@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+<validators>
+	<field name="nombre">
+		<field-validator type="requiredstring">
+		<param name="trim">true</param>
+		<message>El nombre  es obligatorio.</message>
+		</field-validator>
+	</field>
+   <field name="comunidad">
+		<field-validator type="required">
+		<message>La comunidad  es obligatoria.</message>
+		</field-validator>
+		<field-validator type="fieldexpression">
+		<param name="expression">!(comunidad eq -1)</param>
+		<message>La comunidad  es obligatoria.</message>
+		</field-validator>
+	</field>
+	<field name="provincia">
+		<field-validator type="required">
+		<message>La provincia  es obligatoria.</message>
+		</field-validator>
+	</field>
+	<field name="localidad">
+		<field-validator type="required">
+		<message>La localidad  es obligatoria.</message>
+		</field-validator>
+	</field>
+	</validators>

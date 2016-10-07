@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xmlns:wsa="http://cxf.apache.org/ws/addressing"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<jaxws:endpoint id="saludo" 
+		xmlns:s="http://ws.mpr.es/saludo"
+		serviceName="s:SaludarService" 
+		implementor="es.mpr.template.ws.saludo.SaludoServiceImpl"
+		wsdlLocation="/WEB-INF/wsdl/saludo.wsdl" 
+		address="/saludo">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint id="saludoUT" 
+	    xmlns:s="http://ws.mpr.es/saludo"
+		serviceName="s:SaludarService" 
+		implementor="es.mpr.template.ws.saludo.SaludoServiceImpl"
+		wsdlLocation="/WEB-INF/wsdl/saludoUT.wsdl" 
+		address="/saludoUT">
+		<jaxws:properties>
+			<entry key="ws-security.callback-handler" value="es.mpr.template.ws.policy.ServerPasswordCallback" />
+		</jaxws:properties>
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint id="saludoUT_password" 
+	    xmlns:s="http://ws.mpr.es/saludo"
+		serviceName="s:SaludarService" 
+		implementor="es.mpr.template.ws.saludo.SaludoServiceImpl"
+		wsdlLocation="/WEB-INF/wsdl/saludoUT_password.wsdl" 
+		address="/saludoUT_password">
+		<jaxws:properties>
+			<entry key="ws-security.callback-handler" value="es.mpr.template.ws.policy.ServerPasswordCallback" />
+		</jaxws:properties>
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint id="saludoUT_hashpass" 
+	    xmlns:s="http://ws.mpr.es/saludo"
+		serviceName="s:SaludarService" 
+		implementor="es.mpr.template.ws.saludo.SaludoServiceImpl"
+		wsdlLocation="/WEB-INF/wsdl/saludoUT_hashpass.wsdl" 
+		address="/saludoUT_hashpass">
+		<jaxws:properties>
+			<entry key="ws-security.callback-handler" value="es.mpr.template.ws.policy.ServerPasswordCallback" />
+		</jaxws:properties>
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint id="saludo_wss10_cert" 
+	    xmlns:s="http://ws.mpr.es/saludo"
+		serviceName="s:SaludarService" 
+		implementor="es.mpr.template.ws.saludo.SaludoServiceImpl"
+		wsdlLocation="/WEB-INF/wsdl/saludo_wss10_cert.wsdl" 
+		address="/saludo_wss10_cert">
+		<jaxws:properties>
+         	<entry key="ws-security.callback-handler" value="es.mpr.template.ws.policy.ServerPasswordCallback"/>
+         	<entry key="ws-security.signature.properties" value="server-wsp.properties"/>
+         	<entry key="ws-security.signature.username" value="serverx509v1"/>
+         	<entry key="ws-security.encryption.properties" value="server-wsp.properties"/>
+         	<entry key="ws-security.encryption.username" value="clientx509v1"/>
+        </jaxws:properties>
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+		
+</beans>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/peticion"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/peticion"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<element name="Peticion">
+		<complexType>
+			<sequence>
+				<element maxOccurs="1" minOccurs="1" name="Usuario" type="xsd:string"/>
+				<element maxOccurs="1" minOccurs="1" name="Password" type="xsd:string"/>
+				<element maxOccurs="1" minOccurs="1" name="NombreLote" type="xsd:string"/>	
+				<element maxOccurs="1" minOccurs="1" name="Servicio" type="xsd:string"/>
+				<element maxOccurs="1" minOccurs="0" name="Mensajes" type="impl:Mensajes"/>
+			</sequence>
+		</complexType>
+	</element>
+	
+	<complexType name="Mensajes">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="MensajeSMS" type="impl:mensajeSMS"/>
+			<element maxOccurs="unbounded" minOccurs="0" name="MensajeEmail" type="impl:mensajeEmail"/>
+			<element maxOccurs="unbounded" minOccurs="0" name="MensajePush" type="impl:mensajePush"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="mensajeSMS">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="0" name="DocUsuario" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodSia" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodOrganismo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodOrganismoPagador" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="IdExterno" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Destinatario" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Cuerpo" type="xsd:string"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="mensajeEmail">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="0" name="DocUsuario" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodSia" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodOrganismo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="IdExterno" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Asunto" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Cuerpo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="Origen" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="Modo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Destinatarios" type="impl:destinatarios"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="Adjuntos" type="impl:adjuntos"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="mensajePush">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="0" name="DocUsuario" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodSia" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CodOrganismo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="IdExterno" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="IdentificadorUsuario" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Titulo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Cuerpo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="Icono" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="Sonido" type="xsd:string"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="destinatarios">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="To" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CC" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="Bcc" type="xsd:string"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="adjuntos">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Adjunto" type="impl:adjunto"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="adjunto">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Nombre" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Contenido" type="xsd:string"/>
+		</sequence>
+	</complexType>
+
+</schema>
+
+

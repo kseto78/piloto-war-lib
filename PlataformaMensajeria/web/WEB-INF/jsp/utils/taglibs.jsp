@@ -1,0 +1,9 @@
+<%@ taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib prefix="framework" uri="/framework" %>
+<%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="sj" uri="/struts-jquery-tags" %>
+<%@ taglib uri="/WEB-INF/tlds/PlataformaMensajeriaTags.tld" prefix="plataforma" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>

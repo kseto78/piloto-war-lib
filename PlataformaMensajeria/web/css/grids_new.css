@@ -1,0 +1,136 @@
+@charset "utf-8";
+/* CSS Document */
+
+table{width: 98%; border: solid 1px #c0c0c0; margin: 0 7px 9px 9px; border-collapse: separate;}
+th{
+	background-color: #d6dcdf;
+	padding: 2px 3px 0 5px;
+	height: 20px;
+	vertical-align: top;
+	text-align: left;
+	font-size: 10px;
+	vertical-align: middle;
+	border-bottom: solid 1px #c0c0c0;
+}
+th.superHeader{background-color: #bac8cf; padding: 2px; height: 18px; border-bottom: solid 1px #fff;}
+th.separator, td.separator{background-image: url(../img/grids/separator.gif); background-position: 0 center; background-repeat: no-repeat}
+
+th a{color: #165391; text-decoration: none;}
+th a:hover{color: #930;}
+
+tbody td{border-top: solid 1px #dddcdc; font-size: 10px; padding: 2px 3px 2px 5px; height: 18px; vertical-align: middle;}
+tbody tr.odd td{background-color: #edf0f1;}
+tfoot td{
+	background-color: #e6e6e6; padding: 0 0 2px 0; height: 23px; vertical-align: middle; border-top: solid 1px #c0c0c0; font-size: 11px;}
+tfoot tr.totals td{background-color: #ebeadf; font-weight: bold; padding: 2px 5px; height: 18px;}
+tbody td.color{background-color: #e5e8ec !important;}
+tbody tr:hover td{background-color: #dde3e5 !important;}
+
+/*paginacion*/
+tfoot td.paginacion{
+	background-color: #edede6;
+	padding: 3px 0 3px 0 !important;
+	height: 13px !important;
+	border-top: 1px solid #aeb4ac;
+	text-align: center;
+	font-size: 10px;
+}
+tfoot td.paginacion a img{vertical-align: middle;}
+tfoot td.paginacion span{display: inline-block; margin: 0px 3px; padding: 0px 0px 1px 0px;}
+tfoot td.paginacion span a{color: #000; text-decoration: none; vertical-align: middle;}
+tfoot td.paginacion span a:hover{color: #999; text-decoration: none;}
+tfoot td.paginacion span a.paginaActiva{font-weight: bold;}
+/*paginacion*/
+
+tbody td.darkTD{background-color: #f0edde !important; border-right: solid 1px #d4d8da;}
+
+span.edit, span.delete, span.view{display: inline-block; height: 16px;}
+span.edit{width: 23px;}
+span.delete{width: 15px;}
+span.view{width: 29px;}
+span.decline{width: 29px;}
+span.reply{width: 29px;}
+
+td.buttons{text-align: center;}
+td.buttons a:hover{opacity: 0.5; filter: alpha(opacity=50);}
+
+.btnEdit, .btnDelete, .btnView, .btnDecline, .btnReply{display: inline-block; height: 16px;}
+.btnEdit{background:url(../img/grids/btnEdit.gif) left top no-repeat; width: 23px;}
+.btnDelete{background:url(../img/grids/btnDelete.gif) left top no-repeat; width: 15px;}
+.btnView{background:url(../img/grids/btnView.gif) left top no-repeat; width: 29px;}
+.btnDecline{background:url(../img/grids/btnDecline.gif) left top no-repeat; width: 16px;}
+.btnReply{background:url(../img/grids/btnReply.gif) left top no-repeat; width: 18px;}
+
+span.activo, span.inactivo{display: inline-block; width: 16px; height: 13px;}
+span.activo{background:url(../img/grids/icoActivo.png) left top no-repeat;}
+span.inactivo{background:url(../img/grids/icoInactivo.png) left top no-repeat;}
+
+/*TAMAÑOS CELDAS*/
+.TH10{width: 10px !important;}
+.TH15{width: 15px !important;}
+.TH17{width: 17px !important;}
+.TH20{width: 20px !important;}
+.TH30{width: 30px !important;}
+.TH40{width: 40px !important;}
+.TH45{width: 45px !important;}
+.TH50{width: 50px !important;}
+.TH55{width: 55px !important;}
+.TH60{width: 60px !important;}
+.TH65{width: 65px !important;}
+.TH70{width: 70px !important;}
+.TH77{width: 77px !important;}
+.TH80{width: 80px !important;}
+.TH90{width: 90px !important;}
+.TH100{width: 100px !important;}
+.TH110{width: 110px !important;}
+.TH115{width: 115px !important;}
+.TH120{width: 120px !important;}
+.TH130{width: 130px !important;}
+.TH140{width: 140px !important;}
+.TH150{width: 150px !important;}
+.TH160{width: 160px !important;}
+.TH170{width: 170px !important;}
+.TH180{width: 180px !important;}
+.TH190{width: 190px !important;}
+.TH200{width: 200px !important;}
+.TH210{width: 210px !important;}
+.TH220{width: 220px !important;}
+.TH230{width: 230px !important;}
+.TH240{width: 240px !important;}
+.TH250{width: 250px !important;}
+.TH260{width: 260px !important;}
+.TH270{width: 270px !important;}
+.TH280{width: 280px !important;}
+.TH290{width: 290px !important;}
+.TH300{width: 300px !important;}
+.TH310{width: 310px !important;}
+.TH320{width: 320px !important;}
+.TH330{width: 330px !important;}
+
+.gestionEnviosColumn {
+	overflow: hidden !important;;
+	white-space: nowrap !important;;
+	text-overflow: ellipsis !important;
+	width: 116px  !important;
+	max-width: 116px  !important;	
+}
+
+.gestionEnviosColumnLote {
+	overflow: hidden !important;;
+	white-space: nowrap !important;;
+	text-overflow: ellipsis !important;
+	width: 250px  !important;
+	max-width: 250px  !important;	
+}
+
+
+/*TAMAÑOS CELDAS*/
+
+.left{text-align: left !important;}
+.right{text-align: right !important;}
+.center{text-align: center !important;}
+.bold{font-weight: bold !important;}
+
+
+
+.editContent table{ margin: 7px 0 5px 6px;}

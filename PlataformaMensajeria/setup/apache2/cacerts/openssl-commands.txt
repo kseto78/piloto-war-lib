@@ -1,0 +1,5 @@
+
+set PATH=%PATH%;D:\Proyectos\Aplicaciones\OpenSSL-Win32\bin\
+openssl x509 -inform der -in catcert_ec_idcat.crt -out catcert_ec_idcat.pem
+openssl x509 -inform der -in ca_raiz_dnie.crt -out ca_raiz_dnie.pem
+openssl x509 -inform der -in ca_001_dnie.crt -out ca_raiz_dnie.pem

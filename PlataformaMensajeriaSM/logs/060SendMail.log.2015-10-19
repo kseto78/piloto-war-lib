@@ -1,0 +1,466 @@
+2015-10-19 09:19:27,626 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 09:19:28,459 INFO  [SendMail.SendMailService] Mensaje numero 25668
+2015-10-19 09:19:28,784 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:19:28,824 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:19:47,185 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:19:47,565 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:19:47,565 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:19:47,568 INFO  [SendMail.SendMailService] Respuesta: OK | 3857656769980007120
+2015-10-19 09:19:47,568 INFO  [SendMail.SendMailService] SMS numero 25668 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:20:38,677 INFO  [SendMail.SendMailService] Mensaje numero 25669
+2015-10-19 09:20:39,075 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:20:39,077 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:21:38,306 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:22:02,005 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:22:02,005 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:22:06,344 INFO  [SendMail.SendMailService] Respuesta: OK | 3857656914934891216
+2015-10-19 09:22:06,344 INFO  [SendMail.SendMailService] SMS numero 25669 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:24:07,049 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:26:07,069 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:27:53,187 INFO  [SendMail.SendMailService] Mensaje numero 25670
+2015-10-19 09:27:53,424 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:27:53,426 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:28:11,088 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:28:11,793 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:28:11,793 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:28:12,289 INFO  [SendMail.SendMailService] Respuesta: OK | 3857657312219366096
+2015-10-19 09:28:12,289 INFO  [SendMail.SendMailService] SMS numero 25670 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:30:12,806 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:32:12,846 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:33:00,403 INFO  [SendMail.SendMailService] Mensaje numero 25671
+2015-10-19 09:33:00,848 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:33:00,850 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:33:09,493 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:33:23,807 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:33:23,807 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:33:24,333 INFO  [SendMail.SendMailService] Respuesta: OK | 3857657647226815184
+2015-10-19 09:33:24,333 INFO  [SendMail.SendMailService] SMS numero 25671 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:35:25,431 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:37:25,454 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:39:25,485 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:41:24,612 INFO  [SendMail.SendMailService] Mensaje numero 25672
+2015-10-19 09:41:24,788 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:41:24,789 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:41:30,240 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:41:32,100 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:41:32,100 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:41:33,884 INFO  [SendMail.SendMailService] Respuesta: OK | 3857658171213349584
+2015-10-19 09:41:33,884 INFO  [SendMail.SendMailService] SMS numero 25672 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:42:05,598 INFO  [SendMail.SendMailService] Mensaje numero 25673
+2015-10-19 09:42:05,814 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:42:05,815 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:45:02,527 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 09:45:03,158 INFO  [SendMail.SendMailService] Mensaje numero 25674
+2015-10-19 09:45:03,355 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:45:03,371 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:46:08,098 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:46:38,930 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:46:39,514 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:47:00,237 INFO  [SendMail.SendMailService] Respuesta: OK | 3857658500851827408
+2015-10-19 09:47:00,237 INFO  [SendMail.SendMailService] SMS numero 25674 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:47:00,747 INFO  [SendMail.SendMailService] Mensaje numero 25675
+2015-10-19 09:47:01,155 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:47:01,155 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:47:02,325 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:47:03,528 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:47:03,528 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:47:03,965 INFO  [SendMail.SendMailService] Respuesta: OK | 3857658526621369040
+2015-10-19 09:47:03,965 INFO  [SendMail.SendMailService] SMS numero 25675 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:49:04,424 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:50:18,026 INFO  [SendMail.SendMailService] Mensaje numero 25676
+2015-10-19 09:50:18,180 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 09:50:18,180 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 09:50:22,946 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 09:51:16,241 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 09:51:16,241 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 09:51:16,803 INFO  [SendMail.SendMailService] Respuesta: OK | 3857658798278574800
+2015-10-19 09:51:16,803 INFO  [SendMail.SendMailService] SMS numero 25676 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 09:53:17,310 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:55:17,343 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:57:17,372 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 09:59:17,412 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:04:19,128 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:04:27,636 INFO  [SendMail.SendMailService] Mensaje numero 25677
+2015-10-19 10:04:27,910 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:04:27,932 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:05:40,914 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:05:41,603 INFO  [SendMail.SendMailService] Mensaje numero 25678
+2015-10-19 10:05:41,822 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:05:41,848 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:05:43,806 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 10:05:44,737 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:05:44,737 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:05:45,213 INFO  [SendMail.SendMailService] Respuesta: OK | 3857659731359695568
+2015-10-19 10:05:45,214 INFO  [SendMail.SendMailService] SMS numero 25678 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:06:18,685 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:06:49,609 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:07:12,640 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-19 10:07:12,640 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-19 10:07:27,025 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:07:52,359 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-19 10:07:52,359 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-19 10:08:27,252 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:08:33,505 INFO  [SendMail.SendMailService] Mensaje numero 25682
+2015-10-19 10:08:33,711 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:08:33,732 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:08:40,184 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 10:08:41,521 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:08:41,521 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:08:42,439 INFO  [SendMail.SendMailService] Respuesta: OK | 3857659920338518736
+2015-10-19 10:08:42,464 INFO  [SendMail.SendMailService] SMS numero 25682 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:09:09,185 INFO  [SendMail.SendMailService] Mensaje numero 25683
+2015-10-19 10:09:09,453 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:09:09,454 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:09:18,221 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 10:09:19,187 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:09:19,187 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:09:19,745 INFO  [SendMail.SendMailService] Respuesta: OK | 3857659961140445904
+2015-10-19 10:09:19,745 INFO  [SendMail.SendMailService] SMS numero 25683 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:09:53,817 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:10:28,401 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:10:40,592 INFO  [SendMail.SendMailService] Mensaje numero 25685
+2015-10-19 10:10:40,804 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:10:40,821 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:10:46,199 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-19 10:10:47,034 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:10:47,034 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:10:47,446 INFO  [SendMail.SendMailService] Respuesta: OK | 3857660055629726416
+2015-10-19 10:10:47,446 INFO  [SendMail.SendMailService] SMS numero 25685 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:11:53,853 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:12:08,324 INFO  [SendMail.SendMailService] Mensaje numero 25687
+2015-10-19 10:12:08,515 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:12:08,542 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:12:11,695 INFO  [SendMail.SendMailService] Excepcion :For input string: "8081:80" (postSMS)
+2015-10-19 10:12:47,410 INFO  [SendMail.SendMailService] Mensaje numero 25688
+2015-10-19 10:12:47,956 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:12:47,957 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:12:59,540 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:14:35,424 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:14:35,424 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:14:36,930 INFO  [SendMail.SendMailService] Respuesta: OK | 3857660297221898960
+2015-10-19 10:14:36,930 INFO  [SendMail.SendMailService] SMS numero 25688 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:14:42,759 INFO  [SendMail.SendMailService] Mensaje numero 25689
+2015-10-19 10:14:42,909 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:14:42,909 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:14:52,480 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:16:06,764 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:16:06,764 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:16:07,471 INFO  [SendMail.SendMailService] Respuesta: OK | 3857660399228420816
+2015-10-19 10:16:07,471 INFO  [SendMail.SendMailService] SMS numero 25689 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:16:15,031 INFO  [SendMail.SendMailService] Mensaje numero 25690
+2015-10-19 10:16:15,207 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:16:15,208 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:16:16,986 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:17:33,552 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:17:33,553 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:17:34,121 INFO  [SendMail.SendMailService] Respuesta: OK | 3857660491568906960
+2015-10-19 10:17:34,122 INFO  [SendMail.SendMailService] SMS numero 25690 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:19:34,620 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:21:34,658 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:23:34,693 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:25:34,713 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:27:34,733 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:28:58,319 INFO  [SendMail.SendMailService] Mensaje numero 25691
+2015-10-19 10:28:58,476 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:28:58,478 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:29:01,221 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:30:17,584 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:30:17,584 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:30:18,026 INFO  [SendMail.SendMailService] Respuesta: OK | 3857661312981402320
+2015-10-19 10:30:18,026 INFO  [SendMail.SendMailService] SMS numero 25691 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:32:18,502 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:33:51,626 INFO  [SendMail.SendMailService] Mensaje numero 25692
+2015-10-19 10:33:51,779 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:33:51,781 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:33:54,611 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:36:15,558 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:36:15,558 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:36:16,041 INFO  [SendMail.SendMailService] Respuesta: OK | 3857661697380975312
+2015-10-19 10:36:16,042 INFO  [SendMail.SendMailService] SMS numero 25692 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:38:16,488 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:39:04,416 INFO  [SendMail.SendMailService] Mensaje numero 25693
+2015-10-19 10:39:04,555 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:39:04,556 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:39:06,639 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:39:20,317 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:39:20,318 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:39:20,935 INFO  [SendMail.SendMailService] Respuesta: OK | 3857661894949470928
+2015-10-19 10:39:20,935 INFO  [SendMail.SendMailService] SMS numero 25693 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:40:42,529 INFO  [SendMail.SendMailService] Mensaje numero 25694
+2015-10-19 10:40:42,672 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:40:42,673 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:40:44,585 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:41:39,398 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:41:39,399 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:41:40,022 INFO  [SendMail.SendMailService] Respuesta: OK | 3857662038830875344
+2015-10-19 10:41:40,022 INFO  [SendMail.SendMailService] SMS numero 25694 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:43:37,336 INFO  [SendMail.SendMailService] Mensaje numero 25695
+2015-10-19 10:43:37,471 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:43:37,471 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:43:42,414 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:44:48,672 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:44:53,744 INFO  [SendMail.SendMailService] Mensaje numero 25696
+2015-10-19 10:44:53,956 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:44:53,984 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:44:56,091 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:45:28,538 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:45:29,207 INFO  [SendMail.SendMailService] Mensaje numero 25697
+2015-10-19 10:45:29,435 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:45:29,451 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:45:30,622 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:45:41,189 INFO  [SendMail.SendMailService] Excepcion :Connection refused: connect (postSMS)
+2015-10-19 10:47:43,643 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:48:19,410 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 10:48:27,130 INFO  [SendMail.SendMailService] Mensaje numero 25698
+2015-10-19 10:48:27,270 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:48:27,271 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:48:29,346 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:49:09,867 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:49:09,867 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:49:11,648 INFO  [SendMail.SendMailService] Respuesta: OK | 3857662528457409232
+2015-10-19 10:49:11,648 INFO  [SendMail.SendMailService] SMS numero 25698 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:49:32,985 INFO  [SendMail.SendMailService] Mensaje numero 25699
+2015-10-19 10:49:33,129 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 10:49:33,129 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 10:49:35,096 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 10:49:55,156 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 10:49:55,156 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 10:49:56,070 INFO  [SendMail.SendMailService] Respuesta: OK | 3857662576775791312
+2015-10-19 10:49:56,070 INFO  [SendMail.SendMailService] SMS numero 25699 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 10:50:20,138 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:51:56,592 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:52:20,167 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:53:56,610 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:54:20,199 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:55:56,631 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:56:20,217 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:57:56,664 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:58:20,255 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 10:59:56,694 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:00:20,277 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:01:56,713 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:02:20,294 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:03:56,742 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:04:20,315 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:05:56,762 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:05:59,600 INFO  [SendMail.SendMailService] Mensaje numero 25700
+2015-10-19 11:05:59,788 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:05:59,789 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:06:02,303 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:06:20,329 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:07:32,486 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:07:32,486 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:07:33,153 INFO  [SendMail.SendMailService] Respuesta: OK | 3857663712794641104
+2015-10-19 11:07:33,153 INFO  [SendMail.SendMailService] SMS numero 25700 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 11:08:08,324 INFO  [SendMail.SendMailService] Mensaje numero 25701
+2015-10-19 11:08:08,471 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:08:08,472 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:08:10,598 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:08:20,345 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:08:26,363 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:08:26,364 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:08:26,861 INFO  [SendMail.SendMailService] Respuesta: OK | 3857663770776437456
+2015-10-19 11:08:26,861 INFO  [SendMail.SendMailService] SMS numero 25701 enviado (postSMS) - Version sendMail 1.3
+2015-10-19 11:09:12,707 INFO  [SendMail.SendMailService] Mensaje numero 25702
+2015-10-19 11:09:12,837 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:09:12,838 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:09:14,842 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:10:20,369 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:10:36,714 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:10:36,714 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:10:37,564 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:10:42,114 INFO  [SendMail.SendMailService] Mensaje numero 25703
+2015-10-19 11:10:42,249 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:10:42,250 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:10:43,573 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:12:20,383 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:14:20,406 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:16:01,630 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:16:01,630 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:16:02,072 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:16:20,646 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:18:02,888 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:18:21,114 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:20:02,916 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:20:21,146 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:22:02,935 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:22:21,165 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:25:28,857 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 11:25:33,364 INFO  [SendMail.SendMailService] Mensaje numero 25705
+2015-10-19 11:25:33,576 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:25:33,599 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:25:36,711 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:26:38,144 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:26:38,145 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:26:38,736 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:28:39,653 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:29:22,879 INFO  [SendMail.SendMailService] Mensaje numero 25706
+2015-10-19 11:29:23,223 INFO  [SendMail.SendMailService] Numero de receptores: 2
+2015-10-19 11:30:59,567 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 11:31:00,180 INFO  [SendMail.SendMailService] Mensaje numero 25707
+2015-10-19 11:31:00,393 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:31:00,423 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:31:02,664 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:34:27,209 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:34:27,209 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:34:27,690 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:36:28,167 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:37:38,326 INFO  [SendMail.SendMailService] Mensaje numero 25708
+2015-10-19 11:37:38,459 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:37:38,460 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:37:40,173 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:38:15,672 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:38:15,672 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:38:16,235 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:38:52,604 INFO  [SendMail.SendMailService] Mensaje numero 25709
+2015-10-19 11:38:52,750 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:38:52,751 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:38:54,137 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:39:12,686 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:39:12,686 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:39:16,959 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:40:25,205 INFO  [SendMail.SendMailService] Mensaje numero 25710
+2015-10-19 11:40:25,354 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:40:25,356 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:40:27,355 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:41:04,524 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:41:04,524 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:41:05,469 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:41:59,092 INFO  [SendMail.SendMailService] Mensaje numero 25711
+2015-10-19 11:41:59,228 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:41:59,229 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:42:00,837 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:42:20,233 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:42:20,234 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:42:20,959 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:43:39,312 INFO  [SendMail.SendMailService] Mensaje numero 25712
+2015-10-19 11:43:39,482 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:43:39,484 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:43:41,169 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:44:01,442 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:44:01,443 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:44:01,925 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:44:33,819 INFO  [SendMail.SendMailService] Mensaje numero 25713
+2015-10-19 11:44:33,956 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:44:33,957 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:44:35,980 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:44:54,099 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:44:54,099 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:44:54,555 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:46:55,018 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:48:55,036 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 11:50:44,768 INFO  [SendMail.SendMailService] Mensaje numero 25714
+2015-10-19 11:50:44,903 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:50:44,904 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:50:46,771 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:51:29,704 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:51:29,704 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:51:30,460 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:51:34,760 INFO  [SendMail.SendMailService] Mensaje numero 25715
+2015-10-19 11:51:34,897 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:51:34,899 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:51:36,256 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:53:19,958 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:53:19,958 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:53:20,537 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:54:37,949 INFO  [SendMail.SendMailService] Mensaje numero 25716
+2015-10-19 11:54:38,089 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:54:38,090 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:54:39,468 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 11:56:28,308 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 11:56:28,308 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 11:56:28,850 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 11:56:36,846 INFO  [SendMail.SendMailService] Mensaje numero 25717
+2015-10-19 11:56:36,992 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 11:56:36,993 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 11:56:37,965 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:00:38,403 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 12:00:38,403 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 12:00:38,631 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 12:02:14,482 INFO  [SendMail.SendMailService] Mensaje numero 25718
+2015-10-19 12:02:14,634 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 12:02:14,635 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 12:02:16,382 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:02:54,145 INFO  [SendMail.SendMailService] Excepcion :Connection refused: connect (postSMS)
+2015-10-19 12:04:57,274 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 12:06:57,303 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 12:08:03,914 INFO  [SendMail.SendMailService] Mensaje numero 25719
+2015-10-19 12:08:04,074 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 12:08:04,075 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 12:08:05,873 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:08:35,774 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 12:08:35,774 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 12:08:36,454 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 12:09:53,903 INFO  [SendMail.SendMailService] Mensaje numero 25720
+2015-10-19 12:09:54,116 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 12:09:54,117 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 12:09:55,785 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:11:12,631 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 12:11:12,631 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 12:11:13,156 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 12:13:13,698 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 12:15:13,733 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 12:17:13,765 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 12:21:33,587 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-19 12:21:34,272 INFO  [SendMail.SendMailService] Mensaje numero 25721
+2015-10-19 12:21:34,516 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 12:21:34,543 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 12:21:36,268 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:23:32,441 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 12:23:32,441 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 12:23:32,932 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 12:23:33,382 INFO  [SendMail.SendMailService] Mensaje numero 25722
+2015-10-19 12:23:33,521 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 12:23:33,522 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 12:23:33,997 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:24:11,470 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 12:24:11,470 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 12:24:12,258 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 12:24:14,843 INFO  [SendMail.SendMailService] Mensaje numero 25723
+2015-10-19 12:24:14,981 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-19 12:24:14,982 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-19 12:24:15,866 INFO  [SendMail.SendMailService] URL: http://localhost:8081/SMS/SMS
+2015-10-19 12:26:53,068 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-19 12:26:53,068 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-19 12:26:53,391 INFO  [SendMail.SendMailService] Respuesta: ERROR
+2015-10-19 12:28:53,798 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-19 12:30:10,179 INFO  [SendMail.SendMailService] Error.DequeueMail : Conexión cerrada
+2015-10-19 12:30:31,193 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:31:52,202 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:33:13,196 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:34:34,212 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:35:55,219 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:37:16,229 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:38:37,233 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:39:58,239 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:41:19,247 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:42:40,245 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:44:01,253 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:45:22,256 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:46:43,265 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:48:04,272 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:49:25,280 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:50:46,291 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:52:07,298 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:53:28,309 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:54:49,323 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:56:10,332 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:57:31,343 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 12:58:52,351 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 13:00:13,355 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 13:01:34,358 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 13:02:55,371 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 13:04:16,375 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 13:05:37,373 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:21:04,527 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:22:25,738 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:23:47,028 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:25:08,313 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:26:29,614 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:27:50,729 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:29:11,830 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:30:32,933 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:31:54,031 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:33:15,077 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:34:36,119 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-10-19 16:35:36,630 INFO  [SendMail.SendMailService] Mensaje numero 25724

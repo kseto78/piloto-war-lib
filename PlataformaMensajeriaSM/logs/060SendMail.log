@@ -1,0 +1,180 @@
+2016-02-15 14:10:12,014 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:10:22,164 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29131
+2016-02-15 14:10:22,452 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:13:00,064 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:13:06,588 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29133
+2016-02-15 14:13:06,855 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:13:07,073 WARN  [org.apache.cxf.bus.extension.ExtensionManagerImpl] Loading Bus extensions via META-INF/cxf/bus-extensions.xml (found url jar:file:/C:/Migracion/repositorioMavenNuevo/org/apache/cxf/cxf-bundle/2.3.1/cxf-bundle-2.3.1.jar!/META-INF/cxf/bus-extensions.xml) is deprecated.  Use META-INF/cxf/bus-extensions.txt instead.
+2016-02-15 14:14:32,372 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:14:45,312 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29137
+2016-02-15 14:14:45,543 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:14:46,467 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 14:14:47,529 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 14:14:47,530 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29137 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 14:16:47,725 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:18:47,879 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:19:06,868 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:19:23,484 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29141
+2016-02-15 14:19:23,702 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:19:24,295 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 14:19:24,914 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 14:19:24,914 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29141 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 14:20:16,137 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:20:33,256 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29146
+2016-02-15 14:20:33,490 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:20:34,098 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 14:20:34,712 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 14:20:34,712 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29146 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 14:22:27,929 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:22:51,014 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29148
+2016-02-15 14:22:51,247 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:22:51,806 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 14:22:52,405 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 14:22:52,406 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29148 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 14:24:52,591 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:27:13,772 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:27:27,387 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29150
+2016-02-15 14:27:27,606 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:27:28,159 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 14:27:28,784 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 14:27:28,784 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29150 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 14:29:33,598 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:29:52,673 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29152
+2016-02-15 14:29:53,408 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 2
+2016-02-15 14:29:54,026 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 14:29:54,680 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 14:29:54,681 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29152 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 14:31:54,866 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:33:55,030 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:35:07,955 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29153
+2016-02-15 14:35:08,227 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de servidores: 2
+2016-02-15 14:35:08,412 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] postMail Try Catch General: java.lang.ArrayIndexOutOfBoundsException: 0
+2016-02-15 14:37:08,620 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:39:08,775 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:41:08,937 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:43:09,093 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:45:09,259 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:47:09,415 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:47:46,128 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:48:47,304 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:49:28,631 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 14:51:29,504 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:53:29,665 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:55:29,831 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:57:29,987 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 14:59:30,152 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 15:01:30,308 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 15:03:22,441 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 15:03:33,960 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 15:05:17,304 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 15:05:34,755 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 15:07:12,675 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 15:19:25,728 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 15:21:11,764 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 16:35:53,907 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 16:36:15,058 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2016-02-15 16:37:35,980 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2016-02-15 16:38:36,599 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29202
+2016-02-15 16:38:36,682 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 28550
+2016-02-15 16:50:51,244 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 16:50:57,501 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Error.DequeueMail : Conexión cerrada
+2016-02-15 16:51:11,400 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 16:53:12,175 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 16:55:12,246 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 16:57:12,328 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 16:59:12,400 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:01:12,483 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:03:12,553 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:05:12,634 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:07:12,702 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:09:12,783 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:11:12,854 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:13:12,935 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:15:13,195 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:17:13,285 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:19:13,358 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:21:13,440 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:23:13,510 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:25:13,581 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:27:13,653 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:29:13,733 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:29:49,083 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29215
+2016-02-15 17:29:49,401 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:36:55,406 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 17:36:56,093 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29216
+2016-02-15 17:36:56,322 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:36:56,970 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 17:36:57,621 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:36:57,621 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29216 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:37:25,454 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29217
+2016-02-15 17:37:25,643 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:37:25,894 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:37:25,894 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29217 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:37:25,951 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29218
+2016-02-15 17:37:26,139 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:37:26,369 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:37:26,369 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29218 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:39:26,476 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:40:10,343 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 17:40:23,103 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29219
+2016-02-15 17:40:23,164 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29220
+2016-02-15 17:40:23,341 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:40:23,341 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:40:23,609 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:40:23,609 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29220 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:41:29,075 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 17:41:37,600 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29221
+2016-02-15 17:41:37,814 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:41:38,423 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 17:41:39,231 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:41:39,232 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29221 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:43:39,334 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:45:39,422 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:46:52,373 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29223
+2016-02-15 17:46:52,525 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:46:52,680 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:46:52,680 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29223 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:46:52,727 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29224
+2016-02-15 17:46:52,898 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 3
+2016-02-15 17:46:53,042 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:46:53,042 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29224 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:48:53,153 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:50:53,225 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:52:53,306 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:54:53,389 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 17:58:58,622 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 17:59:16,053 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29229
+2016-02-15 17:59:16,253 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 4
+2016-02-15 17:59:16,844 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 17:59:17,448 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:59:17,448 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29229 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:59:17,495 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29230
+2016-02-15 17:59:17,632 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 4
+2016-02-15 17:59:17,765 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: OK
+2016-02-15 17:59:17,766 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] SMS numero 29230 enviado (postSMS) - Version sendMail 1.3
+2016-02-15 17:59:52,260 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Error.DequeueMail : Conexión cerrada
+2016-02-15 18:00:13,204 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2016-02-15 18:03:12,829 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 18:05:12,438 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 18:07:12,316 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 18:08:34,510 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 18:08:46,156 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29231
+2016-02-15 18:08:46,386 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 4
+2016-02-15 18:08:52,340 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 18:13:50,542 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2016-02-15 18:13:51,208 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29233
+2016-02-15 18:13:51,398 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 4
+2016-02-15 18:13:52,067 INFO  [org.apache.cxf.service.factory.ReflectionServiceFactoryBean] Creating Service {http://misim.redsara.es/misim-bus-webapp/}EnviarMensajesWS from WSDL: file:/C:/Migracion/workspace_migracion_kepler/clienteMisim-wsclient/target/classes/es/redsara/misim/misim_bus_webapp/enviarmensaje/EnviarMensajesWS.wsdl
+2016-02-15 18:13:52,798 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No se ha podido abrir la conexión: null
+2016-02-15 18:13:52,798 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: 
+2016-02-15 18:13:52,827 INFO  [es.minhap.plataformamensajeria.sm.jdbc.JDBCAccess] JDBCAccess.SetMessageStatus : 905 - ORA-00905: falta una palabra clave
+
+2016-02-15 18:13:52,845 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Mensaje numero 29234
+2016-02-15 18:13:53,020 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Numero de proveedores: 4
+2016-02-15 18:13:53,254 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No se ha podido abrir la conexión: null
+2016-02-15 18:13:53,255 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] Respuesta: 
+2016-02-15 18:13:53,285 INFO  [es.minhap.plataformamensajeria.sm.jdbc.JDBCAccess] JDBCAccess.SetMessageStatus : 905 - ORA-00905: falta una palabra clave
+
+2016-02-15 18:15:53,310 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 18:17:53,354 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio
+2016-02-15 18:19:53,390 INFO  [es.minhap.plataformamensajeria.sm.sendmessage.SendMailService] No hay mensajes disponibles para su envio

@@ -1,0 +1,6 @@
+<OPERACIÓN>
+	<ANULARMENSAJE>
+		<OK/>
+		<ERROR codigo="01" descripción="ABCD"/>
+	</ANULARMENSAJE>
+</OPERACIÓN>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints version="2.0" xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+  <endpoint implementation="es.mpr.plataformamensajeria.ws.seguimiento.SeguimientoMensajesImpl" name="SeguimientoMensajesImpl" url-pattern="/SeguimientoMensajesImpl"/>
+  <endpoint implementation="es.mpr.plataformamensajeria.ws.opraciones.OperacionesMensajesImpl" name="OperacionesMensajesImpl" url-pattern="/OperacionesMensajesImpl"/>
+  <endpoint implementation="es.mpr.plataformamensajeria.ws.envio.EnvioMensajesImpl" name="EnvioMensajesImpl" url-pattern="/EnvioMensajesImpl"/>
+</endpoints>

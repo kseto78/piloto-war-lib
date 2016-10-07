@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+   "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+   
+<taglib>
+   <tlibversion>1.0</tlibversion>
+   <jspversion>1.1</jspversion>
+   <shortname>PlataformaMensajeriaTags</shortname>
+   
+   <tag>
+      <name>securityadmin</name>
+      <tagclass>es.mpr.plataformamensajeria.web.tags.PlataformaSecurityTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Muestra el contenido de este tag dependiendo del rol asignado al usuario logueado o al indicado en el parametro usuarioNombre</info>
+      <attribute>
+         <name>usuarioLogueado</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>usuarioNombre</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+	  <attribute>
+      	 <name>showIfGranted</name>
+      	 <required>false</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>
+
+      <attribute>
+      	 <name>showIfNotGranted</name>
+      	 <required>false</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>      
+   </tag>
+   <tag>
+      <name>puedeEditarAplicacion</name>
+      <tagclass>es.mpr.plataformamensajeria.web.tags.PlataformaAppEditableTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Muestra el contenido de este tag dependiendo del permiso asociado al usuario propietario logueado o al indicado en el parametro usuarioNombre</info>
+      <attribute>
+      	 <name>idAplicacion</name>
+      	 <required>true</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>      
+   </tag>   
+   <tag>
+      <name>securityRedirect</name>
+      <tagclass>es.mpr.plataformamensajeria.web.tags.PlataformaSecurityRedirectTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Este tag redirecciona</info>
+      <attribute>
+      	<name>isAction</name>
+      	<required>true</required>
+      </attribute>
+      <attribute>
+      	 <name>redirectTo</name>
+      	 <required>true</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+      	 <name>allowedTo</name>
+      	 <required>true</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+      	 <name>permisoIdAplicacion</name>
+      	 <required>false</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>                                   
+   </tag>   
+   
+   
+</taglib>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<wls:weblogic-web-app
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:wls="http://xmlns.oracle.com/weblogic/weblogic-web-app"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_4.xsd 
+	http://xmlns.oracle.com/weblogic/weblogic-web-app 
+	http://xmlns.oracle.com/weblogic/weblogic-web-app/1.0/weblogic-web-app.xsd">
+	<wls:context-root>PlataformaMensajeria</wls:context-root>
+	<wls:weblogic-version>10.3.2</wls:weblogic-version>
+	<wls:session-descriptor>
+        <wls:cookie-http-only>false</wls:cookie-http-only>
+	</wls:session-descriptor>
+	<wls:container-descriptor>
+		<wls:prefer-web-inf-classes>true</wls:prefer-web-inf-classes>
+		<wls:client-cert-proxy-enabled>true</wls:client-cert-proxy-enabled>
+		<wls:show-archived-real-path-enabled>true</wls:show-archived-real-path-enabled>
+	</wls:container-descriptor>
+</wls:weblogic-web-app>

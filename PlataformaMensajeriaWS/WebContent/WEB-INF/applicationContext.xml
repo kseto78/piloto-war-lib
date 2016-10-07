@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+    <!-- Se importan los recursos de Apache CXF necesarios -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+
+    <!-- Declaramos el bean implementación del Servicio Web.
+    -->
+    <bean id="seguimientoMensajesImpl" class="es.mpr.plataformamensajeria.ws.seguimiento.SeguimientoMensajesImpl"/>
+    <bean id="operacionesMensajesImpl" class="es.mpr.plataformamensajeria.ws.operaciones.OperacionesMensajesImpl"/>
+    <bean id="envioMensajesImpl" class="es.mpr.plataformamensajeria.ws.envio.EnvioMensajesImpl"/>
+    <bean id="recepcionMensajesImpl" class="es.mpr.plataformamensajeria.ws.recepcion.IRecepcionMensajesServiceImpl"/>
+    <bean id="registroUsuarioServiceImpl" class="es.mpr.plataformamensajeria.ws.usuariosplataformas.IRegistroUsuarioServiceImpl"/>
+    <bean id="envioNotificacionPushServiceImpl" class="es.mpr.plataformamensajeria.ws.envionotificacionespush.IEnvioNotificacionPushServiceImpl"/>
+    <!-- Declaramos el endpoint de nuestro servicio web, indicando cual es la
+         clase de implementación. En el atributo "implementor" podemos escribir
+         el nombre completo de la clase implementación, o referenciar a un
+         bean de Spring usando un # seguido del nombre del bean.
+    -->
+	<jaxws:endpoint 
+	  id="seguimientoMensajes"
+	  implementor="#seguimientoMensajesImpl"
+	  address="/SeguimientoMensajes" />
+	<jaxws:endpoint 
+	  id="operacionesMensajes"
+	  implementor="#operacionesMensajesImpl"
+	  address="/OperacionesMensajes" />
+	<jaxws:endpoint 
+	  id="envioMensajes"
+	  implementor="#envioMensajesImpl"
+	  address="/EnvioMensajes" />
+	 <jaxws:endpoint 
+	  id="recepcionMensajes"
+	  implementor="#recepcionMensajesImpl"
+	  address="/RecepcionMensajes" />
+	  <jaxws:endpoint 
+	  id="registroUsuarios"
+	  implementor="#registroUsuarioServiceImpl"
+	  address="/RegistroUsuarios" />
+	  <jaxws:endpoint 
+	  id="envioNotificacionPush"
+	  implementor="#envioNotificacionPushServiceImpl"
+	  address="/EnvioNotificacionPush" />
+</beans>

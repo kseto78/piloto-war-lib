@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://cxf.apache.org/jaxrs
+		http://cxf.apache.org/schemas/jaxrs.xsd
+		http://cxf.apache.org/jaxws
+ 		http://cxf.apache.org/schemas/jaxws.xsd
+ 		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+ 
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	
+	<jaxrs:server id="registroUsuario" address="/rest/registro">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="serviceBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+       
+ 	<jaxrs:server id="gestionAyuda" address="/rest/gestionAyuda">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="gestionaAyudaBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+       
+	<jaxrs:server id="gestionNotificacionesPush" address="/rest/gestionNotificacionesPush">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="notificacionEstadoBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+       
+	<jaxrs:server id="registroUsuarioEnServicio" address="/rest/gestionServiciosPush/registroUsuarioEnServicio">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="registroUsuarioEnServicioBean" />
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+ 	<jaxrs:server id="consultaServiciosDisponibles" address="/rest/gestionServiciosPush/consultaServiciosDisponibles">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="consultaServiciosDisponiblesBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     <jaxrs:server id="getAvisosUsuarioPush" address="/rest/getAvisosUsuario">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="getAvisosUsuarioPushBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     
+     <!-- INTEGRACION CON CLAVE -->
+     <jaxrs:server id="WS_ClaveAuthRequest" address="/rest/claveAuth/WS_ClaveAuthRequest">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="WS_ClaveAuthRequestBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     
+     <jaxrs:server id="WS_ClaveAuthResponse" address="/rest/claveAuth/WS_ClaveAuthResponse">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="WS_ClaveAuthResponseBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     
+      <jaxrs:server id="WS_ClaveGetAuth" address="/rest/claveAuth/WS_ClaveGetAuth">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="WS_ClaveGetAuthBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     
+     <bean class="es.minhap.misim.bus.webapp.restserviceprovider.RegistroUsuarioImpl" id="serviceBean" />
+     
+     <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionAyudaImpl" id="gestionaAyudaBean" />
+     
+     <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionNotificacionesPushImpl" id="notificacionEstadoBean" />
+     
+     <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionServiciosPushImpl" id="registroUsuarioEnServicioBean" />
+
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionServiciosDisponiblesImpl" id="consultaServiciosDisponiblesBean" />
+	
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.GetAvisosUsuarioImpl" id="getAvisosUsuarioPushBean" />
+	
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.WS_ClaveAuthRequestImpl" id="WS_ClaveAuthRequestBean" /> 
+	
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.WS_ClaveAuthResponseImpl" id="WS_ClaveAuthResponseBean" /> 
+	
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.WS_ClaveGetAuthImpl" id="WS_ClaveGetAuthBean" />   
+</beans>

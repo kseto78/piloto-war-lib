@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<catalogs>
+
+
+  <!-- ****************************************************************** -->
+  <!-- Aplicacion Plantilla                                               --> 
+  <!-- ****************************************************************** -->
+    
+    <catalog name="servidores">
+      <type>JDBC</type>
+      <tableName>TBL_SERVIDORES</tableName>
+      <codeField>servidorid</codeField>
+      <messageField>nombre</messageField>
+    </catalog>
+    
+  <!--  <catalog name="unidadesOrganizacionales">
+      <type>JDBC</type>
+      <tableName>TEMP_UnidadOrganizacional</tableName>
+      <codeField>id</codeField>
+      <messageField>nombre</messageField>
+    </catalog>
+   
+   <catalog name="organismos">
+      <type>JDBC</type>
+      <tableName>TEMP_Organismo</tableName>
+      <codeField>id</codeField>
+      <messageField>nombre</messageField>
+   </catalog>
+   -->
+   <catalog name="lenguajes">
+      <type>XML</type>
+      <name>lenguajes</name>
+   </catalog>
+   
+   <catalog name="formatosInformes">
+      <type>XML</type>
+      <name>formatosInformes</name>
+   </catalog>
+      
+   <catalog name="comunidades">
+      <type>XML</type>
+      <name>comunidades</name>
+   </catalog>
+   
+   <catalog name="provinciasPorCA">
+      <type>XML</type>
+      <fileName>provincias</fileName>
+      <lookupField>codCA</lookupField>
+   </catalog>
+   
+  <!--  <catalog name="localidadesPorProvincia">
+      <type>JDBC</type>
+      <tableName>TEMP_Localidades</tableName>
+      <codeField>ID</codeField>
+      <messageField>DESCRIPCION</messageField>
+      <lookupField>CODPROVINCIA</lookupField>
+      <sortField>DESCRIPCION</sortField>
+   </catalog>-->
+   
+   <catalog name="provincias">
+      <type>XML</type>
+      <fileName>provincias</fileName>
+   </catalog>
+   
+   <catalog name="paises">
+      <type>XML</type>
+      <name>paises</name>
+   </catalog>
+   
+   <catalog name="paisesNoComunitarios">
+      <type>XML</type>
+      <name>paisesNoComunitarios</name>
+   </catalog>
+   
+   <catalog name="paisesComunitarios">
+      <type>XML</type>
+      <name>paisesComunitarios</name>
+   </catalog>
+
+</catalogs>

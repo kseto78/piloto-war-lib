@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE exception_config[
+<!ELEMENT auditableHandler   EMPTY>
+<!ATTLIST auditableHandler logLevel CDATA #REQUIRED>
+<!ATTLIST auditableHandler name CDATA #REQUIRED >
+<!ATTLIST auditableHandler auditingType CDATA #REQUIRED >
+<!ELEMENT spanish   EMPTY >
+<!ATTLIST spanish description CDATA #REQUIRED >
+<!ELEMENT class   EMPTY >
+<!ATTLIST class name CDATA #REQUIRED >
+<!ELEMENT exception_config   (global-error,base-exception,app-exceptions)>
+<!ELEMENT base-exception   (class,redirectableHandler,notificableHandler,auditableHandler,recoverableHandler)>
+<!ELEMENT app-exceptions   (exception)*>
+<!ELEMENT exception   (class,redirectableHandler?,notificableHandler?,auditableHandler?,recoverableHandler?)>
+<!ELEMENT global-error   (spanish,alternativeLang)>
+<!ELEMENT alternativeLang   EMPTY>
+<!ATTLIST alternativeLang description CDATA #REQUIRED >
+<!ELEMENT notificableHandler   EMPTY>
+<!ATTLIST notificableHandler name CDATA #REQUIRED>
+<!ATTLIST notificableHandler notificationType CDATA #REQUIRED>
+<!ELEMENT recoverableHandler   EMPTY>
+<!ATTLIST recoverableHandler forward CDATA #REQUIRED>
+<!ATTLIST recoverableHandler name CDATA #REQUIRED>
+<!ATTLIST recoverableHandler attemptsNumber CDATA #REQUIRED>
+<!ELEMENT redirectableHandler   EMPTY >
+<!ATTLIST redirectableHandler forward CDATA #REQUIRED>
+<!ATTLIST redirectableHandler name CDATA #REQUIRED>
+]>
+<exception_config>
+	<global-error>
+	  		<spanish description="Sentimos no poder atenderle en estos momentos. Perdon por las molestias. Gracias" /> 
+	  		<alternativeLang description="Sorry, we can't attend you now. Excuse us for problems. Thanks." /> 
+  	</global-error>
+
+	<base-exception>
+	  		<class name="java.lang.Exception" /> 
+	  		<redirectableHandler name="com.map.j2ee.exceptions.handler.RedirectableExceptionManager" forward="error" /> 
+	  		<notificableHandler name="com.map.j2ee.exceptions.handler.NotificableExceptionManager" notificationType="2" /> 
+			<auditableHandler name="com.map.j2ee.exceptions.handler.AuditableExceptionManager" logLevel="2" auditingType="3" />
+	  		<recoverableHandler name="com.map.j2ee.exceptions.handler.RecoverableExceptionManager" attemptsNumber="0" forward="error"/>
+	</base-exception>
+	
+ 	<app-exceptions>
+		<exception>
+	  		<class name="com.map.j2ee.exceptions.FrameworkException" /> 
+	  		<redirectableHandler name="com.map.j2ee.exceptions.handler.RedirectableExceptionManager" forward="error" /> 
+			<auditableHandler name="com.map.j2ee.exceptions.handler.AuditableExceptionManager" logLevel="2" auditingType="3" />
+	 	</exception>	
+		<exception>
+	  		<class name="com.map.j2ee.exceptions.BusinessException" /> 
+	  		<redirectableHandler name="com.map.j2ee.exceptions.handler.RedirectableExceptionManager" forward="error"/>
+	  		<auditableHandler name="com.map.j2ee.exceptions.handler.AuditableExceptionManager" logLevel="2" auditingType="3" /> 
+	 	</exception>
+	 	<exception>
+	  		<class name="org.springframework.security.AccessDeniedException" /> 
+			<recoverableHandler name="com.map.j2ee.exceptions.handler.RecoverableExceptionManager" attemptsNumber="1" forward="securityerror"/>
+	 	</exception>
+        <exception>
+	  		<class name="org.springframework.security.AuthenticationCredentialsNotFoundException" />
+			<recoverableHandler name="com.map.j2ee.exceptions.handler.RecoverableExceptionManager" attemptsNumber="1" forward="securityerror"/>
+	 	</exception>
+	</app-exceptions>
+	
+</exception_config>

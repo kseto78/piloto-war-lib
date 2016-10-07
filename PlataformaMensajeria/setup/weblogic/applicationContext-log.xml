@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://www.springframework.org/schema/tx 
+  http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+  http://www.springframework.org/schema/jee 
+  http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
+  http://www.springframework.org/schema/aop 
+  http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<!-- Aspecto Log -->
+	
+	<bean id="aspectoLog" class="com.map.j2ee.aspect.LogAspect" />
+	
+	<aop:config>
+		<aop:pointcut id="aspectLogPointcut"
+			expression="execution(* *..Servicio*.*(..))" />
+		<aop:aspect id="aspectLog" ref="aspectoLog">
+			<aop:before method="before"
+				pointcut-ref="aspectLogPointcut" />
+			<aop:after-returning method="afterReturning"
+				returning="returnValue" pointcut-ref="aspectLogPointcut" />
+			<aop:after-throwing method="afterThrowing"
+				pointcut-ref="aspectLogPointcut" throwing="ex" />
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="log4jInitializer" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+   		<property name="staticMethod" value="org.springframework.util.Log4jConfigurer.initLogging" />
+   		<property name="arguments">
+   		<list>
+         	<value>classpath:log4j-application.properties</value>
+      	</list>
+   		</property>
+	</bean>
+	
+</beans>

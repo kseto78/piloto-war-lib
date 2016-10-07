@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+        
+	<persistence-unit name="plataformamensajeriaapp" transaction-type="RESOURCE_LOCAL">
+	
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<non-jta-data-source>java:comp/env/dsOraclePlataforma</non-jta-data-source>
+		
+		<!-- <class>es.mpr.template.model.configuracion.OrganismoJPA</class>-->
+		<class>es.mpr.template.model.configuracion.UnidadOrganizacionalJPA</class>
+		<class>com.map.j2ee.model.audit.AuditEntry</class>
+		<class>com.map.j2ee.model.usuarios.FwkUsuario</class>
+		<class>com.map.j2ee.model.usuarios.FwkGroup</class>
+		
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle9Dialect" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+		
+	</persistence-unit>
+	
+</persistence> 
+ 

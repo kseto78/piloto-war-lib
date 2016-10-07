@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="PlataformaMensajeria" default="help" basedir=".">
+
+	<property file="build.properties" />
+
+	<presetdef name="javac">
+	<javac fork="yes" executable="C:/Migracion/jdk1.6.0_29/bin/javac"  debug="true" debuglevel="lines,vars,source"/>
+	</presetdef>
+	
+	<!-- set global properties for this build -->
+	<property name="project.home" value="${basedir}" />
+	<property name="dist.dir" value="${project.home}/build/dist" />
+	<property name="bin.dir" value="${project.home}/build/classes" />
+	<property name="web.dir" value="${project.home}/web" />
+	<property name="xmlconfig.dir" value="${web.dir}/WEB-INF" />
+	<property name="webinf.dir" value="${web.dir}/WEB-INF" />
+	<property name="src.dir" value="${project.home}/src/java" />
+	<property name="conf.dir" value="${project.home}/src/conf" />
+	<property name="src.test.dir" value="${project.home}/test/" />
+	<property name="bin.test.dir" value="${project.home}/build/test-classes" />
+	<property name="src.test.reports" value="${src.test.dir}/reports" />
+	<property name="lib.dir" value="${project.home}/lib" />
+	<property name="doc.dir" value="${project.home}/docs" />
+	<property name="setup.dir" value="${project.home}/setup" />
+	<property name="meta.subdir" value="setup" />
+	<property name="meta.dir" value="${project.home}/${meta.subdir}" />
+	<property name="sql.subdir" value="sql" />
+	<property name="sql.dir" value="${meta.dir}/${sql.subdir}" />
+	<property name="api.dir" value="${doc.dir}/api" />
+	
+	<!-- external libs dirs -->
+	<property name="antcontrib.dir" value="${externallib.dir}/ant-contrib" />
+	<property name="antcontrib.jar" value="${antcontrib.dir}/lib/ant-contrib.jar" />
+
+	<!-- Project classpath -->
+	<path id="project.classpath">
+		<path location="${bin.dir}" />
+		<fileset dir="${lib.dir}" />
+		<fileset dir="${libmap.dir}/libcomun">
+			<!--exclude name="**/ojdbc*jar"/>-->
+		</fileset>
+		<fileset dir="${libmap.dir}/libfwk">
+			<include name="${main.framework.jarname}" />
+			<include name="${firma.framework.jarname}" />
+		</fileset>
+	</path>
+		
+	<!-- Establece la variable tomcat.set jboss.set o weblogic.set en función del valor establecido en la propiedad server.default del build.properties -->
+	<target name="prepareServer">
+		<condition property="tomcat.set">
+			<matches pattern="tomcat" string="${server.default}" />
+		</condition>
+		<condition property="jboss.set">
+			<matches pattern="jboss" string="${server.default}" />
+		</condition>
+		<condition property="weblogic.set">
+			<matches pattern="weblogic" string="${server.default}" />
+		</condition>
+	</target>
+
+	<target name="prepareAll" depends="prepareTomcat,prepareWeblogic,prepareJboss" />
+
+	<target name="prepareTomcat" depends="prepareServer" if="tomcat.set">
+		<!--directorios dentro de las librerias externas ${externallib.dir}/libcomun que no queremos empaquetar -->
+		<patternset id="directorioslibexcluidos">
+			<exclude name="xerces" />
+			<exclude name="varios" />
+			<exclude name="enhanced" />
+			<exclude name="libserver" />
+			<exclude name="strutsportletplugin" />
+		</patternset>
+		<property name="deploy.dir" value="${tomcat.deploy.dir}" />
+		<property name="deployOpenApp.dir" value="${tomcat.deploy.dir}/${main.name}" />
+	</target>
+
+	<target name="prepareWeblogic" depends="prepareServer" if="weblogic.set">
+		<!--directorios dentro de las librerias externas ${externallib.dir}/libcomun que no queremos empaquetar -->
+		<patternset id="directorioslibexcluidos">
+			<exclude name="xerces" />
+			<exclude name="jpa" />
+			<exclude name="hibernate" />
+			<exclude name="varios" />
+			<exclude name="enhanced" />
+			<exclude name="libserver" />
+			<exclude name="strutsportletplugin"/>
+			<exclude name="tomcat" />
+		</patternset>
+		<property name="deploy.dir" value="${weblogic.deploy.dir}" />
+		<property name="deployOpenApp.dir" value="${deploy.dir}/${main.name}.war" />
+
+	</target>
+
+	<target name="prepareJboss" depends="prepareServer" if="jboss.set">
+		<!--directorios dentro de las librerias externas ${externallib.dir}/libcomun que no queremos empaquetar -->
+		<patternset id="directorioslibexcluidos">
+			<exclude name="xerces" />
+			<exclude name="jpa" />
+			<exclude name="hibernate" />
+			<exclude name="varios" />
+			<exclude name="enhanced" />
+			<exclude name="libserver" />
+			<exclude name="strutsportletplugin" />
+			<exclude name="cxf-extra"/>
+			<exclude name="tomcat" />
+			<exclude name="javassist" />
+		</patternset>
+		<property name="deploy.dir" value="${jboss.deploy.dir}" />
+		<property name="deployOpenApp.dir" value="${deploy.dir}/${main.name}.war" />
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Help                                                                -->
+	<!-- =================================================================== -->
+	<target name="help" description="Muestra el uso de este build.xml">
+		<echo>
+    	   Key Targets:
+    	   
+            compile: Compila los fuentes
+            gen-war: Genera el war de la aplicacion en función del servidor configurado en build.properties
+            gen-ear: Genera el ear de la aplicacion en función del servidor configurado en build.properties
+            deploy: Instala la aplicacion en el servidor como war
+            deployOpenApp: Instala la aplicacion en el servidor en abierto (apto para tomcat y boss, no para weblogic)
+            undeploy: Quita la aplicacion del servidor 
+            
+            gen-ldap-properties: Generar el archivo ldap.properties       
+            gen-mail-properties: Generar el archivo mail.properties       
+            gen-properties: Genera todos los archivos de propiedades (ldap.properties y mail.properties)                   
+           
+            test: Compila y ejecuta los test unitarios de la aplicación.
+           
+            all:  Compila, regenera los ficheros de propiedades, empaqueta la aplicacion y finalmente la despliega en el servidor configurado en build.properties
+
+            help: Muestra este texto de ayuda...
+        </echo>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Initializes the process                                             -->
+	<!-- =================================================================== -->
+	<target name="init" depends="prepareAll">
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Compile                                                             -->
+	<!-- =================================================================== -->
+	<target name="compile">
+		<javac debug="true" 
+			   debuglevel="lines,vars,source" 
+			   srcdir="${src.dir}" 
+			   destdir="${bin.dir}" 
+			   encoding="ISO-8859-1">
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Clean                                                               -->
+	<!-- =================================================================== -->
+	<target name="clean">
+		<delete dir="${bin.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${bin.test.dir}" />
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${bin.test.dir}" />
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Build                                                               -->
+	<!-- =================================================================== -->
+	<target name="build" depends="clean,compile,copy-properties">
+		<copy todir="${bin.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+            	<exclude name="**/.svn/"/>
+			</fileset>
+			<!-- cambio  includes en log4j.properties y framework.properties -->
+			<fileset dir="${conf.dir}">
+				<include name="log4j.properties"/>
+				<include name="framework.properties"/>
+			    <include name="*.properties"/>
+				<include name="*.jks"/>
+				<include name="**/catalogs/**"/>
+			</fileset>
+			
+			<fileset dir="${conf.dir}/i18n">
+				<include name="*.properties"/>
+			</fileset>
+			
+		</copy>
+		<echo>Copiamos fichero</echo>
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Build the sar (JMX)                                                 -->
+	<!-- =================================================================== -->
+	<target name="gen-sar" depends="prepareAll,build">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/temp/" />
+		<copy todir="${dist.dir}/temp" overwrite="true" verbose="false">
+			<fileset dir="${bin.dir}">
+				<exclude name="**/*.properties" />
+			</fileset>
+		</copy>
+		<delete dir="${dist.dir}/temp/catalogs" />
+		<delete dir="${dist.dir}/temp/nl" />
+		<delete dir="${dist.dir}/temp/test" />
+		<delete>
+			<fileset dir="${dist.dir}/temp" includes="*.xml" />
+		</delete>
+        <delete file="${dist.dir}/temp/META-INF/persistence.xml" />  
+		<zip destfile="${dist.dir}/jmx.sar" basedir="${dist.dir}/temp/" update="false" />
+		<delete dir="${dist.dir}/temp/" />
+		<copy todir="${deploy.dir}" verbose="true">
+			<fileset dir="${dist.dir}">
+				<include name="jmx.sar" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Build the war                                                       -->
+	<!-- =================================================================== -->
+	<target name="gen-war" depends="prepareAll,build" description="Packages app as WAR">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/temp/" />
+		<delete file="${bin.dir}/META-INF/jboss-service.xml" />
+		<typedef name="for" classname="net.sf.antcontrib.logic.For">
+			<classpath>
+				<pathelement location="${antcontrib.jar}" />
+			</classpath>
+		</typedef>
+		<for param="param">
+			<path>
+				<dirset dir="${libmap.dir}/libcomun/">
+					<patternset refid="directorioslibexcluidos">
+					</patternset>
+				</dirset>
+			</path>
+			<sequential>
+				<copy todir="${dist.dir}/temp" overwrite="true" verbose="false">
+					<fileset dir="@{param}" includes="*.jar" >
+						<exclude name="ojdbc6.jar"/>
+					</fileset>
+				</copy>
+			</sequential>
+		</for>
+		<war destfile="${dist.dir}/${main.name}.war" webxml="${web.dir}/WEB-INF/web.xml" compress="true">
+
+			<classes dir="${bin.dir}" />
+
+			<!-- <metainf dir="${project.home}/META-INF" /> -->
+
+			<lib dir="${lib.dir}" />
+
+			<lib dir="${libmap.dir}/libfwk">
+				<include name="${main.framework.jarname}" />
+				<include name="${firma.framework.jarname}" />
+			</lib>
+
+			<lib dir="${dist.dir}/temp" />
+
+			<fileset dir="${web.dir}">
+				<include name="**/*.*" />
+				<exclude name="build*.*" />
+				<exclude name="**/web.xml" />
+			</fileset>
+
+		</war>
+
+		<delete dir="${dist.dir}/temp/" />
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Copiamos propiedades de entorno a directorio ${dist.dir}            -->
+	<!-- =================================================================== -->
+	<target name="copy-properties" depends="init">
+		<copy todir="${dist.dir}" verbose="false">
+		<fileset dir="${conf.dir}">
+			<include name="**/framework.properties" />
+			<include name="**/log4j.properties" />
+		</fileset>
+		</copy>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Copy App                                                            -->
+	<!-- =================================================================== -->
+	<target name="copy-app" depends="prepareAll">
+		<typedef name="for" classname="net.sf.antcontrib.logic.For">
+			<classpath>
+				<pathelement location="${antcontrib.jar}" />
+			</classpath>
+		</typedef>
+		<copy todir="${deploy.dir}" verbose="false">
+			<fileset dir="${web.dir}">
+				<include name="**/*.*" />
+				<exclude name="build*.*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${deploy.dir}/WEB-INF/classes" verbose="false">
+			<fileset dir="${bin.dir}" />
+
+		</copy>
+
+
+		<copy todir="${deploy.dir}/META-INF" verbose="false">
+			<fileset dir="${project.home}/src/java/META-INF" />
+		</copy>
+
+		<copy todir="${deploy.dir}/WEB-INF/lib" verbose="false">
+			<fileset dir="${lib.dir}" />
+		</copy>
+
+		<for param="param">
+			<path>
+				<dirset dir="${libmap.dir}/libcomun">
+					<patternset refid="directorioslibexcluidos">
+					</patternset>
+				</dirset>
+			</path>
+			<sequential>
+				<echo>@{param}</echo>
+				<copy todir="${deploy.dir}/WEB-INF/lib" overwrite="true" verbose="false">
+					<fileset dir="@{param}" includes="*.jar" />
+				</copy>
+			</sequential>
+		</for>
+
+		<copy todir="${deploy.dir}/WEB-INF/lib" verbose="false">
+			<fileset dir="${libmap.dir}/libfwk">
+				<include name="${main.framework.jarname}" />
+				<include name="${firma.framework.jarname}" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- deploy                                                      -->
+	<!-- =================================================================== -->
+	<target name="deploy" depends="undeploy,gen-war">
+		<echo>
+            directorio de deploy:${deploy.dir}
+        </echo>
+
+		<copy todir="${deploy.dir}" verbose="true">
+			<fileset dir="${dist.dir}">
+				<include name="${main.name}.war" />
+			</fileset>
+		</copy>
+
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- deploy hace un deploy en modo directorio                            -->
+	<!-- =================================================================== -->
+	<target name="deployOpenApp" depends="undeployOpenApp,gen-war">
+		<antcall target="copy-app">
+			<param name="deploy.dir" value="${deployOpenApp.dir}" />
+		</antcall>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- undeploy                                                    -->
+	<!-- =================================================================== -->
+	<target name="undeploy" depends="init">
+		<delete file="${deploy.dir}/${main.name}.war" verbose="true" quiet="true" />
+	</target>
+    
+	<!-- =================================================================== -->
+	<!-- undeploy de una aplicación en modo directorio                       -->
+	<!-- =================================================================== -->
+	<target name="undeployOpenApp" depends="init">
+		<delete dir="${deployOpenApp.dir}" verbose="true" quiet="true" />
+	</target>
+
+	<!-- ====================================================================================================================  -->
+	<!-- Compila, regenera los ficheros de propiedades, empaqueta la aplicacion y finalmente la despliega en Jboss   -->
+	<!-- ====================================================================================================================  -->
+	<target name="all" depends="build,undeploy,deploy">
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- The "test" target execute junit test and  one report with results   -->
+	<!-- =================================================================== -->
+
+	<target name="test" depends="build">
+		<delete dir="${src.test.reports}/tests" />
+		<mkdir dir="${src.test.reports}/tests" />
+		<javac debug="true" 
+			   srcdir="${src.test.dir}" 
+			   destdir="${bin.test.dir}"
+			   encoding = "ISO-8859-1">
+			<classpath location="${bin.dir}">
+				<fileset dir="${lib.dir}" />
+				<fileset dir="${libmap.dir}/libcomun" />
+				<fileset dir="${libmap.dir}/libfwk">
+					<include name="${main.framework.jarname}" />
+					<include name="${firma.framework.jarname}" />
+					<include name="${webservice.framework.jarname}" />
+				</fileset>
+				<fileset dir="${src.test.dir}/lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<junit>
+			<jvmarg value="-Dfile.encoding=ISO-8859-1"/>
+			<classpath>
+				<pathelement path="${libmap.dir}/libfwk/${main.framework.jarname}" />
+				<pathelement path="${libmap.dir}/libfwk/${firma.framework.jarname}" />
+				<pathelement path="${libmap.dir}/libfwk/${webservice.framework.jarname}"/>
+				<pathelement path="${src.test.dir}/testConfig" />
+				<pathelement path="${bin.test.dir}" />
+				<pathelement path="${bin.dir}" />
+				
+				<pathelement path="${web.dir}/WEB-INF"/>
+				<pathelement path="${src.test.dir}/data/certificados" />
+				<pathelement path="${src.test.dir}" />
+				
+				<fileset dir="${libmap.dir}/libcomun">
+					<include name="**/*.jar" />
+				</fileset>
+				
+				<fileset dir="${src.test.dir}/lib">
+					<include name="*.jar" />
+				</fileset> 
+					
+			</classpath>
+
+			<formatter type="xml" />
+
+			<test name="es.mpr.jpa.JpaTest" haltonfailure="no" outfile="TEST-01" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.files.DescargaFicherosTest" haltonfailure="no" outfile="TEST-DFT" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.usuarios.UsuariosManagerTest" haltonfailure="no" outfile="TEST-UMT" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.pool.poolTest" haltonfailure="no" outfile="TEST-03" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.auditoria.ServicioAuditoriaTest" haltonfailure="no" outfile="TEST-05" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.autorizacion.AutorizacionTest" haltonfailure="no" outfile="TEST-06" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.j2ee.afirma.services.ValidaServiceImplTest" haltonfailure="no" outfile="TEST-VALIDACERTIFICADO" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.j2ee.ws.client.SaludoServiceTest" haltonfailure="no" outfile="TEST-SALUDO" todir="${src.test.reports}/tests" />
+			<test name="es.mpr.j2ee.afirma.services.SignServiceImplTest" haltonfailure="no" outfile="TEST-GENERACIONFIRMA" todir="${src.test.reports}/tests" />
+		</junit>
+
+		<junitreport todir="${src.test.reports}">
+			<fileset dir="${src.test.reports}/tests">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${src.test.reports}/html" />
+		</junitreport>
+	</target>
+	<target name="copyWebPart">
+		<property name="deploy.dir" value="${jboss.deploy.dir}" />
+		<property name="deployOpenApp.dir" value="${deploy.dir}/${main.name}.war" />
+	<copy todir="${deployOpenApp.dir}">
+		
+		<fileset dir="${web.dir}">
+				<include name="**/*.*" />
+				<exclude name="build*.*" />
+		</fileset>
+	</copy>
+	</target>
+	<target name="copyConfigXMLPart">
+			<property name="deploy.dir" value="${jboss.deploy.dir}" />
+			<property name="deployOpenApp.dir" value="${deploy.dir}/${main.name}.war" />
+		
+		<copy todir="${deployOpenApp.dir}/WEB-INF">
+			
+			<fileset dir="${xmlconfig.dir}">
+					<include name="**/*.xml" />
+					<exclude name="build*.*" />
+			</fileset>
+		</copy>
+			<copy todir="${deployOpenApp.dir}/WEB-INF/classes">
+				
+				<fileset dir="${src.dir}">
+						<include name="**/*.xml" />
+						<exclude name="build*.*" />
+				</fileset>
+			</copy>
+	</target>
+
+	<target name="gen-ear" depends="gen-war">
+		<delete file="${dist.dir}/${main.name}.ear" failonerror="true" />
+		<ear earfile="${dist.dir}/${main.name}.ear" appxml="${project.home}/META-INF/application.xml">
+			<metainf dir="${project.home}/META-INF">
+			</metainf>
+			<fileset dir="${dist.dir}" includes="${main.name}.war" />
+		</ear>
+	</target>
+</project>

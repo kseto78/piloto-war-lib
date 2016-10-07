@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="es.mpr.plataformamensajeria.beans">
+	<class name="es.mpr.plataformamensajeria.beans.ServidorBean" table="TBL_SERVIDORES">
+  		<id name="servidorId" column="SERVIDORID">
+    		<generator class="native"/>
+    	</id>
+        <property name="nombre" column="NOMBRE" />
+        <property name="tipo" column="TIPO" />
+    	<property name="descripcion" column="DESCRIPCION" />
+    	<property name="activo" column="ACTIVO" />
+    	<property name="fechaCreacion" column="FECHACREACION" />
+		<property name="creadoPor" column="CREADOPOR" />
+		<property name="fechaModificacion" column="FECHAMODIFICACION" />
+		<property name="modificadoPor" column="MODIFICADOPOR" />
+		<property name="urlDestino" column="URLDESTINO" />
+		<property name="externalId" column="EXTERNALID" />
+	</class>
+	<sql-query name="deleteServidor" callable="false">
+		
+	     select PKG_SERVIDOR.deleteServidor(?) from dual 
+      
+	</sql-query>
+	<sql-query name="addParametroServidor" callable="false">
+	{ call PKG_SERVIDOR.addParametroServidor(?,?,?,?,?) }
+	</sql-query>
+	<sql-query name="addPlanificacionServidor" callable="false">
+	{ call PKG_SERVIDOR.addPlanificacionServidor(?,?,?,?,?,?,?,?,?,?,?,?) }
+	</sql-query>
+	<sql-query name="anulaEnvio" callable="false">
+	{ call ANULARRENVIOS(?) }
+	</sql-query>
+	<sql-query name="anulaEnvioMult" callable="false">
+	{ call ANULARRENVIOS_MULT(?) }
+	</sql-query>
+	<sql-query name="reenviaEnvio" callable="false">
+	{ call REENVIAR(?) }
+	</sql-query>
+	<sql-query name="reenviaEnvioMult" callable="false">
+	{ call REENVIAR_MULT(?) }
+	</sql-query>
+	<sql-query name="validaPlanificacion" callable="false">
+	{ call VALIDARPLANIFICACION(?,?) }
+	</sql-query>					
+</hibernate-mapping>

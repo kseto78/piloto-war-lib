@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Ejemplo firma web</title>
+		<link rel="stylesheet" href="../css/afirma.css" type="text/css"></link>
+
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/time.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/instalador.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/deployJava.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/firma.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/htmlEscape.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/utils.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/styles.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/common-js/firmaWeb.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/afirma/constantes.js"></script>
+		<script type="text/javascript" language="javascript" src="../js/jquery-1.5.min.js"></script>
+		
+		<script type="text/javascript" language="javascript">
+			function firmar(element)
+			{
+			// Para evitar que se pulse dos veces el botón (dos peticiones no es buena idea) lo inhabilitamos
+				$("#botonFirmar").disabled = "disabled";
+				//document.getElementById("botonFirmar").disabled="disabled";
+				// Preparamos el cliente para firmar
+				clienteFirma.initialize();
+				clienteFirma.setShowErrors(false);
+				
+				// Configuramos el proceso de firma
+				var formato= getFormato();
+				clienteFirma.setSignatureFormat(formato);
+				var modo= getModo();
+				clienteFirma.setSignatureMode(modo);	
+
+				// Firmamos
+				var ficheroFirmado = firmaWeb(element, document);
+								
+				// Recogemos el resultado (o el mensaje de error)
+				if(!clienteFirma.isError())
+				{
+					var ext;
+					var firma;
+					if(formato == 'XADES' || formato=='XMLDSIGN')
+					{
+						firma = clienteFirma.getSignatureText();
+						ext= ".xml";
+					}
+					else
+					{
+						firma = clienteFirma.getSignatureBase64Encoded();
+						if(formato == 'NONE')
+						{
+							ext= ".fir";
+						}
+						else
+						{
+							ext= ".p7s";
+						}
+					}
+					
+					$("textarea#mensaje").val(firma);
+					alert("El fichero "+ficheroFirmado+" contiene el HTML firmado.");
+					
+					var guardar= confirm('¿Desea guardar la firma en un fichero?');
+					if(guardar == true)
+					{
+						clienteFirma.saveSignToFile();
+					}
+				}
+				else
+				{
+					$("textarea#mensaje").val(clienteFirma.getErrorMessage());
+					//$("#mensaje").value= clienteFirma.getErrorMessage();
+				}
+				//Volvemos a activar el botón
+				$("#botonFirmar").disabled="";
+			}
+			
+			function getFormato()
+			{
+				var valueFormato = $("#formato option:selected").val();
+								
+				return valueFormato;
+			}
+
+			function getModo()
+			{
+				var valueModo = $("#modo option:selected").val();
+								
+				return valueModo;
+				
+			}
+		</script>
+</head>
+<body>
+	<script type="text/javascript">
+		cargarAppletFirma('MEDIA');
+	</script>
+	<div class="contenido">
+		Formato de firma electr&oacute;nica:
+    	<select name="formato" id="formato">
+    		<option value="CMS">CMS</option>
+		<option value="XADES" selected="selected">XAdES</option>
+		<option value="XADES Enveloping" >XAdES Enveloping</option>
+		<option value="XMLDSIGN" >XML D-Sign</option>
+    	</select>
+	</div>
+	<div class="contenido">
+		Modo de firma electr&oacute;nica:
+    	<select name="modo" id="modo">
+    		<option value="explicit">Explicita</option>
+		<option value="implicit" selected="selected">Implicita</option>
+    	</select>
+	</div>
+	<form action="/contacto.php" id="formulario">
+		<div class="titulo">
+			<div class="poneresquina">
+				<div class="ponerimagen">Escribenos</div>
+			</div>
+		</div>
+		<div class="contenido">
+			Su direcci&oacute;n de correo electr&oacute;nico: <br/>
+			<input name="email" maxlength="90" value="" type="text"/><br/>
+			Fichero adjunto 1:<br/>
+			<input type="text"/><br/>
+			Fichero adjunto 2:<br/>
+			<input type="text"/><br/>
+			Motivo de su consulta: <br/>
+			<select name="motivo">
+				<option value="0">-- Elegir opci&oacute;n --</option>
+				<option value="1">Quiero patrocinar o poner publicidad en vuestro
+				sitio web</option>
+				<option value="2">Quiero colaborar con vosotros</option>
+				<option value="3">He detectado un problema en el sitio web</option>
+				<option value="10">Otros</option>
+
+			</select><br/> 
+			Su mensaje: <br/>
+			<textarea name="mensaje" id="mensaje" class="formens" cols="60" rows="5"></textarea> 
+			<input name="btnFirmar" id="botonFirmar" value="Firmar formulario" class="boton" type="button" onclick="firmar(this.form)"/><br/>
+		</div>
+		<input name="op" value="add" type="hidden"/><input name="idzona" value="" type="hidden"/>
+	</form>
+	<p>¡Gracias por colaborar!</p>
+</body>
+</html>

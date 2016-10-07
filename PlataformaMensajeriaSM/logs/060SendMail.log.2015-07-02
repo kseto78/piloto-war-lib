@@ -1,0 +1,107 @@
+2015-07-02 08:34:00,245 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-07-02 08:34:01,544 INFO  [SendMail.SendMailService] Mensaje numero 14004
+2015-07-02 08:34:02,190 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:34:12,499 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:34:22,589 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:34:22,780 INFO  [SendMail.SendMailService] Mensaje numero 14005
+2015-07-02 08:34:23,119 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:34:33,128 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:34:43,272 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:34:43,350 INFO  [SendMail.SendMailService] Mensaje numero 13983
+2015-07-02 08:34:43,695 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:34:44,028 INFO  [SendMail.SendMailService] Mail numero 13983 enviado (postMail) - Version sendMail 1.3
+2015-07-02 08:34:44,095 INFO  [SendMail.SendMailService] Mensaje numero 13845
+2015-07-02 08:34:44,560 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:34:54,612 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:35:04,671 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:35:04,786 INFO  [SendMail.SendMailService] Mensaje numero 13923
+2015-07-02 08:35:05,121 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:35:15,243 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:35:25,276 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:35:25,361 INFO  [SendMail.SendMailService] Mensaje numero 13924
+2015-07-02 08:35:25,700 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:35:35,709 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:35:45,869 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:35:45,946 INFO  [SendMail.SendMailService] Mensaje numero 14004
+2015-07-02 08:35:46,264 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:35:56,273 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:36:06,310 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:36:06,392 INFO  [SendMail.SendMailService] Mensaje numero 14005
+2015-07-02 08:36:06,708 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:36:16,826 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:36:26,872 INFO  [SendMail.SendMailService] Excepcion :Could not connect to SMTP host: mdm.correo.gob.es, port: 25 (postMail)
+2015-07-02 08:36:26,955 INFO  [SendMail.SendMailService] Mensaje numero 13983
+2015-07-02 08:38:27,013 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:40:27,052 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:42:27,102 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:42:51,385 INFO  [SendMail.SendMailService] Mensaje numero 14024
+2015-07-02 08:42:51,691 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-02 08:42:52,060 INFO  [SendMail.SendMailService] Mail numero 14024 enviado (postMail) - Version sendMail 1.3
+2015-07-02 08:44:52,131 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:46:52,183 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:48:52,223 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:50:52,026 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:52:52,117 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:54:52,224 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:56:52,325 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 08:58:52,390 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:00:52,453 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:02:52,524 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:04:52,575 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:06:52,627 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:08:52,676 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:10:52,704 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:12:52,731 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:14:52,776 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 09:16:53,050 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:25:07,523 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-07-02 11:25:08,178 INFO  [SendMail.SendMailService] Mensaje numero 14025
+2015-07-02 11:25:08,465 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-07-02 11:25:08,503 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-07-02 11:25:08,576 INFO  [SendMail.SendMailService] XML:<sending><params><idProveedor><![CDATA[3]]></idProveedor><sms_remitente><![CDATA[AVISAME]]></sms_remitente><sms_id><![CDATA[14025]]></sms_id><sms_telefono><![CDATA[669835047]]></sms_telefono><sms_texto><![CDATA[Prueba con tildes áéíóú]]></sms_texto></params></sending>
+2015-07-02 11:25:08,577 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-07-02 11:25:09,244 INFO  [SendMail.SendMailService] Response Code: 200
+2015-07-02 11:25:09,244 INFO  [SendMail.SendMailService] Response Message: OK
+2015-07-02 11:25:09,246 INFO  [SendMail.SendMailService] Respuesta: OK | 3847552775664290032
+2015-07-02 11:25:09,246 INFO  [SendMail.SendMailService] SMS numero 14025 enviado (postSMS) - Version sendMail 1.3
+2015-07-02 11:27:09,357 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:29:09,396 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:31:09,435 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:32:36,913 INFO  [SendMail.SendMailService] Error.DequeueMail : Error de E/S: Connection reset
+2015-07-02 11:32:57,914 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-07-02 11:34:18,922 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-07-02 11:35:39,922 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-07-02 11:37:00,934 INFO  [SendMail.SendMailService] No se ha podido abrir la conexión: Error de E/S: The Network Adapter could not establish the connection
+2015-07-02 11:40:01,276 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:42:01,291 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:44:01,317 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:46:01,387 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:48:01,428 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:50:01,457 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:52:01,485 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:54:01,524 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:56:01,563 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 11:58:01,371 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:00:01,420 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:02:01,462 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:04:01,507 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:06:01,546 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:08:01,599 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:10:01,639 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:12:01,689 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:14:01,738 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:16:01,779 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:18:01,833 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:20:01,872 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:22:01,914 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:24:01,953 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:26:01,992 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:28:02,041 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:30:02,090 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:32:02,129 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:34:02,168 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:36:02,207 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:38:02,257 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:40:02,296 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:42:02,354 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-07-02 12:44:02,406 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio

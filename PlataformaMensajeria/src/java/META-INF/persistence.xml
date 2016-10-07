@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<persistence 
+    xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+    http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <!-- Configuracion empleada en Jboss y Tomcat debemos revisar el atributo 'non-jta-data-source'
+    en caso de desplegar en jboss <non-jta-data-source>dsOraclePlataforma</non-jta-data-source>
+    en caso de desplegar en tomcat <non-jta-data-source>java:comp/env/dsOraclePlataforma</non-jta-data-source>
+    -->
+	<persistence-unit name="plataformamensajeriaapp2" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<non-jta-data-source>java:dsOraclePlataforma</non-jta-data-source>
+		<class>es.mpr.plataformamensajeria.model.ServidoresJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewServidoresJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ProveedoresSMSJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewProveedoresSMSJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ReceptoresSMSJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewReceptoresSMSJPA</class>
+		<class>es.mpr.plataformamensajeria.model.PlanificacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewPlanificacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ParametroServidorJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewParametroServidorJPA</class>
+		<class>es.mpr.plataformamensajeria.model.TipoParametroJPA</class>
+		<class>es.mpr.plataformamensajeria.model.TipoPlanificacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewTipoPlanificacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.AplicacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewAplicacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ServicioJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewServicioJPA</class>
+		<class>es.mpr.plataformamensajeria.model.CanalJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewCanalJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ServidoresServiciosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewServidoresServiciosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.UsuarioJPA</class>
+		<class>es.mpr.plataformamensajeria.model.UsuarioAplicacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewUsuarioJPA</class>		
+		<class>es.mpr.plataformamensajeria.model.views.ViewUsuarioAplicacionJPA</class>
+		<class>es.mpr.plataformamensajeria.model.EstadoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewEstadoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.AuditoriaPlataformaJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewAuditoriaPlataformaJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewGestionEnviosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.AdjuntoEmailJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewAdjuntoEmailJPA</class>
+		<class>es.mpr.plataformamensajeria.model.DestinatarioJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewDestinatarioJPA</class>
+		<class>es.mpr.plataformamensajeria.model.MensajesJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewMensajesJPA</class>
+		<class>es.mpr.plataformamensajeria.model.HistoricoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewHistoricoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.HistoricoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewHistoricoSMSJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.views.ViewGestionEnviosHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewAdjuntoEmailHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewDestinatarioHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewSMSHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewHistoricoHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewMensajesHistJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.LotesEnviosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.GestionEnviosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.MensajesJPA</class>
+		<class>es.mpr.plataformamensajeria.model.MensajesAdjuntosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.AdjuntoEmailJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.LotesEnviosHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.MensajesHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.MensajesAdjuntosHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.AdjuntoEmailHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.DestinatarioHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.LotesEnviosHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.HistoricoHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.GestionEnviosHistoricosJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.ProcesoHistJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.EstadisticasConsolidadasJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.ProcesoConsJPA</class>
+															
+		<class>es.mpr.plataformamensajeria.model.views.ViewEnviosPendientesCanalJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewEstadoEnviosLotesJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.views.ViewServidoresPushJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ServidoresPushJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.PlataformaJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.UsuariosPushJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewUsuariosPushJPA</class>
+		
+		<class>es.mpr.plataformamensajeria.model.ProcesoInformesServiciosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewInformesServiciosEstadoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewInformesServiciosCodOrgJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewInformesServiciosCodSiaJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewInformesServiciosCodOrgPagadorJPA</class>
+		<class>es.mpr.plataformamensajeria.model.OrganismoJPA</class>
+		<class>es.mpr.plataformamensajeria.model.OrganismosServicioJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewServicioOrganismosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.ServidoresOrganismosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewServidoresOrganismosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewLotesEnviosDetalladaJPA</class>
+		<class>es.mpr.plataformamensajeria.model.DestinatariosMensajesJPA</class>
+		<class>es.mpr.plataformamensajeria.model.DestinatariosMensajesHistoricosJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewLotesEnviosDetalladaHistJPA</class>
+		<class>es.mpr.plataformamensajeria.model.views.ViewConsolidacionHistoricoJPA</class>
+
+
+		<class>com.map.j2ee.model.audit.AuditEntry</class>
+		
+		<properties>
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.cache.use_second_level_cache"	value="false" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			
+		</properties>
+	</persistence-unit>
+
+	<!-- Configuracion empleada en Bea Weblogic  
+	<persistence-unit name="plataformamensajeriaapp" transaction-type="RESOURCE_LOCAL">
+		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+		<non-jta-data-source>dsOraclePlataforma</non-jta-data-source>
+		<class>es.mpr.template.model.configuracion.OrganismoJPA</class>
+		<class>es.mpr.template.model.configuracion.UnidadOrganizacionalJPA	</class>
+		<class>com.map.j2ee.model.audit.AuditEntry</class>
+		<properties>
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.cache.use_second_level_cache"	value="false" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+		</properties>
+	</persistence-unit>
+	-->
+	
+</persistence>

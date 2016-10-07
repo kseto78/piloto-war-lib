@@ -1,0 +1,67 @@
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://registrousuario.ws.plataformamensajeria.minhap.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="RegistroUsuarioImplService" targetNamespace="http://registrousuario.ws.plataformamensajeria.minhap.es/">
+	<wsdl:types>
+		<xsd:schema xmlns:tns="http://registrousuario.ws.plataformamensajeria.minhap.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://registrousuario.ws.plataformamensajeria.minhap.es/">
+			
+			<xsd:element name="registroUsuarioRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="Servicio" type="xsd:string"/>
+						<xsd:element minOccurs="1" maxOccurs="1" name="Usuario" type="xsd:string"/>
+						<xsd:element minOccurs="1" maxOccurs="1" name="Password" type="xsd:string"/>
+						<xsd:element minOccurs="0" maxOccurs="1" name="IdentificadorUsuario" type="xsd:string"/>
+						<xsd:element minOccurs="1" maxOccurs="1" name="Plataforma" type="xsd:string"/>
+						<xsd:element minOccurs="1" maxOccurs="1" name="RegistroId" type="xsd:string"/>
+						<xsd:element minOccurs="1" maxOccurs="1" name="DispositivoId" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="registroUsuarioResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="Status" type="tns:responseStatusType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:complexType name="responseStatusType">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="1" name="StatusCode" type="xsd:string"/>
+					<xsd:element minOccurs="1" maxOccurs="1" name="StatusText" type="xsd:string"/>
+					<xsd:element minOccurs="0" maxOccurs="1" name="Details" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+		
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="registroUsuarioRequest">
+		<wsdl:part element="tns:registroUsuarioRequest" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="registroUsuarioResponse">
+		<wsdl:part element="tns:registroUsuarioResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:portType name="IRegistroUsuarioService">
+		<wsdl:operation name="registroUsuario">
+			<wsdl:input message="tns:registroUsuarioRequest" name="registroUsuarioRequest"/>
+			<wsdl:output message="tns:registroUsuarioResponse" name="registroUsuarioResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="RegistroUsuarioImplServiceSoapBinding" type="tns:IRegistroUsuarioService">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="registroUsuario">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="registroUsuarioRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="registroUsuarioResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="RegistroUsuarioImplService">
+		<wsdl:port binding="tns:RegistroUsuarioImplServiceSoapBinding" name="RegistroUsuarioImplPort">
+			<soap:address location="http://des-sim.redsara.es/PlataformaMensajeriaWS/RegistroUsuarios"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

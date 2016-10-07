@@ -1,0 +1,77 @@
+dn: ou=fwk,ou=intranet,ou=usuarios,dc=mpr,dc=es
+objectClass: top
+objectClass: organizationalUnit
+ou: fwk
+
+dn: ou=fwk,ou=internet,ou=usuarios,dc=mpr,dc=es
+objectClass: top
+objectClass: organizationalUnit
+ou: fwk
+
+dn: ou=fwk,ou=extranet,ou=usuarios,dc=mpr,dc=es
+objectClass: top
+objectClass: organizationalUnit
+ou: fwk
+
+dn: ou=fwk,ou=grupos,dc=mpr,dc=es
+objectClass: organizationalUnit
+objectClass: top
+ou: fwk
+
+dn: cn=grupos,ou=fwk,ou=grupos,dc=mpr,dc=es
+objectClass: groupOfNames
+objectClass: top
+cn: grupos
+member: ou=fwk,ou=grupos,dc=mpr,dc=es
+
+dn: cn=adminFWK,cn=grupos,ou=fwk,ou=grupos,dc=mpr,dc=es
+objectClass: groupOfNames
+objectClass: top
+cn: adminFWK
+member: cn=admin,ou=fwk,ou=allnet,ou=usuarios,dc=mpr,dc=es
+
+dn: cn=grupoFWK,cn=grupos,ou=fwk,ou=grupos,dc=mpr,dc=es
+objectClass: groupOfNames
+objectClass: top
+cn: grupoFWK
+member: cn=admin,ou=fwk,ou=allnet,ou=usuarios,dc=mpr,dc=es
+member: cn=pruebas,ou=fwk,ou=allnet,ou=usuarios,dc=mpr,dc=es
+
+dn: ou=fwk,ou=allnet,ou=usuarios,dc=mpr,dc=es
+objectClass: top
+objectClass: organizationalUnit
+ou: fwk
+
+dn: cn=pruebas,ou=fwk,ou=allnet,ou=usuarios,dc=mpr,dc=es
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: uidObject
+objectClass: organizationalPerson
+carLicense: 12345678Z
+cn: pruebas
+description: pruebas
+givenName: pruebas
+sn: pruebas
+uid: pruebas
+userPassword:: e1NIQX1ZZ3A5NkNkalVuUUdwQlBLZnVKbmdXMHpLQkU9
+
+dn: cn=admin,ou=fwk,ou=allnet,ou=usuarios,dc=mpr,dc=es
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: uidObject
+objectClass: organizationalPerson
+cn: admin
+description: admin
+givenName: admin
+sn: admin
+uid: admin
+userPassword:: e1NIQX0wRFBpS3VOSXJyVm1EOElVQ3V3MWhReE5xWmM9
+
+dn: cn=fwkmanager,ou=managers,dc=mpr,dc=es
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: fwkmanager
+sn: fwkmanager
+userPassword:: e1NIQX1aZjJoOGozL29xZlBZaEpERWV2cmt1RUxXNEk9
+

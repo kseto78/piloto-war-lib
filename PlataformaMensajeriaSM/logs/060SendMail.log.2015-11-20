@@ -1,0 +1,82 @@
+2015-11-20 08:47:22,350 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 08:48:00,097 INFO  [SendMail.SendMailService] Mensaje numero 26694
+2015-11-20 08:48:36,559 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 08:57:55,992 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 08:57:56,723 INFO  [SendMail.SendMailService] Mensaje numero 26695
+2015-11-20 08:58:47,266 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 08:58:51,339 INFO  [SendMail.SendMailService] Mensaje numero 26696
+2015-11-20 08:59:08,782 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 09:19:07,074 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 09:19:07,676 INFO  [SendMail.SendMailService] Mensaje numero 26697
+2015-11-20 09:19:11,256 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 09:19:22,682 INFO  [es.minhap.envionotificacionespush.android.GMCSendMessage] {"to":[["APA91bEju-eB74DWRChlVt5gh7YfIVzNOr8gRYPisFbmcwBPlMJeGTYmdF7cYR3oL-F9KqmTey016drxmWAkYa4WQv9pQ_KvRzI1VUkql6ObbYGPkV7UBsm6pYoBw0dEk3veh60v3lVhDtLztWIbDc3XqtjU_fE_0g"]],"notification":{"body":"Esto es una notificacion Push","title":"Titulo","sound":"default","badge":"1"}}
+2015-11-20 09:19:43,914 INFO  [es.minhap.envionotificacionespush.android.GMCSendMessage] java.net.ConnectException: Connection timed out: connect
+2015-11-20 09:19:49,762 INFO  [SendMail.SendMailService] Respuesta: null
+2015-11-20 09:21:15,694 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 09:21:19,253 INFO  [SendMail.SendMailService] Mensaje numero 26698
+2015-11-20 09:21:21,435 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 09:21:26,154 INFO  [es.minhap.envionotificacionespush.android.GMCSendMessage] {"to":[["APA91bEju-eB74DWRChlVt5gh7YfIVzNOr8gRYPisFbmcwBPlMJeGTYmdF7cYR3oL-F9KqmTey016drxmWAkYa4WQv9pQ_KvRzI1VUkql6ObbYGPkV7UBsm6pYoBw0dEk3veh60v3lVhDtLztWIbDc3XqtjU_fE_0g"]],"notification":{"body":"Esto es una notificacion Push","title":"Titulo","sound":"default","badge":"1"}}
+2015-11-20 09:21:47,325 INFO  [es.minhap.envionotificacionespush.android.GMCSendMessage] java.net.ConnectException: Connection timed out: connect
+2015-11-20 09:22:02,897 INFO  [SendMail.SendMailService] Respuesta: KO
+2015-11-20 09:22:16,941 INFO  [SendMail.SendMailService] Mensaje numero 26699
+2015-11-20 09:22:19,324 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 09:22:21,864 INFO  [es.minhap.envionotificacionespush.android.GMCSendMessage] {"to":[["APA91bEju-eB74DWRChlVt5gh7YfIVzNOr8gRYPisFbmcwBPlMJeGTYmdF7cYR3oL-F9KqmTey016drxmWAkYa4WQv9pQ_KvRzI1VUkql6ObbYGPkV7UBsm6pYoBw0dEk3veh60v3lVhDtLztWIbDc3XqtjU_fE_0g"]],"notification":{"body":"Esto es una notificacion Push","title":"Titulo","sound":"default","badge":"1"}}
+2015-11-20 09:22:42,866 INFO  [es.minhap.envionotificacionespush.android.GMCSendMessage] java.net.ConnectException: Connection timed out: connect
+2015-11-20 09:23:26,579 INFO  [SendMail.SendMailService] Respuesta: KO
+2015-11-20 09:25:27,049 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:27:27,068 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:33:35,863 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 09:33:36,523 INFO  [SendMail.SendMailService] Mensaje numero 26700
+2015-11-20 09:33:41,337 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 09:34:05,008 INFO  [SendMail.SendMailService] Respuesta: KO | Se ha producido una excepcion al enviar la peticion Push
+2015-11-20 09:36:05,489 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:38:05,519 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:40:05,549 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:42:05,572 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:42:08,099 INFO  [SendMail.SendMailService] Mensaje numero 26701
+2015-11-20 09:42:10,664 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 09:42:52,934 INFO  [SendMail.SendMailService] Respuesta: KO | Se ha producido una excepcion al enviar la peticion Push
+2015-11-20 09:44:53,374 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:46:53,429 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:48:53,468 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:50:53,492 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:52:53,521 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:54:53,541 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:56:53,570 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 09:58:53,590 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:00:53,616 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:02:53,638 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:04:53,669 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:06:53,688 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:08:53,712 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:10:53,742 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 10:13:30,375 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 10:13:35,700 INFO  [SendMail.SendMailService] Mensaje numero 26702
+2015-11-20 10:13:39,071 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 10:16:29,137 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 10:16:34,063 INFO  [SendMail.SendMailService] Mensaje numero 26703
+2015-11-20 10:16:36,885 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 11:03:17,692 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 11:03:24,366 INFO  [SendMail.SendMailService] Mensaje numero 26704
+2015-11-20 11:03:27,732 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 11:05:12,362 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 11:05:14,763 INFO  [SendMail.SendMailService] Mensaje numero 26705
+2015-11-20 11:05:18,563 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 11:05:24,270 INFO  [es.minhap.envionotificacionespush.ios.APNSSendMessage] No se encuentra el certificado en la ruta especificada
+2015-11-20 11:05:25,087 INFO  [es.minhap.envionotificacionespush.ios.APNSSendMessage] No se encuentra el certificado en la ruta especificada
+2015-11-20 11:05:51,200 INFO  [SendMail.SendMailService] Respuesta: KO | Se ha producido una excepcion al enviar la peticion Push
+2015-11-20 11:07:51,691 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 11:12:02,664 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-11-20 11:12:05,810 INFO  [SendMail.SendMailService] Mensaje numero 26706
+2015-11-20 11:12:12,861 INFO  [SendMail.SendMailService] Numero de servidores Push: 2
+2015-11-20 11:12:20,163 INFO  [es.minhap.envionotificacionespush.ios.APNSSendMessage] No se encuentra el certificado en la ruta especificada
+2015-11-20 11:12:39,451 INFO  [SendMail.SendMailService] Respuesta: KO | Se ha producido una excepcion al enviar la peticion Push
+2015-11-20 11:14:12,603 INFO  [SendMail.SendMailService] Mensaje numero 26707
+2015-11-20 11:14:17,245 INFO  [SendMail.SendMailService] Numero de servidores Push: 3
+2015-11-20 11:15:17,480 INFO  [SendMail.SendMailService] Respuesta: KO | El username no está dado de alta en la plataforma Android
+2015-11-20 11:15:39,930 INFO  [SendMail.SendMailService] Mensaje numero 26708
+2015-11-20 11:15:43,847 INFO  [SendMail.SendMailService] Numero de servidores Push: 3
+2015-11-20 11:15:51,793 INFO  [SendMail.SendMailService] Respuesta: KO | El username no está dado de alta en la plataforma Android
+2015-11-20 11:17:52,276 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 11:19:52,312 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-11-20 11:21:52,342 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio

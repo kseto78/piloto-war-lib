@@ -1,0 +1,55 @@
+<Catalog tipo="provincias">
+	<desc>Provincias</desc>
+	<elemento-lista valor="01" codCA="16">ALAVA</elemento-lista>
+    <elemento-lista valor="02" codCA="8">ALBACETE</elemento-lista>
+    <elemento-lista valor="03" codCA="10">ALICANTE</elemento-lista>
+    <elemento-lista valor="04" codCA="1">ALMERIA</elemento-lista>
+    <elemento-lista valor="05" codCA="7">AVILA</elemento-lista>
+    <elemento-lista valor="06" codCA="11">BADAJOZ</elemento-lista>
+    <elemento-lista valor="07" codCA="4">BALEARES</elemento-lista>
+    <elemento-lista valor="08" codCA="9">BARCELONA</elemento-lista>
+    <elemento-lista valor="09" codCA="7">BURGOS</elemento-lista>
+    <elemento-lista valor="10" codCA="11">CACERES</elemento-lista>
+    <elemento-lista valor="11" codCA="1">CADIZ</elemento-lista>
+    <elemento-lista valor="12" codCA="10">CASTELLON</elemento-lista>
+    <elemento-lista valor="13" codCA="8">CIUDAD REAL</elemento-lista>
+    <elemento-lista valor="14" codCA="1">CORDOBA</elemento-lista>
+    <elemento-lista valor="15" codCA="12">CORUNA</elemento-lista>
+    <elemento-lista valor="16" codCA="8">CUENCA</elemento-lista>
+    <elemento-lista valor="17" codCA="9">GIRONA</elemento-lista>
+    <elemento-lista valor="18" codCA="1">GRANADA</elemento-lista>
+    <elemento-lista valor="19" codCA="8">GUADALAJARA</elemento-lista>
+    <elemento-lista valor="20" codCA="16">GUIPUZCOA</elemento-lista>
+    <elemento-lista valor="21" codCA="1">HUELVA</elemento-lista>
+    <elemento-lista valor="22" codCA="2">HUESCA</elemento-lista>
+    <elemento-lista valor="23" codCA="1">JAEN</elemento-lista>
+    <elemento-lista valor="24" codCA="7">LEON</elemento-lista>
+    <elemento-lista valor="25" codCA="9">LLEIDA</elemento-lista>
+    <elemento-lista valor="26" codCA="17">LA RIOJA</elemento-lista>
+    <elemento-lista valor="27" codCA="12">LUGO</elemento-lista>
+    <elemento-lista valor="28" codCA="13">MADRID</elemento-lista>
+    <elemento-lista valor="29" codCA="1">MALAGA</elemento-lista>
+    <elemento-lista valor="30" codCA="14">MURCIA</elemento-lista>
+    <elemento-lista valor="31" codCA="15">NAVARRA</elemento-lista>
+    <elemento-lista valor="32" codCA="12">OURENSE</elemento-lista>
+    <elemento-lista valor="33" codCA="3">ASTURIAS</elemento-lista>
+    <elemento-lista valor="34" codCA="7">PALENCIA</elemento-lista>
+    <elemento-lista valor="35" codCA="5">LAS PALMAS</elemento-lista>
+    <elemento-lista valor="36" codCA="12">PONTEVEDRA</elemento-lista>
+    <elemento-lista valor="37" codCA="7">SALAMANCA</elemento-lista>
+    <elemento-lista valor="38" codCA="5">SANTA CRUZ DE TENERIFE</elemento-lista>
+    <elemento-lista valor="39" codCA="6">CANTABRIA</elemento-lista>
+    <elemento-lista valor="40" codCA="7">SEGOVIA</elemento-lista>
+    <elemento-lista valor="41" codCA="1">SEVILLA</elemento-lista>
+    <elemento-lista valor="42" codCA="7">SORIA</elemento-lista>
+    <elemento-lista valor="43" codCA="9">TARRAGONA</elemento-lista>
+    <elemento-lista valor="44" codCA="2">TERUEL</elemento-lista>
+    <elemento-lista valor="45" codCA="8">TOLEDO</elemento-lista>
+    <elemento-lista valor="46" codCA="10">VALENCIA</elemento-lista>
+    <elemento-lista valor="47" codCA="7">VALLADOLID</elemento-lista>
+    <elemento-lista valor="48" codCA="16">VIZCAYA</elemento-lista>
+    <elemento-lista valor="49" codCA="7">ZAMORA</elemento-lista>
+    <elemento-lista valor="50" codCA="2">ZARAGOZA</elemento-lista>
+    <elemento-lista valor="51" codCA="18">CEUTA</elemento-lista>
+    <elemento-lista valor="52" codCA="19">MELILLA</elemento-lista>
+</Catalog>

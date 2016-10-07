@@ -1,0 +1,84 @@
+2015-10-06 15:10:45,877 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:14:00,663 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:14:08,150 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:14:08,150 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:16:08,190 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 15:18:08,220 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 15:20:08,263 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 15:22:06,138 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:22:06,138 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:24:06,172 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 15:26:06,213 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 15:28:06,255 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 15:29:51,718 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:29:51,718 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:30:50,882 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:31:35,546 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:31:35,546 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:32:12,326 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:32:17,211 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:32:17,211 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:32:54,036 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:32:54,036 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:33:01,478 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:33:01,478 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:33:18,828 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:34:59,580 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:35:07,029 INFO  [SendMail.SendMailService] Mensaje numero 25452
+2015-10-06 15:49:51,716 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:49:56,904 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:49:56,904 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:50:39,778 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:50:39,779 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 15:51:16,838 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 15:51:26,651 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 15:51:26,651 INFO  [SendMail.SendMailService] No se puede parar el server hasta que se obtenga un mensaje de la cola
+2015-10-06 16:22:22,502 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 16:22:25,901 INFO  [SendMail.SendMailService] Mensaje numero 25454
+2015-10-06 16:22:37,271 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-06 16:22:37,310 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-06 16:22:37,335 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-06 16:22:37,685 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-06 16:22:37,685 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-06 16:22:37,688 INFO  [SendMail.SendMailService] Respuesta: OK | 3856477983993365200
+2015-10-06 16:22:37,688 INFO  [SendMail.SendMailService] SMS numero 25454 enviado (postSMS) - Version sendMail 1.3
+2015-10-06 16:22:38,783 INFO  [SendMail.SendMailService] Mensaje numero 25456
+2015-10-06 16:22:40,506 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-10-06 16:22:40,508 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-06 16:22:40,509 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-06 16:22:40,865 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-06 16:22:40,865 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-06 16:22:40,865 INFO  [SendMail.SendMailService] Respuesta: OK | 3856477987214590672
+2015-10-06 16:22:40,865 INFO  [SendMail.SendMailService] SMS numero 25456 enviado (postSMS) - Version sendMail 1.3
+2015-10-06 16:22:41,630 INFO  [SendMail.SendMailService] Mensaje numero 25458
+2015-10-06 16:23:05,452 INFO  [SendMail.SendMailService] Numero de proveedores: 1
+2015-10-06 16:23:05,453 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-06 16:23:05,455 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-06 16:23:05,818 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-06 16:23:05,818 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-06 16:23:05,818 INFO  [SendMail.SendMailService] Respuesta: OK | 3856478014058136272
+2015-10-06 16:23:05,818 INFO  [SendMail.SendMailService] SMS numero 25458 enviado (postSMS) - Version sendMail 1.3
+2015-10-06 16:24:48,799 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 16:24:49,339 INFO  [SendMail.SendMailService] Stop SendMailService-Main
+2015-10-06 16:26:04,131 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 16:26:07,007 INFO  [SendMail.SendMailService] Mensaje numero 25459
+2015-10-06 16:26:18,434 INFO  [SendMail.SendMailService] Numero de proveedores: 1
+2015-10-06 16:26:18,459 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-10-06 16:26:18,473 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-10-06 16:26:18,851 INFO  [SendMail.SendMailService] Response Code: 200
+2015-10-06 16:26:18,851 INFO  [SendMail.SendMailService] Response Message: OK
+2015-10-06 16:26:18,854 INFO  [SendMail.SendMailService] Respuesta: OK | 3856478221295289040
+2015-10-06 16:26:18,854 INFO  [SendMail.SendMailService] SMS numero 25459 enviado (postSMS) - Version sendMail 1.3
+2015-10-06 16:27:32,968 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-10-06 16:27:33,406 INFO  [SendMail.SendMailService] Stop SendMailService-Main
+2015-10-06 16:28:07,102 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 16:28:11,889 INFO  [SendMail.SendMailService] Mensaje numero 25460
+2015-10-06 16:28:56,652 INFO  [SendMail.SendMailService] Error and Stoping SendMailService-Main : null
+2015-10-06 16:35:46,689 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 16:35:47,298 INFO  [SendMail.SendMailService] Mensaje numero 25461
+2015-10-06 16:36:09,668 INFO  [SendMail.SendMailService] Error and Stoping SendMailService-Main : null
+2015-10-06 17:28:16,935 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-10-06 17:28:17,591 INFO  [SendMail.SendMailService] Mensaje numero 25462
+2015-10-06 17:31:59,863 INFO  [SendMail.SendMailService] Numero de receptores: 1
+2015-10-06 17:34:04,869 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio
+2015-10-06 17:36:04,925 INFO  [SendMail.SendMailService] No hay mensajes disponibles para su envio

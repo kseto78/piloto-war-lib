@@ -1,0 +1,2 @@
+${detalleEmail.cuerpo}
+    

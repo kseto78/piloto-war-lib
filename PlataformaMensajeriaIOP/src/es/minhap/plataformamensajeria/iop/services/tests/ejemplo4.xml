@@ -1,0 +1,21 @@
+
+     <Peticion xmlns="http://misim.redsara.es/misim-bus-webapp/peticion">
+        <Usuario>aeat4347</Usuario>
+        <Password>aeat4347</Password>
+        <NombreLote>LOTE_PRUEBA_SMS_JAVI_2</NombreLote>
+        <Servicio>1622</Servicio>
+        <CodOrganismoPagadorSMS>11111112</CodOrganismoPagadorSMS>
+        
+        <Mensajes>
+           <MensajeSMS>
+              <Cuerpo>Mensaje de texto prueba 0001</Cuerpo>
+              <!--1 or more repetitions:-->
+              <DestinatariosSMS>
+                <DestinatarioSMS>
+                    <IdExterno>IDEXTERNO</IdExterno>
+                    <Destinatario>609691700</Destinatario>
+                 </DestinatarioSMS>           
+              </DestinatariosSMS>
+           </MensajeSMS>
+        </Mensajes>
+     </Peticion>

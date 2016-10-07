@@ -1,0 +1,3 @@
+Este directorio contiene los certificados de confianza para las CAs en formato CER y PEM.
+
+Los archivos CA en formato PEM debe agregarse al fichero ca.crt para soportar un certificado expedido por esa CA.

@@ -1,0 +1,59 @@
+2015-07-02 11:20:06,595 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-07-02 11:20:07,158 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 11:20:07,159 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-07-02 11:20:07,159 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 2
+2015-07-02 11:20:07,159 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 11:20:07,242 INFO  [SendMail.RefreshStatusSmsService] Numero SMS desasignados 0
+2015-07-02 11:20:07,303 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados 0
+2015-07-02 11:20:07,349 INFO  [SendMail.RefreshStatusSmsService] SMS recuperados 0
+2015-07-02 11:22:37,967 INFO  [SendMail.RefreshStatusSmsService] Numero SMS desasignados 0
+2015-07-02 11:22:37,998 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados 0
+2015-07-02 11:22:38,024 INFO  [SendMail.RefreshStatusSmsService] SMS recuperados 0
+2015-07-02 11:25:16,211 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-07-02 11:25:16,738 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 11:25:16,739 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-07-02 11:25:16,739 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 2
+2015-07-02 11:25:16,739 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 11:25:16,810 INFO  [SendMail.RefreshStatusSmsService] Numero SMS desasignados 0
+2015-07-02 11:25:16,946 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados 1
+2015-07-02 11:25:16,990 INFO  [SendMail.RefreshStatusSmsService] SMS recuperados 1
+2015-07-02 11:25:17,200 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 14025
+2015-07-02 11:25:17,223 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 3
+2015-07-02 11:25:17,240 INFO  [SendMail.RefreshStatusSmsService] XML:<tracking><params><idProveedor><![CDATA[3]]></idProveedor><sms_id><![CDATA[14025]]></sms_id><sms_uim><![CDATA[3847552775664290032]]></sms_uim></params></tracking>
+2015-07-02 11:25:17,240 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-07-02 11:25:17,624 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-07-02 11:25:17,624 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-07-02 11:27:31,607 INFO  [SendMail.RefreshStatusSmsService] Stop RefreshStatusSmsService-Main
+2015-07-02 11:28:22,164 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-07-02 11:28:22,686 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 11:28:22,686 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-07-02 11:28:22,686 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 2
+2015-07-02 11:28:22,686 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 11:28:26,274 INFO  [SendMail.RefreshStatusSmsService] Numero SMS desasignados: 1
+2015-07-02 11:28:26,339 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-07-02 11:28:26,376 INFO  [SendMail.RefreshStatusSmsService] SMS recuperados: 0
+2015-07-02 11:30:32,814 INFO  [SendMail.RefreshStatusSmsService] Stop RefreshStatusSmsService-Main
+2015-07-02 13:34:38,681 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-07-02 13:34:39,211 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 13:34:39,211 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-07-02 13:34:39,211 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 2
+2015-07-02 13:34:39,211 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-07-02 13:34:39,291 INFO  [SendMail.RefreshStatusSmsService] Numero SMS desasignados: 0
+2015-07-02 13:34:39,667 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-07-02 13:34:39,738 INFO  [SendMail.RefreshStatusSmsService] SMS recuperados: 1
+2015-07-02 13:34:39,954 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 14025
+2015-07-02 13:34:39,981 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 3
+2015-07-02 13:34:39,993 INFO  [SendMail.RefreshStatusSmsService] XML:<tracking><params><idProveedor><![CDATA[3]]></idProveedor><sms_id><![CDATA[14025]]></sms_id><sms_uim><![CDATA[3847552775664290032]]></sms_uim></params></tracking>
+2015-07-02 13:34:39,993 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-07-02 13:34:40,437 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-07-02 13:34:40,438 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-07-02 13:36:40,513 INFO  [SendMail.RefreshStatusSmsService] Numero SMS desasignados: 1
+2015-07-02 13:36:40,599 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-07-02 13:36:40,627 INFO  [SendMail.RefreshStatusSmsService] SMS recuperados: 1
+2015-07-02 13:36:40,772 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 14044
+2015-07-02 13:36:40,773 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 3
+2015-07-02 13:36:40,775 INFO  [SendMail.RefreshStatusSmsService] XML:<tracking><params><idProveedor><![CDATA[3]]></idProveedor><sms_id><![CDATA[14044]]></sms_id><sms_uim><![CDATA[3847560391715834096]]></sms_uim></params></tracking>
+2015-07-02 13:36:40,775 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-07-02 13:36:41,115 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-07-02 13:36:41,115 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-07-02 13:38:41,155 INFO  [SendMail.RefreshStatusSmsService] Stop RefreshStatusSmsService-Main

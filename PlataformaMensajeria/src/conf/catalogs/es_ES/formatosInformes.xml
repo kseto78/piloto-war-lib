@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Catalog tipo="FormatosInforme">
+	<desc>FormatosInformes</desc>
+	<elemento-lista valor="PDF">PDF</elemento-lista>
+	<elemento-lista valor="XLS">EXCEL</elemento-lista>
+	<elemento-lista valor="XML">XML</elemento-lista>
+	<elemento-lista valor="HTML">HTML</elemento-lista>
+	<elemento-lista valor="CSV">CSV</elemento-lista>
+	<elemento-lista valor="RTF">RTF</elemento-lista>
+</Catalog>

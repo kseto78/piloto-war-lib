@@ -1,0 +1,28 @@
+<Catalog tipo="paisesComunitarios">
+<desc>paisesComunitarios</desc>
+<elemento-lista valor="0">--Extranjero comunitario</elemento-lista>
+<elemento-lista valor="DE">Alemania</elemento-lista>                                      
+<elemento-lista valor="AT">Austria</elemento-lista>                                        
+<elemento-lista valor="BE">Belgica</elemento-lista>                                        
+<elemento-lista valor="CY">Chipre</elemento-lista>                                         
+<elemento-lista valor="CZ">Republica Checa</elemento-lista>                                
+<elemento-lista valor="DK">Dinamarca</elemento-lista>                                      
+<elemento-lista valor="EE">Estonia</elemento-lista>                                        
+<elemento-lista valor="FI">Finlandia</elemento-lista>                                      
+<elemento-lista valor="FR">Francia</elemento-lista>                                        
+<elemento-lista valor="GR">Grecia</elemento-lista>                                         
+<elemento-lista valor="HU">Hungria</elemento-lista>                                        
+<elemento-lista valor="IE">Irlanda</elemento-lista>                                       
+<elemento-lista valor="IT">Italia</elemento-lista>  
+<elemento-lista valor="LE">Letonia</elemento-lista>                                        
+<elemento-lista valor="LT">Lituania</elemento-lista>                                        
+<elemento-lista valor="LU">Luxemburgo</elemento-lista>                                    
+<elemento-lista valor="MT">Malta</elemento-lista>                                          
+<elemento-lista valor="NL">Paises Bajos</elemento-lista>  
+<elemento-lista valor="PL">Polonia</elemento-lista>                                 
+<elemento-lista valor="PT">Portugal</elemento-lista>                                       
+<elemento-lista valor="SK">Eslovaquia</elemento-lista>                                     
+<elemento-lista valor="SI">Eslovenia</elemento-lista>                                      
+<elemento-lista valor="SE">Suecia</elemento-lista>                                       
+<elemento-lista valor="GB">Reino Unido</elemento-lista>                      
+</Catalog>

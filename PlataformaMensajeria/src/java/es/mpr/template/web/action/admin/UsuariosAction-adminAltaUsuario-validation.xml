@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE validators PUBLIC 
+"-//OpenSymphony Group//XWork Validator 1.0.2//EN" 
+"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+	<field name="form.username">
+		<field-validator type="requiredstring">
+			<message key="errors.web.user.fields.usuario.obligatorio"/>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression"><![CDATA[[^=]*$]]></param>
+			<message key="errors.web.user.fields.usuario.noigual.permitido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.nombre">
+		<field-validator type="requiredstring">
+			<message key="errors.web.user.fields.nombre.obligatorio" />
+		</field-validator>
+	</field>
+	
+	<field name="form.apellidos">
+		<field-validator type="requiredstring">
+			<message key="errors.web.user.fields.apellidos.obligatorio" />
+		</field-validator>
+	</field>
+	
+	<field name="form.password">
+		<field-validator type="requiredstring">
+			<message key="errors.web.user.fields.password.obligatorio" />
+		</field-validator>
+	</field>
+
+	<field name="form.nif">
+		<field-validator type="nifvalidator">
+			<message key="errors.validation.nif" />
+		</field-validator>
+	</field>
+
+	<field name="form.email">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.email2">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.mailNoticias">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.mailNovedades">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.mailContenidos">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.mailServicios">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+	<field name="form.mailCampanias">
+		<field-validator type="email">
+			<message key="errors.web.user.fields.email.novalido" />
+		</field-validator>
+	</field>
+	
+</validators>

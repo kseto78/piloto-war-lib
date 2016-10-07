@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Peticion>
+  <Usuario>pruebasSIMdes</Usuario>
+  <Password>pruebasSIMdes</Password>
+  <NombreLote>Pruebas SIM Desarrollo SMS</NombreLote>
+  <Servicio>522</Servicio>
+  <CodSia>SIA1232</CodSia>
+  <CodOrganismo>ORG123</CodOrganismo>
+  <CodOrganismoPagadorSMS>ORG123</CodOrganismoPagadorSMS>
+  <Mensajes>
+    <MensajeSMS>
+      <Cuerpo>prueba de envio sms</Cuerpo>
+      <DestinatariosSMS>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>pruebasSIMdesarrolloSMS</IdExterno>
+        <Destinatario>609691700</Destinatario>
+      </DestinatariosSMS>
+    </MensajeSMS>
+    <MensajeSMS>
+      <Cuerpo>prueba de envio sms gregorio</Cuerpo>
+      <DestinatariosSMS>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>pruebasSIMdesarrolloSMS</IdExterno>
+        <Destinatario>609691700</Destinatario>
+      </DestinatariosSMS>
+    </MensajeSMS>
+    <MensajeEmail>
+      <Asunto>str1234</Asunto>
+      <Cuerpo>str1234</Cuerpo>
+      <Origen>str1234</Origen>
+      <Modo>str1234</Modo>
+      <Adjuntos>
+        <Adjunto>
+          <Nombre>str1234</Nombre>
+          <Contenido>str1234</Contenido>
+        </Adjunto>
+      </Adjuntos>
+      <DestinatariosMail>
+        <DocUsuario>str1234</DocUsuario>
+        <IdExterno>str1234</IdExterno>
+        <Destinatarios>
+          <To>str1234</To>
+          <CC>str1234</CC>
+          <Bcc>str1234</Bcc>
+        </Destinatarios>
+      </DestinatariosMail>
+    </MensajeEmail>
+    <MensajePush>
+      <Titulo>titulo_x1</Titulo>
+      <Cuerpo>Cuerpo del mensaje por push1</Cuerpo>
+      <Icono>?</Icono>
+      <Sonido>?</Sonido>
+      <DestinatariosPush>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>ID_SMS_IOP_4</IdExterno>
+        <IdentificadorUsuario>Pedro Marmol</IdentificadorUsuario>
+      </DestinatariosPush>
+    </MensajePush>
+    <MensajePush>
+      <Titulo>titulo_xML2</Titulo>
+      <Cuerpo>Cuerpo del mensaje por push2</Cuerpo>
+      <Icono>?</Icono>
+      <Sonido>?</Sonido>
+      <DestinatariosPush>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>ID_SMS_IOP_3</IdExterno>
+        <IdentificadorUsuario>Paco Gil</IdentificadorUsuario>
+      </DestinatariosPush>
+    </MensajePush>
+  </Mensajes>
+</Peticion>

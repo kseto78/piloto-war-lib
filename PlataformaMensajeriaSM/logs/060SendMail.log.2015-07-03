@@ -1,0 +1,45 @@
+2015-07-03 14:49:26,068 INFO  [SendMail.SendMailService] Start Servicio SendMail (Envio Emails y SMS) Version Actual: 1.3
+2015-07-03 14:50:04,131 INFO  [SendMail.SendMailService] Mensaje numero 15218
+2015-07-03 14:50:04,557 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:50:05,890 INFO  [SendMail.SendMailService] Mail numero 15218 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:50:11,007 INFO  [SendMail.SendMailService] Mensaje numero 15224
+2015-07-03 14:50:12,073 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:50:14,149 INFO  [SendMail.SendMailService] Mail numero 15224 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:50:17,722 INFO  [SendMail.SendMailService] Mensaje numero 15230
+2015-07-03 14:50:18,106 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:50:19,026 INFO  [SendMail.SendMailService] Mail numero 15230 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:50:26,841 INFO  [SendMail.SendMailService] Mensaje numero 15239
+2015-07-03 14:50:27,234 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:50:27,632 INFO  [SendMail.SendMailService] Mail numero 15239 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:50:32,902 INFO  [SendMail.SendMailService] Mensaje numero 15245
+2015-07-03 14:50:34,154 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:50:34,524 INFO  [SendMail.SendMailService] Mail numero 15245 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:50:40,462 INFO  [SendMail.SendMailService] Mensaje numero 15253
+2015-07-03 14:50:40,803 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:50:41,149 INFO  [SendMail.SendMailService] Mail numero 15253 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:50:49,646 INFO  [SendMail.SendMailService] Mensaje numero 15260
+2015-07-03 14:50:49,869 INFO  [SendMail.SendMailService] Numero de proveedores: 3
+2015-07-03 14:50:49,896 INFO  [SendMail.SendMailService] Proveedor ID: 3
+2015-07-03 14:50:49,907 INFO  [SendMail.SendMailService] XML:<sending><params><idProveedor><![CDATA[3]]></idProveedor><sms_remitente><![CDATA[AVISAME]]></sms_remitente><sms_id><![CDATA[15260]]></sms_id><sms_telefono><![CDATA[669835047]]></sms_telefono><sms_texto><![CDATA[Prueba con tildes áéíóú]]></sms_texto></params></sending>
+2015-07-03 14:50:49,907 INFO  [SendMail.SendMailService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-07-03 14:50:50,255 INFO  [SendMail.SendMailService] Response Code: 200
+2015-07-03 14:50:50,255 INFO  [SendMail.SendMailService] Response Message: OK
+2015-07-03 14:50:50,258 INFO  [SendMail.SendMailService] Respuesta: OK | 3847658798005471472
+2015-07-03 14:50:50,258 INFO  [SendMail.SendMailService] SMS numero 15260 enviado (postSMS) - Version sendMail 1.3
+2015-07-03 14:50:59,618 INFO  [SendMail.SendMailService] Mensaje numero 15267
+2015-07-03 14:50:59,942 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:51:01,032 INFO  [SendMail.SendMailService] Mail numero 15267 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:51:04,409 INFO  [SendMail.SendMailService] Mensaje numero 15272
+2015-07-03 14:51:04,724 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:51:05,063 INFO  [SendMail.SendMailService] Mail numero 15272 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:51:13,967 INFO  [SendMail.SendMailService] Mensaje numero 15283
+2015-07-03 14:51:14,383 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:51:14,724 INFO  [SendMail.SendMailService] Mail numero 15283 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:51:36,991 INFO  [SendMail.SendMailService] Mensaje numero 15305
+2015-07-03 14:51:37,320 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:51:37,672 INFO  [SendMail.SendMailService] Mail numero 15305 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:51:43,441 INFO  [SendMail.SendMailService] Mensaje numero 15312
+2015-07-03 14:51:44,037 INFO  [SendMail.SendMailService] Numero de servidores: 2
+2015-07-03 14:51:44,371 INFO  [SendMail.SendMailService] Mail numero 15312 enviado (postMail) - Version sendMail 1.3
+2015-07-03 14:53:28,272 INFO  [SendMail.SendMailService] Mensaje numero -1
+2015-07-03 14:53:28,272 INFO  [SendMail.SendMailService] Stop SendMailService-Main

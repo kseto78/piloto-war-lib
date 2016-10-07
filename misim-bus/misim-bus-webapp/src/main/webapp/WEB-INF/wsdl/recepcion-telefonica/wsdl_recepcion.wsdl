@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:ns="http://www.telefonica.es/MI/InterfazSimplificado/schemas"
+	xmlns:ns1="http://www.w3.org/2001/XMLSchema" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.telefonica.es/MI/InterfazSimplificado/definitions"
+	xmlns:xsd1="http://www.telefonica.es/MI/InterfazSimplificado/schemas"
+	targetNamespace="http://www.telefonica.es/MI/InterfazSimplificado/definitions">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.telefonica.es/MI/InterfazSimplificado/schemas">
+			<simpleType name="versionType">
+				<annotation>
+					<documentation>Version of the protocol used</documentation>
+				</annotation>
+				<restriction base="string">
+					<enumeration value="1.0" />
+				</restriction>
+			</simpleType>
+			<simpleType name="smsClassType">
+				<annotation>
+					<documentation>Message class</documentation>
+				</annotation>
+				<restriction base="string">
+					<enumeration value="0" />
+					<enumeration value="1" />
+					<enumeration value="2" />
+					<enumeration value="3" />
+				</restriction>
+			</simpleType>
+			<simpleType name="relativeOrAbsoluteDateType">
+				<annotation>
+					<documentation>Absolute and relative time</documentation>
+				</annotation>
+				<union memberTypes="dateTime duration" />
+			</simpleType>
+			<simpleType name="deliveryReportType">
+				<annotation>
+					<documentation>Delivery report type</documentation>
+				</annotation>
+				<restriction base="string">
+					<enumeration value="All" />
+					<enumeration value="Failure" />
+					<enumeration value="Success" />
+					<enumeration value="None" />
+				</restriction>
+			</simpleType>
+			<complexType name="recipientsType">
+				<annotation>
+					<documentation>Recipient type</documentation>
+				</annotation>
+				<sequence>
+					<element maxOccurs="unbounded" name="To" type="string" />
+				</sequence>
+			</complexType>
+			<complexType name="massivePersonalRecipientType">
+				<annotation>
+					<documentation>Recipient type for MassivePersonalSMSSubmit
+					</documentation>
+				</annotation>
+				<sequence>
+					<element name="Number" type="string" />
+					<element minOccurs="0" name="Key1" type="string" />
+					<element minOccurs="0" name="Key2" type="string" />
+					<element minOccurs="0" name="Key3" type="string" />
+				</sequence>
+			</complexType>
+			<complexType name="massivePersonalRecipientsType">
+				<annotation>
+					<documentation>Recipients type for MassivePersonalSMSSubmit
+					</documentation>
+				</annotation>
+				<sequence>
+					<element maxOccurs="unbounded" name="Recipient"
+						type="xsd1:massivePersonalRecipientType" />
+				</sequence>
+			</complexType>
+			<complexType name="contentType">
+				<annotation>
+					<documentation>Content type</documentation>
+				</annotation>
+				<sequence>
+					<element name="contentType" type="string" />
+					<element minOccurs="0" name="contentId" type="string" />
+					<element name="contentData" type="base64Binary" />
+				</sequence>
+			</complexType>
+			<complexType name="mmsContentsType">
+				<annotation>
+					<documentation>Contents of the MM</documentation>
+				</annotation>
+				<sequence>
+					<element maxOccurs="unbounded" name="Content" type="xsd1:contentType" />
+				</sequence>
+			</complexType>
+			<simpleType name="statusType">
+				<annotation>
+					<documentation>Status type</documentation>
+				</annotation>
+				<restriction base="string">
+					<enumeration value="Delivered" />
+					<enumeration value="Expired" />
+					<enumeration value="Rejected" />
+				</restriction>
+			</simpleType>
+			<complexType name="responseStatusType">
+				<annotation>
+					<documentation>Response status type</documentation>
+				</annotation>
+				<all>
+					<element name="StatusCode" type="string" />
+					<element name="StatusText" type="string" />
+					<element minOccurs="0" name="Details" type="string" />
+				</all>
+			</complexType>
+			<element name="smsTextSubmitReq">
+				<annotation>
+					<documentation>VASP to Telefonica Relay/Server : Sending simple
+						text SMS from the VASP to one or more recipients
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Authorization" type="base64Binary" />
+						<element name="Sender" type="string" />
+						<element name="Recipients" type="xsd1:recipientsType" />
+						<element name="SMSText" type="string" />
+						<element minOccurs="0" name="EarliestDeliveryTime"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="ExpiryDate"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="DeliveryReport" type="xsd1:deliveryReportType" />
+						<element minOccurs="0" name="DeliveryReportURL" type="anyURI" />
+						<element minOccurs="0" name="SMSClass" type="xsd1:smsClassType" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="smsBinarySubmitReq">
+				<annotation>
+					<documentation>VASP to Telefonica Relay/Server : Sending binary
+						SMS from the VASP to one or more recipients
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Authorization" type="base64Binary" />
+						<element name="Sender" type="string" />
+						<element name="Recipients" type="xsd1:recipientsType" />
+						<element minOccurs="0" name="SMSData" type="base64Binary" />
+						<element minOccurs="0" name="UserDataHeader" type="string" />
+						<element name="DataCodingScheme" type="string" />
+						<element minOccurs="0" name="EarliestDeliveryTime"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="ExpiryDate"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="DeliveryReport" type="xsd1:deliveryReportType" />
+						<element minOccurs="0" name="DeliveryReportURL" type="anyURI" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="mmsSubmitReq">
+				<annotation>
+					<documentation>VASP to Telefonica Relay/Server: Sending MMS from
+						the VASP to one or more recipients
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Authorization" type="base64Binary" />
+						<element name="Sender" type="string" />
+						<element name="Recipients" type="xsd1:recipientsType" />
+						<element name="Contents" type="xsd1:mmsContentsType" />
+						<element minOccurs="0" name="Subject" type="string" />
+						<element minOccurs="0" name="EarliestDeliveryTime"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="ExpiryDate"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="DeliveryReport" type="xsd1:deliveryReportType" />
+						<element minOccurs="0" name="DeliveryReportURL" type="anyURI" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="wappushSubmitReq">
+				<annotation>
+					<documentation>VASP to Telefonica Relay/Server: Sending WAPPUSH
+						from the VASP to one or more recipients
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Authorization" type="base64Binary" />
+						<element name="Sender" type="string" />
+						<element name="Recipients" type="xsd1:recipientsType" />
+						<element name="WAPPushText" type="string" />
+						<element name="WAPPushURL" type="anyURI" />
+						<element minOccurs="0" name="EarliestDeliveryTime"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="ExpiryDate"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="DeliveryReport" type="xsd1:deliveryReportType" />
+						<element minOccurs="0" name="DeliveryReportURL" type="anyURI" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="massivePersonalSMSSubmitReq">
+				<annotation>
+					<documentation>VASP to TelefonicaRelay/Server: Sending simple text
+						SMS with customizable keys from the VASP to one or more
+						recipients
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Authorization" type="base64Binary" />
+						<element name="Sender" type="string" />
+						<element name="Recipients" type="xsd1:massivePersonalRecipientsType" />
+						<element name="SMSText" type="string" />
+						<element minOccurs="0" name="EarliestDeliveryTime"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="ExpiryDate"
+							type="xsd1:relativeOrAbsoluteDateType" />
+						<element minOccurs="0" name="DeliveryReport" type="xsd1:deliveryReportType" />
+						<element minOccurs="0" name="DeliveryReportURL" type="anyURI" />
+						<element minOccurs="0" name="SMSClass" type="xsd1:smsClassType" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="SubmitRes">
+				<complexType>
+					<annotation>
+						<documentation>All SubmitReq operations response</documentation>
+					</annotation>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Status" type="xsd1:responseStatusType" />
+						<element minOccurs="0" name="MessageId" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="smsDeliverReq">
+				<annotation>
+					<documentation>Telefonica to VASP : Delivery of simple text SMS
+						from the Telefonica Relay/Server to the VASP
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Sender" type="string" />
+						<element name="Recipient" type="string" />
+						<element name="MessageId" type="string" />
+						<element name="SMSText" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="mmsDeliverReq">
+				<annotation>
+					<documentation>Telefonica to VASP : Delivery of MMS from the
+						Telefonica Relay/Server to the VASP
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Sender" type="string" />
+						<element name="Recipient" type="string" />
+						<element minOccurs="0" name="Subject" type="string" />
+						<element name="MessageId" type="string" />
+						<element name="Contents" type="xsd1:mmsContentsType" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="deliveryReportReq">
+				<annotation>
+					<documentation>Telefonica to VASP : Delivery report from the
+						Telefonica Relay/Server to the VASP
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Version" type="xsd1:versionType" />
+						<element name="Sender" type="string" />
+						<element name="Recipient" type="string" />
+						<element name="MessageId" type="string" />
+						<element name="MessageStatus" type="xsd1:statusType" />
+						<element minOccurs="0" name="StatusText" type="string" />
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="DeliverRes">
+				<annotation>
+					<documentation>base for MO response messages from VASP to R/S
+					</documentation>
+				</annotation>
+				<sequence>
+					<element name="Version" type="xsd1:versionType" />
+					<element name="Status" type="xsd1:responseStatusType" />
+				</sequence>
+			</complexType>
+			<complexType name="DeliveryReportRes">
+				<annotation>
+					<documentation>base for DR response messages from VASP to R/S
+					</documentation>
+				</annotation>
+				<sequence>
+					<element name="Version" type="xsd1:versionType" />
+					<element name="Status" type="xsd1:responseStatusType" />
+				</sequence>
+			</complexType>
+			<element name="smsDeliverRes" type="xsd1:DeliverRes">
+				<annotation>
+					<documentation>smsDeliverReq response</documentation>
+				</annotation>
+			</element>
+			<element name="mmsDeliverRes" type="xsd1:DeliverRes">
+				<annotation>
+					<documentation>mmsDeliverReq response</documentation>
+				</annotation>
+			</element>
+			<element name="deliveryReportRes" type="xsd1:DeliveryReportRes">
+				<annotation>
+					<documentation>deliveryReportReq response</documentation>
+				</annotation>
+			</element>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="deliveryReportReq">
+		<wsdl:part element="xsd1:deliveryReportReq" name="msgdeliveryReportReq" />
+	</wsdl:message>
+	<wsdl:message name="deliveryReportRes">
+		<wsdl:part element="xsd1:deliveryReportRes" name="msgdeliveryReportRes" />
+	</wsdl:message>
+	<wsdl:message name="smsDeliverReq">
+		<wsdl:part element="xsd1:smsDeliverReq" name="msgsmsDeliverReq" />
+	</wsdl:message>
+	<wsdl:message name="smsDeliverRes">
+		<wsdl:part element="xsd1:smsDeliverRes" name="msgsmsDeliverRes" />
+	</wsdl:message>
+	<wsdl:message name="mmsDeliverReq">
+		<wsdl:part element="xsd1:mmsDeliverReq" name="msgmmsDeliverReq" />
+	</wsdl:message>
+	<wsdl:message name="mmsDeliverRes">
+		<wsdl:part element="xsd1:mmsDeliverRes" name="msgmmsDeliverRes" />
+	</wsdl:message>
+	<wsdl:portType name="RecepcionTelefonicaPortType">
+		<wsdl:operation name="deliveryReport">
+			<wsdl:input message="tns:deliveryReportReq" />
+			<wsdl:output message="tns:deliveryReportRes" />
+		</wsdl:operation>
+		<wsdl:operation name="smsDeliver">
+			<wsdl:input message="tns:smsDeliverReq" />
+			<wsdl:output message="tns:smsDeliverRes" />
+		</wsdl:operation>
+		<wsdl:operation name="mmsDeliver">
+			<wsdl:input message="tns:mmsDeliverReq" />
+			<wsdl:output message="tns:mmsDeliverRes" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="RecepcionTelefonicaBinding" type="tns:RecepcionTelefonicaPortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="deliveryReport">
+			<soap:operation soapAction="deliveryReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="smsDeliver">
+			<soap:operation soapAction="smsDeliver" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="mmsDeliver">
+			<soap:operation soapAction="mmsDeliver" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="Recepcion001Service">
+		<wsdl:port binding="tns:RecepcionTelefonicaBinding" name="RecepcionTelefonicaPort">
+			<soap:address location="/misim-bus-webapp/Recepcion001Service" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

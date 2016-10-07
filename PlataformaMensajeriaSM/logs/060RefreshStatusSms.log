@@ -1,0 +1,286 @@
+2015-11-18 11:42:13,252 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-11-18 11:42:14,861 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:14,861 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-11-18 11:42:14,861 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 1
+2015-11-18 11:42:14,861 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:14,861 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:14,861 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 11:42:23,181 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 11:42:23,181 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:23,181 INFO  [SendMail.RefreshStatusSmsService] Stop RefreshStatusSmsService-Main
+2015-11-18 11:42:41,538 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-11-18 11:42:42,111 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:42,111 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-11-18 11:42:42,111 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 1
+2015-11-18 11:42:42,111 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:42,111 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 11:42:42,111 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 11:42:48,756 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:01:33,239 INFO  [SendMail.RefreshStatusSmsService] Start Servicio RefreshStatusSMS (Actualizacion estado SMS) Version Actual: 1.0
+2015-11-18 12:01:33,844 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:01:33,844 INFO  [SendMail.RefreshStatusSmsService] IdNodo: 1
+2015-11-18 12:01:33,844 INFO  [SendMail.RefreshStatusSmsService] Numero total de nodos: 1
+2015-11-18 12:01:33,844 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:01:33,844 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:01:33,844 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:01:33,983 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:03:49,173 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:03:49,173 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:03:49,173 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:03:49,173 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:03:49,261 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-11-18 12:04:06,375 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 26368
+2015-11-18 12:04:11,346 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 621
+2015-11-18 12:04:11,363 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-11-18 12:04:14,393 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-11-18 12:04:15,263 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-11-18 12:04:53,682 INFO  [SendMail.RefreshStatusSmsService] Numero SMS consultados: 1
+2015-11-18 12:04:54,868 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:04:54,868 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:04:54,869 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:04:54,869 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:04:54,929 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:06:55,786 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:06:55,786 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:06:55,786 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:06:55,786 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:07:05,010 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-11-18 12:07:17,798 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 26368
+2015-11-18 12:07:24,210 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 621
+2015-11-18 12:07:24,215 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-11-18 12:07:37,983 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-11-18 12:07:40,205 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-11-18 12:07:52,355 INFO  [SendMail.RefreshStatusSmsService] Numero SMS consultados: 1
+2015-11-18 12:07:53,228 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:07:53,228 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:07:53,228 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:07:53,228 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:07:53,288 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:09:54,678 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:09:54,678 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:09:54,678 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:09:54,678 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:09:54,722 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:11:54,736 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:11:54,736 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:11:54,736 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:11:54,736 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:11:54,777 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:13:54,790 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:13:54,790 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:13:54,790 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:13:54,790 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:13:54,832 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:15:54,846 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:15:54,846 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:15:54,846 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:15:54,846 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:15:54,884 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:17:54,917 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:17:54,917 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:17:54,917 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:17:54,917 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:17:54,982 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-11-18 12:17:55,080 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 26368
+2015-11-18 12:17:55,081 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 621
+2015-11-18 12:17:55,082 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-11-18 12:19:56,255 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-11-18 12:20:39,286 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-11-18 12:20:40,526 INFO  [SendMail.RefreshStatusSmsService] Numero SMS consultados: 1
+2015-11-18 12:20:40,526 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:20:40,526 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:20:40,526 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:20:40,526 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:20:40,573 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:22:40,602 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:22:40,602 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:22:40,602 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:22:40,602 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:22:40,655 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:24:40,682 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:24:40,682 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:24:40,682 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:24:40,682 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:24:40,716 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:26:40,743 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:26:40,743 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:26:40,743 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:26:40,743 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:26:40,777 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:28:40,807 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:28:40,807 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:28:40,807 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:28:40,807 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:28:40,845 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:30:40,869 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:30:40,869 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:30:40,869 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:30:40,869 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:30:40,929 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:32:40,955 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:32:40,955 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:32:40,955 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:32:40,955 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:32:40,988 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:34:41,011 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:34:41,011 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:34:41,011 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:34:41,011 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:34:41,045 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:36:41,071 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:36:41,071 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:36:41,071 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:36:41,071 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:36:41,104 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:38:41,126 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:38:41,126 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:38:41,126 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:38:41,126 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:38:41,187 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:40:41,217 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:40:41,217 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:40:41,217 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:40:41,217 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:40:41,253 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:42:41,266 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:42:41,266 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:42:41,266 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:42:41,266 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:42:41,315 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:44:41,330 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:44:41,330 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:44:41,330 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:44:41,330 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:44:41,365 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:46:41,385 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:46:41,385 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:46:41,385 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:46:41,385 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:46:41,465 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-11-18 12:46:41,606 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 26368
+2015-11-18 12:46:41,607 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 621
+2015-11-18 12:46:41,608 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-11-18 12:47:19,427 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-11-18 12:47:19,427 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-11-18 12:47:19,427 INFO  [SendMail.RefreshStatusSmsService] Numero SMS consultados: 1
+2015-11-18 12:47:19,427 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:47:19,427 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:47:19,428 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:47:19,428 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:47:19,475 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:49:19,488 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:49:19,488 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:49:19,488 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:49:19,488 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:49:19,527 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:51:19,550 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:51:19,550 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:51:19,550 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:51:19,550 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:51:19,606 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:53:19,620 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:53:19,620 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:53:19,620 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:53:19,620 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:53:19,666 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:55:19,684 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:55:19,684 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:55:19,684 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:55:19,684 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:55:19,733 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:57:19,744 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:57:19,744 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:57:19,744 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:57:19,744 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:57:19,791 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 12:59:19,820 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 12:59:19,820 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:59:19,820 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 12:59:19,820 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 12:59:19,872 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:01:19,900 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:01:19,900 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:01:19,900 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:01:19,900 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:01:19,945 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:03:19,976 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:03:19,976 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:03:19,976 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:03:19,976 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:03:20,028 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:05:20,053 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:05:20,053 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:05:20,053 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:05:20,053 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:05:20,097 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:07:20,130 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:07:20,130 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:07:20,130 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:07:20,130 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:07:20,166 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:09:20,194 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:09:20,194 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:09:20,194 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:09:20,194 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:09:20,232 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:11:20,262 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:11:20,262 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:11:20,262 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:11:20,262 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:11:20,304 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:13:20,334 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:13:20,334 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:13:20,334 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:13:20,334 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:13:20,370 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:15:20,394 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:15:20,394 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:15:20,394 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:15:20,394 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:15:20,445 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:17:20,476 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:17:20,476 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:17:20,476 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:17:20,476 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:17:20,513 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:19:20,537 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:19:20,537 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:19:20,537 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:19:20,537 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:19:20,585 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:21:20,612 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:21:20,612 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:21:20,612 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:21:20,612 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:21:20,652 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:23:20,679 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:23:20,679 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:23:20,679 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:23:20,679 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:23:20,715 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:25:20,737 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:25:20,737 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:25:20,737 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:25:20,737 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:25:20,827 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 1
+2015-11-18 13:25:20,964 INFO  [SendMail.RefreshStatusSmsService] ID mensaje tracking: 26608
+2015-11-18 13:25:20,965 INFO  [SendMail.RefreshStatusSmsService] Proveedor ID: 621
+2015-11-18 13:25:20,966 INFO  [SendMail.RefreshStatusSmsService] URL: http://des-sms.redsara.es:80/SMS/SMS
+2015-11-18 13:25:34,315 INFO  [SendMail.RefreshStatusSmsService] Response Code: 200
+2015-11-18 13:25:34,315 INFO  [SendMail.RefreshStatusSmsService] Response Message: OK
+2015-11-18 13:25:34,316 INFO  [SendMail.RefreshStatusSmsService] Numero SMS consultados: 1
+2015-11-18 13:25:34,316 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:25:34,316 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:25:34,316 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:25:34,316 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:25:34,422 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:27:34,462 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:27:34,462 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:27:34,462 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:27:34,462 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:27:34,518 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0
+2015-11-18 13:29:34,569 INFO  [SendMail.RefreshStatusSmsService] Fin del refresco de estado
+2015-11-18 13:29:34,569 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:29:34,569 INFO  [SendMail.RefreshStatusSmsService] --------------------------
+2015-11-18 13:29:34,569 INFO  [SendMail.RefreshStatusSmsService] Inicio del refresco de estado
+2015-11-18 13:29:34,617 INFO  [SendMail.RefreshStatusSmsService] Numero SMS asignados: 0

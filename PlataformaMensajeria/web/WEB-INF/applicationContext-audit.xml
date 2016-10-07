@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://www.springframework.org/schema/tx 
+  http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+  http://www.springframework.org/schema/jee 
+  http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
+  http://www.springframework.org/schema/aop 
+  http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+	<!-- Aspecto Auditoria -->
+	<bean id="aspectoAudit" class="com.map.j2ee.aspect.AuditAspect">
+		<property name="servicioAuditoria" ref="servicioAuditoria"></property>
+	</bean>
+	<!-- Servicio Auditoria -->
+	<bean id="servicioAuditoria"
+		class="com.map.j2ee.auditoria.impl.ServicioAuditoriaImpl">
+		<property name="jpa" ref="jpa" />
+	</bean>
+	<!-- Transaccionalidad del componente auditoria: transaccionalidad declarativa con aspectos-->
+	<!--  <tx:advice id="txAdviceAuditoria"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="transacAuditoria"
+			expression="execution(* *..ServicioAuditoriaImpl.*(..))"></aop:pointcut>
+		<aop:advisor advice-ref="txAdviceAuditoria"
+			pointcut-ref="transacAuditoria"></aop:advisor>
+	</aop:config>-->
+
+	<!-- /Transaccionalidad del componente auditoria-->
+	
+	</beans>

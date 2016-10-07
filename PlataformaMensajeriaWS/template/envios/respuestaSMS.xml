@@ -1,0 +1,18 @@
+<RESPUESTA>
+	<LOTE>
+		<ID/>	
+		<ERROR CODIGO="01"  DESCRIPCION="Descripción del error" />	
+	</LOTE>
+	<MENSAJES>
+		<MENSAJE>
+			<IDEXTERNO/>
+			<IDMENSAJE/>				
+			<ERROR CODIGO="02"  DESCRIPCION="Descripción del error" />
+		</MENSAJE>
+		<MENSAJE>
+			<IDEXTERNO/>
+			<IDMENSAJE/>
+			<ERROR CODIGO="02"  DESCRIPCION="Descripción del error" />
+		</MENSAJE>
+	</MENSAJES>
+</RESPUESTA>

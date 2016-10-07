@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<spring:beans>
+		<spring:bean id="invocarAyuda" name="invocarAyuda" class="es.minhap.misim.components.InvocarAyuda" />
+	</spring:beans>
+
+	<!-- DESDE LAS APLICACONES A MISIM (CON LA LIBRERIA PARA INTRODUCIR BBDD) -->
+
+	<flow name="FLW-CON-AYUDA" doc:name="FLW-CON-AYUDA" doc:description="Procesa una nueva Petición de ayuda">
+
+		<!-- RECEPCIÓN PETICIÓN -->
+		<vm:inbound-endpoint exchange-pattern="request-response" path="gestion-ayuda" responseTimeout="120000" doc:name="VM" />
+
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="Petición SOAP recibida desde Aplicación: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="Inicio petición" />
+
+		<!-- INICIALIZAR VARIABLES -->
+		<logger level="INFO" doc:name="Logger" message="Inicializar variables" />
+		<component doc:name="Inicializa variables">
+			<spring-object bean="inicializarMovil" />
+		</component>
+		
+		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" />
+		
+		<!-- ENCRIPTACIÓN -->
+		<logger level="INFO" doc:name="Logger" message="Encriptación para la auditoría" />
+		<processor-chain doc:name="Processor Chain">
+			<component	doc:name="Encripta" >
+				<spring-object bean="encriptar" />
+			</component>
+		</processor-chain>
+		
+		<!-- AUDITORÍA -->
+		<logger level="INFO" doc:name="Logger" message="Auditoría de la petición recibida" /> 
+			<component doc:name="Audita" >
+			<spring-object bean="audit" />
+		</component>
+		
+		<!-- ADAPTAR PROTOCOLO -->
+		<choice doc:name="Adaptar la petición"> 
+			<when expression="#[message.outboundProperties['PeticionSolicitudAyuda'] == 'S']">
+				<processor-chain>
+					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" />
+					
+					<logger level="INFO" doc:name="Logger" message="Adaptación de la petición" />
+					
+					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-CON-AYUDA de adaptación del protocolo el payload es : #[payload]" />
+					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia misim" />
+					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-CON-AYUDA de adaptación del protocolo el payload es : #[payload]" />
+				</processor-chain>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la peticion" />
+			</otherwise>
+		</choice>
+
+		<!-- INVOCACIÓN DEL ENVIADOR -->
+		<logger level="INFO" doc:name="Logger" message="Invocar registro de usuarios" />
+		<component doc:name="Invocar ayuda">
+			<spring-object bean="invocarAyuda" />
+		</component>
+		
+		<!-- ADAPTAR PROTOCOLO -->		
+		<choice doc:name="Adaptar la respuesta"> 
+			<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
+				<processor-chain>		
+					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
+							
+					<logger level="INFO" doc:name="Logger" message="Adaptación de la respuesta" />
+					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-CON-AYUDA de adaptación del protocolo el payload es : #[payload]" />
+					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Aplicacion Movil" />
+					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-CON-AYUDA de adaptación del protocolo el payload es : #[payload]" />
+				</processor-chain>
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la respuesta" />
+			</otherwise>
+		</choice>
+		
+		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
+		
+		<!-- ENCRIPTACIÓN -->
+		<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+		<processor-chain doc:name="Processor Chain">
+			<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+			<component	doc:name="Encripta" >
+				<spring-object bean="encriptar" />
+			</component>
+		</processor-chain>
+		
+		<!-- ACTUALIZACIÓN DE AUDITORÍA -->
+		<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría" />
+		<component doc:name="Actualizacón de Auditoría">
+			<spring-object bean="updateAudit" />
+		</component>
+		
+		<logger level="INFO" doc:name="Logger" message="Petición procesada" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="Respuesta SOAP devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+
+
+		<!-- GESTIÓN DE ERRORES -->
+
+
+
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+
+			<!-- GENERAR EL SOAP FAULT -->
+        	<component	doc:name="Gestión de errores" >
+				<spring-object bean="gestionErroresMovil" />
+			</component>
+			
+			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
+					
+			<!-- ACTUALIZACIÓN DE AUDITORÍA -->
+        	<logger level="INFO" doc:name="Logger" message="Comprobar actualización de la auditoría" />
+        	<choice doc:name="Encriptación del error al Consumidor">
+				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
+					<!-- ENCRIPTACIÓN -->
+					<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+					<processor-chain doc:name="Processor Chain">
+						<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+						<component	doc:name="Encripta" >
+							<spring-object bean="encriptar" />
+						</component>
+					</processor-chain>
+					<processor-chain doc:name="Processor Chain">
+						<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría fault" />
+						<component doc:name="Actualización de auditoría Fault">
+							<spring-object bean="updateAuditFault" />
+						</component>
+					</processor-chain>
+				</when>
+				<otherwise>
+					<logger level="INFO" message="Actualización de auditoría no requerida" doc:name="Logger" />
+				</otherwise>
+			</choice>	
+
+			<logger level="INFO" doc:name="Logger" message="SOAP Fault procesado" />
+			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="SOAP Fault devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
+			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+
+		</catch-exception-strategy>
+	</flow>
+</mule>
