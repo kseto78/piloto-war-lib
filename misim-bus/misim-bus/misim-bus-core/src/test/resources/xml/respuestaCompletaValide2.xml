@@ -1,0 +1,108 @@
+<root>
+	<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+		<soap:Header/>
+		<soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-15DF44BE37E944A66B143151511035341">
+			<Peticion xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion">
+				<Atributos>
+					<IdPeticion>12463</IdPeticion>
+					<NumElementos>1</NumElementos>
+					<TimeStamp>2015-05-13T13:05:08.164Z</TimeStamp>
+					<Estado>
+						<CodigoEstado/>
+						<CodigoEstadoSecundario/>
+						<LiteralError/>
+					</Estado>
+					<CodigoCertificado>VALIDE_002</CodigoCertificado>
+				</Atributos>
+				<Solicitudes>
+					<SolicitudTransmision>
+						<DatosGenericos>
+							<Emisor>
+								<NifEmisor>S2833002E</NifEmisor>
+								<NombreEmisor>MINHAP</NombreEmisor>
+							</Emisor>
+							<Solicitante>
+								<IdentificadorSolicitante>S2833002E</IdentificadorSolicitante>
+								<NombreSolicitante>CARPETA</NombreSolicitante>
+								<UnidadTramitadora>MINHAP</UnidadTramitadora>
+								<Finalidad>Consulta del ciudadano</Finalidad>
+								<Consentimiento>Si</Consentimiento>
+							</Solicitante>
+							<Titular>
+								<TipoDocumentacion>DNI</TipoDocumentacion>
+								<Documentacion>70894428X</Documentacion>
+							</Titular>
+							<Transmision>
+								<CodigoCertificado>VALIDE_002</CodigoCertificado>
+								<IdSolicitud>12463</IdSolicitud>
+							</Transmision>
+						</DatosGenericos>
+						<ns2:DatosEspecificos xmlns:ns2="http://intermediacion.redsara.es/scsp/esquemas/datosespecificos">
+							<ValidarCertificado:ValidarCertificado xmlns:ValidarCertificado="http://afirmaws/ws/validacion">
+								<ValidarCertificadoRequest xmlns="http://afirmaws/ws/validacion">&lt;mensajeEntrada xmlns="http://afirmaws/ws/validacion"&gt;&lt;peticion&gt;ValidarCertificado&lt;/peticion&gt;&lt;versionMsg&gt;1.0&lt;/versionMsg&gt;&lt;parametros&gt;&lt;certificado&gt;MIIFoDCCBQmgAwIBAgIEPRfeFTANBgkqhkiG9w0BAQUFADA2MQswCQYDVQQGEwJFUzENMAsGA1UEChMERk5NVDEYMBYGA1UECxMPRk5NVCBDbGFzZSAyIENBMB4XDTE0MDcwODExNDcwOFoXDTE3MDcwODExNDcwOFowfzELMAkGA1UEBhMCRVMxDTALBgNVBAoTBEZOTVQxGDAWBgNVBAsTD0ZOTVQgQ2xhc2UgMiBDQTESMBAGA1UECxMJNTAwMTcwNjIzMTMwMQYDVQQDEypOT01CUkUgTkFWQVJSTyBESUVaIEFMVkFSTyAtIE5JRiA3MDg5NDQyOFgwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCX4PP7uELKJne72bzSR9ZbEC0PcJuu9esCPiYyS9/6hNpePN7qmaVfZknRikQ/jBHWZWLYZQ2kOHQn3XXfvjhLUNji2EDeAPYGWd0z2DH9pOEKDHDuc2QmaRcU00aIWyuuYMcf2vzGjY7Dd0VQuiHyffgpPygXzhH5UYB45190Mzwj/VOaCrDCSbwgwnzeQCFsGnaZ0ZlLoO9EhG3v9YTj6SQzixRZ8c+s/3pKjtDKw6i+JfuibGX/7ZtnV+6aWb/Jao57QlWgyK2QxuJ1UhkacGqwHF8TOo2oG5bBStkpRy8Wz9+iZlwqXPPuT5Nan4kjH8YckiNhTUlgWbRRrXkNAgMBAAGjggLsMIIC6DBrBgNVHREEZDBipGAwXjEYMBYGCSsGAQQBrGYBBBMJNzA4OTQ0MjhYMRMwEQYJKwYBBAGsZgEDEwRESUVaMRYwFAYJKwYBBAGsZgECEwdOQVZBUlJPMRUwEwYJKwYBBAGsZgEBEwZBTFZBUk8wCQYDVR0TBAIwADArBgNVHRAEJDAigA8yMDE0MDcwODExNDcwOFqBDzIwMTcwNzA4MTE0NzA4WjALBgNVHQ8EBAMCBaAwEQYJYIZIAYb4QgEBBAQDAgWgMB0GA1UdDgQWBBQ06bqkMhhc1s3Ko3TbCll25lYofDAfBgNVHSMEGDAWgBRAmnZEl3QHxKwUyx6NTzpFfDDXYTCCATEGA1UdIASCASgwggEkMIIBIAYJKwYBBAGsZgMFMIIBETA0BggrBgEFBQcCARYoaHR0cDovL3d3dy5jZXJ0LmZubXQuZXMvY29udmVuaW8vZHBjLnBkZjCB2AYIKwYBBQUHAgIwgcsagchDZXJ0aWZpY2FkbyBSZWNvbm9jaWRvIGV4cGVkaWRvIHNlZ/puIGxlZ2lzbGFjafNuIHZpZ2VudGUuVXNvIGxpbWl0YWRvIGEgbGEgQ29tdW5pZGFkIEVsZWN0cvNuaWNhIHBvciB2YWxvciBt4XhpbW8gZGUgMTAwIGUgc2Fsdm8gZXhjZXBjaW9uZXMgZW4gRFBDLkNvbnRhY3RvIEZOTVQ6Qy9Kb3JnZSBKdWFuIDEwNi0yODAwOS1NYWRyaWQtRXNwYfFhLjAdBgkrBgEEAaxmASEEEBYOUEVSU09OQSBGSVNJQ0EwLwYIKwYBBQUHAQMEIzAhMAgGBgQAjkYBATAVBgYEAI5GAQIwCxMDRVVSAgFkAgEAMFwGA1UdHwRVMFMwUaBPoE2kSzBJMQswCQYDVQQGEwJFUzENMAsGA1UEChMERk5NVDEYMBYGA1UECxMPRk5NVCBDbGFzZSAyIENBMREwDwYDVQQDEwhDUkwxNTA3NTANBgkqhkiG9w0BAQUFAAOBgQBCD/v7ijjG7G39kLtAad9Z2BS4/3rPB7JKJwSRKWBO+fC98K/6AFtwXfdhF2xNvb0rEiqHJm1u3gr6jDBqb5ifSLWaO5jXYDEo9b00ZhV6qAYRC/ChqFZFbXO02NRuDSKzyw+poLoNGap9UPP6tKkUDEiavTJSB4GhIq2gZLj3PA==&lt;/certificado&gt;&lt;idAplicacion&gt;minhap.carpeta&lt;/idAplicacion&gt;&lt;modoValidacion&gt;2&lt;/modoValidacion&gt;&lt;obtenerInfo&gt;true&lt;/obtenerInfo&gt;&lt;/parametros&gt;&lt;/mensajeEntrada&gt;</ValidarCertificadoRequest>
+							</ValidarCertificado:ValidarCertificado>
+						</ns2:DatosEspecificos>
+					</SolicitudTransmision>
+				</Solicitudes>
+			</Peticion>
+		</soap:Body>
+	</soap:Envelope>
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+		<soapenv:Header>
+			<wsse:Security soapenv:actor="http://schemas.xmlsoap.org/soap/actor/next" soapenv:mustUnderstand="0">
+				<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" wsu:Id="binaryToken">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</wsse:BinarySecurityToken>
+				<Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="Signature-BEDBFBFBBBGBC963">
+					<SignedInfo>
+						<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/>
+						<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+						<Reference URI="#SignedBody-BEDBFBFBBBGBC963">
+							<Transforms>
+								<Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#WithComments"/>
+							</Transforms>
+							<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+							<DigestValue>WYvW5qst9lj937TJD46OpqdZ1GI=</DigestValue>
+						</Reference>
+						<Reference URI="#keyInfo-BEDBFBFBBBGBC963">
+							<Transforms>
+								<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/>
+							</Transforms>
+							<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+							<DigestValue>mFVkhlWeKdJIM9eVGlHehmXz2NE=</DigestValue>
+						</Reference>
+						<Reference URI="#binaryToken">
+							<Transforms>
+								<Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#WithComments"/>
+							</Transforms>
+							<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+							<DigestValue>RNLrxlXYJBJEfZQqgxhyDgFus2k=</DigestValue>
+						</Reference>
+					</SignedInfo>
+					<SignatureValue Id="SignatureValue-BEDBFBFBBBGBC963">BUEqzoGsLKXBWEMs9WGP85zz2YWRIsrsqZ6K5Kimf3Eq+uGIi/PtuhGp+tJyQb0BHGPixsWCryCVqY15xVI38iWk17KebMXdXp0T6QKbJJn6E7t4pqNNDKEHLHsWDcg8Lf8dmh+G780ahrwd4Xm0aaMBsvY//5NwUQN15pvU5czXKjlYr2ugfYpv37HKWCfO2wpCtC3Y3Pz3h739ary/gjRM4OzxROXS/8IP0tXWhzeax1hPBR2hur+25qZnx874BSovA71zjcwPSwQR8cFTwZTPS3ERIaaSGcy3Gc8aaX8vho/0EIWKs7nkcR1hGBnQFjFa/NHnn/TCpKeDgcl/kQ==</SignatureValue>
+					<KeyInfo Id="keyInfo-BEDBFBFBBBGBC963">
+						<KeyValue>
+							<RSAKeyValue>
+								<Modulus>lgmq7FD2e9cBRp/P/Xp/SmMJqSZk+Y4UYCydfoZLzkUmAlORhmfCDsrtX7uy3I7zJOCHPYyhi5z0H5fbhfSh1EuNgxCa/zXl+ofUmeBhGo0zMV9p/kdqdQ+SnkpHp1f1Q0qFvH0aDYovKMoSHNk6fiQF5j2oCCLur7F/1SQrXXtlip80uztA7f7QzwTBy/L7p6FLzPhb/xmeFU57e5LxMHGdBe1rmsp6QkICY/IPEp6I2brXCRnGMaGxdDWswB9FM73eBSdw/BaU4PP/0eUH855gpGLzt4g3OBhk4tB4HWnwTsGahKAIKGYkpiQmeps5p0bLoNeAdUxPmrqgsnH/Cw==</Modulus>
+								<Exponent>AQAB</Exponent>
+							</RSAKeyValue>
+						</KeyValue>
+						<X509Data>
+							<X509Certificate>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</X509Certificate>
+							<X509IssuerSerial>
+								<X509IssuerName>C=ES,O=ACCV,OU=PKIACCV,CN=ACCVCA-120</X509IssuerName>
+								<X509SerialNumber>4163431596502778410</X509SerialNumber>
+							</X509IssuerSerial>
+						</X509Data>
+						<wsse:SecurityTokenReference xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+							<wsse:Reference URI="#binaryToken"/>
+						</wsse:SecurityTokenReference>
+					</KeyInfo>
+				</Signature>
+			</wsse:Security>
+		</soapenv:Header>
+		<soapenv:Body wsu:Id="SignedBody-BEDBFBFBBBGBC963">
+			<ValidarCertificadoResponse xmlns="http://soapinterop.org/">
+				<ValidarCertificadoReturn xmlns="" xsi:type="xsd:string">&lt;?xml version="1.0"?&gt; &lt;mensajeSalida xmlns="http://afirmaws/ws/validacion" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://afirmaws/ws/validacion https://des-afirma.redsara.es/afirmaws/xsd/mvalidacion/ws.xsd "&gt;&lt;peticion&gt;ValidarCertificado&lt;/peticion&gt;&lt;versionMsg&gt;1.0&lt;/versionMsg&gt;&lt;respuesta&gt;&lt;ResultadoProcesamiento&gt;&lt;InfoCertificado&gt;&lt;Campo&gt;&lt;idCampo&gt;ApellidosResponsable&lt;/idCampo&gt;&lt;valorCampo&gt;NAVARRO DIEZ&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;OrganizacionEmisora&lt;/idCampo&gt;&lt;valorCampo&gt;FNMT&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;segundoApellidoResponsable&lt;/idCampo&gt;&lt;valorCampo&gt;DIEZ&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;versionPolitica&lt;/idCampo&gt;&lt;valorCampo&gt;42&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;usoCertificado&lt;/idCampo&gt;&lt;valorCampo&gt;digitalSignature | keyEncipherment&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;subject&lt;/idCampo&gt;&lt;valorCampo&gt;CN=NOMBRE NAVARRO DIEZ ALVARO - NIF 70894428X,OU=500170623,OU=FNMT Clase 2 CA,O=FNMT,C=ES&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;numeroSerie&lt;/idCampo&gt;&lt;valorCampo&gt;1024974357&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;primerApellidoResponsable&lt;/idCampo&gt;&lt;valorCampo&gt;NAVARRO&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;NombreApellidosResponsable&lt;/idCampo&gt;&lt;valorCampo&gt;ALVARO NAVARRO DIEZ&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;validoHasta&lt;/idCampo&gt;&lt;valorCampo&gt;2017-07-08 sáb 13:47:08 +0200&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;idPolitica&lt;/idCampo&gt;&lt;valorCampo&gt;MITyC&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;validoDesde&lt;/idCampo&gt;&lt;valorCampo&gt;2014-07-08 mar 13:47:08 +0200&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;tipoCertificado&lt;/idCampo&gt;&lt;valorCampo&gt;FNMT PF&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;email&lt;/idCampo&gt;&lt;valorCampo&gt;&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;clasificacion&lt;/idCampo&gt;&lt;valorCampo&gt;0&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;NIFResponsable&lt;/idCampo&gt;&lt;valorCampo&gt;70894428X&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;idEmisor&lt;/idCampo&gt;&lt;valorCampo&gt;OU=FNMT Clase 2 CA,O=FNMT,C=ES&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;nombreResponsable&lt;/idCampo&gt;&lt;valorCampo&gt;ALVARO&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;Campo&gt;&lt;idCampo&gt;politica&lt;/idCampo&gt;&lt;valorCampo&gt;1.3.6.1.4.1.5734.3.5&lt;/valorCampo&gt;&lt;/Campo&gt;&lt;/InfoCertificado&gt;&lt;ResultadoValidacion&gt;&lt;resultado&gt;0&lt;/resultado&gt;&lt;descripcion&gt;Validacion Satisfactoria&lt;/descripcion&gt;&lt;ValidacionSimple&gt;&lt;codigoResultado&gt;0&lt;/codigoResultado&gt;&lt;descResultado&gt;Validacion Satisfactoria&lt;/descResultado&gt;&lt;/ValidacionSimple&gt;&lt;ValidacionEstado&gt;&lt;estado&gt;0&lt;/estado&gt;&lt;descEstado&gt;Estado Certificado OK&lt;/descEstado&gt;&lt;InfoMetodoVerificacion&gt;&lt;estado&gt;0&lt;/estado&gt;&lt;descEstado&gt;Estado Certificado OK&lt;/descEstado&gt;&lt;fechaUltimaActualizacion&gt;2015-05-13 mié 13:05:11 +0200&lt;/fechaUltimaActualizacion&gt;&lt;Metodo&gt;&lt;urlServidor&gt;http://apus.cert.fnmt.es/appsUsuario/ocsp/OcspResponder&lt;/urlServidor&gt;&lt;protocolo&gt;OCSP&lt;/protocolo&gt;&lt;/Metodo&gt;&lt;tokenOCSP&gt;&lt;![CDATA[]]&gt;&lt;/tokenOCSP&gt;&lt;/InfoMetodoVerificacion&gt;&lt;/ValidacionEstado&gt;&lt;ValidacionCadena&gt;&lt;codigoResultado&gt;0&lt;/codigoResultado&gt;&lt;descResultado&gt;Cadena de certificacion OK&lt;/descResultado&gt;&lt;/ValidacionCadena&gt;&lt;/ResultadoValidacion&gt;&lt;/ResultadoProcesamiento&gt;&lt;/respuesta&gt;&lt;/mensajeSalida&gt;</ValidarCertificadoReturn>
+			</ValidarCertificadoResponse>
+		</soapenv:Body>
+	</soapenv:Envelope>
+</root>

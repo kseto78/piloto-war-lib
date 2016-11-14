@@ -21,7 +21,6 @@ import org.mule.module.client.MuleClient;
 import org.springframework.context.annotation.Scope;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.plataformamensajeria.iop.jdbc.EnvioMensajesPremiumDAO;
 import es.redsara.misim.misim_bus_webapp.respuesta.ResponseStatusType;
 import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 
@@ -30,7 +29,7 @@ import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 @Scope(value="request")
 public class EnvioSIMWSProvider extends WSProvider {
 
-	static Logger logger = Logger.getLogger(EnvioMensajesPremiumDAO.class);
+	static Logger logger = Logger.getLogger(EnvioSIMWSProvider.class);
 	/**
 	 * Cola de recepción VM de peticiones sincronas
 	 */

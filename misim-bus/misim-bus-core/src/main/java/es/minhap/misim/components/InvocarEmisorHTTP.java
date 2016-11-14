@@ -67,9 +67,10 @@ public class InvocarEmisorHTTP implements Callable {
 				
 				PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 				
-				String keystore = ps.getMessage("ruta.certificados", null, null, null) + certificado;
+				String keystore = ps.getMessage("ruta.certificados", null, null, null) + 
+						((certificado.contains("sms") == true) ? ps.getMessage("ruta.tempos", null, null, null) + certificado :  certificado);
 				
-				
+				//LOG.error("valor key store ->" + keystore);
 				if (parametros.length > 3) {
 					LOG.debug("Se va a proceder a enviar un SMS");
 					respuesta = sendSMS(parametros, user, password, company, url, type, keystore, keystorePassword);

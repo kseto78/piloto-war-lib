@@ -26,7 +26,6 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoXMLBean;
 import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensajesService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 /**
  * Cliente genérico para JAX-WS
@@ -38,6 +37,9 @@ public class InvocarConsultaEstado implements Callable {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarConsultaEstado.class);
 
+	@Resource
+	private ISeguimientoMensajesService seguimientoMensajesImpl;
+	
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	
@@ -56,9 +58,9 @@ public class InvocarConsultaEstado implements Callable {
 			
 			ConsultaEstadoXMLBean consultaEstado = new ConsultaEstadoXMLBean();
 			consultaEstado.loadObjectFromXML(xmlPeticion);
-			ISeguimientoMensajesService seguimientoService = FactoryServiceSim.getInstance().getInstanceSeguimiento();
+			
 			ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-			String respuesta=seguimientoService.consultarEstado(consultaEstado, ps);
+			String respuesta=seguimientoMensajesImpl.consultarEstado(consultaEstado);
 			
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());

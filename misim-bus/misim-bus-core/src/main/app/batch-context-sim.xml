@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:core="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://activemq.apache.org/schema/core http://activemq.org/config/1.0/1.0.xsd">
+<!-- 	<import resource="classpath*:/es/minhap/plataformamensajeria/iop/services/springTest/spring-context.xml" />		 -->
+	<import resource="classpath:/applicationContext-dbSIM.xml" />
+	<import resource="classpath:/applicationContext-logic.xml" />
+	<import resource="classpath:/applicationContext-aop.xml" />
+	<import resource="classpath*:/jms-context-sim.xml" />
+	<context:component-scan base-package="es.minhap.*" />
+	<bean name="enviarMensajeJob" class="es.redsara.misim.misim_bus_webapp.quartz.jobs.EnviarMensajeJob">
+		<property name="maxMensajesLeer" value="10" />
+	</bean>
+	<bean name="enviarMensajeJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="enviarMensajeJob" />
+		<property name="targetMethod" value="execute" />
+	</bean>
+
+	<bean name="enviarMensajeTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="enviarMensajeJobDetail" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="30000" />
+	</bean>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="enviarMensajeJobDetail" />
+
+			</list>
+		</property>
+
+		<property name="triggers">
+			<list>
+				<ref bean="enviarMensajeTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>

@@ -39,39 +39,4 @@
 	  <url-pattern>/ServletSAML</url-pattern>
 	</servlet-mapping>
 	
-	
-<!-- 	<servlet> -->
-<!-- 		<servlet-name>muleServlet</servlet-name> -->
-<!-- 		<servlet-class>org.mule.transport.servlet.MuleReceiverServlet</servlet-class> -->
-<!-- 	</servlet> -->
-<!-- 	<servlet-mapping> -->
-<!-- 		<servlet-name>muleServlet</servlet-name> -->
-<!-- 		<url-pattern>/*</url-pattern> -->
-<!-- 	</servlet-mapping> -->
-
-	
-<!-- 	<listener> -->
-<!-- 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> -->
-<!-- 	</listener> -->
-
-<!-- *************************** -->
-	<!-- INICIO QUARTZ -->
-	<!-- *************************** --> 
-	<servlet> 
-		<servlet-name>QuartzInitializer</servlet-name> 
-		<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class> 
-	  	<load-on-startup>2</load-on-startup>
-	</servlet>
-	<servlet>
-     	<display-name>QuartzInicializarJobs</display-name>
-     	<servlet-name>QuartzInicializarJobs</servlet-name> 
-     	<servlet-class>es.redsara.misim.misim_bus_webapp.quartz.QuartzInicializarJobs</servlet-class>
-     	<load-on-startup>0</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>QuartzInicializarJobs</servlet-name>
-		<url-pattern>/QuartzInicializarJobs</url-pattern>
-	</servlet-mapping>
-	<!-- FIN QUARTZ -->
-
 </web-app>

@@ -214,4 +214,5 @@ public class InicializarAplicacionCliente implements Callable {
 		return eventContext.getMessage();
 	}
 
+	
 }

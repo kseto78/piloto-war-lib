@@ -26,7 +26,6 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.services.envioLotes.IEnvioLotesMensajesService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 
 /**
@@ -38,66 +37,69 @@ import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 public class InvocarEnvioEmailPassbook implements Callable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarEnvioEmailPassbook.class);
-	
+
+	@Resource
+	IEnvioLotesMensajesService envioLotesMensajesImpl;
+
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
-	
-	
+
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
 		LOG.debug("Empezando el proceso de invocación del enviador...");
 		PropertiesServices ps = null;
-		try{
+		try {
 
-			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
+			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
+					.getSoapMessage();
 			System.out.println("REQUEST: " + XMLUtils.dom2xml(docOriginal));
 
-			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "Peticion");
+			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion",
+					"Peticion");
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
 			PeticionXMLBean peticionXML = new PeticionXMLBean();
 			peticionXML.loadObjectFromXML(xmlPeticion);
-			IEnvioLotesMensajesService envioService = FactoryServiceSim.getInstance().getInstanceLotes();
 			ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-			String respuesta=envioService.enviarLotesEmail(peticionXML, ps);
-			
+			String respuesta = envioLotesMensajesImpl.enviarLotesEmail(peticionXML, ps);
+
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
-			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
-			
-			SOAPMessage responseMessage=getSoapMessageFromString(respuestaCompleta);
-			
-	        try{
-				
-					SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
-					SoapPayload<?> soapPayload = null;
-				    if (responseMessage.getSOAPBody().hasFault()) {
-				    	// La respuesta es un SOAP Fault
-						soapPayload = new SoapPayload<Object>();
-						eventContext.getMessage().setOutboundProperty("SOAPFault", true);
-			        } else {
-			        	// La respuesta no es un SOAP Fault
-			        	soapPayload = new SoapPayload<Respuesta>();
-						eventContext.getMessage().setOutboundProperty("SOAPFault", false);
-			        }
-				    
-				    System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-					soapPayload.setSoapAction(initPayload.getSoapAction());
-					soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
-			
-					eventContext.getMessage().setPayload(soapPayload);
-					
-				}catch(Exception e){
-					//Lanzar error
-					LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
-					throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
+			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
+
+			SOAPMessage responseMessage = getSoapMessageFromString(respuestaCompleta);
+
+			try {
+
+				SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
+				SoapPayload<?> soapPayload = null;
+				if (responseMessage.getSOAPBody().hasFault()) {
+					// La respuesta es un SOAP Fault
+					soapPayload = new SoapPayload<Object>();
+					eventContext.getMessage().setOutboundProperty("SOAPFault", true);
+				} else {
+					// La respuesta no es un SOAP Fault
+					soapPayload = new SoapPayload<Respuesta>();
+					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				}
 
-		}catch (ModelException e){
-			
+				System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+				soapPayload.setSoapAction(initPayload.getSoapAction());
+				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
+
+				eventContext.getMessage().setPayload(soapPayload);
+
+			} catch (Exception e) {
+				// Lanzar error
+				LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
+				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
+			}
+
+		} catch (ModelException e) {
+
 			throw new ModelException(e.getMensaje(), e.getCodigo());
-			
-		}catch(Exception e){
-			//Lanzar error
+
+		} catch (Exception e) {
+			// Lanzar error
 			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
 			throw new ModelException("Error de sistema Invocar Emisor", 502);
 		}
@@ -109,7 +111,8 @@ public class InvocarEnvioEmailPassbook implements Callable {
 
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
-		SOAPMessage message = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
+		SOAPMessage message = factory.createMessage(new MimeHeaders(),
+				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
 	}
 

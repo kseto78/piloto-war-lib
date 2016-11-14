@@ -1,11 +1,19 @@
 
 package es.redsara.misim.misim_bus_webapp.respuesta;
 
+import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 
 /**
@@ -89,4 +97,39 @@ public class Respuesta {
         this.messageId = value;
     }
 
+	public void loadObjectFromXML(String xml)
+			throws PlataformaBusinessException {
+
+		JAXBContext jaxbContext;
+		try {
+			jaxbContext = JAXBContext.newInstance(Respuesta.class);
+
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+			StringReader reader = new StringReader(xml);
+			Respuesta respuesta = (Respuesta) unmarshaller
+					.unmarshal(reader);
+
+			org.apache.commons.beanutils.BeanUtils.copyProperties(this,
+					respuesta);
+
+			
+		} catch (JAXBException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xml);
+		} catch (IllegalAccessException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xml);
+		} catch (InvocationTargetException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xml);
+		}
+	}
+    
 }

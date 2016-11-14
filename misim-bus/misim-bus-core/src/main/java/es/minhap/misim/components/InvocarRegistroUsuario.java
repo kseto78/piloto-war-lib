@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,9 +29,8 @@ import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.UsuariosXMLBean;
 import es.minhap.plataformamensajeria.iop.services.usuariosplataformas.IRegistroUsuarioPushService;
 import es.minhap.plataformamensajeria.iop.services.usuariosplataformas.RegistroUsuarioPushResponse;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
-import es.redsara.misim.misim_bus_webapp.respuesta.rest.Respuesta;
 import es.redsara.misim.misim_bus_webapp.respuesta.rest.ResponseStatusType;
+import es.redsara.misim.misim_bus_webapp.respuesta.rest.Respuesta;
 /**
  * Cliente genérico para JAX-WS
  * 
@@ -41,6 +41,9 @@ public class InvocarRegistroUsuario implements Callable {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarRegistroUsuario.class);
 
+	@Resource
+	IRegistroUsuarioPushService registroUsuarioPushImpl;
+	
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
@@ -57,8 +60,7 @@ public class InvocarRegistroUsuario implements Callable {
 			UsuariosXMLBean usuariosXML = new UsuariosXMLBean();
 			usuariosXML.loadObjectFromXML(xmlPeticion);
 			
-			IRegistroUsuarioPushService usuarioService = FactoryServiceSim.getInstance().getInstanceUsuario();
-			RegistroUsuarioPushResponse respuestaUsuario = usuarioService.registroUsuario(usuariosXML);
+			RegistroUsuarioPushResponse respuestaUsuario = registroUsuarioPushImpl.registroUsuario(usuariosXML);
 			
 			Respuesta respuesta = new Respuesta();
 

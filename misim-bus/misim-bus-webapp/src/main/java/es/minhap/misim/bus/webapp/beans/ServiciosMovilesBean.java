@@ -2,55 +2,55 @@ package es.minhap.misim.bus.webapp.beans;
 
 public class ServiciosMovilesBean {
 
-	private String IDServicio;	//Identificador único del servicio	Numero
-	private String Nombre;	//Nombre del Servicio disponible para móviles	Cadena de caracteres
-	private String Descripción;	//Nombre del Servicio disponible para móviles	Cadena de caracteres
-	private String Icono;	//Icono asignado al Servicio disponible para móviles	Cadena de caracteres
-	private String URL;	//URL del Servicio disponible para móviles	Cadena de caracteres
-	private Integer Tipo;	//Tipo de Servicio para móviles	Numérico
-	private Integer Estado;	//Estado del servicio móvil para el usuario. 	Numérico
+	private String idServicio;	//Identificador único del servicio	Numero
+	private String nombre;	//Nombre del Servicio disponible para móviles	Cadena de caracteres
+	private String descripcion;	//Nombre del Servicio disponible para móviles	Cadena de caracteres
+	private String icono;	//Icono asignado al Servicio disponible para móviles	Cadena de caracteres
+	private String url;	//URL del Servicio disponible para móviles	Cadena de caracteres
+	private Integer tipo;	//Tipo de Servicio para móviles	Numérico
+	private Integer estado;	//Estado del servicio móvil para el usuario. 	Numérico
 	
 	public String getIDServicio() {
-		return IDServicio;
+		return this.idServicio;
 	}
 	public void setIDServicio(String iDServicio) {
-		IDServicio = iDServicio;
+		this.idServicio = iDServicio;
 	}
 	public String getNombre() {
-		return Nombre;
+		return this.nombre;
 	}
 	public void setNombre(String nombre) {
-		Nombre = nombre;
+		this.nombre = nombre;
 	}
 	public String getDescripción() {
-		return Descripción;
+		return this.descripcion;
 	}
 	public void setDescripción(String descripción) {
-		Descripción = descripción;
+		this.descripcion = descripción;
 	}
 	public String getIcono() {
-		return Icono;
+		return this.icono;
 	}
 	public void setIcono(String icono) {
-		Icono = icono;
+		this.icono = icono;
 	}
 	public String getURL() {
-		return URL;
+		return this.url;
 	}
 	public void setURL(String uRL) {
-		URL = uRL;
+		this.url = uRL;
 	}
 	public Integer getTipo() {
-		return Tipo;
+		return this.tipo;
 	}
 	public void setTipo(Integer tipo) {
-		Tipo = tipo;
+		this.tipo = tipo;
 	}
 	public Integer getEstado() {
-		return Estado;
+		return this.estado;
 	}
 	public void setEstado(Integer estado) {
-		Estado = estado;
+		this.estado = estado;
 	}
 
 }

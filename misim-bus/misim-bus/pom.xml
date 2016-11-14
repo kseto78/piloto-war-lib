@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.minhap</groupId>
+	<artifactId>misim-bus</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>M.I.S.I.M Bus</name>
+
+	<properties>
+		<!-- Java code source -->
+		<jdkName>JavaSE-1.7</jdkName>
+		<jdk.version>1.7</jdk.version>
+		<javaee.version>7.0</javaee.version>
+		<encoding>UTF-8</encoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<eclipsePluginVersion>2.8</eclipsePluginVersion>
+
+		<!-- Maven build -->
+		<build-helper.version>1.7</build-helper.version>
+
+		<!-- Spring Core -->
+		<spring.version>3.2.1.RELEASE</spring.version>
+
+		<!-- Web Services -->
+		<cxf.version>2.7.1</cxf.version>
+
+		<!-- JAXb -->
+		<jaxb.version>2.2.5</jaxb.version>
+
+		<!-- JMS Implementation -->
+		<hornetq.version>2.2.13.Final</hornetq.version>
+
+		<!-- Mule ESB -->
+		<mule.version>3.5.0</mule.version>
+
+		<!-- Hibernate JPA Specification -->
+		<hibernate-jpa-api.version>1.0.1.Final</hibernate-jpa-api.version>
+
+		<!-- Hibernate JPA Implementation -->
+		<hibernate-jpa.version>4.0.1.Final</hibernate-jpa.version>
+
+		<!-- Logging -->
+		<slf4j.version>1.6.1</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+
+		<!-- Testing -->
+		<junit.version>4.9</junit.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+		
+			<!-- JavaEE Specification -->
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${javaee.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- Spring dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			
+			<!-- JPA Implementation dependencies -->
+			<!-- JPA : Hibernate -->
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.hibernate.javax.persistence</groupId> -->
+<!-- 				<artifactId>hibernate-jpa-2.0-api</artifactId> -->
+<!-- 				<version>${hibernate-jpa-api.version}</version> -->
+<!-- 			</dependency> -->
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.hibernate</groupId> -->
+<!-- 				<artifactId>hibernate-entitymanager</artifactId> -->
+<!-- 				<version>${hibernate-jpa.version}</version> -->
+<!-- 			</dependency> -->
+			
+			<!-- Logging dependencies -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+
+			<!-- Dependencias utilitarias -->
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.9</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
+
+			<!-- Tests -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<encoding>${encoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<modules>
+		<module>misim-bus-common</module>
+		<module>misim-bus-persistence</module>
+		<module>misim-bus-model-api</module>
+		<module>misim-bus-model-impl</module>
+		<module>misim-bus-core</module>
+		<module>misim-bus-webapp</module>
+	</modules>
+</project>

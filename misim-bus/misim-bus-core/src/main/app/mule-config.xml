@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:context="http://www.springframework.org/schema/context"
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns="http://www.mulesoft.org/schema/mule/core" 
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
 	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/jms 
+						http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd 
+						http://www.springframework.org/schema/beans 
 						http://www.springframework.org/schema/beans/spring-beans-current.xsd
 						http://www.springframework.org/schema/jee
 						http://www.springframework.org/schema/jee/spring-jee.xsd
@@ -47,6 +53,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 					<spring:value>classpath:/properties/dataconnection.properties</spring:value>
 					<spring:value>classpath:/properties/sp.properties</spring:value>
 					<spring:value>classpath:/properties/passbook.properties</spring:value>
+					<spring:value>classpath:/properties/confSIMEnviroiment.properties</spring:value>					
 				</spring:list>
 			</spring:property>
 			<spring:property name="ignoreUnresolvablePlaceholders"
@@ -54,11 +61,14 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		</spring:bean>
 
 		<spring:import resource="${classpath}/properties/certificados-context.xml" />
+	 	<spring:import resource="${classpath}/jms-context-sim.xml" />
+	 	<spring:import resource="${classpath}/batch-context-sim.xml" />
+		<spring:import resource="${classpath}/applicationContext-db.xml" />
+		<spring:import resource="${classpath}/applicationContext-dbSIM.xml" />
 		<spring:import resource="${classpath}/applicationContext-tx.xml" />
+		<spring:import resource="${classpath}/applicationContextSIM-tx.xml" />
 		<spring:import resource="${classpath}/applicationContext-aop.xml" />
 		<spring:import resource="${classpath}/applicationContext-logic.xml" />
-		<spring:import resource="${classpath}/applicationContext-db.xml" />
-<!-- 		<spring:import resource="${classpath}/applicationContext-rest.xml" /> -->
 
 		<spring:bean id="reloadableResourceBundleMessageSource"
 			class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -67,14 +77,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 					<spring:value>classpath:/properties/spring-config</spring:value>
 					<spring:value>classpath:/properties/sp</spring:value>
 					<spring:value>classpath:/properties/passbook</spring:value>
-					
+					<spring:value>classpath:/properties/confSIMEnviroiment</spring:value>
 				</spring:list>
 			</spring:property>
 			<spring:property name="cacheSeconds" value="600" />
 		</spring:bean>
-
-
 	</spring:beans>
-
-
 </mule>

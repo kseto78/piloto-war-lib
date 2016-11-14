@@ -27,7 +27,6 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.PeticionClaveAuthRequest;
 import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGestionSAMLRequestService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 import es.redsara.misim.misim_bus_webapp.respuesta.rest.Parametros;
 import es.redsara.misim.misim_bus_webapp.respuesta.rest.ResponseSAMLStatusType;
 import es.redsara.misim.misim_bus_webapp.respuesta.rest.RespuestaSAMLRequest;
@@ -42,6 +41,9 @@ public class InvocarGenerarSAML implements Callable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarGenerarSAML.class);
 
+	@Resource
+	IGestionSAMLRequestService gestionSAMLRequestImpl;
+
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	PropertiesServices ps = null;
@@ -52,48 +54,48 @@ public class InvocarGenerarSAML implements Callable {
 		LOG.debug("Empezando el proceso de invocación del enviador...");
 
 		try {
-			IGestionSAMLRequestService comprobarUsuario = FactoryServiceSim.getInstance().getInstanceSAMLRequest();
-			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
+			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
+					.getSoapMessage();
 			System.out.println("REQUEST: " + XMLUtils.dom2xml(docOriginal));
 
-			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest", "PeticionClaveAuthRequest");
+			NodeList peticion = docOriginal.getElementsByTagNameNS(
+					"http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest", "PeticionClaveAuthRequest");
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
 
 			PeticionClaveAuthRequest pet = new PeticionClaveAuthRequest();
 			pet.loadObjectFromXML(xmlPeticion);
 
-			String respuesta = comprobarUsuario.comprobarDatosUsuario(pet);
+			String respuesta = gestionSAMLRequestImpl.comprobarDatosUsuario(pet);
 
 			RespuestaSAMLRequest request = new RespuestaSAMLRequest();
 			ResponseSAMLStatusType status = new ResponseSAMLStatusType();
 			Parametros parametros = null;
 
 			if (respuesta.contains("OK")) {
-				
-								
+
 				ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-				
+
 				String plataformaIOS = ps.getMessage("sp.plataforma.ios", null, null, null);
 				String plataformaAndroid = ps.getMessage("sp.plataforma.android", null, null, null);
-				
+
 				String allowLegalPerson = ps.getMessage("attribute.allowLegalPerson", null, null, null);
 				String urlClave = ps.getMessage("country.url", null, null, null);
 				String urlReturn = ps.getMessage("sp.return", null, null, null);
-				
-				String allowCertificateMinApiLevel = ps.getMessage("sp.android.allowCertificateMinApiLevel", null, null, null);
-				
+
+				String allowCertificateMinApiLevel = ps.getMessage("sp.android.allowCertificateMinApiLevel", null,
+						null, null);
+
 				String excludedIdPList = "";
-				if (null != pet.getAPILevel() && pet.getIdPlataforma().equals(plataformaAndroid)){
-					if (Integer.parseInt(pet.getAPILevel())<Integer.parseInt(allowCertificateMinApiLevel))
+				if (null != pet.getAPILevel() && pet.getIdPlataforma().equals(plataformaAndroid)) {
+					if (Integer.parseInt(pet.getAPILevel()) < Integer.parseInt(allowCertificateMinApiLevel))
 						excludedIdPList = ps.getMessage("sp.excludedIdPList.excludeCertificate", null, null, null);
 					else
 						excludedIdPList = ps.getMessage("sp.excludedIdPList", null, null, null);
-				}else if (pet.getIdPlataforma().equals(plataformaIOS)){
+				} else if (pet.getIdPlataforma().equals(plataformaIOS)) {
 					excludedIdPList = ps.getMessage("sp.excludedIdPList.excludeCertificate", null, null, null);
-				}else{
+				} else {
 					excludedIdPList = ps.getMessage("sp.excludedIdPList", null, null, null);
 				}
-				
 
 				String idpList = "";
 
@@ -120,12 +122,12 @@ public class InvocarGenerarSAML implements Callable {
 					status.setStatusCode("4000");
 					status.setStatusText("KO");
 				}
-			
-			request.setStatus(status);
-			request.setParameters(parametros);
-			respuesta = request.toXMLSMS(request);
+
+				request.setStatus(status);
+				request.setParameters(parametros);
+				respuesta = request.toXMLSMS(request);
 			}
-			
+
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
@@ -173,7 +175,8 @@ public class InvocarGenerarSAML implements Callable {
 
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
-		SOAPMessage message = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
+		SOAPMessage message = factory.createMessage(new MimeHeaders(),
+				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
 	}
 

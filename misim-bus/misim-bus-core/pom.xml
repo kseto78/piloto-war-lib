@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>es.minhap</groupId>
 		<artifactId>misim-bus</artifactId>
-		<version>1.0.0</version>
+		<version>2.0.0</version>
 	</parent>
 
 	<artifactId>misim-bus-core</artifactId>
@@ -561,7 +561,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>PlataformaMensajeriaIOP</artifactId>
-			<version>1.0.0</version>
+			<version>2.0.0-SNAPSHOT</version> 
 			<exclusions>
 			<exclusion> 
  				<groupId>org.bouncycastle</groupId> 
@@ -785,44 +785,6 @@
 			</dependencies>
 			<build>
 				<plugins>
-					<plugin>
-						<groupId>org.apache.cxf</groupId>
-						<artifactId>cxf-codegen-plugin</artifactId>
-						<version>${cxf.version}</version>
-						<executions>
-							<execution>
-								<id>generate-sources</id>
-								<phase>generate-sources</phase>
-								<configuration>
-									<sourceRoot>${basedir}/src/main/java</sourceRoot>
-									<wsdlRoot>${basedir}/src/main/resources</wsdlRoot>
-									<wsdlOptions>
-<!-- 										<wsdlOption> -->
-<!-- 											<wsdl>${basedir}/src/main/resources/wsdl/peticion-sincrona.wsdl</wsdl> -->
-<!-- 										</wsdlOption> -->
-<!-- 										<wsdlOption> -->
-<!-- 											<wsdl>${basedir}/src/main/resources/wsdl/peticion-asincrona.wsdl</wsdl> -->
-<!-- 										</wsdlOption> -->
-										<wsdlOption>
-											<wsdl>${basedir}/src/main/resources/wsdl/envio-sim/enviarMensajes.wsdl</wsdl>
-										</wsdlOption>
-<!-- 										<wsdlOption> -->
-<!-- 											<wsdl>${basedir}/src/main/resources/wsdl/recepcion-sim/enviarMensajesSIM.wsdl</wsdl> -->
-<!-- 										</wsdlOption> -->
-<!-- 										<wsdlOption> -->
-<!-- 											<wsdl>${basedir}/src/main/resources/wsdl/recepcion-sim/operacionesSIM.wsdl</wsdl> -->
-<!-- 										</wsdlOption> -->
-<!-- 										<wsdlOption> -->
-<!-- 											<wsdl>${basedir}/src/main/resources/wsdl/recepcion-sim/seguimientoSIM.wsdl</wsdl> -->
-<!-- 										</wsdlOption> -->
-									</wsdlOptions>
-								</configuration>
-								<goals>
-									<goal>wsdl2java</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 					<!-- JAXB xjc plugin that invokes the xjc compiler to compile XML schema 
 						into Java classes. -->
 					<plugin>

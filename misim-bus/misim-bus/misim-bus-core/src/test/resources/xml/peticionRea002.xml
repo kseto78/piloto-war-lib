@@ -1,0 +1,110 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Header>
+		<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" soap:mustUnderstand="1">
+			<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" wsu:Id="D48A69C4C76C23DC941426596534150116">MIIDbDCCAlSgAwIBAgIEVMdQfjANBgkqhkiG9w0BAQQFADB4MR4wHAYJKoZIhvcNAQkBFg9taWNjQGV2ZXJpcy5jb20xCzAJBgNVBAYTAkVTMQ4wDAYDVQQIEwVTUEFJTjEKMAgGA1UEBxMBTTEPMA0GA1UEChMGTUlOSEFQMQ0wCwYDVQQLEwRTRUFQMQ0wCwYDVQQDEwRtaWNjMB4XDTE1MDEyNzA4NDc1OFoXDTIwMDEyNzA4NDc1OFoweDEeMBwGCSqGSIb3DQEJARYPbWljY0BldmVyaXMuY29tMQswCQYDVQQGEwJFUzEOMAwGA1UECBMFU1BBSU4xCjAIBgNVBAcTAU0xDzANBgNVBAoTBk1JTkhBUDENMAsGA1UECxMEU0VBUDENMAsGA1UEAxMEbWljYzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMG+q70gyaw6lzn/XkzFCZd08V24huzGItV+G7VYqG0njg/8h73bboPk/6/UrusjmdgizVDnRXVEVRhbfyu0n2SnLIo+TBhhwsPptqTnslxLAFEPCq4FXgMG9WmYzDl2dIbxtefKonHf6+n/29rGjr1XcZSXwB/3FBHUVUHCsFPivlQxgI81xLfy5fEIEbK1YsoM/3gaK4yOzUq86KWPEvqb+io5WC42VrY9JZwjLPlTxHb5YDxtOQV+7RLC2FFs3IoTtyHEL1g+Fryx08UfM3wrVRdltbk+73wEOoesyv/JqoLWeJ+2felbGG3IiVeSW4xaibX97u2afyO346MDY8UCAwEAATANBgkqhkiG9w0BAQQFAAOCAQEAHGGgjmxMa4L/M28w1II1WEhmILxN/tnuNaDRbbnCmLu8AsogT4j1c55y3Ww6icY7SDBW3z43k0WbDZ5baKD1Lh1eQaWDNI7WElnJzFuz96vbOnGnNk3GmweiGBvfd0+1i871oPjq4AnPzp8ncGFZSESvOtAwc698HUfvVzQN2O//6KleATpDdZfn8WYe5CM22hX697thh9H08huf/ThPF40ShP6y1iN0h2TQpvdWMX70acRWxlZ5EOHKKQo0A5sDvIaAVvjHivntxOy2qn0CVHJ9lqCr2Z7Fame41vOWrrsABpg1FFeVu39MCO3uN+mT4QETVerl2luTJoC5x4dIdw==</wsse:BinarySecurityToken>
+			<xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" Id="EK-D48A69C4C76C23DC941426596534150115">
+				<xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/>
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<wsse:SecurityTokenReference>
+						<wsse:Reference URI="#D48A69C4C76C23DC941426596534150116" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+					</wsse:SecurityTokenReference>
+				</ds:KeyInfo>
+				<xenc:CipherData>
+					<xenc:CipherValue>UyyDoj7vc9ig/Ke1ej+1bQ==</xenc:CipherValue>
+				</xenc:CipherData>
+				<xenc:ReferenceList>
+					<xenc:DataReference URI="#ED-D48A69C4C76C23DC941426596534150117"/>
+				</xenc:ReferenceList>
+			</xenc:EncryptedKey>
+			<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" wsu:Id="X509-7841A9917F39F74EB21426596533915122">MIIDeDCCAmCgAwIBAAIEVMdUEjANBgkqhkiG9w0BAQQFADB+MSEwHwYJKoZIhvcNAQkBFhJjYXJwZXRhQGV2ZXJpcy5jb20xCzAJBgNVBAYTAkVTMQ4wDAYDVQQIEwVTUEFJTjEKMAgGA1UEBxMBTTEPMA0GA1UEChMGTUlOSEFQMQ0wCwYDVQQLEwRTRUFQMRAwDgYDVQQDEwdDQVJQRVRBMB4XDTE1MDEyNzA5MDI1MVoXDTIwMDEyNzA5MDI1MVowfjEhMB8GCSqGSIb3DQEJARYSY2FycGV0YUBldmVyaXMuY29tMQswCQYDVQQGEwJFUzEOMAwGA1UECBMFU1BBSU4xCjAIBgNVBAcTAU0xDzANBgNVBAoTBk1JTkhBUDENMAsGA1UECxMEU0VBUDEQMA4GA1UEAxMHQ0FSUEVUQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKr+oeISTReJ+8FT6kvFw3YYQlsVLaHL4e7Hbk2EAVQ7dWqIgU2bwdpqQTATigZYcB5VNzkVAhx1XPkMetyWoI4CH9Vffsp3PyDv3Xv6djN5nczmI2uFq+Om5inzBoR2Z2NtrSjGwPEHuKQ4i1uMMYSrZuF4Byt1r2ofyZMf4A8S3Zv3vXA91VPYi8aLKzgCh5uCU5EBSDFPbwSggIGWpPEenVP9iHve6wAkBx/dxUDlxosTreY7yXuS6MoCBGoai0kY00ufNpZmcJKu7xC3qhs8Iy793GwczfhNSMb0r5fIAGb7O1RYU3dY63iNwp/mEiotzGY+/V10cg0Ev0t0440CAwEAATANBgkqhkiG9w0BAQQFAAOCAQEAYrXaFKPVHMhpy93WntArJYbFX0RAQM10ojbU1PPd1ZXIA2r9+3fjUxpDVHShCCVnPHPgwQcq6rT+2fPcW3efHxGqq7JkiyElf81ZE2m/8ijY77N1USB1wfCnes43PqBdGs89BRQY6i3lneTTS79/39L/b8Xf4y+X1OeozJaKu7+AcTolD65FNl4rD91dM4agIBlUQZ8Gw5880l6uO1owlguf+w9cm6S6SrCl/2Dan67AvwdgrMhJT3FeRubaOowUxJf25CK+SKMODM7JcDAWjgLiaAvXRqfWE+BHX6wVwy4vevhbuZRedG8DXE2cTuvvErTuZzRj9LXyp+JSOlZHzQ==</wsse:BinarySecurityToken>
+			<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-7841A9917F39F74EB21426596533916126">
+				<ds:SignedInfo>
+					<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+						<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="soap"/>
+					</ds:CanonicalizationMethod>
+					<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+					<ds:Reference URI="#id-7841A9917F39F74EB21426596533916125">
+						<ds:Transforms>
+							<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+								<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList=""/>
+							</ds:Transform>
+						</ds:Transforms>
+						<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+						<ds:DigestValue>lU/wAA8F1sR+pyIi6IO++g1IZVU=</ds:DigestValue>
+					</ds:Reference>
+				</ds:SignedInfo>
+				<ds:SignatureValue>EopUP4Oe6srzMIjQ/Yh09JCwt79wZEEA1jZa7Q0xbuH0BKAXMljgmzyxUEC67wnz3/lVh/tlnHtWQpa36kJCcyz3Pwc7GyqLlkZXgXK3v/0HJ13ZOhee+sDFQimKr5Bf4rIU8M538UUFRLWrl+CuJiuh4IziUeK1efzfVe1MvM9+vl0ZzQd7jey6qOj6TGhfnNNvbuNMyP8m49FZDnqGHeXZbfliWfkSTTTcr2QjfPy1tJmK/+Nwa5JgGHkX1Sa42PYr1qySqqohkHI3q7GSI2hgskrMw0TSanJ9tR7PrGJ6EorRzahiS23e3jQZ1z0CVN4Mlzt2ejXE5OiLBXrYTg==</ds:SignatureValue>
+				<ds:KeyInfo Id="KI-7841A9917F39F74EB21426596533916123">
+					<wsse:SecurityTokenReference wsu:Id="STR-7841A9917F39F74EB21426596533916124">
+						<wsse:Reference URI="#X509-7841A9917F39F74EB21426596533915122" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+					</wsse:SecurityTokenReference>
+				</ds:KeyInfo>
+			</ds:Signature>
+			<xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" Id="EK-7841A9917F39F74EB21426596533901120">
+				<xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/>
+				<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+					<wsse:SecurityTokenReference>
+						<ds:X509Data>
+							<ds:X509IssuerSerial>
+								<ds:X509IssuerName>CN=micc,OU=SEAP,O=MINHAP,L=M,ST=SPAIN,C=ES,1.2.840.113549.1.9.1=#160f6d696363406576657269732e636f6d</ds:X509IssuerName>
+								<ds:X509SerialNumber>1422348414</ds:X509SerialNumber>
+							</ds:X509IssuerSerial>
+						</ds:X509Data>
+					</wsse:SecurityTokenReference>
+				</ds:KeyInfo>
+				<xenc:CipherData>
+					<xenc:CipherValue>WJ0qSGL6BFIhK0jdY9aY4A==</xenc:CipherValue>
+				</xenc:CipherData>
+				<xenc:ReferenceList>
+					<xenc:DataReference URI="#ED-7841A9917F39F74EB21426596533904121"/>
+				</xenc:ReferenceList>
+			</xenc:EncryptedKey>
+		</wsse:Security>
+	</soap:Header>
+	<soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-7841A9917F39F74EB21426596533916125">
+		<Peticion xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion" xmlns:ns2="http://intermediacion.redsara.es/scsp/esquemas/datosespecificos" xmlns:ns3="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta">
+			<Atributos>
+				<IdPeticion>2440</IdPeticion>
+				<NumElementos>1</NumElementos>
+				<TimeStamp>2015-03-17T13:48:53.856Z</TimeStamp>
+				<Estado>
+					<CodigoEstado/>
+					<CodigoEstadoSecundario/>
+					<LiteralError/>
+				</Estado>
+				<CodigoCertificado>REA_002</CodigoCertificado>
+			</Atributos>
+			<Solicitudes>
+				<SolicitudTransmision>
+					<DatosGenericos>
+						<Emisor>
+							<NifEmisor>NIFREAREA</NifEmisor>
+							<NombreEmisor>REA</NombreEmisor>
+						</Emisor>
+						<Solicitante>
+							<IdentificadorSolicitante>S2833002E</IdentificadorSolicitante>
+							<NombreSolicitante>CARPETA</NombreSolicitante>
+							<UnidadTramitadora>MINHAP</UnidadTramitadora>
+							<Finalidad>Consulta del ciudadano</Finalidad>
+							<Consentimiento>Si</Consentimiento>
+						</Solicitante>
+						<Titular>
+							<Documentacion>11111111H</Documentacion>
+						</Titular>
+						<Transmision>
+							<CodigoCertificado>REA_002</CodigoCertificado>
+							<IdSolicitud>2440</IdSolicitud>
+						</Transmision>
+					</DatosGenericos>
+					<ns2:DatosEspecificos>
+						<ns2:revocarApoderamientoWS xmlns:ns2="http://ws.funcionario.map.es">
+							<Organismo xmlns="" xmlns:ns5="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion">E00122805</Organismo>
+							<CodApoderamiento xmlns="" xmlns:ns5="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion">9592</CodApoderamiento>
+							<NIF_NIE__Poderdante xmlns="" xmlns:ns5="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion">11111111H</NIF_NIE__Poderdante>
+						</ns2:revocarApoderamientoWS>
+					</ns2:DatosEspecificos>
+				</SolicitudTransmision>
+			</Solicitudes>
+		</Peticion>
+	</soap:Body>
+</soap:Envelope>

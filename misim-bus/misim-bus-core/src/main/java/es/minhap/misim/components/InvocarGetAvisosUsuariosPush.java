@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
@@ -21,15 +22,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import es.minhap.misim.bus.model.exception.ModelException;
-import es.minhap.plataformamensajeria.iop.beans.PeticionClaveAuthRequest;
 import es.minhap.plataformamensajeria.iop.beans.getAvisosUsuario.PeticionGetAvisosUsuario;
-import es.minhap.plataformamensajeria.iop.beans.getAvisosUsuario.RespuestaGetAvisosUsuario;
 import es.minhap.plataformamensajeria.iop.services.gestionNotificacionesPush.IGestionNotificacionesPushService;
-import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGestionSAMLRequestService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
-import es.redsara.misim.misim_bus_webapp.respuesta.rest.Parametros;
 import es.redsara.misim.misim_bus_webapp.respuesta.rest.ResponseSAMLStatusType;
-import es.redsara.misim.misim_bus_webapp.respuesta.rest.RespuestaSAMLRequest;
 
 /**
  * Cliente genérico para JAX-WS
@@ -41,25 +36,28 @@ public class InvocarGetAvisosUsuariosPush implements Callable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarGetAvisosUsuariosPush.class);
 
-	
+	@Resource
+	IGestionNotificacionesPushService gestionNotificacionesPushImpl;
+
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
 		LOG.debug("Empezando el proceso de invocación del enviador...");
 
 		try {
-			IGestionNotificacionesPushService servicio = FactoryServiceSim.getInstance().getInstanceNotificacionesPush();
-			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
+			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
+					.getSoapMessage();
 			System.out.println("REQUEST: " + XMLUtils.dom2xml(docOriginal));
 
-			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario", "PeticionGetAvisosUsuario");
+			NodeList peticion = docOriginal.getElementsByTagNameNS(
+					"http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario", "PeticionGetAvisosUsuario");
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
 
 			PeticionGetAvisosUsuario pet = new PeticionGetAvisosUsuario();
 			pet.loadObjectFromXML(xmlPeticion);
 
-			String respuesta = servicio.getAvisosUsuarioPush(pet);
-			
+			String respuesta = gestionNotificacionesPushImpl.getAvisosUsuarioPush(pet);
+
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
@@ -107,7 +105,8 @@ public class InvocarGetAvisosUsuariosPush implements Callable {
 
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
-		SOAPMessage message = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
+		SOAPMessage message = factory.createMessage(new MimeHeaders(),
+				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
 	}
 

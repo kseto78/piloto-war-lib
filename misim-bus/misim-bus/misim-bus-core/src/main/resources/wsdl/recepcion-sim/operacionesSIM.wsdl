@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/"  
+	xmlns:ns1="http://misim.redsara.es/misim-bus-webapp/peticion" 
+	xmlns:ns2="http://misim.redsara.es/misim-bus-webapp/respuesta"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.map.es/xml-schemas">
+			<import namespace="http://misim.redsara.es/misim-bus-webapp/peticion" schemaLocation="peticionOperaciones.xsd"/>
+			<import namespace="http://misim.redsara.es/misim-bus-webapp/respuesta" schemaLocation="respuestaOperaciones.xsd"/>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="anularMensajePeticion">
+		<wsdl:part name="peticion" element="ns1:PeticionMensaje"/>
+	</wsdl:message>
+	<wsdl:message name="anularMensajeRespuesta">
+		<wsdl:part name="respuesta" element="ns2:Respuesta"/>
+	</wsdl:message>
+	<wsdl:message name="reenviarMensajePeticion">
+		<wsdl:part name="peticion" element="ns1:PeticionMensaje"/>
+	</wsdl:message>
+	<wsdl:message name="reenviarMensajeRespuesta">
+		<wsdl:part name="respuesta" element="ns2:Respuesta"/>
+	</wsdl:message>
+	<wsdl:message name="anularLotePeticion">
+		<wsdl:part name="peticion" element="ns1:PeticionLote"/>
+	</wsdl:message>
+	<wsdl:message name="anularLoteRespuesta">
+		<wsdl:part name="respuesta" element="ns2:Respuesta"/>
+	</wsdl:message>
+	<wsdl:message name="reenviarLotePeticion">
+		<wsdl:part name="peticion" element="ns1:PeticionLote"/>
+	</wsdl:message>
+	<wsdl:message name="reenviarLoteRespuesta">
+		<wsdl:part name="respuesta" element="ns2:Respuesta"/>
+	</wsdl:message>
+	<wsdl:portType name="OperacionMensajesServicePortType">
+		<wsdl:operation name="anularMensaje">
+			<wsdl:input name="PeticionAnularMensaje" message="impl:anularMensajePeticion"/>
+			<wsdl:output name="RespuestaAnularMensaje" message="impl:anularMensajeRespuesta"/>
+		</wsdl:operation>
+		<wsdl:operation name="reenviarMensaje">
+			<wsdl:input name="PeticionReenviarMensaje" message="impl:reenviarMensajePeticion"/>
+			<wsdl:output name="RespuestaReenviarMensaje" message="impl:reenviarMensajeRespuesta"/>
+		</wsdl:operation>
+		<wsdl:operation name="anularLote">
+			<wsdl:input name="PeticionAnularLote" message="impl:anularLotePeticion"/>
+			<wsdl:output name="RespuestaAnularLote" message="impl:anularLoteRespuesta"/>
+		</wsdl:operation>
+		<wsdl:operation name="reenviarLote">
+			<wsdl:input name="PeticionReenviarLote" message="impl:reenviarLotePeticion"/>
+			<wsdl:output name="RespuestaReenviarLote" message="impl:reenviarLoteRespuesta"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="OperacionMensajesServiceBinding" type="impl:OperacionMensajesServicePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="anularMensaje">
+			<soap:operation soapAction="anularMensaje" style="document"/>
+			<wsdl:input>
+				<soap:body parts="peticion" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="respuesta" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="reenviarMensaje">
+			<soap:operation soapAction="reenviarMensaje" style="document"/>
+			<wsdl:input>
+				<soap:body parts="peticion" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="respuesta" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="anularLote">
+			<soap:operation soapAction="anularLote" style="document"/>
+			<wsdl:input>
+				<soap:body parts="peticion" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="respuesta" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="reenviarLote">
+			<soap:operation soapAction="reenviarLote" style="document"/>
+			<wsdl:input>
+				<soap:body parts="peticion" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="respuesta" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="OperacionMensajesService">
+		<wsdl:port name="OperacionMensajesServicePort" binding="impl:OperacionMensajesServiceBinding">
+			<soap:address location="/OperacionMensajesService"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

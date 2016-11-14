@@ -1,0 +1,263 @@
+<root>
+	<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+		<soap:Header/>
+		<soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-92CE16C59ACA6BB6CF1430141412979930">
+			<Peticion xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion">
+				<Atributos>
+					<IdPeticion>9139</IdPeticion>
+					<NumElementos>1</NumElementos>
+					<TimeStamp>2015-04-27T15:30:12.914Z</TimeStamp>
+					<Estado>
+						<CodigoEstado/>
+						<CodigoEstadoSecundario/>
+						<LiteralError/>
+					</Estado>
+					<CodigoCertificado>MEYSS_001</CodigoCertificado>
+				</Atributos>
+				<Solicitudes>
+					<SolicitudTransmision>
+						<DatosGenericos>
+							<Emisor>
+								<NifEmisor>S2819001E</NifEmisor>
+								<NombreEmisor>MEYSS</NombreEmisor>
+							</Emisor>
+							<Solicitante>
+								<IdentificadorSolicitante>S2833002E</IdentificadorSolicitante>
+								<NombreSolicitante>CARPETA</NombreSolicitante>
+								<UnidadTramitadora>MINHAP</UnidadTramitadora>
+								<Finalidad>Consulta del ciudadano</Finalidad>
+								<Consentimiento>Si</Consentimiento>
+							</Solicitante>
+							<Titular>
+								<TipoDocumentacion>DNI</TipoDocumentacion>
+								<Documentacion>00000001R</Documentacion>
+							</Titular>
+							<Transmision>
+								<CodigoCertificado>MEYSS_001</CodigoCertificado>
+								<IdSolicitud>9139</IdSolicitud>
+							</Transmision>
+						</DatosGenericos>
+						<ns2:DatosEspecificos xmlns:ns2="http://intermediacion.redsara.es/scsp/esquemas/datosespecificos">
+							<Peticion:Peticion xmlns:Peticion="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion">
+								<docIdentidad xmlns="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion">00000001R</docIdentidad>
+								<rol xmlns="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion">RO3</rol>
+								<clasificacion xmlns="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion"/>
+								<estado xmlns="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion">Abierto</estado>
+								<qaa xmlns="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion">3</qaa>
+							</Peticion:Peticion>
+						</ns2:DatosEspecificos>
+					</SolicitudTransmision>
+				</Solicitudes>
+			</Peticion>
+		</soap:Body>
+	</soap:Envelope>
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+		<soapenv:Header/>
+		<soapenv:Body>
+			<ns3:consultaExpedientes xmlns:ns3="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/" xmlns:ns2="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/respuesta" xmlns="http://des-carpetaciudadana.redsara.es/micc-bus-webapp/peticion">
+				<ns2:expedientes>
+					<ns2:expediente>
+						<ns2:identificador>IDAAAAA000000000000000000000000000000000000000000000</ns2:identificador>
+						<ns2:clasificacion>020130</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-03-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_1 BAJO</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDAAAAA000000000000000000000000000000000000000000002</ns2:identificador>
+						<ns2:clasificacion>020160</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-02-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_1 BAJO</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDAAAAA000000000000000000000000000000000000000000004</ns2:identificador>
+						<ns2:clasificacion>020150</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2014-03-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000004G</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado 1</ns2:nombreORazon>
+								</ns2:interesado>
+								<ns2:representante>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Representante</ns2:nombreORazon>
+								</ns2:representante>
+							</ns2:interesadoRepresentante>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000006Y</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado 2</ns2:nombreORazon>
+								</ns2:interesado>
+								<ns2:representante>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Representante</ns2:nombreORazon>
+								</ns2:representante>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_2 BAJO_CON_REGISTRO_FUERTE</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDAAAAA000000000000000000000000000000000000000000006</ns2:identificador>
+						<ns2:clasificacion>020130</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-03-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_3 SUSTANCIAL</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDAAAAA000000000000000000000000000000000000000000008</ns2:identificador>
+						<ns2:clasificacion>020160</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-02-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_3 SUSTANCIAL</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDBBBBB000000000000000000000000000000000000000000000</ns2:identificador>
+						<ns2:clasificacion>020130</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-03-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_1 BAJO</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDBBBBB000000000000000000000000000000000000000000002</ns2:identificador>
+						<ns2:clasificacion>020160</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-02-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_1 BAJO</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDBBBBB000000000000000000000000000000000000000000004</ns2:identificador>
+						<ns2:clasificacion>020150</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2014-03-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000005M</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado 1</ns2:nombreORazon>
+								</ns2:interesado>
+								<ns2:representante>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Representante</ns2:nombreORazon>
+								</ns2:representante>
+							</ns2:interesadoRepresentante>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000007F</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado 2</ns2:nombreORazon>
+								</ns2:interesado>
+								<ns2:representante>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Representante</ns2:nombreORazon>
+								</ns2:representante>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_2 BAJO_CON_REGISTRO_FUERTE</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDBBBBB000000000000000000000000000000000000000000006</ns2:identificador>
+						<ns2:clasificacion>020130</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-03-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_3 SUSTANCIAL</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+					<ns2:expediente>
+						<ns2:identificador>IDBBBBB000000000000000000000000000000000000000000008</ns2:identificador>
+						<ns2:clasificacion>020160</ns2:clasificacion>
+						<ns2:organo>E04921501</ns2:organo>
+						<ns2:fechaPresentacion>2015-02-01T00:00:00.000+01:00</ns2:fechaPresentacion>
+						<ns2:estado>Abierto</ns2:estado>
+						<ns2:interesadosRepresentantes>
+							<ns2:interesadoRepresentante>
+								<ns2:interesado>
+									<ns2:docIdentidad>00000001R</ns2:docIdentidad>
+									<ns2:nombreORazon>Interesado</ns2:nombreORazon>
+								</ns2:interesado>
+							</ns2:interesadoRepresentante>
+						</ns2:interesadosRepresentantes>
+						<ns2:observaciones>QAA_3 SUSTANCIAL</ns2:observaciones>
+						<ns2:enlace>https://sede.empleoyseguridadsocial.gob.es/es/sede_electronica/tramites/index.htm</ns2:enlace>
+					</ns2:expediente>
+				</ns2:expedientes>
+				<ns2:hayMasResultados>false</ns2:hayMasResultados>
+				<ns2:hayMasResultadosQaa>true</ns2:hayMasResultadosQaa>
+			</ns3:consultaExpedientes>
+		</soapenv:Body>
+	</soapenv:Envelope>
+</root>

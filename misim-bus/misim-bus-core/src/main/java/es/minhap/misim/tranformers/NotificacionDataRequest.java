@@ -1,12 +1,20 @@
 package es.minhap.misim.tranformers;
 
+import java.io.StringWriter;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionEnvioXML;
+import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "notificacionDataRequest", propOrder = {
@@ -178,5 +186,32 @@ public class NotificacionDataRequest {
 	}
 	
 	
+	public String toXML() throws PlataformaBusinessException {
+		
+		NotificacionDataRequest peticion = this;
+
+		try {
+
+			JAXBContext jaxbContext = JAXBContext.newInstance(NotificacionDataRequest.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+			StringWriter writer = new StringWriter();
+			jaxbMarshaller.marshal(peticion, writer);
+
+			return writer.toString();
+
+		} catch (PropertyException e) {
+			throw new PlataformaBusinessException(
+					"Error generando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage());
+		} catch (JAXBException e) {
+			throw new PlataformaBusinessException(
+					"Error generando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage());
+		}
+
+	}
 
 }

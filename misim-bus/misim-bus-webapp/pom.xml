@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>misim-bus</artifactId>
 		<groupId>es.minhap</groupId>
-		<version>1.0.0</version>
+		<version>2.0.0</version>
 	</parent>
 
 	<artifactId>misim-bus-webapp</artifactId>

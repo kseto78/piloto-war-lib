@@ -1,6 +1,7 @@
 package es.minhap.misim.components;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -124,6 +125,7 @@ public class Auditar implements Callable {
 			auditoria.setProducto(producto);
 			auditoria.setProveedor(proveedor);
 			auditoria.setPeticion(peticion);
+			auditoria.setFechaCreacion(new Date());
 			
 			if (idMensaje!=null){
 				auditoria.setIdMensaje(idMensaje);

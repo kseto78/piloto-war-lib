@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+						http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+						http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
+	<sub-flow name="FLW-MSG-ADP" doc:name="FLW-MSG-ADP">
+		<logger level="INFO" doc:name="Logger" message="Inicio del flujo FLW-MSG-ADP - Payload: #[payload]" />
+		
+		<processor-chain doc:name="Processor Chain">
+			<set-variable value="#[payload]" variableName="${PETICION_BACKUP}" doc:name="Backup del payload" />
+			
+			<set-payload
+				value="#[groovy:es.minhap.misim.tranformers.XSLTransformer.process(payload.soapMessage, flowVars['${XSL_SHEET}'])]"
+				doc:name="Transformación del mensaje XML a DOM" />
+			<expression-component doc:name="Inyección del nuevo DOM al SOAPPayload original">
+				<![CDATA[flowVars['${PETICION_BACKUP}'].soapMessage = payload]]>
+			</expression-component>
+			<set-payload value="#[flowVars['${PETICION_BACKUP}']]" doc:name="Recarga del payload actualizado" />
+				
+		</processor-chain>
+
+		<logger level="INFO" doc:name="Logger" message="Fin del flujo FLW-MSG-ADP - Payload: #[payload]" />
+	</sub-flow>
+</mule>

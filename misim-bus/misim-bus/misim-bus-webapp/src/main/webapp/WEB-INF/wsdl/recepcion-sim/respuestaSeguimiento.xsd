@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/respuesta"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/respuesta"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<element name="Respuesta">
+		<complexType>
+			<sequence>
+				<element maxOccurs="1" minOccurs="1" name="Status" type="impl:responseStatusType"/>
+				<element maxOccurs="1" minOccurs="0" name="SeguimientoMensajes" type="impl:seguimientoMensajes"/>
+				<element maxOccurs="1" minOccurs="0" name="Historial" type="impl:historial"/>
+			</sequence>
+		</complexType>
+	</element>
+	
+	<complexType name="responseStatusType">
+		<sequence>
+			<element maxOccurs="1" minOccurs="1" name="StatusCode" type="string"/>
+			<element maxOccurs="1" minOccurs="1" name="StatusText" type="string"/>
+			<element maxOccurs="1" minOccurs="0" name="Details" type="string" />
+		</sequence>
+	</complexType>
+	
+	<complexType name="seguimientoMensajes">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="1" name="SeguimientoMensaje" type="impl:seguimientoMensaje"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="seguimientoMensaje">
+		<sequence>
+			<element maxOccurs="1" minOccurs="1" name="IdServicio" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Servicio" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="IdAplicacion" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Aplicacion" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="IdCanal" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Canal" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="IdLote" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="IdMensaje" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="IdExterno" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="IdEstado" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Estado" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="Reintentos" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Fecha" type="xsd:dateTime"/>
+			<element maxOccurs="1" minOccurs="0" name="DocUsuario" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="0" name="CodSia" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="0" name="CodOrganismo" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="0" name="CodOrganismoPagador" type="xsd:string"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="historial">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="1" name="Historico" type="impl:registro"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="registro">
+		<sequence>
+			<element maxOccurs="1" minOccurs="1" name="idServidor" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Servidor" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="IdCanal" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="IdMensaje" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="IdExterno" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="IdEstado" type="xsd:int"/>
+			<element maxOccurs="1" minOccurs="1" name="Estado" type="xsd:string"/>
+			<element maxOccurs="1" minOccurs="1" name="Fecha" type="xsd:dateTime"/>
+		</sequence>
+	</complexType>
+	
+</schema>

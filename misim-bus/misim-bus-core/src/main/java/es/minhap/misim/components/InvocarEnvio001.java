@@ -26,8 +26,8 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
+
 //import es.minhap.misim.components.envio.EnvioEmailXMLBean;
 /**
  * Cliente genérico para JAX-WS
@@ -39,11 +39,13 @@ public class InvocarEnvio001 implements Callable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarEnvio001.class);
 
+	@Resource
+	IEnvioPremiumService envioPremiumAEATService;
+
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	PropertiesServices ps = null;
 
-	
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
@@ -56,79 +58,75 @@ public class InvocarEnvio001 implements Callable {
 		String passwordMISIM = ps.getMessage("misim.aplicacion.aeat.contrasena.sms", null, null, null);
 		Integer reintentos = new Integer(ps.getMessage("aeat.reintentos.sms.premium", null, null, null));
 
-//		String usuarioAEAT = "pruebasSIMdes";
-//		String passwordAEAT = "pruebasSIMdes";
-//		Integer idServicioAEAT = 1602;
+		// String usuarioAEAT = "pruebasSIMdes";
+		// String passwordAEAT = "pruebasSIMdes";
+		// Integer idServicioAEAT = 1602;
 		String COMPROBACION_ENVIO = "&lt;![CDATA[";
 		String COMPROBACION_URL = " | ";
 
-		try{
-			IEnvioPremiumService envioPremiumService = FactoryServiceSim.getInstance().getInstancePremium();
-			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
-			
+		try {
+			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
+					.getSoapMessage();
+
 			LOG.info("REQUEST PREMIUM: " + XMLUtils.dom2xml(docOriginal));
 
-//			Peticion peticion = (Peticion) docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "Peticion");
-			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "Peticion");
+			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion",
+					"Peticion");
 
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
 			EnvioAEATXMLBean envioAEATXML = new EnvioAEATXMLBean();
 			envioAEATXML.loadObjectFromXML(xmlPeticion);
-			String respuesta=envioPremiumService.enviarSMSPremium(envioAEATXML,usuarioAEAT,passwordAEAT,idServicioAEAT,usuarioMISIM,passwordMISIM, reintentos);
+			String respuesta = envioPremiumAEATService.enviarSMSPremium(envioAEATXML, usuarioAEAT, passwordAEAT,
+					idServicioAEAT, usuarioMISIM, passwordMISIM, reintentos);
 			eventContext.getMessage().setOutboundProperty("mensaje_AEAT", "S");
-			if (null!= respuesta && respuesta.contains(COMPROBACION_ENVIO)){
+			if (null != respuesta && respuesta.contains(COMPROBACION_ENVIO)) {
 				respuesta = adaptarRespuestaEnvioSMS(respuesta);
 				eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "S");
-				
-			}else{
-//				if (respuesta.contains(COMPROBACION_URL)){
-//					respuesta = adaptarRespuestaEnvioSMS(respuesta);
-//					eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "C");
-//				}else{
-						eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "N");
-//				}
+
+			} else {
+				eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "N");
 			}
-			
-			if (null!= respuesta && respuesta.contains(COMPROBACION_URL)){
+
+			if (null != respuesta && respuesta.contains(COMPROBACION_URL)) {
 				respuesta = quitarURLRespuesta(respuesta);
 			}
-				Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
-				String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
-				
-				SOAPMessage responseMessage=getSoapMessageFromString(respuestaCompleta);
-		        try{
-					
-						SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
-						SoapPayload<?> soapPayload = null;
-					    if (responseMessage.getSOAPBody().hasFault()) {
-					    	// La respuesta es un SOAP Fault
-							soapPayload = new SoapPayload<Object>();
-							eventContext.getMessage().setOutboundProperty("SOAPFault", true);
-				        } else {
-				        	// La respuesta no es un SOAP Fault
-				        	soapPayload = new SoapPayload<Respuesta>();
-							eventContext.getMessage().setOutboundProperty("SOAPFault", false);
-				        }
-					    
-					    LOG.info("RESPONSE PREMIUM: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-						soapPayload.setSoapAction(initPayload.getSoapAction());
-						soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
-				
-						eventContext.getMessage().setPayload(soapPayload);
-						
-					}catch(Exception e){
-						//Lanzar error
-						LOG.error("Error en la transmision: Error al obtener la respuesta del servicio Web especificado", e);
-						throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
-					}
-//			}
+			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
+			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
-		}catch (ModelException e){
-			
+			SOAPMessage responseMessage = getSoapMessageFromString(respuestaCompleta);
+			try {
+
+				SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
+				SoapPayload<?> soapPayload = null;
+				if (responseMessage.getSOAPBody().hasFault()) {
+					// La respuesta es un SOAP Fault
+					soapPayload = new SoapPayload<Object>();
+					eventContext.getMessage().setOutboundProperty("SOAPFault", true);
+				} else {
+					// La respuesta no es un SOAP Fault
+					soapPayload = new SoapPayload<Respuesta>();
+					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
+				}
+
+				LOG.info("RESPONSE PREMIUM: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+				soapPayload.setSoapAction(initPayload.getSoapAction());
+				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
+
+				eventContext.getMessage().setPayload(soapPayload);
+
+			} catch (Exception e) {
+				// Lanzar error
+				LOG.error("Error en la transmision: Error al obtener la respuesta del servicio Web especificado", e);
+				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
+			}
+			// }
+
+		} catch (ModelException e) {
+
 			throw new ModelException(e.getMensaje(), e.getCodigo());
-			
-		}catch(Exception e){
-			//Lanzar error
+
+		} catch (Exception e) {
+			// Lanzar error
 			LOG.error("Error en la transmision: Error de sistema Invocar Emisor", e);
 			throw new ModelException("Error de sistema Invocar Emisor", 502);
 		}
@@ -144,28 +142,32 @@ public class InvocarEnvio001 implements Callable {
 	 * @param respuesta
 	 * @return
 	 */
-		private String adaptarRespuestaEnvioSMS(String respuesta) {
-			if (respuesta.contains("&lt;![CDATA[")){
-				respuesta = respuesta.substring(respuesta.indexOf("&lt;![CDATA[", 0)+12, respuesta.indexOf("]]&gt;"));
-			}
-			respuesta = respuesta.replaceAll("&gt;",">").replaceAll("&lt;","<");
-//			respuesta = respuesta.substring(0, respuesta.indexOf(" | ")).concat(respuesta.substring(respuesta.indexOf("</Details>"),respuesta.length()));
-//			respuesta.indexOf("</Details>");
-			respuesta = respuesta.replaceAll("<Peticion>", "<Peticion xmlns=\"http://misim.redsara.es/misim-bus-webapp/peticion\">");
-			
-//			System.out.println("PETICION DE ENVIO SMS: " + respuesta);
-			return respuesta;
+	private String adaptarRespuestaEnvioSMS(String respuesta) {
+		if (respuesta.contains("&lt;![CDATA[")) {
+			respuesta = respuesta.substring(respuesta.indexOf("&lt;![CDATA[", 0) + 12, respuesta.indexOf("]]&gt;"));
 		}
+		respuesta = respuesta.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
+		// respuesta = respuesta.substring(0,
+		// respuesta.indexOf(" | ")).concat(respuesta.substring(respuesta.indexOf("</Details>"),respuesta.length()));
+		// respuesta.indexOf("</Details>");
+		respuesta = respuesta.replaceAll("<Peticion>",
+				"<Peticion xmlns=\"http://misim.redsara.es/misim-bus-webapp/peticion\">");
 
-		private String quitarURLRespuesta(String respuesta) {
-			respuesta = respuesta.substring(0, respuesta.indexOf(" | ")).concat(respuesta.substring(respuesta.indexOf("</Details>"),respuesta.length()));
-//			System.out.println("PETICION DE ENVIO SMS: " + respuesta);
-			return respuesta;
-		}
-	
+		// System.out.println("PETICION DE ENVIO SMS: " + respuesta);
+		return respuesta;
+	}
+
+	private String quitarURLRespuesta(String respuesta) {
+		respuesta = respuesta.substring(0, respuesta.indexOf(" | ")).concat(
+				respuesta.substring(respuesta.indexOf("</Details>"), respuesta.length()));
+		// System.out.println("PETICION DE ENVIO SMS: " + respuesta);
+		return respuesta;
+	}
+
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
-		SOAPMessage message = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
+		SOAPMessage message = factory.createMessage(new MimeHeaders(),
+				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
 	}
 }

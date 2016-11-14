@@ -4,6 +4,7 @@
 		<dependencies>
 			<module name="es.minhap.misim.modulo" />
 			<module name="oracle.driver.oci" />
+			<module name="org.jboss.ironjacamar.jdbcadapters"/>
 		</dependencies>
 	</deployment>
 </jboss-deployment-structure>

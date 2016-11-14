@@ -97,7 +97,7 @@ public class Auditoria implements java.io.Serializable {
 		this.idMensaje = idMensaje;
 	}
 
-	@Column(name = "FECHA_CREACION", nullable = false, length = 7)
+	@Column(name = "FECHA_CREACION",  length = 7)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -106,7 +106,7 @@ public class Auditoria implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	@Column(name = "FECHA_ACTUALIZACION", nullable = false, length = 7)
+	@Column(name = "FECHA_ACTUALIZACION", length = 7)
 	public Date getFechaActualizacion() {
 		return this.fechaActualizacion;
 	}

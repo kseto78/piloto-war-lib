@@ -9,6 +9,5 @@
   default-autowire="byName">
 
   	<!-- Inyección por anotaciones de los business y DAO -->
-  	<context:component-scan base-package="es.minhap.*" />
-
+  	<context:component-scan base-package="es.minhap.misim.*" />
 </beans>

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
@@ -35,6 +36,9 @@ import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 public class InvocarEnvioEmail implements Callable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarEnvioEmail.class);
+	
+	@Resource
+	private IEnvioLotesMensajesService envioLotesMensajesImpl;
 
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
@@ -49,16 +53,10 @@ public class InvocarEnvioEmail implements Callable {
 			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "Peticion");
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
 			
-//			EnvioEmailXMLBean envioEmail = new EnvioEmailXMLBean();
-//			envioEmail.loadObjectFromXML(xmlPeticion);
-//			IEnvioMensajesService envioService = FactoryServiceSim.getInstance().getInstanceMensajes();
-//			String respuesta=envioService.enviarEmail(envioEmail);
-//			SOAPMessage responseMessage=getSoapMessageFromString(respuesta);
-			
 			PeticionXMLBean peticionXML = new PeticionXMLBean();
 			peticionXML.loadObjectFromXML(xmlPeticion);
-			IEnvioLotesMensajesService envioService = FactoryServiceSim.getInstance().getInstanceLotes();
-			String respuesta=envioService.enviarLotesEmail(peticionXML);
+
+			String respuesta=envioLotesMensajesImpl.enviarLotesEmail(peticionXML);
 			
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());

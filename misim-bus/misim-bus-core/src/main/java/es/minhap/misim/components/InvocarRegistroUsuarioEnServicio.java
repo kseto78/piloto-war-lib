@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
@@ -22,10 +23,9 @@ import org.w3c.dom.NodeList;
 
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.RegistroUsuarioXMLBean;
-import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.RespuestaServiciosDisponibles;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.RespuestaServiciosRegistrarUsuario;
 import es.minhap.plataformamensajeria.iop.services.gestionServiciosPush.IGestionServiciosPushService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
+
 /**
  * Cliente genérico para JAX-WS
  * 
@@ -33,76 +33,81 @@ import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
  * 
  */
 public class InvocarRegistroUsuarioEnServicio implements Callable {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarRegistroUsuarioEnServicio.class);
+
+	@Resource
+	IGestionServiciosPushService gestionServiciosPushImpl;
 
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
 		LOG.debug("Empezando el proceso de invocación del enviador...");
 
-		try{
+		try {
 
-			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
+			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
+					.getSoapMessage();
 			System.out.println("REQUEST: " + XMLUtils.dom2xml(docOriginal));
 
-			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio", "PeticionRegistroUsuario");
+			NodeList peticion = docOriginal.getElementsByTagNameNS(
+					"http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio",
+					"PeticionRegistroUsuario");
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
-			
+
 			RegistroUsuarioXMLBean registroUsuarioXML = new RegistroUsuarioXMLBean();
 			registroUsuarioXML.loadObjectFromXML(xmlPeticion);
 
-			IGestionServiciosPushService gestionServiciosPushService = FactoryServiceSim.getInstance().getInstanceServiciosPush();
-			String respuesta = gestionServiciosPushService.registroUsuarioEnServicio(registroUsuarioXML);
-			
-			
+			String respuesta = gestionServiciosPushImpl.registroUsuarioEnServicio(registroUsuarioXML);
+
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
-			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
-			
-			SOAPMessage responseMessage=getSoapMessageFromString(respuestaCompleta);
-	        try{
-				
-					SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
-					SoapPayload<?> soapPayload = null;
-				    if (responseMessage.getSOAPBody().hasFault()) {
-				    	// La respuesta es un SOAP Fault
-						soapPayload = new SoapPayload<Object>();
-						eventContext.getMessage().setOutboundProperty("SOAPFault", true);
-			        } else {
-			        	// La respuesta no es un SOAP Fault
-			        	soapPayload = new SoapPayload<RespuestaServiciosRegistrarUsuario>();
-						eventContext.getMessage().setOutboundProperty("SOAPFault", false);
-			        }
-				    
-				    System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-					soapPayload.setSoapAction(initPayload.getSoapAction());
-					soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
-			
-					eventContext.getMessage().setPayload(soapPayload);
-					
-				}catch(Exception e){
-					//Lanzar error
-					LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
-					throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
+			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
+
+			SOAPMessage responseMessage = getSoapMessageFromString(respuestaCompleta);
+			try {
+
+				SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
+				SoapPayload<?> soapPayload = null;
+				if (responseMessage.getSOAPBody().hasFault()) {
+					// La respuesta es un SOAP Fault
+					soapPayload = new SoapPayload<Object>();
+					eventContext.getMessage().setOutboundProperty("SOAPFault", true);
+				} else {
+					// La respuesta no es un SOAP Fault
+					soapPayload = new SoapPayload<RespuestaServiciosRegistrarUsuario>();
+					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				}
 
-		}catch (ModelException e){
-			
+				System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+				soapPayload.setSoapAction(initPayload.getSoapAction());
+				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
+
+				eventContext.getMessage().setPayload(soapPayload);
+
+			} catch (Exception e) {
+				// Lanzar error
+				LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
+				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
+			}
+
+		} catch (ModelException e) {
+
 			throw new ModelException(e.getMensaje(), e.getCodigo());
-			
-		}catch(Exception e){
-			//Lanzar error
+
+		} catch (Exception e) {
+			// Lanzar error
 			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
 			throw new ModelException("Error de sistema Invocar Emisor", 502);
-		}		
+		}
 		LOG.debug("Proceso de creación de invocación al emisor terminado.");
 		return eventContext.getMessage();
 	}
-	
+
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
-		SOAPMessage message = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
+		SOAPMessage message = factory.createMessage(new MimeHeaders(),
+				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
 	}
-	
+
 }

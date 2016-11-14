@@ -40,7 +40,6 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 import es.minhap.plataformamensajeria.iop.services.recepcion.IRecepcionMensajesService;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.IRecepcionEstadoSMSService;
 import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensajesService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 //import es.minhap.misim.components.envio.EnvioEmailXMLBean;
 /**
@@ -70,6 +69,16 @@ public class InvocarRecepcion implements Callable {
 	
 	
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarRecepcion.class);
+	
+	@Resource
+	IRecepcionMensajesService recepcionMensajesImpl;
+	
+	@Resource
+	IRecepcionEstadoSMSService recepcionEstadoSMSImpl;
+	
+	@Resource
+	ISeguimientoMensajesService seguimientoMensajesImpl;
+	
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	PropertiesServices ps = null;
@@ -98,8 +107,7 @@ public class InvocarRecepcion implements Callable {
 					RecibirSMSRequest recepcionBean = new RecibirSMSRequest();
 					recepcionBean.loadObjectFromXML(xmlPeticion2);
 		
-					IRecepcionMensajesService recepcionMensajesService = FactoryServiceSim.getInstance().getInstanceRecepcionMensajes();
-					respuesta=recepcionMensajesService.recibirSMSXML(recepcionBean);
+					respuesta=recepcionMensajesImpl.recibirSMSXML(recepcionBean);
 					
 					SOAPMessage responseMessage=getSoapMessageFromString(respuesta);
 		        	
@@ -148,8 +156,7 @@ public class InvocarRecepcion implements Callable {
 							RecepcionEstadoSMSXMLBean recepcionBean = new RecepcionEstadoSMSXMLBean();
 							recepcionBean.loadObjectFromXML(xmlPeticion2);
 				
-							IRecepcionEstadoSMSService recepcionEstadoService = FactoryServiceSim.getInstance().getInstanceRecepcionEstado();
-							respuesta=recepcionEstadoService.recibirEstadoSMSXML(recepcionBean);
+							respuesta=recepcionEstadoSMSImpl.recibirEstadoSMSXML(recepcionBean);
 							//messageId = recepcionBean.getMensajeId();
 							if(respuesta.contains(",")){
 								String sender = recepcionBean.getSender();
@@ -262,8 +269,7 @@ public class InvocarRecepcion implements Callable {
 			String usuarioAEAT = new String(ps.getMessage("aeat.usuario.sms", null, null, null));
 			String passwordAEAT = new String(ps.getMessage("aeat.contrasena.sms", null, null, null));
 			Integer idServicioAEAT = new Integer(ps.getMessage("aeat.servicio.sms.premium", null, null, null));
-			ISeguimientoMensajesService seguimientoService = FactoryServiceSim.getInstance().getInstanceSeguimiento();
-			respuestaIncompleta=seguimientoService.consultarEstadoAEAT(idServicioAEAT, new Integer(idMensaje),null, usuarioAEAT, passwordAEAT,sender,recipient, statusText);
+			respuestaIncompleta=seguimientoMensajesImpl.consultarEstadoAEAT(idServicioAEAT, new Integer(idMensaje),null, usuarioAEAT, passwordAEAT,sender,recipient, statusText);
 			
 			PeticionNotificacionEstadoSMS petNotAEAT = new PeticionNotificacionEstadoSMS();
 			petNotAEAT.loadObjectFromXML(respuestaIncompleta);
