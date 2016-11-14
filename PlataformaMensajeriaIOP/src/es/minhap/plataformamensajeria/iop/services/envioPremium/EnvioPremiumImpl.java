@@ -1,434 +1,232 @@
 package es.minhap.plataformamensajeria.iop.services.envioPremium;
 
-import java.util.Map;
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.stereotype.Service;
 
-import es.minhap.plataformamensaferia.iop.beans.envioPremium.DatosEspecificos;
-import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionEnvioXML;
+import es.map.sim.jms.sender.SIMMessageSender;
+import es.map.sim.negocio.modelo.MensajeJMS;
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
-import es.minhap.plataformamensajeria.iop.beans.UrlMensajePremiumBean;
-import es.minhap.plataformamensajeria.iop.jdbc.AplicacionDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.EnvioMensajesDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.EnvioMensajesPremiumDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.MensajeDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.OrganismosDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.ServicioDAO;
-import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorDestinatariosMensajes;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorMensajes;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismos;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServicios;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServidores;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServidoresOrganismos;
+import es.minhap.plataformamensajeria.iop.manager.TblAplicacionesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblErrorMensajeLogManager;
+import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
+import es.minhap.plataformamensajeria.iop.manager.TblUrlMensajePremiumManager;
+import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.util.Utils;
-import es.minhap.plataformamensajeria.sm.modelo.ParametrosProveedor;
-import es.minhap.plataformamensajeria.sm.modelo.Proveedor;
-import es.minhap.plataformamensajeria.sm.modelo.SMSData;
-import es.minhap.plataformamensajeria.sm.modelo.Servicio;
+import es.minhap.sim.model.TblDestinatariosMensajes;
+import es.minhap.sim.model.TblMensajes;
+import es.minhap.sim.model.TblServicios;
+import es.minhap.sim.model.TblUrlMensajePremium;
 
+/**
+ * 
+ * @author everis
+ *
+ */
+@Service("envioPremiumAEATService")
 public class EnvioPremiumImpl implements IEnvioPremiumService {
-	static Logger logger = Logger.getLogger(IEnvioPremiumService.class);
+	public final static Logger LOG = Logger.getLogger(IEnvioPremiumService.class);
+	
+	private static String getStatusTextKo = "plataformaErrores.envioPremiumAEAT.STATUSTEXT_KO";
 
-	private static int GESTION_MULTIDESTINATARIOS = 1;
-	private static String PENDIENTE_ENVIO = "PENDIENTE DE ENVIO";
-	private static String PENDIENTE = "PENDIENTE";
-	private static String ENVIANDO = "ENVIANDO";
-	private static String INCIDENCIA = "INCIDENCIA";
-	private static String PENDIENTE_OPERADORA = "PENDIENTE DE OPERADORA";
-	private static String ENVIADO = "ENVIADO";
-	private static String ANULADO ="ANULADO";
-	private static String APLICACION_NOACTIVA =". La aplicacion no esta activa";
+	private static String getStatusTextOk = "plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK";
+	
+	private static String getCodOk = "plataformaErrores.envioPremiumAEAT.STATUS_OK";
+	
+	private String statusTextKO;
+	
+	private String statusTextOK;
+	
+	private String codOK;
+	
+	@Resource
+	private TblServiciosManager serviciosManager;
+	
+	@Resource
+	private TblServidoresManager servidoresManager;
+	
+	@Resource
+	private TblOrganismosManager organismosManager;
+	
+	@Resource
+	private TblErrorMensajeLogManager errorMensajeLogManager;
+	
+	@Resource
+	private TblAplicacionesManager aplicacionesManager;
+	
+	@Resource
+	private TblMensajesManager mensajesManager;
+	
+	@Resource
+	private TblDestinatariosMensajesManager destinatariosMensajesManager;
+	
+	@Resource
+	TblEstadosManager estadosManager;
+	
+	@Resource
+	private TblLotesEnviosManager lotesManager;
+	
+	@Resource
+	private TblUrlMensajePremiumManager urlMensajePremiunManager;
+	
+	@Resource
+	TblHistoricosManager hitoricosManager;
+	
+	@Autowired
+	private QueryExecutorOrganismos queryExecutorOrganismos;
 
+	@Autowired
+	private QueryExecutorMensajes queryExecutorMensajes;
+	
+	@Autowired
+	private QueryExecutorServidores queryExecutorServidores;
+	
+	@Autowired
+	private QueryExecutorServicios queryExecutorServicios;
+	
+	@Autowired
+	private QueryExecutorServidoresOrganismos queryExecutorServidoresOrganismos;
+
+	@Autowired
+	private QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes;
+
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+	
+	@Resource(name = "messageSender")
+	private SIMMessageSender sender;
+
+	
 	@Override
 	public String enviarSMSPremium(EnvioAEATXMLBean envio, String username, String password, Integer servicio, String usernameMISIM, String passwordMISIM, Integer reintentos) {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		statusTextKO = ps.getMessage(getStatusTextKo,null);
 
-		EnvioMensajesPremiumDAO dao = new EnvioMensajesPremiumDAO();
-		EnvioMensajesDAO daoLote = new EnvioMensajesDAO();
-		MensajeDAO dm = new MensajeDAO();
-		ServicioDAO serviciodao = new ServicioDAO();
-		OrganismosDAO organismodao = new OrganismosDAO();
-		AplicacionDAO aplicacionDao = new AplicacionDAO();
-		PeticionEnvioXML peticionEnvioXML = null;
-		Integer idLote = null;
-		Integer idMensaje = null;
-		boolean reenviar = false;
-		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp = null;
+		Integer idMensaje = new Integer(0);
+		String respuestaFinal = null;
+		
 		try {
-			serviciodao.beginTransaction();
-			// Inicializamos las variables
-			// envioPremium.initializeVariables();
-			if (!serviciodao.isMultiOrganismo("" + servicio)) {
-				resp = peticionCorrectaSMS(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(), envio.getIdExterno(), envio.getDestinatario(), envio.getDeliveryReportURL());
-			} else {
-				organismodao.beginTransaction();
-				boolean activo = organismodao.organismoActivoEnServicio(servicio, envio.getCodOrganismoPagadorSMS());
-				organismodao.endTransaction(false);
-				resp = peticionCorrectaSMSMultiOrganismo(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(), envio.getIdExterno(), envio.getDestinatario(),
-						envio.getDeliveryReportURL(), activo);
-			}
+			respuestaFinal = comprobacionesGenerales(envio, username, password, servicio, ps);
 
-			if (resp != null) {
-				return resp.toXMLSMS(resp);
-			}
-			dao.beginTransaction();
-
-			// Comprobamos el servicio
-			if (null == servicio) {
-				resp = codificarRespuesta(PlataformaErrores.COD_2010_GENERAL, PlataformaErrores.DESC_2010_GENERAL,
-						PlataformaErrores.STATUSTEXT_KO, envio.getIdExterno(), null);
-				return resp.toXMLSMS(resp);
-			}
-
-			// Comprobamos usuario y password
-			if (null == username || null == password) {
-				resp = codificarRespuesta(PlataformaErrores.COD_0008_GENERAL, PlataformaErrores.DESC_0008_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-						envio.getIdExterno(), null);
-				return resp.toXMLSMS(resp);
-			}
-
-			// Comprobamos
-			if (Utils.validarTelefono(envio.getDestinatario()) == 1) {
-				resp = codificarRespuesta(PlataformaErrores.COD_2000_GENERAL, PlataformaErrores.DESC_2000_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-						envio.getIdExterno(), null);
-				return resp.toXMLSMS(resp);
-			}
-			
-			// Comprobamos que la aplicación esté activa
-			aplicacionDao.beginTransaction();
-			Integer activeApplication = aplicacionDao.checkActiveApplication(servicio);
-			if (activeApplication.intValue() == 0) {
-				resp = codificarRespuesta(PlataformaErrores.COD_0008_GENERAL,	PlataformaErrores.DESC_0008_GENERAL + APLICACION_NOACTIVA, PlataformaErrores.STATUSTEXT_KO,
-						envio.getIdExterno(), null);
-				return resp.toXMLSMS(resp);
-			}
-			aplicacionDao.endTransaction(false);
-
-
-			// Tratamiento de reintentos
-			idMensaje = checkMessageExists(dao, envio.getIdExterno());
-
-			if (idMensaje != null) {
-
-				// Comprobar el estado del SMS en sim
-				String status = dao.getStatusMessage(idMensaje);
-				if (PENDIENTE_ENVIO.equals(status) || PENDIENTE.equals(status) || ENVIANDO.equals(status) || INCIDENCIA.equals(status)) {
-					boolean reenvio = comprobarReintentos(dao, idMensaje);
-					
-					if (reenvio){
-						peticionEnvioXML = reenviarSMS(envio, idMensaje, username, password, usernameMISIM, passwordMISIM);
-						if (null == peticionEnvioXML) {
-							resp = codificarRespuesta(PlataformaErrores.COD_ERROR_SERVIDOR_INCORRECTO, PlataformaErrores.DETAILS_ERROR_SERVIDOR_INCORRECTO,
-									PlataformaErrores.STATUSTEXT_KO, envio.getIdExterno(), idMensaje);
-						} else {
-							resp = codificarRespuesta(PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK, PlataformaErrores.STATUSTEXT_OK, envio.getIdExterno(), idMensaje);
-							reenviar = true;
-						}
-					}else{
-						// ponemos el estado a anulado
-						dao.setEstadoMensaje(idMensaje, ANULADO);
-						//OJOO ver qué devolvemos, ahora se devuelve un OK, le aceptamos el reintento pero no hacemos nada.
-						resp = codificarRespuesta(PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK, PlataformaErrores.STATUSTEXT_OK, envio.getIdExterno(), idMensaje);
-					}
-					dao.endTransaction(true);
-				}  else if (PENDIENTE_OPERADORA.equals(status)) {
-					UrlMensajePremiumBean bean = dao.getURLMensajePremiumBeanByIdMessage(idMensaje);
-					if (!bean.getUrl().equalsIgnoreCase(envio.getDeliveryReportURL())) {
-						dao.updateURL(idMensaje, envio.getDeliveryReportURL());
-						dao.endTransaction(true);
-					}
-					resp = codificarRespuesta(PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK, PlataformaErrores.STATUSTEXT_OK, envio.getIdExterno(), idMensaje);
-				} else if (ENVIADO.equals(status) || ANULADO.equals(status)) {
-					resp = codificarRespuesta(PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK, PlataformaErrores.STATUSTEXT_OK, envio.getIdExterno(), idMensaje);
-				}
-			} else {
-
-				// Creamos el lote
-				daoLote.beginTransaction();
-				idLote = daoLote.crearLote(servicio.toString(), PlataformaErrores.NOMBRE_LOTE_AEAT, username, password, GESTION_MULTIDESTINATARIOS);
-				if (null == idLote) {
-					resp = codificarRespuesta(PlataformaErrores.COD_0014_GENERAL, PlataformaErrores.DESC_0014_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-							envio.getIdExterno(), null);
-					return resp.toXMLSMS(resp);
-				} else {
-					if (idLote == -1) {
-						resp = codificarRespuesta(PlataformaErrores.COD_ERROR_APLICACION, PlataformaErrores.DETAILS_ERROR_APLICACION, PlataformaErrores.STATUSTEXT_KO,
-								envio.getIdExterno(), null);
-						return resp.toXMLSMS(resp);
-					} else if (idLote == -2 || idLote == -3) {
-						resp = codificarRespuesta(PlataformaErrores.COD_0016_GENERAL, PlataformaErrores.DESC_0016_GENERAL,
-								PlataformaErrores.STATUSTEXT_KO, envio.getIdExterno(), null);
-						return resp.toXMLSMS(resp);
-					} else if (idLote < 0) {
-						resp = codificarRespuesta(PlataformaErrores.COD_0014_GENERAL, PlataformaErrores.DESC_0014_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-								envio.getIdExterno(), null);
-						return resp.toXMLSMS(resp);
-					}
-				}
-
-				// Crear Mensaje
-				idMensaje = dao.crearMensaje(idLote, envio.getCuerpo(), null, envio.getCodOrganismoPagadorSMS(), envio.getIdExterno(), envio.getDestinatario(), username, password,
-						envio.getDeliveryReportURL(),reintentos);
-				dao.endTransaction(true);
-				daoLote.endTransaction(true);
-				if (null == idMensaje || idMensaje <= 0) {
-					resp = codificarRespuesta(PlataformaErrores.COD_2006_GENERAL, PlataformaErrores.DESC_2006_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-							envio.getIdExterno(), null);
-				} else {
-					peticionEnvioXML = reenviarSMS(envio, idMensaje, username, password, usernameMISIM, passwordMISIM);
-					if (null == peticionEnvioXML) {
-						resp = codificarRespuesta(PlataformaErrores.COD_ERROR_SERVIDOR_INCORRECTO, PlataformaErrores.DETAILS_ERROR_SERVIDOR_INCORRECTO,
-								PlataformaErrores.STATUSTEXT_KO, envio.getIdExterno(), idMensaje);
-					} else {
-						resp = codificarRespuesta(PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK, PlataformaErrores.STATUSTEXT_OK, envio.getIdExterno(), idMensaje);
-						reenviar = true;
-					}
-
-				}
-			}
-			dao.beginTransaction();
-			dm.beginTransaction();
-			String aux = resp.getDetails();
-			String peticion = "";
-			if (null != peticionEnvioXML) {
-				peticion = "<![CDATA[" + peticionEnvioXML.toXMLSMS() + "]]>";
-			}
-			String urlPremium = dm.getUrlPremium(idMensaje);
-			if (resp.getStatusText().equals(PlataformaErrores.STATUSTEXT_KO)) {
-				aux = aux + " | " + urlPremium;
-			} else {
-				aux = aux + ((reenviar) ? " | " + urlPremium + " | " + peticion : " | " + urlPremium);
-			}
-			resp.setDetails(aux);
-			dao.endTransaction(false);
-			dm.endTransaction(false);
-			serviciodao.endTransaction(false);
-			return resp.toXMLSMS(resp);
+			if (null == respuestaFinal){
+				// Tratamiento de reintentos
+				idMensaje = queryExecutorDestinatariosMensajes.checkIdExternoExists(envio.getIdExterno(), true);
+				
+				if (idMensaje != null){
+					//el mensaje se estÃ¡ procesando. Codificamos respuesta de OK ala espera de que se envie.
+					respuestaFinal = reenviarMensaje(envio, username, ps, idMensaje, servicio);
+				}else{ //Se puede crear el mensaje
+					respuestaFinal = crearMensaje(envio, username, password, servicio, ps);
+					Respuesta respuesta = new Respuesta();
+					respuesta.loadObjectFromXML(respuestaFinal);
+					idMensaje = Integer.parseInt(respuesta.getIdMensaje());
+				}	
+				
+			}	
 		} catch (Exception e) {
-			serviciodao.endTransaction(false);
-			dao.endTransaction(false);
-			daoLote.endTransaction(false);
-			dm.endTransaction(false);
-			aplicacionDao.endTransaction(false);
-		} finally {
-			organismodao.endTransaction(false);
-			organismodao.connClose();
-			organismodao.closeAll();
-			serviciodao.connClose();
-			serviciodao.closeAll();
-			dao.connClose();
-			dao.closeAll();
-			daoLote.connClose();
-			daoLote.closeAll();
-			dm.connClose();
-			dm.closeAll();
-			aplicacionDao.closeAll();
-		}
-		return null;
+			LOG.error("[EnvioPremiumImpl.enviarSMSPremium] Enviando Mensaje AEAT",e);
+		} 
+		return respuestaFinal;
 	}
+
+	
 
 	@Override
 	public String cambiarEstadoSMSPremium(Integer idMensaje, String statusText) {
-		EnvioMensajesPremiumDAO dao = new EnvioMensajesPremiumDAO();
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		statusTextOK = ps.getMessage(getStatusTextOk,null);
+		codOK = ps.getMessage(getCodOk,null);
+		statusTextKO = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUS_KO",null);
+		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_OK",null);
+		String codKO = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_GENERAL",null);
+		String detailsKO = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_GENERAL",null);
+		String estadoPendienteOperadora = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA",null);
+		String usuario = ps.getMessage("aeat.usuario.sms",null);
+		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA",null);
 		Respuesta resp = new Respuesta();
 		String idExterno = "";
 		String respuesta = null;
 		try {
-			dao.beginTransaction();
-			idExterno = dao.getIdExterno(idMensaje);
+			idExterno =destinatariosMensajesManager.getIdExterno(idMensaje.longValue());
 			if (statusText.contains("OK")) {
-				dao.setEstadoMensajeEnviado(idMensaje, PENDIENTE_OPERADORA, statusText);
-				resp = codificarRespuesta(PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK, PlataformaErrores.STATUSTEXT_OK, idExterno, idMensaje);
+				mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendienteOperadora, statusText, false, null, null, usuario, null);
+				resp = codificarRespuesta(codOK, detailsOK, statusTextOK, idExterno, idMensaje);
 			} else {
-				resp = comprobarError(statusText, idExterno, idMensaje);
-				dao.setEstadoMensajeEnviado(idMensaje, INCIDENCIA, statusText);
-				// resp = codificarRespuesta(COD_ERROR_GENERAL, statusText ,
-				// STATUSTEXT_KO , idExterno,idMensaje);
+				resp = comprobarError(statusText, idExterno, idMensaje, ps);
+				mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoIncidencia, statusText, false, null, null, usuario, null);
 			}
-			dao.endTransaction(true);
 			respuesta = resp.toXMLSMS(resp);
 		} catch (Exception e) {
-			resp = codificarRespuesta(PlataformaErrores.COD_ERROR_GENERAL, PlataformaErrores.DETAILS_ERROR_GENERAL, PlataformaErrores.STATUSTEXT_KO, idExterno, idMensaje);
-			dao.endTransaction(false);
-		} finally {
-			dao.connClose();
-			dao.closeAll();
-		}
+			LOG.error("[EnvioPremiumImpl.cambiarEstadoSMSPremium] Cambiando Estado Mensaje AEAT",e);
+			resp = codificarRespuesta(codKO, detailsKO, statusTextKO, idExterno, idMensaje);
+			try {
+				respuesta = resp.toXMLSMS(resp);
+			} catch (PlataformaBusinessException e1) {
+				LOG.error("[EnvioPremiumImpl.cambiarEstadoSMSPremium] Cambiando Estado Mensaje AEAT",e1);
+			}
+		} 
 		return respuesta;
 	}
 	
 	@Override
 	public String gerUrlEndpoint(String messageId) {
-		EnvioMensajesPremiumDAO dao = new EnvioMensajesPremiumDAO();
 		String url = "";
 		try {
-			dao.beginTransaction();
-			
+						
 			if (null != messageId && Integer.parseInt(messageId)>0) {
-				UrlMensajePremiumBean bean= dao.getURLMensajePremiumBeanByIdMessage(Integer.parseInt(messageId));
+				TblUrlMensajePremium bean= urlMensajePremiunManager.getUrlByMensaje(Long.parseLong(messageId));
 				url= bean.getUrl();
 			} 
-			dao.endTransaction(false);
-			
+						
 		} catch (Exception e) {
-			dao.endTransaction(false);
-		} finally {
-			dao.connClose();
-			dao.closeAll();
-		}
+			LOG.error("[EnvioPremiumImpl.gerUrlEndpoint] Obteniendo url Endpoint",e);
+		} 
 		return url;
 	}
 
-	private Respuesta comprobarError(String statusText, String idExterno, Integer idMensaje) {
-		Respuesta resp = new Respuesta();
-		if (null == statusText || statusText.isEmpty()) {
-			resp = codificarRespuesta(PlataformaErrores.COD_ERROR_GENERAL, statusText, PlataformaErrores.STATUSTEXT_KO, idExterno, idMensaje);
-		} else if (statusText.contains("credit")) {
-			resp = codificarRespuesta(PlataformaErrores.COD_ERROR_CREDITO, PlataformaErrores.DETAILS_ERROR_CREDITO, PlataformaErrores.STATUSTEXT_KO, idExterno, idMensaje);
+	private Respuesta comprobarError(String statusText, String idExterno, Integer idMensaje, PropertiesServices ps) {
+		Respuesta resp;
+		String codErrorCredito = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_CREDITO",null);
+		String detailsErrorCredito = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_CREDITO",null);
+		String codErrorAuth = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_AUTENTICACION",null);
+		String detailsErrorAuth = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_AUTENTICACION",null);
+		String codErrorGeneral = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_GENERAL",null);
+
+		if (statusText.contains("credit")) {
+			resp = codificarRespuesta(codErrorCredito, detailsErrorCredito,statusTextKO, idExterno, idMensaje);
 		} else if (statusText.contains("Authorization failed")) {
-			resp = codificarRespuesta(PlataformaErrores.COD_ERROR_AUTENTICACION, PlataformaErrores.DETAILS_ERROR_AUTENTICACION, PlataformaErrores.STATUSTEXT_KO, idExterno,
+			resp = codificarRespuesta(codErrorAuth, detailsErrorAuth, statusTextKO, idExterno,
 					idMensaje);
-		} else if (statusText.contains("credit")) {
-			resp = codificarRespuesta(PlataformaErrores.COD_ERROR_GENERAL, statusText, PlataformaErrores.STATUSTEXT_KO, idExterno, idMensaje);
-		} else if (statusText.contains("Error")) {
-			resp = codificarRespuesta(PlataformaErrores.COD_ERROR_GENERAL, statusText, PlataformaErrores.STATUSTEXT_KO, idExterno, idMensaje);
+		}  else {
+			resp = codificarRespuesta(codErrorGeneral, statusText, statusTextKO, idExterno, idMensaje);
 		}
 
 		return resp;
 	}
 
-	private boolean comprobarReintentos(EnvioMensajesPremiumDAO dao, Integer idMensaje) {
-		boolean res = false;
-		UrlMensajePremiumBean bean = dao.getURLMensajePremiumBeanByIdMessage(idMensaje);
-		if (null != bean && bean.getReintentos().intValue() > 0) {
-			dao.decrementReintentos(idMensaje);
-			return true;
-		}
-		return res;
-	}
-
-	private PeticionEnvioXML reenviarSMS(EnvioAEATXMLBean envio, Integer idMensaje, String usuarioAplicacion, String passAplicacion, String usernameMISIM, String passwordMISIM) {
-		return postSMS(idMensaje, envio.getCodOrganismoPagadorSMS(), usuarioAplicacion, passAplicacion, usernameMISIM, passwordMISIM);
-	}
-
-	private Integer checkMessageExists(EnvioMensajesPremiumDAO dao, String idExterno) {
-		return dao.checkIdExternoExists(idExterno);
-	}
-
-	private PeticionEnvioXML postSMS(Integer idMensaje, String codOrganismo, String usuarioAplicacion, String passAplicacion, String usernameMISIM, String passwordMISIM) {
-		EnvioMensajesPremiumDAO dao = new EnvioMensajesPremiumDAO();
-		Map<Integer, Servicio> mapServicios = null;
-		Integer proveedorID = null;
-		PeticionEnvioXML peticionEnvio = null;
-		try {
-			dao.beginTransaction();
-
-			SMSData smsData = dao.getSMSData(idMensaje);
-
-			boolean sendOK = false;
-
-			if (null != smsData.Body) {
-				int indice = 0;
-				int numServidores = smsData.Servers.size();
-				// esto debe tener una lista..debe..debe..
-				mapServicios = dao.findServicioByMessageId(idMensaje);
-				while ((indice < numServidores) && !sendOK) {
-
-					proveedorID = smsData.Servers.get(indice).getProveedorId();
-
-					if (mapServicios.containsKey(proveedorID)) {
-						Servicio s = mapServicios.get(proveedorID);
-						if (logger.isDebugEnabled())
-							logger.debug("Llamamos a Envio SMS");
-						try {
-							// tomamos el Header que corresponde con el
-							// proveedor
-							smsData.ServiceData.setHeaderSMS(s.getHeaderSMS());
-							smsData.ServiceData.setPasswordServidor(s.getProveedorPassSMS());
-							smsData.ServiceData.setUsuarioServidor(s.getProveedorUsuarioSMS());
-							// PROCESO DE ENVIO DEL SMS A TRAVES DEL PROVEEDOR
-							peticionEnvio = generateRequestXML(dao, smsData, idMensaje, s, indice, codOrganismo, usuarioAplicacion, passAplicacion, usernameMISIM, passwordMISIM);
-
-							if (logger.isInfoEnabled())
-								logger.info("Respuesta: " + peticionEnvio);
-							if (null != peticionEnvio) {
-
-								// ponemos el estado a enviando
-								dao.setEstadoMensaje(idMensaje, ENVIANDO);
-							}
-							break;
-						} catch (Exception e) {
-							e.printStackTrace();
-							String errorMessage = e.getMessage();
-							if (logger.isInfoEnabled())
-								logger.info("Excepcion :" + errorMessage + " (postSMS)");
-							dao.setLogError("SendMailService.postSMS", 0, "SMS_ID: " + idMensaje + ". Error: (" + e.hashCode() + ") " + errorMessage);
-						}
-					}
-					indice++;
-				}
-
-			}
-			dao.endTransaction(true);
-		} catch (Exception e) {
-			dao.endTransaction(false);
-		} finally {
-			dao.connClose();
-			dao.closeAll();
-		}
-		return peticionEnvio;
-	}
-
-	private PeticionEnvioXML generateRequestXML(EnvioMensajesPremiumDAO dao, SMSData smsData, Integer idMensaje, Servicio s, int indice, String codigoOrganismo,
-			String usuarioAplicacion, String passAplicacion, String usernameMISIM, String passwordMISIM) {
-		PeticionEnvioXML envio = new PeticionEnvioXML();
-		try {
-			ParametrosProveedor pp = smsData.Servers.get(indice);
-			Proveedor p = dao.findProveedor(pp.getProveedorId());
-			if (p != null) {
-				logger.debug("Recuperado proveedor: " + p.getServidorid());
-			} else {
-				logger.debug("No encontrado proveedor con id: " + pp.getProveedorId());
-				return null;
-			}
-
-			// String bytesEncoded = Base64.encode(passAplicacion.getBytes());
-
-			// generamo la peticion de envio
-			envio.setUsuario(usernameMISIM);
-			envio.setPassword(passwordMISIM);
-			envio.setProveedor(p.getNombre());
-			envio.setMensajeId(idMensaje.toString());
-			envio.setProducto("SMS");
-			envio.setUrlEndpoint(p.getUrlDestino());
-			DatosEspecificos de = new DatosEspecificos();
-			de.setSMS_DESTINATARIO(smsData.Telefono);
-			de.setSMS_HEADER(smsData.ServiceData.getHeaderSMS());
-			de.setSMS_ID(idMensaje.toString());
-			de.setSMS_TEXTO(smsData.Body);
-						
-			String usu = dao.getUsuario(codigoOrganismo, pp.getProveedorId());
-			String pass = dao.getPassword(codigoOrganismo, pp.getProveedorId());
-			
-			de.setSMS_USUARIO((null != usu) ? usu : smsData.ServiceData.getUsuarioServidor());
-			de.setSMS_PASSWORD((null != pass) ? pass : smsData.ServiceData.getPasswordServidor());
-			
-			envio.setDatosEspecificos(de);
-
-			logger.debug("peticion generada : " + envio);
-
-			//indicamos el metodo de consulta
-			dao.setMetodoConsulta(idMensaje,p.getMetodoConsulta());
-			return envio;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return envio;
-	}
 
 	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta codificarRespuesta(String codError, String detailsError, String statusError, String idExterno,
 			Integer idMensaje) {
 
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res = new es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta();
-		// es.minhap.plataformamensaferia.iop.beans.envioPremium.ResponseStatusType
-		// rs = new
-		// es.minhap.plataformamensaferia.iop.beans.envioPremium.ResponseStatusType();
 		res.setDetails(detailsError);
 		res.setStatusCode(codError);
 		res.setStatusText(statusError);
@@ -442,53 +240,586 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	}
 
 	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta peticionCorrectaSMS(String codOrganismoPagador, String cuerpo, String idExterno, String destinatario,
-			String deliveryUrl) {
+			String deliveryUrl, PropertiesServices ps) {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res;
+	
+		res = comprobarOrganismoYCuerpo(codOrganismoPagador, cuerpo, idExterno, true, ps);
+		if (null == res)
+			res = comprobarIdExternoYDestinatario(idExterno, destinatario, deliveryUrl, ps);
+		
+		return res;
+	}
+
+	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta peticionCorrectaSMSMultiOrganismo(String codOrganismoPagador, String cuerpo, String idExterno,
+			String destinatario, String deliveryUrl, boolean organismoActivo, PropertiesServices ps) {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res;
+				
+		res = comprobarOrganismoYCuerpo(codOrganismoPagador, cuerpo, idExterno, organismoActivo, ps);
+		if (null == res)
+			res = comprobarIdExternoYDestinatario(idExterno, destinatario, deliveryUrl, ps);
+				
+		return res;
+	}
+
+	private Respuesta comprobarIdExternoYDestinatario(String idExterno, String destinatario, String deliveryUrl, PropertiesServices ps) {
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res = null;
-		if (null == codOrganismoPagador || codOrganismoPagador.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_2012_GENERAL, PlataformaErrores.DESC_2012_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-					idExterno, null);
-
-		} else if (null == cuerpo || cuerpo.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_0007_GENERAL, PlataformaErrores.DESC_0001_GENERAL, PlataformaErrores.STATUSTEXT_KO, idExterno,
-					null);
-
-		} else if (null == idExterno || idExterno.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_ERROR_ID_EXTERNO_AEAT, PlataformaErrores.DETAILS_ERROR_ID_EXTERNO_AEAT, PlataformaErrores.STATUSTEXT_KO, "", null);
+		String codIdExterno = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_ID_EXTERNO_AEAT",null);
+		String desIdExterno = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_ID_EXTERNO_AEAT",null);
+		String cod2002 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2002_GENERAL",null);
+		String des2002 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2002_GENERAL",null);
+		String cod2020 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0020_GENERAL",null);
+		String des2020 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0020_GENRAL",null);
+		
+		if (null == idExterno || idExterno.isEmpty()) {
+			res = codificarRespuesta(codIdExterno, desIdExterno, statusTextKO, "", null);
 
 		} else if (null == destinatario || destinatario.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_2002_GENERAL, PlataformaErrores.DESC_2002_GENERAL,
-					PlataformaErrores.STATUSTEXT_KO, idExterno, null);
-
+			res = codificarRespuesta(cod2002, des2002, statusTextKO, idExterno, null);
 		} else if (null == deliveryUrl || deliveryUrl.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_0020_GENERAL, PlataformaErrores.DESC_0020_GENRAL, PlataformaErrores.STATUSTEXT_KO, idExterno, null);
+			res = codificarRespuesta(cod2020, des2020, statusTextKO, idExterno, null);
 
 		}
 		return res;
 	}
 
-	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta peticionCorrectaSMSMultiOrganismo(String codOrganismoPagador, String cuerpo, String idExterno,
-			String destinatario, String deliveryUrl, boolean organismoActivo) {
+	private Respuesta comprobarOrganismoYCuerpo(String codOrganismoPagador, String cuerpo, String idExterno, boolean organismoActivo, PropertiesServices ps) {
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res = null;
+		String cod2012 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2012_GENERAL",null);
+		String des2012 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2012_GENERAL",null);
+		String cod0007 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2007_GENERAL",null);
+		String des0007 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2007_GENERAL",null);
+		
 		if (null == codOrganismoPagador || codOrganismoPagador.isEmpty() || !organismoActivo) {
-			return codificarRespuesta(PlataformaErrores.COD_2012_GENERAL, PlataformaErrores.DESC_2012_GENERAL, PlataformaErrores.STATUSTEXT_KO,
-					idExterno, null);
+			res = codificarRespuesta(cod2012, des2012, statusTextKO, idExterno, null);
 
 		} else if (null == cuerpo || cuerpo.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_0007_GENERAL, PlataformaErrores.DESC_0007_GENERAL, PlataformaErrores.STATUSTEXT_KO, idExterno,
-					null);
-
-		} else if (null == idExterno || idExterno.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_ERROR_ID_EXTERNO_AEAT, PlataformaErrores.DETAILS_ERROR_ID_EXTERNO_AEAT, PlataformaErrores.STATUSTEXT_KO, "", null);
-
-		} else if (null == destinatario || destinatario.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_2002_GENERAL, PlataformaErrores.DESC_2002_GENERAL,
-					PlataformaErrores.STATUSTEXT_KO, idExterno, null);
-
-		} else if (null == deliveryUrl || deliveryUrl.isEmpty()) {
-			return codificarRespuesta(PlataformaErrores.COD_0020_GENERAL, PlataformaErrores.DESC_0020_GENRAL, PlataformaErrores.STATUSTEXT_KO, idExterno, null);
-
+			res = codificarRespuesta(cod0007, des0007, statusTextKO, idExterno, null);
+			
 		}
 		return res;
+	}
+	
+	private String reenviarMensaje(EnvioAEATXMLBean envio, String username, PropertiesServices ps, Integer idMensaje, Integer servicio) throws PlataformaBusinessException {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		String respuesta = null;
+		String estadoPendienteOperadora = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA",null);
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO",null);
+		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE",null);
+		statusTextOK = ps.getMessage(getStatusTextOk,null);
+		codOK =  ps.getMessage(getCodOk,null);
+		String detailsOK =  ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_OK",null);
+		TblMensajes mensaje = mensajesManager.getMensaje(idMensaje.longValue());
+		String status = mensaje.getEstadoactual();
+		if (estadoPendienteOperadora.equals(status)){
+			TblUrlMensajePremium bean = urlMensajePremiunManager.getUrlByMensaje(idMensaje.longValue());
+			bean.setUrl(envio.getDeliveryReportURL());
+			urlMensajePremiunManager.update(bean);
+			resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
+			respuesta = resp.toXMLSMS(resp);
+		}else if (estadoAnulado.equals(status)){
+			
+			for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager.getDestinatarioMensajes(idMensaje.longValue())) {
+				mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendiente, null, false, null, null, username, null);
+				
+				MensajeJMS mensajeJms = new MensajeJMS();
+				mensajeJms.setIdMensaje(idMensaje.toString());
+				mensajeJms.setIdExterno(envio.getIdExterno());
+				mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+				mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());								
+				TblServicios servicioAEAT = serviciosManager.getServicio(servicio.longValue());
+			
+				sender.send(mensajeJms, 0, servicioAEAT.getNombre(), true);
+			}
+			resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
+			respuesta = resp.toXMLSMS(resp);
+		}else{
+			resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
+			respuesta = resp.toXMLSMS(resp);
+		}
+		return respuesta;
+	}
+
+	private String crearMensaje(EnvioAEATXMLBean envio, String username, String password, Integer servicio, PropertiesServices ps) throws PlataformaBusinessException {
+		String nombreLote =  ps.getMessage("plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT",null);
+		String cod0014 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0014_GENERAL",null);
+		String des0014 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0014_GENERAL",null);
+		String codErrorAplicacion = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_APLICACION",null);
+		String desErrorAplicacion = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_APLICACION",null);
+		String cod0016 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0016_GENERAL",null);
+		String des0016 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0016_GENERAL",null);
+		String cod2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2006_GENERAL",null);
+		String des2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2006_GENERAL",null);
+		String codServidorIncorrecto = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_SERVIDOR_INCORRECTO",null);
+		String desServidorIncorrecto = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_SERVIDOR_INCORRECTO",null);
+		String codigoOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUS_OK",null);
+		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT",null);
+		String statusOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK",null);
+		
+		Integer idLote;
+		Integer idMensaje;
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		String respuesta;
+		
+		//creamos el lote
+		idLote = lotesManager.insertarLote(servicio.longValue(), nombreLote, username, password);
+		if (null == idLote) {
+			resp = codificarRespuesta(cod0014, des0014, statusTextKO, envio.getIdExterno(), null);
+			respuesta = resp.toXMLSMS(resp);
+		} else {
+			if (idLote == -1) {
+				resp = codificarRespuesta(codErrorAplicacion, desErrorAplicacion, statusTextKO, envio.getIdExterno(), null);
+				respuesta = resp.toXMLSMS(resp);
+			} else if (idLote == -2 || idLote == -3) {
+				resp = codificarRespuesta(cod0016, des0016, statusTextKO, envio.getIdExterno(), null);
+				respuesta = resp.toXMLSMS(resp);
+			} else {
+				resp = codificarRespuesta(cod0014, des0014, statusTextKO, envio.getIdExterno(), null);
+				respuesta = resp.toXMLSMS(resp);
+			}
+		}
+	
+		Long estadoId;
+		
+		// Crear Mensaje
+		idMensaje = mensajesManager.insertarMensajeGISS(idLote, envio.getCuerpo(), null, envio.getCodOrganismoPagadorSMS(), envio.getIdExterno(),
+				envio.getDestinatario(), username, password);
+		if (null == idMensaje || idMensaje <= 0) {
+			resp = codificarRespuesta(cod2006, des2006, statusTextKO, envio.getIdExterno(), null);
+			respuesta = resp.toXMLSMS(resp);
+		} else {
+			estadoId = estadosManager.getEstadoByName(mensajesManager.getMensaje(idMensaje.longValue()).getEstadoactual()).getEstadoid();
+			insertarUrlPremium(envio.getDeliveryReportURL(), idMensaje);
+			for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager.getDestinatarioMensajes(idMensaje.longValue())) {
+				hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(), estadoId, null, null, null, username);
+				MensajeJMS mensajeJms = new MensajeJMS();
+				mensajeJms.setIdMensaje(idMensaje.toString());
+				mensajeJms.setIdExterno(envio.getIdExterno());
+				mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+				mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+				
+				TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
+
+				sender.send(mensajeJms, 0, servicioAEAT.getNombre(), true);
+			}
+		}
+			if (null == respuesta) {
+				resp = codificarRespuesta(codServidorIncorrecto, desServidorIncorrecto, statusTextKO, envio.getIdExterno(), idMensaje);
+				respuesta = resp.toXMLSMS(resp);
+			} else {
+				resp = codificarRespuesta(codigoOK, detailsOK, statusOK, envio.getIdExterno(), idMensaje);
+				respuesta = resp.toXMLSMS(resp);
+
+			}
+			
+		return respuesta;
+	}
+
+	private void insertarUrlPremium(String deliveryReportURL, Integer idMensaje) {
+		TblUrlMensajePremium tbl = new TblUrlMensajePremium();
+		tbl.setMensajeId(idMensaje.longValue());
+		tbl.setUrl(deliveryReportURL);
+		tbl.setReintentos(null);
+		urlMensajePremiunManager.insert(tbl);
+		
+	}
+
+
+
+	private String comprobacionesGenerales(EnvioAEATXMLBean envio, String username, String password, Integer servicio,
+			PropertiesServices ps) throws PlataformaBusinessException {
+		String respuestaFinal;
+		// Comprobamos OrganismoActivo en Servicio
+		respuestaFinal = comprobarOrganismoActivoEnServicio(envio, servicio, ps);
+		
+		// Comprobamos el servicio
+		if (respuestaFinal == null)
+			respuestaFinal = comprobarServicio(envio, servicio, ps);
+
+		// Comprobamos usuario y password
+		if (respuestaFinal == null)
+			respuestaFinal = comprobarUsuarioPassword(envio, username, password, ps);
+
+		// Comprobamos telefono
+		if (respuestaFinal == null)
+			respuestaFinal = comprobarTelefono(envio, ps);
+		
+		// Comprobamos que la aplicaciï¿½n estï¿½ activa
+		if (respuestaFinal == null)
+			respuestaFinal = comprobarAplicacionActiva(envio, servicio, ps);
+		
+		return respuestaFinal;
+	}
+
+	private String comprobarAplicacionActiva(EnvioAEATXMLBean envio, Integer servicio, PropertiesServices ps) throws PlataformaBusinessException {
+		String cod0008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0008_GENERAL",null);
+		String des0008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0008_GENERAL",null);
+		String apNoActiva = ps.getMessage("plataformaErrores.envioPremiumAEAT.APLICACION_NOACTIVA",null);
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		
+		Integer activeApplication =queryExecutorOrganismos.checkActiveApplication(servicio);
+		if (activeApplication.intValue() == 0) {
+			resp = codificarRespuesta(cod0008,	des0008 + apNoActiva, statusTextKO,	envio.getIdExterno(), null);
+			return resp.toXMLSMS(resp);
+		}
+		return null;
+	}
+
+	private String comprobarTelefono(EnvioAEATXMLBean envio, PropertiesServices ps) throws PlataformaBusinessException {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		String cod2000 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2000_GENERAL",null);
+		String des2000 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2000_GENERAL",null);
+		if (Utils.validarTelefono(envio.getDestinatario()) == 1) {
+			resp = codificarRespuesta(cod2000, des2000, statusTextKO, envio.getIdExterno(), null);
+			return resp.toXMLSMS(resp);
+		}
+		return null;
+	}
+
+	private String comprobarUsuarioPassword(EnvioAEATXMLBean envio, String username, String password, PropertiesServices ps) throws PlataformaBusinessException {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		String cod2008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0008_GENERAL",null);
+		String des2008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0008_GENERAL",null);
+		if (null == username || null == password) {
+			resp = codificarRespuesta(cod2008, des2008, statusTextKO, envio.getIdExterno(), null);
+			return resp.toXMLSMS(resp);
+		}
+		return null;
+	}
+
+	private String comprobarServicio(EnvioAEATXMLBean envio, Integer servicio, PropertiesServices ps)
+			throws PlataformaBusinessException {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		String cod2010 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2010_GENERAL",null);
+		String des2010 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2010_GENERAL",null);
+		if (null == servicio) {
+			resp = codificarRespuesta(cod2010, des2010,statusTextKO, envio.getIdExterno(), null);
+			return resp.toXMLSMS(resp);
+		}
+		return null;
+	}
+
+	private String comprobarOrganismoActivoEnServicio(
+			EnvioAEATXMLBean envio, Integer servicio, PropertiesServices ps) throws PlataformaBusinessException {
+		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
+		if (!serviciosManager.isMultiOrganismo(servicio)) {
+			resp = peticionCorrectaSMS(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(), envio.getIdExterno(), envio.getDestinatario(), envio.getDeliveryReportURL(), ps);
+		} else {
+			boolean activo = queryExecutorOrganismos.organismoActivoEnServicio(servicio, envio.getCodOrganismoPagadorSMS());
+			resp = peticionCorrectaSMSMultiOrganismo(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(), envio.getIdExterno(), envio.getDestinatario(),
+					envio.getDeliveryReportURL(), activo, ps);
+		}
+
+		if (null != resp) {
+			return resp.toXMLSMS(resp);
+		}
+		return null;
+	}
+
+
+
+	/**
+	 * @return the serviciosManager
+	 */
+	public TblServiciosManager getServiciosManager() {
+		return serviciosManager;
+	}
+
+
+
+	/**
+	 * @param serviciosManager the serviciosManager to set
+	 */
+	public void setServiciosManager(TblServiciosManager serviciosManager) {
+		this.serviciosManager = serviciosManager;
+	}
+
+
+
+	/**
+	 * @return the servidoresManager
+	 */
+	public TblServidoresManager getServidoresManager() {
+		return servidoresManager;
+	}
+
+
+
+	/**
+	 * @param servidoresManager the servidoresManager to set
+	 */
+	public void setServidoresManager(TblServidoresManager servidoresManager) {
+		this.servidoresManager = servidoresManager;
+	}
+
+
+
+	/**
+	 * @return the organismosManager
+	 */
+	public TblOrganismosManager getOrganismosManager() {
+		return organismosManager;
+	}
+
+
+
+	/**
+	 * @param organismosManager the organismosManager to set
+	 */
+	public void setOrganismosManager(TblOrganismosManager organismosManager) {
+		this.organismosManager = organismosManager;
+	}
+
+
+
+	/**
+	 * @return the errorMensajeLogManager
+	 */
+	public TblErrorMensajeLogManager getErrorMensajeLogManager() {
+		return errorMensajeLogManager;
+	}
+
+
+
+	/**
+	 * @param errorMensajeLogManager the errorMensajeLogManager to set
+	 */
+	public void setErrorMensajeLogManager(TblErrorMensajeLogManager errorMensajeLogManager) {
+		this.errorMensajeLogManager = errorMensajeLogManager;
+	}
+
+
+
+	/**
+	 * @return the aplicacionesManager
+	 */
+	public TblAplicacionesManager getAplicacionesManager() {
+		return aplicacionesManager;
+	}
+
+
+
+	/**
+	 * @param aplicacionesManager the aplicacionesManager to set
+	 */
+	public void setAplicacionesManager(TblAplicacionesManager aplicacionesManager) {
+		this.aplicacionesManager = aplicacionesManager;
+	}
+
+
+
+	/**
+	 * @return the mensajesManager
+	 */
+	public TblMensajesManager getMensajesManager() {
+		return mensajesManager;
+	}
+
+
+
+	/**
+	 * @param mensajesManager the mensajesManager to set
+	 */
+	public void setMensajesManager(TblMensajesManager mensajesManager) {
+		this.mensajesManager = mensajesManager;
+	}
+
+
+
+	/**
+	 * @return the destinatariosMensajesManager
+	 */
+	public TblDestinatariosMensajesManager getDestinatariosMensajesManager() {
+		return destinatariosMensajesManager;
+	}
+
+
+
+	/**
+	 * @param destinatariosMensajesManager the destinatariosMensajesManager to set
+	 */
+	public void setDestinatariosMensajesManager(TblDestinatariosMensajesManager destinatariosMensajesManager) {
+		this.destinatariosMensajesManager = destinatariosMensajesManager;
+	}
+
+
+
+	/**
+	 * @return the lotesManager
+	 */
+	public TblLotesEnviosManager getLotesManager() {
+		return lotesManager;
+	}
+
+
+
+	/**
+	 * @param lotesManager the lotesManager to set
+	 */
+	public void setLotesManager(TblLotesEnviosManager lotesManager) {
+		this.lotesManager = lotesManager;
+	}
+
+
+
+	/**
+	 * @return the urlMensajePremiunManager
+	 */
+	public TblUrlMensajePremiumManager getUrlMensajePremiunManager() {
+		return urlMensajePremiunManager;
+	}
+
+
+
+	/**
+	 * @param urlMensajePremiunManager the urlMensajePremiunManager to set
+	 */
+	public void setUrlMensajePremiunManager(TblUrlMensajePremiumManager urlMensajePremiunManager) {
+		this.urlMensajePremiunManager = urlMensajePremiunManager;
+	}
+
+
+
+	/**
+	 * @return the queryExecutorOrganismos
+	 */
+	public QueryExecutorOrganismos getQueryExecutorOrganismos() {
+		return queryExecutorOrganismos;
+	}
+
+
+
+	/**
+	 * @param queryExecutorOrganismos the queryExecutorOrganismos to set
+	 */
+	public void setQueryExecutorOrganismos(QueryExecutorOrganismos queryExecutorOrganismos) {
+		this.queryExecutorOrganismos = queryExecutorOrganismos;
+	}
+
+
+
+	/**
+	 * @return the queryExecutorMensajes
+	 */
+	public QueryExecutorMensajes getQueryExecutorMensajes() {
+		return queryExecutorMensajes;
+	}
+
+
+
+	/**
+	 * @param queryExecutorMensajes the queryExecutorMensajes to set
+	 */
+	public void setQueryExecutorMensajes(QueryExecutorMensajes queryExecutorMensajes) {
+		this.queryExecutorMensajes = queryExecutorMensajes;
+	}
+
+
+
+	/**
+	 * @return the queryExecutorServidores
+	 */
+	public QueryExecutorServidores getQueryExecutorServidores() {
+		return queryExecutorServidores;
+	}
+
+
+
+	/**
+	 * @param queryExecutorServidores the queryExecutorServidores to set
+	 */
+	public void setQueryExecutorServidores(QueryExecutorServidores queryExecutorServidores) {
+		this.queryExecutorServidores = queryExecutorServidores;
+	}
+
+
+
+	/**
+	 * @return the queryExecutorServicios
+	 */
+	public QueryExecutorServicios getQueryExecutorServicios() {
+		return queryExecutorServicios;
+	}
+
+
+
+	/**
+	 * @param queryExecutorServicios the queryExecutorServicios to set
+	 */
+	public void setQueryExecutorServicios(QueryExecutorServicios queryExecutorServicios) {
+		this.queryExecutorServicios = queryExecutorServicios;
+	}
+
+
+
+	/**
+	 * @return the queryExecutorServidoresOrganismos
+	 */
+	public QueryExecutorServidoresOrganismos getQueryExecutorServidoresOrganismos() {
+		return queryExecutorServidoresOrganismos;
+	}
+
+
+
+	/**
+	 * @param queryExecutorServidoresOrganismos the queryExecutorServidoresOrganismos to set
+	 */
+	public void setQueryExecutorServidoresOrganismos(QueryExecutorServidoresOrganismos queryExecutorServidoresOrganismos) {
+		this.queryExecutorServidoresOrganismos = queryExecutorServidoresOrganismos;
+	}
+
+
+
+	/**
+	 * @return the queryExecutorDestinatariosMensajes
+	 */
+	public QueryExecutorDestinatariosMensajes getQueryExecutorDestinatariosMensajes() {
+		return queryExecutorDestinatariosMensajes;
+	}
+
+
+
+	/**
+	 * @param queryExecutorDestinatariosMensajes the queryExecutorDestinatariosMensajes to set
+	 */
+	public void setQueryExecutorDestinatariosMensajes(QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes) {
+		this.queryExecutorDestinatariosMensajes = queryExecutorDestinatariosMensajes;
+	}
+
+
+
+	/**
+	 * @return the reloadableResourceBundleMessageSource
+	 */
+	public ReloadableResourceBundleMessageSource getReloadableResourceBundleMessageSource() {
+		return reloadableResourceBundleMessageSource;
+	}
+
+
+
+	/**
+	 * @param reloadableResourceBundleMessageSource the reloadableResourceBundleMessageSource to set
+	 */
+	public void setReloadableResourceBundleMessageSource(
+			ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
+		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
+	}
+
+
+
+	/**
+	 * @return the sender
+	 */
+	public SIMMessageSender getSender() {
+		return sender;
+	}
+
+
+
+	/**
+	 * @param sender the sender to set
+	 */
+	public void setSender(SIMMessageSender sender) {
+		this.sender = sender;
 	}
 
 }

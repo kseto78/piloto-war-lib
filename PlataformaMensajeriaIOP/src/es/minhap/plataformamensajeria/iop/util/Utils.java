@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 
 import org.apache.axis.encoding.Base64;
 
-import es.minhap.plataformamensajeria.iop.beans.RecibirSMSRequest;
-
 public class Utils {
     private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -103,6 +101,12 @@ public class Utils {
 		
 		 res = Base64.encode(cadena.getBytes());
 		return res;
+	 }
+	 
+	 public static String decode64(String cadena){
+		 byte[] valueDecoded= Base64.decode(cadena);
+		 return new String(valueDecoded);
+		
 	 }
 	 
 	

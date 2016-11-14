@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.jws.WebService;
 
-import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioEmailXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioSMSXMLBean;
@@ -35,8 +34,6 @@ public interface IEnvioMensajesService {
     
     
     String enviarNotificacion(EnvioPushXMLBean notificacionPush);
-    
-    String enviarNotificacion(EnvioPushXMLBean notificacionPush, PropertiesServices ps);
 
 	boolean asociadoAlOrganismo(String servicio, String OrganismoPagador);
 

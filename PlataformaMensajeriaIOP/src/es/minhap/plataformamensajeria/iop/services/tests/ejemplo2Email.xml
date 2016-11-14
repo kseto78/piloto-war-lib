@@ -14,7 +14,14 @@
 			<Cuerpo>Envío de prueba a traves del servicio web</Cuerpo>
 			<Origen>Trafico</Origen>
 			<Modo>1</Modo>
-			
+			<!--Optional:-->
+              <Adjuntos>
+                 <!--1 or more repetitions:-->
+                 <Adjunto>
+                    <Nombre>NombreDelAdjunto1</Nombre>
+                    <Contenido>asdflñkajsdlkasdglñlkjasdlkjasldfkjañlsd</Contenido>
+                 </Adjunto>
+              </Adjuntos>
 			<DestinatariosMail>
 				<DestinatarioMail>
 

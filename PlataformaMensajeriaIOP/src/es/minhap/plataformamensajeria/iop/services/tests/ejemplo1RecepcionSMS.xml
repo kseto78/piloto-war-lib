@@ -1,0 +1,8 @@
+<recibirSMSRequest>
+	<User>vodafone</User>
+    <Password>vodafone</Password>
+    <Sender>609691700</Sender>
+    <Recipient>34600124564</Recipient>
+    <MessageId>aaaaaaaaaaaaaa</MessageId>
+    <SMSText>esto es una prueba de a ver que pasa</SMSText>
+</recibirSMSRequest>

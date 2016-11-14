@@ -1,71 +1,132 @@
 package es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse;
 
-import org.apache.log4j.Logger;
+import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.stereotype.Service;
+
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.PeticionClaveAuthRequest;
 import es.minhap.plataformamensajeria.iop.beans.ResponseSAMLStatusType;
 import es.minhap.plataformamensajeria.iop.beans.RespuestaSAMLResponse;
-import es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean;
-import es.minhap.plataformamensajeria.iop.jdbc.AplicacionDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.UsuariosPushDAO;
-import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
+import es.minhap.plataformamensajeria.iop.manager.TblAplicacionesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
+import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
+/**
+ * 
+ * @author everis
+ *
+ */
+@Service("gestionSAMLRequestImpl")
 public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService {
-	static Logger logger = Logger.getLogger(GestionSAMLRequestServiceImpl.class);
+	
+	private static final Logger LOG = Logger.getLogger(GestionSAMLRequestServiceImpl.class);
 
-	private static final Integer USUARIO_CORRECTO = 1;
+	@Resource
+	private TblAplicacionesManager aplicacionesManager;
+
+	@Resource
+	private TblUsuariosPushManager usuariosPushManager;
+
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
 	@Override
 	public String comprobarDatosUsuario(PeticionClaveAuthRequest peticion) {
-		UsuariosPushDAO dao = new UsuariosPushDAO();
-		AplicacionDAO aplicacionDao = new AplicacionDAO();
+		PropertiesServices ps = new PropertiesServices(getReloadableResourceBundleMessageSource());
+		String statusTextKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO", null);
+		String codErrorPeticion = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_PETICION", null);
+		String detailsErrorPeticion = ps.getMessage(
+				"plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_PETICION", null);
+		String codErrorServicio = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_SERVICIO", null);
+		String detailsErrorServicio = ps.getMessage(
+				"plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_SERVICIO", null);
+		String codErrorGeneral = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_GENERAL", null);
+		String detailsErrorGeneral = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_GENERAL",
+				null);
 		RespuestaSAMLResponse respuesta = new RespuestaSAMLResponse();
-		UsuariosPushBean usuario = null;
+		Boolean existeDispositivo = null;
 		String res = "";
 		try {
-			if (datosNoValidos(peticion.getUsuario(), peticion.getPassword(), peticion.getIdServicio(), peticion.getIdDispositivo(), peticion.getIdPlataforma())) {
-				respuesta = generarRespuesta(PlataformaErrores.STATUSTEXT_KO, PlataformaErrores.COD_ERROR_PETICION, PlataformaErrores.DETAILS_ERROR_PETICION);
+			if (datosNoValidos(peticion.getUsuario(), peticion.getPassword(), peticion.getIdServicio(),
+					peticion.getIdDispositivo(), peticion.getIdPlataforma())) {
+				respuesta = generarRespuesta(statusTextKO, codErrorPeticion, detailsErrorPeticion);
 			} else {
 				// comprobamos aplicacion
-				aplicacionDao.beginTransaction();
-				Integer existeUsuario = aplicacionDao.loginUsuario(peticion.getUsuario(), peticion.getPassword());
-				aplicacionDao.endTransaction(true);
-				if (USUARIO_CORRECTO == existeUsuario) {
-					// comprobamos si existe el usuario con sus datos
-					usuario = dao.comprobarDispositivoAplicacion(peticion.getIdServicio(), peticion.getIdDispositivo(), peticion.getIdPlataforma());
-					if (null != usuario)
-						respuesta = generarRespuesta(PlataformaErrores.STATUSTEXT_OK, PlataformaErrores.STATUS_OK, PlataformaErrores.DETAILS_OK);
-					else
-						respuesta = generarRespuesta(PlataformaErrores.STATUSTEXT_KO, PlataformaErrores.COD_ERROR_DISPOSITIVO_NO_ENCONTRADO,
-								PlataformaErrores.DETAILS_DISPOSITIVO_NO_ENCONTRADO);
+				Boolean existeUsuario = getAplicacionesManager().existeAplicacion(peticion.getUsuario(),
+						peticion.getPassword());
 
-					dao.endTransaction(true);
+				if (existeUsuario) {
+					// comprobamos si existe el usuario con sus datos
+					existeDispositivo = getUsuariosPushManager().comprobarExisteDispositivo(peticion.getIdServicio(),
+							peticion.getIdDispositivo(), peticion.getIdPlataforma(), null);
+					respuesta = respuestaUsuario(existeDispositivo, ps);
+
 				} else {// no es un usuario correcto
-					respuesta = generarRespuesta(PlataformaErrores.STATUSTEXT_KO, PlataformaErrores.COD_ERROR_SERVICIO, PlataformaErrores.DETAILS_ERROR_SERVICIO);
+					respuesta = generarRespuesta(statusTextKO, codErrorServicio, detailsErrorServicio);
 				}
 			}
 			res = respuesta.toXMLSMS(respuesta);
 		} catch (Exception e) {
-			dao.endTransaction(false);
-			aplicacionDao.endTransaction(false);
-			// e.printStackTrace();
-			respuesta = generarRespuesta(PlataformaErrores.STATUSTEXT_KO, PlataformaErrores.COD_ERROR_GENERAL, PlataformaErrores.DETAILS_OK);
-		} finally {
-			dao.closeAll();
-			aplicacionDao.closeAll();
+			LOG.error(
+					"[GestionSAMLRequestServiceImpl.comprobarDatosUsuario] Error Comprobando los datos del usuario", e);
+			respuesta = generarRespuesta(statusTextKO, codErrorGeneral, detailsErrorGeneral);
+			try {
+				return respuesta.toXMLSMS(respuesta);
+			} catch (PlataformaBusinessException e1) {
+				LOG.error(
+						"[GestionSAMLRequestServiceImpl.comprobarDatosUsuario] Obteniendo String con la respuesta", e1);
+			}
 		}
 
 		return res;
 	}
 
-	private boolean datosNoValidos(String usuario, String password, String servicio, String dispositivo, String plataforma) {
+	private RespuestaSAMLResponse respuestaUsuario(Boolean existeDispositivo, PropertiesServices ps) {
+		RespuestaSAMLResponse respuesta;
+		String statusTextOK = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_OK", null);
+		String statusOK = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUS_OK", null);
+		String detailsOK = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_OK", null);
+		String statusTextKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO", null);
+		String statusKO = ps.getMessage(
+				"plataformaErrores.gestionSAMLRequestService.COD_ERROR_DISPOSITIVO_NO_ENCONTRADO", null);
+		String detailsKO = ps.getMessage(
+				"plataformaErrores.gestionSAMLRequestService.DETAILS_DISPOSITIVO_NO_ENCONTRADO", null);
+		if (null != existeDispositivo)
+			respuesta = generarRespuesta(statusTextOK, statusOK, detailsOK);
+		else
+			respuesta = generarRespuesta(statusTextKO, statusKO, detailsKO);
+		return respuesta;
+	}
+
+
+	private boolean datosNoValidos(String usuario, String password, String servicio, String dispositivo,
+			String plataforma) {
 		boolean res = false;
 
-		if (null == usuario || usuario.length() <= 0 || null == password || password.length() <= 0 || null == servicio || servicio.length() <= 0 || null == dispositivo
-				|| dispositivo.length() <= 0 || null == plataforma || plataforma.length() <= 0)
+		if (checkUsuarioPassword(usuario, password) || null == servicio || servicio.length() <= 0
+				|| checkDispositivoPlataforma(dispositivo, plataforma))
 			return true;
 
 		return res;
+	}
+
+	private boolean checkUsuarioPassword(String usuario, String password) {
+		return (checkUsuario(usuario) || null == password || password.length() <= 0) ? true : false;
+	}
+
+	private boolean checkUsuario(String usuario) {
+		return (null == usuario || usuario.length() <= 0) ? true : false;
+	}
+
+	private boolean checkDispositivoPlataforma(String dispositivo, String palataforma) {
+		return (checkDispositivo(dispositivo) || null == palataforma || palataforma.length() <= 0) ? true : false;
+	}
+
+	private boolean checkDispositivo(String dispositivo) {
+		return (null == dispositivo || dispositivo.length() <= 0) ? true : false;
 	}
 
 	private RespuestaSAMLResponse generarRespuesta(String statustext, String codigo, String details) {
@@ -80,17 +141,46 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 		return res;
 	}
 
-	private UsuariosPushBean completarUsuario(UsuariosPushBean usuario, String nombre, String NIF, String apellido1, String apellido2) {
-		UsuariosPushBean u = new UsuariosPushBean();
-		u.setApellido1(apellido1);
-		u.setApellido2(apellido2);
-		u.setDispositivoId(usuario.getDispositivoId());
-		u.setNombreUsuario(NIF);
-		u.setNombre(nombre);
-		u.setPlataformaId(usuario.getPlataformaId());
-		u.setServicioId(usuario.getServicioId());
-		u.setTokenUsuario(usuario.getTokenUsuario());
-		return u;
+	/**
+	 * @return the aplicacionesManager
+	 */
+	public TblAplicacionesManager getAplicacionesManager() {
+		return aplicacionesManager;
+	}
+
+	/**
+	 * @param aplicacionesManager the aplicacionesManager to set
+	 */
+	public void setAplicacionesManager(TblAplicacionesManager aplicacionesManager) {
+		this.aplicacionesManager = aplicacionesManager;
+	}
+
+	/**
+	 * @return the usuariosPushManager
+	 */
+	public TblUsuariosPushManager getUsuariosPushManager() {
+		return usuariosPushManager;
+	}
+
+	/**
+	 * @param usuariosPushManager the usuariosPushManager to set
+	 */
+	public void setUsuariosPushManager(TblUsuariosPushManager usuariosPushManager) {
+		this.usuariosPushManager = usuariosPushManager;
+	}
+
+	/**
+	 * @return the reloadableResourceBundleMessageSource
+	 */
+	public ReloadableResourceBundleMessageSource getReloadableResourceBundleMessageSource() {
+		return reloadableResourceBundleMessageSource;
+	}
+
+	/**
+	 * @param reloadableResourceBundleMessageSource the reloadableResourceBundleMessageSource to set
+	 */
+	public void setReloadableResourceBundleMessageSource(ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
+		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
 }

@@ -43,21 +43,25 @@ public class WSPlataformaErrors {
 	static final String REENVIARLOTE_1 = "Error de Autenticacion. No existe aplicacion para el usuario/password.";
 	static final String REENVIARLOTE_2 = "Lote Incorrecto. No existe o no esta asignado a la aplicacion.";
 	static final String REENVIARLOTE_3 = "Servicio inactivo o no existe.";
+	static final String REENVIARLOTE_4 = "El lote ya ha sido enviado y no se puede reenviar";
 	static final String REENVIARLOTE_10 = "Error BBDD al actualizar el estado";
 
 	static final String ANULARLOTE_1 = "Error de Autenticacion. No existe aplicacion para el usuario/password.";
 	static final String ANULARLOTE_2 = "Lote Incorrecto. No existe o no esta asignado a la aplicacion.";
 	static final String ANULARLOTE_3 = "Servicio inactivo o no existe.";
+	static final String ANULARLOTE_4 = "El lote ya ha sido enviado y no se puede anular";
 	static final String ANULARLOTE_10 = "Error BBDD al actualizar el estado";
 
 	static final String REENVIARMENSAJE_1 = "Error de Autenticacion. No existe aplicacion para el usuario/password.";
 	static final String REENVIARMENSAJE_2 = "Mensaje incorrecto";
 	static final String REENVIARMENSAJE_3 = "El mensaje ya ha sido enviado y no se puede reenviar";
+	static final String REENVIARMENSAJE_4 = "El mensaje no pertenece a esta aplicacion";
 	static final String REENVIARMENSAJE_10 = "Error BBDD al actualizar el estado";
 
 	static final String ANULARMENSAJE_1 = "Error de Autenticacion. No existe aplicacion para el usuario/password.";
 	static final String ANULARMENSAJE_2 = "Mensaje incorrecto";
 	static final String ANULARMENSAJE_3 = "El mensaje ya ha sido enviado y no se puede anular";
+	static final String ANULARMENSAJE_4 = "El mensaje no pertenece a esta aplicacion.";
 	static final String ANULARMENSAJE_10 = "Error BBDD al actualizar el estado";
 
 	private static final HashMap<Integer, String> anularMensaje = new HashMap<Integer, String>() {
@@ -70,6 +74,8 @@ public class WSPlataformaErrors {
 			put(-1, ANULARMENSAJE_1);
 			put(-2, ANULARMENSAJE_2);
 			put(-3, ANULARMENSAJE_3);
+			put(-4, ANULARMENSAJE_4);
+			put(-5, ANULARMENSAJE_3);
 			put(-10, ANULARMENSAJE_10);
 		}
 	};
@@ -83,6 +89,8 @@ public class WSPlataformaErrors {
 			put(-1, REENVIARMENSAJE_1);
 			put(-2, REENVIARMENSAJE_2);
 			put(-3, REENVIARMENSAJE_3);
+			put(-4, REENVIARMENSAJE_4);
+			put(-5, REENVIARMENSAJE_3);
 			put(-10, REENVIARMENSAJE_10);
 		}
 	};
@@ -96,6 +104,7 @@ public class WSPlataformaErrors {
 			put(-1, ANULARLOTE_1);
 			put(-2, ANULARLOTE_2);
 			put(-3, ANULARLOTE_3);
+			put(-5, ANULARLOTE_4);
 			put(-10, ANULARLOTE_10);
 		}
 	};
@@ -109,6 +118,7 @@ public class WSPlataformaErrors {
 			put(-1, REENVIARLOTE_1);
 			put(-2, REENVIARLOTE_2);
 			put(-3, REENVIARLOTE_3);
+			put(-5, REENVIARLOTE_4);
 			put(-10, REENVIARLOTE_10);
 		}
 	};
@@ -391,6 +401,11 @@ public class WSPlataformaErrors {
 	public static String getErrorFaltaServicio() {
 
 		return "El campo Servicio es obligatorio";
+	}
+	
+	public static String getErrorServicioNoNumerico() {
+
+		return "El campo Servicio no es numerico";
 	}
 
 	public static String getErrorFaltaLote() {

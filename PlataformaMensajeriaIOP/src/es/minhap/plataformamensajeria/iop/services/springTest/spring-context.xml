@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       		http://www.springframework.org/schema/beans
+           	http://www.springframework.org/schema/beans/spring-beans.xsd
+       		http://cxf.apache.org/jaxws
+       		http://cxf.apache.org/schemas/jaxws.xsd
+       		http://cxf.apache.org/transports/http/configuration 
+ 			http://cxf.apache.org/schemas/configuration/http-conf.xsd
+ 			http://www.springframework.org/schema/util
+ 			http://www.springframework.org/schema/util/spring-util-3.0.xsd
+ 			http://www.springframework.org/schema/context
+ 			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+ 			http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/tx 
+  			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- ********************************** -->
+	<!-- Bean con los properties externos para utilizar en el proyecto constantes y recursos que no queremos tener en código-->
+	<!-- ********************************** -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/confSIMEnviroiment.properties</value>
+			</list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+
+	<bean id="reloadableResourceBundleMessageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:confSIMEnviroiment</value>
+			</list>
+		</property>
+		<property name="cacheSeconds" value="600" />
+	</bean>
+
+	<context:component-scan base-package="es.minhap.*" />
+
+	<bean id="dataSourceApp" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@//10.253.114.133:1521/INSIMDESA"/>
+        <property name="username" value="SIM_FRONT"/>
+        <property name="password" value="Aem44hHnY9n1Xph"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="16000"/>
+        <property name="minIdle" value="0"/>
+    </bean>
+    <bean id="sessionFactorySIMApp" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceApp"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">none</prop>
+                <prop key="hibernate.connection.autocommit">false</prop>
+                <prop key="hibernate.connection.release_mode">after_statement</prop>
+                <prop key="hibernate.validator.apply_to_ddl">false</prop> 
+				<prop key="hibernate.validator.autoregister_listeners">false</prop>
+            </props>
+        </property>
+         <property name="packagesToScan">
+           <list>
+               <value>es.minhap.sim.model</value>
+           </list>
+       </property>
+        
+    </bean>
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" /> 
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="txBusiness"
+			expression="execution(* es.minhap.plataformamensajeria.iop.manager.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txBusiness" />
+	</aop:config>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactorySIMApp" />
+	</bean>  
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>

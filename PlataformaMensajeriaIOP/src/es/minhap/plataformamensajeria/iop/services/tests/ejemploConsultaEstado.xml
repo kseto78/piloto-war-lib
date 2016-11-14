@@ -1,0 +1,12 @@
+
+<PeticionEstado xmlns="http://misim.redsara.es/misim-bus-webapp/peticion">
+	<Usuario>pruebasSIMdes</Usuario>
+	<Password>pruebasSIMdes</Password>
+	<Filtro>
+		<!--Optional: -->
+		<Mensaje>
+			<!--Optional: -->
+			<IdExterno>MSG_JUAN_6</IdExterno>
+		</Mensaje>
+	</Filtro>
+</PeticionEstado>

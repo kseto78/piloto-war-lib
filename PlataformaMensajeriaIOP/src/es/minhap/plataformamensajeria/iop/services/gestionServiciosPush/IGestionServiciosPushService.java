@@ -2,7 +2,6 @@ package es.minhap.plataformamensajeria.iop.services.gestionServiciosPush;
 
 import javax.jws.WebService;
 
-import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoBean;
 import es.minhap.plataformamensajeria.iop.beans.RegistroUsuarioXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.ServiciosDisponiblesXMLBean;
 
@@ -14,19 +13,8 @@ import es.minhap.plataformamensajeria.iop.beans.ServiciosDisponiblesXMLBean;
 @WebService
 public interface IGestionServiciosPushService {
 
-	String consultaServiciosDisponibles(Integer servicioId, Integer canalId,
-			Integer aplicacionId, Integer loteId, Integer idMensaje,
-			String idExterno, Integer estadoId, String fechaDesde,
-			String fechaHasta, String usuario, String password);
-
-	String registroUsuarioEnServicio(Integer servicioId, Integer canalId,
-			Integer aplicacionId, Integer loteId, Integer idMensaje,
-			String idExterno, Integer estadoId, String fechaDesde,
-			String fechaHasta, String usuario, String password);
 
 	String consultaServiciosDisponibles(ServiciosDisponiblesXMLBean servDispXMLBean);
-
-	String consultaServiciosDisponibles(ConsultaEstadoBean consultaEstado);
 
 	String registroUsuarioEnServicio(RegistroUsuarioXMLBean registroUsuarioXMLBean);
 }

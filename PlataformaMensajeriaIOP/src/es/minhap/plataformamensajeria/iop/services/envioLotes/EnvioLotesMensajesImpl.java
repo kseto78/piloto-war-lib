@@ -7,8 +7,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import de.brendamour.jpasskit.PKField;
 import de.brendamour.jpasskit.PassbookGenerator;
@@ -29,27 +32,31 @@ import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesSMSXML
 import es.minhap.plataformamensajeria.iop.beans.lotes.PassbookXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PkFieldsXMLBean;
-import es.minhap.plataformamensajeria.iop.services.envio.EnvioMensajesImpl;
+import es.minhap.plataformamensajeria.iop.services.envio.IEnvioMensajesService;
 
+
+@Service("envioLotesMensajesImpl")
 public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 	
-	 private static Logger logger = Logger.getLogger(EnvioLotesMensajesImpl.class);
+	private static Logger logger = Logger.getLogger(EnvioLotesMensajesImpl.class);
+
+	private static final String ERROR_GENERACION_PASSBOOK = "Se ha producido un error en la generacion del fichero passbook";
 	 
-	 private static final String ERROR_GENERACION_PASSBOOK ="Se ha producido un error en la generacion del fichero passbook";
-	 
+	@Resource(name="envioMensajesImpl")
+	private IEnvioMensajesService envioMensajes;
 	 
 	@Override
 	public String enviarLotesEmail(PeticionXMLBean peticionXML, PropertiesServices ps) {
 		String res = "";
 		
-		if (peticionXML.getMensajes().getMensajeEmail().size()> 0){
+		if (!peticionXML.getMensajes().getMensajeEmail().isEmpty()){
 			EnvioEmailXMLBean envioEmail = new EnvioEmailXMLBean();
 			
 			envioEmail.setUsuario(peticionXML.getUsuario());
 			envioEmail.setServicio(peticionXML.getServicio());
 			envioEmail.setPassword(peticionXML.getPassword());
 			envioEmail.setNombreLote(peticionXML.getNombreLote());
-			List<String> erroresGeneracionPassbook = new ArrayList<String>();
+			List<String> erroresGeneracionPassbook = new ArrayList<>();
 			for (MensajePeticionLotesEmailXMLBean mensajePeticionLotes : peticionXML.getMensajes().getMensajeEmail()){
 				
 						
@@ -84,8 +91,8 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				
 			}
 				
-			EnvioMensajesImpl envioMensaje = new EnvioMensajesImpl();
-			res =  envioMensaje.enviarEmail(envioEmail, erroresGeneracionPassbook);
+			
+			res =  getEnvioMensajes().enviarEmail(envioEmail, erroresGeneracionPassbook);
 		}
 		
 		return res;
@@ -164,8 +171,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				String pkpassFile = null;
 				pkpassFile = PassbookGenerator.generate(camposPrincipales, camposSecundarios, camposAuxiliares, camposCabecera, 
 						camposDetalleTrasera, url, logoText, description, backgroundColor, foregroundColor, labelColor,passTypeIdentifier, 
-						serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);				
-				AdjuntosXMLBean adjunto = new AdjuntosXMLBean();
+						serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);				AdjuntosXMLBean adjunto = new AdjuntosXMLBean();
 				adjunto.setNombre(nombrePassbook);
 				File fichero = new File(pkpassFile);
 				adjunto.setContenido(getBytesFromFile(fichero));
@@ -229,7 +235,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 	@Override
 	public String enviarLotesSMS(PeticionXMLBean peticionXML) {
 		String res ="";
-		if (peticionXML.getMensajes().getMensajeSMS().size() > 0){
+		if (!peticionXML.getMensajes().getMensajeSMS().isEmpty()){
 			EnvioSMSXMLBean envioSMS = new EnvioSMSXMLBean();
 			
 			envioSMS.setUsuario(peticionXML.getUsuario());
@@ -258,22 +264,16 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				
 				
 			}
-			EnvioMensajesImpl envioMensaje = new EnvioMensajesImpl();
-			res =  envioMensaje.enviarSMS(envioSMS);
+			res =  getEnvioMensajes().enviarSMS(envioSMS);
 		}
 		return res;
 	}
 
 	@Override
 	public String enviarLotesNotificacion(PeticionXMLBean peticionXML) {
-		return this.enviarLotesNotificacion(peticionXML, null);
-	}
-	
-	@Override
-	public String enviarLotesNotificacion(PeticionXMLBean peticionXML, PropertiesServices ps) {
 		String res ="";
 		
-		if (peticionXML.getMensajes().getMensajePush().size() > 0){
+		if (!peticionXML.getMensajes().getMensajePush().isEmpty()){
 			EnvioPushXMLBean envioPush = new EnvioPushXMLBean();
 			
 			envioPush.setUsuario(peticionXML.getUsuario());
@@ -284,12 +284,12 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 			envioPush.setCodOrganismo(peticionXML.getCodOrganismo());
 			
 			
-			for (MensajePeticionLotesPushXMLBean mensajePeticionLotes : peticionXML.getMensajes().getMensajePush()) {
+			for (MensajePeticionLotesPushXMLBean mensajePeticionLotes : peticionXML.getMensajes().getMensajePush()){
 				mensajePeticionLotes.setCuerpo(mensajePeticionLotes.getCuerpo().replace("\"", "\\\""));
-				envioPush.addMensaje(mensajePeticionLotes);
+					envioPush.addMensaje(mensajePeticionLotes);
+				
 			}
-			EnvioMensajesImpl envioMensaje = new EnvioMensajesImpl();
-			res =  envioMensaje.enviarNotificacion(envioPush, ps);
+			res =  getEnvioMensajes().enviarNotificacion(envioPush);
 		}
 		
 		return res;
@@ -316,5 +316,19 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 			throw new IOException("" + file.getName());
 		}
 		return bytes;
+	}
+
+	/**
+	 * @return the envioMensajes
+	 */
+	public IEnvioMensajesService getEnvioMensajes() {
+		return envioMensajes;
+	}
+
+	/**
+	 * @param envioMensajes the envioMensajes to set
+	 */
+	public void setEnvioMensajes(IEnvioMensajesService envioMensajes) {
+		this.envioMensajes = envioMensajes;
 	}
 }

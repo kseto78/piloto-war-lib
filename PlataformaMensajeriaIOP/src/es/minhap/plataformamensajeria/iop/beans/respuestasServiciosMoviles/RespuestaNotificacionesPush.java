@@ -22,8 +22,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
-import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
 
 /**
  * <p>
@@ -81,109 +81,130 @@ public class RespuestaNotificacionesPush {
 		}
 	}
 
-	public String toXML(int resultado) throws PlataformaBusinessException {
+	public String toXML(int resultado, PropertiesServices ps) throws PlataformaBusinessException {
 		RespuestaNotificacionesPush respuesta = this;
-
+		String codeOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_OK", null);
+		String statusTextOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_OK", null);
+		String detailsOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSDETAILS_CHANGE_MESSAGE_STATUS_OK", null);
+		String codeKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_KO", null);
+		String statusTextKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String detailsKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSDETAILS_KO", null);
+		ResponseNotificacionPushStatusType stat = new ResponseNotificacionPushStatusType();
 		if (resultado >= 1) {
-			ResponseNotificacionPushStatusType status = new ResponseNotificacionPushStatusType();
-			status.setStatusCode(PlataformaErrores.STATUS_OK);
-			status.setStatusText(PlataformaErrores.STATUSTEXT_OK);
-			status.setDetails(PlataformaErrores.STATUSDETAILS_CHANGE_MESSAGE_STATUS_OK);
-			respuesta.setStatus(status);
+			stat.setStatusCode(codeOK);
+			stat.setStatusText(statusTextOK);
+			stat.setDetails(detailsOK);
+			respuesta.setStatus(stat);
 		} else {
-			ResponseNotificacionPushStatusType status = new ResponseNotificacionPushStatusType();
-			status.setStatusCode(PlataformaErrores.STATUSCODE_KO);
-			status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-			status.setDetails(PlataformaErrores.STATUSDETAILS_KO);
-			respuesta.setStatus(status);
+			stat.setStatusCode(codeKO);
+			stat.setStatusText(statusTextKO);
+			stat.setDetails(detailsKO);
+			respuesta.setStatus(stat);
 		}
 		return writeResponse(respuesta);
 	}
 	
-	public String actualizarTodosMensajes(int resultado) throws PlataformaBusinessException {
+	public String actualizarTodosMensajes(int resultado, PropertiesServices ps) throws PlataformaBusinessException {
 		RespuestaNotificacionesPush respuesta = this;
-
+		String codeOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_OK", null);
+		String statusTextOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_OK", null);
+		String detailsOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_MODIFICACION_TODOS_MENSAJES", null);
+		String codeKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_KO", null);
+		String statusTextKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String detailsKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_ERROR_MODIFICACION_TODOS_MENSAJES", null);
+		ResponseNotificacionPushStatusType stat = new ResponseNotificacionPushStatusType();
 		if (resultado == 1) {
-			ResponseNotificacionPushStatusType status = new ResponseNotificacionPushStatusType();
-			status.setStatusCode(PlataformaErrores.STATUS_OK);
-			status.setStatusText(PlataformaErrores.STATUSTEXT_OK);
-			status.setDetails(PlataformaErrores.DETAILS_MODIFICACION_TODOS_MENSAJES);
-			respuesta.setStatus(status);
+			stat.setStatusCode(codeOK);
+			stat.setStatusText(statusTextOK);
+			stat.setDetails(detailsOK);
+			respuesta.setStatus(stat);
 		} else {
-			ResponseNotificacionPushStatusType status = new ResponseNotificacionPushStatusType();
-			status.setStatusCode(PlataformaErrores.STATUSCODE_KO);
-			status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-			status.setDetails(PlataformaErrores.DETAILS_ERROR_MODIFICACION_TODOS_MENSAJES);
-			respuesta.setStatus(status);
+			stat.setStatusCode(codeKO);
+			stat.setStatusText(statusTextKO);
+			stat.setDetails(detailsKO);
+			respuesta.setStatus(stat);
 		}
 		return writeResponse(respuesta);
 	}
 
-	public String loginIncorrectotoXML() throws PlataformaBusinessException {
-
+	public String loginIncorrectotoXML(PropertiesServices ps) throws PlataformaBusinessException {
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO", null);
+		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGIN_KO", null);
 		RespuestaNotificacionesPush respuesta = this;
-		ResponseNotificacionPushStatusType ResponseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
-		ResponseNotificacionPushStatusType.setStatusCode(PlataformaErrores.STATUSLOGINCODE_KO);
-		ResponseNotificacionPushStatusType.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-		ResponseNotificacionPushStatusType.setDetails(PlataformaErrores.STATUSLOGIN_KO);
-		respuesta.setStatus(ResponseNotificacionPushStatusType);
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(code);
+		responseNotificacionPushStatusType.setStatusText(statusText);
+		responseNotificacionPushStatusType.setDetails(details);
+		respuesta.setStatus(responseNotificacionPushStatusType);
 		return writeResponse(respuesta);
 	}
 	
-	public String incorrectStatusXML() throws PlataformaBusinessException {
-
+	public String incorrectStatusXML(PropertiesServices ps) throws PlataformaBusinessException {
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO", null);
+		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUS_DETAILS_MESSAGE_KO", null);
 		RespuestaNotificacionesPush respuesta = this;
-		ResponseNotificacionPushStatusType ResponseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
-		ResponseNotificacionPushStatusType.setStatusCode(PlataformaErrores.STATUSLOGINCODE_KO);
-		ResponseNotificacionPushStatusType.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-		ResponseNotificacionPushStatusType.setDetails(PlataformaErrores.STATUS_DETAILS_MESSAGE_KO);
-		respuesta.setStatus(ResponseNotificacionPushStatusType);
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(code);
+		responseNotificacionPushStatusType.setStatusText(statusText);
+		responseNotificacionPushStatusType.setDetails(details);
+		respuesta.setStatus(responseNotificacionPushStatusType);
 		return writeResponse(respuesta);
 	}
 	
 	
-	public String peticionIncorrectaXML() throws PlataformaBusinessException {
-
+	public String peticionIncorrectaXML(PropertiesServices ps) throws PlataformaBusinessException {
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA", null);
+		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_PETICION_INCORRECTA", null);
 		RespuestaNotificacionesPush respuesta = this;
-		ResponseNotificacionPushStatusType ResponseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
-		ResponseNotificacionPushStatusType.setStatusCode(PlataformaErrores.COD_PETICION_INCORRECTA);
-		ResponseNotificacionPushStatusType.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-		ResponseNotificacionPushStatusType.setDetails(PlataformaErrores.DETAILS_PETICION_INCORRECTA);
-		respuesta.setStatus(ResponseNotificacionPushStatusType);
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(code);
+		responseNotificacionPushStatusType.setStatusText(statusText);
+		responseNotificacionPushStatusType.setDetails(details);
+		respuesta.setStatus(responseNotificacionPushStatusType);
 		return writeResponse(respuesta);
 	}
 	
-	public String noExisteUsuarioPush() throws PlataformaBusinessException {
-
+	public String noExisteUsuarioPush(PropertiesServices ps) throws PlataformaBusinessException {
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA", null);
+		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_ERROR_USUARIO_PUSH", null);
+		
 		RespuestaNotificacionesPush respuesta = this;
-		ResponseNotificacionPushStatusType ResponseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
-		ResponseNotificacionPushStatusType.setStatusCode(PlataformaErrores.COD_PETICION_INCORRECTA);
-		ResponseNotificacionPushStatusType.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-		ResponseNotificacionPushStatusType.setDetails(PlataformaErrores.DETAILS_ERROR_USUARIO_PUSH);
-		respuesta.setStatus(ResponseNotificacionPushStatusType);
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(code);
+		responseNotificacionPushStatusType.setStatusText(statusText);
+		responseNotificacionPushStatusType.setDetails(details);
+		respuesta.setStatus(responseNotificacionPushStatusType);
 		return writeResponse(respuesta);
 	}
 	
-	public String incorrectUserXML() throws PlataformaBusinessException {
-
+	public String incorrectUserXML(PropertiesServices ps) throws PlataformaBusinessException {
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSUSERCODE_KO", null);
+		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSDETAILS_USER_OK", null);
 		RespuestaNotificacionesPush respuesta = this;
-		ResponseNotificacionPushStatusType ResponseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
-		ResponseNotificacionPushStatusType.setStatusCode(PlataformaErrores.STATUSUSERCODE_KO);
-		ResponseNotificacionPushStatusType.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-		ResponseNotificacionPushStatusType.setDetails(PlataformaErrores.STATUSDETAILS_USER_OK);
-		respuesta.setStatus(ResponseNotificacionPushStatusType);
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(code);
+		responseNotificacionPushStatusType.setStatusText(statusText);
+		responseNotificacionPushStatusType.setDetails(details);
+		respuesta.setStatus(responseNotificacionPushStatusType);
 		return writeResponse(respuesta);
 	}
 
 	
-	public String notPushXML() throws PlataformaBusinessException {
-
+	public String notPushXML(PropertiesServices ps) throws PlataformaBusinessException {
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO", null);
+		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUS_DETAILS_PUSH_MESSAGE_KO", null);
 		RespuestaNotificacionesPush respuesta = this;
-		ResponseNotificacionPushStatusType ResponseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
-		ResponseNotificacionPushStatusType.setStatusCode(PlataformaErrores.STATUSLOGINCODE_KO);
-		ResponseNotificacionPushStatusType.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-		ResponseNotificacionPushStatusType.setDetails(PlataformaErrores.STATUS_DETAILS_PUSH_MESSAGE_KO);
-		respuesta.setStatus(ResponseNotificacionPushStatusType);
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(code);
+		responseNotificacionPushStatusType.setStatusText(statusText);
+		responseNotificacionPushStatusType.setDetails(details);
+		respuesta.setStatus(responseNotificacionPushStatusType);
 		return writeResponse(respuesta);
 	}
 

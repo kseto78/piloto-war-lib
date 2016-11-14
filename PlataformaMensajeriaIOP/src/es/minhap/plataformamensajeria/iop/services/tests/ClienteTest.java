@@ -21,12 +21,14 @@ import es.minhap.plataformamensajeria.iop.beans.ConsultaHistoricoXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.DestinatarioXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioEmailXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.MensajeSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.MensajesXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.OperacionesLotesMensajesXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.OperacionesMensajesXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.PeticionClaveAuthResponse;
 import es.minhap.plataformamensajeria.iop.beans.RecepcionEstadoSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.RecibirSMSRequest;
 import es.minhap.plataformamensajeria.iop.beans.UsuariosXMLBean;
@@ -39,9 +41,11 @@ import es.minhap.plataformamensajeria.iop.respone.RespuestaEnvioXMLBean;
 import es.minhap.plataformamensajeria.iop.respone.RespuestaOperacion;
 import es.minhap.plataformamensajeria.iop.services.envio.IEnvioMensajesService;
 import es.minhap.plataformamensajeria.iop.services.envioLotes.IEnvioLotesMensajesService;
+import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumGISSService;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumService;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.services.operaciones.IOperacionesMensajesService;
+import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGestionSAMLResponseService;
 import es.minhap.plataformamensajeria.iop.services.recepcion.IRecepcionMensajesService;
 import es.minhap.plataformamensajeria.iop.services.recepcion.RecibirSMSResponse;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.IRecepcionEstadoSMSService;
@@ -78,8 +82,10 @@ public class ClienteTest {
 			.getInstanceLotes();
 	private IEnvioPremiumService instancePremium = FactoryServiceSim.getInstance()
 			.getInstancePremium();
-//	private IEnvioPremiumGISSService instanceGISS = FactoryServiceSim.getInstance()
-//			.getInstanceGISS();
+	private IEnvioPremiumGISSService instanceGISS = FactoryServiceSim.getInstance()
+			.getInstanceGISS();
+	private IGestionSAMLResponseService instanceSAML = FactoryServiceSim.getInstance()
+			.getInstanceSAML();
 
 	private static  Integer LOTE_PRUEBAS = 28546;// 84//86
 	private static  Integer MENSAJE_PRUEBAS = 29082;
@@ -685,8 +691,8 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		
 		RecepcionEstadoSMSXMLBean recepcionEstado = new RecepcionEstadoSMSXMLBean();
 		recepcionEstado.setRecipient("pruebasSIMdes");
-		recepcionEstado.setMensajeId("589");
-		recepcionEstado.setMessajeStatus("589");
+		recepcionEstado.setMensajeId("2909");
+		recepcionEstado.setMessajeStatus("2909");
 		recepcionEstado.setUser("pruebasSIMdes");
 		recepcionEstado.setPassword("pruebasSIMdes");
 		recepcionEstado.setSender("Remitente");
@@ -863,20 +869,36 @@ public void testEnviarGISS() throws PlataformaBusinessException {
 	
 	//InputStream is = ClienteTest.class.getResourceAsStream("peticionEnvioSms.xml");
 	 
-//	EnvioGISSXMLBean envio = new EnvioGISSXMLBean();
-//
-//	envio.setCodOrganismoPagadorSMS("11111112");
-//	envio.setCuerpo("Mensaje de GISS");
+	EnvioGISSXMLBean envio = new EnvioGISSXMLBean();
+
+	envio.setCodOrganismoPagadorSMS("11111112");
+	envio.setCuerpo("Mensaje de GISS");
 //	envio.setDeliveryReportURL("");
-//	envio.setDestinatario("+34609691700");
-//	envio.setIdExterno(new Date().toString());
-//	String result = instancePremium.cambiarEstadoSMSPremium(763403, "La danza de los nadie, OK");
+	envio.setDestinatario("+34609691700");
+	envio.setIdPeticion(new Date().toString());
+	String result = instanceGISS.cambiarEstadoSMSPremium(786655, "OK | SwitchSMS_MT_42590_103");
 //	String result = instanceGISS.enviarSMSGISS(envio,"pruebasSIMdes","pruebasSIMdes",1602,"pruebasSIMdes","pruebasSIMdes");
 //	String result = instance.enviarSMS(envio);
 //	RespuestaEnvioXMLBean respuesta = new RespuestaEnvioXMLBean();
 //	respuesta.parseResponse(result);
 //	System.out.println(result);
 
+}
+
+public void testProcesarSAML() throws PlataformaBusinessException {
+	
+	PeticionClaveAuthResponse peticion = new PeticionClaveAuthResponse();
+	
+	peticion.setDispositivoId("822_322");
+	peticion.setIdPlataforma("2");
+	peticion.setIdServicio("842");
+	peticion.setPassword("pruebasSIMdes");
+	peticion.setUsuario("pruebasSIMdes");
+	
+	
+	String result = instanceSAML.insertarDatosUsuario(peticion, "JUAN ESPAÑOL ESPAÑOL",
+			"70894428X", "ESPAÑOL", "ESPAÑOL");
+	System.out.println(result);
 }
 
 	
@@ -928,9 +950,9 @@ public void testEnviarGISS() throws PlataformaBusinessException {
 //		 testEnviarNotificacionPushFromXmlFile();
 //		testRecepcionMensajesXML();
 //		testRecepcionEstadoXML();
-		testRecepcionEstadoXML();
+//		testRecepcionEstadoXML();
 //		 testRegistroUsuariosXML();
-//		 testEnviarPeticionLotesSMS();
+		 testEnviarPeticionLotesSMS();
 //		 testEnviarPeticionLotesPush();
 //		 testEnviarPeticionLotesEmail();
 //		testReenviarLote2();
@@ -939,6 +961,7 @@ public void testEnviarGISS() throws PlataformaBusinessException {
 //		testAnularMensaje2();
 //		 testEnviarAEAT();
 //		 testEnviarGISS();
+//		 testProcesarSAML();
 	}
 
 	public static void main(String[] args) throws PlataformaBusinessException {

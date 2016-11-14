@@ -2,7 +2,6 @@ package es.minhap.plataformamensajeria.iop.services.seguimiento;
 
 import javax.jws.WebService;
 
-import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoBean;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaHistoricoXMLBean;
@@ -29,28 +28,10 @@ public interface ISeguimientoMensajesService {
 	 * @param password
 	 * @return Devuelve un xml con los resultados
 	 */
-	String consultarEstado(Integer servicioId, Integer canalId,Integer aplicacionId, Integer loteId, Integer idMensaje, String idExterno, Integer estadoId, String fechaDesde, String FechaHasta, String usuario, String password);
-    
-    /**
-	 * 
-	 * @param servicioId
-	 * @param canalId
-	 * @param loteId
-	 * @param idMensaje
-	 * @param idExterno
-	 * @param estadoId
-	 * @param fechaDesde
-	 * @param FechaHasta
-	 * @param usuario
-	 * @param password
-	 * @param ps
-	 * @return Devuelve un xml con los resultados
-	 */
-    String consultarEstado(Integer servicioId, Integer canalId,Integer aplicacionId, Integer loteId, Integer idMensaje, String idExterno, Integer estadoId, String fechaDesde, String FechaHasta, String usuario, String password, PropertiesServices ps);
+	//idservicio, idcanal, idaplicacion, idLote, idmensaje, idexterno, idestado, FechaDesde, FechaHasta, usuario, password
+    String consultarEstado(Integer servicioId, Integer canalId,Integer aplicacionId, Integer loteId, Integer idMensaje, String idExterno, Integer estadoId, String fechaDesde, String FechaHasta, String usuario, String password);
 	
 	String consultarEstado(ConsultaEstadoBean consultaEstado);
-	
-	String consultarEstado(ConsultaEstadoBean consultaEstado, PropertiesServices ps);
 	
 
     /**
@@ -62,8 +43,6 @@ public interface ISeguimientoMensajesService {
      * @return 
      */
     String consultarHistorial(Integer idMensaje, String idExterno, String usuario, String password);
-    
-    String consultarEstado(ConsultaEstadoXMLBean consultaEstado, PropertiesServices ps);
     
     String consultarEstado(ConsultaEstadoXMLBean consultaEstado);
 	

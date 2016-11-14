@@ -23,7 +23,7 @@ import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGestion
 import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGestionSAMLResponseService;
 import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGetAuthService;
 import es.minhap.plataformamensajeria.iop.services.recepcion.IRecepcionMensajesService;
-import es.minhap.plataformamensajeria.iop.services.recepcion.IRecepcionMensajesServiceImpl;
+import es.minhap.plataformamensajeria.iop.services.recepcion.RecepcionMensajesServiceImpl;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.IRecepcionEstadoSMSService;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.RecepcionEstadoSMSImpl;
 import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensajesService;
@@ -37,7 +37,7 @@ public class FactoryServiceSim {
     private ISeguimientoMensajesService instanceSeguimiento = new SeguimientoMensajesImpl();
     private IOperacionesMensajesService instanceOperaciones = new OperacionesMensajesImpl();
     private IRegistroUsuarioPushService instanceUsuario = new RegistroUsuarioPushServiceImpl();
-    private IRecepcionMensajesService instanceRecepcionMensajes = new IRecepcionMensajesServiceImpl();
+    private IRecepcionMensajesService instanceRecepcionMensajes = new RecepcionMensajesServiceImpl();
     private IRecepcionEstadoSMSService instanceRecepcionEstado = new RecepcionEstadoSMSImpl();
     private IEnvioLotesMensajesService instanceLotes = new EnvioLotesMensajesImpl();
     private IGestionAyudaService instanceAyuda = new GestionAyudaImpl();
@@ -47,7 +47,7 @@ public class FactoryServiceSim {
     private IEnvioPremiumGISSService instanceGISS = new EnvioPremiumGISSImpl();
     private IGestionSAMLResponseService instanceSAML = new GestionSAMLResponseServiceImpl();
     private IGestionSAMLRequestService instanceSAMLRequest = new GestionSAMLRequestServiceImpl();
-    private IGetAuthService instanceGetAuth = new GetAuthServiceImpl();
+    private IGetAuthService intanceAuthService = new GetAuthServiceImpl();
     
     public static FactoryServiceSim instance = new  FactoryServiceSim();
     
@@ -110,7 +110,7 @@ public class FactoryServiceSim {
 		return instanceSAMLRequest;
 	}
 	
-	public IGetAuthService getInstanceGetAuth(){
-		return instanceGetAuth;
+	public IGetAuthService getInstanceGetAuth() {
+		return intanceAuthService;
 	}
 }

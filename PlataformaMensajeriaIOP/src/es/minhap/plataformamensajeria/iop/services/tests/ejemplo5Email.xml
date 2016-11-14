@@ -1,0 +1,99 @@
+
+<Peticion xmlns="http://misim.redsara.es/misim-bus-webapp/peticion">
+        <!--type: string-->
+        <Usuario>pae_sim</Usuario>
+        <!--type: string-->
+        <Password>pae_password</Password>
+        <!--type: string-->
+        <NombreLote>Lote de pruebas</NombreLote>
+        <!--type: string-->
+        <Servicio>102</Servicio>
+        <Mensajes>
+        <MensajeEmail>
+              <!--Optional:-->
+              <!--type: string-->
+              <DocUsuario>Docusuario</DocUsuario>
+              <IdExterno>20072016_1410</IdExterno>
+              <!--type: string-->
+              <Asunto>Pruebas envio con libreria rectificada y soporta AEAT, GISS, Passbook y Cl@ve</Asunto>
+              <!--type: string-->
+              <Cuerpo>Pruebas de envio WS con inclusion de Passbook</Cuerpo>
+              <Modo>1</Modo>
+               <DestinatariosMail>
+                 <!--1 or more repetitions:-->
+                 <DestinatarioMail>
+                    <!--Optional:-->
+                    <DocUsuario></DocUsuario>
+                    <IdExterno>IDEXTERNO</IdExterno>
+                   <Destinatarios>
+                        <To>frankj.escobar@gmail.com;anavarrd@everis.com;</To>
+                    </Destinatarios>
+                 </DestinatarioMail>
+              </DestinatariosMail>
+              <Destinatarios>
+                 <!--type: string-->
+                 <To>frankj.escobar@gmail.com;anavarrd@everis.com;</To>
+              </Destinatarios>
+              <!--Optional:-->
+              <PassBook>
+                 <!--type: string-->
+                 <URL>https://des-sede-administracion.redsara.es/pagSedeFront/servicios/descargaCSV.htm?csvquery=FA5v6p6pRvz---2BJKj7CUhnu8nwPJEit7Clsi---2BbpgsMlqV4VakYkYUXmsqW5---2Bp0CFYtmJ---2Bar6R719OTviEU8tEXYA---3D---3D</URL>
+                 <!--type: string-->
+                 <LogoText></LogoText>
+                 <!--type: string-->
+                 <Description>Justificante de ausencia de delitos penales sexuales.</Description>
+                                                  <CamposPrincipales>
+                    <PkFields>
+                       <!--type: string-->
+                       <Key>p1</Key>
+                       <!--type: string-->
+                       <Label>Ausencia de antecedentes</Label>
+                       <!--type: string-->
+                       <Value>de delitos de naturaleza sexual</Value>
+                    </PkFields>
+                 </CamposPrincipales>
+                 <CamposSecundarios>
+                     <PkFields>
+                       <Key>s1</Key>
+                       <Label>Fecha</Label>
+                      <Value>27/06/2016 13:20</Value>
+                    </PkFields>
+                    <PkFields>
+                       <Key>s2</Key>
+                       <Label>Documento de identidad</Label>
+                      <Value>70894428X</Value>
+                    </PkFields>
+                 </CamposSecundarios>
+                 <CamposAuxiliares>
+                      <PkFields>
+                       <Key>a1</Key>
+                       <Label>Nombre y apellidos</Label>
+                      <Value>ALVARO NAVARRO DIEZ</Value>
+                    </PkFields>
+                    <PkFields>
+                       <Key>a2</Key>
+                       <Label>Código de verificación (CSV)</Label>
+                      <Value>CCD-a714-04a3-ea3b-425a-c6f8-5c32-2c3c</Value>
+                    </PkFields>
+                 </CamposAuxiliares>
+                 <CamposDetalleTrasero>
+                <PkFields>
+                       <Key>fp1</Key>
+                       <Label>Documento</Label>
+                       <Value>Justificante de ausencia de antecedentes de delitos de naturaleza sexual</Value>
+                  </PkFields>
+                  <PkFields>
+                       <Key>fp2</Key>
+                       <Label>Descripción</Label>
+                       <Value>La consulta realizada al Registro Central de Penados del Ministerio de Justicia en fecha 27/06/2016 13:20 indica que no constan antecedentes penales</Value>
+                  </PkFields>
+                    <PkFields>
+                       <Key>fp3</Key>
+                       <Label>Código de verificación (CSV)</Label>
+                      <Value>CCD-a714-04a3-ea3b-425a-c6f8-5c32-2c3c</Value>
+                    </PkFields>
+                 </CamposDetalleTrasero>
+              </PassBook>
+           </MensajeEmail>
+        </Mensajes>
+     </Peticion>

@@ -23,8 +23,6 @@ public interface IEnvioLotesMensajesService {
     
     
     String enviarLotesNotificacion(PeticionXMLBean peticionXML);
-    
-    String enviarLotesNotificacion(PeticionXMLBean peticionXML, PropertiesServices ps);
 
 
 }

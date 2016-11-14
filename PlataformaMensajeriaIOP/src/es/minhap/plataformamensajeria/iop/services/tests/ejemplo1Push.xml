@@ -1,4 +1,4 @@
-<Peticion xmlns="http://misim.redsara.es/misim-bus-webapp/peticion">>
+<Peticion xmlns="http://misim.redsara.es/misim-bus-webapp/peticion">
         <Usuario>pruebasSIMdes</Usuario>
         <Password>pruebasSIMdes</Password>
         <NombreLote>Prueba PUSH 2</NombreLote>
@@ -22,6 +22,12 @@
                     <DocUsuario>11111111H</DocUsuario>
                     <IdExterno>IDEXTERNO</IdExterno>
                     <IdentificadorUsuario>Usuario P1</IdentificadorUsuario>
+                 </DestinatarioPush>
+                 <DestinatarioPush>
+                    <!--Optional:-->
+                    <DocUsuario>11111111H</DocUsuario>
+                    <IdExterno>IDEXTERNO2</IdExterno>
+                    <IdentificadorUsuario>tres_usu</IdentificadorUsuario>
                  </DestinatarioPush>
               </DestinatariosPush>
            </MensajePush>

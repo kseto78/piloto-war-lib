@@ -54,17 +54,17 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "Peticion")
 public class PeticionEnvioXML {
 
-    @XmlElement(name = "Usuario", required = true)
+    @XmlElement(name = "Usuario", required = false)
     protected String usuario;
-    @XmlElement(name = "Password", required = true)
+    @XmlElement(name = "Password", required = false)
     protected String password;
-    @XmlElement(name = "Producto", required = true)
+    @XmlElement(name = "Producto", required = false)
     protected String producto;
-    @XmlElement(name = "Proveedor", required = true)
+    @XmlElement(name = "Proveedor", required = false)
     protected String proveedor;
-    @XmlElement(name = "UrlEndpoint", required = true)
+    @XmlElement(name = "UrlEndpoint", required = false)
     protected String urlEndpoint;
-    @XmlElement(name = "MensajeId", required = true)
+    @XmlElement(name = "MensajeId", required = false)
     protected String mensajeId;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificos datosEspecificos;

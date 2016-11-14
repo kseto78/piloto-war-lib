@@ -1,165 +1,309 @@
 package es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.stereotype.Service;
 
-import es.minhap.plataformamensajeria.iop.beans.HistoricoBean;
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.RecepcionEstadoSMSXMLBean;
-import es.minhap.plataformamensajeria.iop.jdbc.HistoricoDAO;
-import es.minhap.plataformamensajeria.iop.jdbc.MensajeDAO;
+import es.minhap.plataformamensajeria.iop.beans.entity.EstadosBean;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorSubEstados;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblUrlMensajePremiumManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
+import es.minhap.sim.model.TblMensajes;
+import es.minhap.sim.model.TblUrlMensajePremium;
 
+/**
+ * 
+ * @author everis
+ *
+ */
+@Service("recepcionEstadoSMSImpl")
 public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 
-	static Logger logger = Logger.getLogger(RecepcionEstadoSMSImpl.class);
+	private static final Logger LOG = Logger.getLogger(RecepcionEstadoSMSImpl.class);
 
-	private static String STATUSCODE_OK = "0000";
-	private static String STATUSCODE_KO = "4000";
-	private static String STATUSTEXT_OK = "OK";
-	private static String STATUSCTEXT_KO = "KO";
-	private static String STATUSDETAILS_OK = "Peticion procesada correctamente";
-	private static String STATUSDETAILS_KO = "Error en la Peticion";
-	private static String ERROR_ESTADO_MENSAJE ="Se ha recibido un estado no permitido ";
-	private static String ERROR_UIM_NOEXISTE="No existe el UIM indicado";
-	static final String TAG_ERROR_GENERANDO_RESPUESTA_XML = "Se ha producido un error generando la cadena de respuesta";
+	@Resource
+	private TblMensajesManager mensajesManager;
+
+	@Resource
+	private TblDestinatariosMensajesManager destinatariosMensajesManager;
 	
+	@Resource
+	private TblLotesEnviosManager lotesManager;
+
+	@Resource
+	private TblUrlMensajePremiumManager urlMensajeManager;
+
+	@Autowired
+	private TblHistoricosManager hitoricosManager;
+	
+	@Autowired
+	private QueryExecutorSubEstados queryExecutorSubestados;
+	
+	@Resource
+	private TblEstadosManager tblEstadosManager;
+	
+
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
 	@Override
 	public RespuestaEstadoSMSXMLBean recibirEstadoSMS(RecepcionEstadoSMSXMLBean recepcionEstadoSMS) {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String statusCodeKO = ps.getMessage("plataformaErrores.recepcionEstado.STATUSCODE_KO", null);
+		String errorUimNoExiste = ps.getMessage("plataformaErrores.recepcionEstado.ERROR_UIM_NOEXISTE", null);
+		String errorEstadoMensaje = ps.getMessage("plataformaErrores.recepcionEstado.ERROR_ESTADO_MENSAJE", null);
+		String statusTextKO = ps.getMessage("plataformaErrores.recepcionEstado.STATUSTEXT_KO", null);
+		String statusDetailsKO = ps.getMessage("plataformaErrores.recepcionEstado.STATUSDETAILS_KO", null);
+		String statusCodeOK = ps.getMessage("plataformaErrores.recepcionEstado.STATUSCODE_OK", null);
+		String statusTextOK = ps.getMessage("plataformaErrores.recepcionEstado.STATUSTEXT_OK", null);
+		String statusDetailsOK = ps.getMessage("plataformaErrores.recepcionEstado.STATUSDETAILS_OK", null);
 
-		MensajeDAO dm = new MensajeDAO();
-
-		Integer mensajeID = null;
-		BigDecimal cod = new BigDecimal(0);
+		Long mensajeID = null;
+		Long cod;
 		RespuestaEstadoSMSXMLBean res = new RespuestaEstadoSMSXMLBean();
 		String urlPremium = "";
-
+		TblMensajes mensaje = null;
+		String descripcion;
+		Long estadoFinalId;
 		try {
-			dm.beginTransaction();
-			mensajeID = dm.getMensajeIDByUIM(recepcionEstadoSMS.getMensajeId());
-			
-			if (mensajeID != null && null != dm.getUrlPremium(mensajeID) && !dm.getUrlPremium(mensajeID).isEmpty()) {
-				//comprobamos si es mensaje premium para anadir la url
-				urlPremium = dm.getUrlPremium(mensajeID).concat(" | ").concat(mensajeID.toString());
-			}
-			
-		} catch (Exception e) {	
-			e.printStackTrace();
-		} finally {
-			dm.endTransaction(false);
-			dm.closeAll();
+			mensaje = mensajesManager.getMensajeIDByUIM(recepcionEstadoSMS.getMensajeId());
+			mensajeID = mensaje.getMensajeid();
+			urlPremium = getUrlPremium(mensajeID);
+		} catch (Exception e) {
+			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);
 		}
-		
+
 		if (null == mensajeID) {
-			logger.debug("[recibirEstadoSMS] Se ha producido un error buscando el mensajeID a traves del UIM: " + recepcionEstadoSMS.getMensajeId());
-			ResponseStatusType status = new ResponseStatusType();
-			status.setStatusCode(STATUSCODE_KO);
-			status.setStatusText(ERROR_UIM_NOEXISTE);
-			if (urlPremium.length()>0)
-				status.setDetails("UIM "+recepcionEstadoSMS.getMensajeId()+" NOT FOUND,"+urlPremium);
-			else
-				status.setDetails("UIM "+recepcionEstadoSMS.getMensajeId()+" NOT FOUND");
-			res.setStatus(status);	
-			return res;
+			LOG.debug("[recibirEstadoSMS] Se ha producido un error buscando el mensajeID a traves del UIM: "
+					+ recepcionEstadoSMS.getMensajeId());
+			return getRespuestaNoMensaje(recepcionEstadoSMS, statusCodeKO, errorUimNoExiste, urlPremium);
 		}
-		
+
 		String estado = recepcionEstadoSMS.getMessajeStatus().toUpperCase().trim();
 
 		try {
-			
-			cod = new BigDecimal(estado);
-		} catch (NumberFormatException e) {
-			ResponseStatusType status = new ResponseStatusType();
-			status.setStatusCode(STATUSCODE_KO);
-			if (urlPremium.length()>0)
-				status.setDetails(ERROR_ESTADO_MENSAJE+","+urlPremium);
-			else
-				status.setDetails(ERROR_ESTADO_MENSAJE);
-			status.setStatusText(STATUSCTEXT_KO);
-			res.setStatus(status);
-			return res;
-		} catch (Exception e1) {
-			logger.debug("Cargando fichero propiedades");
+
+			cod = new Long(estado);
+		} catch (Exception e) {
+			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);
+			return getRespuestaNoEstado(statusCodeKO, errorEstadoMensaje, statusTextKO, urlPremium);
 		}
 
-		HistoricoBean hist = new HistoricoBean(new Date(), new BigDecimal(mensajeID), cod);
-		hist.setDescripcion(recepcionEstadoSMS.getStatusText());
-		boolean multidestinatario = false;
-		
-		HistoricoDAO dao = new HistoricoDAO();
+		Long destinatarioMensajeId = null;
 
-		logger.debug("[Registrar Historico] Antes de registrar el mensajeId: " + hist.getMensajeid());
+		if (null != mensaje && lotesManager.isMultidestinatario(mensajeID)) {
+			destinatarioMensajeId = destinatariosMensajesManager.getDestinatarioMensajeByUim(
+					recepcionEstadoSMS.getMensajeId()).getDestinatariosmensajes();
+		}
 
+		EstadosBean estadoMensaje = queryExecutorSubestados.getEstadoByCode(cod.toString());
+		estadoFinalId = estadoMensaje.getEstadoId();
+		descripcion = estadoMensaje.getDescripcion();
 		try {
-			dao.beginTransaction();
-			dm.beginTransaction();
-			if (dm.isMultidestinatario(mensajeID)){
-				hist.setDestinatariosMensajes(dm.getDestinatarioMensajeByUim_Mensaje(mensajeID,recepcionEstadoSMS.getMensajeId()));
-				multidestinatario = true;
-			}
-			dm.endTransaction(false);
-			boolean historico = false;
-			//actualizamos el estado del lote
-			dao.actualizarEstadoLote(hist.getMensajeid().intValue());
-			dao.endTransaction(true); //confirmamos
-			dao.beginTransaction();
-			if (multidestinatario){
-				historico = dao.setHistoricoMult(hist);
-				dao.actualizarEstadoLote(hist.getMensajeid().intValue());
-			}else{
-				historico = dao.setHistorico(hist);
-			}
-			dao.endTransaction(true);
-			ResponseStatusType status = new ResponseStatusType();
-			if(!historico){
-				status.setStatusCode(STATUSCODE_KO);
-				status.setStatusText(STATUSCTEXT_KO);
-				if (urlPremium.length()>0)
-					status.setDetails(STATUSDETAILS_KO+","+urlPremium);
-				else
-					status.setDetails(STATUSDETAILS_KO);
-			}else{
-			logger.debug("[Recibir Historico] Despues de registrar el mensajeId: " + hist.getMensajeid());
-			status.setStatusCode(STATUSCODE_OK);
-			status.setStatusText(STATUSTEXT_OK);
-			if (urlPremium.length()>0)
-				status.setDetails(STATUSDETAILS_OK+","+urlPremium);
+			Integer idHistorico = hitoricosManager.creaHistorico(mensaje.getMensajeid(),destinatarioMensajeId, estadoFinalId, null, 
+					descripcion, cod.toString(), recepcionEstadoSMS.getUser());
+
+			ResponseStatusType status;
+			if (null == idHistorico)
+				status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
 			else
-				status.setDetails(STATUSDETAILS_OK);
-			}
+				status = getStatus(statusCodeOK, statusTextOK, statusDetailsOK, urlPremium);
+
 			res.setStatus(status);
 		} catch (Exception e) {
-			logger.debug("[Registrar Historico] Se ha producido un error escribiendo en el Historico el mensaje: " + hist.getMensajeid());
-			ResponseStatusType status = new ResponseStatusType();
-			status.setStatusCode(STATUSCODE_KO);
-			status.setStatusText(STATUSCTEXT_KO);
-			if (urlPremium.length()>0)
-				status.setDetails(STATUSDETAILS_KO+","+urlPremium);
-			else
-				status.setDetails(STATUSDETAILS_KO);
+			LOG.error("[Registrar Historico] Se ha producido un error escribiendo en el Historico el mensaje: "
+					+ mensaje.getMensajeid(),e);
+			ResponseStatusType status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
 			res.setStatus(status);
-			dao.endTransaction(false);// hacemos rollback
-			dm.endTransaction(false);
-		} finally {
-			dao.closeAll();
-			dm.closeAll();
 		}
 
 		return res;
 	}
 
+	private ResponseStatusType getStatus(String statusCode, String statusText, String statusDetails, String urlPremium) {
+		ResponseStatusType res = new ResponseStatusType();
+		res.setStatusCode(statusCode);
+		res.setStatusText(statusText);
+		if (urlPremium.length() > 0)
+			res.setDetails(statusDetails + "," + urlPremium);
+		else
+			res.setDetails(statusDetails);
+		return res;
+	}
+
+	private RespuestaEstadoSMSXMLBean getRespuestaNoEstado(String statusCodeKO, String errorEstadoMensaje,
+			String statusTextKO, String urlPremium) {
+		RespuestaEstadoSMSXMLBean res = new RespuestaEstadoSMSXMLBean();
+		ResponseStatusType status = new ResponseStatusType();
+		status.setStatusCode(statusCodeKO);
+		if (urlPremium.length() > 0)
+			status.setDetails(errorEstadoMensaje + "," + urlPremium);
+		else
+			status.setDetails(errorEstadoMensaje);
+		status.setStatusText(statusTextKO);
+		res.setStatus(status);
+		return res;
+	}
+
+	private RespuestaEstadoSMSXMLBean getRespuestaNoMensaje(RecepcionEstadoSMSXMLBean recepcionEstadoSMS,
+			String statusCodeKO, String errorUimNoExiste, String urlPremium) {
+		RespuestaEstadoSMSXMLBean res = new RespuestaEstadoSMSXMLBean();
+		ResponseStatusType status = new ResponseStatusType();
+		status.setStatusCode(statusCodeKO);
+		status.setStatusText(errorUimNoExiste);
+		if (urlPremium.length() > 0)
+			status.setDetails("UIM " + recepcionEstadoSMS.getMensajeId() + " NOT FOUND," + urlPremium);
+		else
+			status.setDetails("UIM " + recepcionEstadoSMS.getMensajeId() + " NOT FOUND");
+		res.setStatus(status);
+		return res;
+	}
+
+	private String getUrlPremium(Long mensajeID) {
+		TblUrlMensajePremium urlPremium = urlMensajeManager.getUrlByMensaje(mensajeID);
+
+		if (mensajeID != null && null != urlPremium && !urlPremium.getUrl().isEmpty()) {
+			// comprobamos si es mensaje premium para anadir la url
+			return urlPremium.getUrl().concat(" | ").concat(mensajeID.toString());
+		}
+		return "";
+	}
+
 	@Override
 	public String recibirEstadoSMSXML(RecepcionEstadoSMSXMLBean recepcionEstadoSMS) {
 		RespuestaEstadoSMSXMLBean respuesta = this.recibirEstadoSMS(recepcionEstadoSMS);
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String res = "";
 		try {
 			res = respuesta.toXML();
 		} catch (PlataformaBusinessException e) {
-			res = TAG_ERROR_GENERANDO_RESPUESTA_XML;
+			LOG.error("[Recepcion Estado SMS m�todo recibirEstadoSMSXML] Se ha producido un error recibiendo el estado: ",e);
+			res = ps.getMessage("plataformaErrores.generales.TAG_ERROR_GENERANDO_RESPUESTA_XML", null);
 		}
 		return res;
+	}
+
+	/**
+	 * @return the mensajesManager
+	 */
+	public TblMensajesManager getMensajesManager() {
+		return mensajesManager;
+	}
+
+	/**
+	 * @param mensajesManager the mensajesManager to set
+	 */
+	public void setMensajesManager(TblMensajesManager mensajesManager) {
+		this.mensajesManager = mensajesManager;
+	}
+
+	/**
+	 * @return the destinatariosMensajesManager
+	 */
+	public TblDestinatariosMensajesManager getDestinatariosMensajesManager() {
+		return destinatariosMensajesManager;
+	}
+
+	/**
+	 * @param destinatariosMensajesManager the destinatariosMensajesManager to set
+	 */
+	public void setDestinatariosMensajesManager(TblDestinatariosMensajesManager destinatariosMensajesManager) {
+		this.destinatariosMensajesManager = destinatariosMensajesManager;
+	}
+
+	/**
+	 * @return the lotesManager
+	 */
+	public TblLotesEnviosManager getLotesManager() {
+		return lotesManager;
+	}
+
+	/**
+	 * @param lotesManager the lotesManager to set
+	 */
+	public void setLotesManager(TblLotesEnviosManager lotesManager) {
+		this.lotesManager = lotesManager;
+	}
+
+	/**
+	 * @return the urlMensajeManager
+	 */
+	public TblUrlMensajePremiumManager getUrlMensajeManager() {
+		return urlMensajeManager;
+	}
+
+	/**
+	 * @param urlMensajeManager the urlMensajeManager to set
+	 */
+	public void setUrlMensajeManager(TblUrlMensajePremiumManager urlMensajeManager) {
+		this.urlMensajeManager = urlMensajeManager;
+	}
+
+	/**
+	 * @return the hitoricosManager
+	 */
+	public TblHistoricosManager getHitoricosManager() {
+		return hitoricosManager;
+	}
+
+	/**
+	 * @param hitoricosManager the hitoricosManager to set
+	 */
+	public void setHitoricosManager(TblHistoricosManager hitoricosManager) {
+		this.hitoricosManager = hitoricosManager;
+	}
+
+	/**
+	 * @return the reloadableResourceBundleMessageSource
+	 */
+	public ReloadableResourceBundleMessageSource getReloadableResourceBundleMessageSource() {
+		return reloadableResourceBundleMessageSource;
+	}
+
+	/**
+	 * @param reloadableResourceBundleMessageSource the reloadableResourceBundleMessageSource to set
+	 */
+	public void setReloadableResourceBundleMessageSource(
+			ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
+		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
+	}
+
+	/**
+	 * @return the queryExecutorSubestados
+	 */
+	public QueryExecutorSubEstados getQueryExecutorSubestados() {
+		return queryExecutorSubestados;
+	}
+
+	/**
+	 * @param queryExecutorSubestados the queryExecutorSubestados to set
+	 */
+	public void setQueryExecutorSubestados(QueryExecutorSubEstados queryExecutorSubestados) {
+		this.queryExecutorSubestados = queryExecutorSubestados;
+	}
+
+	/**
+	 * @return the tblEstadosManager
+	 */
+	public TblEstadosManager getTblEstadosManager() {
+		return tblEstadosManager;
+	}
+
+	/**
+	 * @param tblEstadosManager the tblEstadosManager to set
+	 */
+	public void setTblEstadosManager(TblEstadosManager tblEstadosManager) {
+		this.tblEstadosManager = tblEstadosManager;
 	}
 
 }

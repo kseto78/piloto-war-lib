@@ -1,0 +1,9 @@
+
+<PeticionClaveAuthRequest xmlns="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest">
+	<Usuario>pruebasSIMdes</Usuario>
+	<Password>pruebasSIMdes</Password>
+	<IdServicio>822</IdServicio>
+	<IdDispositivo>822_500</IdDispositivo>
+	<IdPlataforma>1</IdPlataforma>
+</PeticionClaveAuthRequest>
+  

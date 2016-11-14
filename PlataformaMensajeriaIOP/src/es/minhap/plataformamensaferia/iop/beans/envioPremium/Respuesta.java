@@ -1,12 +1,15 @@
 
 package es.minhap.plataformamensaferia.iop.beans.envioPremium;
 
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -134,6 +137,41 @@ public class Respuesta {
     			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     		}
     }
+    
+    public void loadObjectFromXML(String xmlRespuesta)
+			throws PlataformaBusinessException {
+
+		JAXBContext jaxbContext;
+		try {
+			jaxbContext = JAXBContext.newInstance(Respuesta.class);
+
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+			StringReader reader = new StringReader(xmlRespuesta);
+			Respuesta respuesta = (Respuesta) unmarshaller
+					.unmarshal(reader);
+
+			org.apache.commons.beanutils.BeanUtils.copyProperties(this,
+					respuesta);
+
+			
+		} catch (JAXBException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xmlRespuesta);
+		} catch (IllegalAccessException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xmlRespuesta);
+		} catch (InvocationTargetException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xmlRespuesta);
+		}
+	}
 
 	/**
 	 * @return the statusCode

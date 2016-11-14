@@ -22,6 +22,22 @@
                  </DestinatarioSMS>
               </DestinatariosSMS>
            </MensajeSMS>
-          
+          <MensajeSMS>
+              <Cuerpo>Mensaje de texto prueba 0002</Cuerpo>
+              <!--1 or more repetitions:-->
+              <DestinatariosSMS>
+                <DestinatarioSMS>
+                    <!--Optional:-->
+                    <DocUsuario>70894428x</DocUsuario>
+                    <IdExterno>IDEXTERNO</IdExterno>
+                    <Destinatario>609691700</Destinatario>
+                 </DestinatarioSMS>
+                 <DestinatarioSMS>
+                    <!--Optional:-->
+                    <IdExterno>IDEXTERNO2</IdExterno>
+                    <Destinatario>696644884</Destinatario>
+                 </DestinatarioSMS>
+              </DestinatariosSMS>
+           </MensajeSMS>
         </Mensajes>
      </Peticion>
