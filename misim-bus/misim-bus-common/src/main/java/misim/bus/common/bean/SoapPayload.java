@@ -13,6 +13,7 @@ public class SoapPayload<P> implements Serializable {
 	 */
 	private static final long serialVersionUID = 1680035718626095801L;
 
+	private String soapAplication;
 	private String soapAction;
 	private Document soapMessage;
 	private Boolean encrypted = Boolean.FALSE;
@@ -67,4 +68,19 @@ public class SoapPayload<P> implements Serializable {
 			encrypted = Boolean.TRUE;
 		}
 	}
+
+	/**
+	 * @return the soapAplication
+	 */
+	public String getSoapAplication() {
+		return soapAplication;
+	}
+
+	/**
+	 * @param soapAplication the soapAplication to set
+	 */
+	public void setSoapAplication(String soapAplication) {
+		this.soapAplication = soapAplication;
+	}
+	
 }

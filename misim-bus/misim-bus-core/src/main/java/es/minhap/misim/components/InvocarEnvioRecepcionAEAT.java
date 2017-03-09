@@ -99,7 +99,11 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 			
 			
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
-			System.out.println("REQUEST: " + XMLUtils.dom2xml(docOriginal));
+			
+			if(LOG.isInfoEnabled()){
+	        	LOG.info("REQUEST: "+ XMLUtils.dom2xml(docOriginal));
+	        }			
+			
 			NodeList peticion = docOriginal.getElementsByTagName("PeticionNotificacionEstadoSMS");
 
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));

@@ -2,7 +2,8 @@ package es.minhap.plataformamensajeria.iop.business;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +11,7 @@ import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.business.common.ICommonUtilitiesService;
 import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
+import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
 import es.minhap.sim.model.TblMensajes;
 
 /**
@@ -30,35 +32,49 @@ import es.minhap.sim.model.TblMensajes;
 public class SIMMessageDispatcher {
 
 
-	private static Logger LOG = Logger.getLogger(SIMMessageDispatcher.class);
+	private static Logger LOG = LoggerFactory.getLogger(SIMMessageDispatcher.class);
 
 	@Resource
 	private ICommonUtilitiesService commonUtilitiesService;
 
 	@Resource
 	private ISendMessageService sendMessageService;
+	
+	@Resource(name = "TblHistoricosManagerImpl")
+	private TblHistoricosManager tblHistoricosManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
 	@Transactional(noRollbackFor=RuntimeException.class)
 	public void dispatchMessage(MensajeJMS msg) {
-		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		LOG.info("Procesando mensaje: " + msg.getIdMensaje());
-		Long mensajeId = Long.parseLong(msg.getIdMensaje());
-		Long destinatarioMensajeId = null;
-		Integer canal = Integer.parseInt(msg.getIdCanal());
+		
+		Long mensajeId = null;
+		
 		try {
-			destinatarioMensajeId = Long.parseLong(msg.getDestinatarioMensajeId());
-		} catch (NumberFormatException e) {
-			destinatarioMensajeId = null;
-		}
-
-		try {
+			PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+			Long estadoId = Long.parseLong(ps.getMessage("constantes.ESTADOID_ENVIADO", null,  "1"));
+			LOG.info("Procesando mensaje: " + msg.getIdMensaje());
+			mensajeId = Long.parseLong(msg.getIdMensaje());
+			Long destinatarioMensajeId = null;
+			Integer canal = Integer.parseInt(msg.getIdCanal());
+			try {
+				destinatarioMensajeId = Long.parseLong(msg.getDestinatarioMensajeId());
+			} catch (NumberFormatException e) {
+				destinatarioMensajeId = null;
+			}
 			
 			//Se comprueba que el mensaje no este anulado entonces se procesa
 			TblMensajes mensaje = getCommonUtilitiesService().getMensaje(mensajeId);
-			if (mensaje.getEstadoactual() != null && !mensaje.getEstadoactual().equals(ps.getMessage("constantes.ESTADO_ANULADO", null))) {
+			
+			//comprobamos si el mensaje en su historico ya tiene un estado enviado.
+			Boolean yaEnviado = tblHistoricosManager.checkMensajeYaEnviado(mensajeId, destinatarioMensajeId, estadoId);
+			if (yaEnviado){
+				LOG.info("El mensaje " + msg.getIdMensaje() + " con destinatario: " + msg.getDestinatarioMensajeId() + " ya ha sido enviado anteriormente");
+			}
+
+			if (mensaje.getEstadoactual() != null && !mensaje.getEstadoactual().equals(ps.getMessage("constantes.ESTADO_ANULADO", null)) 
+					&& !yaEnviado) {
 				switch (canal) {
 				case 1:
 					getSendMessageService().postMail(mensajeId, msg.getDestinatarioMensajeId());
@@ -79,9 +95,11 @@ public class SIMMessageDispatcher {
 				}
 			}
 		} catch (Exception e) {
-			LOG.error("[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId);
+			LOG.error("[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId, e);
 			throw new RuntimeException("");
 		}
+		
+//		LOG.info("Mensaje procesado: " + msg.getIdMensaje());
 	}
 
 	/**

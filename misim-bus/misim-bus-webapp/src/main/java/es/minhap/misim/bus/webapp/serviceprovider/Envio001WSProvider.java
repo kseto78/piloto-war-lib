@@ -17,9 +17,15 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
+import es.minhap.misim.bus.webapp.threadlocal.RecuperarHeaders;
 import es.redsara.misim.misim_bus_webapp.respuesta.ResponseStatusType;
 import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 
@@ -28,11 +34,14 @@ import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 @Scope(value="request")
 public class Envio001WSProvider extends WSProvider {
 
+	private static final Logger LOG = LoggerFactory.getLogger(Envio001WSProvider.class);
+	
 	/**
 	 * Cola de recepción VM de peticiones sincronas
 	 */
 	public static final String RECEPT_QUEUE = "vm://envio-sim-001";
 	
+	public static final int N_HEADERS = 1;
 
 	@Override
 	public SOAPMessage invoke(final SOAPMessage request) {
@@ -53,10 +62,37 @@ public class Envio001WSProvider extends WSProvider {
 				}
 			}
 			try {
+				
+				Document docOriginal = XMLUtils.soap2dom(request);
+				
+				if(RecuperarHeaders.getHeader()!=null){
+					NodeList nodeList = docOriginal.getElementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/", "Header");
+					LOG.info("Envio001WSProvider - nodeList.getLength() :" + nodeList.getLength());
+					if (nodeList!=null && nodeList.getLength()==N_HEADERS){
+						
+				        Element certificado = docOriginal.createElement("certificado");
+				        certificado.setNodeValue(RecuperarHeaders.getHeader());
+				        certificado.setTextContent(RecuperarHeaders.getHeader());
+						
+						docOriginal.getElementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/", "Header").item(0).appendChild(docOriginal.importNode(certificado, true));
+						
+					}else{
+						
+						//NO SE DA NUNCA
+						Element certificado = docOriginal.createElement("certificado");
+				        certificado.setNodeValue(RecuperarHeaders.getHeader());
+				        certificado.setTextContent(RecuperarHeaders.getHeader());
+				        
+						Element header = docOriginal.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Header");
+				        header.appendChild(certificado);
+						
+						docOriginal.getElementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/", "Envelope").item(0).appendChild(docOriginal.importNode(header, true));
+					}
+				}
 
 				SoapPayload<?> payload = new PeticionPayload();
 				payload.setSoapAction(String.class.cast(getContext().getMessageContext().get(SOAP_ACTION)));
-				payload.setSoapMessage(XMLUtils.soap2dom(request));
+				payload.setSoapMessage(docOriginal);
 			
 //				System.out.println("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
 

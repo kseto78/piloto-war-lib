@@ -69,11 +69,13 @@ public class InvocarEmisor implements Callable {
 			QName serviceQName = new QName(targetName, serviceName);
 	        QName portQName = new QName(targetName, portName);
 	        
-	        System.out.println("REQUEST: "+request);
+	        if(LOG.isInfoEnabled()){
+	        	LOG.info("REQUEST: "+request);
+	        }
 //	        SOAPMessage responseMessage =this.invoke(serviceQName, portQName, endpointUrl, operationName, request, timeout);
 	        
 	        try{
-	        	 SOAPMessage responseMessage =this.invoke(serviceQName, portQName, endpointUrl, operationName, request, timeout);
+	        	SOAPMessage responseMessage =this.invoke(serviceQName, portQName, endpointUrl, operationName, request, timeout);
 				SoapPayload<?> initPayload = eventContext.getMessage().getPayload(SoapPayload.class);
 				SoapPayload<?> soapPayload = null;
 			    if (responseMessage.getSOAPBody().hasFault()) {
@@ -88,9 +90,14 @@ public class InvocarEmisor implements Callable {
 			   // idDelMensaje
 //			    String xmlResponse=XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage));
 //			    responseMessage=XMLUtils.dom2soap(XMLUtils.xml2doc(xmlResponse.replace("idDelMensaje", idSms), Charset.forName("UTF-8")));
-			    System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-				soapPayload.setSoapAction(initPayload.getSoapAction());
+			    if(LOG.isInfoEnabled()){
+			    	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+			    }
+			    soapPayload.setSoapAction(initPayload.getSoapAction());
 				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
+				
+								
+				eventContext.getMessage().setOutboundProperty("xmlRespuestaDirectaOperador", XMLUtils.dom2xml(soapPayload.getSoapMessage()));
 				
 				eventContext.getMessage().setPayload(soapPayload);
 				

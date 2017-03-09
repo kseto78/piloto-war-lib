@@ -48,7 +48,10 @@ public class InvocarGestionNotificacionesPush implements Callable {
 
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
 					.getSoapMessage();
-			System.out.println("REQUEST: " + XMLUtils.dom2xml(docOriginal));
+			
+			if(LOG.isInfoEnabled()){
+	        	LOG.info("REQUEST: "+ XMLUtils.dom2xml(docOriginal));
+	        }
 
 			NodeList peticion = docOriginal.getElementsByTagNameNS(
 					"http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush", "PeticionNotificacionPush");
@@ -76,7 +79,10 @@ public class InvocarGestionNotificacionesPush implements Callable {
 					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				}
 
-				System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+				if(LOG.isInfoEnabled()){
+		        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+		        }
+				
 				soapPayload.setSoapAction(initPayload.getSoapAction());
 				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 

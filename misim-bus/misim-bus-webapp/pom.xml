@@ -386,6 +386,20 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>1.46</version>
 		</dependency>
+		
+		<!-- GRAYLOG -->
+		<!--  <dependency>
+		    <groupId>biz.paluch.logging</groupId>
+		    <artifactId>logstash-gelf</artifactId>
+		    <version>1.11.0</version>
+		</dependency> -->
+		
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>1.7.4</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

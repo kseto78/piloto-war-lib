@@ -33,8 +33,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,7 @@ import es.minhap.sim.query.TblServidoresQuery;
 @Service("sendMessageService")
 public class SendMessageServiceImpl implements ISendMessageService {
 	
-	private static final Logger LOG = Logger.getLogger(SendMessageServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SendMessageServiceImpl.class);
 
 	@Autowired
 	private QueryExecutorServidoresOrganismos queryExecutorServidoresOrganismos;
@@ -183,7 +184,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	public void postSMS(Long idMensaje, Long destinatarioMensajeId, String codOrganismo, String usuarioAplicacion,
 			String passAplicacion) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String okEnvio = ps.getMessage("constantes.ESTADO_ENVIADO", null);
+		String okEnvio = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA", null);
 		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
 		String usuarioMISIM = ps.getMessage("usuarioMISIM", null);
 		String passMISIM = ps.getMessage("passwordMISIM", null);
@@ -411,6 +412,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	public void postMail(Long mensajeId, String destinatarioMensajeId) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String ejecutarTodosServidores = ps.getMessage("mail.ejecutarTodosServidores", null);
+		String rutaTemporal = ps.getMessage("constantes.RUTA_ARCHIVO_TEMPORAL", null);
 		String okEnvio = ps.getMessage("constantes.ESTADO_ENVIADO", null);
 		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
 		StringBuilder errorMessage = new StringBuilder();
@@ -423,7 +425,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			LOG.debug("Intentamos recuperar los datos del mail con id: " + mensajeId + " destinatarioMensaje: "
 					+ lista.toString() + " (postMail)");
 		}
-		if (lista.size() == 1)
+		if (lista.size() == 1 && lista.get(0)!=null &&  lista.get(0).length()>0)
 			mailData = getMailData(mensajeId, Long.parseLong(lista.get(0)));
 		else
 			mailData = getMailData(mensajeId, null);
@@ -450,8 +452,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 				
 				int numServidores = mailData.Servers.size();
-				if (LOG.isInfoEnabled()) {
-					LOG.info("Numero de servidores: " + numServidores);
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Numero de servidores: " + numServidores);
 				}
 				if ("S".equals(ejecutarTodosServidores)) {
 					while ((indice < numServidores) && (!sendOK)) {
@@ -460,7 +462,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 							LOG.debug("Llamamos a sendMail (postMail)");
 						}
 						try {
-							sendMail(mailData, indice);
+//							LOG.info("BEFORE SENDMAIL TS");
+							sendMail(mailData, indice, rutaTemporal);
+//							LOG.info("AFTER SENDMAIL TS");
 							sendOK = true;
 							
 						} catch (Exception e) {
@@ -505,7 +509,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 							LOG.debug("Llamamos a sendMail (postMail)");
 						}
 						try {
-							sendMail(mailData, indice);
+//							LOG.info("BEFORE SENDMAIL");
+							sendMail(mailData, indice, rutaTemporal);
+//							LOG.info("AFTER SENDMAIL");
 							sendOK = true;
 							
 						} catch (Exception e) {
@@ -549,8 +555,10 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				if (LOG.isInfoEnabled()) {
 					LOG.info("Mail numero " + mensajeId + " enviado (postMail) ");
 				}
+//				LOG.info("BEFORE SETESTADOMENSAJE");
 				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), okEnvio, "Mensaje Enviado Correctamente", false,
 						mailData.destinatarioMensajeId, null, null, servidorId);
+//				LOG.info("AFTER SETESTADOMENSAJE");
 			} else {
 				mensajesManager.setEstadoMensaje(
 						Long.valueOf(mensajeId),
@@ -565,7 +573,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 	}
 
-	private void sendMail(MailData mailData, int indice) throws Exception{
+	private void sendMail(MailData mailData, int indice, String rutaTemporal) throws Exception{
 		boolean debug = false;
 
 		Properties props = new Properties();
@@ -581,7 +589,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			} else {
 				props.put("mail.smtp.port", Integer.valueOf(25));
 			}
-			
+				
 			Session session = null;
 			Authenticator auth = null;
 			if (ps.getTimeOut() != "") {
@@ -652,7 +660,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				multipart = new MimeMultipart();
 			}
 			MimeBodyPart cuerpo = new MimeBodyPart();
-			String body = updateBody(mailData.Body, multipart);
+			String body = updateBody(mailData.Body, multipart, rutaTemporal);
 			String typeContent = mailData.TipoCuerpo + "; charset=" + mailData.TipoCodificacion;
 
 			cuerpo.setContent(body, typeContent);
@@ -662,10 +670,10 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				LOG.debug("Adjuntos: " + mailData.Attachments.size());
 			}
 			if (mailData.Attachments.size() > 0) {
-				addAttachToMail(mailData.Attachments, multipart);
+				addAttachToMail(mailData.Attachments, multipart, rutaTemporal);
 			}
 			if (mailData.Images.size() > 0) {
-				addImagesToMail(mailData.Images, multipart);
+				addImagesToMail(mailData.Images, multipart, rutaTemporal);
 			}
 			msg.setContent(multipart);
 			if (LOG.isDebugEnabled()) {
@@ -703,11 +711,11 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		return correos;
 	}
 
-	private void addAttachToMail(ArrayList<Adjunto> attachs, Multipart multipart) throws FileNotFoundException,
+	private void addAttachToMail(ArrayList<Adjunto> attachs, Multipart multipart, String rutaTemporal) throws FileNotFoundException,
 			SQLException, IOException, MessagingException {
 		for (int indice = 0; indice < attachs.size(); indice++) {
 			FileOutputStream fos = null;
-			File file = new File("Temp/File" + indice);
+			File file = File.createTempFile(rutaTemporal, String.valueOf(indice));
 			fos = new FileOutputStream(file);
 			MimeBodyPart adjunto = new MimeBodyPart();
 			Blob bin = ((Adjunto) attachs.get(indice)).getContenido();
@@ -735,11 +743,11 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		}
 	}
 
-	private void addImagesToMail(ArrayList<Adjunto> images, Multipart multipart) throws FileNotFoundException,
+	private void addImagesToMail(ArrayList<Adjunto> images, Multipart multipart, String rutaTemporal) throws FileNotFoundException,
 			SQLException, IOException, MessagingException {
 		for (int indice = 0; indice < images.size(); indice++) {
 			FileOutputStream fos = null;
-			File file = new File("Temp/File" + indice);
+			File file = File.createTempFile(rutaTemporal, String.valueOf(indice));
 			fos = new FileOutputStream(file);
 			Blob bin = ((Adjunto) images.get(indice)).getContenido();
 			InputStream input = bin.getBinaryStream();
@@ -767,7 +775,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		}
 	}
 
-	private String updateBody(String body, Multipart multipart) throws IOException, MessagingException {
+	private String updateBody(String body, Multipart multipart, String rutaTemporal) throws IOException, MessagingException {
 		String newBody = "";
 		String[] partImages = body.split("<img");
 		int cont = 0;
@@ -779,7 +787,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 					byte[] bytes = Base64.decodeBase64(base64.getBytes());
 					FileOutputStream fos = null;
-					File file = new File("Temp/File" + cont);
+					File file = File.createTempFile(rutaTemporal, String.valueOf(cont));
+					
 					fos = new FileOutputStream(file);
 					int size = bytes.length;
 					fos.write(bytes, 0, size);
@@ -947,8 +956,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 			
 			int numServidoresPush = notificacionPushData.servers.size();
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Numero de servidores Push: " + numServidoresPush);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Numero de servidores Push: " + numServidoresPush);
 			}
 			if ("S".equals(ejecutarTodosServidores)) {
 				while ((indice < numServidoresPush) && (!sendOK)) {
@@ -1024,7 +1033,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				
 			} else {
 				mensajesManager.setEstadoMensaje(mensajeId, koEnvio,
-						resultNotificacionPush, false, null, null, null, servidorPushID.longValue());
+						resultNotificacionPush, false, notificacionPushData.getDestinatarioMensajeId(), null, null, servidorPushID.longValue());
 				throw new Exception();
 			}
 		}
@@ -1186,7 +1195,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			tblErrorMensajeLog.setCodigoerror(new Long("0"));
 			tblErrorMensajeLog.setDescripcionerror("Error: No existe ningun Receptor Disponible");
 			tblErrorMensajeLog.setFecha(new Date());
-			tblErrorMensajeLog.setOperacion("`postRecepcionSMS");
+			tblErrorMensajeLog.setOperacion("postRecepcionSMS");
 			errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
 			throw new Exception();
 		} else {

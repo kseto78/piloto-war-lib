@@ -37,7 +37,9 @@ import javax.xml.bind.annotation.XmlType;
     "idPlataforma",
     "dispositivoId",
     "samlResponse",
-    "remoteHost"
+    "remoteHost",
+    "uidDispositivo",
+    "tokenSession"
 })
 @XmlRootElement(name = "PeticionClaveAuthResponse", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
 public class PeticionClaveAuthResponse {
@@ -56,6 +58,10 @@ public class PeticionClaveAuthResponse {
     protected String samlResponse;
     @XmlElement(name = "RemoteHost", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
     protected String remoteHost;
+    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+	protected String uidDispositivo;
+	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+	protected String tokenSession;
 	
     /**
 	 * @return the usuario
@@ -140,6 +146,30 @@ public class PeticionClaveAuthResponse {
 	 */
 	public void setIdPlataforma(String idPlataforma) {
 		this.idPlataforma = idPlataforma;
+	}
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
 	
 }

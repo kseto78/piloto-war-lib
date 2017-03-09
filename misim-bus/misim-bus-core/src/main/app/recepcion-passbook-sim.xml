@@ -35,21 +35,15 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
 	<!-- DESDE LAS APLICACONES A MISIM (CON LA LIBRERIA PARA INTRODUCIR BBDD) -->
 
-	<flow name="FLW-RCP-PBK-SIM" doc:name="FLW-RCP-PBK-SIM" doc:description="Procesa una nueva Petición">
+	<flow name="FLW-RCP-PBK-SIM" doc:name="FLW-RCP-PBK-SIM" doc:description="Procesa una nueva Peticion">
 
-		<!-- RECEPCIÓN PETICIÓN -->
+		<!-- RECEPCION PETICION -->
 		<vm:inbound-endpoint exchange-pattern="request-response" path="recepcion-passbook-sim" responseTimeout="120000" doc:name="VM" />
 
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Petición SOAP Passbook recibida desde Aplicación: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Inicio petición" />
-
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Inicio peticion" />
 
 		<!-- INICIALIZAR VARIABLES -->
-		<logger level="INFO" doc:name="Logger" message="Inicializar variables" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Inicializar variables" />
 		<component doc:name="Inicializa variables">
 			<spring-object bean="inicializarClientePBK" />
 		</component>
@@ -57,53 +51,53 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" />
 
 		<!-- INDENTIFICAR TIPO DE PETICION -->
-		<logger level="INFO" doc:name="Logger" message="Indentificación de la petición" />
-		<component doc:name="Recupera la información del tipo de peticion">
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Identificacion de la peticion" />
+		<component doc:name="Recupera la informacion del tipo de peticion">
 			<spring-object bean="identificarTipoPeticionPBK" />
 		</component>
 		
-		<!-- LOGGER TIPO PETICIÓN -->
+		<!-- LOGGER TIPO PETICION -->
 		<logger level="INFO" doc:name="Logger" message="TIPO PETICION #[message.outboundProperties['${TIPO_PETICION}']]" />
 
-		<!-- ENCRIPTACIÓN -->
-		<logger level="INFO" doc:name="Logger" message="Encriptación para la auditoría" />
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
 			<component	doc:name="Encripta" >
 				<spring-object bean="encriptar" />
 			</component>
 		</processor-chain>
 		
-		<!-- AUDITORÍA -->
-		<logger level="INFO" doc:name="Logger" message="Auditoría de la petición recibida" /> 
+		<!-- AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Auditoria de la peticion recibida" /> 
 			<component doc:name="Audita" >
 			<spring-object bean="audit" />
 		</component>
 		
 		<!-- ADAPTAR PROTOCOLO -->
-		<choice doc:name="Adaptar la petición"> 
+		<choice doc:name="Adaptar la peticion"> 
 			<when expression="#[message.outboundProperties['${TRANSFORMACION_PETICION}'] == 'S']">
 				<processor-chain>
 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" />
 					
-					<logger level="INFO" doc:name="Logger" message="Adaptación de la petición" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Adaptacion de la peticion" />
 					
-					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia misim" />
-					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la peticion" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - No se requiere de adaptacion de la peticion" />
 			</otherwise>
 		</choice>
 
-		<!-- INVOCACIÓN DEL ENVIADOR -->
-		<logger level="INFO" doc:name="Logger" message="Invocación del enviador" />
+		<!-- INVOCACION DEL ENVIADOR -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Invocacion del enviador" />
 		<choice doc:name="Tipo de ennvio">
 
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${enviarEmail}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Enviar MAIL" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Enviar MAIL" />
 					<component doc:name="Invocar envio Email">
 						<spring-object bean="invocarEnvioEmailPBK" />
 					</component>
@@ -111,7 +105,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${enviarSMS}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Enviar SMS" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Enviar SMS" />
 					<component doc:name="Invocar envio SMS">
 						<spring-object bean="invocarEnvioSMSPBK" />
 					</component>
@@ -119,7 +113,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${enviarPUSH}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Enviar PUSH" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Enviar PUSH" />
 					<component doc:name="Invocar envio PUSH">
 						<spring-object bean="invocarEnvioPushPBK" />
 					</component>
@@ -127,7 +121,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${consultarEstado}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Consultar estado" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Consultar estado" />
 					<component doc:name="Invocar consulta estado">
 						<spring-object bean="invocarConsultaEstadoPBK" />
 					</component>
@@ -135,7 +129,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${consultarHistorial}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Consultar historial" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Consultar historial" />
 					<component doc:name="Invocar consulta estado">
 						<spring-object bean="invocarConsultaHistorialPBK" />
 					</component>
@@ -143,7 +137,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${anularMensaje}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Anular mensaje" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Anular mensaje" />
 					<component doc:name="Invocar consulta estado">
 						<spring-object bean="invocarAnularMensajePBK" />
 					</component>
@@ -151,7 +145,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${anularLote}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Anular lote" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Anular lote" />
 					<component doc:name="Invocar consulta estado">
 						<spring-object bean="invocarAnularLotePBK" />
 					</component>
@@ -159,7 +153,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${reenviarMensaje}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Reenviar mensaje" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Reenviar mensaje" />
 					<component doc:name="Invocar consulta estado">
 						<spring-object bean="invocarReenviarMensajePBK" />
 					</component>
@@ -167,7 +161,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${reenviarLote}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Reenviar lote" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Reenviar lote" />
 					<component doc:name="Invocar consulta estado">
 						<spring-object bean="invocarReenviarLotePBK" />
 					</component>
@@ -175,11 +169,11 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<otherwise>
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Ninguna operacion disponible" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Ninguna operacion disponible" />
 				</processor-chain>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="Logger" message="Operacion invocada #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Operacion invocada #[payload]" />
 
 		<!-- ADAPTAR PROTOCOLO -->		
 		<choice doc:name="Adaptar la respuesta"> 
@@ -187,86 +181,72 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 				<processor-chain>		
 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
 							
-					<logger level="INFO" doc:name="Logger" message="Adaptación de la respuesta" />
-					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Adaptacion de la respuesta" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Aplicacion Cliente" />
-					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la respuesta" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - No se requiere de adaptacion de la respuesta" />
 			</otherwise>
 		</choice>
 		
 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
 		
-		<!-- ENCRIPTACIÓN -->
-		<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Comprobar si se requiere encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
-			<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+			<logger level="INFO" message="[FLOW - RecepcionPassbookSIM] - Encriptacion requerida" doc:name="Logger" />
 			<component	doc:name="Encripta" >
 				<spring-object bean="encriptar" />
 			</component>
 		</processor-chain>
 		
-		<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-		<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría" />
-		<component doc:name="Actualizacón de Auditoría">
+		<!-- ACTUALIZACION DE AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Actualizacion de la auditoria" />
+		<component doc:name="Actualizacon de Auditoria">
 			<spring-object bean="updateAudit" />
 		</component>
 
-		<logger level="INFO" doc:name="Logger" message="Petición procesada" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Respuesta SOAP devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Peticion procesada" />
 
-
-
-		<!-- GESTIÓN DE ERRORES -->
-
-
+		<!-- GESTION DE ERRORES -->
 
 		<catch-exception-strategy doc:name="Catch Exception Strategy">
 
 			<!-- GENERAR EL SOAP FAULT -->
-			<component doc:name="Gestión de errores" >
+			<component doc:name="Gestion de errores" >
 				<spring-object bean="gestionErroresAplicacionesPBK" />
 			</component>
 
 			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
 				
-			<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-        	<logger level="INFO" doc:name="Logger" message="Comprobar actualización de la auditoría" />
-        	<choice doc:name="Encriptación del error al Consumidor">
+			<!-- ACTUALIZACION DE AUDITORIA -->
+        	<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Comprobar actualizacion de la auditoria" />
+        	<choice doc:name="Encriptacion del error al Consumidor">
 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
-					<!-- ENCRIPTACIÓN -->
-					<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+					<!-- ENCRIPTACION -->
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Comprobar si se requiere encriptacion para la auditoria" />
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+						<logger level="INFO" message="[FLOW - RecepcionPassbookSIM] - Encriptacion requerida" doc:name="Logger" />
 						<component	doc:name="Encripta" >
 							<spring-object bean="encriptar" />
 						</component>
 					</processor-chain>
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría fault" />
-						<component doc:name="Actualización de auditoría Fault">
+						<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Actualizacion de la auditoria fault" />
+						<component doc:name="Actualizacion de auditoria Fault">
 							<spring-object bean="updateAuditFault" />
 						</component>
 					</processor-chain>
 				</when>
 				<otherwise>
-					<logger level="INFO" message="Actualización de auditoría no requerida" doc:name="Logger" />
+					<logger level="INFO" message="[FLOW - RecepcionPassbookSIM] - Actualizacion de auditoria no requerida" doc:name="Logger" />
 				</otherwise>
 			</choice>	
 
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault procesado" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - SOAP Fault procesado" />
 
 		</catch-exception-strategy>
 	</flow>

@@ -129,8 +129,11 @@ public class InvocarRecepcion implements Callable {
 			
 					eventContext.getMessage().setPayload(soapPayload);
 					
-					System.out.println("RESPONSE: " + respuesta);
+					eventContext.getMessage().setOutboundProperty("xmlRespuestaDirectaOperador", XMLUtils.dom2xml(soapPayload.getSoapMessage()));
 					
+					if(LOG.isInfoEnabled()){
+			        	LOG.info("RESPONSE: " + respuesta);
+			        }					
 				}catch(Exception e){
 					//Lanzar error
 					LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
@@ -214,8 +217,11 @@ public class InvocarRecepcion implements Callable {
 			
 					eventContext.getMessage().setPayload(soapPayload);
 					
-					LOG.info("RESPONSE: " + respuestaFinal);
-				
+					eventContext.getMessage().setOutboundProperty("xmlRespuestaDirectaOperador", XMLUtils.dom2xml(soapPayload.getSoapMessage()));
+					
+					if(LOG.isInfoEnabled()){
+			        	LOG.info("RESPONSE: " + respuestaFinal);
+			        }				
 				}catch(Exception e){
 					//Lanzar error
 					LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);

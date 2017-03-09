@@ -2,7 +2,6 @@ package es.minhap.plataformamensajeria.iop.business.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,10 +17,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import misim.bus.common.bean.SoapPayload;
 import misim.bus.common.util.XMLUtils;
 
-import org.apache.log4j.Logger;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -57,7 +57,7 @@ import es.minhap.sim.model.TblMensajes;
 @Service("commonUtilitiesService")
 public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, MuleContextAware {
 	
-	private static final Logger LOG = Logger.getLogger(CommonUtilitiesServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CommonUtilitiesServiceImpl.class);
 
 	@Resource
 	private TblDestinatariosMensajesManager tblDestinatariosMensajesManager;
@@ -175,7 +175,7 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 		final MuleMessage muleResponse = muleContext.getClient().send(receptQueue, payload, null, 10000);
 		Document respuestaSOAP = muleResponse.getPayload(SoapPayload.class).getSoapMessage();
 
-		NodeList nodoRespuesta = respuestaSOAP.getElementsByTagName("ns2:Respuesta");
+		NodeList nodoRespuesta = respuestaSOAP.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Respuesta");//("ns2:Respuesta");
 		String xmlRespuesta = XMLUtils.nodeToString(nodoRespuesta.item(0));
 				
 		JAXBContext jaxbContext = JAXBContext.newInstance(Respuesta.class);

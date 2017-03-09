@@ -84,6 +84,9 @@ public class WS_ClaveAuthResponseImpl implements WS_ClaveAuthResponse {
 			String servicioId = jsonObject.getString("Servicio");
 			String plataformaId = jsonObject.getString("Plataforma");
 			String samlResponse = jsonObject.getString("SAMLResponse");
+			String uidDispositivo = (!jsonObject.isNull("UidDispositivo")) ? jsonObject.getString("UidDispositivo") : null;
+			String tokenSession = (!jsonObject.isNull("TokenSession")) ? jsonObject.getString("TokenSession") : null;
+			
 			// Decode the data back to original string
 			byte[] bytes = new BASE64Decoder().decodeBuffer(data);
 			decoded = new String(bytes);
@@ -98,7 +101,9 @@ public class WS_ClaveAuthResponseImpl implements WS_ClaveAuthResponse {
 			if ((null != username && !("").equals(username)) && (null != password && !("").equals(password)) && (null != dispositivoId && !("").equals(dispositivoId))
 					&& (null != samlResponse && !("").equals(samlResponse))
 					&& (null != servicioId && !("").equals(servicioId))
-					&& (null != plataformaId && !("").equals(plataformaId))) {
+					&& (null != plataformaId && !("").equals(plataformaId))
+					&& (null != uidDispositivo && !("").equals(uidDispositivo))
+					&& (null != tokenSession && !("").equals(tokenSession))) {
 
 				try {
 					PeticionClaveAuthResponse peticion = new PeticionClaveAuthResponse();
@@ -109,6 +114,8 @@ public class WS_ClaveAuthResponseImpl implements WS_ClaveAuthResponse {
 					peticion.setIdServicio(servicioId);
 					peticion.setSamlResponse(samlResponse);
 					peticion.setRemoteHost(remoteHost);
+					peticion.setUidDispositivo(uidDispositivo);
+					peticion.setTokenSession(tokenSession);
 
 					DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 					Document document = docBuilder.newDocument();
@@ -158,7 +165,7 @@ public class WS_ClaveAuthResponseImpl implements WS_ClaveAuthResponse {
 			} else {
 				response.setStatusCode("0020");
 				response.setStatusText("La peticion no incluye todos los parametros obligatorios");
-				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, DispositivoId, SAMLResponse");
+				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, DispositivoId, SAMLResponse, UidDispositivo o TokenSession");
 
 				respuesta.setStatus(response);
 			}

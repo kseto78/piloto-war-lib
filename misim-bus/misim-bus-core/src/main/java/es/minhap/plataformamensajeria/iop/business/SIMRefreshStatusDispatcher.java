@@ -3,7 +3,8 @@ package es.minhap.plataformamensajeria.iop.business;
 import javax.annotation.Resource;
 
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.plataformamensajeria.iop.business.refreshstatus.IRefreshStatusService;
@@ -14,7 +15,7 @@ import es.minhap.plataformamensajeria.iop.business.refreshstatus.IRefreshStatusS
  */
 public class SIMRefreshStatusDispatcher {
 	
-	private static final Logger LOG = Logger.getLogger(SIMRefreshStatusDispatcher.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SIMRefreshStatusDispatcher.class);
 	
 	@Resource(name = "refreshStatusServiceImpl")
 	private IRefreshStatusService refreshStatusService;

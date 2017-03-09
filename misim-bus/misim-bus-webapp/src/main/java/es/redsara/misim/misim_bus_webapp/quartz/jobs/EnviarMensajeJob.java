@@ -7,8 +7,9 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -16,7 +17,6 @@ import org.springframework.util.CollectionUtils;
 import es.map.sim.jms.receiver.SIMMessageReceiver;
 import es.minhap.plataformamensajeria.iop.manager.TblPlanificacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
-import es.minhap.sim.model.TblServicios;
 
 /**
  * 
@@ -24,8 +24,8 @@ import es.minhap.sim.model.TblServicios;
  * @author everis
  *
  */
-public class EnviarMensajeJob{
-	private static final Logger LOG = Logger.getLogger(EnviarMensajeJob.class);
+public class EnviarMensajeJob {
+	private static final Logger LOG = LoggerFactory.getLogger(EnviarMensajeJob.class);
 	
 	@Autowired
 	private TblPlanificacionesManager planificacionesManager;
@@ -42,42 +42,47 @@ public class EnviarMensajeJob{
 		
 	}
 
-	@Transactional(noRollbackFor=Throwable.class)
+//	@Transactional(noRollbackFor=Throwable.class)
 	public void execute() throws JobExecutionException {
-		checkDependenciesPresent();
-		List<Long> idServiciosPlan = planificacionesManager.getServiciosPlanificacion();
-//		LOG.info("[EnviarMensajeJob] Servicios planificados: " + idServiciosPlan.size());
-		if(!CollectionUtils.isEmpty(idServiciosPlan)){
-			Set<String> nombreServiciosPlan= new LinkedHashSet<String>();
-			for(Long servicioId:idServiciosPlan){
-				TblServicios servicio = serviciosManager.getServicio(servicioId);
-				if(servicio!=null&&servicio.getNombre()!=null){
-					nombreServiciosPlan.add(servicio.getNombre());
+		try {
+			checkDependenciesPresent();
+			List<Long> idServiciosPlan = planificacionesManager.getServiciosPlanificacion();
+	//		LOG.info("[EnviarMensajeJob] Servicios planificados: " + idServiciosPlan.size());
+			if(!CollectionUtils.isEmpty(idServiciosPlan)){
+				Set<String> nombreServiciosPlan= new LinkedHashSet<String>();
+				for(Long servicioId:idServiciosPlan){
+					
+						nombreServiciosPlan.add(servicioId.toString());
+					
 				}
-			}
-			if(!CollectionUtils.isEmpty(nombreServiciosPlan)){
-				boolean leido=true;
-				long mensajesLeidos=0;
-				while(leido&&mensajesLeidos<maxMensajesLeer){
-					leido=false;
-					Iterator<String> it = nombreServiciosPlan.iterator();
-					for(;it.hasNext()&&mensajesLeidos<maxMensajesLeer;){
-						String nombreServicio=it.next();
-//						LOG.info("[EnviarMensajeJob] Desencolando mensajes de servicio: " + nombreServicio);
-						boolean received=false;
-						try{ 
-							received=messageReceiver.receiveByServiceName(nombreServicio);
-						}catch (Throwable t){
-							LOG.error("Error receiving message for service "+nombreServicio,t);
-							leido=true;
-						}
-						if(received){
-							leido=true;
-							mensajesLeidos++;
+				if(!CollectionUtils.isEmpty(nombreServiciosPlan)){
+					boolean leido=true;
+					long mensajesLeidos=0;
+					while(leido&&mensajesLeidos<maxMensajesLeer){
+						leido=false;
+						Iterator<String> it = nombreServiciosPlan.iterator();
+						for(;it.hasNext()&&mensajesLeidos<maxMensajesLeer;){
+							String nombreServicio=it.next();
+	//						LOG.info("[EnviarMensajeJob] Desencolando mensajes de servicio: " + nombreServicio);
+							boolean received=false;
+							try{ 
+	//							LOG.info("[EnviarMensajeJob] BEFORE " + nombreServicio);
+								received=messageReceiver.receiveByServiceName(nombreServicio);
+	//							LOG.info("[EnviarMensajeJob] AFTER " + nombreServicio);
+							}catch (Throwable t){
+								LOG.error("Error receiving message for service "+nombreServicio,t);
+								leido=true;
+							}
+							if(received){
+								leido=true;
+								mensajesLeidos++;
+							}
 						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			LOG.error("[EnviarMensajeJob] Error inesperado en job de enviar mensajes",e);
 		}
 
 	}

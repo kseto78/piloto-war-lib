@@ -39,6 +39,8 @@ import javax.xml.bind.annotation.XmlType;
     "idServicioMovil",
     "idDispositivo",
     "accion",
+    "uidDispositivo",
+	"tokenSession"
 })
 @XmlRootElement(name = "PeticionRegistroUsuario", namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
 public class PeticionRegistroUsuarioEnServicio {
@@ -55,6 +57,10 @@ public class PeticionRegistroUsuarioEnServicio {
     protected String idDispositivo;
     @XmlElement(name = "Accion", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
     protected String accion;
+    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio")
+	protected String uidDispositivo;
+	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio")
+	protected String tokenSession;
 	/**
 	 * @return the usuario
 	 */
@@ -126,6 +132,30 @@ public class PeticionRegistroUsuarioEnServicio {
 	 */
 	public void setIdDispositivo(String idDispositivo) {
 		this.idDispositivo = idDispositivo;
+	}
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
     
 }

@@ -6,7 +6,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import es.map.sim.negocio.modelo.MensajeJMS;
@@ -20,7 +21,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
  */
 public class SIMDLQMessageDispatcher {
 	
-	private static Logger LOGG = Logger.getLogger(SIMDLQMessageDispatcher.class);
+	private static Logger LOG = LoggerFactory.getLogger(SIMDLQMessageDispatcher.class);
 	
 	@Resource
 	private TblMensajesManager tblMensajesManager;
@@ -33,7 +34,7 @@ public class SIMDLQMessageDispatcher {
 	 * @param msg
 	 */
 	public void dispatchMessage(MensajeJMS msg){
-		LOGG.info("Procesando mensaje de la DLQ: " + msg.getIdMensaje());
+		LOG.info("Procesando mensaje de la DLQ: " + msg.getIdMensaje());
 		try {
 			PropertiesServices ps = new PropertiesServices(getReloadableResourceBundleMessageSource());
 			String estado = ps.getMessage("constantes.ESTADO_ANULADO", null);
@@ -45,7 +46,9 @@ public class SIMDLQMessageDispatcher {
 				listaDestinatariosMensajes = Arrays.asList(msg.getDestinatarioMensajeId().split(";"));
 			}
 			Integer codEstado;
-			if (listaDestinatariosMensajes.size() == 1){
+			if (listaDestinatariosMensajes.size() == 1 
+					&& listaDestinatariosMensajes.get(0)!=null
+					&& !"".equals(listaDestinatariosMensajes.get(0))){
 				codEstado = getTblMensajesManager().setEstadoMensaje(mensajeId, estado, descripcion, false, Long.parseLong(listaDestinatariosMensajes.get(0)), null, usuario, null);
 			}else{
 				codEstado = getTblMensajesManager().setEstadoMensaje(mensajeId, estado, descripcion, false, null, null, usuario, null);
@@ -54,10 +57,10 @@ public class SIMDLQMessageDispatcher {
 				throw new Exception();
 			
 			//elimina los mensajes que estén en esta cola
-			LOGG.info("Mensaje DLQ procesado ---->: " + msg.getIdMensaje());
+			LOG.info("Mensaje DLQ procesado ---->: " + msg.getIdMensaje());
 		} catch (Exception e) {
 			//Se lanza una excepción para volver a encolar el mensaje.
-			LOGG.error("[SIMDLQMessageDispatcher] Error procesando el mensaje de la DLQ", e);
+			LOG.error("[SIMDLQMessageDispatcher] Error procesando el mensaje de la DLQ", e);
 			throw new RuntimeException("");
 		}
 	}

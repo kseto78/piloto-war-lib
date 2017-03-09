@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -70,7 +71,7 @@ public class WS_ClaveAuthRequestImpl implements WS_ClaveAuthRequest {
 	
 
 	@Override
-	public String getSAMLRequest(String idServicio, String idPlataforma, String idDispositivo, String APILevel) {
+	public String getSAMLRequest(MultivaluedMap<String,String>map) {
 		RespuestaSAMLRequest respuesta = new RespuestaSAMLRequest();
 		ResponseSAMLStatusType response = new ResponseSAMLStatusType();
 		String decoded;
@@ -84,6 +85,13 @@ public class WS_ClaveAuthRequestImpl implements WS_ClaveAuthRequest {
 			// string
 			String data = header.substring(header.indexOf(" ") + 1);
 
+			String idServicio = (null != map.getFirst("Servicio")) ? map.getFirst("Servicio") : null;
+			String idPlataforma = (null != map.getFirst("Plataforma")) ? map.getFirst("Plataforma") : null;
+			String idDispositivo = (null != map.getFirst("IdDispositivo")) ? map.getFirst("IdDispositivo") : null;
+			String APILevel = (null != map.getFirst("APILevel")) ? map.getFirst("APILevel") : null;
+			String uidDispositivo = (null != map.getFirst("UidDispositivo")) ? map.getFirst("UidDispositivo") : null;
+			String tokenSession = (null != map.getFirst("TokenSession")) ? map.getFirst("TokenSession") : null;
+				
 			// Decode the data back to original string
 			byte[] bytes = new BASE64Decoder().decodeBuffer(data);
 			decoded = new String(bytes);
@@ -96,7 +104,9 @@ public class WS_ClaveAuthRequestImpl implements WS_ClaveAuthRequest {
 			}
 
 			if ((null != username && !("").equals(username)) && (null != password && !("").equals(password)) && (null != idDispositivo && !("").equals(idDispositivo))
-					&& (null != idServicio && !("").equals(idServicio)) && (null != idPlataforma && !("").equals(idPlataforma))) {
+					&& (null != idServicio && !("").equals(idServicio)) && (null != idPlataforma && !("").equals(idPlataforma))
+					&& (null != uidDispositivo && !("").equals(uidDispositivo))
+					&& (null != tokenSession && !("").equals(tokenSession))) {
 
 				try {
 
@@ -106,6 +116,8 @@ public class WS_ClaveAuthRequestImpl implements WS_ClaveAuthRequest {
 					peticion.setIdDispositivo(idDispositivo);
 					peticion.setIdServicio(idServicio);
 					peticion.setIdPlataforma(idPlataforma);
+					peticion.setUidDispositivo(uidDispositivo);
+					peticion.setTokenSession(tokenSession);
 					
 					if (null != APILevel){
 						Integer.parseInt(APILevel);
@@ -165,7 +177,7 @@ public class WS_ClaveAuthRequestImpl implements WS_ClaveAuthRequest {
 			} else {
 				response.setStatusCode("0020");
 				response.setStatusText("La peticion no incluye todos los parametros obligatorios");
-				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: servicioId, dispositivoId, plataformaId");
+				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: servicioId, dispositivoId, plataformaId, UidDispositivo, TokenSession");
 
 				respuesta.setStatus(response);
 			}

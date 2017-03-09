@@ -31,7 +31,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "status",
-    "idDispositivo"
+    "idDispositivo",
+    "tokenSession"
 })
 @XmlRootElement(name = "Respuesta")
 public class Respuesta {
@@ -40,6 +41,8 @@ public class Respuesta {
     protected ResponseStatusType status;
     @XmlElement(name = "idDispositivo", required = true)
     protected String idDispositivo;
+    @XmlElement(name = "TokenSession", required = false)
+    protected String tokenSession;
 
     public Respuesta() {
 		super();
@@ -92,5 +95,19 @@ public class Respuesta {
     public void setIdDispositivo(String value) {
         this.idDispositivo = value;
     }
+
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
+	}
 
 }

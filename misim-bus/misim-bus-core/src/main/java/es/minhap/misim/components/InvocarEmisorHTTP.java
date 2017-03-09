@@ -129,6 +129,9 @@ public class InvocarEmisorHTTP implements Callable {
 			
 			SoapPayload.class.cast(eventContext.getMessage().getPayload()).setSoapMessage(XMLUtils.setPayloadFromObject(respuestaWS, Charset.forName("UTF-8"), Respuesta.class));
 		
+			eventContext.getMessage().setOutboundProperty("xmlRespuestaDirectaOperador", 
+					XMLUtils.dom2xml(SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage()));
+			
 		}catch (Exception e) {
 			LOG.error("Error al generar la respuesta: " + e.getMessage());
 			throw new ModelException(e.getMessage()); 

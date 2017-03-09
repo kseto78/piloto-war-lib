@@ -141,7 +141,7 @@ public class Auditar implements Callable {
 			eventContext.getMessage().setOutboundProperty("idAuditoria", String.valueOf(idAuditoria));
 			eventContext.getMessage().setOutboundProperty("idPeticion", String.valueOf(idPeticion));
 			
-			String xmlPeticionOriginal = eventContext.getMessage().getOutboundProperty("xmlPeticion"); 
+			String xmlPeticionOriginal =eventContext.getMessage().getOutboundProperty("xmlPeticion"); 
 			Document documentOriginal = XMLUtils.xml2doc(xmlPeticionOriginal, Charset.forName("UTF-8"));
 			
 			SoapPayload.class.cast(eventContext.getMessage().getPayload()).setSoapMessage(documentOriginal);

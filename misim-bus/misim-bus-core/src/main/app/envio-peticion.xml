@@ -37,20 +37,15 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<spring:bean id="gestionErrores" name="gestionErrores" class="es.minhap.misim.components.GestionErroresEnvioSMS"/>
 	</spring:beans>
 
-	<flow name="FLW-RCP-ENV" doc:name="FLW-RCP-ENV" doc:description="Procesa un nuevo Envío">
+	<flow name="FLW-RCP-ENV" doc:name="FLW-RCP-ENV" doc:description="Procesa un nuevo Envio">
 			
-		<!-- RECEPCIÓN PETICIÓN POR PARTE DE SIM (SENDMAIL O REFRESSH)-->
+		<!-- RECEPCION PETICION POR PARTE DE SIM (SENDMAIL O REFRESSH)-->
 		<vm:inbound-endpoint exchange-pattern="request-response" path="envio-sim" responseTimeout="120000" doc:name="VM"/>
 			
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Petición SOAP recibida de SIM: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Inicio envio SIM a MISIM" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Inicio envio SIM a MISIM" />
 		
 		<!-- INICIALIZAR VARIABLES -->
-		<logger level="INFO" doc:name="Logger" message="Inicializar variables" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Inicializar variables" />
 		<component	doc:name="Inicializa variables" >
 			<spring-object bean="inicializar" />
 		</component>
@@ -58,56 +53,56 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_PETICION" />
 		
 		<!-- INDENTIFICAR APLICACION -->
-		<logger level="INFO" doc:name="Logger" message="Indentificación de la aplicacion" />
-		<component	doc:name="Recupera la configuración del cliente" >
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Identificacion de la aplicacion" />
+		<component	doc:name="Recupera la configuracion del cliente" >
 			<spring-object bean="identificarAplicacion" />
 		</component>
 		
 		<!-- LOGGER APLICACION -->
-		<logger level="INFO" doc:name="Logger" message="APLICACION #[message.outboundProperties['${ID_APLICACION}']]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - APLICACION #[message.outboundProperties['${ID_APLICACION}']]" />
 			
 		<!-- INDENTIFICAR DEL PRODUCTO -->
-		<logger level="INFO" doc:name="Logger" message="Indentificación del producto" />
-		<component	doc:name="Recupera la configuración del producto" >
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Identificacion del producto" />
+		<component	doc:name="Recupera la configuracion del producto" >
 			<spring-object bean="identificarProducto" />
 		</component>
 		
 		<!-- LOGGER PRODUCTO -->
-		<logger level="INFO" doc:name="Logger" message="PRODUCTO #[message.outboundProperties['${ID_PRODUCTO}']]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - PRODUCTO #[message.outboundProperties['${ID_PRODUCTO}']]" />
 		
 		<!-- INDENTIFICAR DEL PROVEEDOR -->
-		<logger level="INFO" doc:name="Logger" message="Indentificación del proveedor" />
-		<component	doc:name="Recupera la configuración del proveedor" >
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Identificacion del proveedor" />
+		<component	doc:name="Recupera la configuracion del proveedor" >
 			<spring-object bean="identificarProveedor" />
 		</component>
 
 		<!-- LOGGER PROVEEDOR -->
-		<logger level="INFO" doc:name="Logger" message="PROVEEDOR #[message.outboundProperties['${ID_PROVEEDOR}']]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - PROVEEDOR #[message.outboundProperties['${ID_PROVEEDOR}']]" />
 
-		<!-- ENCRIPTACIÓN -->
-		<logger level="INFO" doc:name="Logger" message="Encriptación para la auditoría" />
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
 			<component	doc:name="Encripta" >
 				<spring-object bean="encriptar" />
 			</component>
 		</processor-chain>
 		
-		<!-- AUDITORÍA -->
-		<logger level="INFO" doc:name="Logger" message="Auditoría de la petición recibida" />
+		<!-- AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Auditoria de la peticion recibida" />
 		<component	doc:name="Audita" >
 			<spring-object bean="audit" />
 		</component>
 		
-		<!-- ADAPTAR PETICIÓN -->
-		<choice doc:name="Adaptar la petición"> 
+		<!-- ADAPTAR PETICION -->
+		<choice doc:name="Adaptar la peticion"> 
 			<when expression="#[message.outboundProperties['${TRANSFORMACION_PETICION}'] == 'S']">
 				<processor-chain>
 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" />
 					
-					<logger level="INFO" doc:name="Logger" message="Adaptación de la petición" />
-					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Adaptacion de la peticion" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Emisor" />
-					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 				</processor-chain>
 			</when>
 			<otherwise>
@@ -115,24 +110,24 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</otherwise>
 		</choice>
 		
-		<!-- SECURIZACIÓN PETICIÓN-->
-		<logger level="INFO" doc:name="Logger" message="Preparación de la securización" />
-		<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-PET de securización el payload es : #[payload]" />
-		<flow-ref name="FLW-SEG-PET" doc:name="Securizar petición" />
+		<!-- SECURIZACION PETICION-->
+		<logger level="INFO" doc:name="Logger" message="Preparacion de la securizacion" />
+		<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
+		<flow-ref name="FLW-SEG-PET" doc:name="Securizar peticion" />
 		<logger level="INFO" doc:name="Logger" message="Fludo de ida securizado" />
-		<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-SEG-PET de securización el payload es : #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
 		
-		<!-- INVOCACIÓN AL EMISOR -->
-		<logger level="INFO" doc:name="Logger" message="Invocación del emisor" />
+		<!-- INVOCACION AL EMISOR -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion del emisor" />
 		
-		<logger level="INFO" doc:name="Logger" message="Comunicación #[message.outboundProperties['${ID_COMUNICACION}']]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comunicacion #[message.outboundProperties['${ID_COMUNICACION}']]" />
 		
 		<choice doc:name="Endpoint">
 			<when expression="#[message.outboundProperties['${ENDPOINT_URL_SIM}'] != '']"> 
-				<logger level="INFO" doc:name="Logger" message="Endpoint SIM #[message.outboundProperties['${ENDPOINT_URL_SIM}']]" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Endpoint SIM #[message.outboundProperties['${ENDPOINT_URL_SIM}']]" />
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="Endpoint #[message.outboundProperties['${ENDPOINT_URL}']]" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Endpoint #[message.outboundProperties['${ENDPOINT_URL}']]" />
 			</otherwise>
 		</choice>
 		
@@ -140,7 +135,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
 			<when expression="#[message.outboundProperties['${ID_COMUNICACION}'] == '${WS}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Invocacion Web Service" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion Web Service" />
 					<component	doc:name="Invocar via WS" >
 						<spring-object bean="invocarEmisor" />
 					</component>
@@ -148,7 +143,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${ID_COMUNICACION}'] == '${HTTP}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Invocacion HTTP" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion HTTP" />
 					<component	doc:name="Invocar via HTTP" >
 						<spring-object bean="invocarEmisorHTTP" />
 					</component>
@@ -156,7 +151,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<when expression="#[message.outboundProperties['${ID_COMUNICACION}'] == '${PUSH}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Invocacion Push" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion Push" />
 					<component	doc:name="Invocar via Push" >
 						<spring-object bean="invocarEmisorPush" />
 					</component>
@@ -164,40 +159,40 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			</when>
 			<otherwise>
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" doc:name="Logger" message="Invocacion por defecto" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion por defecto" />
 					<component	doc:name="Invocar via WS" >
 						<spring-object bean="invocarEmisor" />
 					</component>
 				</processor-chain>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="Logger" message="Emisor invocado" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Emisor invocado" />
 		
 		<!-- COMPROBAR SOAP_FAULT -->
-		<logger level="INFO" doc:name="Logger" message="Comprobar SOAP Fault" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comprobar SOAP Fault" />
 		<choice doc:name="Respuesta o SOAP Fault">
 			<when expression="#[message.outboundProperties['${SOAP_FAULT}']]">
 				<processor-chain>
-					<logger level="INFO" doc:name="Logger" message="SOAP Fault recibido" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - SOAP Fault recibido" />
 					<choice doc:name="Comprobar la transformacion de la respuesta"> 
 						<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
 							<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_SOAP_FAULT}']]" doc:name="Hoja XSL para transformar el error SOAP" />
 						</when>
 						<otherwise>
-							<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la peticion" />
+							<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - No se requiere de adaptacion de la peticion" />
 						</otherwise>
 					</choice>
 				</processor-chain>
 			</when>
 			<otherwise>
 				<processor-chain>
-					<logger level="INFO" doc:name="Logger" message="Respuesta recibida" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Respuesta recibida" />
 					<choice doc:name="Comprobar la transformacion de la respuesta"> 
 						<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
 							<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />
 						</when>
 						<otherwise>
-							<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la peticion" />
+							<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - No se requiere de adaptacion de la peticion" />
 						</otherwise>
 					</choice>
 				</processor-chain>
@@ -206,104 +201,92 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		
 		<!-- DES-SECURIZAR RESPUESTA -->
 		<processor-chain>
-			<logger level="INFO" doc:name="Logger" message="Preparación de la dessecurización" />
-			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-RES de dessecurización el payload es : #[payload]" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Preparacion de la dessecurizacion" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Antes del subfujo FLW-SEG-RES de dessecurizacion el payload es : #[payload]" />
 			<flow-ref name="FLW-SEG-RES" doc:name="Securizar respuesta" />
-			<logger level="INFO" doc:name="Logger" message="Fludo de ida securizado" />
-			<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-SEG-PET de securización el payload es : #[payload]" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Flujo de ida securizado" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
 		</processor-chain>
 		
 		<!-- ADAPTAR PROTOCOLO -->		
 		<choice doc:name="Adaptar la respuesta"> 
 			<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
 				<processor-chain>					
-					<logger level="INFO" doc:name="Logger" message="Adaptación de la respuesta" />
-					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Adaptacion de la respuesta" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia MISIM" />
-					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la respuesta" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - No se requiere de adaptacion de la respuesta" />
 			</otherwise>
 		</choice>
 		
 		<!-- INDENTIFICAR INCLUIR ID SMS -->
-		<logger level="INFO" doc:name="Logger" message="Indentificación propiedades mensaje" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Identificacion propiedades mensaje" />
 		<component	doc:name="incluir id mensaje" >
 			<spring-object bean="incluirIdentificadorMensaje" />
 		</component>
 		
 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
 		
-		<!-- ENCRIPTACIÓN -->
-		<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comprobar si se requiere encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
-			<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+			<logger level="INFO" message="[FLOW - EnvioPeticion] - Encriptacion requerida" doc:name="Logger" />
 			<component	doc:name="Encripta" >
 				<spring-object bean="encriptar" />
 			</component>
 		</processor-chain>
 		
-		<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-		<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría" />
-		<component doc:name="Actualizacón de Auditoría">
+		<!-- ACTUALIZACION DE AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Actualizacion de la auditoria" />
+		<component doc:name="Actualizacon de Auditoria">
 			<spring-object bean="updateAudit" />
 		</component>
 
-		<logger level="INFO" doc:name="Logger" message="Petición procesada" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Respuesta SOAP devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Peticion procesada" />
         
-        
-        
-        <!-- GESTIÓN DE ERRORES -->
+        <!-- GESTION DE ERRORES -->
         
         
         
         <catch-exception-strategy doc:name="Catch Exception Strategy">
         	
         	<!-- GENERAR EL SOAP FAULT -->
-        	<logger level="INFO" doc:name="Logger" message="Tratamiento del error" />
-        	<component	doc:name="Gestión de errores" >
+        	<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Tratamiento del error" />
+        	<component	doc:name="Gestion de errores" >
 				<spring-object bean="gestionErrores" />
 			</component>
 			
 			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
 					
-			<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-        	<logger level="INFO" doc:name="Logger" message="Comprobar actualización de la auditoría" />
-        	<choice doc:name="Encriptación del error al Consumidor">
+			<!-- ACTUALIZACION DE AUDITORIA -->
+        	<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comprobar actualizacion de la auditoria" />
+        	<choice doc:name="Encriptacion del error al Consumidor">
 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
-					<!-- ENCRIPTACIÓN -->
-					<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+					<!-- ENCRIPTACION -->
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comprobar si se requiere encriptacion para la auditoria" />
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+						<logger level="INFO" message="[FLOW - EnvioPeticion] - Encriptacion requerida" doc:name="Logger" />
 						<component	doc:name="Encripta" >
 							<spring-object bean="encriptar" />
 						</component>
 					</processor-chain>
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría fault" />
-						<component doc:name="Actualización de auditoría Fault">
+						<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Actualizacion de la auditoria fault" />
+						<component doc:name="Actualizacion de auditoria Fault">
 							<spring-object bean="updateAuditFault" />
 						</component>
 					</processor-chain>
 				</when>
 				<otherwise>
-					<logger level="INFO" message="Actualización de auditoría no requerida" doc:name="Logger" />
+					<logger level="INFO" message="[FLOW - EnvioPeticion] - Actualizacion de auditoria no requerida" doc:name="Logger" />
 				</otherwise>
 			</choice>	
 	
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault procesado" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - SOAP Fault procesado" />
 		
         </catch-exception-strategy>
         

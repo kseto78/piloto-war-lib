@@ -28,7 +28,6 @@
 		<servlet-name>cxfServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
-	
 	 
 	<servlet>
 	  <servlet-name>samlServlet</servlet-name>
@@ -38,5 +37,14 @@
 	  <servlet-name>samlServlet</servlet-name>
 	  <url-pattern>/ServletSAML</url-pattern>
 	</servlet-mapping>
+	
+	<filter>
+		<filter-name>recuperarHeaders</filter-name>
+		<filter-class>es.minhap.misim.bus.webapp.threadlocal.RecuperarHeadersFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>recuperarHeaders</filter-name>
+		<url-pattern>/Envio001Service</url-pattern>
+	</filter-mapping>
 	
 </web-app>

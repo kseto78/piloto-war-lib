@@ -3,6 +3,7 @@ package es.minhap.misim.components;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
@@ -25,7 +26,12 @@ import org.w3c.dom.NodeList;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
+import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesPremium;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumGISSService;
+import es.minhap.sim.model.TblDestinatariosMensajes;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 
 //import es.minhap.misim.components.envio.EnvioEmailXMLBean;
@@ -42,6 +48,15 @@ public class InvocarEnvioGiss implements Callable {
 	@Resource
 	IEnvioPremiumGISSService envioPremiumGISSServiceImpl;
 
+	@Resource(name = "TblMensajesManagerImpl")
+	private TblMensajesManager tblMensajesManager;
+
+	@Resource(name = "TblDestinatariosMensajesManagerImpl")
+	private TblDestinatariosMensajesManager tblDestinatariosMensajes;
+
+	@Resource(name = "sendMessageService")
+	private ISendMessageService sendMessageService;
+
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	PropertiesServices ps = null;
@@ -57,7 +72,7 @@ public class InvocarEnvioGiss implements Callable {
 		String usuarioMISIM = ps.getMessage("misim.aplicacion.giss.usuario.sms", null, null, null);
 		String passwordMISIM = ps.getMessage("misim.aplicacion.giss.contrasena.sms", null, null, null);
 
-		String COMPROBACION_ENVIO = "&lt;![CDATA[";
+		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -72,13 +87,12 @@ public class InvocarEnvioGiss implements Callable {
 			envioGISSXML.loadObjectFromXML(xmlPeticion);
 			String respuesta = envioPremiumGISSServiceImpl.enviarSMSGISS(envioGISSXML, usuarioGISS, passwordGISS,
 					idServicioGISS, usuarioMISIM, passwordMISIM);
-			eventContext.getMessage().setOutboundProperty("mensaje_GISS", "S");
-			if (null != respuesta && respuesta.contains(COMPROBACION_ENVIO)) {
-				respuesta = adaptarRespuestaEnvioSMS(respuesta);
-				eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "S");
-			} else {
-				eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "N");
+
+			List<Long> listaMensajes = tblDestinatariosMensajes.getIdMensajeByIdExterno(envioGISSXML.getIdExterno());
+			for (Long idMensaje : listaMensajes) {
+				levantarHilo(estadoPendiente, idMensaje);
 			}
+
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
@@ -125,28 +139,23 @@ public class InvocarEnvioGiss implements Callable {
 		return eventContext.getMessage();
 	}
 
-	/**
-	 * @param usuarioMISIM
-	 * @param passwordMISIM
-	 * @param respuesta
-	 * @return
-	 */
-	private String adaptarRespuestaEnvioSMS(String respuesta) {
-		if (respuesta.contains("&lt;![CDATA[")) {
-			respuesta = respuesta.substring(respuesta.indexOf("&lt;![CDATA[", 0) + 12, respuesta.indexOf("]]&gt;"));
-		}
-		respuesta = respuesta.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
-		respuesta = respuesta.replaceAll("<Peticion>",
-				"<Peticion xmlns=\"http://misim.redsara.es/misim-bus-webapp/peticion\">");
-
-		System.out.println("PETICION DE ENVIO SMS: " + respuesta);
-		return respuesta;
-	}
-
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
 		SOAPMessage message = factory.createMessage(new MimeHeaders(),
 				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
+	}
+
+	private void levantarHilo(String estadoPendiente, Long idMensaje) {
+		String estadoActual = tblMensajesManager.getMensaje(idMensaje).getEstadoactual();
+		List<TblDestinatariosMensajes> listaDestinatarios = tblDestinatariosMensajes.getDestinatarioMensajes(idMensaje);
+
+		for (TblDestinatariosMensajes d : listaDestinatarios) {
+			if (estadoActual.equals(estadoPendiente)) {
+				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService, tblMensajesManager,
+						idMensaje, d.getDestinatariosmensajes(), false, reloadableResourceBundleMessageSource);
+				hilo1.start();
+			}
+		}
 	}
 }

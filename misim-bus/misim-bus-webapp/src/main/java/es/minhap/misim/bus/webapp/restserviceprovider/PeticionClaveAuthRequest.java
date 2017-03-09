@@ -37,7 +37,9 @@ import javax.xml.bind.annotation.XmlType;
     "idDispositivo",
     "idServicio",
     "idPlataforma",
-    "APILevel"
+    "APILevel",
+    "uidDispositivo",
+    "tokenSession"
 })
 @XmlRootElement(name = "PeticionClaveAuthRequest", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest")
 public class PeticionClaveAuthRequest {
@@ -54,6 +56,10 @@ public class PeticionClaveAuthRequest {
     protected String idPlataforma;
     @XmlElement(name = "APILevel", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest")
     protected String APILevel;
+    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest")
+   	protected String uidDispositivo;
+   	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest")
+   	protected String tokenSession;
     
 	public String getUsuario() {
 		return usuario;
@@ -110,6 +116,30 @@ public class PeticionClaveAuthRequest {
 	 */
 	public void setAPILevel(String aPILevel) {
 		APILevel = aPILevel;
+	}
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
 	
 }

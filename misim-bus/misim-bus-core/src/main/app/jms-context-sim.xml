@@ -17,21 +17,29 @@
 	<!-- CONFIGURACIÓN CONEXION ACTIVEMQ -->
 
 	<!-- Activemq connection factory -->
-	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-		<!-- brokerURL -->
-		<property name="brokerURL" value="${activemq.brokerURL}" />
-		<property name="userName" value="${activemq.userName}" />
-		<property name="password" value="${activemq.password}" />
-		<property name="transactedIndividualAck" value="true" />
-	</bean>
+	
+    <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+       	<property name="maxConnections" value="${activemq.maxConnections}" />
+       	<property name="maximumActiveSessionPerConnection" value="${activemq.maximumActiveSessionPerConnection}" />
+		<property name="connectionFactory">
+		<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+			<!-- brokerURL -->
+			<property name="brokerURL" value="${activemq.brokerURL}" />
+			<property name="userName" value="${activemq.userName}" />
+			<property name="password" value="${activemq.password}" />
+			<property name="transactedIndividualAck" value="true" />
+		</bean>
+		</property>
+    </bean>
+    
 
 	<!-- JmsTemplate Definition -->
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<property name="connectionFactory" ref="amqConnectionFactory" />
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
 		<property name="receiveTimeout" value="200" />
 		<property name="sessionAcknowledgeMode" value="0" />
-		<!--
 	    <property name="sessionTransacted" value="false" />
+	    <!--
 	    <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
 -->
 	</bean>
@@ -42,7 +50,7 @@
 	<!-- GESTION DE TRANSACCIONES -->
 	<bean id="txJMSManager"
 		class="org.springframework.jms.connection.JmsTransactionManager">
-		<property name="connectionFactory" ref="amqConnectionFactory" />
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
 	</bean>
 
 	<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
@@ -129,8 +137,8 @@
 	
 	<!-- CONFIGURACION LISTENER ENVIAR MENSAJE -->
 	<jms:listener-container acknowledge="transacted"
-		transaction-manager="txJMSManager" connection-factory="amqConnectionFactory"
-		concurrency="10" destination-type="queue" receive-timeout="100">
+		transaction-manager="txJMSManager" connection-factory="pooledConnectionFactory"
+		concurrency="${activemq.premium.concurrency}" destination-type="queue" receive-timeout="100">
 		<jms:listener ref="enviarMensajeListener" destination="#{queueResolver.premiumQueueName}.>" />
 	</jms:listener-container>
 	
@@ -148,8 +156,8 @@
 	</bean>
 	
 	<jms:listener-container acknowledge="transacted"
-		transaction-manager="txJMSManager" connection-factory="amqConnectionFactory"
-		concurrency="10" destination-type="queue" receive-timeout="100">
+		transaction-manager="txJMSManager" connection-factory="pooledConnectionFactory"
+		concurrency="${activemq.refresh.concurrency}" destination-type="queue" receive-timeout="100">
 		<jms:listener ref="refreshStatusListener" destination="#{queueResolver.refreshQueueName}" />
 	</jms:listener-container>
 	
@@ -173,8 +181,8 @@
 	 -->
 	 
 	<jms:listener-container acknowledge="transacted"
-		transaction-manager="txJMSManager" connection-factory="amqConnectionFactory"
-		concurrency="10" destination-type="queue" receive-timeout="100">
+		transaction-manager="txJMSManager" connection-factory="pooledConnectionFactory"
+		concurrency="${activemq.dlq.concurrency}" destination-type="queue" receive-timeout="100">
 		<jms:listener ref="mensajesFallidosListener" destination="#{queueResolver.fallidosQueueName}" />
 	</jms:listener-container>
 </beans>

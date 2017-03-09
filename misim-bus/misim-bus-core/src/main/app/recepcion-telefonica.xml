@@ -18,65 +18,60 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<spring:bean id="invocarEnvio001SMSConsulta" name="invocarEnvio001SMSConsulta" class="es.minhap.misim.components.InvocarEnvio001ConsultaOP" />
 	</spring:beans>
 
-	<flow name="FLW-RCP-TEL" doc:name="FLW-RCP-TEL" doc:description="Procesa una nueva Petición">
+	<flow name="FLW-RCP-TEL" doc:name="FLW-RCP-TEL" doc:description="Procesa una nueva Peticion">
 			
-		<!-- RECEPCIÓN PETICIÓN -->
+		<!-- RECEPCION PETICION -->
 		<vm:inbound-endpoint exchange-pattern="request-response" path="recepcion-telefonica" responseTimeout="120000" doc:name="VM"/>
 			
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Petición SOAP recibida: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Inicio petición" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Inicio peticion" />
 
 		<!-- INICIALIZAR VARIABLES -->
-		<logger level="INFO" doc:name="Logger" message="Inicializar variables" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Inicializar variables" />
 		<component	doc:name="Inicializa variables" >
 			<spring-object bean="inicializarTelefonica" />
 		</component>
 
 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_PETICION" />
 			
-		<!-- ENCRIPTACIÓN -->
-		<logger level="INFO" doc:name="Logger" message="Encriptación para la auditoría" />
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
 			<component	doc:name="Encripta" >
 				<spring-object bean="encriptar" />
 			</component>
 		</processor-chain>
 		
-		<!-- AUDITORÍA -->
-		<logger level="INFO" doc:name="Logger" message="Auditoría de la petición recibida" />
+		<!-- AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Auditoria de la peticion recibida" />
 		<component	doc:name="Audita" >
 			<spring-object bean="audit" />
 		</component>
 		
-		<!-- ADAPTAR PETICIÓN -->
+		<!-- ADAPTAR PETICION -->
 		<processor-chain>
 			<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" />
 			
-			<logger level="INFO" doc:name="Logger" message="Transformación del mensaje de la petición" />
-			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Transformacion del mensaje de la peticion" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 			
 			<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Emisor" />
 			
-			<logger level="INFO" doc:name="Logger" message="Flujo de ida adaptado" />
-			<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Flujo de ida adaptado" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 		</processor-chain>
 		
 		<!-- INCLUIR USUARIO -->
-		<logger level="INFO" doc:name="Logger" message="Incluir usuario"/>
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Incluir usuario"/>
 		<component	doc:name="Incluir usuario" >
 			<spring-object bean="incluirUsuario" />
 		</component>
 		
-		<!-- INVOCACIÓN AL EMISOR -->
-		<logger level="INFO" doc:name="Logger" message="Operation #[payload.soapAction]" />
+		<!-- INVOCACION AL EMISOR -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Operation #[payload.soapAction]" />
 		<component	doc:name="Recepcion telefonica" >
 			<spring-object bean="invocarRecepcionSMS" />
 		</component>
-		<logger level="INFO" doc:name="Logger" message="Operacion invocada #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Operacion invocada #[payload]" />
 		
 		
 		
@@ -86,62 +81,55 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 				<processor-chain>	
 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
 								
-					<logger level="INFO" doc:name="Logger" message="Adaptación de la respuesta" />
-					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Adaptacion de la respuesta" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Telefonica" />
-					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la respuesta" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - No se requiere de adaptacion de la respuesta" />
 			</otherwise>
 		</choice>
 		
 		<!-- INDENTIFICAR INCLUIR ID SMS -->
-		<logger level="INFO" doc:name="Logger" message="Indentificación propiedades mensaje" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Identificacion propiedades mensaje" />
 		<component	doc:name="incluir id mensaje" >
 			<spring-object bean="incluirIdentificadorMensajeOperador" />
 		</component>
 		
 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
 		
-		<!-- ENCRIPTACIÓN -->
-		<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Comprobar si se requiere encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
-			<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+			<logger level="INFO" message="[FLOW - RecepcionTelefonica] - Encriptacion requerida" doc:name="Logger" />
 			<component	doc:name="Encripta" >
 				<spring-object bean="encriptar" />
 			</component>
 		</processor-chain>
 		
-		<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-		<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría" />
-		<component doc:name="Actualizacón de Auditoría">
+		<!-- ACTUALIZACION DE AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Actualizacion de la auditoria" />
+		<component doc:name="Actualizacon de Auditoria">
 			<spring-object bean="updateAudit" />
 		</component>
 
-		<logger level="INFO" doc:name="Logger" message="Petición procesada" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Respuesta SOAP devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Peticion procesada" />
         
-        
-        
-        <!-- GESTIÓN DE ERRORES -->
+        <!-- GESTION DE ERRORES -->
         
         
         <catch-exception-strategy doc:name="Catch Exception Strategy">
         	
         	<!-- GENERAR EL SOAP FAULT -->
-        	<component	doc:name="Gestión de errores" >
+        	<component	doc:name="Gestion de errores" >
 				<spring-object bean="gestionErroresTelefonica" />
 			</component>
 			
 			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
 <!-- 					
-		<choice doc:name="Adaptar la petición"> 
+		<choice doc:name="Adaptar la peticion"> 
 			<when expression="#[message.outboundProperties['${RECEPCION_MENSAJE_PREMIUM_001}']  != '']">
 				<processor-chain>
 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
@@ -153,36 +141,31 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
  		</choice>
  -->			
 				
-			<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-        	<logger level="INFO" doc:name="Logger" message="Comprobar actualización de la auditoría" />
-        	<choice doc:name="Encriptación del error al Consumidor">
+			<!-- ACTUALIZACION DE AUDITORIA -->
+        	<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Comprobar actualizacion de la auditoria" />
+        	<choice doc:name="Encriptacion del error al Consumidor">
 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
-					<!-- ENCRIPTACIÓN -->
-					<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+					<!-- ENCRIPTACION -->
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Comprobar si se requiere encriptacion para la auditoria" />
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+						<logger level="INFO" message="[FLOW - RecepcionTelefonica] - Encriptacion requerida" doc:name="Logger" />
 						<component	doc:name="Encripta" >
 							<spring-object bean="encriptar" />
 						</component>
 					</processor-chain>
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría fault" />
-						<component doc:name="Actualización de auditoría Fault">
+						<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - Actualizacion de la auditoria fault" />
+						<component doc:name="Actualizacion de auditoria Fault">
 							<spring-object bean="updateAuditFault" />
 						</component>
 					</processor-chain>
 				</when>
 				<otherwise>
-					<logger level="INFO" message="Actualización de auditoría no requerida" doc:name="Logger" />
+					<logger level="INFO" message="[FLOW - RecepcionTelefonica] - Actualizacion de auditoria no requerida" doc:name="Logger" />
 				</otherwise>
 			</choice>	
 	
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault procesado" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionTelefonica] - SOAP Fault procesado" />
 		
         </catch-exception-strategy>
 	</flow>

@@ -53,45 +53,16 @@ public class Encriptar implements Callable {
 		final Document docOriginal = SoapPayload.class.cast(muleMessage.getPayload()).getSoapMessage();
 		
 		try{
-			
-			// Se recuperan todos los nodos Solicitudes del XML
+			//encriptamos la respuesta real con transformacion
 			String xml = XMLUtils.dom2xml(docOriginal);
-			Document documento = XMLUtils.xml2doc(xml, Charset.forName("UTF-8"));
+			// Se recuperan todos los nodos Solicitudes del XML
+			encriptarMensaje(muleMessage, xml);
 			
-			NodeList nodeList = documento.getElementsByTagNameNS(
-					"http://schemas.xmlsoap.org/soap/envelope/",
-					"Body");
-		
-			// Si no existen no se realiza el cifrado
-			if(nodeList!=null && nodeList.getLength()>0){
-				
-				// Se prepara la lista de nodos a cifrar
-				List<Node> nodosACifrar = new ArrayList<Node>();
-				nodosACifrar.add(nodeList.item(0));
-				
-				Document docCifrado = cifradoService.cifrar(
-						documento, 
-					props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
-					props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
-					props.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
-					props.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
-					props.getProperty(KeyStoreUtils.KEY_STORE_FILE),
-					nodosACifrar);
-				
-				// Verificamos que el documento ha sido cifrado
-				
-				//Comprobamos el nodo de cifrado
-				NodeList cipherValue = docCifrado.getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#", 
-					"CipherValue");
-		
-				if(cipherValue == null || !(cipherValue.getLength() > 0)){
-					LOG.error("Cifrado: No se ha cifrado correctamente");
-					throw new ModelException("No se ha cifrado correctamente", 320);
-				}
-				
-				SoapPayload.class.cast(muleMessage.getPayload()).setSoapMessage(docCifrado);
-
+			//encriptamos la respuesta directa del operador si existe.
+			xml = eventContext.getMessage().getOutboundProperty("xmlRespuestaDirectaOperador");
+			
+			if (null != xml && xml.length() >= 0){
+				encriptarMensajeOriginal(eventContext, xml);
 			}
 		
 		}catch(ModelException e){
@@ -105,6 +76,86 @@ public class Encriptar implements Callable {
 
 		LOG.debug("Proceso de encriptación terminado.");
 		return muleMessage;
+	}
+
+	private void encriptarMensaje(MuleMessage muleMessage, String xml) throws Exception, ModelException {
+		Document documento = XMLUtils.xml2doc(xml, Charset.forName("UTF-8"));
+		
+		NodeList nodeList = documento.getElementsByTagNameNS(
+				"http://schemas.xmlsoap.org/soap/envelope/",
+				"Body");
+
+		// Si no existen no se realiza el cifrado
+		if(nodeList!=null && nodeList.getLength()>0){
+			
+			// Se prepara la lista de nodos a cifrar
+			List<Node> nodosACifrar = new ArrayList<Node>();
+			nodosACifrar.add(nodeList.item(0));
+			
+			Document docCifrado = cifradoService.cifrar(
+					documento, 
+				props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
+				props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
+				props.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
+				props.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
+				props.getProperty(KeyStoreUtils.KEY_STORE_FILE),
+				nodosACifrar);
+			
+			// Verificamos que el documento ha sido cifrado
+			
+			//Comprobamos el nodo de cifrado
+			NodeList cipherValue = docCifrado.getElementsByTagNameNS(
+				"http://www.w3.org/2001/04/xmlenc#", 
+				"CipherValue");
+
+			if(cipherValue == null || !(cipherValue.getLength() > 0)){
+				LOG.error("Cifrado: No se ha cifrado correctamente");
+				throw new ModelException("No se ha cifrado correctamente", 320);
+			}
+			
+			SoapPayload.class.cast(muleMessage.getPayload()).setSoapMessage(docCifrado);
+
+		}
+	}
+	
+	private void encriptarMensajeOriginal(MuleEventContext eventContext, String xml) throws Exception, ModelException {
+		Document documento = XMLUtils.xml2doc(xml, Charset.forName("UTF-8"));
+		
+		NodeList nodeList = documento.getElementsByTagNameNS(
+				"http://schemas.xmlsoap.org/soap/envelope/",
+				"Body");
+
+		// Si no existen no se realiza el cifrado
+		if(nodeList!=null && nodeList.getLength()>0){
+			
+			// Se prepara la lista de nodos a cifrar
+			List<Node> nodosACifrar = new ArrayList<Node>();
+			nodosACifrar.add(nodeList.item(0));
+			
+			Document docCifrado = cifradoService.cifrar(
+					documento, 
+				props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
+				props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
+				props.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
+				props.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
+				props.getProperty(KeyStoreUtils.KEY_STORE_FILE),
+				nodosACifrar);
+			
+			// Verificamos que el documento ha sido cifrado
+			
+			//Comprobamos el nodo de cifrado
+			NodeList cipherValue = docCifrado.getElementsByTagNameNS(
+				"http://www.w3.org/2001/04/xmlenc#", 
+				"CipherValue");
+
+			if(cipherValue == null || !(cipherValue.getLength() > 0)){
+				LOG.error("Cifrado: No se ha cifrado correctamente");
+				throw new ModelException("No se ha cifrado correctamente", 320);
+			}
+			
+			eventContext.getMessage().setOutboundProperty("xmlRespuestaDirectaOperador", XMLUtils.dom2xml(docCifrado));
+			
+		}
 	}
 
 }

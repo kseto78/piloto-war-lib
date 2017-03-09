@@ -2,11 +2,11 @@ package es.minhap.misim.bus.webapp.restserviceprovider;
 
 import javax.jws.WebService;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 
 import org.springframework.context.annotation.Scope;
 
@@ -15,12 +15,9 @@ import org.springframework.context.annotation.Scope;
 @Scope(value="request")
 public interface WS_ClaveAuthRequest {
 
-	@GET
+	@POST
     @Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)  
-	String getSAMLRequest( @QueryParam("Servicio") String idServicio ,
-			@QueryParam("Plataforma") String idPlataforma,
-			@QueryParam("IdDispositivo") String idDispositivo,
-			@QueryParam("APILevel") String APILevel);	
+	String getSAMLRequest(MultivaluedMap<String,String>map);	
 }

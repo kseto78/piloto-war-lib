@@ -33,31 +33,31 @@ import com.google.gson.Gson;
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
 
 @Service("registroUsuario")
-public class RegistroUsuarioImpl implements RegistroUsuario  {
-	
+public class RegistroUsuarioImpl implements RegistroUsuario {
+
 	public static String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
 	public static String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
 	public static String ERROR_PARAMETROS = "Error en Parametros de entrada";
-	
+
 	public static final String RECEPT_QUEUE = "vm://registro-usuario";
 	public static final String SOAP_ACTION = "registrarUsuario";
 
 	private StringTokenizer tokenizer = null;
 	private String username = null;
-	private String password = null; 
+	private String password = null;
 
-	
 	@Context
 	private HttpServletRequest request;
 
 	@Context
 	private ServletContext servletContext;
-	
+
 	public String registrarUsuario(String servicio, String idUsuario,String plataforma,String idRegistro,String idDispositivo) {
 
 		Respuesta respuesta = new Respuesta();
 		  String decoded;
 		  try{
+			 
 		   // Get the Authorisation Header from Request
 		   String header = request.getHeader("authorization");
 		    
@@ -165,7 +165,7 @@ public class RegistroUsuarioImpl implements RegistroUsuario  {
 		
 		return respuestaJson;
 	}
-	
+
 	/**
 	 * Genera el SOAP Fault Message
 	 * 
@@ -173,26 +173,25 @@ public class RegistroUsuarioImpl implements RegistroUsuario  {
 	 * @return
 	 * @throws Exception
 	 */
-	protected static final SOAPMessage generateSOAPFault()throws Exception {
-		
+	protected static final SOAPMessage generateSOAPFault() throws Exception {
+
 		ResponseStatusType response = new ResponseStatusType();
-		
+
 		response.setStatusCode("999");
 		response.setStatusText("Error indeterminado");
 		response.setDetails("Error indeterminado");
 
 		Respuesta respuesta = new Respuesta();
 		respuesta.setStatus(response);
-		
+
 		return XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(respuesta, Charset.forName("UTF-8"), Respuesta.class));
 	}
-	
+
 	public String getJsonResponse(Object conResponse) {
 		Gson gson = new Gson();
-		
+
 		String result = gson.toJson(conResponse);
 		return result;
 	}
 
-	
 }

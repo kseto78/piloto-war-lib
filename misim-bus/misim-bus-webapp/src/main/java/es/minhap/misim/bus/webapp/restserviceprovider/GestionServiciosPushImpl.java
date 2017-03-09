@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -50,7 +51,7 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 	@Context
 	private ServletContext servletContext;
 
-	public String registroUsuarioEnServicio(String idUsuario, String idServicioMovil, String accion, String idDispositivo) {
+	public String registroUsuarioEnServicio(MultivaluedMap<String,String>map) {
 
 		RespuestaServiciosRegistrarUsuario respuesta = new RespuestaServiciosRegistrarUsuario();
 		String decoded;
@@ -62,6 +63,15 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 			// We need to extract data before decoding it back to original
 			// string
 			String data = header.substring(header.indexOf(" ") + 1);
+			
+			String idUsuario = (null != map.getFirst("IdUsuario")) ? map.getFirst("IdUsuario") : null;
+			String idServicioMovil = (null != map.getFirst("IdServicioMovil")) ? map.getFirst("IdServicioMovil") : null;
+			String accion = (null != map.getFirst("accion")) ? map.getFirst("accion") : null;
+			String idDispositivo = (null != map.getFirst("IdDispositivo")) ? map.getFirst("IdDispositivo") : null;
+			String uidDispositivo = (null != map.getFirst("UidDispositivo")) ? map.getFirst("UidDispositivo") : null;
+			String tokenSession = (null != map.getFirst("TokenSession")) ? map.getFirst("TokenSession") : null;
+
+
 
 			// Decode the data back to original string
 			byte[] bytes = new BASE64Decoder().decodeBuffer(data);
@@ -76,7 +86,9 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 
 			if ((null != username && !("").equals(username)) && (null != password && !("").equals(password)) && (null != idUsuario && !("").equals(idUsuario))
 					&& (null != idServicioMovil && !("").equals(idServicioMovil)) && (null != idDispositivo && !("").equals(idDispositivo)) 
-					&& (null != accion && !("").equals(accion))) {
+					&& (null != accion && !("").equals(accion))
+					&& (null != uidDispositivo && !("").equals(uidDispositivo))
+					&& (null != tokenSession && !("").equals(tokenSession))) {
 
 				try {
 
@@ -87,6 +99,8 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 					peticion.setIdServicioMovil(idServicioMovil);
 					peticion.setAccion(accion);
 					peticion.setIdDispositivo(idDispositivo);
+					peticion.setUidDispositivo(uidDispositivo);
+					peticion.setTokenSession(tokenSession);
 
 					DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 					Document document = docBuilder.newDocument();
@@ -137,7 +151,7 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 				ResponseServRegUsuarioStatusType status = new ResponseServRegUsuarioStatusType();
 				status.setStatusCode("2000");
 				status.setStatusText("La petici&oacute;n no incluye todos los parametros obligatorios");
-				status.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, Servicio, Plataforma, IdDispositivo o IdRegistro");
+				status.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, IdUsuario, IdServicioMovil, accion, IdDispositivo, UidDispositivo o TokenSession");
 				respuesta.setStatus(status);
 			}
 		} catch (Exception e) {

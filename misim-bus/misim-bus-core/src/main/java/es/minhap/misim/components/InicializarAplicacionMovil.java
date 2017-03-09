@@ -204,8 +204,8 @@ public class InicializarAplicacionMovil implements Callable {
 			
 		}catch (Exception e){
 			
-			LOG.error("Identificación: Error de sistema al inicializar Telefonica", e);
-			throw new ModelException("Error de sistema al inicializar Telefonica", 502);
+			LOG.error("Identificación: Error de sistema al inicializar Aplicación Móvil", e);
+			throw new ModelException("Error de sistema al inicializar Aplicación Móvil", 502);
 		}
 
 		LOG.debug("Fin de la inicialización de variables");

@@ -20,101 +20,81 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
 	<!-- DESDE LAS APLICACONES A MISIM (CON LA LIBRERIA PARA INTRODUCIR BBDD) -->
 
-	<flow name="FLW-ENV-SIM-GISS" doc:name="FLW-ENV-SIM-GISS" doc:description="Procesa una nueva Petición">
+	<flow name="FLW-ENV-SIM-GISS" doc:name="FLW-ENV-SIM-GISS" doc:description="Procesa una nueva Peticion">
 
-		<!-- RECEPCIÓN PETICIÓN -->
+		<!-- RECEPCION PETICION -->
 		<vm:inbound-endpoint exchange-pattern="request-response" path="envio-sim-GISS" responseTimeout="120000" doc:name="VM" />
 
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Petición SOAP recibida desde Aplicación: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Inicio petición" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Inicio peticion" />
 
-
-		<!-- INVOCACIÓN DEL ENVIADOR -->
+		<!-- INVOCACION DEL ENVIADOR -->
 		<component doc:name="Invocar envio SMS AEAT">
 			<spring-object bean="invocarEnvioGISS" />
 		</component>
 
-		<!-- ADAPTAR PETICIÓN -->
+		<!-- ADAPTAR PETICION -->
 		
-		<choice doc:name="Adaptar la petición"> 
+		<choice doc:name="Adaptar la peticion"> 
 			<when expression="#[message.outboundProperties['${ENVIAR_MENSAJE_PREMIUM_001}'] == 'S']">
 				<processor-chain doc:name="Processor Chain">
 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" />
 					
-					<logger level="INFO" doc:name="Logger" message="Adaptación de la petición" />
-					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Adaptacion de la peticion" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 					<flow-ref name="FLW-RCP-ENV" doc:name="Adaptar protocolo hacia Emisor" />
-					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" />
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
 				<component doc:name="Invocar envio SMS AEAT">
 					<spring-object bean="invocarEnvioGISSResp" />
 				</component>
 				</processor-chain>
 			</when>
  			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="No se requiere de adaptacion de la peticion" />
+				<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - No se requiere de adaptacion de la peticion" />
 			</otherwise>
 		</choice>
 
-		<!-- INVOCACIÓN DEL ENVIADOR -->
+		<!-- INVOCACION DEL ENVIADOR -->
 
 
 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
-		<logger level="INFO" doc:name="Logger" message="Petición procesada" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Respuesta SOAP devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Peticion procesada" />
 
-
-
-		<!-- GESTIÓN DE ERRORES -->
-
-
+		<!-- GESTION DE ERRORES -->
 
 		<catch-exception-strategy doc:name="Catch Exception Strategy">
 
 			<!-- GENERAR EL SOAP FAULT -->
-			<component doc:name="Gestión de errores" >
+			<component doc:name="Gestion de errores" >
 				<spring-object bean="gestionErroresEnvioSimGiss" />
 			</component>
 
 			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
 				
-			<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-        	<logger level="INFO" doc:name="Logger" message="Comprobar actualización de la auditoría" />
-        	<choice doc:name="Encriptación del error al Consumidor">
+			<!-- ACTUALIZACION DE AUDITORIA -->
+        	<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Comprobar actualizacion de la auditoria" />
+        	<choice doc:name="Encriptacion del error al Consumidor">
 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
-					<!-- ENCRIPTACIÓN -->
-					<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" />
+					<!-- ENCRIPTACION -->
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Comprobar si se requiere encriptacion para la auditoria" />
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" message="Encriptación requerida" doc:name="Logger" />
+						<logger level="INFO" message="[FLOW - EnvioSIMGISS] - Encriptacion requerida" doc:name="Logger" />
 						<component	doc:name="Encripta" >
 							<spring-object bean="encriptar" />
 						</component>
 					</processor-chain>
 					<processor-chain doc:name="Processor Chain">
-						<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría fault" />
-						<component doc:name="Actualización de auditoría Fault">
+						<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Actualizacion de la auditoria fault" />
+						<component doc:name="Actualizacion de auditoria Fault">
 							<spring-object bean="updateAuditFault" />
 						</component>
 					</processor-chain>
 				</when>
 				<otherwise>
-					<logger level="INFO" message="Actualización de auditoría no requerida" doc:name="Logger" />
+					<logger level="INFO" message="[FLOW - EnvioSIMGISS] - Actualizacion de auditoria no requerida" doc:name="Logger" />
 				</otherwise>
 			</choice>	
 
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault procesado" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - SOAP Fault procesado" />
 
 		</catch-exception-strategy>
 	</flow>

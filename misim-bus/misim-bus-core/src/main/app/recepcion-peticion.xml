@@ -29,33 +29,28 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 <!-- 		<spring:bean id="gestionErrores" name="gestionErrores" class="es.minhap.misim.components.GestionErrores"/> -->
 	</spring:beans>
 
-	<flow name="FLW-RCP-PET" doc:name="FLW-RCP-PET" doc:description="Procesa una nueva Petición">
+	<flow name="FLW-RCP-PET" doc:name="FLW-RCP-PET" doc:description="Procesa una nueva Peticion">
 			
-		<!-- RECEPCIÓN PETICIÓN -->
+		<!-- RECEPCION PETICION -->
 		<vm:inbound-endpoint exchange-pattern="request-response" path="recepcion-sincrona" responseTimeout="120000" doc:name="VM"/>
 			
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Petición SOAP recibida: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Inicio petición" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPeticion] - Inicio peticion" />
 		
-<!-- 		<choice doc:name="Protocolo de comunicación"> -->
+<!-- 		<choice doc:name="Protocolo de comunicacion"> -->
 <!-- 			<when expression="#[payload.soapAction == '${PETICION_SINCRONA}']"> -->
 <!-- 				<processor-chain doc:name="Processor Chain"> -->
-<!-- 					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-RCP-SIN de la petición sincronizada el payload es : #[payload]" /> -->
-<!-- 					<set-variable variableName="${TIPO_COMUNICACION}" value="${SINCRONO}" doc:name="Tipo de comunicación síncrona" /> -->
-<!-- 					<flow-ref name="FLW-RCP-SIN" doc:name="Procesa la petición síncrona" /> -->
-<!-- 					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-RCP-SIN de la petición sincronizada el payload es: #[payload]" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-RCP-SIN de la peticion sincronizada el payload es : #[payload]" /> -->
+<!-- 					<set-variable variableName="${TIPO_COMUNICACION}" value="${SINCRONO}" doc:name="Tipo de comunicacion sincrona" /> -->
+<!-- 					<flow-ref name="FLW-RCP-SIN" doc:name="Procesa la peticion sincrona" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-RCP-SIN de la peticion sincronizada el payload es: #[payload]" /> -->
 <!-- 				</processor-chain> -->
 <!-- 			</when> -->
 <!-- 			<otherwise> -->
 <!-- 				<processor-chain doc:name="Processor Chain"> -->
-<!-- 					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-RCP-ASI de la petición asíncrona el payload es : #[payload]" /> -->
-<!-- 					<set-variable variableName="${TIPO_COMUNICACION}" value="${ASINCRONO}"  doc:name="Tipo de comunicación asíncrona" /> -->
-<!-- 					<flow-ref name="FLW-RCP-ASI" doc:name="Procesa la petición asíncrona" /> -->
-<!-- 					<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-RCP-ASI de la petición asíncrona el payload es : #[payload]" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-RCP-ASI de la peticion asincrona el payload es : #[payload]" /> -->
+<!-- 					<set-variable variableName="${TIPO_COMUNICACION}" value="${ASINCRONO}"  doc:name="Tipo de comunicacion asincrona" /> -->
+<!-- 					<flow-ref name="FLW-RCP-ASI" doc:name="Procesa la peticion asincrona" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-RCP-ASI de la peticion asincrona el payload es : #[payload]" /> -->
 <!-- 				</processor-chain> -->
 <!-- 			</otherwise> -->
 <!-- 		</choice> -->
@@ -69,8 +64,8 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 <!-- 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_PETICION" /> -->
 		
 		<!-- INDENTIFICAR APLICACION -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Indentificación de la aplicacion" /> -->
-<!-- 		<component	doc:name="Recupera la configuración del cliente" > -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Indentificacion de la aplicacion" /> -->
+<!-- 		<component	doc:name="Recupera la configuracion del cliente" > -->
 <!-- 			<spring-object bean="identificarAplicacion" /> -->
 <!-- 		</component> -->
 		
@@ -78,8 +73,8 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 <!-- 		<logger level="INFO" doc:name="Logger" message="Endpoint #[message.outboundProperties['${ID_APLICACION}']]" /> -->
 			
 		<!-- INDENTIFICAR DEL PRODUCTO -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Indentificación del producto" /> -->
-<!-- 		<component	doc:name="Recupera la configuración del producto" > -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Indentificacion del producto" /> -->
+<!-- 		<component	doc:name="Recupera la configuracion del producto" > -->
 <!-- 			<spring-object bean="identificarProducto" /> -->
 <!-- 		</component> -->
 		
@@ -87,24 +82,24 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 <!-- 		<logger level="INFO" doc:name="Logger" message="Endpoint #[message.outboundProperties['${ID_PRODUCTO}']]" /> -->
 		
 		<!-- INDENTIFICAR DEL PROVEEDOR -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Indentificación del proveedor" /> -->
-<!-- 		<component	doc:name="Recupera la configuración del proveedor" > -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Indentificacion del proveedor" /> -->
+<!-- 		<component	doc:name="Recupera la configuracion del proveedor" > -->
 <!-- 			<spring-object bean="identificarProveedor" /> -->
 <!-- 		</component> -->
 
 		<!-- LOGGER PROVEEDOR -->
 <!-- 		<logger level="INFO" doc:name="Logger" message="Endpoint #[message.outboundProperties['${ID_PROVEEDOR}']]" /> -->
 			
-		<!-- ENCRIPTACIÓN -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Encriptación para la auditoría" /> -->
+		<!-- ENCRIPTACION -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Encriptacion para la auditoria" /> -->
 <!-- 		<processor-chain doc:name="Processor Chain"> -->
 <!-- 			<component	doc:name="Encripta" > -->
 <!-- 				<spring-object bean="encriptar" /> -->
 <!-- 			</component> -->
 <!-- 		</processor-chain> -->
 		
-		<!-- AUDITORÍA -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Auditoría de la petición recibida" /> -->
+		<!-- AUDITORIA -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Auditoria de la peticion recibida" /> -->
 <!-- 		<component	doc:name="Audita" > -->
 <!-- 			<spring-object bean="audit" /> -->
 <!-- 		</component> -->
@@ -118,28 +113,28 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 <!-- 			<spring-object bean="validarXSDPeticion" /> -->
 <!-- 		</component> -->
 		
-		<!-- ADAPTAR PETICIÓN -->
+		<!-- ADAPTAR PETICION -->
 <!-- 		<processor-chain> -->
 <!-- 			<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" /> -->
 			
-<!-- 			<logger level="INFO" doc:name="Logger" message="Transformación del mensaje de la petición" /> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Transformacion del mensaje de la peticion" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
 			
 <!-- 			<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Emisor" /> -->
 			
 <!-- 			<logger level="INFO" doc:name="Logger" message="Flujo de ida adaptado" /> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
 <!-- 		</processor-chain> -->
 		
-		<!-- SECURIZACIÓN PETICIÓN-->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Preparación de la securización" /> -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-PET de securización el payload es : #[payload]" /> -->
-<!-- 		<flow-ref name="FLW-SEG-PET" doc:name="Securizar petición" /> -->
+		<!-- SECURIZACION PETICION-->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Preparacion de la securizacion" /> -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" /> -->
+<!-- 		<flow-ref name="FLW-SEG-PET" doc:name="Securizar peticion" /> -->
 <!-- 		<logger level="INFO" doc:name="Logger" message="Fludo de ida securizado" /> -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-SEG-PET de securización el payload es : #[payload]" /> -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" /> -->
 		
-		<!-- INVOCACIÓN AL EMISOR -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Invocación del Emisor" /> -->
+		<!-- INVOCACION AL EMISOR -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Invocacion del Emisor" /> -->
 <!-- 		<logger level="INFO" doc:name="Logger" message="Endpoint #[message.outboundProperties['${ENDPOINT_URL}']]" /> -->
 <!-- 		<component	doc:name="Invocar Emisor" > -->
 <!-- 			<spring-object bean="invocarEmisor" /> -->
@@ -165,11 +160,11 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		
 		<!-- DES-SECURIZAR RESPUESTA -->
 <!-- 		<processor-chain> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Preparación de la dessecurización" /> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-RES de dessecurización el payload es : #[payload]" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Preparacion de la dessecurizacion" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-RES de dessecurizacion el payload es : #[payload]" /> -->
 <!-- 			<flow-ref name="FLW-SEG-RES" doc:name="Securizar respuesta" /> -->
 <!-- 			<logger level="INFO" doc:name="Logger" message="Fludo de ida securizado" /> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-SEG-PET de securización el payload es : #[payload]" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" /> -->
 <!-- 		</processor-chain> -->
 		
 		<!-- VALIDAR XSD -->
@@ -180,91 +175,77 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		
 		<!-- ADAPTAR PROTOCOLO -->
 <!-- 		<processor-chain> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Transformación del mensaje recibido" /> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Transformacion del mensaje recibido" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
 			
 <!-- 			<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia misim" /> -->
 			
 <!-- 			<logger level="INFO" doc:name="Logger" message="Flujo de vuelta adaptado" /> -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Después del subfujo FLW-MSG-ADP de adaptación del protocolo el payload es : #[payload]" /> -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
 <!-- 		</processor-chain> -->
 		
 <!-- 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" /> -->
 		
-		<!-- ENCRIPTACIÓN -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" /> -->
+		<!-- ENCRIPTACION -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptacion para la auditoria" /> -->
 <!-- 		<processor-chain doc:name="Processor Chain"> -->
-<!-- 			<logger level="INFO" message="Encriptación requerida" doc:name="Logger" /> -->
+<!-- 			<logger level="INFO" message="Encriptacion requerida" doc:name="Logger" /> -->
 <!-- 			<component	doc:name="Encripta" > -->
 <!-- 				<spring-object bean="encriptar" /> -->
 <!-- 			</component> -->
 <!-- 		</processor-chain> -->
 		
-		<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-<!-- 		<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría" /> -->
-<!-- 		<component doc:name="Actualizacón de Auditoría"> -->
+		<!-- ACTUALIZACION DE AUDITORIA -->
+<!-- 		<logger level="INFO" doc:name="Logger" message="Actualizacion de la auditoria" /> -->
+<!-- 		<component doc:name="Actualizacon de Auditoria"> -->
 <!-- 			<spring-object bean="updateAudit" /> -->
 <!-- 		</component> -->
 		
 		<!-- RECUPERACION DEL BACKUP -->
 <!-- 		<set-payload value="#[flowVars['${XML_RESPUESTA}']]" doc:name="Vuelta a la peticion original" /> -->
 
-		<logger level="INFO" doc:name="Logger" message="Petición procesada" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="Respuesta SOAP devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-		<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPeticion] - Peticion procesada" />
         
-        
-        
-        <!-- GESTIÓN DE ERRORES -->
-        
-        
+        <!-- GESTION DE ERRORES -->
         
         <catch-exception-strategy doc:name="Catch Exception Strategy">
         	
         	<!-- GENERAR EL SOAP FAULT -->
-<!--         	<component	doc:name="Gestión de errores" > -->
+<!--         	<component	doc:name="Gestion de errores" > -->
 <!-- 				<spring-object bean="gestionErrores" /> -->
 <!-- 			</component> -->
 			
 <!-- 			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" /> -->
 					
-			<!-- ENCRIPTACIÓN -->
-<!-- 			<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptación para la auditoría" /> -->
+			<!-- ENCRIPTACION -->
+<!-- 			<logger level="INFO" doc:name="Logger" message="Comprobar si se requiere encriptacion para la auditoria" /> -->
 <!-- 			<processor-chain doc:name="Processor Chain"> -->
-<!-- 				<logger level="INFO" message="Encriptación requerida" doc:name="Logger" /> -->
+<!-- 				<logger level="INFO" message="Encriptacion requerida" doc:name="Logger" /> -->
 <!-- 				<component	doc:name="Encripta" > -->
 <!-- 					<spring-object bean="encriptar" /> -->
 <!-- 				</component> -->
 <!-- 			</processor-chain> -->
 				
-			<!-- ACTUALIZACIÓN DE AUDITORÍA -->
-<!--         	<logger level="INFO" doc:name="Logger" message="Comprobar actualización de la auditoría" /> -->
-<!--         	<choice doc:name="Encriptación del error al Consumidor"> -->
+			<!-- ACTUALIZACION DE AUDITORIA -->
+<!--         	<logger level="INFO" doc:name="Logger" message="Comprobar actualizacion de la auditoria" /> -->
+<!--         	<choice doc:name="Encriptacion del error al Consumidor"> -->
 <!-- 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']"> -->
 <!-- 					<processor-chain doc:name="Processor Chain"> -->
-<!-- 						<logger level="INFO" doc:name="Logger" message="Actualización de la auditoría fault" /> -->
-<!-- 						<component doc:name="Actualización de auditoría Fault"> -->
+<!-- 						<logger level="INFO" doc:name="Logger" message="Actualizacion de la auditoria fault" /> -->
+<!-- 						<component doc:name="Actualizacion de auditoria Fault"> -->
 <!-- 							<spring-object bean="updateAuditFault" /> -->
 <!-- 						</component> -->
 <!-- 					</processor-chain> -->
 <!-- 				</when> -->
 <!-- 				<otherwise> -->
-<!-- 					<logger level="INFO" message="Actualización de auditoría no requerida" doc:name="Logger" /> -->
+<!-- 					<logger level="INFO" message="Actualizacion de auditoria no requerida" doc:name="Logger" /> -->
 <!-- 				</otherwise> -->
 <!-- 			</choice>	 -->
 			
 			<!-- RECUPERACION DEL BACKUP -->
 <!-- 			<set-payload value="#[flowVars['${XML_FAULT}']]" doc:name="Vuelta a la peticion original" /> -->
 	
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault procesado" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="SOAP Fault devuelta: #[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
-			<logger level="INFO" doc:name="Logger" message="------------------------------------------------------------------------------------------" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPeticion] - SOAP Fault procesado" />
 		
         </catch-exception-strategy>
 	</flow>

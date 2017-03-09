@@ -33,7 +33,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "usuario", "password", "notificacionId", "status", "idUsuario"
+@XmlType(name = "", propOrder = { "usuario", "password", "notificacionId", "status", "idUsuario", "uidDispositivo",
+		"tokenSession"
 
 })
 @XmlRootElement(name = "PeticionNotificacionPush", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
@@ -49,6 +50,10 @@ public class PeticionNotificacionEstado {
 	protected String status;
 	@XmlElement(name = "IdUsuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
 	protected String idUsuario;
+	@XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	protected String uidDispositivo;
+	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	protected String tokenSession;
 
 	/**
 	 * @return the usuario
@@ -79,6 +84,7 @@ public class PeticionNotificacionEstado {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	/**
 	 * @return the status
 	 */
@@ -102,7 +108,8 @@ public class PeticionNotificacionEstado {
 	}
 
 	/**
-	 * @param notificacionId the notificacionId to set
+	 * @param notificacionId
+	 *            the notificacionId to set
 	 */
 	public void setNotificacionId(String notificacionId) {
 		this.notificacionId = notificacionId;
@@ -116,9 +123,41 @@ public class PeticionNotificacionEstado {
 	}
 
 	/**
-	 * @param idUsuario the idUsuario to set
+	 * @param idUsuario
+	 *            the idUsuario to set
 	 */
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
 	}
+
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+
+	/**
+	 * @param uidDispositivo
+	 *            the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+
+	/**
+	 * @param tokenSession
+	 *            the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
+	}
+
 }

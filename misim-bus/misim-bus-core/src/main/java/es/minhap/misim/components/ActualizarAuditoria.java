@@ -58,7 +58,14 @@ public class ActualizarAuditoria implements Callable {
 			String idAuditoria=eventContext.getMessage().getOutboundProperty("idAuditoria");
 			
 			// Obtenemos el mensaje de la respuesta
-			String xmlRespuesta = XMLUtils.dom2xml(docOriginal);
+			//String xmlRespuesta = XMLUtils.dom2xml(docOriginal);
+			String xmlRespuesta = eventContext.getMessage().getOutboundProperty("xmlRespuestaDirectaOperador");
+//			LOG.info("xmlRespuestaDirectaOperador--->" + xmlRespuesta);
+			if (null == xmlRespuesta || xmlRespuesta.length() <= 0){
+				xmlRespuesta = XMLUtils.dom2xml(docOriginal);
+			}
+			
+//			LOG.info("respuestaTransformada--->" +XMLUtils.dom2xml(docOriginal));
 	
 			// Obtenemos la petición a actualizar
 

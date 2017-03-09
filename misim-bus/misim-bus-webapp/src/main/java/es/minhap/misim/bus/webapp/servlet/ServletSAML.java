@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet implementation class SevletSAML
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
 @WebServlet("/ServletSAML")
 public class ServletSAML extends HttpServlet {
 
-	private static Logger logger = Logger.getLogger(ServletSAML.class);
+	private static Logger LOG = LoggerFactory.getLogger(ServletSAML.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,9 +48,11 @@ public class ServletSAML extends HttpServlet {
 		try {
 			PrintWriter out = response.getWriter();
 
-			logger.info("-- START SAMLResponse --");
-			logger.info(SAMLResponse);
-			logger.info("-- END SAMLResponse --");
+			if(LOG.isInfoEnabled()){
+				LOG.info("-- START SAMLResponse --");
+				LOG.info(SAMLResponse);
+				LOG.info("-- END SAMLResponse --");
+			}
 			out.println("<html>");
 			out.println("<body style='width:900px;background-color:white;'>");
 			out.println("<div style='width:800px;color:white;'>");
@@ -59,7 +62,7 @@ public class ServletSAML extends HttpServlet {
 			out.println("</html>");
 
 		} catch (Exception e) {
-			logger.error("[ServletSAML] generando printWriter", e);
+			LOG.error("[ServletSAML] generando printWriter", e);
 		}
 	}
 

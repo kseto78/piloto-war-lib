@@ -5,7 +5,8 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ import es.minhap.sim.model.TblServidores;
 @Service("refreshStatusServiceImpl")
 public class RefreshStatusServiceImpl implements IRefreshStatusService {
 	
-	private static final Logger LOG = Logger.getLogger(RefreshStatusServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RefreshStatusServiceImpl.class);
 
 	@Resource
 	private TblDestinatariosMensajesManager tblDestinatariosMensajesManager;

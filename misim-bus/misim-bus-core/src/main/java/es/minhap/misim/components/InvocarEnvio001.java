@@ -3,6 +3,7 @@ package es.minhap.misim.components;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
@@ -25,10 +26,14 @@ import org.w3c.dom.NodeList;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
+import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesPremium;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumService;
+import es.minhap.sim.model.TblDestinatariosMensajes;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 
-//import es.minhap.misim.components.envio.EnvioEmailXMLBean;
 /**
  * Cliente genérico para JAX-WS
  * 
@@ -41,6 +46,15 @@ public class InvocarEnvio001 implements Callable {
 
 	@Resource
 	IEnvioPremiumService envioPremiumAEATService;
+	
+	@Resource(name="sendMessageService")
+	private ISendMessageService sendMessageService;
+	
+	@Resource(name="TblMensajesManagerImpl")
+	private TblMensajesManager tblMensajesManager;
+	
+	@Resource(name="TblDestinatariosMensajesManagerImpl")
+	private TblDestinatariosMensajesManager tblDestinatariosMensajes;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
@@ -57,12 +71,12 @@ public class InvocarEnvio001 implements Callable {
 		String usuarioMISIM = ps.getMessage("misim.aplicacion.aeat.usuario.sms", null, null, null);
 		String passwordMISIM = ps.getMessage("misim.aplicacion.aeat.contrasena.sms", null, null, null);
 		Integer reintentos = new Integer(ps.getMessage("aeat.reintentos.sms.premium", null, null, null));
+		
+		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
 
-		// String usuarioAEAT = "pruebasSIMdes";
-		// String passwordAEAT = "pruebasSIMdes";
-		// Integer idServicioAEAT = 1602;
-		String COMPROBACION_ENVIO = "&lt;![CDATA[";
-		String COMPROBACION_URL = " | ";
+
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -78,18 +92,17 @@ public class InvocarEnvio001 implements Callable {
 			envioAEATXML.loadObjectFromXML(xmlPeticion);
 			String respuesta = envioPremiumAEATService.enviarSMSPremium(envioAEATXML, usuarioAEAT, passwordAEAT,
 					idServicioAEAT, usuarioMISIM, passwordMISIM, reintentos);
-			eventContext.getMessage().setOutboundProperty("mensaje_AEAT", "S");
-			if (null != respuesta && respuesta.contains(COMPROBACION_ENVIO)) {
-				respuesta = adaptarRespuestaEnvioSMS(respuesta);
-				eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "S");
-
-			} else {
-				eventContext.getMessage().setOutboundProperty("enviar_mensaje_premium_001", "N");
+			es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp = new es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta();
+			resp.loadObjectFromXML(respuesta);
+			
+			Long idMensaje = (null != resp.getIdMensaje() && resp.getIdMensaje().length()>0)? Long.parseLong(resp.getIdMensaje()) : null;
+			
+			if (null != idMensaje){
+				levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje);
+				
 			}
-
-			if (null != respuesta && respuesta.contains(COMPROBACION_URL)) {
-				respuesta = quitarURLRespuesta(respuesta);
-			}
+	
+		
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
@@ -119,7 +132,7 @@ public class InvocarEnvio001 implements Callable {
 				LOG.error("Error en la transmision: Error al obtener la respuesta del servicio Web especificado", e);
 				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
 			}
-			// }
+
 
 		} catch (ModelException e) {
 
@@ -136,34 +149,20 @@ public class InvocarEnvio001 implements Callable {
 		return eventContext.getMessage();
 	}
 
-	/**
-	 * @param usuarioMISIM
-	 * @param passwordMISIM
-	 * @param respuesta
-	 * @return
-	 */
-	private String adaptarRespuestaEnvioSMS(String respuesta) {
-		if (respuesta.contains("&lt;![CDATA[")) {
-			respuesta = respuesta.substring(respuesta.indexOf("&lt;![CDATA[", 0) + 12, respuesta.indexOf("]]&gt;"));
+	private void levantarHilo(String estadoPendiente, String estadoAnulado, String estadoIncidencia,
+			es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp, Long idMensaje) {
+		String estadoActual = tblMensajesManager.getMensaje(Long.parseLong(resp.getIdMensaje())).getEstadoactual();
+		List<TblDestinatariosMensajes> listaDestinatarios = tblDestinatariosMensajes.getDestinatarioMensajes(idMensaje);
+		
+		for (TblDestinatariosMensajes d : listaDestinatarios) {
+			if (estadoActual.equals(estadoIncidencia) || estadoActual.equals(estadoAnulado) || estadoActual.equals(estadoPendiente)){
+				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService, tblMensajesManager, idMensaje, d.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
+				hilo1.start();
+			}
 		}
-		respuesta = respuesta.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
-		// respuesta = respuesta.substring(0,
-		// respuesta.indexOf(" | ")).concat(respuesta.substring(respuesta.indexOf("</Details>"),respuesta.length()));
-		// respuesta.indexOf("</Details>");
-		respuesta = respuesta.replaceAll("<Peticion>",
-				"<Peticion xmlns=\"http://misim.redsara.es/misim-bus-webapp/peticion\">");
-
-		// System.out.println("PETICION DE ENVIO SMS: " + respuesta);
-		return respuesta;
 	}
 
-	private String quitarURLRespuesta(String respuesta) {
-		respuesta = respuesta.substring(0, respuesta.indexOf(" | ")).concat(
-				respuesta.substring(respuesta.indexOf("</Details>"), respuesta.length()));
-		// System.out.println("PETICION DE ENVIO SMS: " + respuesta);
-		return respuesta;
-	}
-
+	
 	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
 		MessageFactory factory = MessageFactory.newInstance();
 		SOAPMessage message = factory.createMessage(new MimeHeaders(),

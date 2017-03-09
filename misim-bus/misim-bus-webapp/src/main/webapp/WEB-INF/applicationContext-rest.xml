@@ -22,6 +22,15 @@
            <ref bean="serviceBean"/>
         </jaxrs:serviceBeans>
      </jaxrs:server>
+     
+     <jaxrs:server id="registroUsuarioApp" address="/rest/registroApp">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="serviceAppBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
        
  	<jaxrs:server id="gestionAyuda" address="/rest/gestionAyuda">
          <jaxrs:providers>
@@ -38,6 +47,15 @@
 		</jaxrs:providers>
         <jaxrs:serviceBeans>
            <ref bean="notificacionEstadoBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     
+     <jaxrs:server id="gestionNotificacionesPushApp" address="/rest/gestionNotificacionesPushApp">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="notificacionEstadoAppBean"/>
         </jaxrs:serviceBeans>
      </jaxrs:server>
        
@@ -85,20 +103,24 @@
         </jaxrs:serviceBeans>
      </jaxrs:server>
      
-      <jaxrs:server id="WS_ClaveGetAuth" address="/rest/claveAuth/WS_ClaveGetAuth">
+     <!--  <jaxrs:server id="WS_ClaveGetAuth" address="/rest/claveAuth/WS_ClaveGetAuth">
          <jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
 		</jaxrs:providers>
         <jaxrs:serviceBeans>
            <ref bean="WS_ClaveGetAuthBean"/>
         </jaxrs:serviceBeans>
-     </jaxrs:server>
+     </jaxrs:server> -->
      
      <bean class="es.minhap.misim.bus.webapp.restserviceprovider.RegistroUsuarioImpl" id="serviceBean" />
+     
+     <bean class="es.minhap.misim.bus.webapp.restserviceprovider.RegistroUsuarioAppImpl" id="serviceAppBean" />
      
      <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionAyudaImpl" id="gestionaAyudaBean" />
      
      <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionNotificacionesPushImpl" id="notificacionEstadoBean" />
+     
+     <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionNotificacionesPushAppImpl" id="notificacionEstadoAppBean" />
      
      <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionServiciosPushImpl" id="registroUsuarioEnServicioBean" />
 
@@ -110,5 +132,5 @@
 	
 	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.WS_ClaveAuthResponseImpl" id="WS_ClaveAuthResponseBean" /> 
 	
-	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.WS_ClaveGetAuthImpl" id="WS_ClaveGetAuthBean" />   
+	<!-- <bean class="es.minhap.misim.bus.webapp.restserviceprovider.WS_ClaveGetAuthImpl" id="WS_ClaveGetAuthBean" />   --> 
 </beans>
