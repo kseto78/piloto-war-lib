@@ -54,6 +54,9 @@ public class TblUsuariosPushQuery extends AbstractHibernateQueryEntity<TblUsuari
     public static final String APELLIDO1 = "apellido1";
     public static final String APELLIDO2 = "apellido2";
     public static final String ELIMINADO = "eliminado";
+    public static final String UIDDISPOSITIVO = "uiddispositivo";
+    public static final String TOKENSESSION = "tokensession";
+    public static final String FECHACADUCIDAD = "fechacaducidad";
     public static final String NOTEQUAL = "nEqual";
 
 
@@ -207,6 +210,26 @@ public class TblUsuariosPushQuery extends AbstractHibernateQueryEntity<TblUsuari
      */
     private TextComparator dispositivoidComparator = TextComparator.CONTAINS;
 
+    /**
+     * Valor de busqueda de campo tokensession
+     */
+    private String tokensession;
+
+    /**
+     * Tipo de comparador para la busqueda por campo tokensession
+     */
+    private TextComparator tokensessionComparator = TextComparator.CONTAINS;
+    
+    /**
+     * Valor de busqueda de campo uiddispositivo
+     */
+    private String uiddispositivo;
+
+    /**
+     * Tipo de comparador para la busqueda por campo uiddispositivo
+     */
+    private TextComparator uiddispositivoComparator = TextComparator.CONTAINS;
+    
     /**
      * Lista de valores del campo dispositivoid para busquedas tipo IN
      */
@@ -906,6 +929,101 @@ public class TblUsuariosPushQuery extends AbstractHibernateQueryEntity<TblUsuari
         this.dispositivoidIsNotNull = dispositivoidIsNotNull;
     }
 
+    
+    /**
+     * Valor de busqueda de campo tokensession
+     * @return String.
+     */
+    public String getTokensession() {
+        if (tokensession != null) {
+            switch (tokensessionComparator) {
+	            case STARTS_WITH:
+	                return tokensession + "%";
+	            case CONTAINS:
+	                return "%" + tokensession + "%";
+	            case ENDS_WITH:
+	                return "%" + tokensession;
+	            case EQUALS:
+                	return tokensession;
+              	default:
+	            	break;
+            }
+        }
+        return tokensession;
+    }
+
+    /**
+     * Valor de busqueda de campo tokensession
+     * @param tokensession Valor de seteo.
+     */
+    public void setTokensession(String tokensession) {
+        this.tokensession = tokensession;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo tokensession
+     * @return tokensessionComparator.
+     */
+    public TextComparator getTokensessionComparator() {
+        return tokensessionComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo tokensession
+     * @param tokensessionComparator Valor de seteo.
+     */
+    public void setTokensessionComparator(TextComparator tokensessionComparator) {
+        this.tokensessionComparator = tokensessionComparator;
+    }
+    
+    /**
+     * Valor de busqueda de campo uiddispositivo
+     * @return String.
+     */
+    public String getUiddispositivo() {
+        if (uiddispositivo != null) {
+            switch (uiddispositivoComparator) {
+	            case STARTS_WITH:
+	                return uiddispositivo + "%";
+	            case CONTAINS:
+	                return "%" + uiddispositivo + "%";
+	            case ENDS_WITH:
+	                return "%" + uiddispositivo;
+	            case EQUALS:
+                	return uiddispositivo;
+              	default:
+	            	break;
+            }
+        }
+        return uiddispositivo;
+    }
+
+    /**
+     * Valor de busqueda de campo uiddispositivo
+     * @param uiddispositivo Valor de seteo.
+     */
+    public void setUiddispositivo(String uiddispositivo) {
+        this.uiddispositivo = uiddispositivo;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo uiddispositivo
+     * @return uiddispositivoComparator.
+     */
+    public TextComparator getUiddispositivoComparator() {
+        return uiddispositivoComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo uiddispositivo
+     * @param uiddispositivoComparator Valor de seteo.
+     */
+    public void setUiddispositivoComparator(TextComparator uiddispositivoComparator) {
+        this.uiddispositivoComparator = uiddispositivoComparator;
+    }
+
+    
+    
     /**
      * Valor de busqueda de campo nombre
      * @return String.
@@ -1435,6 +1553,36 @@ public class TblUsuariosPushQuery extends AbstractHibernateQueryEntity<TblUsuari
             criteria.add(Restrictions.isNotNull(DISPOSITIVOID));
         }
 
+        if (getTokensession() != null) {
+            if (getTokensessionComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(TOKENSESSION, getTokensession()));
+            } 
+            else if (getTokensessionComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(TOKENSESSION, getTokensession()));
+            }
+            else if (getTokensessionComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(TOKENSESSION, getTokensession())));
+            }
+            else {
+                criteria.add(Restrictions.like(TOKENSESSION, getTokensession()));
+            }
+        }
+        
+        if (getUiddispositivo() != null) {
+            if (getUiddispositivoComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(UIDDISPOSITIVO, getUiddispositivo()));
+            } 
+            else if (getUiddispositivoComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(UIDDISPOSITIVO, getUiddispositivo()));
+            }
+            else if (getUiddispositivoComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(UIDDISPOSITIVO, getUiddispositivo())));
+            }
+            else {
+                criteria.add(Restrictions.like(UIDDISPOSITIVO, getUiddispositivo()));
+            }
+        }
+        
         if (getNombre() != null) {
             if (getNombreComparator() == TextComparator.EQUALS) {
                 criteria.add(Restrictions.eq(NOMBRE, getNombre()));

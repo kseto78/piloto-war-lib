@@ -59,6 +59,9 @@ public class TblServidoresServicios implements java.io.Serializable {
 
 	@Column(name = "PROVEEDORPASSWORDSMS", length = 20)
 	private String proveedorpasswordsms;
+	
+	@Column(name = "PREFIJOSMS", length = 50)
+	private String prefijosms;
 
 	public TblServidoresServicios() {
 	}
@@ -226,6 +229,20 @@ public class TblServidoresServicios implements java.io.Serializable {
 	 */
 	public void setProveedorpasswordsms(String proveedorpasswordsms) {
 		this.proveedorpasswordsms = proveedorpasswordsms;
+	}
+
+	/**
+	 * @return the prefijosms
+	 */
+	public String getPrefijosms() {
+		return prefijosms;
+	}
+
+	/**
+	 * @param prefijosms the prefijosms to set
+	 */
+	public void setPrefijosms(String prefijosms) {
+		this.prefijosms = prefijosms;
 	}
 
 }

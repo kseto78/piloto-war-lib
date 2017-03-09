@@ -55,7 +55,7 @@ public class TblServidoresServiciosQuery extends AbstractHibernateQueryEntity<Tb
     public static final String FECHAMODIFICACION = "fechamodificacion";
     public static final String PROVEEDORUSUARIOSMS = "proveedorusuariosms";
     public static final String PROVEEDORPASSWORDSMS = "proveedorpasswordsms";
-
+    public static final String PREFIJOSMS = "prefijosms";
 
     /**
      * Valor de busqueda de campo servidorservicioid
@@ -313,6 +313,16 @@ public class TblServidoresServiciosQuery extends AbstractHibernateQueryEntity<Tb
      * Indica si en la consulta se hace un left join con el padre tblServicios
      */
     private boolean leftJoinTblServicios = false;
+    
+    /**
+     * Valor de busqueda de campo prefijosms
+     */
+    private String prefijosms;
+
+    /**
+     * Tipo de comparador para la busqueda por campo prefijosms
+     */
+    private TextComparator prefijosmsComparator = TextComparator.CONTAINS;
 
     /**
      * Constructor default
@@ -1199,6 +1209,52 @@ public class TblServidoresServiciosQuery extends AbstractHibernateQueryEntity<Tb
     public void setLeftJoinTblServicios(boolean leftJoinTblServicios) {
         this.leftJoinTblServicios = leftJoinTblServicios;
     }
+    
+    /**
+     * Valor de busqueda de campo prefijosms
+     * @return String.
+     */
+    public String getPrefijosms() {
+        if (prefijosms != null) {
+            switch (prefijosmsComparator) {
+	            case STARTS_WITH:
+	                return prefijosms + "%";
+	            case CONTAINS:
+	                return "%" + prefijosms + "%";
+	            case ENDS_WITH:
+	                return "%" + prefijosms;
+	            case EQUALS:
+                	return prefijosms;
+              	default:
+	            	break;
+            }
+        }
+        return prefijosms;
+    }
+
+    /**
+     * Valor de busqueda de campo prefijosms
+     * @param prefijosms Valor de seteo.
+     */
+    public void setPrefijosms(String prefijosms) {
+        this.prefijosms = prefijosms;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo prefijosmsComparator
+     * @return prefijosmsComparator.
+     */
+    public TextComparator getPrefijosmsComparator() {
+        return prefijosmsComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo prefijosmsComparator
+     * @param prefijosmsComparator Valor de seteo.
+     */
+    public void setPrefijosmsComparator(TextComparator prefijosmsComparator) {
+        this.prefijosmsComparator = prefijosmsComparator;
+    }
 
     /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
@@ -1464,6 +1520,21 @@ public class TblServidoresServiciosQuery extends AbstractHibernateQueryEntity<Tb
 
         if (isProveedorpasswordsmsIsNotNull()) {
             criteria.add(Restrictions.isNotNull(PROVEEDORPASSWORDSMS));
+        }
+        
+        if (getPrefijosms() != null) {
+            if (getPrefijosmsComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(PREFIJOSMS, getPrefijosms()));
+            } 
+            else if (getPrefijosmsComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(PREFIJOSMS, getPrefijosms()));
+            }
+            else if (getPrefijosmsComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(PREFIJOSMS, getPrefijosms())));
+            }
+            else {
+                criteria.add(Restrictions.like(PREFIJOSMS, getPrefijosms()));
+            }
         }
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {

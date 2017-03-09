@@ -62,6 +62,15 @@ public class TblUsuariosPush implements java.io.Serializable {
 
 	@Column(name = "ELIMINADO", length = 1)
 	private String eliminado;
+	
+	@Column(name = "UID_DISPOSITIVO", length = 200)
+	private String uiddispositivo;
+
+	@Column(name = "TOKENSESSION", length = 200)
+	private String tokensession;
+	
+	@Column(name = "FECHACADUCIDAD", length = 7)
+	private Date fechacaducidad;
 
 	public TblUsuariosPush() {
 	}
@@ -244,6 +253,48 @@ public class TblUsuariosPush implements java.io.Serializable {
 	 */
 	public void setEliminado(String eliminado) {
 		this.eliminado = eliminado;
+	}
+
+	/**
+	 * @return the uiddispositivo
+	 */
+	public String getUiddispositivo() {
+		return uiddispositivo;
+	}
+
+	/**
+	 * @param uiddispositivo the uiddispositivo to set
+	 */
+	public void setUiddispositivo(String uiddispositivo) {
+		this.uiddispositivo = uiddispositivo;
+	}
+
+	/**
+	 * @return the tokensession
+	 */
+	public String getTokensession() {
+		return tokensession;
+	}
+
+	/**
+	 * @param tokensession the tokensession to set
+	 */
+	public void setTokensession(String tokensession) {
+		this.tokensession = tokensession;
+	}
+
+	/**
+	 * @return the fechacaducidad
+	 */
+	public Date getFechacaducidad() {
+		return fechacaducidad;
+	}
+
+	/**
+	 * @param fechacaducidad the fechacaducidad to set
+	 */
+	public void setFechacaducidad(Date fechacaducidad) {
+		this.fechacaducidad = fechacaducidad;
 	}
 
 }

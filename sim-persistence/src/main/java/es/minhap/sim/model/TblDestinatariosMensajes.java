@@ -62,6 +62,9 @@ public class TblDestinatariosMensajes implements java.io.Serializable {
 
 	@Column(name = "ULTIMOENVIO", length = 7)
 	private Date ultimoenvio;
+	
+	@Column(name = "NUMINTENTOSENCOLAR", precision = 2)
+	private Integer numintentosencolar;
 
 	public TblDestinatariosMensajes() {
 	}
@@ -244,6 +247,20 @@ public class TblDestinatariosMensajes implements java.io.Serializable {
 	 */
 	public void setUltimoenvio(Date ultimoenvio) {
 		this.ultimoenvio = ultimoenvio;
+	}
+
+	/**
+	 * @return the numintentosencolar
+	 */
+	public Integer getNumintentosencolar() {
+		return numintentosencolar;
+	}
+
+	/**
+	 * @param numintentosencolar the numintentosencolar to set
+	 */
+	public void setNumintentosencolar(Integer numintentosencolar) {
+		this.numintentosencolar = numintentosencolar;
 	}
 
 }

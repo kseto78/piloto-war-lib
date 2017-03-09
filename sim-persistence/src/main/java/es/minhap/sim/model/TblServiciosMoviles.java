@@ -63,6 +63,18 @@ public class TblServiciosMoviles implements java.io.Serializable {
 
 	@Column(name = "ESTADO", precision = 1, scale = 0)
 	private Integer estado;
+	
+	@Column(name = "IND_SUSCRIPCION")
+	private Integer ind_Suscripcion;
+	
+	@Column(name = "URL_AVISOSUSCRIPCION")
+	private String url_AvisoSuscripcion;
+	
+	@Column(name = "ENDPOINT_USER")
+	private String endpoint_User;
+	
+	@Column(name = "ENDPOINT_PASS")
+	private String endpoint_Pass;
 
 	public TblServiciosMoviles() {
 	}
@@ -277,4 +289,36 @@ public class TblServiciosMoviles implements java.io.Serializable {
 		this.estado = estado;
 	}
 
+	public Integer getInd_Suscripcion() {
+		return ind_Suscripcion;
+	}
+
+	public void setInd_Suscripcion(Integer ind_Suscripcion) {
+		this.ind_Suscripcion = ind_Suscripcion;
+	}
+
+	public String getUrl_AvisoSuscripcion() {
+		return url_AvisoSuscripcion;
+	}
+
+	public void setUrl_AvisoSuscripcion(String url_AvisoSuscripcion) {
+		this.url_AvisoSuscripcion = url_AvisoSuscripcion;
+	}
+
+	public String getEndpoint_User() {
+		return endpoint_User;
+	}
+
+	public void setEndpoint_User(String endpoint_User) {
+		this.endpoint_User = endpoint_User;
+	}
+
+	public String getEndpoint_Pass() {
+		return endpoint_Pass;
+	}
+
+	public void setEndpoint_Pass(String endpoint_Pass) {
+		this.endpoint_Pass = endpoint_Pass;
+	}
+	
 }
