@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ import es.minhap.sim.model.TblMensajes;
  */
 @Service("gestionNotificacionesPushImpl")
 public class GestionNotificacionesPushImpl implements IGestionNotificacionesPushService {
-	private final static Logger LOG = Logger.getLogger(GestionNotificacionesPushImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(GestionNotificacionesPushImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
@@ -64,13 +65,26 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		codeLeido = ps.getMessage("plataformaErrores.gestionNotificacionesPush.CODE_LEIDO", null);
 		codeRecibido = ps.getMessage("plataformaErrores.gestionNotificacionesPush.CODE_RECIBIDO", null);
 		String notificacion = ps.getMessage("constantes.TIPO_MENSAJE_PUSH", null);
-		
+		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		Integer timeSession = null;
+		try{
+			timeSession = Integer.parseInt(stringTimeSession);
+		}catch(NumberFormatException e){
+			timeSession = null;
+		}
 		String xmlResultado = "";
 		RespuestaNotificacionesPush respuesta = new RespuestaNotificacionesPush(); 
 
 		try {
 			if (datosNoValidos(notificacionesPushXMLBean)){
 				return respuesta.peticionIncorrectaXML(ps);
+			}
+			
+			if(null != notificacionesPushXMLBean.getUidDispositivo() && null != notificacionesPushXMLBean.getTokenSession()){
+				if (!comprobarTokeSessionCorrecto(notificacionesPushXMLBean.getUidDispositivo(), notificacionesPushXMLBean.getTokenSession(), timeSession)){
+					return respuesta.tokenIncorrecto(ps);
+					
+				}
 			}
 			
 			Boolean existeUsuario = getAplicacionesManager().existeAplicacion(notificacionesPushXMLBean.getUsuario(), notificacionesPushXMLBean.getPassword());
@@ -123,14 +137,21 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		String codErrorGeneral = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_ERROR_GENERAL", null);
 		String detailsErrorGeneral = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_ERROR_GENERAL",
 				null);
-
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
+		
 		String res = "";
 		try {
 			String errorValidacion = comprobarDatos(peticion, ps);
 			if (null != errorValidacion) {
-				respuesta = generarRespuesta(statusTextKO, codErrorPeticion, detailsErrorPeticion + errorValidacion,
+				if (errorValidacion.equals(codeKO)){
+					respuesta = generarRespuesta(statusTextKO, codeKO, detailsKO, null);
+				}else{
+					respuesta = generarRespuesta(statusTextKO, codErrorPeticion, detailsErrorPeticion + errorValidacion,
 						null);
+				}
 			} else {
+				
 				// comprobamos aplicacion
 				Boolean existeUsuario = getAplicacionesManager().existeAplicacion(peticion.getUsuario(),
 						peticion.getPassword());
@@ -289,7 +310,18 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 				.getMessage("plataformaErrores.gestionNotificacionesPush.numeroPaginaDefecto", null);
 		String errorNumPagina = ps.getMessage("plataformaErrores.gestionNotificacionesPush.ERROR_NUMPAG", null);
 		String errorNoNumerico = ps.getMessage("plataformaErrores.gestionNotificacionesPush.ERROR_NO_NUMERICO", null);
-
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		Integer timeSession = null;
+		try{
+			timeSession = Integer.parseInt(stringTimeSession);
+		}catch(NumberFormatException e){
+			timeSession = null;
+		}
+		if (!comprobarTokeSessionCorrecto(peticion.getUidDispositivo(), peticion.getTokenSession(), timeSession)){
+			return codeKO;
+		}
+		
 		if (checkUsuarioPassword(peticion.getUsuario(), peticion.getPassword()) || null == peticion.getIdServicio()
 				|| peticion.getIdServicio().length() <= 0
 				|| checkDispositivoPlataforma(peticion.getIdDispositivo(), peticion.getIdPlataforma()))
@@ -366,7 +398,11 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 
 		return res;
 	}
-
+	
+	private boolean comprobarTokeSessionCorrecto(String uidDispositivo, String tokenSession, Integer timeSession) {
+		
+		return usuariosPushManager.comprobarTokenSession(uidDispositivo, tokenSession, timeSession);
+	}
 	/**
 	 * @return the aplicacionesManager
 	 */

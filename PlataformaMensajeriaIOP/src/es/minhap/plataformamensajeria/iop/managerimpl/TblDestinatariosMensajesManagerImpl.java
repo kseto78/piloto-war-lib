@@ -86,6 +86,14 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 		query.setMensajeid(mensajeId);
 		return destinatariosMensajesDAO.search(query).getResults();
 	}
+	
+	@Override
+	public List<TblDestinatariosMensajes> getDestinatarioMensajesPendientes(Long mensajeid, String estadoPendiente) {
+		TblDestinatariosMensajesQuery query = new TblDestinatariosMensajesQuery();
+		query.setMensajeid(mensajeid);
+		query.setEstado(estadoPendiente);
+		return destinatariosMensajesDAO.search(query).getResults();
+	}
 
 	@Override
 	public TblDestinatariosMensajes getDestinatarioMensaje(Long destinatarioMensajeId) {
@@ -101,12 +109,14 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	}
 
 	@Override
+	@Transactional
 	public Long insertar(TblDestinatariosMensajes destinatariosMensajes) {
 		return destinatariosMensajesDAO.insert(destinatariosMensajes);
 		
 	}
 
 	@Override
+	@Transactional
 	public Integer contarEstadosDestinatariosMensajes(Long mensajeId) {
 		return queryExecutorDestinatariosMensajes.countDistinctStatus(mensajeId);
 	}
@@ -146,6 +156,7 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 		destinatariosMensajes.setModificadopor(usuario);
 		destinatariosMensajes.setFechacreacion(new Date());
 		destinatariosMensajes.setFechamodificacion(new Date());
+		destinatariosMensajes.setUltimoenvio(new Date());
 		return destinatariosMensajes;
 	}
 
@@ -172,6 +183,31 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 		return destinatariosMensajesDAO.search(query).getResults(); //ver que pasa si no hay
 	}
 
+	@Override
+	@Transactional
+	public Integer updateNumIntentosEncolar(Long destinatarioMensajeId) {
+		TblDestinatariosMensajes destinatario = destinatariosMensajesDAO.get(destinatarioMensajeId);
+		Integer n = (null != destinatario.getNumintentosencolar())? destinatario.getNumintentosencolar() + 1 : 1; 
+		destinatario.setNumintentosencolar(n);
+		destinatariosMensajesDAO.update(destinatario);
+		return n;
+	}
+	
+	
+	@Override
+	@Transactional
+	public List<Long> getIdMensajeByIdExterno(String idExterno) {
+		List<Long> res = new ArrayList<>();
+		TblDestinatariosMensajesQuery query = new TblDestinatariosMensajesQuery();
+		
+		query.setCodigoexterno(idExterno);
+		query.setCodigoexternoComparator(TextComparator.EQUALS);
+		List<TblDestinatariosMensajes> lista = destinatariosMensajesDAO.search(query).getResults();
+		for (TblDestinatariosMensajes dm : lista) {
+			res.add(dm.getMensajeid());
+		}
+		return res;
+	}
 	/**
 	 * @return the destinatariosMensajesDAO
 	 */
@@ -256,4 +292,8 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	public void setQueryExecutorDestinatariosMensajes(QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes) {
 		this.queryExecutorDestinatariosMensajes = queryExecutorDestinatariosMensajes;
 	}
+
+	
+
+	
 }

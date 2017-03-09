@@ -363,7 +363,7 @@ public class ClienteTest {
 	public void testRegistroUsuario() {
 		
 		RegistroUsuarioPushResponse respuesta;		
-		respuesta = instanceUsuarios.registroUsuario(USUARIO_NUEVO_NOMBRE, USUARIO_NUEVO_SERVIDIOID, USUARIO, PASSWORD, USUARIO_NUEVO_PLATAFORMAID, USUARIO_NUEVO_TOKEN, USUARIO_NUEVO_DISPOSITIVO);
+		respuesta = instanceUsuarios.registroUsuario(USUARIO_NUEVO_NOMBRE, USUARIO_NUEVO_SERVIDIOID, USUARIO, PASSWORD, USUARIO_NUEVO_PLATAFORMAID, USUARIO_NUEVO_TOKEN, USUARIO_NUEVO_DISPOSITIVO, null,null);
 		
 		System.out.println(respuesta.toString());
 		

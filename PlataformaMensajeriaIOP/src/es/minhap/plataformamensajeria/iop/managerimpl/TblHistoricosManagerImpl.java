@@ -8,9 +8,12 @@ import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.entity.OrderType;
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.entity.EstadosBean;
 import es.minhap.plataformamensajeria.iop.beans.entity.HistoricoBean;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorDestinatariosMensajes;
@@ -34,6 +37,7 @@ import es.minhap.sim.model.TblHistoricos;
 import es.minhap.sim.model.TblLotesEnvios;
 import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServicios;
+import es.minhap.sim.query.TblEstadosQuery;
 import es.minhap.sim.query.TblGestionEnviosQuery;
 import es.minhap.sim.query.TblHistoricosQuery;
 
@@ -86,10 +90,14 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	@Autowired
     private SessionFactory sessionFactorySIMApp;
 	
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+	
 	/**
 	 * @see es.minhap.TblHistoricosManagerImpl.insertarHistorico
 	 */
 	@Override
+	@Transactional
 	public Integer insertarHistoricos(HistoricoBean hist, String usuario) {
 		
 		// Se implenta l�gica del trigger.
@@ -172,10 +180,15 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	@Override
 	public Integer creaHistorico(Long mensajeId, Long destinatariosMensajesId, Long estadoId, 
 			Long servidorId, String descripcion, String subestado, String usuario) {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String estadoEnviando = ps.getMessage("constantes.ESTADO_ENVIANDO", null);
+		
 		HistoricoBean historicoBean = new HistoricoBean();
 		historicoBean.setMensajeid(mensajeId);
 		historicoBean.setDestinatariosmensajes(destinatariosMensajesId);
-		if (null == servidorId)
+		if (null == servidorId && estadosManager.getEstadoById(estadoId).getNombre().equals(estadoEnviando)){
+			historicoBean.setServidorid(servidorId);
+		}else if (null == servidorId)
 			historicoBean.setServidorid(queryExecutorHistoricos.getServidorByMensaje(mensajeId));
 		else	
 			historicoBean.setServidorid(servidorId);
@@ -210,7 +223,22 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		return (null != lista && !lista.isEmpty())? lista.get(0).getTblEstados().getEstadoid() : 0;
 	}
 
-
+	
+	@Override
+	public Boolean checkMensajeYaEnviado(Long mensajeId, Long destinatarioMensajeId, Long estado) {
+		TblHistoricosQuery query = new TblHistoricosQuery();
+		query.setMensajeid(mensajeId);
+		if (null != destinatarioMensajeId){
+			query.setDestinatariosmensajes(destinatarioMensajeId);
+		}
+		TblEstadosQuery queryEstados = new TblEstadosQuery();
+		queryEstados.setEstadoid(estado);
+		query.setTblEstados(queryEstados);
+		List<Long> historicosEnviados = historicosDAO.searchId(query).getResults();
+		return (null != historicosEnviados && historicosEnviados.size()>0)? true : false;
+	}
+	
+	
 	private void updateMensajes(EstadosBean estado, TblMensajes mensaje, Long historicoId) {
 		mensaje.setEstadoactual(estado.getDescripcion());
 		mensaje.setTblEstados(estadosManager.getEstadoById(estado.getEstadoId()));
@@ -327,16 +355,20 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		switch (canal.getCanalid().intValue()) {
 		case 1:
 			List<String> listaDestinatarios = destinatariosManager.getDestinatarios(Long.parseLong(mensajeId));
-			for (String d : listaDestinatarios) {
-				res.append(d + ";");
+			if (null != listaDestinatarios && listaDestinatarios.size() > 0){
+				for (String d : listaDestinatarios) {
+					res.append(d + ";");
+				}
+				break;
 			}
-			break;
 		case 4:
 			List<String> listaDestinatariosPush = usuariosPushManager.getNombresUsuariosMensaje(Long.parseLong(mensajeId));
-			for (String d : listaDestinatariosPush) {
-				res.append(d + ";");
+			if (null != listaDestinatariosPush && listaDestinatariosPush.size() > 0){
+				for (String d : listaDestinatariosPush) {
+					res.append(d + ";");
+				}
+				break;
 			}
-			break;
 		default:
 			for (TblDestinatariosMensajes dm : destinatariosMensajesManager.getDestinatarioMensajes(Long.parseLong(mensajeId))) {
 				res.append(dm.getDestinatario() + ";");
@@ -528,6 +560,10 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	public void setSessionFactorySIMApp(SessionFactory sessionFactorySIMApp) {
 		this.sessionFactorySIMApp = sessionFactorySIMApp;
 	}
+
+
+
+	
 
 	
 	

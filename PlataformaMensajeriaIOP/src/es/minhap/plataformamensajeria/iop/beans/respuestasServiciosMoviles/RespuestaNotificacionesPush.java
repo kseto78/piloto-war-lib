@@ -208,7 +208,18 @@ public class RespuestaNotificacionesPush {
 		return writeResponse(respuesta);
 	}
 
-
+	public String tokenIncorrecto(PropertiesServices ps) throws PlataformaBusinessException {
+		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
+		RespuestaNotificacionesPush respuesta = this;
+		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
+		responseNotificacionPushStatusType.setStatusCode(codeKO);
+		responseNotificacionPushStatusType.setStatusText(statusTextKO);
+		responseNotificacionPushStatusType.setDetails(detailsKO);
+		respuesta.setStatus(responseNotificacionPushStatusType);
+		return writeResponse(respuesta);
+	}
 	private String writeResponse(RespuestaNotificacionesPush respuesta) throws PlataformaBusinessException {
 		try {
 
@@ -242,4 +253,6 @@ public class RespuestaNotificacionesPush {
 	public void setStatus(ResponseNotificacionPushStatusType status) {
 		this.status = status;
 	}
+
+	
 }

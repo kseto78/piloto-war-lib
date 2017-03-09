@@ -6,13 +6,13 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.CannotCreateTransactionException;
 
-import es.map.sim.jms.sender.SIMMessageSender;
-import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Atributos;
@@ -38,7 +38,6 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.model.TblDestinatariosMensajes;
-import es.minhap.sim.model.TblServicios;
 
 /**
  * Esta clase es la encargada de gestionar los SMS de GISS
@@ -48,7 +47,7 @@ import es.minhap.sim.model.TblServicios;
  */
 @Service("envioPremiumGISSServiceImpl")
 public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
-	static Logger logger = Logger.getLogger(IEnvioPremiumService.class);
+	static Logger LOG = LoggerFactory.getLogger(IEnvioPremiumService.class);
 
 	private static final String SEPARATOR = "_";
 
@@ -105,9 +104,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-	@Resource(name = "messageSender")
-	private SIMMessageSender sender;
-
+	
 	/**
 	 * 
 	 * Metodo que se encarga de enviar un SMS a partir de una peticion
@@ -117,6 +114,9 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			String usernameMISIM, String passwordMISIM) {
 
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String telefonoExcepcion = ps.getMessage("validarTelefono.TelefonoExcepcion", null, "");
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		Integer idLote = null;
 		Integer idMensaje = null;
 		Long estadoId;
@@ -152,7 +152,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			}
 
 			// Comprobamos
-			if (Utils.validarTelefono(envio.getDestinatario()) == 1) {
+			if (Utils.validarTelefono(envio.getDestinatario(), telefonoExcepcion) == 1) {
 				resp = codificarRespuesta(
 						envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.envioPremiumGISS.COD_10_GISS", null),
@@ -213,7 +213,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 						ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_300_GISS", null));
 				return respFault.toXMLSMS(respFault);
 			} else {
-				logger.info("EnvioPremiumGISSImpl.enviarSMSGISS se va a reenviar el mensaje con id: " + idMensaje);
+				LOG.info("EnvioPremiumGISSImpl.enviarSMSGISS se va a enviar el mensaje con id: " + idMensaje);
 
 				estadoId = estadosManager.getEstadoByName(
 						mensajesManager.getMensaje(idMensaje.longValue()).getEstadoactual()).getEstadoid();
@@ -222,20 +222,20 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 						.getDestinatarioMensajes(idMensaje.longValue())) {
 					hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
 							estadoId, null, null, null, username);
-					MensajeJMS mensajeJms = new MensajeJMS();
-					mensajeJms.setIdMensaje(idMensaje.toString());
-					mensajeJms.setIdExterno(envio.getIdExterno());
-					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-					Long maxRetries = null;
-
-					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
-					if (servicioAEAT.getNumeroMaxReenvios() != null && servicioAEAT.getNumeroMaxReenvios() > 0) {
-						maxRetries = servicioAEAT.getNumeroMaxReenvios().longValue();
-					} else {
-						maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
-					}
-					sender.send(mensajeJms, maxRetries, servicioAEAT.getNombre(), true);
+//					MensajeJMS mensajeJms = new MensajeJMS();
+//					mensajeJms.setIdMensaje(idMensaje.toString());
+//					mensajeJms.setIdExterno(envio.getIdExterno());
+//					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+//					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+//					Long maxRetries = null;
+//
+//					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
+//					if (servicioAEAT.getNumeroMaxReenvios() != null && servicioAEAT.getNumeroMaxReenvios() > 0) {
+//						maxRetries = servicioAEAT.getNumeroMaxReenvios().longValue();
+//					} else {
+//						maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+//					}
+//					sender.send(mensajeJms, maxRetries, servicioAEAT.getServicioid().toString(), true);
 				}
 				resp = codificarRespuesta(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.generales.STATUS_OK", null),
@@ -245,15 +245,27 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 
 			}
 
-		} catch (Exception e) {
-			logger.error("Se ha producido un error", e);
+		} catch (CannotCreateTransactionException e) {
+			LOG.error("EnvioPremiumGISSImpl.enviarSMSGISS --Error ActiveMq--", e);
+			mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, false,
+					null, null, username, null);
 			respFault = codificarRespuestaFault(envio.getIdExterno(),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.COD_300_GISS", null),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_300_GISS", null));
 			try {
 				return respFault.toXMLSMS(respFault);
 			} catch (PlataformaBusinessException e1) {
-				logger.error("Se ha producido un error", e);
+				LOG.error("EnvioPremiumGISSImpl.enviarSMSGISS --Error ActiveMq--", e);
+			}
+		} catch (Exception e) {
+			LOG.error("Se ha producido un error", e);
+			respFault = codificarRespuestaFault(envio.getIdExterno(),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.COD_300_GISS", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_300_GISS", null));
+			try {
+				return respFault.toXMLSMS(respFault);
+			} catch (PlataformaBusinessException e1) {
+				LOG.error("Se ha producido un error", e);
 			}
 		}
 		return "";
@@ -284,14 +296,14 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			}
 			respuesta = resp.toXMLSMS(resp);
 		} catch (Exception e) {
-			logger.error("Se ha producido un error", e);
+			LOG.error("Se ha producido un error", e);
 			resp = codificarRespuesta(idExterno, PlataformaErrores.COD_ERROR_GENERAL,
 					PlataformaErrores.DETAILS_ERROR_GENERAL,
 					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
 			try {
 				respuesta = resp.toXMLSMS(resp);
 			} catch (PlataformaBusinessException pe) {
-				logger.error("Se ha producido un error", pe);
+				LOG.error("Se ha producido un error", pe);
 			}
 		}
 		return respuesta;
@@ -404,31 +416,32 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 	}
 
 	@Override
-	public List<EnvioGISSXMLBean> reenviarSMSGISS(String username, String password, Integer servicio,
-			Integer reintentos, String usernameMISIM, String passwordMISIM) {
+	public List<EnvioGISSXMLBean> reenviarSMSGISS(Long servicio, Integer reintentosDefault) {
 		List<EnvioGISSXMLBean> reenvios = new ArrayList<>();
 		try {
+			Integer reintentos = null != serviciosManager.getServicio(servicio).getNumeroMaxReenvios() ? serviciosManager.getServicio(servicio).getNumeroMaxReenvios() : reintentosDefault ;
 			reenvios = queryExecutorDestinatariosMensajes.obtenerMensajesReenvioGISS(servicio, reintentos);
 		} catch (Exception e) {
-			logger.error("Se ha producido un error", e);
+			LOG.error("Se ha producido un error", e);
 		}
 		return reenvios;
 	}
 
 	@Override
-	public void anularSMS(Integer servicio, Integer reintentos) {
+	public void anularSMS(Long servicio, Integer reintentosDefault) {
 		try {
-			logger.debug("EnvioPremiumGISSImpl.anularSMS. Se van a anular los mensajes que han sobrepasado el numero de reintentos:"
+			Integer reintentos = null != serviciosManager.getServicio(servicio).getNumeroMaxReenvios() ? serviciosManager.getServicio(servicio).getNumeroMaxReenvios() : reintentosDefault ;
+			LOG.debug("EnvioPremiumGISSImpl.anularSMS. Se van a anular los mensajes que han sobrepasado el numero de reintentos:"
 					+ reintentos);
 			anularMensajesCaducadosGISS(servicio, reintentos, PlataformaErrores.NUMERO_REINTENTOS_SUPERADO + reintentos);
-			logger.debug("EnvioPremiumGISSImpl.anularSMS. Se han anulado los mensajes que han sobrepasado el numero de reintos ");
+			LOG.debug("EnvioPremiumGISSImpl.anularSMS. Se han anulado los mensajes que han sobrepasado el numero de reintos ");
 		} catch (Exception e) {
-			logger.error("Se ha producido un error", e);
+			LOG.error("Se ha producido un error", e);
 		}
 	}
 
-	private void anularMensajesCaducadosGISS(Integer servicio, Integer reintentos, String descripcion) {
-		List<Long> mensajes = queryExecutorMensajes.getMensajesParaAnular(servicio, reintentos);
+	private void anularMensajesCaducadosGISS(Long servicio, Integer reintentos, String descripcion) {
+				List<Long> mensajes = queryExecutorMensajes.getMensajesParaAnular(servicio, reintentos);
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		for (Long idMensaje : mensajes) {
 			mensajesManager.setEstadoMensaje(idMensaje, ps.getMessage("constantes.ESTADO_ANULADO", null), descripcion,
@@ -663,18 +676,5 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
-	/**
-	 * @return the sender
-	 */
-	public SIMMessageSender getSender() {
-		return sender;
-	}
-
-	/**
-	 * @param sender
-	 *            the sender to set
-	 */
-	public void setSender(SIMMessageSender sender) {
-		this.sender = sender;
-	}
+	
 }

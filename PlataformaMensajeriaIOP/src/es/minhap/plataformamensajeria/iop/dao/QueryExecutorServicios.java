@@ -11,9 +11,10 @@ public interface QueryExecutorServicios {
 	 * Obtiene si el servicio es �nico
 	 * @param recipient
 	 * @param canalId
-	 * @return Integer
+	 * @param prefijoSMS 
+	 * @return List<Long>
 	 */
-	public Integer comprobarServicioUnico(String recipient, Long canalId);
+	public List<Long> comprobarServicioUnico(String recipient, Long canalId, String prefijoSMS);
 	
 	/**
 	 * Obtiene el servicio a partir del organismo pagador y del canal

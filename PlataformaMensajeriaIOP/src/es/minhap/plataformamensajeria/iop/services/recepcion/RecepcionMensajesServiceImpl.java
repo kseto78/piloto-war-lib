@@ -2,9 +2,11 @@ package es.minhap.plataformamensajeria.iop.services.recepcion;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.CannotCreateTransactionException;
 
 import es.map.sim.jms.sender.SIMMessageSender;
 import es.map.sim.negocio.modelo.MensajeJMS;
@@ -31,7 +33,7 @@ import es.minhap.sim.model.TblServicios;
 @Service("recepcionMensajesImpl")                 
 public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 	
-	private static final  Logger LOG = Logger.getLogger(RecepcionMensajesServiceImpl.class);
+	private static final  Logger LOG = LoggerFactory.getLogger(RecepcionMensajesServiceImpl.class);
 	
 	@Resource
 	private TblLotesEnviosManager lotesManager;
@@ -75,15 +77,32 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         RecepcionSMSBean envioSMS = new RecepcionSMSBean();
         String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO",null);
         String errorRecMensaje = ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_RECEPCION_MENSAJE",null);
-    
+        String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+        String prefijoSMS= null;
+        boolean premium = false;
+        Integer idMensaje = null;
         
         try {
         	
         	boolean peticionCorrecta = evaluarPeticion(recibirSMSRequest);
+        	if (null != recibirSMSRequest.getSMSText() && recibirSMSRequest.getSMSText().length() > 0){
+        		String cuerpo = recibirSMSRequest.getSMSText();
+        		if(cuerpo.indexOf(" ")!=-1) {
+        			prefijoSMS = cuerpo.substring(0, cuerpo.indexOf(" "));
+        		} else {
+        			retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_NO_SERVICIO",null));
+        			retorno.getStatus().setStatusText(statusTextKO);
+        			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_NO_SERVICIO",null));
+        			return retorno;
+        		}
+        	}else{
+        		peticionCorrecta = false;
+        	}
         	        	
         	if(peticionCorrecta){
         		
-        		envioSMS = lotesManager.buscarInfoLote(recibirSMSRequest.getRecipient(), recibirSMSRequest.getUser(), recibirSMSRequest.getPassword());
+        		envioSMS = lotesManager.buscarInfoLote(recibirSMSRequest.getRecipient(), recibirSMSRequest.getUser(), recibirSMSRequest.getPassword(), prefijoSMS);
             	//Se valida que se haya recuperado correctamente la informacion de base de datos
         		if (!ps.getMessage("constantes.errores.devolucion.error1",null).equals(envioSMS.getServicio()) &&
         			!ps.getMessage("constantes.errores.devolucion.error2",null).equals(envioSMS.getServicio()) &&
@@ -91,7 +110,8 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         			!ps.getMessage("constantes.errores.devolucion.error5",null).equals(envioSMS.getServicio())){
         		
             		idLote = lotesManager.insertarLote(Long.parseLong(envioSMS.getServicio()), envioSMS.getNombreLote(), envioSMS.getUserAplicacion(), envioSMS.getPasswordAplicacion());
-        			String errorCrearLote = WSPlataformaErrors.getErrorCrearLote(idLote);
+        			
+            		String errorCrearLote = WSPlataformaErrors.getErrorCrearLote(idLote);
         			if(errorCrearLote!=null){
         				Integer value = Integer.parseInt(errorCrearLote);
         				switch (value) {
@@ -116,7 +136,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         				return retorno;
         			}
         			
-        			Integer idMensaje = mensajesManager.insertarMensajeRecepcionSMS(Long.valueOf(idLote), recibirSMSRequest.getSMSText(), recibirSMSRequest.getMessageId(), recibirSMSRequest.getSender(), 
+        			idMensaje = mensajesManager.insertarMensajeRecepcionSMS(Long.valueOf(idLote), recibirSMSRequest.getSMSText(), recibirSMSRequest.getMessageId(), recibirSMSRequest.getSender(), 
         					envioSMS.getUserAplicacion(), envioSMS.getPasswordAplicacion());
         			
         			String errorCrearSMS = WSPlataformaErrors.getErrorCrearSMS(idMensaje);
@@ -154,15 +174,19 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 						mensajeJms.setIdMensaje(idMensaje.toString());
 						mensajeJms.setIdExterno(recibirSMSRequest.getMessageId());
 						mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null));
+						
 						mensajeJms.setDestinatarioMensajeId(desMensaje.toString());
 						Long maxRetries = null;
 						TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioSMS.getServicio()));
+						if(servicio.getPremium()!=null && servicio.getPremium()) {
+							premium = true;
+						}
 						if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
 							maxRetries = servicio.getNumeroMaxReenvios().longValue();
 						} else {
 							maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
 						}
-						sender.send(mensajeJms, maxRetries, servicio.getNombre(), false);
+						sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
         			}
     	        	
             	} else if(ps.getMessage("constantes.errores.devolucion.error1",null).equals(envioSMS.getServicio())) {
@@ -189,7 +213,21 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
     			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_PARAMETROS_PETICION",null));
         	}
         	
-		} catch (Exception e) {
+		}catch (CannotCreateTransactionException e) {
+			LOG.error("IRecepcionMensajesServiceImpl.recibirSMS --Error ActiveMq--", e);
+			if (premium){
+				mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, 
+							false, null, null, envioSMS.getUserAplicacion(), null);
+				retorno.getStatus().setStatusCode(errorRecMensaje);
+				retorno.getStatus().setStatusText(statusTextKO);
+				retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_GENERAL",null));
+			}else{
+				retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK",null));
+				retorno.getStatus().setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK",null));
+				retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.generales.DETAILS_OK",null));	
+			}
+			
+		}catch (Exception e) {
 			LOG.error("IRecepcionMensajesServiceImpl.recibirSMS", e);
 			retorno.getStatus().setStatusCode(errorRecMensaje);
 			retorno.getStatus().setStatusText(statusTextKO);
@@ -217,10 +255,13 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
     
     private boolean evaluarPeticion(RecibirSMSRequest recibirSMSRequest){
     	
+    	PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String telefonoExcepcion = ps.getMessage("validarTelefono.TelefonoExcepcion", null, "");
+    	
     	if(evaluarParametro(recibirSMSRequest.getUser()) && evaluarParametro(recibirSMSRequest.getPassword())
     			&& evaluarParametro(recibirSMSRequest.getSender()) && evaluarParametro(recibirSMSRequest.getRecipient())
     			&& evaluarParametro(recibirSMSRequest.getMessageId()) && evaluarParametro(recibirSMSRequest.getMessageId())){
-    		recibirSMSRequest.setRecipient(Utils.eliminarPrefijo(recibirSMSRequest.getRecipient()));
+    		recibirSMSRequest.setRecipient(Utils.eliminarPrefijo(recibirSMSRequest.getRecipient(), telefonoExcepcion));
     		return true;
     	} else {
     		return false;

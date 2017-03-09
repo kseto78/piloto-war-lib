@@ -17,7 +17,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  *  @author everis
  */
@@ -158,6 +157,31 @@ public void loadObjectFromXML (String xmlRespuesta)throws PlataformaBusinessExce
 		}
 	}
 
+	public String toXML(RespuestaServiciosDisponibles resp)throws PlataformaBusinessException{
+		RespuestaServiciosDisponibles respuesta = this;
+	    	
+	    	try {
+				
+				
+	            JAXBContext jaxbContext = JAXBContext.newInstance(RespuestaServiciosDisponibles.class);
+	    		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+	    		
+	    		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+	    		
+	    		StringWriter writer = new StringWriter();
+	    		jaxbMarshaller.marshal(respuesta, writer);
+	    		
+	    		
+	    		return writer.toString();
+	    		
+	    		
+	    		}  catch (PropertyException e) {
+	    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+	    		} catch (JAXBException e) {
+	    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+	    		}
+	    }
 
 	/**
 	 * @return the status

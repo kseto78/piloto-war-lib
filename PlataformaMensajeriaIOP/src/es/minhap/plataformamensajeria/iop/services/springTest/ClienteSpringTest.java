@@ -8,7 +8,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -62,7 +63,7 @@ import es.minhap.plataformamensajeria.iop.services.usuariosplataformas.RegistroU
 @ContextConfiguration(locations = { ModelTestUtil.SPRING_CONTEXT_LOCATION, ModelTestUtil.SPRING_JMS_CONTEXT_LOCATION })
 public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 
-	private static Logger logger = Logger.getLogger(ClienteSpringTest.class);
+	private static Logger logger = LoggerFactory.getLogger(ClienteSpringTest.class);
 
 	@Resource(name = "envioLotesMensajesImpl")
 	IEnvioLotesMensajesService envioLotesMensajes;

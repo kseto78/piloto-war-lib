@@ -11,8 +11,8 @@ import javax.annotation.Resource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +50,7 @@ import es.minhap.sim.query.ViewHistoricoQuery;
 @Service("seguimientoMensajesImpl")
 public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 
-	private static final Logger LOG = Logger.getLogger(SeguimientoMensajesImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SeguimientoMensajesImpl.class);
 
 	@Resource
 	private TblLotesEnviosManager lotesManager;

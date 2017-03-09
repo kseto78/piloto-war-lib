@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "usuario", "password", "idUsuario", "idServicioMovil", "idDispositivo", "accion" })
+@XmlType(name = "", propOrder = { "usuario", "password", "idUsuario", "idServicioMovil", "idDispositivo", "accion", "uidDispositivo", "tokenSession" })
 @XmlRootElement(name = "PeticionRegistroUsuario", namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
 public class RegistroUsuarioXMLBean {
 
@@ -30,10 +30,14 @@ public class RegistroUsuarioXMLBean {
 	private String idUsuario;
 	@XmlElement(name = "IdServicioMovil", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
 	private String idServicioMovil;
-    @XmlElement(name = "IdDispositivo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
-    protected String idDispositivo;
+	@XmlElement(name = "IdDispositivo", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	protected String idDispositivo;
 	@XmlElement(name = "Accion", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
 	private String accion;
+	@XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio")
+	protected String uidDispositivo;
+	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio")
+	protected String tokenSession;
 
 	public void loadObjectFromXML(String xmlUsuario) throws PlataformaBusinessException {
 
@@ -49,11 +53,14 @@ public class RegistroUsuarioXMLBean {
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, usuarios);
 
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlUsuario);
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
 		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlUsuario);
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
 		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlUsuario);
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
 		}
 	}
 
@@ -73,9 +80,11 @@ public class RegistroUsuarioXMLBean {
 
 			return writer.toString();
 		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+					+ e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+					+ e.getMessage());
 		}
 
 	}
@@ -148,7 +157,8 @@ public class RegistroUsuarioXMLBean {
 	}
 
 	/**
-	 * @param idServicioMovil the idServicioMovil to set
+	 * @param idServicioMovil
+	 *            the idServicioMovil to set
 	 */
 	public void setIdServicioMovil(String idServicioMovil) {
 		this.idServicioMovil = idServicioMovil;
@@ -162,10 +172,39 @@ public class RegistroUsuarioXMLBean {
 	}
 
 	/**
-	 * @param idDispositivo the idDispositivo to set
+	 * @param idDispositivo
+	 *            the idDispositivo to set
 	 */
 	public void setIdDispositivo(String idDispositivo) {
 		this.idDispositivo = idDispositivo;
 	}
-	
+
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
+	}
+
 }

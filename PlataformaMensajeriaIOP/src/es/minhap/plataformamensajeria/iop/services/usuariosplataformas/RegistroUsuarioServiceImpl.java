@@ -8,7 +8,8 @@ package es.minhap.plataformamensajeria.iop.services.usuariosplataformas;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 @Service("registroUsuarioServiceImpl")
 public class RegistroUsuarioServiceImpl implements IRegistroUsuarioService {
     
-	private static final Logger LOG = Logger.getLogger(RegistroUsuarioServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RegistroUsuarioServiceImpl.class);
 	
 	@Resource
 	private TblUsuariosPushManager usuariosPushManager;
@@ -71,7 +72,7 @@ public class RegistroUsuarioServiceImpl implements IRegistroUsuarioService {
         	
         	if(peticionCorrecta){
         		
-        		resultadoAltaUsuario = getUsuariosPushManager().altaUsuario(nombreUsuario, servicioId, usuario, password, plataformaId, tokenUsuario, dispositivoId);
+        		resultadoAltaUsuario = getUsuariosPushManager().altaUsuario(nombreUsuario, servicioId, usuario, password, plataformaId, tokenUsuario, dispositivoId, null, null);
         		
         		if(null!=resultadoAltaUsuario){
         			if(resultadoAltaUsuario>0){

@@ -21,7 +21,9 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlType(name = "", propOrder = {
     "usuario",
     "password",
-    "idUsuario"
+    "idUsuario",
+    "uidDispositivo",
+    "tokenSession"
 })
 @XmlRootElement(name = "PeticionConsultaServiciosDisponibles", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
 public class ServiciosDisponiblesXMLBean {
@@ -32,6 +34,10 @@ public class ServiciosDisponiblesXMLBean {
 		private String password;
 	    @XmlElement(name = "IdUsuario", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
 	    private String idUsuario;
+	    @XmlElement(name = "UidDispositivo", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    protected String uidDispositivo;
+	    @XmlElement(name = "TokenSession", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    protected String tokenSession;
 
 	public String getUsuario() {
 		return usuario;
@@ -62,6 +68,36 @@ public class ServiciosDisponiblesXMLBean {
 	 */
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	
+	
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
 
 	public void loadObjectFromXML (String xmlConsultaServicios)throws PlataformaBusinessException {

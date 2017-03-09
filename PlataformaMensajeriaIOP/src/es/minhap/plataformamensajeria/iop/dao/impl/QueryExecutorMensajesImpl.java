@@ -45,7 +45,7 @@ import es.minhap.sim.model.TblUsuariosPush;
  * @author everis
  * 
  */
-@Service
+@Service("QueryExecutorMensajesImpl")
 @Transactional
 public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements QueryExecutorMensajes {
 
@@ -78,7 +78,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
-	public List<Long> getMensajesParaAnular(Integer servicio, Integer reintentos) {
+	public List<Long> getMensajesParaAnular(Long servicio, Integer reintentos) {
 		List<Long> res = new ArrayList<>();
 		try {
 			if (LOG.isDebugEnabled()) {
@@ -95,7 +95,13 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			queryBuilder.append(" AND dm.estado IN ('INCIDENCIA') ");
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(queryBuilder.toString());
 
-			res = query.list();
+			List<BigDecimal> lista = query.list();
+			
+			if (null != lista && !lista.isEmpty()){
+				for (BigDecimal bd : lista) {
+					res.add(bd.longValue());
+				}
+			}
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_END);
@@ -775,6 +781,37 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			throw new ApplicationException(e);
 		}
 		return data;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<Long> getMensajesPendientes() {
+		List<Long> res = new ArrayList<>();
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			String sql = "select MENSAJEID from TBL_MENSAJES m inner join TBL_LOTESENVIOS l on l.LOTEENVIOID= m.LOTEENVIOID "
+					+ " inner join TBL_SERVICIOS s on l.SERVICIOID = s.SERVICIOID  where m.MENSAJEID in "
+					+ " (select MENSAJEID from TBL_DESTINATARIOS_MENSAJES where ESTADO = 'PENDIENTE DE ENVIO') and (s.PREMIUM is null or s.PREMIUM = 0) "
+					+ " order by MENSAJEID desc";
+			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
+
+			List<Object> rows = query.list();
+			for (Object row : rows) {
+				res.add(((BigDecimal) row).longValue());
+			}
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_END);
+			}
+
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res;
 	}
 
 	/**

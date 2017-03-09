@@ -48,7 +48,9 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 		    adjunto.setContenido((Blob) row[1]);
 		    adjuntos.add(adjunto);
 		}
-		LOG.info("Numero adjuntos  : " + adjuntos.size());
+		if(LOG.isDebugEnabled()){
+			LOG.debug("Numero adjuntos  : " + adjuntos.size());
+		}
 		return adjuntos;
 	}
 	
@@ -68,7 +70,9 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 		    adjunto.setContenido((Blob) row[1]);
 		    adjuntos.add(adjunto);
 		}
-		LOG.info("Numero imagenes adjuntas  : " + adjuntos.size());
+		if(LOG.isDebugEnabled()){
+			LOG.debug("Numero imagenes adjuntas  : " + adjuntos.size());
+		}
 		return adjuntos;
 	}
 }

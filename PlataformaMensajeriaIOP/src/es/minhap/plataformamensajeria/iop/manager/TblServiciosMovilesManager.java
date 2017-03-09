@@ -3,6 +3,7 @@ package es.minhap.plataformamensajeria.iop.manager;
 import java.util.List;
 
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ServicioMovil;
+import es.minhap.sim.model.TblServiciosMoviles;
 
 
 
@@ -42,4 +43,7 @@ public interface TblServiciosMovilesManager {
 	 * @return boolean
 	 */
 	boolean checkMobileActiveService(String idServicioMovil);
+
+
+	TblServiciosMoviles getServicioMovilById(long idServicioMovil);
 }

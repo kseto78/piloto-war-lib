@@ -2,7 +2,8 @@ package es.minhap.plataformamensajeria.iop.services.ayuda;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @Service("gestionAyudaImpl")
 public class GestionAyudaImpl implements IGestionAyudaService {
-	static Logger logger = Logger.getLogger(GestionAyudaImpl.class);
+	static Logger logger = LoggerFactory.getLogger(GestionAyudaImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;

@@ -45,7 +45,9 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "idPlataforma",
     "dispositivoId",
     "samlResponse",
-    "remoteHost"
+    "remoteHost",
+    "uidDispositivo",
+    "tokenSession"
 })
 @XmlRootElement(name = "PeticionClaveAuthResponse", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
 public class PeticionClaveAuthResponse {
@@ -64,6 +66,10 @@ public class PeticionClaveAuthResponse {
     protected String samlResponse;
     @XmlElement(name = "RemoteHost", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
     protected String remoteHost;
+    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+	protected String uidDispositivo;
+	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+	protected String tokenSession;
 	
     /**
 	 * @return the usuario
@@ -150,6 +156,32 @@ public class PeticionClaveAuthResponse {
 	 */
 	public void setRemoteHost(String remoteHost) {
 		this.remoteHost = remoteHost;
+	}
+	
+	
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
 	public void loadObjectFromXML(String xmlSamlResponse)
 			throws PlataformaBusinessException {

@@ -33,11 +33,13 @@ public interface TblUsuariosPushManager {
 	 * @param plataformaId
 	 * @param tokenUsuario
 	 * @param dispositivoId
+	 * @param uidDispositivo 
+	 * @param tokenSession 
 	 * @return Integer
 	 */
 	public Integer altaUsuario(String nombreUsuario, String servicioId,
 			String usuario, String password, String plataformaId,
-			String tokenUsuario, String dispositivoId);
+			String tokenUsuario, String dispositivoId, String tokenSession, String uidDispositivo);
 
 	/**
 	 * elimina un usuario Push
@@ -128,5 +130,34 @@ public interface TblUsuariosPushManager {
 	 * @return TblUsuariosPush
 	 */
 	public TblUsuariosPush getUsuarioPush(long idUsuario);
+
+	/**
+	 * Comnprpueba si el id_dispositivo generado es repetido
+	 * 
+	 * @param codigo
+	 * @return boolean
+	 */
+	public boolean comprobarDispositivoRepetido(String codigo);
+
+	
+
+	/**
+	 * Comnprpueba si el uidDispositivo es repetido
+	 * 
+	 * @param uidDispositivo
+	 * @return TblUsuariosPush
+	 */
+	public TblUsuariosPush existeUimDispositivo(String uidDispositivo, Long servicioId);
+
+	/**
+	 * Comnprpueba si el toten de sessión es válido y esta caducado
+	 * 
+	 * @param uidDispositivo
+	 * @param tokenSession
+	 * @param timeSession
+	 * @return boolean
+	 */
+	public boolean comprobarTokenSession(String uidDispositivo, String tokenSession, Integer timeSession);
+
 
 }

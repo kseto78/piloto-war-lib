@@ -27,7 +27,7 @@ public interface QueryExecutorMensajes {
 	 * @param string
 	 * @return
 	 */
-	public List<Long> getMensajesParaAnular(Integer servicio, Integer reintentos);
+	public List<Long> getMensajesParaAnular(Long servicio, Integer reintentos);
 	
 	/**
 	 * Se obtiene los detalles a nivel de destinatarios mensajes y mensajes para un 
@@ -161,5 +161,10 @@ public interface QueryExecutorMensajes {
 	 */
 	public SMSData getDetailsSMSMultidestinatario(Long mensajeId, Long destinatarioMensajeId, SMSData smsDataComun);
 
-
+	/***
+	 * Recupera una lista con los mensajes que tienen algún destinatrario pendiente de envío
+	 * 
+	 * @return
+	 */
+	public List<Long> getMensajesPendientes();
 }

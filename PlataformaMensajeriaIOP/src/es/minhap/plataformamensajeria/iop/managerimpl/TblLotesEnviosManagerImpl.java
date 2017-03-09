@@ -5,13 +5,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.CannotCreateTransactionException;
 
 import es.map.sim.jms.sender.SIMMessageSender;
 import es.map.sim.negocio.modelo.MensajeJMS;
+import es.minhap.common.entity.TextComparator;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.RecepcionSMSBean;
 import es.minhap.plataformamensajeria.iop.beans.entity.AuditoriaBean;
@@ -54,7 +57,7 @@ import es.minhap.sim.query.ViewServiciosQuery;
 @Service("TblLotesEnviosManagerImpl")
 public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 
-	private static final Logger logger = Logger.getLogger(TblLotesEnviosManagerImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TblLotesEnviosManagerImpl.class);
 
 	private static final boolean GESTION_MULTIDESTINATARIOS = true;
 
@@ -181,23 +184,26 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	}
 
 	@Override
-	public RecepcionSMSBean buscarInfoLote(String recipient, String usuario, String password) {
+	public RecepcionSMSBean buscarInfoLote(String recipient, String usuario, String password, String prefijoSMS) {
 		RecepcionSMSBean res = new RecepcionSMSBean();
-
+		Long s = null;
 		// comprobamos si el servicio es �nico
-		comprobarServicio(recipient, res);
+		comprobarServicio(recipient, res, prefijoSMS);
 
 		// obtenemos el servicio y la aplicaci�n
-		if (null == res.getServicio()) {
-			ViewServicios view = getViewServicios(recipient);
+		try {
+			s = Long.parseLong(res.getServicio());
+		} catch (NumberFormatException e) {
+			return res;
+		}
+		TblServicios serv = serviciosManager.getServicio(s);
 
-			res.setServicio(view.getServicioid().toString());
-			Long aplicacionId = view.getAplicacionid();
-
-			validarUserPassOperadora(usuario, password, res);
+		if (null != serv) {
+			Long aplicacionId = serviciosManager.getServicio(s).getTblAplicaciones().getAplicacionid();
+			validarUserPassOperadora(usuario, password, res, prefijoSMS);
 
 			if (Integer.parseInt(res.getServicio()) >= 0) {
-				res.setNombreLote(view.getNombreloteenvio());
+				res.setNombreLote(serv.getNombreloteenvio());
 				TblAplicacionesQuery am = new TblAplicacionesQuery();
 				am.setAplicacionid(aplicacionId);
 				am.setActivo(true);
@@ -209,7 +215,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		return res;
 	}
 
-	private void validarUserPassOperadora(String usuario, String password, RecepcionSMSBean res) {
+	private void validarUserPassOperadora(String usuario, String password, RecepcionSMSBean res, String prefijoSMS) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		TblServidoresQuery query = new TblServidoresQuery();
@@ -226,9 +232,12 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		TblServidores servidor = tblServidoresManager.getServidor(query);
 
 		TblServidoresServiciosQuery ssq = new TblServidoresServiciosQuery();
-
+/////////aki es la modificación si se permite más de un header en el servicio.
 		ssq.addTblServiciosIdIn(serviciosManager.getServicio(Long.parseLong(res.getServicio())));
 		ssq.addTblServidoresIdIn(servidor);
+		ssq.setPrefijosms(prefijoSMS);
+		ssq.setPrefijosmsComparator(TextComparator.EQUALS);
+		
 		count = tblServidoresServiciosManager.countServidoresServicios(ssq);
 
 		if (count != 1)
@@ -246,16 +255,17 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		return viewServiciosManager.getAplicacionId(query);
 	}
 
-	private void comprobarServicio(String recipient, RecepcionSMSBean res) {
+	private void comprobarServicio(String recipient, RecepcionSMSBean res, String prefijoSMS) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
-		switch (queryExecutorServicios.comprobarServicioUnico(recipient,
-				Long.parseLong(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null)))) {
+		List<Long> lista = queryExecutorServicios.comprobarServicioUnico(recipient,
+				Long.parseLong(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null)), prefijoSMS);
+		switch (lista.size()) {
 		case 0:
 			res.setServicio(MensajesAuditoria.COMPROBAR_SERVICIO_SERVICIO_INCORRECTO);
 			break;
 		case 1:
-			res.setServicio(null);
+			res.setServicio(String.valueOf(lista.get(0)));
 			break;
 		default:
 			res.setServicio(MensajesAuditoria.COMPROBAR_SERVICIO_SERVICIO_DUPLICADO);
@@ -388,7 +398,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 				return codErrorBBDD.intValue();
 			}
 		} catch (Exception e) {
-			logger.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
+			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
 			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
 		}
 
@@ -427,10 +437,12 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		Integer res = 1;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null)).getNombre();
+		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+		List<TblMensajes> listaMensajes = null;
 		try {
 			
 			//buscamos los mensajes del lote que no estan enviados
-			List<TblMensajes> listaMensajes = mensajeManager.getMensajesByLote(idLote);
+			listaMensajes = mensajeManager.getMensajesByLote(idLote);
 			
 			//actualizamos todos los mensajes al estado oportuno
 			for (TblMensajes tblMensaje : listaMensajes) {
@@ -448,8 +460,23 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 				}
 			}
 			
-		} catch (Exception e) {
-			logger.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
+		} catch (CannotCreateTransactionException e) {
+			LOG.error("TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
+			TblServicios servicio = serviciosManager
+					.getServicio(lotesDAO.get(idLote).getTblServicios().getServicioid());
+
+			if (servicio.getPremium() != null && servicio.getPremium()) { // Es premium anulamos
+				for (TblMensajes tblMensaje : listaMensajes) {
+					mensajeManager.setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, false, null,
+							null, usuario, null);
+				}
+				return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			}else{
+				return res;
+			}
+			
+		}catch (Exception e) {
+			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
 			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
 		}
 		return res;
@@ -475,7 +502,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			} else {
 				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
 			}
-			sender.send(mensajeJms, maxRetries, servicio.getNombre(), false);
+			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		} else {
 			sendMessages(idMensaje, tblMensaje, destinatarios);
 		}
@@ -496,7 +523,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			} else {
 				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
 			}
-			sender.send(mensajeJms, maxRetries, servicio.getNombre(), false);
+			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		}
 	}
 }

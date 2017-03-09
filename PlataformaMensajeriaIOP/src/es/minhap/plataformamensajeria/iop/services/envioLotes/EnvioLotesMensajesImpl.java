@@ -10,7 +10,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import de.brendamour.jpasskit.PKField;
@@ -38,7 +39,7 @@ import es.minhap.plataformamensajeria.iop.services.envio.IEnvioMensajesService;
 @Service("envioLotesMensajesImpl")
 public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 	
-	private static Logger logger = Logger.getLogger(EnvioLotesMensajesImpl.class);
+	private static Logger LOG = LoggerFactory.getLogger(EnvioLotesMensajesImpl.class);
 
 	private static final String ERROR_GENERACION_PASSBOOK = "Se ha producido un error en la generacion del fichero passbook";
 	 
@@ -68,7 +69,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 						try {
 							attachedPassbookProcess(mensajePeticionLotes, mensaje, ps);
 						} catch (Exception e) {
-							logger.error(ERROR_GENERACION_PASSBOOK, e);
+							LOG.error(ERROR_GENERACION_PASSBOOK, e);
 							erroresGeneracionPassbook.add(ERROR_GENERACION_PASSBOOK);
 						}
 						DestinatarioPeticionLotesMailXMLBean dest = mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail().get(i);
@@ -83,7 +84,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 					try {
 						attachedPassbookProcess(mensajePeticionLotes, mensaje, ps);
 					} catch (Exception e) {
-						logger.error(ERROR_GENERACION_PASSBOOK, e);
+						LOG.error(ERROR_GENERACION_PASSBOOK, e);
 						erroresGeneracionPassbook.add(ERROR_GENERACION_PASSBOOK);
 					}
 					envioEmail.addMensaje(mensaje);
@@ -117,7 +118,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 					try {
 						adjunto1.setContenido(decodeFile(contenido));
 					} catch (IOException e) {
-						logger.error("Se ha producido un error al convertir el fichero adjunto:" + adjunto.getNombre(), e);
+						LOG.error("Se ha producido un error al convertir el fichero adjunto:" + adjunto.getNombre(), e);
 					}
 					mensaje.addAdjunto(adjunto1);
 				}
@@ -155,13 +156,13 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				
 				String nombrePassbook=ps.getMessage("passbook.nombreAdjunto", null, null, null);
 				
-				logger.info("Passbook - Team identifier " + teamIdentifier);
-				logger.info("Passbook - Organization name " +organizationName);
-				logger.info("Passbook - PassTypeIdentifier " +passTypeIdentifier);
-				logger.info("Passbook - Template path " +templatePath);
-				logger.info("Passbook - Tmp path " +tempPath);
-				logger.info("Passbook - Apple WWDRCA " +appleWWDRCA);
-				logger.info("Passbook - KeyStore " +keyStorePath);
+				LOG.info("Passbook - Team identifier " + teamIdentifier);
+				LOG.info("Passbook - Organization name " +organizationName);
+				LOG.info("Passbook - PassTypeIdentifier " +passTypeIdentifier);
+				LOG.info("Passbook - Template path " +templatePath);
+				LOG.info("Passbook - Tmp path " +tempPath);
+				LOG.info("Passbook - Apple WWDRCA " +appleWWDRCA);
+				LOG.info("Passbook - KeyStore " +keyStorePath);
 
 				List<PKField> camposPrincipales = getPkFieldsListAlign((passbook.getCamposPrincipales() != null)  ?passbook.getCamposPrincipales().getPkFieldsList() : new ArrayList<PkFieldsXMLBean>());
 				List<PKField> camposSecundarios = getPkFieldsListAlign((passbook.getCamposSecundarios()!= null) ? passbook.getCamposSecundarios().getPkFields(): new ArrayList<PkFieldsXMLBean>());

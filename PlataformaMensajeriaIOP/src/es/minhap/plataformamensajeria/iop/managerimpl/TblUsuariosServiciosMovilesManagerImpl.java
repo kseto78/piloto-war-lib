@@ -6,7 +6,8 @@ import java.util.ListIterator;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosMovilesManager;
@@ -24,7 +25,7 @@ import es.minhap.sim.query.TblUsuariosServiciosMovilesQuery;
  */
 @Service("tblUsuariosServiciosMovilesManagerImpl")
 public class TblUsuariosServiciosMovilesManagerImpl implements TblUsuariosServiciosMovilesManager {
-	static Logger logger = Logger.getLogger(TblUsuariosServiciosMovilesManagerImpl.class);
+	static Logger logger = LoggerFactory.getLogger(TblUsuariosServiciosMovilesManagerImpl.class);
 	
 	@Resource
 	private TblUsuariosServiciosMovilesDAO usuariosServiciosMovilesDAO;

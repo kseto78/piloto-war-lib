@@ -2,7 +2,8 @@ package es.minhap.plataformamensajeria.iop.services.operaciones;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import es.minhap.plataformamensajeria.iop.util.WSPlataformaErrors;
  */
 @Service("operacionesMensajesImpl")
 public class OperacionesMensajesImpl implements IOperacionesMensajesService {
-	private final static Logger LOG = Logger.getLogger(OperacionesMensajesImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(OperacionesMensajesImpl.class);
 
 	@Resource
 	private TblMensajesManager mensajesManager;

@@ -2,7 +2,8 @@ package es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import es.minhap.sim.model.TblUsuariosPush;
 @Service("getAuthServiceImpl")
 public class GetAuthServiceImpl implements IGetAuthService {
 	
-	private static final Logger LOG = Logger.getLogger(GetAuthServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GetAuthServiceImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;

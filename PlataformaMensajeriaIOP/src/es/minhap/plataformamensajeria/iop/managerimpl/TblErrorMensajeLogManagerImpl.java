@@ -3,6 +3,7 @@ package es.minhap.plataformamensajeria.iop.managerimpl;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.plataformamensajeria.iop.manager.TblErrorMensajeLogManager;
 import es.minhap.sim.dao.TblErrorMensajeLogDAO;
@@ -21,6 +22,7 @@ public class TblErrorMensajeLogManagerImpl implements TblErrorMensajeLogManager 
 	private TblErrorMensajeLogDAO errorMensajeLogDAO;
 
 	@Override
+	@Transactional
 	public Long insertarLogError(TblErrorMensajeLog tblErrorMensajeLog) {
 		return getErrorMensajeLogDAO().insert(tblErrorMensajeLog);
 	}

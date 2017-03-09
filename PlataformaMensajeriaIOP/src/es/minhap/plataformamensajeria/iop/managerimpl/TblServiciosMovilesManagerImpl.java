@@ -92,6 +92,10 @@ public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManage
 		return (null != serviciosMovilesDAO.search(query) && !serviciosMovilesDAO.search(query).getResults().isEmpty())? true : false;
 	}
 	
+	@Override
+	public TblServiciosMoviles getServicioMovilById(long idServicioMovil) {
+		return getServiciosMovilesDAO().get(idServicioMovil);
+	}
 
 	/**
 	 * @return the serviciosMovilesDAO

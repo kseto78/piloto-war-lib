@@ -125,6 +125,31 @@ public interface TblDestinatariosMensajesManager {
 			String estadoInicial);
 
 
+	/**
+	 * aumenta el número de intentos de encolar
+	 * 
+	 * @param destinatarioMensajeId
+	 * @return Integer
+	 */
+	public Integer updateNumIntentosEncolar(Long destinatarioMensajeId);
 
+
+	/**
+	 * recupera los DetinatariosMensajes
+	 * 
+	 * @param mensajeId 
+	 * @param estadoPendiente
+	 * @return
+	 */
+	public List<TblDestinatariosMensajes> getDestinatarioMensajesPendientes(Long mensajeid, String estadoPendiente);
+
+	
+	/**
+	 * recupera los DetinatariosMensajes
+	 * 
+	 * @param idExterno 
+	 * @return TblMensajes
+	 */
+	public List<Long> getIdMensajeByIdExterno(String idExterno);
 
 }

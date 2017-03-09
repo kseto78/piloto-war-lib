@@ -2,7 +2,8 @@ package es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,12 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 /**
  * 
  * @author everis
- *
+ * 
  */
 @Service("gestionSAMLRequestImpl")
 public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService {
-	
-	private static final Logger LOG = Logger.getLogger(GestionSAMLRequestServiceImpl.class);
+
+	private static final Logger LOG = LoggerFactory.getLogger(GestionSAMLRequestServiceImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
@@ -46,10 +47,30 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 		String codErrorGeneral = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_GENERAL", null);
 		String detailsErrorGeneral = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_GENERAL",
 				null);
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
+		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		Integer timeSession = null;
 		RespuestaSAMLResponse respuesta = new RespuestaSAMLResponse();
 		Boolean existeDispositivo = null;
 		String res = "";
 		try {
+
+			try {
+				timeSession = Integer.parseInt(stringTimeSession);
+			} catch (NumberFormatException e) {
+				timeSession = null;
+			}
+
+			if (!comprobarTokeSessionCorrecto(peticion.getUidDispositivo(), peticion.getTokenSession(), timeSession)) {
+				ResponseSAMLStatusType  status = new ResponseSAMLStatusType();
+				status.setStatusCode(codeKO);
+				status.setStatusText(statusTextKO);
+				status.setDetails(detailsKO);
+				respuesta.setStatus(status);
+				return respuesta.toXMLSMS(respuesta);
+			}
+
 			if (datosNoValidos(peticion.getUsuario(), peticion.getPassword(), peticion.getIdServicio(),
 					peticion.getIdDispositivo(), peticion.getIdPlataforma())) {
 				respuesta = generarRespuesta(statusTextKO, codErrorPeticion, detailsErrorPeticion);
@@ -70,18 +91,23 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 			}
 			res = respuesta.toXMLSMS(respuesta);
 		} catch (Exception e) {
-			LOG.error(
-					"[GestionSAMLRequestServiceImpl.comprobarDatosUsuario] Error Comprobando los datos del usuario", e);
+			LOG.error("[GestionSAMLRequestServiceImpl.comprobarDatosUsuario] Error Comprobando los datos del usuario",
+					e);
 			respuesta = generarRespuesta(statusTextKO, codErrorGeneral, detailsErrorGeneral);
 			try {
 				return respuesta.toXMLSMS(respuesta);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error(
-						"[GestionSAMLRequestServiceImpl.comprobarDatosUsuario] Obteniendo String con la respuesta", e1);
+				LOG.error("[GestionSAMLRequestServiceImpl.comprobarDatosUsuario] Obteniendo String con la respuesta",
+						e1);
 			}
 		}
 
 		return res;
+	}
+
+	private boolean comprobarTokeSessionCorrecto(String uidDispositivo, String tokenSession, Integer timeSession) {
+
+		return usuariosPushManager.comprobarTokenSession(uidDispositivo, tokenSession, timeSession);
 	}
 
 	private RespuestaSAMLResponse respuestaUsuario(Boolean existeDispositivo, PropertiesServices ps) {
@@ -100,7 +126,6 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 			respuesta = generarRespuesta(statusTextKO, statusKO, detailsKO);
 		return respuesta;
 	}
-
 
 	private boolean datosNoValidos(String usuario, String password, String servicio, String dispositivo,
 			String plataforma) {
@@ -149,7 +174,8 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 	}
 
 	/**
-	 * @param aplicacionesManager the aplicacionesManager to set
+	 * @param aplicacionesManager
+	 *            the aplicacionesManager to set
 	 */
 	public void setAplicacionesManager(TblAplicacionesManager aplicacionesManager) {
 		this.aplicacionesManager = aplicacionesManager;
@@ -163,7 +189,8 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 	}
 
 	/**
-	 * @param usuariosPushManager the usuariosPushManager to set
+	 * @param usuariosPushManager
+	 *            the usuariosPushManager to set
 	 */
 	public void setUsuariosPushManager(TblUsuariosPushManager usuariosPushManager) {
 		this.usuariosPushManager = usuariosPushManager;
@@ -177,9 +204,11 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 	}
 
 	/**
-	 * @param reloadableResourceBundleMessageSource the reloadableResourceBundleMessageSource to set
+	 * @param reloadableResourceBundleMessageSource
+	 *            the reloadableResourceBundleMessageSource to set
 	 */
-	public void setReloadableResourceBundleMessageSource(ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
+	public void setReloadableResourceBundleMessageSource(
+			ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 

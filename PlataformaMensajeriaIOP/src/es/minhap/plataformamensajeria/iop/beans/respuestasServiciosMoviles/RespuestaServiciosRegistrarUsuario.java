@@ -15,9 +15,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
-
-
 import es.minhap.common.properties.PropertiesServices;
 /**
  *  @author everis
@@ -119,7 +116,6 @@ public class RespuestaServiciosRegistrarUsuario {
 		String statusOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_OK", null);
 		String codeOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSCODE_OK", null);
 		String detailsOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_DETAILS_OK", null);
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
 		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSUSER_EXISTS_CODE_KO", null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_DETAILS_KO", null);
 		String detailsKO_2 = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_NO_AVAILAIBLE_KO", null);
@@ -159,7 +155,39 @@ public class RespuestaServiciosRegistrarUsuario {
 		}
 		
 	}
+
+	public String accionIncorrectaXML(PropertiesServices ps) throws PlataformaBusinessException {
+		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STAT_INVALID_ACCION_CODE", null);
+		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.DETAILS_ACCION_INCORRECTA", null);
+
+		RespuestaServiciosRegistrarUsuario respuesta = this;
+		ResponseUsuariosServicosStatusType status = new ResponseUsuariosServicosStatusType();
+
+		status.setStatusCode(codeKO);
+		status.setStatusText(statusKO);
+		status.setDetails(detailsKO);
+		respuesta.setStatus(status);
+
+		return writeResponse(respuesta);
+	}
 	
+	public String errorToken(PropertiesServices ps) throws PlataformaBusinessException{
+		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
+		RespuestaServiciosRegistrarUsuario respuesta = this;
+		ResponseUsuariosServicosStatusType status = new ResponseUsuariosServicosStatusType();
+
+		status.setStatusCode(codeKO);
+		status.setStatusText(statusKO);
+		status.setDetails(detailsKO);
+		respuesta.setStatus(status);
+
+		return writeResponse(respuesta);
+	}
+	
+
 	public String toXML(boolean success, PropertiesServices ps) throws PlataformaBusinessException {
 		String statusOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_OK", null);
 		String codeOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSCODE_OK", null);
@@ -218,6 +246,8 @@ public class RespuestaServiciosRegistrarUsuario {
 	public void setStatus(ResponseUsuariosServicosStatusType status) {
 		this.status = status;
 	}
+
+
 
 	
 }

@@ -29,10 +29,11 @@ public interface TblLotesEnviosManager {
 	 * @param recipient
 	 * @param usuario
 	 * @param password
+	 * @param prefijoSMS 
 	 * @return RecepcionSMSBean
 	 * 
 	 */
-	public RecepcionSMSBean buscarInfoLote(String recipient, String usuario, String password);
+	public RecepcionSMSBean buscarInfoLote(String recipient, String usuario, String password, String prefijoSMS);
 	
 	
 	/**

@@ -46,21 +46,24 @@ public class QueryExecutorServiciosImpl extends HibernateDaoSupport implements Q
 
 	@Override
 	@Transactional
-	public Integer comprobarServicioUnico(String recipient, Long canalId) {
-		BigDecimal res = null;
+	public List<Long> comprobarServicioUnico(String recipient, Long canalId, String prefijoSMS) {
+		List<Long> res = null;
 
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_START);
 			}
 
-			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
-					" SELECT count(*) FROM tbl_servicios ser, "
+			String sql = " SELECT ss.SERVICIOID FROM tbl_servicios ser, "
 					+ "tbl_servidores_servicios ss WHERE ss.headersms = '" +recipient
 					+ "' and SER.SERVICIOID = SS.SERVICIOID AND ser.canalid = "+canalId+ " AND "
-					+ "ser.activo = 1");
+					+ "ser.activo = 1";
+			if (null != prefijoSMS){
+				sql = sql + " and ss.PREFIJOSMS = '" + prefijoSMS +"'";
+			}
+			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 
-			res = (BigDecimal) query.uniqueResult();
+			res = query.list();
 						
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_END);
@@ -70,7 +73,7 @@ public class QueryExecutorServiciosImpl extends HibernateDaoSupport implements Q
 			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
-		return res.intValue();
+		return res;
 	}
 
 	@Override

@@ -4,13 +4,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.RegistroUsuarioXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.ServiciosDisponiblesXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ResponseServDispStatusType;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.RespuestaServiciosDisponibles;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.RespuestaServiciosRegistrarUsuario;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ServicioMovil;
@@ -28,7 +30,7 @@ import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensa
  */
 @Service("gestionServiciosPushImpl")
 public class GestionServiciosPushServiceImpl implements IGestionServiciosPushService {
-	private final static Logger LOG = Logger.getLogger(GestionServiciosPushServiceImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(GestionServiciosPushServiceImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
@@ -61,7 +63,17 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 		
 		String xmlResultado = "";
 		RespuestaServiciosRegistrarUsuario respuesta = new RespuestaServiciosRegistrarUsuario(); 
+		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		Integer timeSession = null;
+		try{
+			timeSession = Integer.parseInt(stringTimeSession);
+		}catch(NumberFormatException e){
+			timeSession = null;
+		}
 		try {
+			if (!comprobarTokeSessionCorrecto(registroUsuarioXMLBean.getUidDispositivo(), registroUsuarioXMLBean.getTokenSession(), timeSession)){
+				return respuesta.errorToken(ps);
+			}
 			
 			Boolean existeUsuario = aplicacionesManager.existeAplicacion(registroUsuarioXMLBean.getUsuario(), registroUsuarioXMLBean.getPassword());
 			if(existeUsuario) {
@@ -73,7 +85,7 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 				} else if (accionConsultaServicio.equals(registroUsuarioXMLBean.getAccion())) {
 					xmlResultado = consultaUsuarioServicio(registroUsuarioXMLBean, respuesta, users,ps);
 				} else {
-					throw new PlataformaBusinessException("La accion a realizar no es la correcta");
+					xmlResultado = accionIncorrecta(registroUsuarioXMLBean, respuesta, users,ps);
 				}
 				LOG.debug("[GestionServiciosPushServiceImpl] Generando XML de la respuesta");
 				LOG.trace(xmlResultado);
@@ -82,7 +94,7 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 			}
 			LOG.trace(xmlResultado);
 			LOG.debug(xmlGenerado);
-		} catch (PlataformaBusinessException e) {
+		} catch (Exception e) {
 			LOG.error("[GestionServiciosPushServiceImpl] RegistrandoUsuario en Servicio Push",e);
 		} 
 		return xmlResultado;
@@ -94,8 +106,27 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 		LOG.debug("[GestionServiciosPushServiceImpl] Consultando los servicios disponibles");
 		String xmlResultado = "";
 		RespuestaServiciosDisponibles respuesta = new RespuestaServiciosDisponibles(); 
-
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
+		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		Integer timeSession = null;
+		try{
+			timeSession = Integer.parseInt(stringTimeSession);
+		}catch(NumberFormatException e){
+			timeSession = null;
+		}
 		try {
+			if (!comprobarTokeSessionCorrecto(servDispoXMLBean.getUidDispositivo(), servDispoXMLBean.getTokenSession(), timeSession)){
+				ResponseServDispStatusType  status = new ResponseServDispStatusType();
+				status.setStatusCode(codeKO);
+				status.setStatusText(statusTextKO);
+				status.setDetails(detailsKO);
+				respuesta.setStatus(status);
+				return respuesta.toXML(respuesta);
+			}
+				
 			Boolean existeUsuario = aplicacionesManager.existeAplicacion(servDispoXMLBean.getUsuario(), servDispoXMLBean.getPassword());
 			if(existeUsuario) {
 				List<ServicioMovil> serviciosMoviles = serviciosMovilesManager.consultarServiciosDisponibles(servDispoXMLBean.getIdUsuario());
@@ -114,8 +145,20 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 	}
 
 	
+	private String accionIncorrecta(RegistroUsuarioXMLBean registroUsuarioXMLBean,
+			RespuestaServiciosRegistrarUsuario respuesta, List<String> users, PropertiesServices ps) throws PlataformaBusinessException{
+		
+		String xmlResultado = respuesta.accionIncorrectaXML(ps);
+		return xmlResultado;
+	}
 	
-	
+
+	private boolean comprobarTokeSessionCorrecto(String uidDispositivo, String tokenSession, Integer timeSession) {
+		
+		return usuariosPushManager.comprobarTokenSession(uidDispositivo, tokenSession, timeSession);
+	}
+
+
 	private String consultaUsuarioServicio(RegistroUsuarioXMLBean registroUsuarioXMLBean,
 			RespuestaServiciosRegistrarUsuario respuesta, List<String> users, PropertiesServices ps)
 			throws PlataformaBusinessException {

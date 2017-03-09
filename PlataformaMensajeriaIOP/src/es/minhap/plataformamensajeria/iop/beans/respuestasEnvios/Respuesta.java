@@ -214,6 +214,7 @@ public void loadObjectFromXML (String xmlRespuesta)throws PlataformaBusinessExce
 			this.mensajes = new ArrayList<Mensajes>();
 			
 			for (es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje mensaje : listaMensajesProcesados) {
+				mensaje.setIdExterno((null == mensaje.getIdExterno())? "" : mensaje.getIdExterno());
 				Mensajes msj = new Mensajes();
 				msj.setMensaje(mensaje);
 				this.mensajes.add(msj);

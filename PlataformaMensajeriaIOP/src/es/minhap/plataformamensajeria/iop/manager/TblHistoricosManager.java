@@ -51,4 +51,14 @@ public interface TblHistoricosManager {
 	 */
 	public Long getUltimoEstadoHistorico(Long mensajeId, Long destinatariosMensajes);
 
+
+	/**
+	 * Comprueba si un mensaje ya ha tenido un estado enviado para el destinatario si lo tuviera
+	 * 
+	 * @param mensajeId
+	 * @param destinatariosMensajes
+	 * @return
+	 */
+	public Boolean checkMensajeYaEnviado(Long mensajeId, Long destinatarioMensajeId, Long estado);
+
 }

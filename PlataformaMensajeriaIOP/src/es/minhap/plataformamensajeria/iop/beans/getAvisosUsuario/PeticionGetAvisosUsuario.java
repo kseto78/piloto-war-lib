@@ -44,7 +44,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "usuario", "password", "idDispositivo", "idServicio", "idPlataforma", "idUsuario", "numPagina", "tamPagina" })
+@XmlType(name = "", propOrder = { "usuario", "password", "idDispositivo", "idServicio", "idPlataforma", "idUsuario", "numPagina", "tamPagina", "uidDispositivo", "tokenSession" })
 @XmlRootElement(name = "PeticionGetAvisosUsuario", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario")
 public class PeticionGetAvisosUsuario {
 
@@ -64,7 +64,11 @@ public class PeticionGetAvisosUsuario {
 	protected String numPagina;
 	@XmlElement(name = "TamPagina", required = false, namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario")
 	protected String tamPagina;
-
+	@XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario")
+	protected String uidDispositivo;
+	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario")
+	protected String tokenSession;
+	
 	public String getUsuario() {
 		return usuario;
 	}
@@ -162,6 +166,34 @@ public class PeticionGetAvisosUsuario {
 	 */
 	public void setTamPagina(String tamPagina) {
 		this.tamPagina = tamPagina;
+	}
+
+	/**
+	 * @return the uidDispositivo
+	 */
+	public String getUidDispositivo() {
+		return uidDispositivo;
+	}
+
+	/**
+	 * @param uidDispositivo the uidDispositivo to set
+	 */
+	public void setUidDispositivo(String uidDispositivo) {
+		this.uidDispositivo = uidDispositivo;
+	}
+
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
 
 	public void loadObjectFromXML(String xml) throws PlataformaBusinessException {

@@ -35,6 +35,7 @@ public class TblGestionEnviosManagerImpl implements TblGestionEnviosManager {
 	}
 
 	@Override
+	@Transactional
 	public void actualizarGestionEnvios(TblGestionEnvios ge) {
 		getGestionDAO().update(ge);
 

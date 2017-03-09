@@ -60,7 +60,8 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 					+ " (to_char(sysdate,'DY') = 'SAB' OR to_char(sysdate,'DY') = 'SAT') AND S = 'S' OR "
 					+ " (to_char(sysdate,'DY') = 'DOM' OR to_char(sysdate,'DY') = 'SUN') AND D = 'S')"
 					+ " AND horadesde <= to_char(sysdate,'HH24:MI') AND horahasta>=to_char(sysdate,'HH24:MI')"
-					+ " AND servicioId is not null AND activo = '1' AND eliminado IS NULL");
+					+ " AND servicioId is not null AND activo = '1' AND eliminado IS NULL AND servicioId IN (SELECT DISTINCT SERVICIOID FROM TBL_SERVICIOS WHERE PREMIUM IS NULL OR PREMIUM <> 1)"
+					+ " AND servicioId IN (SELECT DISTINCT SERVICIOID FROM TBL_LOTESENVIOS T1 INNER JOIN TBL_MENSAJES T2 ON T1.LOTEENVIOID = T2.LOTEENVIOID WHERE ESTADOACTUAL = 'PENDIENTE DE ENVIO')");
 
 			List<Object> rows = query.list();
 			for (Object row : rows) {
@@ -88,8 +89,8 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 			if (log.isDebugEnabled()) {
 				log.debug(INICIOBUSQUEDA);
 			}
-			List<Long> listaServiciosAExcluir = getServidoresConPlanificacion();
-			if (!listaServiciosAExcluir.isEmpty()){
+			List<Long> listaServiciosAIncluir = getServicioSinPlanificacion();
+			if (!listaServiciosAIncluir.isEmpty()){
 				String sql = "SELECT distinct ss.servicioID FROM tbl_planificaciones p, tbl_servidores_servicios ss, tbl_SERVIDORES	s "
 						+ "where ((to_char(sysdate,'DY') = 'LUN' OR to_char(sysdate,'DY') = 'MON') AND L = 'S' OR "
 						+ "(to_char(sysdate,'DY') = 'MAR' OR to_char(sysdate,'DY') = 'TUE') AND M = 'S' OR "
@@ -101,7 +102,9 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 						+ "horadesde <= to_char(sysdate,'HH24:MI') AND horahasta>=to_char(sysdate,'HH24:MI') AND "
 						+ "p.servicioId is null AND p.activo = '1' AND p.eliminado IS NULL and "
 						+ "p.servidorid = ss.servidorid and s.activo = '1' and ss.servidorid = s.servidorid "
-						+ "and ss.servicioid in ("+getStringFromList(listaServiciosAExcluir)+")";
+						+ "and ss.servicioid in ("+getStringFromList(listaServiciosAIncluir)+") "
+						+ "AND ss.servicioId IN (SELECT DISTINCT SERVICIOID FROM TBL_LOTESENVIOS T1 INNER JOIN TBL_MENSAJES T2 ON T1.LOTEENVIOID = T2.LOTEENVIOID WHERE ESTADOACTUAL = 'PENDIENTE DE ENVIO') "
+						+ "AND ss.servicioId IN (SELECT DISTINCT SERVICIOID FROM TBL_SERVICIOS WHERE PREMIUM IS NULL OR PREMIUM <> 1)";
 				SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 	
 				List<Object> rows = query.list();
@@ -133,7 +136,7 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<Long> getServidoresConPlanificacion() {
+	public List<Long> getServicioSinPlanificacion() {
 		List<Long> res = new ArrayList<>();
 
 		try {

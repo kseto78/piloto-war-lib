@@ -48,7 +48,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param reintentos
 	 * @return
 	 */
-	public List<EnvioGISSXMLBean> obtenerMensajesReenvioGISS(Integer servicio, Integer reintentos);
+	public List<EnvioGISSXMLBean> obtenerMensajesReenvioGISS(Long servicio, Integer reintentos);
 	
 	
 	/**

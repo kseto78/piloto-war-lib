@@ -159,14 +159,14 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 	}
 
 	@Override
-	public List<EnvioGISSXMLBean> obtenerMensajesReenvioGISS(Integer servicio, Integer reintentos) {
+	public List<EnvioGISSXMLBean> obtenerMensajesReenvioGISS(Long servicio, Integer reintentos) {
 		List<EnvioGISSXMLBean> peticiones = new ArrayList<>();
 		try {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_START);
 			}
 			StringBuilder queryBuilder = new StringBuilder();
-			queryBuilder.append(" SELECT dm.CODIGOEXTERNO,dm.DESTINATARIO,m.CODORGANISMOPAGADOR, to_char(sysdate,'DDMMYYYYHH24MISS') ||'_'|| m.CODORGANISMOPAGADOR AS objeto,m.cuerpo FROM TBL_SERVICIOS  s, TBL_LOTESENVIOS  l, TBL_MENSAJES  m, TBL_DESTINATARIOS_MENSAJES  dm ");
+			queryBuilder.append(" SELECT dm.CODIGOEXTERNO,dm.DESTINATARIO,m.CODORGANISMOPAGADOR, to_char(sysdate,'DDMMYYYYHH24MISS') ||'_'|| m.CODORGANISMOPAGADOR AS objeto, TO_CHAR(m.CUERPO) FROM TBL_SERVICIOS  s, TBL_LOTESENVIOS  l, TBL_MENSAJES  m, TBL_DESTINATARIOS_MENSAJES  dm ");
 			queryBuilder.append(" WHERE s.SERVICIOID=" + servicio);
 			queryBuilder.append(" AND M.NUMEROENVIOS < " + reintentos);
 			queryBuilder.append(" AND s.SERVICIOID = l.SERVICIOID ");
@@ -182,7 +182,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 				EnvioGISSXMLBean envioGISS = new EnvioGISSXMLBean();
 				envioGISS.setAplicacion("");
 				envioGISS.setCodOrganismoPagadorSMS((String) row[2]);
-				envioGISS.setContenidoMsj((String) row[4]);
+				envioGISS.setContenidoMsj((null != row[4]) ? (String) row[4] : "");
 				envioGISS.setDestinatario((String) row[1]);
 				envioGISS.setNumeroTelefonoDestino((String) row[1]);
 				envioGISS.setUsuSistemaEnvio((String) row[3]);

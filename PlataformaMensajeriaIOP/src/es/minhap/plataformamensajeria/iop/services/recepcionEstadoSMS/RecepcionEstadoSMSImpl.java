@@ -2,7 +2,8 @@ package es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ import es.minhap.sim.model.TblUrlMensajePremium;
 @Service("recepcionEstadoSMSImpl")
 public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 
-	private static final Logger LOG = Logger.getLogger(RecepcionEstadoSMSImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RecepcionEstadoSMSImpl.class);
 
 	@Resource
 	private TblMensajesManager mensajesManager;
@@ -75,10 +76,16 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		TblMensajes mensaje = null;
 		String descripcion;
 		Long estadoFinalId;
+			
+		
 		try {
 			mensaje = mensajesManager.getMensajeIDByUIM(recepcionEstadoSMS.getMensajeId());
-			mensajeID = mensaje.getMensajeid();
-			urlPremium = getUrlPremium(mensajeID);
+			if(mensaje != null) {
+				mensajeID = mensaje.getMensajeid();
+				urlPremium = getUrlPremium(mensajeID);
+			} else {
+				LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM");
+			}
 		} catch (Exception e) {
 			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);
 		}
@@ -86,7 +93,7 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		if (null == mensajeID) {
 			LOG.debug("[recibirEstadoSMS] Se ha producido un error buscando el mensajeID a traves del UIM: "
 					+ recepcionEstadoSMS.getMensajeId());
-			return getRespuestaNoMensaje(recepcionEstadoSMS, statusCodeKO, errorUimNoExiste, urlPremium);
+			return getRespuestaNoMensaje(recepcionEstadoSMS, statusCodeOK, statusDetailsOK, urlPremium);
 		}
 
 		String estado = recepcionEstadoSMS.getMessajeStatus().toUpperCase().trim();
@@ -96,7 +103,7 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 			cod = new Long(estado);
 		} catch (Exception e) {
 			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);
-			return getRespuestaNoEstado(statusCodeKO, errorEstadoMensaje, statusTextKO, urlPremium);
+			return getRespuestaNoEstado(statusCodeOK, errorEstadoMensaje, statusTextOK, urlPremium);
 		}
 
 		Long destinatarioMensajeId = null;
@@ -110,12 +117,18 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		estadoFinalId = estadoMensaje.getEstadoId();
 		descripcion = estadoMensaje.getDescripcion();
 		try {
-			Integer idHistorico = hitoricosManager.creaHistorico(mensaje.getMensajeid(),destinatarioMensajeId, estadoFinalId, null, 
-					descripcion, cod.toString(), recepcionEstadoSMS.getUser());
+			Integer ultimoEstadoHistorico = hitoricosManager.getUltimoEstadoHistorico(mensaje.getMensajeid(), destinatarioMensajeId).intValue();
+			
+			if(null == ultimoEstadoHistorico || ultimoEstadoHistorico != estadoFinalId.intValue()){
+//				idHistorico = hitoricosManager.creaHistorico(mensaje.getMensajeid(),destinatarioMensajeId, estadoFinalId, null, 
+//					descripcion, cod.toString(), recepcionEstadoSMS.getUser());
+				mensajesManager.setEstadoMensaje(mensaje.getMensajeid(),tblEstadosManager.getEstadoById(estadoFinalId).getNombre(), descripcion, false, destinatarioMensajeId, cod.toString(), recepcionEstadoSMS.getUser(), null);
+			}
 
 			ResponseStatusType status;
-			if (null == idHistorico)
-				status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
+			if (null == ultimoEstadoHistorico || ultimoEstadoHistorico <= 0)
+			  //status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
+				status = getStatus(statusCodeOK, statusTextOK, statusDetailsKO, urlPremium);
 			else
 				status = getStatus(statusCodeOK, statusTextOK, statusDetailsOK, urlPremium);
 
@@ -123,7 +136,8 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		} catch (Exception e) {
 			LOG.error("[Registrar Historico] Se ha producido un error escribiendo en el Historico el mensaje: "
 					+ mensaje.getMensajeid(),e);
-			ResponseStatusType status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
+		  //ResponseStatusType status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
+			ResponseStatusType status = getStatus(statusCodeOK, statusTextOK, statusDetailsKO, urlPremium);
 			res.setStatus(status);
 		}
 
@@ -141,26 +155,26 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		return res;
 	}
 
-	private RespuestaEstadoSMSXMLBean getRespuestaNoEstado(String statusCodeKO, String errorEstadoMensaje,
-			String statusTextKO, String urlPremium) {
+	private RespuestaEstadoSMSXMLBean getRespuestaNoEstado(String statusCodeOK, String errorEstadoMensaje,
+			String statusTextOK, String urlPremium) {
 		RespuestaEstadoSMSXMLBean res = new RespuestaEstadoSMSXMLBean();
 		ResponseStatusType status = new ResponseStatusType();
-		status.setStatusCode(statusCodeKO);
+		status.setStatusCode(statusCodeOK);
 		if (urlPremium.length() > 0)
 			status.setDetails(errorEstadoMensaje + "," + urlPremium);
 		else
 			status.setDetails(errorEstadoMensaje);
-		status.setStatusText(statusTextKO);
+		status.setStatusText(statusTextOK);
 		res.setStatus(status);
 		return res;
 	}
 
 	private RespuestaEstadoSMSXMLBean getRespuestaNoMensaje(RecepcionEstadoSMSXMLBean recepcionEstadoSMS,
-			String statusCodeKO, String errorUimNoExiste, String urlPremium) {
+			String statusCodeOK, String statusDetailsOK, String urlPremium) {
 		RespuestaEstadoSMSXMLBean res = new RespuestaEstadoSMSXMLBean();
 		ResponseStatusType status = new ResponseStatusType();
-		status.setStatusCode(statusCodeKO);
-		status.setStatusText(errorUimNoExiste);
+		status.setStatusCode(statusCodeOK);
+		status.setStatusText(statusDetailsOK);
 		if (urlPremium.length() > 0)
 			status.setDetails("UIM " + recepcionEstadoSMS.getMensajeId() + " NOT FOUND," + urlPremium);
 		else
@@ -187,7 +201,7 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		try {
 			res = respuesta.toXML();
 		} catch (PlataformaBusinessException e) {
-			LOG.error("[Recepcion Estado SMS m�todo recibirEstadoSMSXML] Se ha producido un error recibiendo el estado: ",e);
+			LOG.error("[Recepcion Estado SMS metodo recibirEstadoSMSXML] Se ha producido un error recibiendo el estado: ",e);
 			res = ps.getMessage("plataformaErrores.generales.TAG_ERROR_GENERANDO_RESPUESTA_XML", null);
 		}
 		return res;

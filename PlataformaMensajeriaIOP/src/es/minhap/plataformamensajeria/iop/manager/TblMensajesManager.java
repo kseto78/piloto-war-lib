@@ -3,6 +3,7 @@ package es.minhap.plataformamensajeria.iop.manager;
 import java.util.List;
 import java.util.Map;
 
+import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioEmailXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioPushXMLBean;
@@ -219,6 +220,13 @@ public interface TblMensajesManager {
 	 * @return Boolean
 	 */
 	public Boolean getMultidestinatarioByMensaje(Long mensajeId);
+	
+	/**
+	 * Obtiene Los mensajes a reenviar por estar pendientes
+	 * 
+	 * @return
+	 */
+	public Map<Long, List<MensajeJMS>> getMensajesReenviar();
 
 		
 }

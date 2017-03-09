@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.RespuestaEstadoSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 
@@ -39,7 +38,8 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "status",
-    "idDispositivo"
+    "idDispositivo",
+    "tokenSession"
 })
 @XmlRootElement(name = "Respuesta")
 public class RegistroUsuarioPushResponse {
@@ -48,6 +48,8 @@ public class RegistroUsuarioPushResponse {
     protected ResponseStatusType status;
     @XmlElement(name = "IdDispositivo")
     protected String idDispositivo;
+    @XmlElement(name = "TokenSession")
+    protected String tokenSession;
 
     /**
      * Obtiene el valor de la propiedad status.
@@ -85,6 +87,21 @@ public class RegistroUsuarioPushResponse {
 	 */
 	public void setIdDispositivo(String idDispositivo) {
 		this.idDispositivo = idDispositivo;
+	}
+
+	
+	/**
+	 * @return the tokenSession
+	 */
+	public String getTokenSession() {
+		return tokenSession;
+	}
+
+	/**
+	 * @param tokenSession the tokenSession to set
+	 */
+	public void setTokenSession(String tokenSession) {
+		this.tokenSession = tokenSession;
 	}
 
 	public String toString() {

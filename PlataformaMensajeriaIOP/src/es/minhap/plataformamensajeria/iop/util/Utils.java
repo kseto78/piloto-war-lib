@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 import org.apache.axis.encoding.Base64;
 
 public class Utils {
-    private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 	// convert InputStream to String
 	public static String getStringFromInputStream(InputStream is) {
 
@@ -53,14 +53,19 @@ public class Utils {
 	    }
 	 
 	 
-	 public static int validarTelefono(String telefono){
+	 public static int validarTelefono(String telefono, String telefonoExcepcion){
 		 
 		 if (telefono!=null){
 			 telefono= telefono.trim();
+			 if(telefonoExcepcion.contains(telefono)) {
+				 return 0;
+			 }
+		 } else {
+			 return 1;
 		 }
 				 
 		 if (telefono.length() == 9){
-			 //comprobamos si son todos dígitosif (cadenaUno.matches("[0-9]*"))
+			 //comprobamos si son todos digitosif (cadenaUno.matches("[0-9]*"))
 			 if (telefono.matches("[0-9]*")){ 
 			 	return 0;
 			 }
@@ -110,16 +115,15 @@ public class Utils {
 	 }
 	 
 	
-	 public static String eliminarPrefijo(String telefono) {
+	 public static String eliminarPrefijo(String telefono, String telefonoExcepcion) {
 	    	String res = "";
 	    		    	
 	    	if (telefono.startsWith("+") || telefono.startsWith("00")){
 	    		res = telefono.substring(telefono.length()-9);
-	    		if (validarTelefono(res) == 0){
+	    		if (validarTelefono(res, telefonoExcepcion) == 0){
 	    			return res;
 	    		}
 	    	}
 	    	return telefono;
 	    }
-
 }

@@ -16,9 +16,9 @@ public interface IEnvioPremiumGISSService {
 	
     String enviarSMSGISS(EnvioGISSXMLBean envio, String username,String password,Integer servicio,String usernameMISIM,String passwordMISIM);
     
-    List<EnvioGISSXMLBean> reenviarSMSGISS(String username,String password,Integer servicio, Integer reintentos,String usernameMISIM,String passwordMISIM);
+    List<EnvioGISSXMLBean> reenviarSMSGISS(Long servicio, Integer reintentos);
     
-    void anularSMS(Integer servicio, Integer reintentos);
+    void anularSMS(Long servicio, Integer reintentos);
 
     String cambiarEstadoSMSPremium(Integer idMEnsaje, String estado);
     

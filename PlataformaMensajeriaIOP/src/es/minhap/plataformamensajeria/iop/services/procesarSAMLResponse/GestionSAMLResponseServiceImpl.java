@@ -4,7 +4,8 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ import es.minhap.sim.model.TblUsuariosPush;
 @Service("gestionSAMLResponseImpl")
 public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseService {
 	
-	private static final Logger LOG = Logger.getLogger(GestionSAMLResponseServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GestionSAMLResponseServiceImpl.class);
 	
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
@@ -51,9 +52,29 @@ public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseServi
 		String detailsCodErrorServicio = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_SERVICIO", null);
 		String codErrorGeneral = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_GENERAL", null);
 		String detailsErrorGeneral = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_GENERAL", null);
+		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
+		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		Integer timeSession = null;
 		RespuestaSAMLResponse respuesta = new RespuestaSAMLResponse();
 		String res = "";	
 		try {
+			
+			try {
+				timeSession = Integer.parseInt(stringTimeSession);
+			} catch (NumberFormatException e) {
+				timeSession = null;
+			}
+			
+			if (!comprobarTokeSessionCorrecto(peticion.getUidDispositivo(), peticion.getTokenSession(), timeSession)) {
+				ResponseSAMLStatusType  status = new ResponseSAMLStatusType();
+				status.setStatusCode(codeKO);
+				status.setStatusText(statusTextKO);
+				status.setDetails(detailsKO);
+				respuesta.setStatus(status);
+				return respuesta.toXMLSMS(respuesta);
+			}
+			
 			if (datosNoValidos(peticion.getIdServicio(), peticion.getIdPlataforma(), peticion.getDispositivoId(), nombre, nif)) {
 				respuesta = generarRespuesta(null, null, null, null, statusTextKO, codSAMLNoValido,
 						detailsCodSAMLNoValido);
@@ -81,6 +102,11 @@ public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseServi
 		return res;
 	}
 
+	private boolean comprobarTokeSessionCorrecto(String uidDispositivo, String tokenSession, Integer timeSession) {
+
+		return usuariosPushManager.comprobarTokenSession(uidDispositivo, tokenSession, timeSession);
+	}
+	
 	private RespuestaSAMLResponse actualizarUsuario(PeticionClaveAuthResponse peticion, String nombre, String nif,
 			String apellido1, String apellido2, PropertiesServices ps) {
 		RespuestaSAMLResponse respuesta;
