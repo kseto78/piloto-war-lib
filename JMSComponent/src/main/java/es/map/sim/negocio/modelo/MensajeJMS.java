@@ -2,6 +2,7 @@ package es.map.sim.negocio.modelo;
 
 import java.io.Serializable;
 
+
 public class MensajeJMS implements Serializable {
 	
 	
@@ -265,4 +266,17 @@ public class MensajeJMS implements Serializable {
 	}
 	
 	
+	 @Override
+	 public boolean equals(Object object){
+		 boolean res = false;
+		 MensajeJMS m = (MensajeJMS) object;
+
+		 if (this.idMensaje.equals(m.getIdMensaje()) && this.destinatarioMensajeId.equals(m.getDestinatarioMensajeId()) && 
+				 (this.idExterno!=null && this.idExterno.equals(m.getIdExterno()) || (this.idExterno==null && m.getIdExterno()==null)) && this.idCanal.equals(m.getIdCanal())){
+			 res = true;
+		 }
+
+		 return res;
+	 }
+	 
 }

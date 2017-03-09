@@ -46,10 +46,10 @@ public class RetryLimitExceptionStrategy implements ExceptionStrategy{
 			if(!TransactionAspectSupport.currentTransactionStatus().isNewTransaction()){
 				//No EJB
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			}else{
-				//EJB
-				throw t;
 			}
+			
+			//EJB
+			throw t;
 		} else {
 			template.send(limitQueue, new MessageCreator() {
 				public Message createMessage(Session session) throws JMSException {
