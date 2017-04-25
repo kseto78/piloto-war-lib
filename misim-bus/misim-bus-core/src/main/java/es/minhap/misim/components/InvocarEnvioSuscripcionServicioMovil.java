@@ -100,7 +100,8 @@ public class InvocarEnvioSuscripcionServicioMovil implements Callable, MuleConte
 				operationName = "";
 			
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
-			LOG.info("REQUEST: " + XMLUtils.dom2xml(docOriginal));
+			if(LOG.isInfoEnabled()){
+			LOG.info("REQUEST: " + XMLUtils.dom2xml(docOriginal));}
 //			NodeList peticion = docOriginal.getElementsByTagName("estadoUsuarioRequest");
 //
 //			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
@@ -119,8 +120,9 @@ public class InvocarEnvioSuscripcionServicioMovil implements Callable, MuleConte
 	        tblServiciosMoviles.getEndpoint_User()!=null && tblServiciosMoviles.getEndpoint_Pass()!=null) {
 	        	endpointUrl = tblServiciosMoviles.getUrl_AvisoSuscripcion();
 	        }
+	        if(LOG.isInfoEnabled()){
 	        LOG.info("ENDPOINT: " + endpointUrl);
-	        LOG.info("REQUEST: " + respuestaCompleta);
+	        LOG.info("REQUEST: " + respuestaCompleta);}
 	        
 	        try{
 	        	SOAPMessage responseMessage =this.invoke(serviceQName, portQName, endpointUrl, operationName, respuestaCompleta, timeout);

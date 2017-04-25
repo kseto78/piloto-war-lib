@@ -88,8 +88,11 @@ public class InvocarEmisor implements Callable {
 			   // idDelMensaje
 //			    String xmlResponse=XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage));
 //			    responseMessage=XMLUtils.dom2soap(XMLUtils.xml2doc(xmlResponse.replace("idDelMensaje", idSms), Charset.forName("UTF-8")));
-			    System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-				soapPayload.setSoapAction(initPayload.getSoapAction());
+			    if(LOG.isInfoEnabled()){
+		        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+		        }
+			    
+			    soapPayload.setSoapAction(initPayload.getSoapAction());
 				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 				
 				eventContext.getMessage().setPayload(soapPayload);

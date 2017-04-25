@@ -43,7 +43,8 @@ public class IdentificarPropiedadesMensaje implements Callable {
 			String idMensaje=SMS_ID.item(0).getTextContent();
 			eventContext.getMessage().setOutboundProperty("smsID", idMensaje);
 	
-				
+			
+			
 		}catch (Exception e){
 			
 			LOG.error("Identificación: Error de sistema al obtener ID MENSAJE", e);

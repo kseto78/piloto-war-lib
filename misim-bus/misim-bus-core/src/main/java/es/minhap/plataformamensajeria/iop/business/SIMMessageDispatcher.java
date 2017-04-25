@@ -50,12 +50,20 @@ public class SIMMessageDispatcher {
 	public void dispatchMessage(MensajeJMS msg) {
 		
 		Long mensajeId = null;
-		
+		String aplicacionPremium = null;
+		String errorClave = "";
 		try {
 			PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+			String mensajeAEAT= ps.getMessage("aeat.usuario.sms", null, "aeat");
+			String mensajeGISS= ps.getMessage("giss.usuario.sms", null, "giss");
+			String aplicacionAEAT= ps.getMessage("aeat.aplicacion", null, "AEAT");
+			String aplicacionGISS= ps.getMessage("giss.aplicacion", null, "GISS");
+			errorClave = ps.getMessage("clave.ERRORCLAVE.AEAT", null, "[ERROR-CL@VE]:");
+			
 			Long estadoId = Long.parseLong(ps.getMessage("constantes.ESTADOID_ENVIADO", null,  "1"));
 			LOG.info("Procesando mensaje: " + msg.getIdMensaje());
 			mensajeId = Long.parseLong(msg.getIdMensaje());
+			Long idLote = Long.parseLong(msg.getIdLote());
 			Long destinatarioMensajeId = null;
 			Integer canal = Integer.parseInt(msg.getIdCanal());
 			try {
@@ -64,6 +72,13 @@ public class SIMMessageDispatcher {
 				destinatarioMensajeId = null;
 			}
 			
+			if (null != msg.getUsuarioAplicacion()){
+				if (msg.getUsuarioAplicacion().contains(mensajeAEAT) ){
+					aplicacionPremium = aplicacionAEAT;
+				}else if (msg.getUsuarioAplicacion().contains(mensajeGISS)){
+					aplicacionPremium = aplicacionGISS;
+				}
+			}
 			//Se comprueba que el mensaje no este anulado entonces se procesa
 			TblMensajes mensaje = getCommonUtilitiesService().getMensaje(mensajeId);
 			
@@ -80,21 +95,24 @@ public class SIMMessageDispatcher {
 					getSendMessageService().postMail(mensajeId, msg.getDestinatarioMensajeId());
 					break;
 				case 2:
-					getSendMessageService().postSMS(mensajeId, destinatarioMensajeId, msg.getCodOrganismo(),
-							msg.getUsuarioAplicacion(), msg.getPasswordAplicacion());
+					getSendMessageService().postSMS(mensajeId, idLote, destinatarioMensajeId, msg.getCodOrganismo(),
+							msg.getUsuarioAplicacion(), msg.getPasswordAplicacion(), aplicacionPremium);
 					break;
 				case 4:
-					getSendMessageService().postNotificacionPush(mensajeId, destinatarioMensajeId);
+					getSendMessageService().postNotificacionPush(mensajeId,idLote, destinatarioMensajeId);
 					break;
 				case 3:
 					getSendMessageService().postRecepcionSMS(mensajeId, destinatarioMensajeId);
 					break;
 				default:
-					LOG.error(" [SIMMessageDispatcher] Error procesando el mensaje: canal indefinido");
+					LOG.error((null != aplicacionPremium)? errorClave : "" + " [SIMMessageDispatcher] Error procesando el mensaje: canal indefinido");
 					throw new RuntimeException("");
 				}
 			}
 		} catch (Exception e) {
+			if (null != aplicacionPremium){
+				LOG.error(errorClave + "[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId);
+			}
 			LOG.error("[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId, e);
 			throw new RuntimeException("");
 		}

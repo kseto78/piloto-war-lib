@@ -71,7 +71,6 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionBT] - Operacion invocada #[payload]" />
 		
 		
-		
 		<!-- ADAPTAR PROTOCOLO -->		
 		<choice doc:name="Adaptar la respuesta"> 
 			<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
@@ -131,6 +130,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
         	<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionBT] - Comprobar actualizacion de la auditoria" />
         	<choice doc:name="Encriptacion del error al Consumidor">
 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
+				
 					<!-- ENCRIPTACION -->
 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionBT] - Comprobar si se requiere encriptacion para la auditoria" />
 					<processor-chain doc:name="Processor Chain">

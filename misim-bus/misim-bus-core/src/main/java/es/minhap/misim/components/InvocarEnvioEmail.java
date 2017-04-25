@@ -24,7 +24,6 @@ import org.w3c.dom.NodeList;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.services.envioLotes.IEnvioLotesMensajesService;
-import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 //import es.minhap.misim.components.envio.EnvioEmailXMLBean;
 /**
@@ -48,10 +47,9 @@ public class InvocarEnvioEmail implements Callable {
 		try{
 
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
-			
-			if(LOG.isInfoEnabled()){
-	        	LOG.info("REQUEST: "+ XMLUtils.dom2xml(docOriginal));
-	        }
+			if(LOG.isInfoEnabled()) {
+				LOG.info("REQUEST: " + XMLUtils.dom2xml(docOriginal));
+			}
 
 			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "Peticion");
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
@@ -62,8 +60,14 @@ public class InvocarEnvioEmail implements Callable {
 			String respuesta=envioLotesMensajesImpl.enviarLotesEmail(peticionXML);
 			
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
-			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
+			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
+
+			NodeList nodoLoteId = doc.getElementsByTagName("idLote");
 			
+			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+				String idLote=nodoLoteId.item(0).getTextContent();
+				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+			}		
 			SOAPMessage responseMessage=getSoapMessageFromString(respuestaCompleta);
 			
 	        try{
@@ -80,11 +84,11 @@ public class InvocarEnvioEmail implements Callable {
 						eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 			        }
 				    
-				    if(LOG.isInfoEnabled()){
-			        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-			        }
+				    if(LOG.isInfoEnabled()) {
+						LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+					}
 				    
-				    soapPayload.setSoapAction(initPayload.getSoapAction());
+					soapPayload.setSoapAction(initPayload.getSoapAction());
 					soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 			
 					eventContext.getMessage().setPayload(soapPayload);

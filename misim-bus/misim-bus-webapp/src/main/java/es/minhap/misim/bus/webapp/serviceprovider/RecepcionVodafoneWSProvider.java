@@ -71,7 +71,7 @@ public class RecepcionVodafoneWSProvider extends WSProvider {
 					payload.setSoapAction(soapAction);
 					payload.setSoapMessage(XMLUtils.soap2dom(request));
 				
-//					System.out.println("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
+//					LOG.info("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
 
 					final MuleMessage muleResponse = getMuleClient().send(RECEPT_QUEUE,payload, null, 10000);
 					
@@ -84,7 +84,7 @@ public class RecepcionVodafoneWSProvider extends WSProvider {
 					payload.setSoapAction(soapAction);
 					payload.setSoapMessage(XMLUtils.soap2dom(request));
 				
-//					System.out.println("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
+//					LOG.info("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
 
 					final MuleMessage muleResponse = getMuleClient().send(RECEPT_QUEUE,payload, null, 10000);
 					

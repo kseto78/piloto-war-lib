@@ -111,11 +111,11 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		</choice>
 		
 		<!-- SECURIZACION PETICION-->
-		<logger level="INFO" doc:name="Logger" message="Preparacion de la securizacion" />
-		<logger level="INFO" doc:name="Logger" message="Antes del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] Preparacion de la securizacion" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] Antes del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
 		<flow-ref name="FLW-SEG-PET" doc:name="Securizar peticion" />
-		<logger level="INFO" doc:name="Logger" message="Fludo de ida securizado" />
-		<logger level="INFO" doc:name="Logger" message="Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] Flujo de ida securizado" />
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
 		
 		<!-- INVOCACION AL EMISOR -->
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion del emisor" />

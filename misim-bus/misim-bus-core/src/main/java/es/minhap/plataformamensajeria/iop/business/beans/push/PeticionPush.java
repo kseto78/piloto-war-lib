@@ -45,6 +45,7 @@ import es.minhap.plataformamensajeria.iop.business.beans.consultaestado.Peticion
     "producto",
     "proveedor",
     "mensajeId",
+    "idLote",
     "datosEspecificos"
 })
 @XmlRootElement(name = "Peticion")
@@ -60,6 +61,8 @@ public class PeticionPush {
     protected String proveedor;
     @XmlElement(name = "MensajeId", required = true)
     protected String mensajeId;
+    @XmlElement(name = "idLote", required = false)
+    protected String idLote;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificosPush datosEspecificos;
 
@@ -206,6 +209,14 @@ public class PeticionPush {
     public void setDatosEspecificos(DatosEspecificosPush value) {
         this.datosEspecificos = value;
     }
+    
+	public String getIdLote() {
+		return idLote;
+	}
+
+	public void setIdLote(String idLote) {
+		this.idLote = idLote;
+	}
 
 	@Override
 	public String toString() {

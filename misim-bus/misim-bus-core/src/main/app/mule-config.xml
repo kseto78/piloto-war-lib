@@ -51,10 +51,10 @@
 			<spring:property name="locations">
 				<spring:list>
 					<spring:value>classpath:/properties/spring-config.properties</spring:value>
-					<spring:value>classpath:/properties/dataconnection.properties</spring:value>
+					<!-- <spring:value>classpath:/properties/dataconnection.properties</spring:value> -->
 					<spring:value>classpath:/properties/sp.properties</spring:value>
 					<spring:value>classpath:/properties/passbook.properties</spring:value>
-					<spring:value>classpath:/properties/confSIMEnviroiment.properties</spring:value>					
+					<spring:value>classpath:/properties/confMISIM.properties</spring:value>					
 				</spring:list>
 			</spring:property>
 			<spring:property name="ignoreUnresolvablePlaceholders"
@@ -78,7 +78,7 @@
 					<spring:value>classpath:/properties/spring-config</spring:value>
 					<spring:value>classpath:/properties/sp</spring:value>
 					<spring:value>classpath:/properties/passbook</spring:value>
-					<spring:value>classpath:/properties/confSIMEnviroiment</spring:value>
+					<spring:value>classpath:/properties/confMISIM</spring:value>
 				</spring:list>
 			</spring:property>
 			<spring:property name="cacheSeconds" value="600" />

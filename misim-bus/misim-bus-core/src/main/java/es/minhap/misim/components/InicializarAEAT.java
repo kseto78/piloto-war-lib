@@ -26,6 +26,7 @@ import es.minhap.misim.bus.query.AplicacionQuery;
 import es.minhap.misim.bus.query.ProductoQuery;
 import es.minhap.misim.bus.query.ProveedorQuery;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionNotificacionEstadoSMS;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumService;
 
 public class InicializarAEAT implements Callable {
@@ -47,6 +48,9 @@ public class InicializarAEAT implements Callable {
 
 	@Resource
 	private AplicacionManager aplicacionManager;
+	
+	@Resource(name="TblMensajesManagerImpl")
+	private TblMensajesManager tblMensajesManager;
 
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
@@ -250,10 +254,20 @@ public class InicializarAEAT implements Callable {
 	private String getUrlEndpoint(final MuleEventContext eventContext) throws Exception {
 		String res = null;
 		final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
-		System.out.println("REQUEST AL INICIALIZAR AEAT: " + XMLUtils.dom2xml(docOriginal));
-		NodeList peticion = docOriginal.getElementsByTagName("PeticionNotificacionEstadoSMS");
-
+		LOG.info("REQUEST AL INICIALIZAR AEAT: " + XMLUtils.dom2xml(docOriginal));
+		NodeList peticion = docOriginal.getElementsByTagNameNS("https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd", "PeticionNotificacionEstadoSMS");
+		
 		String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
+		
+		NodeList nodoMensajeId = docOriginal.getElementsByTagName("messageId");
+		
+		if(nodoMensajeId!=null && nodoMensajeId.item(0)!=null) {
+			String idMensaje=nodoMensajeId.item(0).getTextContent();
+			
+			Long idLote = tblMensajesManager.getIdLoteByIdMensaje(Long.valueOf(idMensaje));	
+			eventContext.getMessage().setOutboundProperty("idLote", idLote);
+		}
+		
 		PeticionNotificacionEstadoSMS pet = new PeticionNotificacionEstadoSMS();
 		pet.loadObjectFromXML(xmlPeticion);
 		res = envioPremiumAEATService.gerUrlEndpoint(pet.getMessageId());

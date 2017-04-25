@@ -80,7 +80,7 @@ public class InvocarEnvio001ConsultaOP implements Callable {
 			Document doc = XMLUtils.xml2doc(xmlRespuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
 			
-		    System.out.println( getClass() +"Envio de respuesta a la URL");
+			LOG.info(getClass() +"Envio de respuesta a la URL");
 			String endpointUrl = "";
 
 			

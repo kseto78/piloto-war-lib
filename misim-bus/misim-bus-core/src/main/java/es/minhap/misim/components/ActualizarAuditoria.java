@@ -81,6 +81,8 @@ public class ActualizarAuditoria implements Callable {
 			Boolean peticionAEAT = Boolean.parseBoolean(String.valueOf(eventContext.getMessage().getOutboundProperty("peticionAEAT")));
 			Boolean errorAEAT = Boolean.parseBoolean(String.valueOf(eventContext.getMessage().getOutboundProperty("errorAEAT")));
 			
+			Long idLote = null;
+			
 			// Actualizamos la petición
 			Estado estado = new Estado();
 			if(soapFault){
@@ -111,6 +113,14 @@ public class ActualizarAuditoria implements Callable {
 				// Lanzar error
 				LOG.error("Actualizar auditoría: Error de Base de Datos");
 				throw new ModelException("Error de Base de Datos", 501);
+			}
+			
+			if (eventContext.getMessage().getOutboundProperty("idLote")!=null && !("").equals(eventContext.getMessage().getOutboundProperty("idLote"))){
+				idLote= Long.valueOf(String.valueOf(eventContext.getMessage().getOutboundProperty("idLote")));
+			}
+			
+			if (idLote!=null){
+				auditoria.setIdLote(idLote);
 			}
 			
 			// Actualizamos la petición

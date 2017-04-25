@@ -200,7 +200,7 @@ public class BTSender
     		StringWriter writer = new StringWriter();
     		transformer.transform(new DOMSource(docOriginal), new StreamResult(writer));
     		String output = writer.getBuffer().toString().replaceAll("\n|\r", "").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-    		System.out.println(output);
+    		LOG.info(output);
     		
     		URL url = new URL(this.url);
     	
@@ -217,8 +217,8 @@ public class BTSender
     		out.close();
     		
     		
-    			System.out.println("Response Code: " + httpConnection.getResponseCode());
-    			System.out.println("Response Message: " + httpConnection.getResponseMessage());
+    		LOG.info("Response Code: " + httpConnection.getResponseCode());
+    		LOG.info("Response Message: " + httpConnection.getResponseMessage());
     		
     		InputStreamReader reader = new InputStreamReader( httpConnection.getInputStream() );
     		StringBuilder buf = new StringBuilder();

@@ -14,8 +14,11 @@ public interface IRefreshStatusService {
 	 * 
 	 * @param mensajeId
 	 * @param destinatarioMensajeId
+	 * @param loteId 
+	 * @param aplicacionPremium 
+	 * @param usuarioAplicacion 
 	 */
-    public void refreshStatus(Long mensajeId, Long destinatarioMensajeId) throws Exception;
+    public void refreshStatus(Long mensajeId, Long destinatarioMensajeId, Long loteId, String aplicacionPremium, String usuarioAplicacion) throws Exception;
 	
 
 }

@@ -8,7 +8,7 @@
 						http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 						http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
 	<sub-flow name="FLW-MSG-ADP" doc:name="FLW-MSG-ADP">
-		<logger level="INFO" doc:name="Logger" message="Inicio del flujo FLW-MSG-ADP - Payload: #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - Adaptar protocol] Inicio del flujo FLW-MSG-ADP - Payload: #[payload]" />
 		
 		<processor-chain doc:name="Processor Chain">
 			<set-variable value="#[payload]" variableName="${PETICION_BACKUP}" doc:name="Backup del payload" />
@@ -23,6 +23,6 @@
 				
 		</processor-chain>
 
-		<logger level="INFO" doc:name="Logger" message="Fin del flujo FLW-MSG-ADP - Payload: #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - Adaptar protocol] Fin del flujo FLW-MSG-ADP - Payload: #[payload]" />
 	</sub-flow>
 </mule>

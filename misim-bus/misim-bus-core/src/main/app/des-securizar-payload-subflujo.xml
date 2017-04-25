@@ -7,14 +7,14 @@
 						http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 						
 	<sub-flow name="FLW-SEG-RES" doc:name="Desecurizar Payload">
-		<logger level="INFO" doc:name="Logger" message="Inicio del flujo FLW-SEG-PET - Payload: #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - DESECURIZAR] Inicio del flujo FLW-SEG-PET - Payload: #[payload]" />
 			
 			
 		<!-- VALIDAR FIRMA -->
-		<logger level="INFO" doc:name="Logger" message="Comprobar validacion de la firma de la respuesta" />
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - DESECURIZAR] Comprobar validacion de la firma de la respuesta" />
 		<choice doc:name="Validacion Firma Productor">
 			<when expression="#[message.outboundProperties['${FIRMA}'] == '${INDICADOR_FIRMADO_PROVEEDOR}']">
-				<logger level="INFO" message="Validacion de la firma requerida" doc:name="Logger" />
+				<logger level="INFO" message="[SUBFLOW - DESECURIZAR] Validacion de la firma requerida" doc:name="Logger" />
 				<processor-chain doc:name="Processor Chain">
 					<component	doc:name="Validar la firma de la respuesta" >
 						<spring-object bean="validarFirma" />
@@ -22,26 +22,26 @@
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" message="Validacion de la firma no requerida" doc:name="Logger" />
+				<logger level="INFO" message="[SUBFLOW - DESECURIZAR] Validacion de la firma no requerida" doc:name="Logger" />
 			</otherwise>
 		</choice>
 		
 		<!-- DESENCRIPTAR -->
-		<logger level="INFO" doc:name="Logger" message="Comprobar desencriptacion de la respuesta" />
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - DESECURIZAR] Comprobar desencriptacion de la respuesta" />
 		<choice doc:name="Desencriptacion Emisor">
 			<when expression="#[message.outboundProperties['${CIFRADO}'] == '${INDICADOR_CIFRADO_PROVEEDOR}']">
 				<processor-chain doc:name="Processor Chain">
-					<logger level="INFO" message="Desencriptacion de la respuesta requerida" doc:name="Logger" />
+					<logger level="INFO" message="[SUBFLOW - DESECURIZAR] Desencriptacion de la respuesta requerida" doc:name="Logger" />
 					<component	doc:name="Desencriptar la respuesta" >
 						<spring-object bean="desencriptar" />
 					</component>
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" message="Desencriptacion de la respuesta no requerida" doc:name="Logger" />
+				<logger level="INFO" message="[SUBFLOW - DESECURIZAR] Desencriptacion de la respuesta no requerida" doc:name="Logger" />
 			</otherwise>
 		</choice>
 			
-		<logger level="INFO" doc:name="Logger" message="Fin del flujo FLW-SEG-RES - Payload: #[payload]" />
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - DESECURIZAR] Fin del flujo FLW-SEG-RES - Payload: #[payload]" />
 	</sub-flow>
 </mule>

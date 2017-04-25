@@ -29,7 +29,7 @@ public class XMLConcat {
 			xmlResultado = xmlResultado +"</root>";
 
 			document = XMLUtils.xml2doc(xmlResultado,Charset.forName("UTF-8"));
-//			System.out.println(xmlResultado);
+//			LOG.info(xmlResultado);
 			
 		}catch(Exception e){
 			//Lanzar error

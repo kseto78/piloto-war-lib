@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlType;
     "producto",
     "proveedor",
     "mensajeId",
+    "loteId",
     "datosEspecificos"
 })
 @XmlRootElement(name = "Peticion")
@@ -58,6 +59,8 @@ public class PeticionConsultaEstado {
     protected String proveedor;
     @XmlElement(name = "MensajeId", required = true)
     protected String mensajeId;
+    @XmlElement(name = "idLote", required = true)
+    protected String loteId;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificosConsultaEstado datosEspecificos;
 
@@ -180,8 +183,16 @@ public class PeticionConsultaEstado {
     public void setMensajeId(String value) {
         this.mensajeId = value;
     }
+    
+    public String getLoteId() {
+		return loteId;
+	}
 
-    /**
+	public void setLoteId(String loteId) {
+		this.loteId = loteId;
+	}
+
+	/**
      * Obtiene el valor de la propiedad datosEspecificos.
      * 
      * @return
@@ -207,7 +218,7 @@ public class PeticionConsultaEstado {
 
 	@Override
 	public String toString() {
-		return "PeticionMisim [usuario=" + usuario + ", password=" + password + ", producto=" + producto + ", proveedor=" + proveedor + ", mensajeId=" + mensajeId + ", datosEspecificos=" + datosEspecificos + "]";
+		return "PeticionMisim [usuario=" + usuario + ", password=" + password + ", producto=" + producto + ", proveedor=" + proveedor + ", mensajeId=" + mensajeId + ", loteId=" + loteId + ", datosEspecificos=" + datosEspecificos + "]";
 	}
 	
 	public String toXML() {

@@ -1,8 +1,14 @@
 package es.minhap.misim.bus.webapp.serviceprovider;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.ServiceMode;
@@ -15,11 +21,16 @@ import misim.bus.common.util.XMLUtils;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
+import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoXMLBean;
+import es.minhap.plataformamensajeria.iop.services.seguimiento.SeguimientoMensajesImpl;
 import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.ResponseStatusType;
 import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.Respuesta;
 
@@ -34,7 +45,7 @@ public class RecepcionSeguimientoSIMWSProvider extends WSProvider {
 	 */
 	public static final String RECEPT_QUEUE = "vm://recepcion-sim";
 	
-
+	
 	@Override
 	public SOAPMessage invoke(final SOAPMessage request) {
 
@@ -54,16 +65,29 @@ public class RecepcionSeguimientoSIMWSProvider extends WSProvider {
 				}
 			}
 			try {
-
+				
+				SeguimientoMensajesImpl seguimientoMensajesImpl = (SeguimientoMensajesImpl) getMuleContext().getRegistry().lookupObject("seguimientoMensajesImpl");
+				
 				SoapPayload<?> payload = new PeticionPayload();
 				payload.setSoapAction(String.class.cast(getContext().getMessageContext().get(SOAP_ACTION)));
 				payload.setSoapMessage(XMLUtils.soap2dom(request));
-			
-//				System.out.println("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
-
-				final MuleMessage muleResponse = getMuleClient().send(RECEPT_QUEUE,payload, null, 10000);
 				
-				responseSOAP = XMLUtils.dom2soap(muleResponse.getPayload(SoapPayload.class).getSoapMessage());
+				final Document docOriginal = XMLUtils.soap2dom(request);
+				
+				NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "PeticionEstado");
+				String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
+				
+				ConsultaEstadoXMLBean consultaEstado = new ConsultaEstadoXMLBean();
+				consultaEstado.loadObjectFromXML(xmlPeticion);
+				
+				String respuesta=seguimientoMensajesImpl.consultarEstado(consultaEstado);
+				
+				Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
+				String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
+				
+				responseSOAP = getSoapMessageFromString(respuestaCompleta);
+				
+				
 
 			} catch (final Exception e) {
 				throw new RuntimeException("Error in provider endpoint", e);
@@ -80,6 +104,7 @@ public class RecepcionSeguimientoSIMWSProvider extends WSProvider {
 		return responseSOAP;
 	}
 	
+
 	/**
 	 * Genera el SOAP Fault Message
 	 * 
@@ -101,5 +126,10 @@ public class RecepcionSeguimientoSIMWSProvider extends WSProvider {
 		return XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(respuesta, Charset.forName("UTF-8"), Respuesta.class));
 	}
 
-
+	private SOAPMessage getSoapMessageFromString(String xml) throws SOAPException, IOException {
+		MessageFactory factory = MessageFactory.newInstance();
+		SOAPMessage message = factory.createMessage(new MimeHeaders(), new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
+		return message;
+	}
+	
 }

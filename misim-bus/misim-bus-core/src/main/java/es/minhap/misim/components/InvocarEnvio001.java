@@ -58,6 +58,7 @@ public class InvocarEnvio001 implements Callable {
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+	
 	PropertiesServices ps = null;
 
 	@Override
@@ -72,11 +73,6 @@ public class InvocarEnvio001 implements Callable {
 		String passwordMISIM = ps.getMessage("misim.aplicacion.aeat.contrasena.sms", null, null, null);
 		Integer reintentos = new Integer(ps.getMessage("aeat.reintentos.sms.premium", null, null, null));
 		
-		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
-		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
-		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
-
-
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -96,13 +92,15 @@ public class InvocarEnvio001 implements Callable {
 			resp.loadObjectFromXML(respuesta);
 			
 			Long idMensaje = (null != resp.getIdMensaje() && resp.getIdMensaje().length()>0)? Long.parseLong(resp.getIdMensaje()) : null;
+			Long idLote = null;
 			
 			if (null != idMensaje){
-				levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje);
-				
+				idLote = tblMensajesManager.getIdLoteByIdMensaje(idMensaje);
+				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+//				levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje, idLote);
 			}
-	
 		
+							
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
@@ -128,14 +126,13 @@ public class InvocarEnvio001 implements Callable {
 				eventContext.getMessage().setPayload(soapPayload);
 
 			} catch (Exception e) {
-				// Lanzar error
 				LOG.error("Error en la transmision: Error al obtener la respuesta del servicio Web especificado", e);
 				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
 			}
 
 
 		} catch (ModelException e) {
-
+			LOG.error(e.getMensaje());
 			throw new ModelException(e.getMensaje(), e.getCodigo());
 
 		} catch (Exception e) {
@@ -150,13 +147,13 @@ public class InvocarEnvio001 implements Callable {
 	}
 
 	private void levantarHilo(String estadoPendiente, String estadoAnulado, String estadoIncidencia,
-			es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp, Long idMensaje) {
+			es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp, Long idMensaje, Long idLote) {
 		String estadoActual = tblMensajesManager.getMensaje(Long.parseLong(resp.getIdMensaje())).getEstadoactual();
 		List<TblDestinatariosMensajes> listaDestinatarios = tblDestinatariosMensajes.getDestinatarioMensajes(idMensaje);
 		
 		for (TblDestinatariosMensajes d : listaDestinatarios) {
 			if (estadoActual.equals(estadoIncidencia) || estadoActual.equals(estadoAnulado) || estadoActual.equals(estadoPendiente)){
-				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService, tblMensajesManager, idMensaje, d.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
+				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService, tblMensajesManager, idMensaje, idLote, d.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
 				hilo1.start();
 			}
 		}

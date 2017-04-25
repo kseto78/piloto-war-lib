@@ -205,7 +205,7 @@ public class GMCSendMessage {
 //	    	data = data.replace("contentTitle", "TituloNoValido");
 //	    	data = data.replace("tickerText", "contentTitle");
 //	    	data = data.replace("TituloNoValido", "tickerText");
-//	    	System.out.println("GMCSendMessage :".concat(data));
+//	    	LOG.info("GMCSendMessage :".concat(data));
 	    	data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ");
 	    	string = string.concat(" \"data\": ").concat(data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ")).concat("}");
 //        	{ "registration_ids": [ "APA91bEAI5WzTsswjqftDmN9DW4_cczfc8eRveae9xoCvc-ME0uuoaqLz9Qy0D06Uek9189v4jm3sihpeYbWI2Zyp9mI5Ky1_jROLaaMkLTnEy_L7avvuYqZxwFPE147I8BPq5FAtfGe59GIrbEodbefI1fhTR_Mkg", "APA91bEVZx1Bxm7QGLXyCFNgsufhCFZ1EBt3R6J1kXxyQGp4CQXUp96fO7ZTRMuh0ga9OS0wMnxji4eDkc0W3NwC0SMsPbhNt6kJg1ktT39CNRkRsFH7Kp-6OOeBqZuz05zGApkHXLOPxUeQ5esDSHDk-N-eW4wlSg" ], "data": {"contentTitle":"titulo", "tickerText":"TicketText", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "message":"Prueba de avisos PUSH por favor avisad si os llega", "url": "http://google.com"}}        	
@@ -218,7 +218,7 @@ public class GMCSendMessage {
         	
         	//string = data;
         	log.info("GMCSendMessage string:".concat(string));
-//	    	System.out.println("GMCSendMessage data:".concat(data));	    	
+//	    	LOG.info("GMCSendMessage data:".concat(data));	    	
         } 	else{
             notificationObject.accumulate("title", title);
             notificationObject.accumulate("badge", badge);
@@ -299,7 +299,7 @@ public class GMCSendMessage {
 //        "\"data\": {\"tickerText\":\"" + title + "\", " +
 //                   "\"contentTitle\":\"" + title + "\", " +
 //                   "\"message\": \"" + body + "\"}}";
-//    	System.out.println("GMCSendMessage string:".concat(string));	    	
+//    	LOG.info("GMCSendMessage string:".concat(string));	    	
         return string;
 
 //		return getJsonResponse(jsonObject);

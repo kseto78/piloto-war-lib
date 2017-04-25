@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="misim-bus-webapp-1.0.0">
+    <wb-module deploy-name="misim-bus-webapp-2.0.0">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <dependent-module archiveName="misim-bus-core-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-core/misim-bus-core">
+        <dependent-module archiveName="misim-bus-core-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-core/misim-bus-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="misim-bus-model-api-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-model-api/misim-bus-model-api">
+        <dependent-module archiveName="misim-bus-model-api-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-model-api/misim-bus-model-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="misim-bus-common-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-common/misim-bus-common">
+        <dependent-module archiveName="misim-bus-common-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-common/misim-bus-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="misim-bus-model-impl-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-model-impl/misim-bus-model-impl">
+        <dependent-module archiveName="misim-bus-model-impl-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-model-impl/misim-bus-model-impl">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="misim-bus-persistence-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-persistence/misim-bus-persistence">
+        <dependent-module archiveName="misim-bus-persistence-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/misim-bus-persistence/misim-bus-persistence">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="PlataformaMensajeriaIOP-2.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/PlataformaMensajeriaIOP/PlataformaMensajeriaIOP">

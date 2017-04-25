@@ -1,19 +1,40 @@
 package es.minhap.plataformamensajeria.iop.business.refreshstatus;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
 
+import misim.bus.common.bean.SoapPayload;
+import misim.bus.common.util.XMLUtils;
+
+import org.mule.api.MuleContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.context.MuleContextAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import es.map.sim.jms.sender.SIMMessageSender;
 import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
+import es.minhap.misim.bus.core.pojo.PeticionPayload;
+import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionNotificacionEstadoSMS;
 import es.minhap.plataformamensajeria.iop.beans.entity.EstadosBean;
 import es.minhap.plataformamensajeria.iop.business.beans.consultaestado.DatosEspecificosConsultaEstado;
 import es.minhap.plataformamensajeria.iop.business.beans.consultaestado.PeticionConsultaEstado;
@@ -27,11 +48,15 @@ import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
+import es.minhap.plataformamensajeria.iop.manager.TblUrlMensajePremiumManager;
+import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
+import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensajesService;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosProveedor;
 import es.minhap.plataformamensajeria.sm.modelo.SMSData;
 import es.minhap.plataformamensajeria.sm.modelo.Servicio;
 import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServidores;
+import es.redsara.misim.misim_bus_webapp.respuesta.ResponseStatusType;
 
 /**
  * 
@@ -39,7 +64,7 @@ import es.minhap.sim.model.TblServidores;
  *
  */
 @Service("refreshStatusServiceImpl")
-public class RefreshStatusServiceImpl implements IRefreshStatusService {
+public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleContextAware {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RefreshStatusServiceImpl.class);
 
@@ -57,6 +82,12 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 	
 	@Resource
 	private TblHistoricosManager tblHistoricosManager;
+	
+	@Resource
+	ISeguimientoMensajesService seguimientoMensajesImpl;
+	
+	@Resource(name="TblUrlMensajePremiumManagerImpl")
+	private TblUrlMensajePremiumManager urlMensajeManager;
 	
 	@Autowired
 	private QueryExecutorMensajes queryExecutorMensajes;
@@ -85,15 +116,22 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	
-
+	private MuleContext muleContext;
+	
+	private static final String HEADER = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"> <soapenv:Header/> <soapenv:Body>";    
+	
+	private static final String FOOTER = "</soapenv:Body></soapenv:Envelope>";
+	
 	private boolean repetirRefreshStatus = false;
 	private static String separador = "-----------------------------------";
 	private static String txtPost = "(postSMS)";
+	private String aplicacionAEAT = "";
 	
 	@Override
-	public void refreshStatus(Long mensajeId, Long destinatarioMensajeId) throws Exception{
+	public void refreshStatus(Long mensajeId, Long destinatarioMensajeId, Long loteId, String aplicacionPremium, String usuarioAplicacion) throws Exception{
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String ejecutarTodosServidores = ps.getMessage("refreshStatus.ejecutarTodosProveedores", null);
+		aplicacionAEAT= ps.getMessage("aeat.aplicacion", null, "AEAT");
 		Map<Integer, Servicio> mapServicios;
 		boolean sendOK;
 		String uim;
@@ -109,11 +147,11 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 		uim = tblDestinatariosMensajesManager.getUim(smsData.destinatarioMensajeId);
 
 		if ("S".equals(ejecutarTodosServidores)) {
-			sendOK = consultaTodosProveedores(mensajeId, mapServicios, uim, smsData, numServidores);
+			sendOK = consultaTodosProveedores(mensajeId, mapServicios, uim, smsData, numServidores, loteId, aplicacionPremium);
 
 		} else {
 			// busca el primer proveedor que esta en la tabla
-			sendOK = consultaPrimerProveedor(mensajeId, mapServicios, uim, smsData);
+			sendOK = consultaPrimerProveedor(mensajeId, mapServicios, uim, smsData, loteId, aplicacionPremium);
 		}
 		
 		if (!sendOK) {
@@ -134,6 +172,8 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 
 			mns.setCodSia(mensaje.getCodsia());
 			mns.setIdMensaje(mensaje.getMensajeid().toString());
+			mns.setIdLote(loteId.toString());
+			mns.setUsuarioAplicacion(usuarioAplicacion);
 			messageSender.sendRefresh(mns, numMaxReintentos);
 		}
 
@@ -141,7 +181,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 
 
 	private boolean consultaTodosProveedores(Long mensajeId, Map<Integer, Servicio> mapServicios, String uim,
-			SMSData smsData, int numServidores) {
+			SMSData smsData, int numServidores, Long loteId, String aplicacionPremium) {
 		boolean sendOK;
 		ParametrosProveedor ps;
 		Integer proveedorID;
@@ -158,7 +198,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 			if (mapServicios.containsKey(proveedorID)) {
 				Servicio s = mapServicios.get(proveedorID);
 				ps = smsData.Servers.get(indice);
-				sendOK = consultarEstado(ps, mensajeId, smsData, s, uim);
+				sendOK = consultarEstado(ps, mensajeId, smsData, s, uim, loteId, aplicacionPremium);
 			}
 			indice++;
 		}
@@ -167,7 +207,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 
 
 	private boolean consultaPrimerProveedor(Long mensajeId, Map<Integer, Servicio> mapServicios, String uim,
-			SMSData smsData) {
+			SMSData smsData, Long loteId, String aplicacionPremium) {
 		boolean sendOK;
 		ParametrosProveedor ps;
 		Integer proveedorID = 0;
@@ -184,12 +224,12 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 		Servicio s = mapServicios.get(proveedorID);
 		registerSMSParametersDebug(smsData, 0);
 		ps = smsData.Servers.get(0);
-		sendOK = consultarEstado(ps, mensajeId, smsData, s, uim);
+		sendOK = consultarEstado(ps, mensajeId, smsData, s, uim, loteId, aplicacionPremium);
 		return sendOK;
 	}
 	
 	
-	private boolean consultarEstado(ParametrosProveedor ps, long mensajeId, SMSData smsData, Servicio s, String uim) {
+	private boolean consultarEstado(ParametrosProveedor ps, long mensajeId, SMSData smsData, Servicio s, String uim, long loteId, String aplicacionPremium) {
 			boolean res = false;
 		try {
 			PropertiesServices pa = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -211,6 +251,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 			pet.setProducto(producto);
 			pet.setProveedor(proveedor);
 			pet.setMensajeId(String.valueOf(mensajeId));
+			pet.setLoteId(String.valueOf(loteId));
 			
 		
 			DatosEspecificosConsultaEstado de = new DatosEspecificosConsultaEstado();
@@ -226,7 +267,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 			String respuesta = commonUtilitiesService.sendMessage(pet, pa.getMessage("constantes.SOAP_ACTION", null), pa.getMessage("constantes.RECEPT_QUEUE", null));
 			
 			
-			res = codificaRespuesta(mensajeId, smsData, respuesta);			
+			res = codificaRespuesta(mensajeId, smsData, respuesta, aplicacionPremium, pa);			
 			
 		} catch (Exception ex) {
 			if (LOG.isDebugEnabled())
@@ -238,12 +279,16 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 	}
 
 
-	private boolean codificaRespuesta(long mensajeId, SMSData smsData, String respuesta) {
+	private boolean codificaRespuesta(long mensajeId, SMSData smsData, String respuesta, String aplicacionPremium, PropertiesServices pa) {
 		boolean res = false;
 		 // ejemplo respuesta error: 'ERROR|-10|UIM not found' ejemplo respuesta ok:	
 		try {
-//			respuesta= "OK|00|PENDIENTE DE SER PROCESADO POR LA PLATAFORMA";
-			StringTokenizer st = new StringTokenizer(respuesta, "|");
+		//	respuesta= "OK|00|PENDIENTE DE SER PROCESADO POR LA PLATAFORMA";
+//			respuesta = "ERROR|-10|UIM not found";
+			es.minhap.plataformamensajeria.iop.business.beans.enviarmensaje.Respuesta resp = new es.minhap.plataformamensajeria.iop.business.beans.enviarmensaje.Respuesta();
+			resp.loadObjectFromXML(respuesta);
+			
+			StringTokenizer st = new StringTokenizer(resp.getStatus().getStatusText(), "|");
 			String exito = st.nextToken();
 			String cod;
 			
@@ -258,6 +303,11 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 				descripcion = estadoMensaje.getDescripcion();
 				if (ultimoEstadoHistorialId != estadoMensaje.getEstadoId()){
 					tblMensajesManager.setEstadoMensaje(mensajeId, estadoFinal, descripcion, false, smsData.destinatarioMensajeId, cod, null, null);
+					
+					//Si es AEAT invocar a AEAT
+					if (aplicacionPremium.contains(aplicacionAEAT)){
+						invocarAEAT(resp, pa);
+					}
 				}
 				res = true;
 			}else{
@@ -266,6 +316,12 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 				estadoFinal = tblEstadosManager.getEstadoById(estadoMensaje.getEstadoId()).getNombre();
 				descripcion = estadoMensaje.getDescripcion();
 				tblMensajesManager.setEstadoMensaje(mensajeId, estadoFinal, descripcion, false, smsData.destinatarioMensajeId, cod, null, null);
+				
+				//Si es AEAT invocar a AEAT
+				if (aplicacionPremium.contains(aplicacionAEAT)){
+					invocarAEAT(resp, pa);
+				}
+				
 				res = false;
 			}
 			//Si el subestado se corresponde con el estado de Pendiente de Operador se reencola
@@ -279,6 +335,150 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 	}
 	
 
+	
+	private void invocarAEAT(es.minhap.plataformamensajeria.iop.business.beans.enviarmensaje.Respuesta respuesta,
+			PropertiesServices pa) {
+		String errorClave = pa.getMessage("clave.ERRORCLAVE.AEAT", null, "[ERROR-CL@VE]:");
+		String ok = pa.getMessage("clave.respuestaOK.AEAT", null, "OK");
+
+		try {
+			Long mensajeId = Long.parseLong(respuesta.getMessageId());
+			String endpointUrl = urlMensajeManager.getUrlByMensaje(mensajeId).getUrl();
+
+			SOAPMessage soapMessage = envioAEAT(mensajeId, endpointUrl, null, null, respuesta.getStatus()
+					.getStatusText(), pa);
+
+			String respuestaAEAT = "";
+			if (null != soapMessage) {
+				respuestaAEAT = pharseMessageToString(soapMessage);
+				if (!respuestaAEAT.contains(ok)) {
+					LOG.error(errorClave + "Error notificar estado AEAT Mensaje [" + mensajeId + "]");
+				}
+			}
+		} catch (Exception e) {
+			LOG.error(errorClave + "Error notificar estado AEAT");
+			LOG.error("[RefreshStatusServiceImpl.invocarAEAT] Error notificar estado AEAT",e);
+		}
+	}
+
+	
+	public SOAPMessage envioAEAT(Long mensajeId,String endpointUrl,String sender, String recipient, String statusText, PropertiesServices pa){
+		LOG.debug("Empezando el proceso de invocación al emisor...");
+		String respuestaIncompleta ="";
+		SOAPMessage soapMessage = null;
+		try{
+			String usuarioAEAT = pa.getMessage("aeat.usuario.sms", null);
+			String passwordAEAT = pa.getMessage("aeat.contrasena.sms", null);
+			Integer idServicioAEAT = new Integer(pa.getMessage("aeat.servicio.sms.premium", null, null, null));
+			respuestaIncompleta=seguimientoMensajesImpl.consultarEstadoAEAT(idServicioAEAT, mensajeId.intValue(), null, usuarioAEAT, passwordAEAT,sender,recipient, statusText);
+			
+			PeticionNotificacionEstadoSMS petNotAEAT = new PeticionNotificacionEstadoSMS();
+			petNotAEAT.loadObjectFromXML(respuestaIncompleta);
+
+			soapMessage = sendMessage(petNotAEAT);
+			
+		}catch(IllegalArgumentException e){
+			soapMessage = generateSOAPFaultEnvio(soapMessage, "Error al generar el cliente: Endpoint no encontrado en el WSDL");
+			LOG.error("Error al generar el cliente: Endpoint no encontrado en el WSDL",e);
+			LOG.error("La peticion que se envia es :" + respuestaIncompleta);
+		}catch (SOAPFaultException e) {		
+			soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error al contactar con el servicio Web especificado");
+			LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado",e);
+			LOG.error("La peticion que se envia es :" + respuestaIncompleta);
+		}catch(WebServiceException e){
+			
+			if(e.getCause()!=null){
+				if(e.getCause().getClass().equals(SocketTimeoutException.class)){
+					soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Comunicación sin respuesta");
+					LOG.error("Error en la transmisión: Comunicación sin respuesta",e);
+					LOG.error("La peticion que se envia es :" + respuestaIncompleta);
+				}else{
+					soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error al contactar con el servicio Web especificado");
+					LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
+					LOG.error("La peticion que se envia es :" + respuestaIncompleta);
+				}
+			}else{
+				soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error al contactar con el servicio Web especificado");
+				LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
+				LOG.error("La peticion que se envia es :" + respuestaIncompleta);
+			}
+		}catch(Exception e){
+			soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error de sistema Invocar Emisor");
+			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
+			LOG.error("La peticion que se envia es :" + respuestaIncompleta);
+		}
+		
+		LOG.debug("Proceso de creación de invocación al emisor terminado.");
+	return soapMessage;
+	}
+	
+	private SOAPMessage sendMessage(PeticionNotificacionEstadoSMS envio) {
+		SOAPMessage res = null;
+		String soapAction = "ACUSE_AEAT";
+		String receptQueue = "vm://recepcion-AEAT";
+		try {
+			SoapPayload<?> payload = new PeticionPayload();
+			payload.setSoapAction(soapAction);
+			String xml = mountSoapRequest(envio);
+			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			DocumentBuilder db = null;
+			db = dbf.newDocumentBuilder();
+			Document soapDOM = db.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("UTF-8"))));
+			payload.setSoapMessage(soapDOM);
+			payload.setSoapAplication(aplicacionAEAT);
+			// llamamos al flujo recepcion-AEAT
+			final MuleMessage muleResponse = muleContext.getClient().send(receptQueue,payload, null, 10000);
+			
+			res = XMLUtils.dom2soap(muleResponse.getPayload(SoapPayload.class).getSoapMessage());
+			
+		} catch (Exception e) {
+			LOG.error("ReintentoGISSJob.execute: Se ha producido un error en el reenvio ", e);
+		}
+		return res;
+	}
+	
+	
+	private String pharseMessageToString(SOAPMessage soapMessage) throws SOAPException, IOException {
+		String xml;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		soapMessage.writeTo(out);
+		xml = new String(out.toByteArray());
+		return xml;
+	}
+	
+	private String mountSoapRequest(PeticionNotificacionEstadoSMS envio) throws PlataformaBusinessException {
+		StringBuilder soapRequest = new StringBuilder();
+		soapRequest.append(HEADER);
+		String xml = envio.toXML();
+		soapRequest.append(xml.substring(xml.indexOf(">")+1,xml.length()));
+		soapRequest.append(FOOTER);
+		return soapRequest.toString();
+	}
+	
+	/**
+	 * Genera el SOAP Fault Message
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	protected static final SOAPMessage generateSOAPFaultEnvio(SOAPMessage request, String descripcion) {
+		try{
+			ResponseStatusType response = new ResponseStatusType();
+			
+			response.setStatusCode("0403");
+			response.setStatusText("KO");
+			response.setDetails(descripcion);
+	
+			
+			return XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(response, Charset.forName("UTF-8"), ResponseStatusType.class));
+		}catch (Exception e){
+			LOG.error("Error generando Respuesta",e);
+			return null;
+		}
+		
+	}
 	
 	
 	private void registerSMSDetailsDebug(SMSData smsData) {
@@ -585,6 +785,16 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService {
 	 */
 	public void setTblHistoricosManager(TblHistoricosManager tblHistoricosManager) {
 		this.tblHistoricosManager = tblHistoricosManager;
+	}
+
+
+	public MuleContext getMuleContext() {
+		return muleContext;
+	}
+
+	@Override
+	public void setMuleContext(MuleContext context) {
+		this.muleContext = context;
 	}
 	
 }

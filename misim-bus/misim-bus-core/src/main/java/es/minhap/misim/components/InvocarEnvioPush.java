@@ -70,6 +70,13 @@ public class InvocarEnvioPush implements Callable {
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
+			NodeList nodoLoteId = doc.getElementsByTagName("idLote");
+			
+			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+				String idLote=nodoLoteId.item(0).getTextContent();
+				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+			}
+			
 			SOAPMessage responseMessage = getSoapMessageFromString(respuestaCompleta);
 
 			try {
@@ -85,7 +92,7 @@ public class InvocarEnvioPush implements Callable {
 					soapPayload = new SoapPayload<Respuesta>();
 					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				}
-
+				
 				if(LOG.isInfoEnabled()){
 		        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
 		        }

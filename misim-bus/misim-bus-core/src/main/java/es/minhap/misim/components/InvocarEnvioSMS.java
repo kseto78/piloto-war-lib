@@ -50,8 +50,7 @@ public class InvocarEnvioSMS implements Callable {
 					.getSoapMessage();
 			
 			if(LOG.isInfoEnabled()){
-	        	LOG.info("REQUEST: "+ XMLUtils.dom2xml(docOriginal));
-	        }
+				LOG.info("REQUEST: " + XMLUtils.dom2xml(docOriginal));}
 
 			NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion",
 					"Peticion");
@@ -64,6 +63,13 @@ public class InvocarEnvioSMS implements Callable {
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
+			NodeList nodoLoteId = doc.getElementsByTagName("idLote");
+			
+			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+				String idLote=nodoLoteId.item(0).getTextContent();
+				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+			}
+			
 			SOAPMessage responseMessage = getSoapMessageFromString(respuestaCompleta);
 
 			try {
@@ -79,11 +85,9 @@ public class InvocarEnvioSMS implements Callable {
 					soapPayload = new SoapPayload<Respuesta>();
 					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				}
-
-				if(LOG.isInfoEnabled()){
-		        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-		        }
 				
+				if(LOG.isInfoEnabled()){
+					LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));}
 				soapPayload.setSoapAction(initPayload.getSoapAction());
 				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 

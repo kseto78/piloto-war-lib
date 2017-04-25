@@ -93,11 +93,11 @@ import es.minhap.sim.query.TblServidoresQuery;
 /**
  * 
  * @author everis
- *
+ * 
  */
 @Service("sendMessageService")
 public class SendMessageServiceImpl implements ISendMessageService {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(SendMessageServiceImpl.class);
 
 	@Autowired
@@ -105,10 +105,10 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 	@Resource
 	private TblServidoresManager servidoresManager;
-	
+
 	@Resource
 	private TblServiciosManager serviciosManager;
-	
+
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
 
@@ -151,17 +151,14 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	@Resource
 	private ICommonUtilitiesService commonUtilitiesService;
 
-	@Autowired(required=true)
+	@Autowired(required = true)
 	private SIMMessageSender messageSender;
-	
+
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
-	
-	@Autowired
-    private SessionFactory sessionFactorySIMApp;
-	
-	
 
+	@Autowired
+	private SessionFactory sessionFactorySIMApp;
 
 	/**
 	 * @return the sessionFactorySIMApp
@@ -171,7 +168,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param sessionFactorySIMApp the sessionFactorySIMApp to set
+	 * @param sessionFactorySIMApp
+	 *            the sessionFactorySIMApp to set
 	 */
 	public void setSessionFactorySIMApp(SessionFactory sessionFactorySIMApp) {
 		this.sessionFactorySIMApp = sessionFactorySIMApp;
@@ -181,8 +179,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	/*** INICIO TRATAMIENTO SNS ***/
 	/************************************/
 	@Override
-	public void postSMS(Long idMensaje, Long destinatarioMensajeId, String codOrganismo, String usuarioAplicacion,
-			String passAplicacion) throws Exception {
+	public void postSMS(Long idMensaje, Long loteId, Long destinatarioMensajeId, String codOrganismo,
+			String usuarioAplicacion, String passAplicacion, String aplicacionPremium) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String okEnvio = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA", null);
 		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
@@ -226,8 +224,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				mensajesManager.setEstadoMensaje(Long.valueOf(idMensaje),
 						ps.getMessage("constantes.ESTADO_ENVIANDO", null), "", false, smsData.destinatarioMensajeId,
 						null, null, null);
-				resultadoSMS = sendSMS(smsData, idMensaje, s, indice, codOrganismo, usuarioAplicacion, passAplicacion,
-						usuarioMISIM, passMISIM);
+				resultadoSMS = sendSMS(smsData, idMensaje, loteId, s, indice, codOrganismo, usuarioAplicacion,
+						passAplicacion, usuarioMISIM, passMISIM);
 				if (LOG.isInfoEnabled()) {
 					LOG.info("Respuesta: " + resultadoSMS);
 				}
@@ -255,34 +253,33 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				if (LOG.isInfoEnabled()) {
 					LOG.info("Mensaje numero " + idMensaje + " enviado (SMS)");
 				}
-				mensajesManager.setEstadoMensaje(idMensaje, okEnvio, resultadoSMS,
-						false, smsData.destinatarioMensajeId, null, null, proveedorID.longValue());
-				
-				// encolamos en cola RefreshStatus si método consulta = 1 
+				mensajesManager.setEstadoMensaje(idMensaje, okEnvio, resultadoSMS, false,
+						smsData.destinatarioMensajeId, null, null, proveedorID.longValue());
+
+				// encolamos en cola RefreshStatus si método consulta = 1
 				// (Consulta de estado)(Tempos)
 				TblMensajes mensaje = mensajesManager.getMensaje(idMensaje);
 				if (mensaje.getMetodoconsulta()){
 					if (null != s &&  null != s.getServicioId()){
 						serv = serviciosManager.getServicio(s.getServicioId().longValue());
-						numMaxReintentos = (null != serv && null != serv.getReintentosConsultaEStado())? 
-								serv.getReintentosConsultaEStado() : Integer.parseInt(ps.getMessage("constantes.consultaEstado.numMaxReintentos", null)); 
+						numMaxReintentos = (null != serv && null != serv.getReintentosConsultaEStado()) ? serv
+								.getReintentosConsultaEStado() : Integer.parseInt(ps.getMessage(
+								"constantes.consultaEstado.numMaxReintentos", null));
 					}
-					encolarMsjRefreshStatus(smsData, idMensaje, numMaxReintentos, mensaje);
+					encolarMsjRefreshStatus(smsData, idMensaje, numMaxReintentos, mensaje, aplicacionPremium, ps);
 				}
 			} else {
-				mensajesManager.setEstadoMensaje(idMensaje, koEnvio,
-						resultadoSMS, false,
+				mensajesManager.setEstadoMensaje(idMensaje, koEnvio, resultadoSMS, false,
 						smsData.destinatarioMensajeId, null, null, proveedorID.longValue());
 				throw new Exception();
 			}
 		} else {
 			mensajesManager.setEstadoMensaje(Long.valueOf(idMensaje),
-					ps.getMessage("constantes.ESTADO_INCIDENCIA", null), "MAIL_ID: " + idMensaje
+					ps.getMessage("constantes.ESTADO_INCIDENCIA", null), "SMS_ID: " + idMensaje
 							+ ". Error: No existe ningun Servidor Disponible", false, smsData.destinatarioMensajeId,
 					null, null, null);
 			throw new Exception();
 		}
-		
 
 	}
 
@@ -330,11 +327,12 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	@Transactional
-	private String sendSMS(SMSData smsData, Long idMensaje, Servicio s, int indice, String codigoOrganismo,
-			String usuarioAplicacion, String passAplicacion, String usernameMISIM, String passwordMISIM) {
+	private String sendSMS(SMSData smsData, Long idMensaje, Long loteId, Servicio s, int indice,
+			String codigoOrganismo, String usuarioAplicacion, String passAplicacion, String usernameMISIM,
+			String passwordMISIM) {
 		PeticionEnvioXML envio = new PeticionEnvioXML();
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		
+
 		try {
 			ParametrosProveedor pp = (ParametrosProveedor) smsData.Servers.get(indice);
 			TblServidoresQuery query = new TblServidoresQuery();
@@ -354,6 +352,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			envio.setMensajeId(idMensaje.toString());
 			envio.setProducto("SMS");
 			envio.setUrlEndpoint(servidor.getUrldestino());
+			envio.setIdLote(loteId.toString());
 			DatosEspecificos de = new DatosEspecificos();
 			de.setSMS_DESTINATARIO(smsData.Telefono);
 			de.setSMS_HEADER(smsData.ServiceData.getHeaderSMS());
@@ -368,41 +367,47 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 			envio.setDatosEspecificos(de);
 
-			String res= commonUtilitiesService.sendMessage(envio, ps.getMessage("constantes.SOAP_ACTION", null), ps.getMessage("constantes.RECEPT_QUEUE", null));
-			
+			String res = commonUtilitiesService.sendMessage(envio, ps.getMessage("constantes.SOAP_ACTION", null),
+					ps.getMessage("constantes.RECEPT_QUEUE", null));
+
 			if (res.contains("OK")) {
 				TblMensajes mensaje = mensajesManager.getMensaje(Long.valueOf(idMensaje));
 				mensaje.setMetodoconsulta(servidor.getMetodoconsulta());
 				mensajesManager.update(mensaje);
 				sessionFactorySIMApp.getCurrentSession().flush();
 			}
-			
+
 			return res;
-			
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOG.error("SendMessageServiceImpl [sendSMS]", ex);
 		}
 		return "";
 	}
 
-	private void encolarMsjRefreshStatus(SMSData smsData, Long idMensaje, Integer numMaxReintentos, TblMensajes mensaje)
+	private void encolarMsjRefreshStatus(SMSData smsData, Long idMensaje, Integer numMaxReintentos, TblMensajes mensaje, String aplicacionPremium, PropertiesServices ps)
 			throws InterruptedException {
 		LOG.info("Starting Refresh Listener Message: " + idMensaje);
+		String usuarioAeat = ps.getMessage("aeat.usuario.sms", null, "aeat");
 		MensajeJMS mns = new MensajeJMS();
-		if (null != smsData.destinatarioMensajeId){
+		if (null != smsData.destinatarioMensajeId) {
 			mns.setIdExterno(destinatariosMensajesManager.getDestinatarioMensaje(smsData.destinatarioMensajeId)
 					.getCodigoexterno());
 			mns.setDestinatarioMensajeId(smsData.destinatarioMensajeId.toString());
-		}
-		else{
+		} else {
 			mns.setIdExterno(mensaje.getCodigoexterno());
 		}
 
 		mns.setCodSia(mensaje.getCodsia());
 		mns.setIdMensaje(mensaje.getMensajeid().toString());
-		messageSender.sendRefresh(mns, numMaxReintentos);
+		mns.setIdLote(mensajesManager.getIdLoteByIdMensaje(mensaje.getMensajeid()).toString());
 		
+		if (null != aplicacionPremium && usuarioAeat.toLowerCase().contains(aplicacionPremium.toLowerCase()) ){
+			mns.setUsuarioAplicacion(aplicacionPremium);	
+		}
+
+		messageSender.sendRefresh(mns, numMaxReintentos);
+
 	}
 
 	/************************************/
@@ -425,7 +430,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			LOG.debug("Intentamos recuperar los datos del mail con id: " + mensajeId + " destinatarioMensaje: "
 					+ lista.toString() + " (postMail)");
 		}
-		if (lista.size() == 1 && lista.get(0)!=null &&  lista.get(0).length()>0)
+		if (lista.size() == 1)
 			mailData = getMailData(mensajeId, Long.parseLong(lista.get(0)));
 		else
 			mailData = getMailData(mensajeId, null);
@@ -446,11 +451,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			if ((!mailData.Subject.isEmpty()) || (!mailData.Body.isEmpty())) {
 				registerMailDetailsDebug(mailData);
 				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),
-						ps.getMessage("constantes.ESTADO_ENVIANDO", null), "", 
-						false, mailData.destinatarioMensajeId,
+						ps.getMessage("constantes.ESTADO_ENVIANDO", null), "", false, mailData.destinatarioMensajeId,
 						null, null, null);
 
-				
 				int numServidores = mailData.Servers.size();
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Numero de servidores: " + numServidores);
@@ -462,11 +465,11 @@ public class SendMessageServiceImpl implements ISendMessageService {
 							LOG.debug("Llamamos a sendMail (postMail)");
 						}
 						try {
-//							LOG.info("BEFORE SENDMAIL TS");
+							// LOG.info("BEFORE SENDMAIL TS");
 							sendMail(mailData, indice, rutaTemporal);
-//							LOG.info("AFTER SENDMAIL TS");
+							// LOG.info("AFTER SENDMAIL TS");
 							sendOK = true;
-							
+
 						} catch (Exception e) {
 							sendOK = false;
 							errorMessage.append(e.getMessage());
@@ -483,15 +486,16 @@ public class SendMessageServiceImpl implements ISendMessageService {
 								if (invalid.length <= 0) {
 									errorMessage.append(". Causa: " + sfex.getCause());
 								} else {
-									errorMessage.append(". Mail: " + invalid[0].toString() + " Causa: " + sfex.getCause());
+									errorMessage.append(". Mail: " + invalid[0].toString() + " Causa: "
+											+ sfex.getCause());
 								}
 							}
 							LOG.error("Excepcion :" + errorMessage + " (postMail)", e);
 
 							TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 							tblErrorMensajeLog.setCodigoerror(new Long("0"));
-							tblErrorMensajeLog.setDescripcionerror("MAIL_ID: " + mensajeId + ". Error: (" + e.hashCode()
-									+ ") " + errorMessage);
+							tblErrorMensajeLog.setDescripcionerror("MAIL_ID: " + mensajeId + ". Error: ("
+									+ e.hashCode() + ") " + errorMessage);
 							tblErrorMensajeLog.setFecha(new Date());
 							tblErrorMensajeLog.setOperacion("postMail");
 							errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
@@ -509,11 +513,11 @@ public class SendMessageServiceImpl implements ISendMessageService {
 							LOG.debug("Llamamos a sendMail (postMail)");
 						}
 						try {
-//							LOG.info("BEFORE SENDMAIL");
+							// LOG.info("BEFORE SENDMAIL");
 							sendMail(mailData, indice, rutaTemporal);
-//							LOG.info("AFTER SENDMAIL");
+							// LOG.info("AFTER SENDMAIL");
 							sendOK = true;
-							
+
 						} catch (Exception e) {
 							sendOK = false;
 							errorMessage.append(e.getMessage());
@@ -530,15 +534,16 @@ public class SendMessageServiceImpl implements ISendMessageService {
 								if (invalid.length <= 0) {
 									errorMessage.append(". Causa: " + sfex.getCause());
 								} else {
-									errorMessage.append(". Mail: " + invalid[0].toString() + " Causa: " + sfex.getCause());
+									errorMessage.append(". Mail: " + invalid[0].toString() + " Causa: "
+											+ sfex.getCause());
 								}
 							}
 							LOG.error("Excepcion :" + errorMessage.toString() + " (postMail)", e);
 
 							TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 							tblErrorMensajeLog.setCodigoerror(new Long("0"));
-							tblErrorMensajeLog.setDescripcionerror("MAIL_ID: " + mensajeId + ". Error: (" + e.hashCode()
-									+ ") " + errorMessage);
+							tblErrorMensajeLog.setDescripcionerror("MAIL_ID: " + mensajeId + ". Error: ("
+									+ e.hashCode() + ") " + errorMessage);
 							tblErrorMensajeLog.setFecha(new Date());
 							tblErrorMensajeLog.setOperacion("postMail");
 							errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
@@ -547,140 +552,139 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						}
 					}
 				}
-			}	
+			}
 			// MANDAR MENSAJE COMO QUE SE HA ENVIADO CORRECTAMENTE O QUE
 			// HA HABIDO UN ERROR
-			Long servidorId  = Long.valueOf(((ParametrosServidor) mailData.Servers.get(indice)).getServidor());
+			Long servidorId = Long.valueOf(((ParametrosServidor) mailData.Servers.get(indice)).getServidor());
 			if (sendOK) {
 				if (LOG.isInfoEnabled()) {
 					LOG.info("Mail numero " + mensajeId + " enviado (postMail) ");
 				}
-//				LOG.info("BEFORE SETESTADOMENSAJE");
-				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), okEnvio, "Mensaje Enviado Correctamente", false,
-						mailData.destinatarioMensajeId, null, null, servidorId);
-//				LOG.info("AFTER SETESTADOMENSAJE");
+				// LOG.info("BEFORE SETESTADOMENSAJE");
+				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), okEnvio, "Mensaje Enviado Correctamente",
+						false, mailData.destinatarioMensajeId, null, null, servidorId);
+				// LOG.info("AFTER SETESTADOMENSAJE");
 			} else {
 				mensajesManager.setEstadoMensaje(
 						Long.valueOf(mensajeId),
 						koEnvio,
 						" Error: Se ha producido un error en el envio del Mensaje. Detalle del Error: "
-								+ errorMessage.toString(), false, mailData.destinatarioMensajeId, null, null, servidorId);
+								+ errorMessage.toString(), false, mailData.destinatarioMensajeId, null, null,
+						servidorId);
 				throw new Exception();
 			}
 		}
 
-		
-
 	}
 
-	private void sendMail(MailData mailData, int indice, String rutaTemporal) throws Exception{
+	private void sendMail(MailData mailData, int indice, String rutaTemporal) throws Exception {
 		boolean debug = false;
 
 		Properties props = new Properties();
 
 		ParametrosServidor ps = (ParametrosServidor) mailData.Servers.get(indice);
-		
-			props.put("mail.smtp.host", ps.getIP().toString());
+
+		props.put("mail.smtp.host", ps.getIP().toString());
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Con el Servidor: " + ps.getIP().toString() + " (SendMail)");
+		}
+		if (ps.getPuerto() != "") {
+			props.put("mail.smtp.port", ps.getPuerto());
+		} else {
+			props.put("mail.smtp.port", Integer.valueOf(25));
+		}
+
+		Session session = null;
+		Authenticator auth = null;
+		if (ps.getTimeOut() != "") {
+			int timeout = Integer.parseInt(ps.getTimeOut()) * 1000;
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Con el Servidor: " + ps.getIP().toString() + " (SendMail)");
+				LOG.debug("Con Tiempo de Espera " + ps.getTimeOut() + " milisegundos(SendMail)");
 			}
-			if (ps.getPuerto() != "") {
-				props.put("mail.smtp.port", ps.getPuerto());
-			} else {
-				props.put("mail.smtp.port", Integer.valueOf(25));
-			}
-				
-			Session session = null;
-			Authenticator auth = null;
-			if (ps.getTimeOut() != "") {
-				int timeout = Integer.parseInt(ps.getTimeOut()) * 1000;
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Con Tiempo de Espera " + ps.getTimeOut() + " milisegundos(SendMail)");
-				}
-				props.put("mail.smtp.connectiontimeout", Integer.valueOf(timeout));
-				props.put("mail.smtp.timeout", Integer.valueOf(timeout));
-			}
-			if ((ps.getConexion() != null) && (ps.getConexion().equals("true"))) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Con conexion segura (SendMail)");
-				}
-				props.setProperty("mail.smtp.starttls.enable", "true");
-			}
-			if ((ps.getAutentificacion() != null) && (ps.getAutentificacion().equals("true"))) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Con autenticacion basica (SendMail)");
-				}
-				props.put("mail.smtp.auth", Boolean.valueOf(true));
-				auth = new SMTPAuthenticator(ps.getUsuario(), ps.getContrasena());
-				session = Session.getInstance(props, auth);
-			} else {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Sin autenticacion basica (SendMail)");
-				}
-				props.put("mail.smtp.auth", Boolean.valueOf(false));
-				session = Session.getInstance(props, null);
-			}
-			session.setDebug(debug);
-
-			MimeMessage msg = new MimeMessage(session);
-
-			InternetAddress addressFrom = null;
-			if (mailData.ServiceData.getFromMailNombre() != null) {
-				addressFrom = new InternetAddress(mailData.ServiceData.getFromMail(),
-						mailData.ServiceData.getFromMailNombre());
-
-				msg.setFrom(addressFrom);
-			} else {
-				addressFrom = new InternetAddress(mailData.ServiceData.getFromMail());
-
-				msg.setFrom(addressFrom);
-			}
-			InternetAddress[] addressTo = generateInternetAddress(mailData.Recipients.To);
-			InternetAddress[] addressCC = generateInternetAddress(mailData.Recipients.Cc);
-			InternetAddress[] addressBCC = generateInternetAddress(mailData.Recipients.Bcc);
-
-			msg.setRecipients(Message.RecipientType.TO, addressTo);
-			msg.setRecipients(Message.RecipientType.CC, addressCC);
-			msg.setRecipients(Message.RecipientType.BCC, addressBCC);
+			props.put("mail.smtp.connectiontimeout", Integer.valueOf(timeout));
+			props.put("mail.smtp.timeout", Integer.valueOf(timeout));
+		}
+		if ((ps.getConexion() != null) && (ps.getConexion().equals("true"))) {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("-----------------------------------");
-				LOG.debug("Subject (SendMail)");
-				LOG.debug(mailData.Subject);
-				LOG.debug("-----------------------------------");
-				LOG.debug("Body (SendMail)");
-				LOG.debug(mailData.Body + " (SendMail)");
-				LOG.debug("-----------------------------------");
+				LOG.debug("Con conexion segura (SendMail)");
 			}
-			msg.setSubject(mailData.Subject, mailData.TipoCodificacion);
-
-			Multipart multipart = null;
-			if (mailData.Images.size() > 0) {
-				multipart = new MimeMultipart("related");
-			} else {
-				multipart = new MimeMultipart();
-			}
-			MimeBodyPart cuerpo = new MimeBodyPart();
-			String body = updateBody(mailData.Body, multipart, rutaTemporal);
-			String typeContent = mailData.TipoCuerpo + "; charset=" + mailData.TipoCodificacion;
-
-			cuerpo.setContent(body, typeContent);
-			multipart.addBodyPart(cuerpo);
+			props.setProperty("mail.smtp.starttls.enable", "true");
+		}
+		if ((ps.getAutentificacion() != null) && (ps.getAutentificacion().equals("true"))) {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("-----------------------------------------");
-				LOG.debug("Adjuntos: " + mailData.Attachments.size());
+				LOG.debug("Con autenticacion basica (SendMail)");
 			}
-			if (mailData.Attachments.size() > 0) {
-				addAttachToMail(mailData.Attachments, multipart, rutaTemporal);
-			}
-			if (mailData.Images.size() > 0) {
-				addImagesToMail(mailData.Images, multipart, rutaTemporal);
-			}
-			msg.setContent(multipart);
+			props.put("mail.smtp.auth", Boolean.valueOf(true));
+			auth = new SMTPAuthenticator(ps.getUsuario(), ps.getContrasena());
+			session = Session.getInstance(props, auth);
+		} else {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Realizamos el envio desde mail.jar (SendMail)");
+				LOG.debug("Sin autenticacion basica (SendMail)");
 			}
-			Transport.send(msg);
-		
+			props.put("mail.smtp.auth", Boolean.valueOf(false));
+			session = Session.getInstance(props, null);
+		}
+		session.setDebug(debug);
+
+		MimeMessage msg = new MimeMessage(session);
+
+		InternetAddress addressFrom = null;
+		if (mailData.ServiceData.getFromMailNombre() != null) {
+			addressFrom = new InternetAddress(mailData.ServiceData.getFromMail(),
+					mailData.ServiceData.getFromMailNombre());
+
+			msg.setFrom(addressFrom);
+		} else {
+			addressFrom = new InternetAddress(mailData.ServiceData.getFromMail());
+
+			msg.setFrom(addressFrom);
+		}
+		InternetAddress[] addressTo = generateInternetAddress(mailData.Recipients.To);
+		InternetAddress[] addressCC = generateInternetAddress(mailData.Recipients.Cc);
+		InternetAddress[] addressBCC = generateInternetAddress(mailData.Recipients.Bcc);
+
+		msg.setRecipients(Message.RecipientType.TO, addressTo);
+		msg.setRecipients(Message.RecipientType.CC, addressCC);
+		msg.setRecipients(Message.RecipientType.BCC, addressBCC);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("-----------------------------------");
+			LOG.debug("Subject (SendMail)");
+			LOG.debug(mailData.Subject);
+			LOG.debug("-----------------------------------");
+			LOG.debug("Body (SendMail)");
+			LOG.debug(mailData.Body + " (SendMail)");
+			LOG.debug("-----------------------------------");
+		}
+		msg.setSubject(mailData.Subject, mailData.TipoCodificacion);
+
+		Multipart multipart = null;
+		if (mailData.Images.size() > 0) {
+			multipart = new MimeMultipart("related");
+		} else {
+			multipart = new MimeMultipart();
+		}
+		MimeBodyPart cuerpo = new MimeBodyPart();
+		String body = updateBody(mailData.Body, multipart, rutaTemporal);
+		String typeContent = mailData.TipoCuerpo + "; charset=" + mailData.TipoCodificacion;
+
+		cuerpo.setContent(body, typeContent);
+		multipart.addBodyPart(cuerpo);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("-----------------------------------------");
+			LOG.debug("Adjuntos: " + mailData.Attachments.size());
+		}
+		if (mailData.Attachments.size() > 0) {
+			addAttachToMail(mailData.Attachments, multipart, rutaTemporal);
+		}
+		if (mailData.Images.size() > 0) {
+			addImagesToMail(mailData.Images, multipart, rutaTemporal);
+		}
+		msg.setContent(multipart);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Realizamos el envio desde mail.jar (SendMail)");
+		}
+		Transport.send(msg);
+
 	}
 
 	private void registerMailDetailsDebug(MailData mailData) {
@@ -711,8 +715,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		return correos;
 	}
 
-	private void addAttachToMail(ArrayList<Adjunto> attachs, Multipart multipart, String rutaTemporal) throws FileNotFoundException,
-			SQLException, IOException, MessagingException {
+	private void addAttachToMail(ArrayList<Adjunto> attachs, Multipart multipart, String rutaTemporal)
+			throws FileNotFoundException, SQLException, IOException, MessagingException {
 		for (int indice = 0; indice < attachs.size(); indice++) {
 			FileOutputStream fos = null;
 			File file = File.createTempFile(rutaTemporal, String.valueOf(indice));
@@ -743,8 +747,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		}
 	}
 
-	private void addImagesToMail(ArrayList<Adjunto> images, Multipart multipart, String rutaTemporal) throws FileNotFoundException,
-			SQLException, IOException, MessagingException {
+	private void addImagesToMail(ArrayList<Adjunto> images, Multipart multipart, String rutaTemporal)
+			throws FileNotFoundException, SQLException, IOException, MessagingException {
 		for (int indice = 0; indice < images.size(); indice++) {
 			FileOutputStream fos = null;
 			File file = File.createTempFile(rutaTemporal, String.valueOf(indice));
@@ -775,7 +779,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		}
 	}
 
-	private String updateBody(String body, Multipart multipart, String rutaTemporal) throws IOException, MessagingException {
+	private String updateBody(String body, Multipart multipart, String rutaTemporal) throws IOException,
+			MessagingException {
 		String newBody = "";
 		String[] partImages = body.split("<img");
 		int cont = 0;
@@ -788,7 +793,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 					byte[] bytes = Base64.decodeBase64(base64.getBytes());
 					FileOutputStream fos = null;
 					File file = File.createTempFile(rutaTemporal, String.valueOf(cont));
-					
+
 					fos = new FileOutputStream(file);
 					int size = bytes.length;
 					fos.write(bytes, 0, size);
@@ -913,8 +918,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	/******************************************/
 
 	@Override
-	public void postNotificacionPush(Long mensajeId, Long destinatarioMensaje)
-			throws Exception {
+	public void postNotificacionPush(Long mensajeId, Long loteId, Long destinatarioMensaje) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String okEnvio = ps.getMessage("constantes.ESTADO_ENVIADO", null);
 		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
@@ -938,8 +942,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		boolean sendOK = false;
 		String resultNotificacionPush = "";
 		if (null == notificacionPushData.servers || notificacionPushData.servers.isEmpty()) {
-			mensajesManager.setEstadoMensaje(mensajeId, koEnvio, "Error: No existe ningun Servidor Push Disponible", false,
-					notificacionPushData.getDestinatarioMensajeId(), null, null, null);
+			mensajesManager.setEstadoMensaje(mensajeId, koEnvio, "Error: No existe ningun Servidor Push Disponible",
+					false, notificacionPushData.getDestinatarioMensajeId(), null, null, null);
 			TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 			tblErrorMensajeLog.setCodigoerror(new Long("0"));
 			tblErrorMensajeLog.setDescripcionerror("Error: No existe ningun Servidor Push Disponible");
@@ -950,11 +954,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		} else {
 			registerServidorPushDetailsDebug(notificacionPushData);
 			mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),
-					ps.getMessage("constantes.ESTADO_ENVIANDO", null), ""
-					, false, notificacionPushData.getDestinatarioMensajeId(),
-					null, null, null);
+					ps.getMessage("constantes.ESTADO_ENVIANDO", null), "", false,
+					notificacionPushData.getDestinatarioMensajeId(), null, null, null);
 
-			
 			int numServidoresPush = notificacionPushData.servers.size();
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Numero de servidores Push: " + numServidoresPush);
@@ -970,8 +972,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						LOG.debug("Llamamos a Envio Notificacion Push (postNotificacionPush)");
 					}
 					try {
-						resultNotificacionPush = sendServidorPushByMISIM(notificacionPushData, mensajeId, indice,
-								usuarioMISIM, passMISIM);
+						resultNotificacionPush = sendServidorPushByMISIM(notificacionPushData, mensajeId, loteId,
+								indice, usuarioMISIM, passMISIM);
 						if (LOG.isInfoEnabled()) {
 							LOG.info("Respuesta: " + resultNotificacionPush);
 						}
@@ -1002,8 +1004,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						LOG.debug("Llamamos a Envio Notificacion Push (postNotificacionPush)");
 					}
 					try {
-						resultNotificacionPush = sendServidorPushByMISIM(notificacionPushData, mensajeId, indice,
-								usuarioMISIM, passMISIM);
+						resultNotificacionPush = sendServidorPushByMISIM(notificacionPushData, mensajeId, loteId,
+								indice, usuarioMISIM, passMISIM);
 						if (LOG.isInfoEnabled()) {
 							LOG.info("Respuesta: " + resultNotificacionPush);
 						}
@@ -1024,16 +1026,17 @@ public class SendMessageServiceImpl implements ISendMessageService {
 					}
 				}
 			}
-			
+
 			if (sendOK) {
 				if (LOG.isInfoEnabled()) {
 					LOG.info("Notificacion numero " + mensajeId + " enviado (postNotificacionPush)");
 				}
-					mensajesManager.setEstadoMensaje(mensajeId, okEnvio, resultNotificacionPush, false, notificacionPushData.getDestinatarioMensajeId(), null, null, servidorPushID.longValue());
-				
+				mensajesManager.setEstadoMensaje(mensajeId, okEnvio, resultNotificacionPush, false,
+						notificacionPushData.getDestinatarioMensajeId(), null, null, servidorPushID.longValue());
+
 			} else {
-				mensajesManager.setEstadoMensaje(mensajeId, koEnvio,
-						resultNotificacionPush, false, notificacionPushData.getDestinatarioMensajeId(), null, null, servidorPushID.longValue());
+				mensajesManager.setEstadoMensaje(mensajeId, koEnvio, resultNotificacionPush, false,
+						notificacionPushData.getDestinatarioMensajeId(), null, null, servidorPushID.longValue());
 				throw new Exception();
 			}
 		}
@@ -1064,8 +1067,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		return res;
 	}
 
-	private String sendServidorPushByMISIM(NotificacionPushData messageData, Long messageId, Integer indice,
-			String usuarioMISIM, String passMISIM) throws Exception {
+	private String sendServidorPushByMISIM(NotificacionPushData messageData, Long messageId, Long loteId,
+			Integer indice, String usuarioMISIM, String passMISIM) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String resultado = "";
 		messageData.setIndice("" + indice);
@@ -1076,7 +1079,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		peticionPush.setProducto("PUSH");
 		peticionPush.setUsuario(usuarioMISIM);
 		peticionPush.setPassword(passMISIM);
-				
+		peticionPush.setIdLote(loteId.toString());
+
 		NotificacionDataRequest ndr = new NotificacionDataRequest();
 
 		ParametrosServidorPush psp = (ParametrosServidorPush) messageData.servers.get(indice);
@@ -1111,13 +1115,14 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		ndr.setUrl(psp.getUrl());
 		ndr.setCabecera(messageData.cabecera);
 		ndr.setCuerpo(messageData.cuerpo);
-		DatosEspecificosPush datosEspecificosPush  = new DatosEspecificosPush();
+		DatosEspecificosPush datosEspecificosPush = new DatosEspecificosPush();
 		datosEspecificosPush.setNotificacionDataRequest(ndr);
 		peticionPush.setDatosEspecificos(datosEspecificosPush);
-		
-		String res = commonUtilitiesService.sendMessage(peticionPush, ps.getMessage("constantes.SOAP_ACTION", null), ps.getMessage("constantes.RECEPT_QUEUE", null));
-						
-		return res ;
+
+		String res = commonUtilitiesService.sendMessage(peticionPush, ps.getMessage("constantes.SOAP_ACTION", null),
+				ps.getMessage("constantes.RECEPT_QUEUE", null));
+
+		return res;
 	}
 
 	private void registerServidorPushDetailsDebug(NotificacionPushData notificacionPushData) {
@@ -1190,7 +1195,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		String resultSMS = "";
 		if (smsData.Servers.isEmpty()) {
 			mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), koEnvio,
-					". Error: No existe ningun Receptor Disponible", false, smsData.destinatarioMensajeId, null, null, null);
+					". Error: No existe ningun Receptor Disponible", false, smsData.destinatarioMensajeId, null, null,
+					null);
 			TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 			tblErrorMensajeLog.setCodigoerror(new Long("0"));
 			tblErrorMensajeLog.setDescripcionerror("Error: No existe ningun Receptor Disponible");
@@ -1201,8 +1207,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		} else {
 			if (null != smsData.Body) {
 				registerReceptorSMSDetailsDebug(smsData);
-				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),ps.getMessage("constantes.ESTADO_ENVIANDO", null),
-						null, false, smsData.destinatarioMensajeId, null, null, null);
+				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),
+						ps.getMessage("constantes.ESTADO_ENVIANDO", null), null, false, smsData.destinatarioMensajeId,
+						null, null, null);
 				int indice = 0;
 				int numReceptores = smsData.Servers.size();
 				if (LOG.isInfoEnabled()) {
@@ -1212,7 +1219,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 					while ((indice < numReceptores) && (!sendOK)) {
 						registerReceptorSMSParametersDebug(smsData, indice);
 
-						receptorID = Integer.valueOf(((ParametrosReceptor) smsData.Servers.get(indice)).getReceptorId());
+						receptorID = Integer
+								.valueOf(((ParametrosReceptor) smsData.Servers.get(indice)).getReceptorId());
 						if (LOG.isDebugEnabled()) {
 							LOG.debug("Llamamos a Envio SMS (postRecepcionSMS)");
 						}
@@ -1241,7 +1249,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 					if (numReceptores > 0) {
 						registerReceptorSMSParametersDebug(smsData, indice);
 
-						receptorID = Integer.valueOf(((ParametrosReceptor) smsData.Servers.get(indice)).getReceptorId());
+						receptorID = Integer
+								.valueOf(((ParametrosReceptor) smsData.Servers.get(indice)).getReceptorId());
 						if (LOG.isDebugEnabled()) {
 							LOG.debug("Llamamos a Envio SMS (postRecepcionSMS)");
 						}
@@ -1274,11 +1283,12 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), okEnvio, resultSMS, false,
 						smsData.destinatarioMensajeId, null, null, receptorID.longValue());
 			} else {
-				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), koEnvio, resultSMS, false, smsData.destinatarioMensajeId, null, null, receptorID.longValue());
-				throw new Exception();
+				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), koEnvio, resultSMS, false,
+						smsData.destinatarioMensajeId, null, null, receptorID.longValue());
+				throw new Exception("[SendMessageServiceImpl.postRecepcionSMS] Error el realizar envio.");
 			}
 		}
-		}
+	}
 
 	private ReceptorSMSData getRecepcionSMSData(Long mensajeId, Long destinatarioMensajeId) {
 		ReceptorSMSData res = new ReceptorSMSData();
@@ -1300,11 +1310,13 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		return res;
 	}
 
-	private String sendReceptorSMS(ReceptorSMSData smsData, Long messageId, int indice, String usuarioMISIM, String passMISIM) throws Exception {
-		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);		
-		TblAplicaciones aplicacion = aplicacionesManager.getAplicacion(queryExecutorAplicaciones.findAplicacionByMessageId(messageId));
+	private String sendReceptorSMS(ReceptorSMSData smsData, Long messageId, int indice, String usuarioMISIM,
+			String passMISIM) throws Exception {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		TblAplicaciones aplicacion = aplicacionesManager.getAplicacion(queryExecutorAplicaciones
+				.findAplicacionByMessageId(messageId));
 		String proveedor = aplicacion.getNombre();
-		
+
 		EnvioAplicacionRequest envioAplicacionRequest = new EnvioAplicacionRequest();
 		envioAplicacionRequest.setUser(smsData.User);
 		envioAplicacionRequest.setPassword(smsData.Password);
@@ -1313,11 +1325,10 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		envioAplicacionRequest.setSMSText(smsData.Body);
 		envioAplicacionRequest.setLoteId(smsData.LoteEnvioId);
 		envioAplicacionRequest.setMessageId(messageId.toString());
-		
-		
+
 		DatosEspecificosRecepcionSMS datosEspecificos = new DatosEspecificosRecepcionSMS();
 		datosEspecificos.setEnvioAplicacionRequest(envioAplicacionRequest);
-		
+
 		PeticionRecepcionSMS peticion = new PeticionRecepcionSMS();
 		peticion.setMensajeId(String.valueOf(messageId));
 		peticion.setPassword(passMISIM);
@@ -1325,10 +1336,11 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		peticion.setDatosEspecificos(datosEspecificos);
 		peticion.setProveedor(proveedor);
 		peticion.setProducto("SMS_APLICACION");
-		String res = commonUtilitiesService.sendMessage(peticion, ps.getMessage("constantes.SOAP_ACTION", null), ps.getMessage("constantes.RECEPT_QUEUE", null));
-						
+		String res = commonUtilitiesService.sendMessage(peticion, ps.getMessage("constantes.SOAP_ACTION", null),
+				ps.getMessage("constantes.RECEPT_QUEUE", null));
+
 		return res;
-		
+
 	}
 
 	private void registerReceptorSMSDetailsDebug(ReceptorSMSData smsData) {
@@ -1391,7 +1403,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorServidoresOrganismos the queryExecutorServidoresOrganismos to set
+	 * @param queryExecutorServidoresOrganismos
+	 *            the queryExecutorServidoresOrganismos to set
 	 */
 	public void setQueryExecutorServidoresOrganismos(QueryExecutorServidoresOrganismos queryExecutorServidoresOrganismos) {
 		this.queryExecutorServidoresOrganismos = queryExecutorServidoresOrganismos;
@@ -1405,7 +1418,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param servidoresManager the servidoresManager to set
+	 * @param servidoresManager
+	 *            the servidoresManager to set
 	 */
 	public void setServidoresManager(TblServidoresManager servidoresManager) {
 		this.servidoresManager = servidoresManager;
@@ -1419,7 +1433,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorMensajes the queryExecutorMensajes to set
+	 * @param queryExecutorMensajes
+	 *            the queryExecutorMensajes to set
 	 */
 	public void setQueryExecutorMensajes(QueryExecutorMensajes queryExecutorMensajes) {
 		this.queryExecutorMensajes = queryExecutorMensajes;
@@ -1433,7 +1448,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorMensajeAdjuntos the queryExecutorMensajeAdjuntos to set
+	 * @param queryExecutorMensajeAdjuntos
+	 *            the queryExecutorMensajeAdjuntos to set
 	 */
 	public void setQueryExecutorMensajeAdjuntos(QueryExecutorMensajeAdjuntos queryExecutorMensajeAdjuntos) {
 		this.queryExecutorMensajeAdjuntos = queryExecutorMensajeAdjuntos;
@@ -1447,7 +1463,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorViewServidoresPrioridad the queryExecutorViewServidoresPrioridad to set
+	 * @param queryExecutorViewServidoresPrioridad
+	 *            the queryExecutorViewServidoresPrioridad to set
 	 */
 	public void setQueryExecutorViewServidoresPrioridad(
 			QueryExecutorViewServidoresPrioridad queryExecutorViewServidoresPrioridad) {
@@ -1462,7 +1479,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorServidores the queryExecutorServidores to set
+	 * @param queryExecutorServidores
+	 *            the queryExecutorServidores to set
 	 */
 	public void setQueryExecutorServidores(QueryExecutorServidores queryExecutorServidores) {
 		this.queryExecutorServidores = queryExecutorServidores;
@@ -1476,7 +1494,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorLotesEnvios the queryExecutorLotesEnvios to set
+	 * @param queryExecutorLotesEnvios
+	 *            the queryExecutorLotesEnvios to set
 	 */
 	public void setQueryExecutorLotesEnvios(QueryExecutorLotesEnvios queryExecutorLotesEnvios) {
 		this.queryExecutorLotesEnvios = queryExecutorLotesEnvios;
@@ -1490,7 +1509,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorServicios the queryExecutorServicios to set
+	 * @param queryExecutorServicios
+	 *            the queryExecutorServicios to set
 	 */
 	public void setQueryExecutorServicios(QueryExecutorServicios queryExecutorServicios) {
 		this.queryExecutorServicios = queryExecutorServicios;
@@ -1504,9 +1524,11 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorDestinatariosMensajes the queryExecutorDestinatariosMensajes to set
+	 * @param queryExecutorDestinatariosMensajes
+	 *            the queryExecutorDestinatariosMensajes to set
 	 */
-	public void setQueryExecutorDestinatariosMensajes(QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes) {
+	public void setQueryExecutorDestinatariosMensajes(
+			QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes) {
 		this.queryExecutorDestinatariosMensajes = queryExecutorDestinatariosMensajes;
 	}
 
@@ -1518,7 +1540,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorViewReceptoresPrioridad the queryExecutorViewReceptoresPrioridad to set
+	 * @param queryExecutorViewReceptoresPrioridad
+	 *            the queryExecutorViewReceptoresPrioridad to set
 	 */
 	public void setQueryExecutorViewReceptoresPrioridad(
 			QueryExecutorViewReceptoresPrioridad queryExecutorViewReceptoresPrioridad) {
@@ -1533,7 +1556,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param queryExecutorAplicaciones the queryExecutorAplicaciones to set
+	 * @param queryExecutorAplicaciones
+	 *            the queryExecutorAplicaciones to set
 	 */
 	public void setQueryExecutorAplicaciones(QueryExecutorAplicaciones queryExecutorAplicaciones) {
 		this.queryExecutorAplicaciones = queryExecutorAplicaciones;
@@ -1547,7 +1571,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param errorMensajeLogManager the errorMensajeLogManager to set
+	 * @param errorMensajeLogManager
+	 *            the errorMensajeLogManager to set
 	 */
 	public void setErrorMensajeLogManager(TblErrorMensajeLogManager errorMensajeLogManager) {
 		this.errorMensajeLogManager = errorMensajeLogManager;
@@ -1561,7 +1586,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param mensajesManager the mensajesManager to set
+	 * @param mensajesManager
+	 *            the mensajesManager to set
 	 */
 	public void setMensajesManager(TblMensajesManager mensajesManager) {
 		this.mensajesManager = mensajesManager;
@@ -1575,7 +1601,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param destinatariosMensajesManager the destinatariosMensajesManager to set
+	 * @param destinatariosMensajesManager
+	 *            the destinatariosMensajesManager to set
 	 */
 	public void setDestinatariosMensajesManager(TblDestinatariosMensajesManager destinatariosMensajesManager) {
 		this.destinatariosMensajesManager = destinatariosMensajesManager;
@@ -1589,7 +1616,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param commonUtilitiesService the commonUtilitiesService to set
+	 * @param commonUtilitiesService
+	 *            the commonUtilitiesService to set
 	 */
 	public void setCommonUtilitiesService(ICommonUtilitiesService commonUtilitiesService) {
 		this.commonUtilitiesService = commonUtilitiesService;
@@ -1603,7 +1631,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param messageSender the messageSender to set
+	 * @param messageSender
+	 *            the messageSender to set
 	 */
 	public void setMessageSender(SIMMessageSender messageSender) {
 		this.messageSender = messageSender;
@@ -1617,7 +1646,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param reloadableResourceBundleMessageSource the reloadableResourceBundleMessageSource to set
+	 * @param reloadableResourceBundleMessageSource
+	 *            the reloadableResourceBundleMessageSource to set
 	 */
 	public void setReloadableResourceBundleMessageSource(
 			ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
@@ -1632,7 +1662,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param aplicacionesManager the aplicacionesManager to set
+	 * @param aplicacionesManager
+	 *            the aplicacionesManager to set
 	 */
 	public void setAplicacionesManager(TblAplicacionesManager aplicacionesManager) {
 		this.aplicacionesManager = aplicacionesManager;
@@ -1646,13 +1677,13 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	/**
-	 * @param serviciosManager the serviciosManager to set
+	 * @param serviciosManager
+	 *            the serviciosManager to set
 	 */
 	public void setServiciosManager(TblServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
 	}
 
-	
 	// ---- Fin tratamiento recepcion sms
 
 }

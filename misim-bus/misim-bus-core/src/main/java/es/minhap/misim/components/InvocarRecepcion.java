@@ -36,11 +36,14 @@ import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionNotificacionEstadoSMS;
 import es.minhap.plataformamensajeria.iop.beans.RecepcionEstadoSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.RecibirSMSRequest;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.services.recepcion.IRecepcionMensajesService;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.IRecepcionEstadoSMSService;
 import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensajesService;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
+import es.redsara.misim.misim_bus_webapp.respuesta.ResponseStatusType;
 //import es.minhap.misim.components.envio.EnvioEmailXMLBean;
 /**
  * Cliente genérico para JAX-WS
@@ -58,14 +61,9 @@ public class InvocarRecepcion implements Callable {
 	
 	private static final String FOOTER = "</soapenv:Body></soapenv:Envelope>";
 	
-	private static final String CADENA_AEAT_CORRECTA = "OK";
-	private static final String ETIQUETA_INICIO_STATUSTEXT = "<StatusText>";
-	private static final String ETIQUETA_FIN_STATUSTEXT = "</StatusText>";
-	private static final String ETIQUETA_INICIO_STATUSCODE = "<StatusCode>";
-	private static final String ETIQUETA_FIN_STATUSCODE = "</StatusCode>";
-	private static final String ETIQUETA_INICIO_DETAILS= "<Details>";
-	private static final String ETIQUETA_FIN_DETAILS = "</Details>";
-	private static final String DETALLE_ERROR_AEAT = "ERROR Enviando Acuse a AEAT";
+	
+	private static final String APLICACION = "AEAT";
+	private static final String ESCLAVE = "esClave";
 	
 	
 	private static final Logger LOG = LoggerFactory.getLogger(InvocarRecepcion.class);
@@ -79,6 +77,12 @@ public class InvocarRecepcion implements Callable {
 	@Resource
 	ISeguimientoMensajesService seguimientoMensajesImpl;
 	
+    @Resource
+    TblMensajesManager mensajesManager;
+    
+    @Resource
+    TblDestinatariosMensajesManager destinatariosMensajesManager;
+	
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	PropertiesServices ps = null;
@@ -87,6 +91,10 @@ public class InvocarRecepcion implements Callable {
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
 		LOG.debug("Empezando el proceso de invocación del enviador...");
+		
+		ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String errorClave = ps.getMessage("clave.ERRORCLAVE.AEAT", null, "[ERROR-CL@VE]:");
+		String ok = ps.getMessage("clave.respuestaOK.AEAT", null, "OK");
 
 		String respuesta="";
 		String respuestaFinal = null;
@@ -108,6 +116,15 @@ public class InvocarRecepcion implements Callable {
 					recepcionBean.loadObjectFromXML(xmlPeticion2);
 		
 					respuesta=recepcionMensajesImpl.recibirSMSXML(recepcionBean);
+					
+					Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
+					
+					NodeList nodoLoteId = doc.getElementsByTagName("idLote");
+					
+					if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+						String idLote=nodoLoteId.item(0).getTextContent();
+						eventContext.getMessage().setOutboundProperty("idLote", idLote);
+					}
 					
 					SOAPMessage responseMessage=getSoapMessageFromString(respuesta);
 		        	
@@ -133,7 +150,8 @@ public class InvocarRecepcion implements Callable {
 					
 					if(LOG.isInfoEnabled()){
 			        	LOG.info("RESPONSE: " + respuesta);
-			        }					
+			        }	
+					
 				}catch(Exception e){
 					//Lanzar error
 					LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
@@ -158,10 +176,20 @@ public class InvocarRecepcion implements Callable {
 							
 							RecepcionEstadoSMSXMLBean recepcionBean = new RecepcionEstadoSMSXMLBean();
 							recepcionBean.loadObjectFromXML(xmlPeticion2);
-				
+							
 							respuesta=recepcionEstadoSMSImpl.recibirEstadoSMSXML(recepcionBean);
+							
+							Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
+							
+							NodeList nodoLoteId = doc.getElementsByTagName("idLote");
+							
+							if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+								String idLote=nodoLoteId.item(0).getTextContent();
+								eventContext.getMessage().setOutboundProperty("idLote", idLote);
+							}
+							
 							//messageId = recepcionBean.getMensajeId();
-							if(respuesta.contains(",")){
+							if(respuesta.contains(",")){ ////es AEAT
 								String sender = recepcionBean.getSender();
 								String recipient = recepcionBean.getRecipient();
 								String endpoint = respuesta.substring(respuesta.indexOf(",")+1,respuesta.indexOf(" | "));
@@ -171,11 +199,30 @@ public class InvocarRecepcion implements Callable {
 							//	String messageStatus = respuesta.substring(respuesta.indexOf("<Details>"), respuesta.indexOf("</Details>"));
 								String statusText = respuesta.substring(respuesta.indexOf("<StatusText>")+12, respuesta.indexOf("</StatusText>"));
 								//Tenemos la respuesta de AEAT por si hay que utilizarla para algún reintento de la recepcion de estado.
-								String respuestaAEAT = envioAEAT(eventContext,messageId,endpoint,sender,recipient, statusText);
+//								String respuestaAEAT = envioAEAT(eventContext,messageId,endpoint,sender,recipient, statusText);
+								SOAPMessage soapMessage = envioAEAT(eventContext,messageId,endpoint,sender,recipient, statusText);
+								
+								String respuestaAEAT = "";
+								if (null != soapMessage){
+								 respuestaAEAT = pharseMessageToString(soapMessage);
+								 if (!respuestaAEAT.contains(ok)){//error si son al invocar, auditar, .... Si es en InvocarEnvioRecepcionAEAT se lanza desde esa clase
+										Document document = soapMessage.getSOAPBody().extractContentAsDocument();
+										NodeList nodoRespuesta = document.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "StatusText");//("ns2:Respuesta");
+										NodeList nodoRespuesta2 = document.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Details");
+										String xmlRespuesta = nodoRespuesta.item(0).getFirstChild().getNodeValue();
+										String xmlRespuesta2 = (null != nodoRespuesta2.item(0) )? nodoRespuesta2.item(0).getFirstChild().getNodeValue() : "";
+										
+										LOG.error(errorClave + xmlRespuesta + " " +xmlRespuesta2);
+									}
+								}else{
+									LOG.error(errorClave + "Error notificar estado AEAT " );
+								}
+								
+							
 								LOG.info("RESPONSE ACC_RECIBO AEAT: " + respuestaAEAT);
 								if (respuestaFinal==null){
 									respuestaFinal=respuesta;
-								}else if (!respuesta.contains("<StatusCode>1000</StatusCode>")){
+								}else if (!respuesta.contains(ok)){
 									respuestaFinal=respuesta;
 								}
 //								//si hay error al comunicar con AEAT y queremos modificar la respuesta
@@ -221,20 +268,28 @@ public class InvocarRecepcion implements Callable {
 					
 					if(LOG.isInfoEnabled()){
 			        	LOG.info("RESPONSE: " + respuestaFinal);
-			        }				
+			        }	
 				}catch(Exception e){
 					//Lanzar error
+					if(eventContext.getMessage().getOutboundProperty(ESCLAVE)){
+						LOG.error(errorClave +"Error en la transmisión: Error al obtener la respuesta del servicio Web especificado");
+					}
 					LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
 					throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
 				}
 			}
 	
 		}catch (ModelException e){
-			
+			if(eventContext.getMessage().getOutboundProperty(ESCLAVE)){
+				LOG.error(errorClave +e.getMensaje());
+			}
 			throw new ModelException(e.getMensaje(), e.getCodigo());
 			
 		}catch(Exception e){
 			//Lanzar error
+			if(eventContext.getMessage().getOutboundProperty(ESCLAVE)){
+				LOG.error(errorClave +"Error en la transmisión: Error de sistema Invocar Emisor");
+			}
 			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
 			throw new ModelException("Error de sistema Invocar Emisor", 502);
 		}
@@ -243,14 +298,7 @@ public class InvocarRecepcion implements Callable {
 
 		return eventContext.getMessage();
 	}
-	private String formatResponseErrorAEAT(String respuesta) {
-		String respuestaFinal;
-		String status = respuesta.substring(respuesta.indexOf(ETIQUETA_INICIO_STATUSTEXT)+12, respuesta.indexOf(ETIQUETA_FIN_STATUSTEXT));
-		String details = respuesta.substring(respuesta.indexOf(ETIQUETA_INICIO_DETAILS)+9, respuesta.indexOf(ETIQUETA_FIN_DETAILS));
-		String code = respuesta.substring(respuesta.indexOf(ETIQUETA_INICIO_STATUSCODE)+12, respuesta.indexOf(ETIQUETA_FIN_STATUSCODE));						
-		respuestaFinal = respuesta.replace(status, "OK").replace(details, DETALLE_ERROR_AEAT).replace(code, "9999");
-		return respuestaFinal;
-	}
+	
 	private String quitarURLRespuesta(String respuesta) {
 		if (respuesta.contains(",")){
 			respuesta = respuesta.substring(0, respuesta.indexOf(",")).concat(respuesta.substring(respuesta.indexOf("</Details>"),respuesta.length()));
@@ -264,14 +312,12 @@ public class InvocarRecepcion implements Callable {
 		return message;
 	}
 
-	public String envioAEAT(final MuleEventContext eventContext,String idMensaje,String endpointUrl,String sender, String recipient, String statusText){
-	
+	public SOAPMessage envioAEAT(final MuleEventContext eventContext,String idMensaje,String endpointUrl,String sender, String recipient, String statusText){
 		LOG.debug("Empezando el proceso de invocación al emisor...");
 		String respuestaIncompleta ="";
-		String xml = null;
+		SOAPMessage soapMessage = null;
+//		String xml = null;
 		try{
-			
-			ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 			String usuarioAEAT = new String(ps.getMessage("aeat.usuario.sms", null, null, null));
 			String passwordAEAT = new String(ps.getMessage("aeat.contrasena.sms", null, null, null));
 			Integer idServicioAEAT = new Integer(ps.getMessage("aeat.servicio.sms.premium", null, null, null));
@@ -280,37 +326,71 @@ public class InvocarRecepcion implements Callable {
 			PeticionNotificacionEstadoSMS petNotAEAT = new PeticionNotificacionEstadoSMS();
 			petNotAEAT.loadObjectFromXML(respuestaIncompleta);
 
-			SOAPMessage soapMessage = sendMessage(eventContext.getMuleContext(),petNotAEAT);
-			xml = pharseMessageToString(soapMessage);
+			soapMessage = sendMessage(eventContext.getMuleContext(),petNotAEAT);
+//			xml = pharseMessageToString(soapMessage);
 			
 		}catch(IllegalArgumentException e){
-			LOG.error("Error al generar el cliente: Endpoint no encontrado en el WSDL", e);
+			soapMessage = generateSOAPFaultEnvio(soapMessage, "Error al generar el cliente: Endpoint no encontrado en el WSDL");
+			LOG.error("Error al generar el cliente: Endpoint no encontrado en el WSDL",e);
 			LOG.error("La peticion que se envia es :" + respuestaIncompleta);
-		}catch (SOAPFaultException e) {			
-			LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
+		}catch (SOAPFaultException e) {		
+			soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error al contactar con el servicio Web especificado");
+			LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado",e);
 			LOG.error("La peticion que se envia es :" + respuestaIncompleta);
 		}catch(WebServiceException e){
 			
 			if(e.getCause()!=null){
 				if(e.getCause().getClass().equals(SocketTimeoutException.class)){
+					soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Comunicación sin respuesta");
 					LOG.error("Error en la transmisión: Comunicación sin respuesta",e);
 					LOG.error("La peticion que se envia es :" + respuestaIncompleta);
 				}else{
+					soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error al contactar con el servicio Web especificado");
 					LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
 					LOG.error("La peticion que se envia es :" + respuestaIncompleta);
 				}
 			}else{
+				soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error al contactar con el servicio Web especificado");
 				LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
 				LOG.error("La peticion que se envia es :" + respuestaIncompleta);
 			}
 		}catch(Exception e){
+			soapMessage = generateSOAPFaultEnvio(soapMessage, "Error en la transmisión: Error de sistema Invocar Emisor");
 			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
 			LOG.error("La peticion que se envia es :" + respuestaIncompleta);
 		}
 		
 		LOG.debug("Proceso de creación de invocación al emisor terminado.");
-	return xml;
+	return soapMessage;
 	}
+	
+	
+	/**
+	 * Genera el SOAP Fault Message
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	protected static final SOAPMessage generateSOAPFaultEnvio(SOAPMessage request, String descripcion) {
+		try{
+			ResponseStatusType response = new ResponseStatusType();
+			
+			response.setStatusCode("0403");
+			response.setStatusText("KO");
+			response.setDetails(descripcion);
+	
+			
+			return XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(response, Charset.forName("UTF-8"), ResponseStatusType.class));
+		}catch (Exception e){
+			LOG.error("Error generando Respuesta",e);
+			return null;
+		}
+		
+	}
+	
+	
+	
 	private String pharseMessageToString(SOAPMessage soapMessage) throws SOAPException, IOException {
 		String xml;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -331,6 +411,7 @@ public class InvocarRecepcion implements Callable {
 			db = dbf.newDocumentBuilder();
 			Document soapDOM = db.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("UTF-8"))));
 			payload.setSoapMessage(soapDOM);
+			payload.setSoapAplication(APLICACION);
 			// llamamos al flujo recepcion-AEAT
 			final MuleMessage muleResponse = muleContext.getClient().send(RECEPT_QUEUE,payload, null, 10000);
 			

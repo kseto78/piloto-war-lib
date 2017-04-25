@@ -2,7 +2,6 @@ package es.minhap.plataformamensajeria.iop.business.common;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -131,6 +131,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		<spring:bean id="ID_AUDITORIA" class="java.lang.String">
 			<spring:constructor-arg value="idAuditoria" />
 		</spring:bean>
+		<spring:bean id="ID_LOTE" class="java.lang.String">
+			<spring:constructor-arg value="idLote" />
+		</spring:bean>
 		
 		
 		<!-- Payload operation -->

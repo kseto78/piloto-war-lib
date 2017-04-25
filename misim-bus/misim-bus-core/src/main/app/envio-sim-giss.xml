@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<spring:bean id="invocarEnvioGISS" name="invocarEnvioGISS" class="es.minhap.misim.components.InvocarEnvioGiss" />
 		<spring:bean id="invocarEnvioGISSResp" name="invocarEnvioGISSResp" class="es.minhap.misim.components.InvocarEnvioGissRespOP" />
 		<spring:bean id="gestionErroresEnvioSimGiss" name="gestionErroresEnvioSimGiss" class="es.minhap.misim.components.GestionErroresEnvioSIMGiss"/>
-	
+		<spring:bean id="inicializarGISS" name="inicializarGISS" class="es.minhap.misim.components.InicializarAplicacionCliente"/>
 	</spring:beans>
 
 	<!-- DESDE LAS APLICACONES A MISIM (CON LA LIBRERIA PARA INTRODUCIR BBDD) -->
@@ -24,6 +24,13 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
 		<!-- RECEPCION PETICION -->
 		<vm:inbound-endpoint exchange-pattern="request-response" path="envio-sim-GISS" responseTimeout="120000" doc:name="VM" />
+		
+		<!-- INICIALIZAR VARIABLES -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Inicializar variables Aplicacion Cliente" />
+		<component	doc:name="Inicializa variables" >
+			<spring-object bean="inicializarGISS" />
+		</component>
+
 
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Inicio peticion" />
 
@@ -32,8 +39,15 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			<spring-object bean="invocarEnvioGISS" />
 		</component>
 
+		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" />
+
+		<!-- AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Auditoria de la peticion recibida" />
+		<component	doc:name="Audita" >
+			<spring-object bean="audit" />
+		</component>
+
 		<!-- ADAPTAR PETICION -->
-		
 		<choice doc:name="Adaptar la peticion"> 
 			<when expression="#[message.outboundProperties['${ENVIAR_MENSAJE_PREMIUM_001}'] == 'S']">
 				<processor-chain doc:name="Processor Chain">
@@ -57,6 +71,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
 
 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
+		
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Peticion procesada" />
 
 		<!-- GESTION DE ERRORES -->
@@ -67,13 +82,22 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			<component doc:name="Gestion de errores" >
 				<spring-object bean="gestionErroresEnvioSimGiss" />
 			</component>
-
+			
+			<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
+			
+			<!-- ACTUALIZACION DE AUDITORIA -->
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Actualizacion de la auditoria" />
+			<component doc:name="Actualizacon de Auditoria">
+				<spring-object bean="updateAudit" />
+			</component>
+			
 			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
 				
 			<!-- ACTUALIZACION DE AUDITORIA -->
         	<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Comprobar actualizacion de la auditoria" />
         	<choice doc:name="Encriptacion del error al Consumidor">
 				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
+				
 					<!-- ENCRIPTACION -->
 					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIMGISS] - Comprobar si se requiere encriptacion para la auditoria" />
 					<processor-chain doc:name="Processor Chain">

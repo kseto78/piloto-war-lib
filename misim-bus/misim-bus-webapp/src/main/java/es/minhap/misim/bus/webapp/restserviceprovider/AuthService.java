@@ -36,7 +36,7 @@
 //	   byte[] bytes = new BASE64Decoder().decodeBuffer(data);
 //	   decoded = new String(bytes);
 //	    
-//	   System.out.println(decoded);
+//	   LOG.info(decoded);
 //	    
 //	  }catch(Exception e){
 //	   e.printStackTrace();

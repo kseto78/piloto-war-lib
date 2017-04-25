@@ -32,6 +32,7 @@ public class Auditoria implements java.io.Serializable {
 	private Long idMensaje;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private Long idLote;
 
 	public Auditoria() {
 	}
@@ -95,6 +96,15 @@ public class Auditoria implements java.io.Serializable {
 
 	public void setIdMensaje(Long idMensaje) {
 		this.idMensaje = idMensaje;
+	}
+	
+	@Column(name = "ID_LOTE", precision = 20, scale = 0)
+	public Long getIdLote() {
+		return this.idLote;
+	}
+
+	public void setIdLote(Long idLote) {
+		this.idLote = idLote;
 	}
 
 	@Column(name = "FECHA_CREACION",  length = 7)

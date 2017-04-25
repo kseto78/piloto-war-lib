@@ -21,6 +21,8 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -31,10 +33,13 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
+import es.minhap.misim.components.InicializarAEAT;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ResponseNotificacionPushStatusType;
 
 @Service("gestionNotificacionesPushApp")
 public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPushApp {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(GestionNotificacionesPushAppImpl.class);
 
 	public static String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
 	public static String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
@@ -77,7 +82,7 @@ public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPu
 			byte[] bytes = new BASE64Decoder().decodeBuffer(data);
 			decoded = new String(bytes);
 
-			System.out.println(decoded);
+			LOG.info(decoded);
 			if (null != decoded) {
 				tokenizer = new StringTokenizer(decoded, ":");
 				username = tokenizer.nextToken();

@@ -80,9 +80,14 @@ public class Auditar implements Callable {
 			Long idProovedor = Long.class.cast(eventContext.getMessage().getOutboundProperty("idProveedor"));		
 			
 			Long idMensaje=null;
+			Long idLote = null;
 			
 			if (eventContext.getMessage().getOutboundProperty("idMensaje")!=null && !("").equals(eventContext.getMessage().getOutboundProperty("idMensaje"))){
 				idMensaje= Long.valueOf(String.valueOf(eventContext.getMessage().getOutboundProperty("idMensaje")));
+			}
+			
+			if (eventContext.getMessage().getOutboundProperty("idLote")!=null && !("").equals(eventContext.getMessage().getOutboundProperty("idLote"))){
+				idLote= Long.valueOf(String.valueOf(eventContext.getMessage().getOutboundProperty("idLote")));
 			}
 			
 			Estado estado = new Estado();
@@ -110,6 +115,8 @@ public class Auditar implements Callable {
 				peticion.setIdMensaje(idMensaje);
 			}
 			
+			
+			
 			Long idPeticion = peticionManager.insertPeticion(peticion);
 			
 			if(idPeticion==null || idPeticion<=0){
@@ -129,6 +136,10 @@ public class Auditar implements Callable {
 			
 			if (idMensaje!=null){
 				auditoria.setIdMensaje(idMensaje);
+			}
+			
+			if (idLote!=null){
+				auditoria.setIdLote(idLote);
 			}
 			
 			Long idAuditoria = auditoriaManager.insertAuditoria(auditoria);

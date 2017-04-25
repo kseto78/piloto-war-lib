@@ -47,7 +47,7 @@ public class EnviarMensajeJob {
 		try {
 			checkDependenciesPresent();
 			List<Long> idServiciosPlan = planificacionesManager.getServiciosPlanificacion();
-	//		LOG.info("[EnviarMensajeJob] Servicios planificados: " + idServiciosPlan.size());
+			LOG.info("[EnviarMensajeJob] Servicios planificados: " + idServiciosPlan.size());
 			if(!CollectionUtils.isEmpty(idServiciosPlan)){
 				Set<String> nombreServiciosPlan= new LinkedHashSet<String>();
 				for(Long servicioId:idServiciosPlan){
@@ -63,12 +63,12 @@ public class EnviarMensajeJob {
 						Iterator<String> it = nombreServiciosPlan.iterator();
 						for(;it.hasNext()&&mensajesLeidos<maxMensajesLeer;){
 							String nombreServicio=it.next();
-	//						LOG.info("[EnviarMensajeJob] Desencolando mensajes de servicio: " + nombreServicio);
+							LOG.info("[EnviarMensajeJob] Desencolando mensajes de servicio: " + nombreServicio);
 							boolean received=false;
 							try{ 
-	//							LOG.info("[EnviarMensajeJob] BEFORE " + nombreServicio);
+//								LOG.info("[EnviarMensajeJob] BEFORE " + nombreServicio);
 								received=messageReceiver.receiveByServiceName(nombreServicio);
-	//							LOG.info("[EnviarMensajeJob] AFTER " + nombreServicio);
+//								LOG.info("[EnviarMensajeJob] AFTER " + nombreServicio);
 							}catch (Throwable t){
 								LOG.error("Error receiving message for service "+nombreServicio,t);
 								leido=true;

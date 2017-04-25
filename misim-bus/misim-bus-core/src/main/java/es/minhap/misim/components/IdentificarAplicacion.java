@@ -60,6 +60,13 @@ public class IdentificarAplicacion implements Callable {
 			
 			eventContext.getMessage().setOutboundProperty("idMensaje", idMensaje);
 			
+			NodeList nodoLoteId = docOriginal.getElementsByTagName("idLote");
+			
+			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+				String idLote=nodoLoteId.item(0).getTextContent();
+				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+			}
+
 			// Se recupera el url endpoint (no es obligatorio)
 			String urlEndpoint = "";
 			

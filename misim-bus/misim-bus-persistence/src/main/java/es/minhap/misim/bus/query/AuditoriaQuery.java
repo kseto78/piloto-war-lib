@@ -50,6 +50,7 @@ public class AuditoriaQuery extends AbstractHibernateQueryEntity<Auditoria> {
     public static final String IDMENSAJE = "idMensaje";
     public static final String FECHACREACION = "fechaCreacion";
     public static final String FECHAACTUALIZACION = "fechaActualizacion";
+    public static final String IDLOTE = "idLote";
 
 
     /**
@@ -165,6 +166,26 @@ public class AuditoriaQuery extends AbstractHibernateQueryEntity<Auditoria> {
      * Permite buscar cuando campo idMensaje es NOT NULL
      */
     private boolean idMensajeIsNotNull = false;
+    
+    /**
+     * Valor de busqueda de campo idLote
+     */
+    private Long idLote;
+
+    /**
+     * Lista de valores del campo idLote para busquedas tipo IN
+     */
+    private List<Long> idLoteIn = new ArrayList<Long>(0);
+
+    /**
+     * Permite buscar cuando campo idLote es NULL
+     */
+    private boolean idLoteIsNull = false;
+
+    /**
+     * Permite buscar cuando campo idLote es NOT NULL
+     */
+    private boolean idLoteIsNotNull = false;
 
     /**
      * Valor inferior de rango de busqueda de fecha fechaCreacion
@@ -538,6 +559,68 @@ public class AuditoriaQuery extends AbstractHibernateQueryEntity<Auditoria> {
         this.peticionIsNotNull = peticionIsNotNull;
     }
 
+    /**
+     * Valor de busqueda de campo idLote
+     * @return Long.
+     */
+    public Long getIdLote() {
+        return idLote;
+    }
+
+    /**
+     * Valor de busqueda de campo idLote
+     * @param idLote Valor de seteo.
+     */
+    public void setIdLote(Long idLote) {
+        this.idLote = idLote;
+    }
+
+    /**
+     * @return List<Long>.
+     */
+    public List<Long> getIdLoteIn() {
+        return this.idLoteIn;
+    }
+
+    /**
+     * @param idLote Valor a agregar.
+     */
+    public void addIdLoteIn(Long idLote) {
+        this.idLoteIn.add(idLote);
+    }
+
+    /**
+     * Permite buscar cuando campo idLote es NULL
+     * @return boolean.
+     */
+    public boolean isIdLoteIsNull() {
+        return idLoteIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idLote es NULL
+     * @param idLoteIsNull Valor de seteo.
+     */
+    public void setIdLoteIsNull(boolean idLoteIsNull) {
+        this.idLoteIsNull = idLoteIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idLote es NOT NULL
+     * @return boolean.
+     */
+    public boolean isIdLoteIsNotNull() {
+        return idLoteIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idMensaje es NOT NULL
+     * @param idMensajeIsNotNull Valor de seteo.
+     */
+    public void setIdLoteIsNotNull(boolean idLoteIsNotNull) {
+        this.idLoteIsNotNull = idLoteIsNotNull;
+    }
+    
     /**
      * Valor de busqueda de campo idMensaje
      * @return Long.
@@ -1020,6 +1103,23 @@ public class AuditoriaQuery extends AbstractHibernateQueryEntity<Auditoria> {
         if (isIdMensajeIsNotNull()) {
             criteria.add(Restrictions.isNotNull(IDMENSAJE));
         }
+        
+        if (getIdLote() != null) {
+            criteria.add(Restrictions.eq(IDLOTE, getIdLote()));
+        }
+
+        if (getIdLoteIn().size() > 0) {
+            criteria.add(Restrictions.in(IDLOTE, getIdLoteIn()));
+        }
+
+        if (isIdLoteIsNull()) {
+            criteria.add(Restrictions.isNull(IDLOTE));
+        }
+
+        if (isIdLoteIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(IDLOTE));
+        }
+        
 
         if (getFechaCreacionMin() != null) {
             criteria.add(Restrictions.ge(FECHACREACION, getFechaCreacionMin()));

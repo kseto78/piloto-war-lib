@@ -146,7 +146,10 @@ public class InvocarGenerarSAML implements Callable {
 					eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				}
 
-				System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+				if(LOG.isInfoEnabled()){
+		        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+		        }
+				
 				soapPayload.setSoapAction(initPayload.getSoapAction());
 				soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 

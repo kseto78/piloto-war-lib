@@ -64,6 +64,8 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	PropertiesServices ps = null;
 	
+	String errorClave = "";
+	
 	public MuleContext getMuleContext() {
 		return muleContext;
 	}
@@ -84,8 +86,11 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
-		LOG.debug("Empezando el proceso de invocación actualizacaion estado AEAT...");
+		LOG.debug("Empezando el proceso de invocación actualización estado AEAT...");
 		
+		ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		errorClave = ps.getMessage("clave.ERRORCLAVE.AEAT", null, "[ERROR-CL@VE]:");
+				
 		try{
 			
 			String targetName = eventContext.getMessage().getOutboundProperty("targetName");
@@ -101,10 +106,11 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
 			
 			if(LOG.isInfoEnabled()){
-	        	LOG.info("REQUEST: "+ XMLUtils.dom2xml(docOriginal));
-	        }			
+				LOG.info("REQUEST: " + XMLUtils.dom2xml(docOriginal));
+			}           
 			
-			NodeList peticion = docOriginal.getElementsByTagName("PeticionNotificacionEstadoSMS");
+			NodeList peticion = docOriginal.getElementsByTagNameNS("https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd", "PeticionNotificacionEstadoSMS");
+
 
 			String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
 			Document doc = XMLUtils.xml2doc(xmlPeticion, Charset.forName("UTF-8"));
@@ -132,23 +138,23 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 				eventContext.getMessage().setPayload(soapPayload);
 				
 			}catch(Exception e){
-				establecerPropertyError(eventContext, true);
+				establecerPropertyError(eventContext, true, "Error en la transmisión: Error al obtener la respuesta del servicio Web especificado");
 				LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
 				LOG.error("La peticion que se envia es :" + respuestaCompleta);
 				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
 			}
 			
 		}catch(IllegalArgumentException e){
-			establecerPropertyError(eventContext, true);
+			establecerPropertyError(eventContext, true, "Error al obtener la respuesta del servicio Web especificado");
 			LOG.error("Error al obtener la respuesta del servicio Web especificado", e);
 		}catch(ModelException e){
-			establecerPropertyError(eventContext, true);
+			establecerPropertyError(eventContext, true, "Error al generar el cliente: Endpoint no encontrado en el WSDL");
 			LOG.error("Error al generar el cliente: Endpoint no encontrado en el WSDL", e);
 		}catch (SOAPFaultException e) {	
-			establecerPropertyError(eventContext, true);
+			establecerPropertyError(eventContext, true,"Error en la transmisión: Error al contactar con el servicio Web especificado");
 			LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
 		}catch(WebServiceException e){
-			establecerPropertyError(eventContext, true);
+			establecerPropertyError(eventContext, true, "Error en la transmisión: Comunicación sin respuesta");
 			if(e.getCause()!=null){
 				if(e.getCause().getClass().equals(SocketTimeoutException.class)){
 					LOG.error("Error en la transmisión: Comunicación sin respuesta",e);
@@ -159,7 +165,7 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 				LOG.error("Error en la transmisión: Error al contactar con el servicio Web especificado", e);
 			}
 		}catch(Exception e){
-			establecerPropertyError(eventContext, true);
+			establecerPropertyError(eventContext, true, "Error en la transmisión: Error de sistema Invocar Emisor");
 			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
 		}
 		
@@ -169,10 +175,14 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 	}
 
 
+	private void establecerPropertyError(MuleEventContext eventContext, boolean b, String error) {
+		eventContext.getMessage().setOutboundProperty("errorAEAT", b);
+		LOG.error(errorClave + error);
+	}
+
 	private void establecerPropertyError(MuleEventContext eventContext, boolean b) {
 		eventContext.getMessage().setOutboundProperty("errorAEAT", b);
 	}
-
 
 	private Document getSoapDOM(String operationName, String endpointUrl, Long timeout, String respuestaCompleta, QName serviceQName, QName portQName,MuleEventContext eventContext)
 			throws ParserConfigurationException, SAXException, IOException, UnsupportedEncodingException, ModelException {

@@ -41,7 +41,7 @@ public class IncluirUsuario implements Callable {
 			
 		try{
 
-//			System.out.println("Antes de modificar id MENSAJE: " + XMLUtils.dom2xml(docOriginal));
+//			LOG.debug("Antes de modificar id MENSAJE: " + XMLUtils.dom2xml(docOriginal));
 			
 			Long idAplicacion = Long.class.cast(eventContext.getMessage().getOutboundProperty("idAplicacion"));
 			Aplicacion aplicacion = aplicacionManager.getAplicacionById(idAplicacion);
@@ -59,7 +59,7 @@ public class IncluirUsuario implements Callable {
 			
 			eventContext.getMessage().setPayload(soapPayload);
 			
-//			System.out.println("Despues modificar id MENSAJE: " + XMLUtils.dom2xml(documentoMod));
+//			LOG.debug("Despues modificar id MENSAJE: " + XMLUtils.dom2xml(documentoMod));
 		
 		}catch (Exception e){
 			

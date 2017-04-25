@@ -20,6 +20,8 @@ public class HiloEnviarMensajesPremium extends Thread {
 	private TblMensajesManager tblMensajesManager;
 
 	private Long mensajeId;
+	
+	private Long loteId;
 
 	private Long destinatarioMensajeId;
 
@@ -32,12 +34,13 @@ public class HiloEnviarMensajesPremium extends Thread {
 	}
 
 	public HiloEnviarMensajesPremium(ISendMessageService sendMessageService, TblMensajesManager tblMensajesManager,
-			Long mensajeId, Long destinatarioMensajeId, boolean isAEAT,
+			Long mensajeId, Long loteId, Long destinatarioMensajeId, boolean isAEAT,
 			ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
 		this.sendMessageService = sendMessageService;
 		this.tblMensajesManager = tblMensajesManager;
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 		this.mensajeId = mensajeId;
+		this.loteId = loteId;
 		this.destinatarioMensajeId = destinatarioMensajeId;
 		this.isAEAT = isAEAT;
 	}
@@ -51,7 +54,7 @@ public class HiloEnviarMensajesPremium extends Thread {
 		String descripcion =  ps.getMessage("constantes.descripcionAnularMensaje", null);
 		String usuario =  ps.getMessage("constantes.usuarioActiveMQ", null);
 		try{
-			sendMessageService.postSMS(mensajeId, destinatarioMensajeId, null, null, null);
+			sendMessageService.postSMS(mensajeId, loteId, destinatarioMensajeId, null, null, null, null);
 		
 		}catch(Exception e){
 			LOG.error("Excepcion en el Thread enviando Mensaje: " + mensajeId, e);

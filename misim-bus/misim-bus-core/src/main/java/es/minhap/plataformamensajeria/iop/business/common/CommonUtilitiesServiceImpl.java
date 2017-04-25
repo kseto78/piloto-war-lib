@@ -149,12 +149,14 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 		SoapPayload<?> payload = new PeticionPayload();
 		payload.setSoapAction(soapAction);
 		String xml = "";
+		Boolean isConsulta = false;
 		if (data instanceof PeticionEnvioXML) {
 			xml = ((PeticionEnvioXML) data).toXMLSMS();
 		} else if (data instanceof PeticionPush) {
 			xml = ((PeticionPush) data).toXML();
 		} else if (data instanceof PeticionConsultaEstado){
 			xml = ((PeticionConsultaEstado) data).toXML();
+			isConsulta = true;
 		}else if (data instanceof PeticionRecepcionSMS){
 			xml = ((PeticionRecepcionSMS) data).toXML();
 		}
@@ -183,7 +185,7 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 
 		StringReader reader = new StringReader(xmlRespuesta);
 		Respuesta respuesta = (Respuesta) unmarshaller.unmarshal(reader);
-		return respuesta.getStatus().getStatusText();
+		return isConsulta? xmlRespuesta : respuesta.getStatus().getStatusText();
 	}
 	
 	@Override
