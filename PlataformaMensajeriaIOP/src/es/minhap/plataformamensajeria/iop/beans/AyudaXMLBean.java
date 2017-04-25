@@ -85,7 +85,7 @@ public class AyudaXMLBean {
 		
 		StringWriter writer = new StringWriter();
 		jaxbMarshaller.marshal(ayudaBean, writer);
-		jaxbMarshaller.marshal(ayudaBean, System.out);
+//		jaxbMarshaller.marshal(ayudaBean, System.out);
 		
 		return writer.toString();
 		} catch (PropertyException e) {

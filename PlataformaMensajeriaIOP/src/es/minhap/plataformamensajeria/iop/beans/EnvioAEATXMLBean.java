@@ -77,7 +77,7 @@ public String toXML() throws PlataformaBusinessException{
 	
 	StringWriter writer = new StringWriter();
 	jaxbMarshaller.marshal(envioAEATXML, writer);
-	jaxbMarshaller.marshal(envioAEATXML, System.out);
+//	jaxbMarshaller.marshal(envioAEATXML, System.out);
 	
 	return writer.toString();
 	} catch (PropertyException e) {

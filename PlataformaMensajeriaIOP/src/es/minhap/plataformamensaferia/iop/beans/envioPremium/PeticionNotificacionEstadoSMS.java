@@ -202,7 +202,7 @@ public String toXMLEstado(ArrayList<SeguimientoMensaje> listaResultados, String 
 			
 			StringWriter writer = new StringWriter();
 			jaxbMarshaller.marshal(operacionesMensajes, writer);
-			jaxbMarshaller.marshal(operacionesMensajes, System.out);
+//			jaxbMarshaller.marshal(operacionesMensajes, System.out);
 			
 			return Utils.convertToUTF8(writer.toString());
 			
@@ -258,7 +258,7 @@ public String toXML() throws PlataformaBusinessException{
 	
 	StringWriter writer = new StringWriter();
 	jaxbMarshaller.marshal(envioXML, writer);
-	jaxbMarshaller.marshal(envioXML, System.out);
+//	jaxbMarshaller.marshal(envioXML, System.out);
 	
 	return writer.toString();
 	} catch (PropertyException e) {

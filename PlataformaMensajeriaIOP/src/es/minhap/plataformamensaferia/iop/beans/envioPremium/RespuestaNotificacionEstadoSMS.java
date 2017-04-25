@@ -144,7 +144,7 @@ public class RespuestaNotificacionEstadoSMS {
     	
     	StringWriter writer = new StringWriter();
     	jaxbMarshaller.marshal(envioXML, writer);
-    	jaxbMarshaller.marshal(envioXML, System.out);
+//    	jaxbMarshaller.marshal(envioXML, System.out);
     	
     	return writer.toString();
     	} catch (PropertyException e) {

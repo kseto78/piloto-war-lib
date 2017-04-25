@@ -102,7 +102,7 @@ public class PeticionAEAT {
 			
 			StringWriter writer = new StringWriter();
 			jaxbMarshaller.marshal(operacionesMensajes, writer);
-			jaxbMarshaller.marshal(operacionesMensajes, System.out);
+//			jaxbMarshaller.marshal(operacionesMensajes, System.out);
 			
 			return Utils.convertToUTF8(writer.toString());
 			

@@ -26,20 +26,20 @@
 	<!-- ********************************** -->
 	<!-- Bean con los properties externos para utilizar en el proyecto constantes y recursos que no queremos tener en código-->
 	<!-- ********************************** -->
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:/confSIMEnviroiment.properties</value>
-			</list>
-		</property>
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-	</bean>
+<!-- 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+<!-- 		<property name="locations"> -->
+<!-- 			<list> -->
+<!-- 				<value>classpath:/confMISIM.properties</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 		<property name="ignoreUnresolvablePlaceholders" value="true" /> -->
+<!-- 	</bean> -->
 
 	<bean id="reloadableResourceBundleMessageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>classpath:confSIMEnviroiment</value>
+				<value>classpath:confMISIM</value>
 			</list>
 		</property>
 		<property name="cacheSeconds" value="600" />

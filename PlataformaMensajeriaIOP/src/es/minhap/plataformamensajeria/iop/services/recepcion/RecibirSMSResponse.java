@@ -40,14 +40,16 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "status"
+    "status","idLote"
 })
 @XmlRootElement(name = "Respuesta")
 public class RecibirSMSResponse {
 
     @XmlElement(name = "Status", required = true)
     protected ResponseStatusType status;
-
+    @XmlElement(name = "idLote", required = true)
+    protected Integer idLote;
+    
     /**
      * Obtiene el valor de la propiedad status.
      * 
@@ -71,6 +73,14 @@ public class RecibirSMSResponse {
     public void setStatus(ResponseStatusType value) {
         this.status = value;
     }
+    
+	public Integer getIdLote() {
+		return idLote;
+	}
+
+	public void setIdLote(Integer idLote) {
+		this.idLote = idLote;
+	}
 
 	@Override
 	public String toString() {

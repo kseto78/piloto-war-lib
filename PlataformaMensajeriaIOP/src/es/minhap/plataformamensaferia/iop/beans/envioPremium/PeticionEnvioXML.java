@@ -49,6 +49,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "proveedor",
     "urlEndpoint",
     "mensajeId",
+    "idLote",
     "datosEspecificos"
 })
 @XmlRootElement(name = "Peticion")
@@ -66,6 +67,8 @@ public class PeticionEnvioXML {
     protected String urlEndpoint;
     @XmlElement(name = "MensajeId", required = false)
     protected String mensajeId;
+    @XmlElement(name = "idLote", required = false)
+    protected String idLote;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificos datosEspecificos;
 
@@ -237,6 +240,14 @@ public class PeticionEnvioXML {
         this.datosEspecificos = value;
     }
 
+    	public String getIdLote() {
+		return idLote;
+	}
+
+	public void setIdLote(String idLote) {
+		this.idLote = idLote;
+	}
+	
 	@Override
 	public String toString() {
 		return "Peticion [usuario=" + usuario + ", password=" + password + ", producto=" + producto + ", proveedor=" + proveedor + ", mensajeId=" + mensajeId + ", datosEspecificos=" + datosEspecificos + "]";

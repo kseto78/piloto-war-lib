@@ -4,6 +4,7 @@
 package es.minhap.plataformamensajeria.iop.services.springTest;
 
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -123,17 +124,22 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 	 * debera invocar inmediatamente.
 	 * @throws InterruptedException
 	 */
-	//@Test
+	@Test
 	public final void JMSComponentEncolarPremium() throws InterruptedException {
 		logger.debug("Starting test JMSComponentEncolarPremium");
-		MensajeJMS mensaje = new MensajeJMS();
-		mensaje.setIdMensaje("TestIdMensaje2");
-		mensaje.setIdExterno("TestIdExternoPremium2");
-		mensaje.setCodSia("TestCodSia1");
-		long maxRetries = 0L;
-		String serviceName = "test";
-		boolean premium = true;
-		sender.send(mensaje, maxRetries, serviceName, premium);
+		for (int i = 0; i < 10; i++) {
+			MensajeJMS mensaje = new MensajeJMS();
+			mensaje.setIdMensaje("839557");
+			mensaje.setDestinatarioMensajeId("92124");
+			mensaje.setIdExterno(new Timestamp(System.currentTimeMillis()).toString());
+			mensaje.setCodSia("TestCodSia1");
+			mensaje.setIdCanal("1");
+			long maxRetries = 0L;
+			String serviceName = "283";
+			boolean premium = false;
+			sender.send(mensaje, maxRetries, serviceName, premium);
+		}
+	
 	}
 	
 //	@Test

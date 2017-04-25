@@ -148,7 +148,7 @@ public class RecepcionEstadoSMSXMLBean {
 
 			StringWriter writer = new StringWriter();
 			jaxbMarshaller.marshal(recepcionEstadoSMS, writer);
-			jaxbMarshaller.marshal(recepcionEstadoSMS, System.out);
+//			jaxbMarshaller.marshal(recepcionEstadoSMS, System.out);
 
 			return writer.toString();
 		} catch (PropertyException e) {

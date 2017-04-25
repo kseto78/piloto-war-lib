@@ -184,4 +184,29 @@ public class QueryExecutorServidoresImpl extends HibernateDaoSupport implements 
 	}
 
 	
+	@Override
+	@Transactional
+	public Long getIdLoteByIdMensaje(Long idMensaje) {
+		BigDecimal res = null;
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			SQLQuery query = getSessionFactory().getCurrentSession()
+					.createSQLQuery("SELECT loteenvioid "
+							+ "FROM tbl_mensajes "
+							+ "WHERE mensajeid = "
+							+ idMensaje);
+			res = (BigDecimal) query.uniqueResult();
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
+			}
+
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res.longValue();	
+	}
+	
 }

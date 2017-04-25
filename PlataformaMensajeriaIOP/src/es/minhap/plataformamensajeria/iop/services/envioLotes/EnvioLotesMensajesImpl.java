@@ -172,7 +172,8 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				String pkpassFile = null;
 				pkpassFile = PassbookGenerator.generate(camposPrincipales, camposSecundarios, camposAuxiliares, camposCabecera, 
 						camposDetalleTrasera, url, logoText, description, backgroundColor, foregroundColor, labelColor,passTypeIdentifier, 
-						serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);				AdjuntosXMLBean adjunto = new AdjuntosXMLBean();
+						serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);				
+				AdjuntosXMLBean adjunto = new AdjuntosXMLBean();
 				adjunto.setNombre(nombrePassbook);
 				File fichero = new File(pkpassFile);
 				adjunto.setContenido(getBytesFromFile(fichero));

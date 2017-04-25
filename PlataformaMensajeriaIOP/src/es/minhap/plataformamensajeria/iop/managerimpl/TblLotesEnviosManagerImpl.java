@@ -494,6 +494,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			mensajeJms.setIdMensaje(idMensaje.toString());
 			mensajeJms.setIdExterno(tblMensaje.getCodigoexterno());
 			mensajeJms.setDestinatarioMensajeId(destBuilder.toString());
+			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
 			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
@@ -516,6 +517,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			mensajeJms.setIdExterno(tblMensaje.getCodigoexterno());
 			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
 			mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
 			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {

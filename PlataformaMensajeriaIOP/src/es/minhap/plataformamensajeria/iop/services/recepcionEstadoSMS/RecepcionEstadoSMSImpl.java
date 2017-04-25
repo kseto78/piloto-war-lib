@@ -80,11 +80,13 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		
 		try {
 			mensaje = mensajesManager.getMensajeIDByUIM(recepcionEstadoSMS.getMensajeId());
-			if(mensaje != null) {
+			if (mensaje == null){
+				LOG.error("[RespuestaEstadoSMSXMLBean] Error no se ha encontrado mensaje con UIM: " + recepcionEstadoSMS.getMensajeId());
+			} else {
+				Long idLote = mensaje.getTblLotesEnvios().getLoteenvioid();
+				res.setIdLote(idLote);
 				mensajeID = mensaje.getMensajeid();
 				urlPremium = getUrlPremium(mensajeID);
-			} else {
-				LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM");
 			}
 		} catch (Exception e) {
 			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);

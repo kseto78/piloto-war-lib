@@ -126,6 +126,7 @@ public class TblUsuariosServiciosMovilesManagerImpl implements TblUsuariosServic
 		TblUsuariosServiciosMovilesQuery query = new TblUsuariosServiciosMovilesQuery();
 		TblUsuariosPushQuery upQuery = new TblUsuariosPushQuery();
 		query.setServiciosmovilesid(Long.parseLong(idServicioMovil));
+		query.setEstadosuscripcion(1);
 		upQuery.setUsuarioid(Long.valueOf(usuario));
 		query.setTblUsuariosPush(upQuery);
 		return (null != usuariosServiciosMovilesDAO.search(query) && !usuariosServiciosMovilesDAO.search(query).getResults().isEmpty())? true : false;

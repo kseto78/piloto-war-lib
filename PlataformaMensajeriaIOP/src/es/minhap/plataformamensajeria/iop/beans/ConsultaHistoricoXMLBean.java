@@ -711,7 +711,7 @@ public class ConsultaHistoricoXMLBean {
 		
 		StringWriter writer = new StringWriter();
 		jaxbMarshaller.marshal(consultaHistorico, writer);
-		jaxbMarshaller.marshal(consultaHistorico, System.out);
+//		jaxbMarshaller.marshal(consultaHistorico, System.out);
 		
 		return writer.toString();
 		} catch (PropertyException e) {

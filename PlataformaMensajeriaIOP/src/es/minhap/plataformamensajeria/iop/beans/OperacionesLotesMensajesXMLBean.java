@@ -252,7 +252,7 @@ public class OperacionesLotesMensajesXMLBean {
 		
 		StringWriter writer = new StringWriter();
 		jaxbMarshaller.marshal(operacionesLotesMensajes, writer);
-		jaxbMarshaller.marshal(operacionesLotesMensajes, System.out);
+//		jaxbMarshaller.marshal(operacionesLotesMensajes, System.out);
 		
 		return writer.toString();
 		

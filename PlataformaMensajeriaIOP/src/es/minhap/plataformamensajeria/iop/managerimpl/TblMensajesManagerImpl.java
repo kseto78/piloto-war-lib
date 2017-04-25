@@ -294,24 +294,30 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		}
 
-		// creamos el mensaje
 		TblMensajes mens = crearMensajeEmail(idLote, mensaje, envio);
 
-		mens.setMensajeid(tblMensajesDAO.insert(mens));
-		if (null != mens.getMensajeid()) {
+		if(mensaje.getIdMensaje() == null || mensaje.getIdMensaje().isEmpty()){
+			// creamos el mensaje
+			mens.setMensajeid(tblMensajesDAO.insert(mens));
+			
+			if (null != mens.getMensajeid()) {
 
-			// auditoria mensaje correcto
-			auditarMensaje(idLote, mens.getMensajeid(), envio.getUsuario(), envio.getPassword(),
-					MensajesAuditoria.MENSAJE_EMAIL_CORRECTO, MensajesAuditoria.OPERACION_MENSAJE_EMAIL_CREAR,
-					mens.getMensajeid());
+				// auditoria mensaje correcto
+				auditarMensaje(idLote, mens.getMensajeid(), envio.getUsuario(), envio.getPassword(),
+						MensajesAuditoria.MENSAJE_EMAIL_CORRECTO, MensajesAuditoria.OPERACION_MENSAJE_EMAIL_CREAR,
+						mens.getMensajeid());
 
+			} else {
+
+				// auditoria mensaje incorrecto
+				auditarMensaje(idLote, null, envio.getUsuario(), envio.getPassword(), MensajesAuditoria.ERROR_BBDD,
+						MensajesAuditoria.OPERACION_MENSAJE_EMAIL_CREAR, MensajesAuditoria.COD_ERROR_BBDD);
+				return generarRespuesta(MensajesAuditoria.COD_ERROR_BBDD.toString(), PlataformaErrores.STATUSTEXT_KO,
+						MensajesAuditoria.ERROR_BBDD, mensaje.getIdExterno(), null);
+			}
+			
 		} else {
-
-			// auditoria mensaje incorrecto
-			auditarMensaje(idLote, null, envio.getUsuario(), envio.getPassword(), MensajesAuditoria.ERROR_BBDD,
-					MensajesAuditoria.OPERACION_MENSAJE_EMAIL_CREAR, MensajesAuditoria.COD_ERROR_BBDD);
-			return generarRespuesta(MensajesAuditoria.COD_ERROR_BBDD.toString(), PlataformaErrores.STATUSTEXT_KO,
-					MensajesAuditoria.ERROR_BBDD, mensaje.getIdExterno(), null);
+			mens.setMensajeid(Long.valueOf(mensaje.getIdMensaje()));
 		}
 
 		return generarRespuesta(null, null, null, mensaje.getIdExterno(), mens.getMensajeid());
@@ -654,6 +660,12 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	public Long getIdServicioByIdMensaje(Long idMensaje) {
 		return queryExecutorServidores.getIdServicioByIdMensaje(idMensaje);
 	}
+	
+	@Override
+	@Transactional
+	public Long getIdLoteByIdMensaje(Long idMensaje) {
+		return queryExecutorServidores.getIdLoteByIdMensaje(idMensaje);
+	}
 
 	@Override
 	@Transactional
@@ -783,6 +795,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			mensajeJms.setIdMensaje(idMensaje.toString());
 			mensajeJms.setIdExterno(tblMensaje.getCodigoexterno());
 			mensajeJms.setDestinatarioMensajeId(destBuilder.toString());
+			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
 			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
@@ -805,6 +818,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			mensajeJms.setIdExterno(tblMensaje.getCodigoexterno());
 			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
 			mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
 			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
@@ -902,7 +916,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}else{
 				mensaje = tblMensajesDAO.get(dm.getMensajeid());
 			}
-	
+			mensaje.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(mensaje.getTblLotesEnvios().getLoteenvioid()));
 		} catch (Exception e) {
 			LOG.debug("[TblMensajesManagerImpl] - Error en bbdd", e);
 			return null;
@@ -1089,6 +1103,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		mensajeJms.setDestinatarioMensajeId(destinatarioMensajeId);
 		mensajeJms.setIdCanal(servicio.getTblCanales().getCanalid().toString());
 		mensajeJms.setServicio(servicio.getServicioid().toString());
+		mensajeJms.setIdLote(mensaje.getTblLotesEnvios().getLoteenvioid().toString());
 		
 		List<MensajeJMS> listado = new ArrayList<>();
 		listado.add(mensajeJms);
@@ -1103,6 +1118,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		mensajeJms.setDestinatarioMensajeId(destinatarioMensajeId);
 		mensajeJms.setIdCanal(servicio.getTblCanales().getCanalid().toString());
 		mensajeJms.setServicio(servicio.getServicioid().toString());
+		mensajeJms.setIdLote(mensaje.getTblLotesEnvios().getLoteenvioid().toString());
 		
 		map.get(servicio.getServicioid()).add(mensajeJms);
 	}

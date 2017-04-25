@@ -38,12 +38,14 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  * 
  */
 
-@XmlType(name = "", propOrder = { "status" })
+@XmlType(name = "", propOrder = { "status", "idLote"})
 @XmlRootElement(name = "Respuesta")
 public class RespuestaEstadoSMSXMLBean {
 
 	@XmlElement(name = "Status", required = true)
 	protected ResponseStatusType status;
+	@XmlElement(name = "idLote", required = true)
+	protected Long idLote;
 
 	/**
 	 * Obtiene el valor de la propiedad status.
@@ -64,6 +66,11 @@ public class RespuestaEstadoSMSXMLBean {
 	 */
 	public void setStatus(ResponseStatusType value) {
 		this.status = value;
+	}
+	
+	
+	public void setIdLote(Long idLote) {
+		this.idLote = idLote;
 	}
 
 	@Override

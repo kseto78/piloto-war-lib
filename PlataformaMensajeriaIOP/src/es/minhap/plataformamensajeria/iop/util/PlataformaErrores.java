@@ -194,7 +194,8 @@ public class PlataformaErrores {
 	public static final String DETAILS_KO_CAMPOS_OBLIGATORIOS = "El identificador del servicio movil es obligatorio";
 	public static final String DETAILS_KO_CAMPOS_OBLIGATORIOS_SERVICIO = "El servicio movil es incorrecto o no estÃ¡ activo";
 	public static final String ERROR_ADJUNTOS = "Se ha producido un error al adjuntar archivos";
-	
+	public static final String STATUSDETAILS_KO_NMAXENVIOS = "Se ha sobrepasado el numero maximo de mensajes a enviar por lote";
+	public static final String STATUS_KO_NMAXENVIOS = "3014";
 	
 
 	

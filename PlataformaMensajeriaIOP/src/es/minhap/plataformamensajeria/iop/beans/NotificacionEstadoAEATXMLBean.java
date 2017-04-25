@@ -67,7 +67,7 @@ public class NotificacionEstadoAEATXMLBean {
 
 			StringWriter writer = new StringWriter();
 			jaxbMarshaller.marshal(usuariosBean, writer);
-			jaxbMarshaller.marshal(usuariosBean, System.out);
+//			jaxbMarshaller.marshal(usuariosBean, System.out);
 
 			return writer.toString();
 		} catch (PropertyException e) {

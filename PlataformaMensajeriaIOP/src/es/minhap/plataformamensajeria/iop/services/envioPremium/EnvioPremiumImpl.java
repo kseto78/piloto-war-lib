@@ -9,6 +9,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 
+import es.map.sim.jms.sender.SIMMessageSender;
+import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
@@ -33,6 +35,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.model.TblDestinatariosMensajes;
 import es.minhap.sim.model.TblMensajes;
+import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUrlMensajePremium;
 
 /**
@@ -110,8 +113,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-//	@Resource(name = "messageSender")
-//	private SIMMessageSender sender;
+	@Resource(name = "messageSender")
+	private SIMMessageSender sender;
 
 	@Override
 	public String enviarSMSPremium(EnvioAEATXMLBean envio, String username, String password, Integer servicio,
@@ -331,14 +334,16 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 					mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendiente, null, false, null, null,
 							username, null);
 	
-//					MensajeJMS mensajeJms = new MensajeJMS();
-//					mensajeJms.setIdMensaje(idMensaje.toString());
-//					mensajeJms.setIdExterno(envio.getIdExterno());
-//					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-//					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-//					TblServicios servicioAEAT = serviciosManager.getServicio(servicio.longValue());
-//	
-//					sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
+					MensajeJMS mensajeJms = new MensajeJMS();
+					mensajeJms.setIdMensaje(idMensaje.toString());
+					mensajeJms.setIdExterno(envio.getIdExterno());
+					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+					mensajeJms.setIdLote(queryExecutorServidores.getIdLoteByIdMensaje(idMensaje.longValue()).toString());
+					mensajeJms.setUsuarioAplicacion(username);
+					TblServicios servicioAEAT = serviciosManager.getServicio(servicio.longValue());
+	
+					sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
 				}
 				resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
 				respuesta = resp.toXMLSMS(resp);
@@ -417,15 +422,16 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 						.longValue())) {
 					hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
 							estadoId, null, null, null, username);
-//					MensajeJMS mensajeJms = new MensajeJMS();
-//					mensajeJms.setIdMensaje(idMensaje.toString());
-//					mensajeJms.setIdExterno(envio.getIdExterno());
-//					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-//					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-//	
-//					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
-//	
-//					sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
+					MensajeJMS mensajeJms = new MensajeJMS();
+					mensajeJms.setIdMensaje(idMensaje.toString());
+					mensajeJms.setIdExterno(envio.getIdExterno());
+					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+					mensajeJms.setIdLote((null != idLote) ? idLote.toString() : "0");
+					mensajeJms.setUsuarioAplicacion(username);
+					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
+	
+					sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
 				}
 			}
 			if (null == respuesta) {

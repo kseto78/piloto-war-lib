@@ -195,7 +195,7 @@ public class EstadoUsuarioRequest {
     	
     	StringWriter writer = new StringWriter();
     	jaxbMarshaller.marshal(estadoUsuarioRequestXML, writer);
-    	jaxbMarshaller.marshal(estadoUsuarioRequestXML, System.out);
+//    	jaxbMarshaller.marshal(estadoUsuarioRequestXML, System.out);
     	
     	return writer.toString();
     	} catch (PropertyException e) {

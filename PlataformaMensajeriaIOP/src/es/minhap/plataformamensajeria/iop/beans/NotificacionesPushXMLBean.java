@@ -170,7 +170,7 @@ public class NotificacionesPushXMLBean {
 
 			StringWriter writer = new StringWriter();
 			jaxbMarshaller.marshal(notificacionesPushBean, writer);
-			jaxbMarshaller.marshal(notificacionesPushBean, System.out);
+//			jaxbMarshaller.marshal(notificacionesPushBean, System.out);
 
 			return writer.toString();
 		} catch (PropertyException e) {

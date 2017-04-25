@@ -321,4 +321,12 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
+	@Override
+	public RegistroUsuarioPushResponse registroUsuario(String nombreUsuario,
+			String servicioId, String usuario, String password,
+			String plataformaId, String tokenUsuario, String dispositivoId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

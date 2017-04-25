@@ -67,7 +67,7 @@ public class RespuestaEnvioXMLBean {
 		
 		StringWriter writer = new StringWriter();
 		jaxbMarshaller.marshal(consultasServiciosBean, writer);
-		jaxbMarshaller.marshal(consultasServiciosBean, System.out);
+//		jaxbMarshaller.marshal(consultasServiciosBean, System.out);
 		
 		return writer.toString();
 		} catch (PropertyException e) {

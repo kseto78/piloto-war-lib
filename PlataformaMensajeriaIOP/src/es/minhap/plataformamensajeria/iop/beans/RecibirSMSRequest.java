@@ -249,7 +249,7 @@ public void loadObjectFromXML (String xmlrecibirRequestSms)throws PlataformaBusi
 		
 		StringWriter writer = new StringWriter();
 		jaxbMarshaller.marshal(recibirRequestSms, writer);
-		jaxbMarshaller.marshal(recibirRequestSms, System.out);
+//		jaxbMarshaller.marshal(recibirRequestSms, System.out);
 		
 		return writer.toString();
 		} catch (PropertyException e) {

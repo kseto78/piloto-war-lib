@@ -13,6 +13,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 
+import es.map.sim.jms.sender.SIMMessageSender;
+import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Atributos;
@@ -38,6 +40,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.model.TblDestinatariosMensajes;
+import es.minhap.sim.model.TblServicios;
 
 /**
  * Esta clase es la encargada de gestionar los SMS de GISS
@@ -104,7 +107,9 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-	
+	@Resource(name = "messageSender")
+	private SIMMessageSender sender;
+
 	/**
 	 * 
 	 * Metodo que se encarga de enviar un SMS a partir de una peticion
@@ -222,20 +227,22 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 						.getDestinatarioMensajes(idMensaje.longValue())) {
 					hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
 							estadoId, null, null, null, username);
-//					MensajeJMS mensajeJms = new MensajeJMS();
-//					mensajeJms.setIdMensaje(idMensaje.toString());
-//					mensajeJms.setIdExterno(envio.getIdExterno());
-//					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-//					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-//					Long maxRetries = null;
-//
-//					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
-//					if (servicioAEAT.getNumeroMaxReenvios() != null && servicioAEAT.getNumeroMaxReenvios() > 0) {
-//						maxRetries = servicioAEAT.getNumeroMaxReenvios().longValue();
-//					} else {
-//						maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
-//					}
-//					sender.send(mensajeJms, maxRetries, servicioAEAT.getServicioid().toString(), true);
+					MensajeJMS mensajeJms = new MensajeJMS();
+					mensajeJms.setIdMensaje(idMensaje.toString());
+					mensajeJms.setIdExterno(envio.getIdExterno());
+					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+					mensajeJms.setIdLote(idLote.toString());
+					mensajeJms.setUsuarioAplicacion(username);
+					Long maxRetries = null;
+
+					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
+					if (servicioAEAT.getNumeroMaxReenvios() != null && servicioAEAT.getNumeroMaxReenvios() > 0) {
+						maxRetries = servicioAEAT.getNumeroMaxReenvios().longValue();
+					} else {
+						maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+					}
+					sender.send(mensajeJms, maxRetries, servicioAEAT.getServicioid().toString(), true);
 				}
 				resp = codificarRespuesta(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.generales.STATUS_OK", null),
@@ -676,5 +683,18 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
-	
+	/**
+	 * @return the sender
+	 */
+	public SIMMessageSender getSender() {
+		return sender;
+	}
+
+	/**
+	 * @param sender
+	 *            the sender to set
+	 */
+	public void setSender(SIMMessageSender sender) {
+		this.sender = sender;
+	}
 }

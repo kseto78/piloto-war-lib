@@ -723,7 +723,7 @@ public class ConsultaEstadoXMLBean {
 
 			StringWriter writer = new StringWriter();
 			jaxbMarshaller.marshal(consultaEstado, writer);
-			jaxbMarshaller.marshal(consultaEstado, System.out);
+//			jaxbMarshaller.marshal(consultaEstado, System.out);
 
 			return Utils.convertToUTF8(writer.toString());
 		} catch (PropertyException e) {

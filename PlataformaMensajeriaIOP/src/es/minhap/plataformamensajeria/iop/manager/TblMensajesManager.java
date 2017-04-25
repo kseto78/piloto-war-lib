@@ -123,6 +123,14 @@ public interface TblMensajesManager {
 	 */
 	public Long getIdServicioByIdMensaje(Long idMensaje);
 	
+	/**
+	 * Se obtiene el id de lote a partir del id mensaje
+	 * 
+	 * @param idMensaje
+	 * @return
+	 */
+	public Long getIdLoteByIdMensaje(Long idMensaje);
+	
 	
 	/**
 	 * Prepara el mensaje para el reenvio
@@ -227,6 +235,8 @@ public interface TblMensajesManager {
 	 * @return
 	 */
 	public Map<Long, List<MensajeJMS>> getMensajesReenviar();
+
+	
 
 		
 }

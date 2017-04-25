@@ -110,7 +110,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         			!ps.getMessage("constantes.errores.devolucion.error5",null).equals(envioSMS.getServicio())){
         		
             		idLote = lotesManager.insertarLote(Long.parseLong(envioSMS.getServicio()), envioSMS.getNombreLote(), envioSMS.getUserAplicacion(), envioSMS.getPasswordAplicacion());
-        			
+        			retorno.setIdLote(idLote);
             		String errorCrearLote = WSPlataformaErrors.getErrorCrearLote(idLote);
         			if(errorCrearLote!=null){
         				Integer value = Integer.parseInt(errorCrearLote);
@@ -174,7 +174,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 						mensajeJms.setIdMensaje(idMensaje.toString());
 						mensajeJms.setIdExterno(recibirSMSRequest.getMessageId());
 						mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null));
-						
+						mensajeJms.setIdLote(idLote.toString());
 						mensajeJms.setDestinatarioMensajeId(desMensaje.toString());
 						Long maxRetries = null;
 						TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioSMS.getServicio()));
