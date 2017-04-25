@@ -43,6 +43,8 @@ public class MensajeJMS implements Serializable {
 	private String passwordMISIM;
 	
 	private String destinatarioMensajeId;
+	
+	private String idLote;
 
 	
 	
@@ -265,8 +267,16 @@ public class MensajeJMS implements Serializable {
 		this.destinatarioMensajeId = destinatarioMensajeId;
 	}
 	
+	 public String getIdLote() {
+		return idLote;
+	}
+	 
+	public void setIdLote(String idLote) {
+		this.idLote = idLote;
+	}
 	
-	 @Override
+	
+	@Override
 	 public boolean equals(Object object){
 		 boolean res = false;
 		 MensajeJMS m = (MensajeJMS) object;
