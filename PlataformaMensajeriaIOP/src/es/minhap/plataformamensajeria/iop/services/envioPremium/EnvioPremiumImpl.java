@@ -9,8 +9,6 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 
-import es.map.sim.jms.sender.SIMMessageSender;
-import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
@@ -113,8 +111,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-	@Resource(name = "messageSender")
-	private SIMMessageSender sender;
+//	@Resource(name = "messageSender")
+//	private SIMMessageSender sender;
 
 	@Override
 	public String enviarSMSPremium(EnvioAEATXMLBean envio, String username, String password, Integer servicio,
@@ -140,7 +138,6 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 					respuestaFinal = crearMensaje(envio, username, password, servicio, ps);
 					Respuesta respuesta = new Respuesta();
 					respuesta.loadObjectFromXML(respuestaFinal);
-					idMensaje = Integer.parseInt(respuesta.getIdMensaje());
 				}
 
 			}
@@ -240,17 +237,6 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		return res;
 	}
 
-	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta peticionCorrectaSMS(
-			String codOrganismoPagador, String cuerpo, String idExterno, String destinatario, String deliveryUrl,
-			PropertiesServices ps) {
-		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res;
-
-		res = comprobarOrganismoYCuerpo(codOrganismoPagador, cuerpo, idExterno, true, ps);
-		if (null == res)
-			res = comprobarIdExternoYDestinatario(idExterno, destinatario, deliveryUrl, ps);
-
-		return res;
-	}
 
 	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta peticionCorrectaSMSMultiOrganismo(
 			String codOrganismoPagador, String cuerpo, String idExterno, String destinatario, String deliveryUrl,
@@ -295,6 +281,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String des0007 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2007_GENERAL", null);
 
 		if (null == codOrganismoPagador || codOrganismoPagador.isEmpty() || !organismoActivo) {
+			des2012 = des2012 + ". [Organismo Pagador:" + codOrganismoPagador + "]";
 			res = codificarRespuesta(cod2012, des2012, statusTextKO, idExterno, null);
 
 		} else if (null == cuerpo || cuerpo.isEmpty()) {
@@ -310,7 +297,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String respuesta = null;
 		String estadoPendienteOperadora = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA", null);
 		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
-		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
+		Long estadoPendienteId = Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null, "3"));
 		statusTextOK = ps.getMessage(getStatusTextOk, null);
 		codOK = ps.getMessage(getCodOk, null);
 		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_OK", null);
@@ -331,20 +318,12 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	
 				for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager.getDestinatarioMensajes(idMensaje
 						.longValue())) {
-					mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendiente, null, false, null, null,
-							username, null);
-	
-					MensajeJMS mensajeJms = new MensajeJMS();
-					mensajeJms.setIdMensaje(idMensaje.toString());
-					mensajeJms.setIdExterno(envio.getIdExterno());
-					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-					mensajeJms.setIdLote(queryExecutorServidores.getIdLoteByIdMensaje(idMensaje.longValue()).toString());
-					mensajeJms.setUsuarioAplicacion(username);
-					TblServicios servicioAEAT = serviciosManager.getServicio(servicio.longValue());
-	
-					sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
+					hitoricosManager.creaHistoricoPremium(idMensaje.longValue(),
+							destinatario.getDestinatariosmensajes(), estadoPendienteId, username);
+//					mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendiente, null, false, destinatario.getDestinatariosmensajes(),
+//							null, username, null);
 				}
+				
 				resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
 				respuesta = resp.toXMLSMS(resp);
 			} else {
@@ -365,16 +344,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String nombreLote = ps.getMessage("plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT", null);
 		String cod0014 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0014_GENERAL", null);
 		String des0014 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0014_GENERAL", null);
-		String codErrorAplicacion = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_APLICACION", null);
-		String desErrorAplicacion = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_APLICACION", null);
-		String cod0016 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0016_GENERAL", null);
-		String des0016 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0016_GENERAL", null);
 		String cod2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2006_GENERAL", null);
 		String des2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2006_GENERAL", null);
-		String codServidorIncorrecto = ps.getMessage(
-				"plataformaErrores.envioPremiumAEAT.COD_ERROR_SERVIDOR_INCORRECTO", null);
-		String desServidorIncorrecto = ps.getMessage(
-				"plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_SERVIDOR_INCORRECTO", null);
 		String codigoOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUS_OK", null);
 		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT", null);
 		String statusOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK", null);
@@ -384,73 +355,55 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		Integer idLote;
 		Integer idMensaje = null;
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
-		String respuesta;
+		String respuesta = null;
+		TblServicios serv = null;
 
-		try{
+		try {
+			serv = serviciosManager.getServicio(servicio.longValue());
+
 			// creamos el lote
-			idLote = lotesManager.insertarLote(servicio.longValue(), nombreLote, username, password);
-			if (null == idLote) {
+			idLote = lotesManager.insertarLotePremium(serv, nombreLote, username, password);
+
+			if (idLote == -10) {
 				resp = codificarRespuesta(cod0014, des0014, statusTextKO, envio.getIdExterno(), null);
-				respuesta = resp.toXMLSMS(resp);
-			} else {
-				if (idLote == -1) {
-					resp = codificarRespuesta(codErrorAplicacion, desErrorAplicacion, statusTextKO, envio.getIdExterno(),
-							null);
-					respuesta = resp.toXMLSMS(resp);
-				} else if (idLote == -2 || idLote == -3) {
-					resp = codificarRespuesta(cod0016, des0016, statusTextKO, envio.getIdExterno(), null);
-					respuesta = resp.toXMLSMS(resp);
-				} else {
-					resp = codificarRespuesta(cod0014, des0014, statusTextKO, envio.getIdExterno(), null);
-					respuesta = resp.toXMLSMS(resp);
-				}
+				return resp.toXMLSMS(resp);
 			}
-	
+
 			Long estadoId;
-	
+
 			// Crear Mensaje
 			idMensaje = mensajesManager.insertarMensajeGISS(idLote, envio.getCuerpo(), null,
-					envio.getCodOrganismoPagadorSMS(), envio.getIdExterno(), envio.getDestinatario(), username, password);
+					envio.getCodOrganismoPagadorSMS(), envio.getIdExterno(), envio.getDestinatario(), username,
+					password);
+
 			if (null == idMensaje || idMensaje <= 0) {
 				resp = codificarRespuesta(cod2006, des2006, statusTextKO, envio.getIdExterno(), null);
-				respuesta = resp.toXMLSMS(resp);
+				return resp.toXMLSMS(resp);
 			} else {
-				estadoId = estadosManager.getEstadoByName(
-						mensajesManager.getMensaje(idMensaje.longValue()).getEstadoactual()).getEstadoid();
+				estadoId = Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null, "3"));
 				insertarUrlPremium(envio.getDeliveryReportURL(), idMensaje);
-				for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager.getDestinatarioMensajes(idMensaje
-						.longValue())) {
-					hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
-							estadoId, null, null, null, username);
-					MensajeJMS mensajeJms = new MensajeJMS();
-					mensajeJms.setIdMensaje(idMensaje.toString());
-					mensajeJms.setIdExterno(envio.getIdExterno());
-					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-					mensajeJms.setIdLote((null != idLote) ? idLote.toString() : "0");
-					mensajeJms.setUsuarioAplicacion(username);
-					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
-	
-					sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
+				for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager
+						.getDestinatarioMensajes(idMensaje.longValue())) {
+					hitoricosManager.creaHistoricoPremium(idMensaje.longValue(),
+							destinatario.getDestinatariosmensajes(), estadoId, username);
+
 				}
 			}
-			if (null == respuesta) {
-				resp = codificarRespuesta(codServidorIncorrecto, desServidorIncorrecto, statusTextKO, envio.getIdExterno(),
-						idMensaje);
-				respuesta = resp.toXMLSMS(resp);
-			} else {
-				resp = codificarRespuesta(codigoOK, detailsOK, statusOK, envio.getIdExterno(), idMensaje);
-				respuesta = resp.toXMLSMS(resp);
-	
-			}
-		}catch (CannotCreateTransactionException e) {
+
+			resp = codificarRespuesta(codigoOK, detailsOK, statusOK, envio.getIdExterno(), idMensaje);
+			respuesta = resp.toXMLSMS(resp);
+
+		} catch (CannotCreateTransactionException e) {
 			LOG.error("EnvioPremiumImpl.crearMensaje --Error ActiveMq--", e);
-			mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, false, null, null, username, null);
+			mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, false,
+					null, null, username, null);
 			resp = codificarRespuesta(cod2006, des2006, statusTextKO, envio.getIdExterno(), null);
-				respuesta = resp.toXMLSMS(resp);
+			respuesta = resp.toXMLSMS(resp);
 		}
 		return respuesta;
 	}
+
+	
 
 	private void insertarUrlPremium(String deliveryReportURL, Integer idMensaje) {
 		TblUrlMensajePremium tbl = new TblUrlMensajePremium();
@@ -540,15 +493,12 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	private String comprobarOrganismoActivoEnServicio(EnvioAEATXMLBean envio, Integer servicio, PropertiesServices ps)
 			throws PlataformaBusinessException {
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
-		if (!serviciosManager.isMultiOrganismo(servicio)) {
-			resp = peticionCorrectaSMS(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(), envio.getIdExterno(),
-					envio.getDestinatario(), envio.getDeliveryReportURL(), ps);
-		} else {
+		
 			boolean activo = queryExecutorOrganismos.organismoActivoEnServicio(servicio,
 					envio.getCodOrganismoPagadorSMS());
 			resp = peticionCorrectaSMSMultiOrganismo(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(),
 					envio.getIdExterno(), envio.getDestinatario(), envio.getDeliveryReportURL(), activo, ps);
-		}
+		
 
 		if (null != resp) {
 			return resp.toXMLSMS(resp);

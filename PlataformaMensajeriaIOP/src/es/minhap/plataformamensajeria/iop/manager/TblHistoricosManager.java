@@ -29,6 +29,17 @@ public interface TblHistoricosManager {
 	 */
 	Integer creaHistorico(Long mensajeId, Long destinatariosMensajesId, Long estadoId, Long servidorId, String descripcion, String subestado, String usuario);
 
+	/**
+	 * Crea e inserta un Historico
+	 * 
+	 * @param mensajeId
+	 * @param destinatarioMensajeId
+	 * @param estadoId
+	 * @param usuario 
+	 * @return
+	 */
+	Integer creaHistoricoPremium(Long mensajeId, Long destinatariosMensajesId, Long estadoId,  String usuario);
+	
 
 	/**
 	 * Crea e inserta un Historico
@@ -60,5 +71,6 @@ public interface TblHistoricosManager {
 	 * @return
 	 */
 	public Boolean checkMensajeYaEnviado(Long mensajeId, Long destinatarioMensajeId, Long estado);
+
 
 }

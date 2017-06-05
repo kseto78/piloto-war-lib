@@ -15,6 +15,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,6 +41,8 @@ public class EnvioAEATXMLBean {
     protected String destinatario;
     @XmlElement(name = "DeliveryReportURL", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String deliveryReportURL;
+    
+    private static Logger LOG = LoggerFactory.getLogger(EnvioAEATXMLBean.class);
 
 public void loadObjectFromXML (String xmlEnvio)throws PlataformaBusinessException {
 	
@@ -55,7 +60,7 @@ public void loadObjectFromXML (String xmlEnvio)throws PlataformaBusinessExceptio
 	
 	
 	} catch (JAXBException e) {
-		e.printStackTrace();
+		LOG.error("Error en EnvioAEATXMLBean", e);
 		throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlEnvio);
 	} catch (IllegalAccessException e) {
 		throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlEnvio);

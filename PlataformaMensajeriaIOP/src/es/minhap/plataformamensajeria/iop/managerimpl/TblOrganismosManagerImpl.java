@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.minhap.common.entity.TextComparator;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
 import es.minhap.sim.dao.TblOrganismosDAO;
 import es.minhap.sim.model.TblOrganismos;
@@ -38,6 +39,7 @@ public class TblOrganismosManagerImpl implements TblOrganismosManager {
 	public TblOrganismosQuery crearFiltro(String codOrganismoPagadorSMS) {
 		TblOrganismosQuery query = new TblOrganismosQuery();
 		query.setDir3(codOrganismoPagadorSMS);
+		query.setDir3Comparator(TextComparator.EQUALS);
 		return query;
 		
 	}

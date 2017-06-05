@@ -17,6 +17,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -36,6 +38,9 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  *
  */
 public class RespuestaOperacion {
+	
+	private static Logger LOG = LoggerFactory.getLogger(RespuestaOperacion.class);
+	
 	public static final String TAG_OPERACION="OPERACION";
 	public static final String TAG_REENVIARLOTE="REENVIARLOTE";
 	public static final String TAG_ANULARLOTE="ANULARLOTE";
@@ -144,8 +149,7 @@ public class RespuestaOperacion {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaOperacion",e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -153,8 +157,7 @@ public class RespuestaOperacion {
  		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaOperacion",e);
 		}
 		return Utils.convertToUTF8(writer.toString());
 		

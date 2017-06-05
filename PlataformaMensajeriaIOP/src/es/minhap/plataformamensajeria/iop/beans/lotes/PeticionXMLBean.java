@@ -9,10 +9,13 @@
 package es.minhap.plataformamensajeria.iop.beans.lotes;
 
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -294,5 +297,29 @@ public void loadObjectFromXML (String xmlPeticionXML)throws PlataformaBusinessEx
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlPeticionXML);
 		}
 	}
+
+public String toXML(PeticionXMLBean resp) throws PlataformaBusinessException {
+	PeticionXMLBean respuesta = this;
+
+	try {
+
+		JAXBContext jaxbContext = JAXBContext.newInstance(PeticionXMLBean.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		StringWriter writer = new StringWriter();
+		jaxbMarshaller.marshal(respuesta, writer);
+
+		return writer.toString();
+
+	} catch (PropertyException e) {
+		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+				+ e.getMessage());
+	} catch (JAXBException e) {
+		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+				+ e.getMessage());
+	}
+}
     
 }

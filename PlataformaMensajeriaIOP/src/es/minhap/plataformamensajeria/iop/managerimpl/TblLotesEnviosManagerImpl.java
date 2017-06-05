@@ -36,18 +36,15 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.dao.TblLotesEnviosDAO;
 import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblDestinatariosMensajes;
-import es.minhap.sim.model.TblEstados;
 import es.minhap.sim.model.TblLotesEnvios;
 import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblServidores;
-import es.minhap.sim.model.ViewServicios;
 import es.minhap.sim.query.TblAplicacionesQuery;
 import es.minhap.sim.query.TblServiciosQuery;
 import es.minhap.sim.query.TblServidoresQuery;
 import es.minhap.sim.query.TblServidoresServiciosQuery;
 import es.minhap.sim.query.ViewLotesEnviosDetalladaQuery;
-import es.minhap.sim.query.ViewServiciosQuery;
 
 /**
  * 
@@ -179,6 +176,31 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	}
 
 	@Override
+	public Integer insertarLotePremium(TblServicios servicio, String nombreLote, String usuario, String password) {
+		Integer res;
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String operacionCrearLote = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CREAR", null);
+		String operacionLoteCorrecto = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CORRECTO", null);
+
+		TblLotesEnvios lote = crearLote(servicio, nombreLote, usuario, GESTION_MULTIDESTINATARIOS);
+		res = lotesDAO.insert(lote).intValue();
+
+		if (null != res) {
+			AuditoriaBean auditoria = new AuditoriaBean(operacionCrearLote, new Date(), null, null, servicioId, null,
+					usuario, password, Long.valueOf(res), operacionLoteCorrecto);
+			auditoriaManager.insertarAuditoria(auditoria);
+
+		} else {
+			AuditoriaBean auditoria = new AuditoriaBean(operacionCrearLote, new Date(), null, null, servicioId, null,
+					usuario, password, MensajesAuditoria.COD_ERROR_BBDD, operacionLoteCorrecto);
+			auditoriaManager.insertarAuditoria(auditoria);
+			res = MensajesAuditoria.COD_ERROR_BBDD.intValue();
+		}
+
+		return res;
+	}
+	
+	@Override
 	public TblLotesEnvios getLoteEnvioById(Long idLote) {
 		return lotesDAO.get(idLote);
 	}
@@ -244,17 +266,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			res.setServicio(MensajesAuditoria.ERROR_NO_EXISTE_RELACION_SERVIDOR_SERVICIO);
 	}
 
-	private ViewServicios getViewServicios(String recipient) {
-		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-
-		ViewServiciosQuery query = new ViewServiciosQuery();
-		query.setActivo(true);
-		query.setCanalid(Long.parseLong(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null)));
-		query.setHeadersms(recipient);
-
-		return viewServiciosManager.getAplicacionId(query);
-	}
-
+	
 	private void comprobarServicio(String recipient, RecepcionSMSBean res, String prefijoSMS) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
@@ -287,18 +299,13 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		res.setFechacreacion(new Date());
 		res.setFechamodificacion(new Date());
 		res.setDescripcion(nombreLote);
-		res.setEstadoenvioid(getIdEstado(ps.getMessage("constantes.ESTADO_PENDIENTE", null)));
+		res.setEstadoenvioid(Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null,"3")));
 		res.setMultidestinatario(gestionMultidestinatarios);
 
 		return res;
 	}
 
-	private Long getIdEstado(String nombreEstado) {
-		TblEstados estado = estadosManager.getEstadoByName(nombreEstado);
-
-		return estado.getEstadoid();
-	}
-
+	
 	@Override
 	public void update(TblLotesEnvios lote) {
 		lotesDAO.update(lote);

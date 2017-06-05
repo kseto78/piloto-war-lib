@@ -8,7 +8,7 @@ package es.minhap.plataformamensajeria.iop.dao;
 public interface QueryExecutorHistoricos {
 
 	/**
-	 * Obtiene el último servidor de la tabla de historicos del mensaje
+	 * Obtiene el ultimo servidor de la tabla de historicos del mensaje
 	 * 
 	 * @param mensajeId
 	 * @return

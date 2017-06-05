@@ -29,18 +29,18 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "responseServDispStatusType", propOrder = {
+@XmlType(name = "responseStatusTypeAltaUser", propOrder = {
     "statusCode",
     "statusText",
     "details"
 })
-public class ResponseSAMLStatusType {
+public class ResponseStatusTypeConfirmarAltaUsuario {
 
-    @XmlElement(name = "StatusCode", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "StatusCode", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario")
     protected String statusCode;
-    @XmlElement(name = "StatusText", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "StatusText", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario")
     protected String statusText;
-    @XmlElement(name = "Details", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "Details",namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario")
     protected String details;
 
     /**

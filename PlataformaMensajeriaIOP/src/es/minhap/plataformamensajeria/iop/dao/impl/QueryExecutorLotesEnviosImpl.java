@@ -1,5 +1,7 @@
 package es.minhap.plataformamensajeria.iop.dao.impl;
 
+import java.math.BigDecimal;
+
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.exception.ApplicationException;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorLotesEnvios;
@@ -71,5 +74,30 @@ public class QueryExecutorLotesEnviosImpl extends HibernateDaoSupport implements
 						+ mensajeId + " AND lt.MULTIDESTINATARIO = 1");
 		multidestinatario =  !query.list().isEmpty();
 		return multidestinatario;
+	}
+	
+	@Override
+	@Transactional
+	public Long getIdLoteByIdMensaje(Long idMensaje) {
+		BigDecimal res = null;
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_START);
+			}
+			SQLQuery query = getSessionFactory().getCurrentSession()
+					.createSQLQuery("SELECT loteenvioid "
+							+ "FROM tbl_mensajes "
+							+ "WHERE mensajeid = "
+							+ idMensaje);
+			res = (BigDecimal) query.uniqueResult();
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_END);
+			}
+
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res.longValue();	
 	}
 }

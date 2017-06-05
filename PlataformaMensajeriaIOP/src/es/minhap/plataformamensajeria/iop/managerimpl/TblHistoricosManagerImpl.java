@@ -177,6 +177,8 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	/**
 	 * @see es.minhap.TblHistoricosManagerImpl.creaHistorico
 	 */
+//	hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
+//			estadoId, null, null, null, username);
 	@Override
 	public Integer creaHistorico(Long mensajeId, Long destinatariosMensajesId, Long estadoId, 
 			Long servidorId, String descripcion, String subestado, String usuario) {
@@ -204,6 +206,26 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 			historicoBean.setEstadoId(estadoId);
 		}
 		return insertarHistoricos(historicoBean, usuario);
+	}
+	
+	@Override
+	public Integer creaHistoricoPremium(Long mensajeId, Long destinatariosMensajesId, Long estadoId, 
+			String usuario) {
+				
+		HistoricoBean historicoBean = new HistoricoBean();
+		historicoBean.setMensajeid(mensajeId);
+		historicoBean.setDestinatariosmensajes(destinatariosMensajesId);
+		
+		historicoBean.setFecha(new Date());
+		historicoBean.setEstadoId(estadoId);
+		
+		//insertamos en tabla historicos y gestion envios
+		TblHistoricos historico = createHistorico(historicoBean);
+		Long historicoId = historicosDAO.insert(historico);
+		sessionFactorySIMApp.getCurrentSession().flush();
+		
+		insertarGestionEnvios(mensajeId.toString(), destinatariosMensajesId,null);
+		return historicoId.intValue();
 	}
 	
 	@Override
@@ -306,7 +328,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		ge.setEstadolote(estadosManager.getEstadoById(lote.getEstadoenvioid()).getNombre());
 		ge.setUltimoenvio(Calendar.getInstance().getTime());
 		ge.setAnio(Calendar.getInstance().get(Calendar.YEAR));
-		ge.setMes(Calendar.getInstance().get(Calendar.MONTH));
+		ge.setMes(Calendar.getInstance().get(Calendar.MONTH)+1);
 		ge.setServidorid(servidorId);
 		ge.setAplicacion(aplicacion.getNombre());
 		ge.setAplicacionid(aplicacion.getAplicacionid());
@@ -339,7 +361,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		ge.setEstadolote(estadosManager.getEstadoById(lote.getEstadoenvioid()).getNombre());
 		ge.setUltimoenvio(Calendar.getInstance().getTime());
 		ge.setAnio(Calendar.getInstance().get(Calendar.YEAR));
-		ge.setMes(Calendar.getInstance().get(Calendar.MONTH));
+		ge.setMes(Calendar.getInstance().get(Calendar.MONTH)+1);
 		ge.setServidorid(servidorId);
 		//obtenemos los destinatarios
 		ge.setDestinatario(concatenarDestinatarios(tblMensajes.getMensajeid().toString(), canal));

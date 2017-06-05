@@ -44,6 +44,7 @@ public class QueryExecutorServiciosImpl extends HibernateDaoSupport implements Q
 		super.setSessionFactory(sessionFactory);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public List<Long> comprobarServicioUnico(String recipient, Long canalId, String prefijoSMS) {

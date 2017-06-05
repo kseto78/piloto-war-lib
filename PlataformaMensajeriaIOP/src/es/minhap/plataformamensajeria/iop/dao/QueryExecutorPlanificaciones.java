@@ -11,7 +11,7 @@ import java.util.List;
 public interface QueryExecutorPlanificaciones {
 	
 	/**
-	 * Obtiene la lista servicios con planificación activa
+	 * Obtiene la lista servicios con planificacion activa
 	 * @return Lista
 	 */
 	public List<Long> obtenerServiciosPlanificacion();

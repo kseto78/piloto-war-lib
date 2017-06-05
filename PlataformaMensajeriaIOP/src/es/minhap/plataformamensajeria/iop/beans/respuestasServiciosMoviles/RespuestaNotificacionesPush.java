@@ -141,7 +141,7 @@ public class RespuestaNotificacionesPush {
 	}
 	
 	public String incorrectStatusXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO", null);
+		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA", null);
 		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUS_DETAILS_MESSAGE_KO", null);
 		RespuestaNotificacionesPush respuesta = this;

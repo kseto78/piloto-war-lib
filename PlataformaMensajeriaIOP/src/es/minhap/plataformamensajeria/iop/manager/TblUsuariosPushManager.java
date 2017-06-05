@@ -3,6 +3,7 @@ package es.minhap.plataformamensajeria.iop.manager;
 import java.util.List;
 
 import es.minhap.sim.model.TblUsuariosPush;
+import es.minhap.sim.query.TblUsuariosPushQuery;
 
 public interface TblUsuariosPushManager {
 
@@ -158,6 +159,14 @@ public interface TblUsuariosPushManager {
 	 * @return boolean
 	 */
 	public boolean comprobarTokenSession(String uidDispositivo, String tokenSession, Integer timeSession);
+
+	/**
+	 * Comnprpueba si el toten de sessión es válido y esta caducado
+	 * 
+	 * @param query
+	 * @return TblUsuariosPush
+	 */
+	public TblUsuariosPush getUsuarioPushByQuery(TblUsuariosPushQuery query);
 
 
 }

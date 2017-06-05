@@ -53,7 +53,6 @@ import es.minhap.sim.dao.TblMensajesDAO;
 import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblDestinatariosMensajes;
 import es.minhap.sim.model.TblEstados;
-import es.minhap.sim.model.TblLotesEnvios;
 import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.query.TblAplicacionesQuery;
@@ -614,8 +613,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		Long mensajeId;
 		
 		try {
-			TblLotesEnvios lote = lotesEnviosManager.getLoteEnvioById(idLote.longValue());
-			TblMensajes mensaje = crearMensaje(lote.getLoteenvioid(), cuerpo, docUsuario, null, codOrganismoPagadorSMS, 
+			TblMensajes mensaje = crearMensaje(idLote.longValue(), cuerpo, docUsuario, null, codOrganismoPagadorSMS, 
 					codOrganismoPagadorSMS, idExterno, usuario, ps.getMessage("constantes.TIPO_MENSAJE_SMS", null),null); 
 
 			// Insertamos el mensaje
@@ -628,7 +626,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			destinatariosMensajesManager.insertar(destinatariosMensajes);
 			
 
-			auditarMensaje(lote.getLoteenvioid(), mensaje.getMensajeid(), usuario, password,
+			auditarMensaje(idLote.longValue(), mensaje.getMensajeid(), usuario, password,
 					ps.getMessage("mensajesAuditoria.mensajes.SMS_CORRECTO", null),
 					ps.getMessage("mensajesAuditoria.mensajes.SMS_CREAR", null), mensaje.getMensajeid());
 		} catch (Exception e) {
@@ -664,7 +662,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	@Override
 	@Transactional
 	public Long getIdLoteByIdMensaje(Long idMensaje) {
-		return queryExecutorServidores.getIdLoteByIdMensaje(idMensaje);
+		return queryExecutorLotesEnvios.getIdLoteByIdMensaje(idMensaje);
 	}
 
 	@Override

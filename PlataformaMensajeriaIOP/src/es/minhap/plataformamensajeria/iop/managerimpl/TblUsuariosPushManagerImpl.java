@@ -306,8 +306,10 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		query.setUiddispositivo(uidDispositivo);
 		query.setUiddispositivoComparator(TextComparator.EQUALS);
 		query.setServicioid(servicioId);
-		query.setNombreIsNull(true);
-		return usuariosPushDAO.searchUnique(query);
+		//query.setNombreIsNull(true);
+		query.addOrder("usuarioid", OrderType.ASC);
+		return (null != usuariosPushDAO.search(query) && !usuariosPushDAO.search(query).getResults().isEmpty())? 
+				usuariosPushDAO.search(query).getResults().get(0) : null;
 	}
 	
 	@Override
@@ -319,8 +321,10 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		query.setUiddispositivoComparator(TextComparator.EQUALS);
 		query.setTokensession(tokenSession);
 		query.setTokensessionComparator(TextComparator.EQUALS);
-		query.setNombreIsNull(true);
-		TblUsuariosPush usuario = usuariosPushDAO.searchUnique(query);
+		//query.setNombreIsNull(true);
+		query.addOrder("usuarioid", OrderType.ASC);
+		TblUsuariosPush usuario = (null != usuariosPushDAO.search(query) && !usuariosPushDAO.search(query).getResults().isEmpty())? 
+				usuariosPushDAO.search(query).getResults().get(0) : null;
 		
 		if (null == usuario || null == usuario.getFechacaducidad())
 			return false;
@@ -334,6 +338,12 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		}
 		
 		return (calendar.after(Calendar.getInstance())? true : false);
+	}
+	
+	@Override
+	public TblUsuariosPush getUsuarioPushByQuery(TblUsuariosPushQuery query) {
+		return (null != usuariosPushDAO.search(query) && !usuariosPushDAO.search(query).getResults().isEmpty())? 
+				usuariosPushDAO.search(query).getResults().get(0) : null;
 	}
 
 	private Integer comprobarServicioActivo(String servicioId, String usuario, String password, String operacion, PropertiesServices ps) {
@@ -519,12 +529,5 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
-
-
-	
-
-
-
-	
 	
 }

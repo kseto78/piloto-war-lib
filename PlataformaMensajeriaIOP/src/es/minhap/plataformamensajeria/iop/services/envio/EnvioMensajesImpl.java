@@ -193,7 +193,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						msj.setIdExterno(idExterno.toString());
 						msj.setIdMensaje("");
 						ResponseStatusType status = new ResponseStatusType();
-						status.setStatusCode(PlataformaErrores.STATUSCODE_KO);
+						status.setStatusCode(PlataformaErrores.STATUSCODE_PETICION_MAIL_KO);
 						status.setDetails(PlataformaErrores.STATUSDETAILS_KO);
 						status.setStatusText(faltaCampoObligatorio);
 						msj.setErrorMensaje(status);
@@ -415,7 +415,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 	private ResponseStatusType responseStatusError() {
 		ResponseStatusType status = new ResponseStatusType();
-		status.setStatusCode(PlataformaErrores.STATUSCODE_KO);
+		status.setStatusCode(PlataformaErrores.STATUSCODE_ADJUNTOS_KO);
 		status.setDetails(PlataformaErrores.STATUSDETAILS_KO);
 		status.setStatusText(PlataformaErrores.ERROR_ADJUNTOS);
 		return status;

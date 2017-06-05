@@ -85,7 +85,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 				LOG.debug(LOG_END);
 			}
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR + " idExterno: " + idExterno, e);
 			throw new ApplicationException(e);
 		}
 		return (mensajeId != null) ? mensajeId.intValue() : null;

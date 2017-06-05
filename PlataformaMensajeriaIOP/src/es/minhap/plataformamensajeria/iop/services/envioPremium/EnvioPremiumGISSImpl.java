@@ -13,13 +13,12 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 
-import es.map.sim.jms.sender.SIMMessageSender;
-import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Atributos;
 import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Detail;
 import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Fault;
+import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorDestinatariosMensajes;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorMensajes;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismos;
@@ -107,8 +106,8 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-	@Resource(name = "messageSender")
-	private SIMMessageSender sender;
+//	@Resource(name = "messageSender")
+//	private SIMMessageSender sender;
 
 	/**
 	 * 
@@ -119,7 +118,6 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			String usernameMISIM, String passwordMISIM) {
 
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String telefonoExcepcion = ps.getMessage("validarTelefono.TelefonoExcepcion", null, "");
 		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		Integer idLote = null;
@@ -127,59 +125,16 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		Long estadoId;
 		es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta resp = null;
 		es.minhap.plataformamensajeria.iop.beans.enviosGISS.Fault respFault = null;
-
+		TblServicios serv = null;
 		try {
-			if (null != envio.getUsuSistemaEnvio() && null != envio.getPassSistemaEnvio()
-					&& envio.getUsuSistemaEnvio().equals(envio.getPassSistemaEnvio())) {
-				tokenizer = new StringTokenizer(envio.getUsuSistemaEnvio(), SEPARATOR);
-				tokenizer.nextToken();
-				envio.setCodOrganismoPagadorSMS(tokenizer.nextToken());
-			} else {
-				resp = codificarRespuesta(envio.getIdExterno(),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.COD_10_GISS", null),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_10_GISS", null),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
-				return resp.toXMLSMS(resp);
-			}
-			boolean existeOrganismo = organismosManager.existeOrganismo(envio.getCodOrganismoPagadorSMS());
-			if (!serviciosManager.isMultiOrganismo(servicio)) {
-				resp = peticionCorrectaSMS(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(), envio.getIdExterno(),
-						envio.getDestinatario(), existeOrganismo);
-			} else {
+			resp = comprobacionesIniciales(envio, servicio, ps);
+			
 
-				boolean activo = queryExecutorOrganismos.organismoActivoEnServicio(servicio,
-						envio.getCodOrganismoPagadorSMS());
-				resp = peticionCorrectaSMSMultiOrganismo(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(),
-						envio.getIdExterno(), envio.getDestinatario(), activo, existeOrganismo);
-			}
 			if (resp != null) {
 				return resp.toXMLSMS(resp);
 			}
-
-			// Comprobamos
-			if (Utils.validarTelefono(envio.getDestinatario(), telefonoExcepcion) == 1) {
-				resp = codificarRespuesta(
-						envio.getIdExterno(),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.COD_10_GISS", null),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_10_GISS", null)
-								+ ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_DESTINATARIO", null),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
-				return resp.toXMLSMS(resp);
-			}
-
-			// Comprobamos si la aplicacion esta activa
-			Integer activeApplication = queryExecutorOrganismos.checkActiveApplication(servicio);
-			if (activeApplication.intValue() == 0) {
-				resp = codificarRespuesta(
-						envio.getIdExterno(),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.COD_0008_GENERAL", null),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.DESC_0008_GENERAL", null)
-								+ ps.getMessage("plataformaErrores.envioPremiumGISS.APLICACION_NOACTIVA", null),
-						ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
-				return resp.toXMLSMS(resp);
-			}
-
-			// comprobamos idPeticionRepetido
+	
+			// comprobamos idExterno repetido
 			if (destinatariosMensajesManager.checkIdExternoExists(envio.getIdExterno()) > 0) {
 				resp = codificarRespuesta(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.envioPremiumGISS.COD_20_GISS", null),
@@ -187,24 +142,16 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 						ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
 				return resp.toXMLSMS(resp);
 			} else {
-				idLote = lotesManager.insertarLote(servicio.longValue(), PlataformaErrores.NOMBRE_LOTE_GISS, username,
-						password);
-				if (null == idLote || idLote <= 0) {
-					if (idLote == -10) {
-						respFault = codificarRespuestaFault(envio.getIdExterno(),
-								ps.getMessage("plataformaErrores.envioPremiumGISS.COD_300_GISS", null),
-								ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_300_GISS", null));
-						return respFault.toXMLSMS(respFault);
-					} else {// es error porque la aplicacion no activa o
-							// servicio no activo es resDerdak
-						resp = codificarRespuesta(
-								envio.getIdExterno(),
-								ps.getMessage("plataformaErrores.envioPremiumGISS.COD_0008_GENERAL", null),
-								ps.getMessage("plataformaErrores.envioPremiumGISS.DESC_0008_GENERAL", null)
-										+ ps.getMessage("plataformaErrores.envioPremiumGISS.APLICACION_NOACTIVA", null),
-								ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
-						return resp.toXMLSMS(resp);
-					}
+				serv = serviciosManager.getServicio(servicio.longValue());
+				
+				idLote = lotesManager.insertarLotePremium(serv, PlataformaErrores.NOMBRE_LOTE_GISS,
+						username, password);
+
+				if (idLote == -10) {
+					respFault = codificarRespuestaFault(envio.getIdExterno(),
+							ps.getMessage("plataformaErrores.envioPremiumGISS.COD_300_GISS", null),
+							ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_300_GISS", null));
+					return respFault.toXMLSMS(respFault);
 				}
 
 				// Crear Mensaje
@@ -212,6 +159,8 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 						envio.getCodOrganismoPagadorSMS(), envio.getIdExterno(), envio.getDestinatario(), username,
 						password);
 			}
+			
+			//si se ha insertado el mensaje encolamos sino devolvemos error
 			if (null == idMensaje || idMensaje < 0) {
 				respFault = codificarRespuestaFault(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.envioPremiumGISS.COD_300_GISS", null),
@@ -220,29 +169,14 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			} else {
 				LOG.info("EnvioPremiumGISSImpl.enviarSMSGISS se va a enviar el mensaje con id: " + idMensaje);
 
-				estadoId = estadosManager.getEstadoByName(
-						mensajesManager.getMensaje(idMensaje.longValue()).getEstadoactual()).getEstadoid();
+				estadoId = Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null,"3"));
 
 				for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager
 						.getDestinatarioMensajes(idMensaje.longValue())) {
-					hitoricosManager.creaHistorico(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
-							estadoId, null, null, null, username);
-					MensajeJMS mensajeJms = new MensajeJMS();
-					mensajeJms.setIdMensaje(idMensaje.toString());
-					mensajeJms.setIdExterno(envio.getIdExterno());
-					mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-					mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-					mensajeJms.setIdLote(idLote.toString());
-					mensajeJms.setUsuarioAplicacion(username);
-					Long maxRetries = null;
-
-					TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
-					if (servicioAEAT.getNumeroMaxReenvios() != null && servicioAEAT.getNumeroMaxReenvios() > 0) {
-						maxRetries = servicioAEAT.getNumeroMaxReenvios().longValue();
-					} else {
-						maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
-					}
-					sender.send(mensajeJms, maxRetries, servicioAEAT.getServicioid().toString(), true);
+					
+					hitoricosManager.creaHistoricoPremium(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
+							estadoId, username);
+//					encolarMensaje(envio, username, ps, idLote, idMensaje, serv, destinatario);
 				}
 				resp = codificarRespuesta(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.generales.STATUS_OK", null),
@@ -276,6 +210,100 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			}
 		}
 		return "";
+	}
+
+	private es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta comprobacionesIniciales(
+			EnvioGISSXMLBean envio, Integer servicio, PropertiesServices ps) throws PlataformaBusinessException {
+		es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta resp;
+		
+		///obtenemos el codOrganismo de la peticion si no existe o peticion incompleta return error
+		resp = comprobacionesYObtenerCodOrganismo(envio, ps);
+		
+		if (null == resp) {
+			//comprobamos el organismo, organismo-servicio y aplicacion
+			resp = comprobarOrgSerApl(servicio, envio, ps);
+		}
+		
+		
+		return resp;
+	}
+
+//	private void encolarMensaje(EnvioGISSXMLBean envio, String username, PropertiesServices ps, Integer idLote,
+//			Integer idMensaje, TblServicios serv, TblDestinatariosMensajes destinatario) {
+//		MensajeJMS mensajeJms = new MensajeJMS();
+//		mensajeJms.setIdMensaje(idMensaje.toString());
+//		mensajeJms.setIdExterno(envio.getIdExterno());
+//		mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+//		mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+//		mensajeJms.setIdLote(idLote.toString());
+//		mensajeJms.setUsuarioAplicacion(username);
+//		Long maxRetries;
+//
+//		
+//		if (serv.getNumeroMaxReenvios() != null && serv.getNumeroMaxReenvios() > 0) {
+//			maxRetries = serv.getNumeroMaxReenvios().longValue();
+//		} else {
+//			maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+//		}
+//		sender.send(mensajeJms, maxRetries, serv.getServicioid().toString(), true);
+//	}
+
+	private Respuesta comprobarOrgSerApl(Integer servicio, EnvioGISSXMLBean envio, PropertiesServices ps) {
+		Respuesta resp = null;
+		boolean existeOrganismo = organismosManager.existeOrganismo(envio.getCodOrganismoPagadorSMS());
+
+		boolean activo = queryExecutorOrganismos.organismoActivoEnServicio(servicio, envio.getCodOrganismoPagadorSMS());
+		resp = peticionCorrectaSMSMultiOrganismo(envio.getCodOrganismoPagadorSMS(), envio.getCuerpo(),
+				envio.getIdExterno(), envio.getDestinatario(), activo, existeOrganismo);
+
+		if (null != resp) {
+			return resp;
+		}
+		
+		// Comprobamos si la aplicacion esta activa
+		Integer activeApplication = queryExecutorOrganismos.checkActiveApplication(servicio);
+		if (activeApplication.intValue() == 0) {
+			resp = codificarRespuesta(
+					envio.getIdExterno(),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.COD_0008_GENERAL", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.DESC_0008_GENERAL", null)
+							+ ps.getMessage("plataformaErrores.envioPremiumGISS.APLICACION_NOACTIVA", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
+			
+		}
+		return resp;
+
+	}
+
+	private Respuesta comprobacionesYObtenerCodOrganismo(EnvioGISSXMLBean envio, PropertiesServices ps) {
+		String telefonoExcepcion = ps.getMessage("validarTelefono.TelefonoExcepcion", null, "");
+		Respuesta resp;
+		
+		//obtenemos el codOrganismo
+		if (null != envio.getUsuSistemaEnvio() && null != envio.getPassSistemaEnvio()
+				&& envio.getUsuSistemaEnvio().equals(envio.getPassSistemaEnvio())) {
+			tokenizer = new StringTokenizer(envio.getUsuSistemaEnvio(), SEPARATOR);
+			tokenizer.nextToken();
+			envio.setCodOrganismoPagadorSMS(tokenizer.nextToken());
+		} else {
+			resp = codificarRespuesta(envio.getIdExterno(),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.COD_10_GISS", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_10_GISS", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
+			return resp;
+		}
+		
+		// Comprobamos telefono
+		if (Utils.validarTelefono(envio.getDestinatario(), telefonoExcepcion) == 1) {
+			resp = codificarRespuesta(
+					envio.getIdExterno(),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.COD_10_GISS", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_10_GISS", null)
+							+ ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_DESTINATARIO", null),
+					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
+			return resp;
+		}
+		return null;
 	}
 
 	@Override
@@ -341,34 +369,6 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		return res;
 	}
 
-	/**
-	 * Se comprueba si los parametros obligatorios vienen informados
-	 * 
-	 * @param codOrganismoPagador
-	 * @param cuerpo
-	 * @param idExterno
-	 * @param destinatario
-	 * @param existeOrganismo
-	 * @return
-	 */
-	private es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta peticionCorrectaSMS(
-			String codOrganismoPagador, String cuerpo, String idExterno, String destinatario, boolean existeOrganismo) {
-		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta res = null;
-		if (checkOrganismoPagador(codOrganismoPagador) || checkOrganismoPagador(cuerpo)
-				|| checkOrganismoPagador(idExterno) || checkOrganismoPagador(destinatario)) {
-			return codificarRespuesta(idExterno, ps.getMessage("plataformaErrores.envioPremiumGISS.COD_10_GISS", null),
-					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_10_GISS", null),
-					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null)); // error
-																											// 10
-		} else if (!existeOrganismo) {
-			return codificarRespuesta(idExterno,
-					ps.getMessage("plataformaErrores.envioPremiumGISS.COD_0031_GENERAL", null),
-					ps.getMessage("plataformaErrores.envioPremiumGISS.DESC_0031_GENERAL", null),
-					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
-		}
-		return res;
-	}
 
 	private boolean checkOrganismoPagador(String codOrganismoPagador) {
 		return null == codOrganismoPagador || codOrganismoPagador.isEmpty();
@@ -385,6 +385,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_10_GISS", null),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null));
 		} else if (!existeOrganismo) {
+			LOG.error("ERROR-GISS: El organismo: " + codOrganismoPagador + " no existe");
 			return codificarRespuesta(idExterno, ps.getMessage("plataformaErrores.envioPremiumGISS.COD_40_GISS", null),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_40_GISS", null),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null)); // no
@@ -395,6 +396,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 																											// estado
 																											// 40
 		} else if (!organismoActivo) {
+			LOG.error("ERROR-GISS: El organismo: " + codOrganismoPagador + " no esta activo en el servicio de GISS");
 			return codificarRespuesta(idExterno, ps.getMessage("plataformaErrores.envioPremiumGISS.COD_50_GISS", null),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.DESCRIPCION_COD_50_GISS", null),
 					ps.getMessage("plataformaErrores.envioPremiumGISS.ERROR_RETURN_DERDACK_GISS", null)); // error
@@ -683,18 +685,5 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
-	/**
-	 * @return the sender
-	 */
-	public SIMMessageSender getSender() {
-		return sender;
-	}
 
-	/**
-	 * @param sender
-	 *            the sender to set
-	 */
-	public void setSender(SIMMessageSender sender) {
-		this.sender = sender;
-	}
 }

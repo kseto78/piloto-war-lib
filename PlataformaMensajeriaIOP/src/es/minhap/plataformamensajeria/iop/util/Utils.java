@@ -4,12 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.axis.encoding.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Utils {
+	
+	private static Logger LOG = LoggerFactory.getLogger(Utils.class);
+	
 	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 	// convert InputStream to String
@@ -27,13 +33,13 @@ public class Utils {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("Error en Utils",e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOG.error("Error en Utils",e);
 				}
 			}
 		}
@@ -126,4 +132,15 @@ public class Utils {
 	    	}
 	    	return telefono;
 	    }
+	 
+	 public static String crearSmsToken (int len ) {
+			String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			SecureRandom rnd = new SecureRandom();
+			StringBuilder sb = new StringBuilder( len );
+			for( int i = 0; i < len; i++ ) { 
+				sb.append(AB.charAt(rnd.nextInt(AB.length()) ) );
+			}
+			return sb.toString();
+}
+
 }

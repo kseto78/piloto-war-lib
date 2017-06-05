@@ -17,6 +17,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -37,6 +39,8 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  * 
  */
 public class RespuestaEnvioXMLBean {
+	
+	private static Logger LOG = LoggerFactory.getLogger(RespuestaEnvioXMLBean.class);
 
 	static final String TAG_SOAP_ENV = "soapenv:Envelope";
 	static final String TAG_SOAP_BODY = "soapenv:Body";
@@ -388,8 +392,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-				e.printStackTrace();
+			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -397,8 +400,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
 		return Utils.convertToUTF8(writer.toString());
 	}
@@ -547,8 +549,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -556,8 +557,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
 		return Utils.convertToUTF8(writer.toString());
 	}
@@ -657,8 +657,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -666,8 +665,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
 		return writer.toString();
 	}*/

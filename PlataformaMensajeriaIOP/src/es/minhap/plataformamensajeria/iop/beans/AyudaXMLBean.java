@@ -15,6 +15,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -25,10 +28,12 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "PeticionSolicitudAyuda", namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudAyuda")
 public class AyudaXMLBean {
 
-	    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudAyuda")
-		private String usuario;
-	    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudAyuda")
-		private String password;
+    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudAyuda")
+	private String usuario;
+    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudAyuda")
+	private String password;
+    
+    private static Logger LOG = LoggerFactory.getLogger(AyudaXMLBean.class);
 	
 	
 	public String getUsuario() {
@@ -63,7 +68,7 @@ public class AyudaXMLBean {
 		
 		
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			LOG.error("Error en AyudaXMLBean", e);
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlUsuario);
 		} catch (IllegalAccessException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlUsuario);

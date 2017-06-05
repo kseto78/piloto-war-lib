@@ -181,7 +181,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 						if(servicio.getPremium()!=null && servicio.getPremium()) {
 							premium = true;
 						}
-						if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+						if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 							maxRetries = servicio.getNumeroMaxReenvios().longValue();
 						} else {
 							maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));

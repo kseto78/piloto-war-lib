@@ -10,58 +10,48 @@ package es.minhap.plataformamensajeria.iop.util;
 public class PlataformaErrores {
 
 	//Estados y codigos de Error GISS
-		public static final String DESCRIPCION_COD_0_GISS = "SMS Tramitado";
-		public static final String COD_0_GISS = "0";
-		public static final String DESCRIPCION_COD_1_GISS = "Tramitandose el envio";
-		public static final String COD_1_GISS = "1";
-		public static final String DESCRIPCION_COD_10_GISS = "Error en los Campos de Entrada";
-		public static final String COD_10_GISS = "10";
-		public static final String DESCRIPCION_COD_20_GISS = "Valor de IdPeticion duplicado";
-		public static final String COD_20_GISS = "20";
-		public static final String ESTADO_NOENCONTRADO_GISS = "IdPetion no encontrado";
-		public static final String COD_NOENCONTRADO_GISS = "30";
-		public static final String DESCRIPCION_COD_40_GISS = "El Usuario de sistema envio no se encuentra en la BBDD";
-		public static final String COD_40_GISS = "40";
-		public static final String DESCRIPCION_COD_50_GISS = "El Usuario de sistema de envio no se corresponde con la Aplicacion";
-		public static final String COD_50_GISS= "50";
-		public static final String DESCRIPCION_COD_60_GISS = "Aplicacion no Activa";
-		public static final String COD_60_GISS = "60";
-		public static final String DESCRIPCION_COD_100_GISS = "SMS enviado a Derdack";
-		public static final String COD_100_GISS = "100";
-		public static final String DESCRIPCION_COD_105_GISS = "SMS esta siendo procesado en Derdack";
-		public static final String COD_105_GISS = "105";
-		public static final String DESCRIPCION_COD_110_GISS = "SMS enviado a Derdack, pero se ha producido un error";
-		public static final String COD_110_GISS = "110";
-		public static final String DESCRIPCION_COD_120_GISS = "SMS con error en la entrega, se ha superado el numero de reintentos";
-		public static final String COD_120_GISS = "120";
-		public static final String DESCRIPCION_COD_130_GISS = "Error en la invocacion a Derdack";
-		public static final String COD_130_GISS = "130";
-		public static final String DESCRIPCION_COD_200_GISS = "SMS Tramitado";
-		public static final String COD_200_GISS = "200";
-		public static final String DESCRIPCION_COD_205_GISS = "SMS entregado al destinatario";
-		public static final String COD_205_GISS = "205";
-		public static final String DESCRIPCION_COD_210_GISS = "Error procesando SMS en Derdack";
-		public static final String COD_210_GISS = "210";
-		public static final String DESCRIPCION_COD_300_GISS = "Error en BBDD de Comunicacion";
-		public static final String COD_300_GISS = "300";
-		public static final String DESCRIPCION_COD_600_GISS = "Error General";
-		public static final String COD_600_GISS = "600";
-		public static final String ERROR_RETURN_DERDACK_GISS = "-1";
+//		public static final String DESCRIPCION_COD_0_GISS = "SMS Tramitado";
+//		public static final String COD_0_GISS = "0";
+//		public static final String DESCRIPCION_COD_1_GISS = "Tramitandose el envio";
+//		public static final String COD_1_GISS = "1";
+//		public static final String DESCRIPCION_COD_10_GISS = "Error en los Campos de Entrada";
+//		public static final String COD_10_GISS = "10";
+//		public static final String DESCRIPCION_COD_20_GISS = "Valor de IdPeticion duplicado";
+//		public static final String COD_20_GISS = "20";
+//		public static final String ESTADO_NOENCONTRADO_GISS = "IdPetion no encontrado";
+//		public static final String COD_NOENCONTRADO_GISS = "30";
+//		public static final String DESCRIPCION_COD_40_GISS = "El Usuario de sistema envio no se encuentra en la BBDD";
+//		public static final String COD_40_GISS = "40";
+//		public static final String DESCRIPCION_COD_50_GISS = "El Usuario de sistema de envio no se corresponde con la Aplicacion";
+//		public static final String COD_50_GISS= "50";
+//		public static final String DESCRIPCION_COD_60_GISS = "Aplicacion no Activa";
+//		public static final String COD_60_GISS = "60";
+//		public static final String DESCRIPCION_COD_100_GISS = "SMS enviado a Derdack";
+//		public static final String COD_100_GISS = "100";
+//		public static final String DESCRIPCION_COD_105_GISS = "SMS esta siendo procesado en Derdack";
+//		public static final String COD_105_GISS = "105";
+//		public static final String DESCRIPCION_COD_110_GISS = "SMS enviado a Derdack, pero se ha producido un error";
+//		public static final String COD_110_GISS = "110";
+//		public static final String DESCRIPCION_COD_120_GISS = "SMS con error en la entrega, se ha superado el numero de reintentos";
+//		public static final String COD_120_GISS = "120";
+//		public static final String DESCRIPCION_COD_130_GISS = "Error en la invocacion a Derdack";
+//		public static final String COD_130_GISS = "130";
+//		public static final String DESCRIPCION_COD_200_GISS = "SMS Tramitado";
+//		public static final String COD_200_GISS = "200";
+//		public static final String DESCRIPCION_COD_205_GISS = "SMS entregado al destinatario";
+//		public static final String COD_205_GISS = "205";
+//		public static final String DESCRIPCION_COD_210_GISS = "Error procesando SMS en Derdack";
+//		public static final String COD_210_GISS = "210";
+//		public static final String DESCRIPCION_COD_300_GISS = "Error en BBDD de Comunicacion";
+//		public static final String COD_300_GISS = "300";
+//		public static final String DESCRIPCION_COD_600_GISS = "Error General";
+//		public static final String COD_600_GISS = "600";
+//		public static final String ERROR_RETURN_DERDACK_GISS = "-1";
 		public static final String OK_RETURN_DERDACK_GISS = "0";
-		
 		public static final String NOMBRE_LOTE_GISS = "GISS";
-		
 		public static final String NUMERO_REINTENTOS_SUPERADO="Se ha superado el numero de reintentos:";
 		////FIN CODIGOS GISS////	
-		
-		/*//Estados y codigos de Error GISS
-	public static final String ERROR_RETURN_DERDACK_GISS = "-1";
-	public static final String OK_RETURN_DERDACK_GISS = "0";
-	
-	public static final String NOMBRE_LOTE_GISS = "GISS";
-	
-	public static final String NUMERO_REINTENTOS_SUPERADO="Se ha superado el numero de reintentos:";
-	////FIN CODIGOS GISS////*/
+
 		
 	////Textos y ERRORES AEAT////
 	public static final String COD_ERROR_ID_EXTERNO_AEAT ="2013";
@@ -95,22 +85,12 @@ public class PlataformaErrores {
 	
 ////CODIGOS GET AVISOS USUARIO////
 	
-////CODIGOS GESTION NOTIFICACIONES PUSH////
-	public static final String STATUSCODE_KO = "3001";
-	public static final String STATUSLOGINCODE_KO = "3002";
-	public static final String STATUSUSERCODE_KO = "3005";
+
+	public static final String STATUSCODE_KO = "2010";
+	public static final String STATUSCODE_ADJUNTOS_KO = "1007";
+	public static final String STATUSCODE_PETICION_MAIL_KO = "1008";
 	public static final String STATUSDETAILS_KO = "Error en la peticion";
-//	public static final String STATUSLOGIN_KO = "El Usuario y Password no corresponden a ninguna aplicacion";
-//	public static final String STATUS_DETAILS_MESSAGE_KO = "El mensaje no se encuentra en estado ENVIADO o RECIBIDO por tanto no se puede procesar la peticion";
-//	public static final String STATUS_DETAILS_PUSH_MESSAGE_KO = "El identificador de la notificacion no pertenece a una notificacion PUSH";
-//	public static final String STATUSDETAILS_CHANGE_MESSAGE_STATUS_OK = "El estado de la notificacion se ha cambiado satisfactoriamente";
-//	public static final String STATUSDETAILS_USER_OK = "El usuario indicado no se corresponde con el identificador de la notificacion";
-//	public static final String COD_PETICION_INCORRECTA = "0020";
-//	public static final String DETAILS_PETICION_INCORRECTA = "La peticion no esta construida correctamente. Faltan campos obligatorios: status";
-//	public static final String DETAILS_ERROR_USUARIO_PUSH = "El usuario Push no esta registrado";
-//	public static final String DETAILS_MODIFICACION_TODOS_MENSAJES = "Modificado el estado de todos los mensajes satisfactoriamente";
-//	public static final String DETAILS_ERROR_MODIFICACION_TODOS_MENSAJES = "Modificado el estado de todos los mensajes satisfactoriamente";
-//// FIN CODIGOS GESTION NOTIFICACIONES PUSH////
+
 	
 	////ERRORES GENERALES////
 	public static final String STATUSTEXT_KO = "KO";
@@ -129,7 +109,7 @@ public class PlataformaErrores {
 	
 	
 	public static final String COD_0001_GENERAL = "0001";
-	public static final String DESC_0001_GENERAL = "El usuario/password no coincide con el del servidor o esixte mas de un servidor";
+	public static final String DESC_0001_GENERAL = "El usuario/password no coincide con el del servidor o existe mas de un servidor";
 	public static final String COD_0002_GENERAL = "0002";
 	public static final String DESC_0002_GENERAL = "El campo Usuario es obligatorio";
 	public static final String COD_0003_GENERAL = "0003";

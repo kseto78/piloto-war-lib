@@ -88,6 +88,7 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	}
 	
 	@Override
+	@Transactional
 	public List<TblDestinatariosMensajes> getDestinatarioMensajesPendientes(Long mensajeid, String estadoPendiente) {
 		TblDestinatariosMensajesQuery query = new TblDestinatariosMensajesQuery();
 		query.setMensajeid(mensajeid);
@@ -96,6 +97,7 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	}
 
 	@Override
+	@Transactional
 	public TblDestinatariosMensajes getDestinatarioMensaje(Long destinatarioMensajeId) {
 		return destinatariosMensajesDAO.get(destinatarioMensajeId);
 	}
