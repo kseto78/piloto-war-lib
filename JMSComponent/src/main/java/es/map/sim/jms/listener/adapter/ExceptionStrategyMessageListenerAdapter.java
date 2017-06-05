@@ -32,7 +32,7 @@ public class ExceptionStrategyMessageListenerAdapter extends MessageListenerAdap
 			try {
 				excStrategy.manageException(message, t);
 			} catch (Throwable e) {
-				LOG.error("Error on exception Strategy",e);
+//				LOG.info("Error on exception Strategy",e);
 				throw new RuntimeException(e);
 			}
 		}
