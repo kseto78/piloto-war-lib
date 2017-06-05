@@ -11,6 +11,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 
 /**
  * <p>Clase Java para anonymous complex type.
@@ -63,6 +67,8 @@ public class PeticionConsultaEstado {
     protected String loteId;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificosConsultaEstado datosEspecificos;
+    
+    private static Logger LOG = LoggerFactory.getLogger(PeticionConsultaEstado.class);
 
     /**
      * Obtiene el valor de la propiedad usuario.
@@ -237,7 +243,7 @@ public class PeticionConsultaEstado {
 
 			return writer.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("[PeticionConsultaEstado] toXML", e);
 			return "";
 		}
 

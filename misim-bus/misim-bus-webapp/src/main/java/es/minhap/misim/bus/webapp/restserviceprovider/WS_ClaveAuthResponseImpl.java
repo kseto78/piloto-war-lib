@@ -38,7 +38,6 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.misim.components.InicializarAEAT;
 
 /**
  * @author everis
@@ -175,13 +174,13 @@ public class WS_ClaveAuthResponseImpl implements WS_ClaveAuthResponse {
 				respuesta.setStatus(response);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			LOG.error("Error en WS_ClaveAuthResponseImpl - JSONException", e);
 			response.setStatusCode("0020");
 			response.setStatusText("La peticion no incluye todos los parametros obligatorios");
 			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: dispositivoId, SAMLResponse");
 			respuesta.setStatus(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error en WS_ClaveAuthResponseImpl", e);
 			response.setStatusCode("0020");
 			response.setStatusText("Autentificiacion no valida o enviada.");
 			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");

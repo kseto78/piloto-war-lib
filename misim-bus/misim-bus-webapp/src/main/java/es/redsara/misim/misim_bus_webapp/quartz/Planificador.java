@@ -2,7 +2,6 @@ package es.redsara.misim.misim_bus_webapp.quartz;
 
 import java.text.ParseException;
 
-import org.apache.log4j.Logger;
 import org.mule.api.MuleContext;
 import org.quartz.CronExpression;
 import org.quartz.Job;
@@ -11,13 +10,15 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import es.minhap.common.properties.PropertiesServices;
 
 public class Planificador {
 
-	private static Logger logger = Logger.getLogger(Planificador.class);
+	private static Logger logger = LoggerFactory.getLogger(Planificador.class);
 	private PropertiesServices ps;
 	private static final String ACTIVEMQ_JOB = "DESENCOLAR_MENSAJES_ACTIVEMQ";
 	private static final String ACTIVEMQ_TRIGGER_NAME = "DESENCOLAR_MENSAJES_ACTIVEMQ_TRIGGER";
@@ -54,8 +55,7 @@ public class Planificador {
 				scheduler.start();
 			}
 		}catch (SchedulerException se){
-			logger.debug("planificar - Error: " + se.getMessage());
-			se.printStackTrace();
+			logger.error("planificar - Error: " + se.getMessage(),se);
 		}
 	}
 	
@@ -92,14 +92,11 @@ public class Planificador {
 			logger.info("Desencolar de la Active MQ los mensajes - Iniciamos la tarea");
 			scheduler.scheduleJob(job, trigger);
 		}catch (SchedulerException se){
-			logger.error("planificarJobGISS - Error: " + se.getMessage());
-			se.printStackTrace();
+			logger.error("planificarJobGISS - Error: " + se.getMessage(),se);
 		}catch(ParseException pe){
-			logger.error("planificarJobGISS - Error: " + pe.getMessage());
-			pe.printStackTrace();
+			logger.error("planificarJobGISS - Error: " + pe.getMessage(),pe);
 		}catch (ClassNotFoundException cnfe){
-			logger.error("planificarJobGISS - Error: " + cnfe.getMessage());
-			cnfe.printStackTrace();
+			logger.error("planificarJobGISS - Error: " + cnfe.getMessage(),cnfe);
 		}
 	}
 }

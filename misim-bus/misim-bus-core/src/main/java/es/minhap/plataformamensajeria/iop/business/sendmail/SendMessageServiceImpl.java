@@ -179,6 +179,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	/*** INICIO TRATAMIENTO SNS ***/
 	/************************************/
 	@Override
+	@Transactional
 	public void postSMS(Long idMensaje, Long loteId, Long destinatarioMensajeId, String codOrganismo,
 			String usuarioAplicacion, String passAplicacion, String aplicacionPremium) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -271,14 +272,14 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			} else {
 				mensajesManager.setEstadoMensaje(idMensaje, koEnvio, resultadoSMS, false,
 						smsData.destinatarioMensajeId, null, null, proveedorID.longValue());
-				throw new Exception();
+				throw new Exception("[SendMessageServiceImpl.postSMS] -ERROR ENVIANDO SMS- KO Recibido enviando SMS: " + idMensaje + " Descripcion: " +resultadoSMS);
 			}
 		} else {
 			mensajesManager.setEstadoMensaje(Long.valueOf(idMensaje),
 					ps.getMessage("constantes.ESTADO_INCIDENCIA", null), "SMS_ID: " + idMensaje
 							+ ". Error: No existe ningun Servidor Disponible", false, smsData.destinatarioMensajeId,
 					null, null, null);
-			throw new Exception();
+			throw new Exception("[SendMessageServiceImpl.postSMS] -ERROR ENVIANDO SMS- No existe ningun Servidor Disponible: " + idMensaje);
 		}
 
 	}
@@ -446,7 +447,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			tblErrorMensajeLog.setFecha(new Date());
 			tblErrorMensajeLog.setOperacion("postMail");
 			errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
-			throw new Exception();
+			throw new Exception("[SendMessageServiceImpl.postMail] -ERROR ENVIANDO EMAIL- No existe ningun Servidor Disponible: " + mensajeId);
 		} else {
 			if ((!mailData.Subject.isEmpty()) || (!mailData.Body.isEmpty())) {
 				registerMailDetailsDebug(mailData);
@@ -571,7 +572,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						" Error: Se ha producido un error en el envio del Mensaje. Detalle del Error: "
 								+ errorMessage.toString(), false, mailData.destinatarioMensajeId, null, null,
 						servidorId);
-				throw new Exception();
+				throw new Exception("[SendMessageServiceImpl.postMail] -ERROR ENVIANDO EMAIL- KO Recibido enviando EMAIL: " + mensajeId + " Descripcion: " +errorMessage.toString());
 			}
 		}
 
@@ -950,7 +951,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			tblErrorMensajeLog.setFecha(new Date());
 			tblErrorMensajeLog.setOperacion("postNotificacionPush");
 			errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
-			throw new Exception();
+			throw new Exception("[SendMessageServiceImpl.postNotificacionPush] -ERROR ENVIANDO PUSH- No existe ningun Servidor Disponible: " + mensajeId);
 		} else {
 			registerServidorPushDetailsDebug(notificacionPushData);
 			mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),
@@ -1037,7 +1038,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			} else {
 				mensajesManager.setEstadoMensaje(mensajeId, koEnvio, resultNotificacionPush, false,
 						notificacionPushData.getDestinatarioMensajeId(), null, null, servidorPushID.longValue());
-				throw new Exception();
+				throw new Exception("[SendMessageServiceImpl.postNotificacionPush] -ERROR ENVIANDO PUSH- KO Recibido enviando PUSH: " + mensajeId + " Descripcion: " +resultNotificacionPush);
 			}
 		}
 	}
@@ -1203,7 +1204,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			tblErrorMensajeLog.setFecha(new Date());
 			tblErrorMensajeLog.setOperacion("postRecepcionSMS");
 			errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
-			throw new Exception();
+			throw new Exception("[SendMessageServiceImpl.postRecepcionSMS] -ERROR ENVIANDO RecepcionSMS- No existe ningun Servidor Disponible: " + mensajeId);
 		} else {
 			if (null != smsData.Body) {
 				registerReceptorSMSDetailsDebug(smsData);
@@ -1285,7 +1286,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			} else {
 				mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId), koEnvio, resultSMS, false,
 						smsData.destinatarioMensajeId, null, null, receptorID.longValue());
-				throw new Exception("[SendMessageServiceImpl.postRecepcionSMS] Error el realizar envio.");
+				throw new Exception("[SendMessageServiceImpl.postRecepcionSMS] -ERROR ENVIANDO RecepcionSMS-: " + mensajeId + " Descripcion: " + resultSMS);
 			}
 		}
 	}

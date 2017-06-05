@@ -16,7 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import misim.bus.common.bean.SoapPayload;
 import misim.bus.common.util.XMLUtils;
 
-import org.eclipse.jetty.util.log.Log;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -33,7 +32,6 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.misim.components.InicializarAEAT;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ResponseNotificacionPushStatusType;
 
 @Service("gestionNotificacionesPush")
@@ -154,7 +152,7 @@ public class GestionNotificacionesPushImpl implements GestionNotificacionesPush 
 				respuesta.setStatus(response);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error en GestionNotificacionesPushImpl", e);
 			ResponseNotificacionPushStatusType response = new ResponseNotificacionPushStatusType();
 			response.setStatusCode("3002");
 			response.setStatusText("Autentificiacion no valida o enviada.");

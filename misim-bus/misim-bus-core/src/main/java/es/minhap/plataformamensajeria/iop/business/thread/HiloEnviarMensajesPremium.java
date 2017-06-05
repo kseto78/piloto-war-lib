@@ -46,17 +46,19 @@ public class HiloEnviarMensajesPremium extends Thread {
 	}
 
 	@Override
-	@Transactional()
+//	@Transactional()
 	public void run() {
 		LOG.info("Ejecución Thread envío mensaje: " + mensajeId);
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String estado = ps.getMessage("constantes.ESTADO_ANULADO", null);
 		String descripcion =  ps.getMessage("constantes.descripcionAnularMensaje", null);
 		String usuario =  ps.getMessage("constantes.usuarioActiveMQ", null);
+		String errorClave = ps.getMessage("clave.ERRORCLAVE.AEAT", null, "[ERROR-CL@VE]:");
 		try{
 			sendMessageService.postSMS(mensajeId, loteId, destinatarioMensajeId, null, null, null, null);
 		
 		}catch(Exception e){
+			LOG.error(errorClave + "Excepcion en el Thread enviando Mensaje PREMIUM: " + mensajeId);
 			LOG.error("Excepcion en el Thread enviando Mensaje: " + mensajeId, e);
 			if (isAEAT){
 				tblMensajesManager.setEstadoMensaje(mensajeId, estado, descripcion, null, destinatarioMensajeId, null, usuario, null);

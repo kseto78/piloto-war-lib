@@ -36,6 +36,7 @@
 		<spring:import resource="${classpath}registro-usuario.xml" />
 		<spring:import resource="${classpath}registro-usuario-en-servicio.xml" />
 		<spring:import resource="${classpath}consulta-servicios-disponibles.xml" />
+		<spring:import resource="${classpath}registro-movil.xml" />
  		<spring:import resource="${classpath}gestion-notificaciones-push.xml" />
 		<spring:import resource="${classpath}get-avisos-usuario-push.xml" />
  		<spring:import resource="${classpath}gestion-ayuda.xml" />

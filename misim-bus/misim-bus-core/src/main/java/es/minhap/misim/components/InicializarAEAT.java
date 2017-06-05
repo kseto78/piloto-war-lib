@@ -36,6 +36,7 @@ public class InicializarAEAT implements Callable {
 	private static final String PRODUCTO_ACUSE = "ACUSE_AEAT";
 	private static final String PROVEEDOR = "AEAT";
 	private static final String APLICACION = "SIM";
+	private static final String APLICACION_AEAT = "AEAT";
 
 	@Resource
 	private IEnvioPremiumService envioPremiumAEATService;
@@ -64,8 +65,17 @@ public class InicializarAEAT implements Callable {
 
 		try {
 
+			String soapAction = SoapPayload.class.cast(eventContext.getMessage().getPayload(SoapPayload.class))
+					.getSoapAction();
+
 			AplicacionQuery arg0 = new AplicacionQuery();
-			arg0.setNombre(APLICACION);
+			
+			if ((PRODUCTO_ACUSE).equals(soapAction)) {
+				arg0.setNombre(APLICACION_AEAT);
+			} else {
+				arg0.setNombre(APLICACION);
+			}
+			
 			arg0.setNombreComparator(TextComparator.EQUALS);
 
 			List<Aplicacion> listaAplicaciones = aplicacionManager.getAplicacion(arg0);
@@ -81,9 +91,6 @@ public class InicializarAEAT implements Callable {
 				eventContext.getMessage().setOutboundProperty("idAplicacion",
 						listaAplicaciones.get(0).getIdAplicacion());
 			}
-
-			String soapAction = SoapPayload.class.cast(eventContext.getMessage().getPayload(SoapPayload.class))
-					.getSoapAction();
 
 			ProductoQuery arg1 = new ProductoQuery();
 

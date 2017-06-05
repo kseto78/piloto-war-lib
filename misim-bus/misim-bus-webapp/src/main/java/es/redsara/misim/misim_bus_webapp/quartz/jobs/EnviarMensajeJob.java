@@ -11,7 +11,6 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import es.map.sim.jms.receiver.SIMMessageReceiver;
@@ -70,7 +69,7 @@ public class EnviarMensajeJob {
 								received=messageReceiver.receiveByServiceName(nombreServicio);
 //								LOG.info("[EnviarMensajeJob] AFTER " + nombreServicio);
 							}catch (Throwable t){
-								LOG.error("Error receiving message for service "+nombreServicio,t);
+								LOG.error("Error receiving message for service "+ nombreServicio);
 								leido=true;
 							}
 							if(received){

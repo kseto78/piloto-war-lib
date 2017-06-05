@@ -121,9 +121,7 @@ public class InvocarRecepcion implements Callable {
 			
 					eventContext.getMessage().setPayload(soapPayload);
 					
-					if(LOG.isInfoEnabled()){
-			        	LOG.info("RESPONSE: " + respuesta);
-			        }
+					System.out.println("RESPONSE: " + respuesta);
 					
 				}catch(Exception e){
 					//Lanzar error
@@ -208,9 +206,8 @@ public class InvocarRecepcion implements Callable {
 					soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 			
 					eventContext.getMessage().setPayload(soapPayload);
-					if(LOG.isInfoEnabled()){
-						LOG.info("RESPONSE: " + respuestaFinal);
-					}
+					
+					LOG.info("RESPONSE: " + respuestaFinal);
 				
 				}catch(Exception e){
 					//Lanzar error

@@ -39,7 +39,6 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.misim.components.InicializarAEAT;
 
 /**
  * @author everis
@@ -187,11 +186,11 @@ public class WS_ClaveAuthRequestImpl implements WS_ClaveAuthRequest {
 				respuesta.setStatus(response);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatusCode("0020");
-			response.setStatusText("Autentificiacion no valida o enviada.");
-			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
-			respuesta.setStatus(response);
+			 LOG.error("Error en WS_ClaveAuthRequestImpl", e);
+			 response.setStatusCode("0020");
+			 response.setStatusText("Autentificiacion no valida o enviada.");
+			 response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
+			 respuesta.setStatus(response);
 		}
 
 		String respuestaJson = "";

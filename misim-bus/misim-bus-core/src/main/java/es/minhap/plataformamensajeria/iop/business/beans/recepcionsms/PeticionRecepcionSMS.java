@@ -11,6 +11,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.minhap.plataformamensajeria.iop.business.beans.push.PeticionPush;
 
 
@@ -65,6 +68,8 @@ public class PeticionRecepcionSMS {
     protected String loteId;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificosRecepcionSMS datosEspecificos;
+    
+    private static Logger LOG = LoggerFactory.getLogger(PeticionRecepcionSMS.class);
 
     /**
      * Obtiene el valor de la propiedad usuario.
@@ -239,7 +244,7 @@ public class PeticionRecepcionSMS {
 
 			return writer.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("[PeticionRecepcionSMS - toXML]", e);
 			return "";
 		}
 

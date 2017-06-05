@@ -111,9 +111,10 @@ public class SIMMessageDispatcher {
 			}
 		} catch (Exception e) {
 			if (null != aplicacionPremium){
-				LOG.error(errorClave + "[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId);
+				LOG.error(errorClave + "[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId, e);
+			} else {
+				LOG.error("[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId, e);
 			}
-			LOG.error("[SIMMessageDispatcher] Error enviando el mensaje ----->" + mensajeId, e);
 			throw new RuntimeException("");
 		}
 		

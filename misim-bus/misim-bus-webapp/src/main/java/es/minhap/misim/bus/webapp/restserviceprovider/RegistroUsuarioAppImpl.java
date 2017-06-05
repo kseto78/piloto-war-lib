@@ -2,7 +2,6 @@ package es.minhap.misim.bus.webapp.restserviceprovider;
 
 import java.io.StringReader;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
@@ -19,8 +18,6 @@ import javax.xml.soap.SOAPMessage;
 import misim.bus.common.bean.SoapPayload;
 import misim.bus.common.util.XMLUtils;
 
-import org.eclipse.jetty.util.log.Log;
-import org.json.JSONObject;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -37,7 +34,6 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.misim.components.InicializarAEAT;
 
 @Service("registroUsuarioApp")
 public class RegistroUsuarioAppImpl implements RegistroUsuarioApp {
@@ -177,12 +173,12 @@ public class RegistroUsuarioAppImpl implements RegistroUsuarioApp {
 			respuesta.setStatus(response);
 		}
 	  }catch(Exception e){
-		   e.printStackTrace();
-			ResponseStatusType response = new ResponseStatusType();
-			response.setStatusCode("3000");
-			response.setStatusText("Autentificiaci&oacute;n no v&aacute;lida o enviada.");
-			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
-			respuesta.setStatus(response);
+		  LOG.error("Error en RegistroUsuarioAppImpl", e);
+		  ResponseStatusType response = new ResponseStatusType();
+		  response.setStatusCode("3000");
+		  response.setStatusText("Autentificiaci&oacute;n no v&aacute;lida o enviada.");
+		  response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
+		  respuesta.setStatus(response);
 	  }
 
 		

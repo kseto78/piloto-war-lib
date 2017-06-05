@@ -155,7 +155,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 		}
 		
 		if (!sendOK) {
-			throw new Exception();
+			throw new Exception("[RefreshStatusServiceImpl.refreshStatus] -ERROR Actualizando Estado- Mensaje: " + mensajeId);
 		}
 		if (repetirRefreshStatus){
 			MensajeJMS mns = new MensajeJMS();
@@ -174,6 +174,9 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 			mns.setIdMensaje(mensaje.getMensajeid().toString());
 			mns.setIdLote(loteId.toString());
 			mns.setUsuarioAplicacion(usuarioAplicacion);
+			//Se fuerza el delay de consulta de estado a traves de propiedades en ms.
+			long refreshStatusDelay = Long.valueOf(ps.getMessage("constantes.consultaEstado.refreshStatusDelay", null, "0"));
+			Thread.sleep(refreshStatusDelay);
 			messageSender.sendRefresh(mns, numMaxReintentos);
 		}
 

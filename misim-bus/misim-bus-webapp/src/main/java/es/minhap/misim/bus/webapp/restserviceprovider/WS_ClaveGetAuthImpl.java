@@ -26,6 +26,8 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -36,6 +38,7 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
+import es.minhap.misim.components.InicializarAEAT;
 
 /**
  * @author everis
@@ -44,6 +47,8 @@ import es.minhap.misim.bus.core.pojo.PeticionPayload;
 @Service("WS_ClaveGetAuth")
 public class WS_ClaveGetAuthImpl implements WS_ClaveGetAuth {
 
+	private static final Logger LOG = LoggerFactory.getLogger(WS_ClaveGetAuthImpl.class);
+	
 	public static String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
 	public static String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
 	public static String ERROR_PARAMETROS = "Error en Parametros de entrada";
@@ -80,7 +85,7 @@ public class WS_ClaveGetAuthImpl implements WS_ClaveGetAuth {
 			byte[] bytes = new BASE64Decoder().decodeBuffer(data);
 			decoded = new String(bytes);
 
-			System.out.println(decoded);
+			LOG.info(decoded);
 			if (null != decoded) {
 				tokenizer = new StringTokenizer(decoded, ":");
 				username = tokenizer.nextToken();
@@ -157,11 +162,11 @@ public class WS_ClaveGetAuthImpl implements WS_ClaveGetAuth {
 				respuesta.setStatus(response);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatusCode("0020");
-			response.setStatusText("Autentificiacion no valida o enviada.");
-			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
-			respuesta.setStatus(response);
+			 LOG.error("Error en WS_ClaveGetAuthImpl", e);
+			 response.setStatusCode("0020");
+			 response.setStatusText("Autentificiacion no valida o enviada.");
+			 response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
+			 respuesta.setStatus(response);
 		}
 
 		String respuestaJson = "";

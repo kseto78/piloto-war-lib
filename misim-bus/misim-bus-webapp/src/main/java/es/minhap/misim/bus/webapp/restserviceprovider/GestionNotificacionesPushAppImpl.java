@@ -33,7 +33,6 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.misim.components.InicializarAEAT;
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ResponseNotificacionPushStatusType;
 
 @Service("gestionNotificacionesPushApp")
@@ -67,9 +66,9 @@ public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPu
 			// Get the Authorisation Header from Request
 			String header = request.getHeader("authorization");
 
-			String idUsuario = (null != map.getFirst("idUsuario")) ? map.getFirst("idUsuario") : null;
-			String status = (null != map.getFirst("status")) ? map.getFirst("status") : null;
-			String notificacionId = (null != map.getFirst("notificacionId")) ? map.getFirst("notificacionId") : null;
+			String idUsuario = (null != map.getFirst("IdDispositivo")) ? map.getFirst("IdDispositivo") : null;
+			String status = (null != map.getFirst("Status")) ? map.getFirst("Status") : null;
+			String notificacionId = (null != map.getFirst("NotificacionId")) ? map.getFirst("NotificacionId") : null;
 			String uidDispositivo = (null != map.getFirst("UidDispositivo")) ? map.getFirst("UidDispositivo") : null;
 			String tokenSession = (null != map.getFirst("TokenSession")) ? map.getFirst("TokenSession") : null;
 
@@ -158,12 +157,12 @@ public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPu
 
 				response.setStatusCode("3001");
 				response.setStatusText("La peticion no incluye todos los parametros obligatorios");
-				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, idUsuario, UidDispositivo o TokenUsuario");
+				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, IdDispositivo, UidDispositivo o TokenUsuario");
 
 				respuesta.setStatus(response);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error en GestionNotificacionesPushAppImpl", e);
 			ResponseNotificacionPushStatusType response = new ResponseNotificacionPushStatusType();
 			response.setStatusCode("3002");
 			response.setStatusText("Autentificiacion no valida o enviada.");

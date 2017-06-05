@@ -29,7 +29,7 @@ public class QuartzInicializarJobs extends HttpServlet {
 		try {
 			p.run();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("QuartzInicializarJobs - Error: " + e.getMessage(),e);
 		}
 		logger.debug(" QuartzInicializarJobs - Salimos del servlet");
 	}

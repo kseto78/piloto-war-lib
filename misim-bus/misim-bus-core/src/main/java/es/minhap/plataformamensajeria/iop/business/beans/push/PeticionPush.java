@@ -11,7 +11,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import es.minhap.plataformamensajeria.iop.business.beans.consultaestado.PeticionConsultaEstado;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -65,6 +66,8 @@ public class PeticionPush {
     protected String idLote;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificosPush datosEspecificos;
+    
+    private static Logger LOG = LoggerFactory.getLogger(PeticionPush.class);
 
     /**
      * Obtiene el valor de la propiedad usuario.
@@ -239,7 +242,7 @@ public class PeticionPush {
 
 			return writer.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("[PeticionPush - toXML]", e);
 			return "";
 		}
 

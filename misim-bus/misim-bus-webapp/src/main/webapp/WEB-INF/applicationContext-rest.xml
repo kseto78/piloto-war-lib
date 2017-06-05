@@ -75,6 +75,24 @@
            <ref bean="consultaServiciosDisponiblesBean"/>
         </jaxrs:serviceBeans>
      </jaxrs:server>
+     
+     <jaxrs:server id="solicitudRegistroMovil" address="/rest/gestionServiciosPush/solicitudRegistroMovil">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="solicitudRegistroMovilBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server>
+     <jaxrs:server id="confirmarAltaUsuario" address="/rest/gestionServiciosPush/confirmarAltaUsuario">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="confirmarAltaUsuarioBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server> 
+     
      <jaxrs:server id="getAvisosUsuarioPush" address="/rest/getAvisosUsuario">
          <jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
@@ -125,6 +143,12 @@
      <bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionServiciosPushImpl" id="registroUsuarioEnServicioBean" />
 
 	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.GestionServiciosDisponiblesImpl" id="consultaServiciosDisponiblesBean" />
+	
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.SolicitudRegistroMovilImpl" id="solicitudRegistroMovilBean" />
+	
+	
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.ConfirmarAltaUsuarioImpl" id="confirmarAltaUsuarioBean" /> 
+	
 	
 	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.GetAvisosUsuarioImpl" id="getAvisosUsuarioPushBean" />
 	

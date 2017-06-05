@@ -73,6 +73,9 @@ public class InvocarEnvio001 implements Callable {
 		String passwordMISIM = ps.getMessage("misim.aplicacion.aeat.contrasena.sms", null, null, null);
 		Integer reintentos = new Integer(ps.getMessage("aeat.reintentos.sms.premium", null, null, null));
 		
+		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -97,7 +100,7 @@ public class InvocarEnvio001 implements Callable {
 			if (null != idMensaje){
 				idLote = tblMensajesManager.getIdLoteByIdMensaje(idMensaje);
 				eventContext.getMessage().setOutboundProperty("idLote", idLote);
-//				levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje, idLote);
+				levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje, idLote);
 			}
 		
 							

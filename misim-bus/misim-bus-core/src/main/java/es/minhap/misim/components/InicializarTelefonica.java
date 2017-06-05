@@ -8,7 +8,8 @@ import misim.bus.common.bean.SoapPayload;
 
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -26,7 +27,7 @@ import es.minhap.misim.bus.query.ProveedorQuery;
 
 public class InicializarTelefonica implements Callable {
 	
-	private static final Logger LOG = Logger.getLogger(InicializarTelefonica.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InicializarTelefonica.class);
 	
 	private static final String PRODUCTO_RECIBIR = "RECIBIR_SMS";
 	private static final String PRODUCTO_NOTIFICAR = "NOTIFICAR_SMS";

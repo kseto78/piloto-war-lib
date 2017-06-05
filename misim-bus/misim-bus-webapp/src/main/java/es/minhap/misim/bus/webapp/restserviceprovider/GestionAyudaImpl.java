@@ -144,11 +144,11 @@ public class GestionAyudaImpl implements GestionAyuda  {
 			respuestaAyuda.setStatus(response);
 		}
 	  }catch(Exception e){
-			e.printStackTrace();
-			response.setStatusCode("3000");
-			response.setStatusText("Autentificiaci&oacute;n no v&aacute;lida o enviada.");
-			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
-			respuestaAyuda.setStatus(response);
+		  LOG.error("Error en GestionAyudaImpl", e);
+		  response.setStatusCode("3000");
+		  response.setStatusText("Autentificiaci&oacute;n no v&aacute;lida o enviada.");
+		  response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
+		  respuestaAyuda.setStatus(response);
 	  }
 
 		

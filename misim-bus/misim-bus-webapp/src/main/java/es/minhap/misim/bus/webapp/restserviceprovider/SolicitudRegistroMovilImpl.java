@@ -32,18 +32,16 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
+import es.minhap.plataformamensajeria.iop.beans.ResponseStatusTypeRegistroMovil;
+import es.minhap.plataformamensajeria.iop.beans.RespuestaRegistroMovil;
 
 
-public class GestionServiciosPushImpl implements GestionServiciosPush {
+public class SolicitudRegistroMovilImpl implements SolicitudRegistroMovil {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(GestionServiciosPushImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SolicitudRegistroMovilImpl.class);
 
-	public static String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
-	public static String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
-	public static String ERROR_PARAMETROS = "Error en Parametros de entrada";
-
-	public static final String RECEPT_QUEUE = "vm://registro-usuario-en-servicio";
-	public static final String SOAP_ACTION = "registro-usuario-en-servicio";
+	public static final String RECEPT_QUEUE = "vm://registro-movil";
+	public static final String SOAP_ACTION = "solicitud-registro-movil";
 
 	private StringTokenizer tokenizer = null;
 	private String username = null;
@@ -55,9 +53,10 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 	@Context
 	private ServletContext servletContext;
 
-	public String registroUsuarioEnServicio(MultivaluedMap<String,String>map) {
+	@Override
+	public String solicitudRegistroMovil(MultivaluedMap<String,String>map) {
 
-		RespuestaServiciosRegistrarUsuario respuesta = new RespuestaServiciosRegistrarUsuario();
+		RespuestaRegistroMovil respuesta = new RespuestaRegistroMovil();
 		String decoded;
 		try {
 			// Get the Authorisation Header from Request
@@ -68,10 +67,8 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 			// string
 			String data = header.substring(header.indexOf(" ") + 1);
 			
-			String idUsuario = (null != map.getFirst("IdUsuario")) ? map.getFirst("IdUsuario") : null;
-			String idServicioMovil = (null != map.getFirst("IdServicioMovil")) ? map.getFirst("IdServicioMovil") : null;
-			String accion = (null != map.getFirst("Accion")) ? map.getFirst("Accion") : null;
-			String idDispositivo = (null != map.getFirst("IdDispositivo")) ? map.getFirst("IdDispositivo") : null;
+			String numMovil = (null != map.getFirst("NumMovil")) ? map.getFirst("NumMovil") : null;
+			String idServicioMovil = (null != map.getFirst("ServicioMovil")) ? map.getFirst("ServicioMovil") : null;
 			String uidDispositivo = (null != map.getFirst("UidDispositivo")) ? map.getFirst("UidDispositivo") : null;
 			String tokenSession = (null != map.getFirst("TokenSession")) ? map.getFirst("TokenSession") : null;
 
@@ -88,21 +85,19 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 				password = tokenizer.nextToken();
 			}
 
-			if ((null != username && !("").equals(username)) && (null != password && !("").equals(password)) && (null != idUsuario && !("").equals(idUsuario))
-					&& (null != idServicioMovil && !("").equals(idServicioMovil)) && (null != idDispositivo && !("").equals(idDispositivo)) 
-					&& (null != accion && !("").equals(accion))
+			if ((null != username && !("").equals(username)) && (null != password && !("").equals(password))
+					&& (null != numMovil && !("").equals(numMovil))
+					&& (null != idServicioMovil && !("").equals(idServicioMovil)) 
 					&& (null != uidDispositivo && !("").equals(uidDispositivo))
 					&& (null != tokenSession && !("").equals(tokenSession))) {
 
 				try {
 
-					PeticionRegistroUsuarioEnServicio peticion = new PeticionRegistroUsuarioEnServicio();
+					PeticionSolicitudRegistroMovil peticion = new PeticionSolicitudRegistroMovil();
 					peticion.setUsuario(username);
 					peticion.setPassword(password);
-					peticion.setIdUsuario(idUsuario);
+					peticion.setNumMovil(numMovil);
 					peticion.setIdServicioMovil(idServicioMovil);
-					peticion.setAccion(accion);
-					peticion.setIdDispositivo(idDispositivo);
 					peticion.setUidDispositivo(uidDispositivo);
 					peticion.setTokenSession(tokenSession);
 
@@ -122,19 +117,19 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 						SoapPayload<?> payload = new PeticionPayload();
 						payload.setSoapAction(SOAP_ACTION);
 						payload.setSoapMessage(XMLUtils.xml2doc(respuestaCompleta, Charset.forName("UTF-8")));
-
+						
 						final MuleMessage muleResponse = muleClient.send(RECEPT_QUEUE, payload, null, 10000);
 
 						Document respuestaSOAP = muleResponse.getPayload(SoapPayload.class).getSoapMessage();
 
-						NodeList nodoRespuesta = respuestaSOAP.getElementsByTagName("Respuesta");
+						NodeList nodoRespuesta = respuestaSOAP.getElementsByTagName("RespuestaRegistroMovil");
 						String xmlRespuesta = XMLUtils.nodeToString(nodoRespuesta.item(0));
 
-						JAXBContext jaxbContext = JAXBContext.newInstance(RespuestaServiciosRegistrarUsuario.class);
+						JAXBContext jaxbContext = JAXBContext.newInstance(RespuestaRegistroMovil.class);
 						Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
 						StringReader reader = new StringReader(xmlRespuesta);
-						respuesta = (RespuestaServiciosRegistrarUsuario) unmarshaller.unmarshal(reader);
+						respuesta = (RespuestaRegistroMovil) unmarshaller.unmarshal(reader);
 
 					} catch (final MuleException e) {
 						throw new RuntimeException("Error in mule client", e);
@@ -152,15 +147,15 @@ public class GestionServiciosPushImpl implements GestionServiciosPush {
 
 			} else {
 
-				ResponseServRegUsuarioStatusType status = new ResponseServRegUsuarioStatusType();
+				ResponseStatusTypeRegistroMovil status = new ResponseStatusTypeRegistroMovil();
 				status.setStatusCode("2000");
 				status.setStatusText("La petici&oacute;n no incluye todos los parametros obligatorios");
-				status.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, IdUsuario, IdServicioMovil, Accion, IdDispositivo, UidDispositivo o TokenSession");
+				status.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, NumMovil, ServicioMovil, UidDispositivo o TokenSession");
 				respuesta.setStatus(status);
 			}
 		} catch (Exception e) {
-			LOG.error("Error en GestionServiciosPushImpl", e);
-			ResponseServRegUsuarioStatusType status = new ResponseServRegUsuarioStatusType();
+			LOG.error("[SolicitudRegistroMovil] solicitudRegistroMovil",e);
+			ResponseStatusTypeRegistroMovil status = new ResponseStatusTypeRegistroMovil();
 			status.setStatusCode("3000");
 			status.setStatusText("Autentificiaci&oacute;n no v&aacute;lida o enviada.");
 			status.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");

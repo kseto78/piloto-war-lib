@@ -21,7 +21,6 @@ import javax.xml.soap.SOAPMessage;
 import misim.bus.common.bean.SoapPayload;
 import misim.bus.common.util.XMLUtils;
 
-import org.eclipse.jetty.util.log.Log;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -37,7 +36,6 @@ import sun.misc.BASE64Decoder;
 import com.google.gson.Gson;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.minhap.misim.components.InicializarAEAT;
 
 /**
  * @author fescobaf
@@ -88,7 +86,7 @@ public class GestionServiciosDisponiblesImpl implements GestionServiciosDisponib
 			// string
 			String data = header.substring(header.indexOf(" ") + 1);
 
-			String idUsuario = (null != map.getFirst("IdUsuario")) ? map.getFirst("IdUsuario") : null;
+			String idUsuario = (null != map.getFirst("IdDispositivo")) ? map.getFirst("IdDispositivo") : null;
 			String uidDispositivo = (null != map.getFirst("UidDispositivo")) ? map.getFirst("UidDispositivo") : null;
 			String tokenSession = (null != map.getFirst("TokenSession")) ? map.getFirst("TokenSession") : null;
 
@@ -164,12 +162,12 @@ public class GestionServiciosDisponiblesImpl implements GestionServiciosDisponib
 			} else {
 				response.setStatusCode("3005");
 				response.setStatusText("La petici&oacute;n no incluye todos los parametros obligatorios");
-				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, IdUsuario, UidDispositivo o TokenSession");
+				response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password, IdDispositivo, UidDispositivo o TokenSession");
 
 				respuesta.setStatus(response);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error en GestionServiciosDisponiblesImpl", e);
 			response.setStatusCode("3002");
 			response.setStatusText("Autentificiaci&oacute;n no v&aacute;lida o enviada.");
 			response.setDetails("No se ha detectado alguno de los siguientes parametros obligatorios: Usuario, Password");
