@@ -40,15 +40,14 @@ public class RegistroUsuarioAppImpl implements RegistroUsuarioApp {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(RegistroUsuarioAppImpl.class);
 
-	public static String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
-	public static String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
-	public static String ERROR_PARAMETROS = "Error en Parametros de entrada";
+	public static final String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
+	public static final String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
+	public static final String ERROR_PARAMETROS = "Error en Parametros de entrada";
 
 	public static final String RECEPT_QUEUE = "vm://registro-usuario";
 	public static final String SOAP_ACTION = "registrarUsuarioApp";
 	public static final String SOAP_APLICATION = "Mi buzón gob.ES";
 
-	private StringTokenizer tokenizer = null;
 	private String username = null;
 	private String password = null;
 
@@ -64,7 +63,8 @@ public class RegistroUsuarioAppImpl implements RegistroUsuarioApp {
 		
 		  String decoded;
 		  try{
-			 
+			  StringTokenizer tokenizer = null;
+			  
 		   // Get the Authorisation Header from Request
 		   String header = request.getHeader("authorization");
 		    
@@ -182,9 +182,8 @@ public class RegistroUsuarioAppImpl implements RegistroUsuarioApp {
 	  }
 
 		
-		String respuestaJson = this.getJsonResponse(respuesta);
-		
-		return respuestaJson;
+		return this.getJsonResponse(respuesta);
+
 	}
 
 	/**
@@ -211,8 +210,8 @@ public class RegistroUsuarioAppImpl implements RegistroUsuarioApp {
 	public String getJsonResponse(Object conResponse) {
 		Gson gson = new Gson();
 
-		String result = gson.toJson(conResponse);
-		return result;
+		return gson.toJson(conResponse);
+
 	}
 
 }

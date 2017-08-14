@@ -180,7 +180,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						StringBuilder idExterno = new StringBuilder();
 						if(mensaje.getListaDestinatarios()!=null) {
 							for (DestinatarioPeticionLotesMailXMLBean em : mensaje.getListaDestinatarios()) {
-								if(!idExterno.toString().contains(em.getIdExterno())) {
+								if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 									if(idExterno.toString().length()>0) {
 										idExterno.append(",");
 									}
@@ -199,92 +199,102 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						msj.setErrorMensaje(status);
 						listaMensajesProcesados.add(msj);
 					} else {
-						
-						for (DestinatarioPeticionLotesMailXMLBean destinatario : mensaje.getListaDestinatarios()) {
-							String to = (null != destinatario.getDestinatarios().getTo() && destinatario.getDestinatarios().getTo().length() > 1)? 
-									destinatario.getDestinatarios().getTo() : null;
-							String cc = (null != destinatario.getDestinatarios().getCC() && destinatario.getDestinatarios().getCC().length() > 1)? 
-									destinatario.getDestinatarios().getCC() : null ;
-							String bcc = (null != destinatario.getDestinatarios().getBcc() && destinatario.getDestinatarios().getBcc().length() > 1)? 
-									destinatario.getDestinatarios().getBcc() : null;
-
-							if(LOG.isDebugEnabled()){
-								LOG.debug("[EnviarEmail] - Antes de crearEmail() - Tam Cuerpo: "
-										+ mensaje.getCuerpo().length());
-							}
-							mensajeCreado = mensajesManager.insertarMensajeEmail(Long.valueOf(idLote), mensaje,
-									envioEmail, to, cc, bcc);
-							if(LOG.isDebugEnabled()){
-								LOG.debug("[EnviarEmail]  - Despues de crearEmail() ");
-							}
-							mensaje.setIdMensaje(mensajeCreado.getIdMensaje());
-
-							listaMensajesProcesados.add(mensajeCreado);
-
-							if (mensajeCreado.getErrorMensaje() == null) {
-
-								// Si no hay errores se guardan los adjuntos
-								for (AdjuntosXMLBean adjunto : mensaje.getListaAdjuntos()) {
-									Integer adjuntoId = adjuntosManager.insertarAdjunto(
-											Long.parseLong(mensajeCreado.getIdMensaje()), adjunto.getNombre(),
-											adjunto.getContenido(), envioEmail.getUsuario(), envioEmail.getPassword());
-									if (WSPlataformaErrors.getErrorCrearAnexo(adjuntoId) != null) {
-										ResponseStatusType status = responseStatusError();
-										mensajeCreado.setErrorMensaje(status);
-										listaMensajesProcesados.add(mensajeCreado);
-
+							StringBuilder idExterno = new StringBuilder();
+							for (DestinatarioPeticionLotesMailXMLBean destinatario : mensaje.getListaDestinatarios()) {
+								String to = (null != destinatario.getDestinatarios().getTo() && destinatario
+										.getDestinatarios().getTo().length() > 1) ? destinatario.getDestinatarios()
+										.getTo() : null;
+								String cc = (null != destinatario.getDestinatarios().getCC() && destinatario
+										.getDestinatarios().getCC().length() > 1) ? destinatario.getDestinatarios()
+										.getCC() : null;
+								String bcc = (null != destinatario.getDestinatarios().getBcc() && destinatario
+										.getDestinatarios().getBcc().length() > 1) ? destinatario.getDestinatarios()
+										.getBcc() : null;
+								if (destinatario.getIdExterno()!=null && !idExterno.toString().contains(destinatario.getIdExterno())) {
+									if (idExterno.toString().length() > 0) {
+										idExterno.append(",");
 									}
+									idExterno.append(destinatario.getIdExterno());
 								}
-								for (AdjuntosXMLBean adjunto : envioEmail.getListadoAdjuntosGenerales()) {
-									if (adjunto.getIdAdjunto() == null) {
+								if (LOG.isDebugEnabled()) {
+									LOG.debug("[EnviarEmail] - Antes de crearEmail() - Tam Cuerpo: "
+											+ mensaje.getCuerpo().length());
+								}
+							if (null == mensajeCreado){
+								mensajeCreado = mensajesManager.insertarMensajeEmail(Long.valueOf(idLote), mensaje,
+										envioEmail, to, cc, bcc);
+								if(LOG.isDebugEnabled()){
+									LOG.debug("[EnviarEmail]  - Despues de crearEmail() ");
+								}
+								mensaje.setIdMensaje(mensajeCreado.getIdMensaje());
+	
+								listaMensajesProcesados.add(mensajeCreado);
+	
+								if (mensajeCreado.getErrorMensaje() == null) {
+	
+									// Si no hay errores se guardan los adjuntos
+									for (AdjuntosXMLBean adjunto : mensaje.getListaAdjuntos()) {
 										Integer adjuntoId = adjuntosManager.insertarAdjunto(
 												Long.parseLong(mensajeCreado.getIdMensaje()), adjunto.getNombre(),
-												adjunto.getContenido(), envioEmail.getUsuario(),
-												envioEmail.getPassword());
-										adjunto.setIdAdjunto(adjuntoId);
+												adjunto.getContenido(), envioEmail.getUsuario(), envioEmail.getPassword());
 										if (WSPlataformaErrors.getErrorCrearAnexo(adjuntoId) != null) {
 											ResponseStatusType status = responseStatusError();
 											mensajeCreado.setErrorMensaje(status);
 											listaMensajesProcesados.add(mensajeCreado);
-										}
-
-									} else {
-										Integer idAdjuntoAsociar = adjunto.getIdAdjunto();
-										Integer salida = adjuntosManager.asociarAnexo(
-												Long.parseLong(mensajeCreado.getIdMensaje()),
-												Long.valueOf(idAdjuntoAsociar), envioEmail.getUsuario(),
-												envioEmail.getPassword());
-										if (WSPlataformaErrors.getErrorAsociarAnexo(salida) != null) {
-											ResponseStatusType status = responseStatusError();
-											mensajeCreado.setErrorMensaje(status);
-											listaMensajesProcesados.add(mensajeCreado);
+	
 										}
 									}
-								}
-								for (ImagenXMLBean imagen : mensaje.getListaImagenes()) {
-									if (imagen.getIdImagen() == null) {
-										Integer imagenId = adjuntosManager.insertarAdjunto(
-												Long.parseLong(mensajeCreado.getIdMensaje()), imagen.getCid(),
-												imagen.getContenido(), envioEmail.getUsuario(),
-												envioEmail.getPassword());
-										if (WSPlataformaErrors.getErrorCrearAnexo(imagenId) != null) {
-											ResponseStatusType status = responseStatusError();
-											mensajeCreado.setErrorMensaje(status);
-											listaMensajesProcesados.add(mensajeCreado);
-										}
-									} else {
-										Integer idImagen = imagen.getIdImagen();
-										Integer salida = adjuntosManager.asociarAnexo(
-												Long.parseLong(mensajeCreado.getIdMensaje()), Long.valueOf(idImagen),
-												envioEmail.getUsuario(), envioEmail.getPassword());
-										if (WSPlataformaErrors.getErrorAsociarAnexo(salida) != null) {
-											ResponseStatusType status = responseStatusError();
-											mensajeCreado.setErrorMensaje(status);
-											listaMensajesProcesados.add(mensajeCreado);
+									for (AdjuntosXMLBean adjunto : envioEmail.getListadoAdjuntosGenerales()) {
+										if (adjunto.getIdAdjunto() == null) {
+											Integer adjuntoId = adjuntosManager.insertarAdjunto(
+													Long.parseLong(mensajeCreado.getIdMensaje()), adjunto.getNombre(),
+													adjunto.getContenido(), envioEmail.getUsuario(),
+													envioEmail.getPassword());
+											adjunto.setIdAdjunto(adjuntoId);
+											if (WSPlataformaErrors.getErrorCrearAnexo(adjuntoId) != null) {
+												ResponseStatusType status = responseStatusError();
+												mensajeCreado.setErrorMensaje(status);
+												listaMensajesProcesados.add(mensajeCreado);
+											}
+	
+										} else {
+											Integer idAdjuntoAsociar = adjunto.getIdAdjunto();
+											Integer salida = adjuntosManager.asociarAnexo(
+													Long.parseLong(mensajeCreado.getIdMensaje()),
+													Long.valueOf(idAdjuntoAsociar), envioEmail.getUsuario(),
+													envioEmail.getPassword());
+											if (WSPlataformaErrors.getErrorAsociarAnexo(salida) != null) {
+												ResponseStatusType status = responseStatusError();
+												mensajeCreado.setErrorMensaje(status);
+												listaMensajesProcesados.add(mensajeCreado);
+											}
 										}
 									}
+									for (ImagenXMLBean imagen : mensaje.getListaImagenes()) {
+										if (imagen.getIdImagen() == null) {
+											Integer imagenId = adjuntosManager.insertarAdjunto(
+													Long.parseLong(mensajeCreado.getIdMensaje()), imagen.getCid(),
+													imagen.getContenido(), envioEmail.getUsuario(),
+													envioEmail.getPassword());
+											if (WSPlataformaErrors.getErrorCrearAnexo(imagenId) != null) {
+												ResponseStatusType status = responseStatusError();
+												mensajeCreado.setErrorMensaje(status);
+												listaMensajesProcesados.add(mensajeCreado);
+											}
+										} else {
+											Integer idImagen = imagen.getIdImagen();
+											Integer salida = adjuntosManager.asociarAnexo(
+													Long.parseLong(mensajeCreado.getIdMensaje()), Long.valueOf(idImagen),
+													envioEmail.getUsuario(), envioEmail.getPassword());
+											if (WSPlataformaErrors.getErrorAsociarAnexo(salida) != null) {
+												ResponseStatusType status = responseStatusError();
+												mensajeCreado.setErrorMensaje(status);
+												listaMensajesProcesados.add(mensajeCreado);
+											}
+										}
+									}
+	
 								}
-
 							}
 							if (!mensajeCreado.getIdMensaje().isEmpty()) {
 								List<Long> listaTblDestinatarios = destinatariosManager.setDestinatarios(
@@ -294,17 +304,19 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										.insertarDestinatarioMensajeEmail(mensajeCreado.getIdMensaje(),
 												listaTblDestinatarios, destinatario.getIdExterno(),
 												envioEmail.getUsuario(), estadoId);
-								mensajeCreado.setIdExterno(destinatario.getIdExterno());
+								mensajeCreado.setIdExterno(idExterno.toString());
 								historicosManager.creaHistoricoEmail(mensajeCreado.getIdMensaje(),
 										listaTblDestinatariosMensajes, estadoId, null, null, envioEmail.getUsuario());
 
-								if (null == mensaje.getModo() || mensaje.getModo().equals("0")) {
+								if (null == mensaje.getModo() || "0".equals(mensaje.getModo())) {
 									MensajeJMS mensajeJms = new MensajeJMS();
 									mensajeJms.setIdExterno(destinatario.getIdExterno());
 									mensajeJms.setIdMensaje(mensajeCreado.getIdMensaje());
 									mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_EMAIL", null));
 									mensajeJms.setIdLote(idLote.toString());
+
 									Long maxRetries = null;
+
 									StringBuilder mensajes = new StringBuilder();
 									for (Long dest : listaTblDestinatariosMensajes) {
 										mensajes.append(dest + ";");
@@ -312,7 +324,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									mensajeJms.setDestinatarioMensajeId(mensajes.toString());
 									TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioEmail
 											.getServicio()));
-									if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+									if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 										maxRetries = servicio.getNumeroMaxReenvios().longValue();
 									} else {
 										maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios",
@@ -331,12 +343,14 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										mensajeJms.setIdMensaje(mensajeCreado.getIdMensaje());
 										mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_EMAIL", null));
 										mensajeJms.setIdLote(idLote.toString());
+
 										Long maxRetries = null;
+
 										mensajeJms.setDestinatarioMensajeId(dest.toString());
 										TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioEmail
 												.getServicio()));
 										if (servicio.getNumeroMaxReenvios() != null
-												&& servicio.getNumeroMaxReenvios() > 0) {
+												&& servicio.getNumeroMaxReenvios() >= 0) {
 											maxRetries = servicio.getNumeroMaxReenvios().longValue();
 										} else {
 											maxRetries = Long.parseLong(ps.getMessage(
@@ -356,7 +370,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						}// del for
 
 					}
-
+					mensajeCreado = null;
 				}
 				}
 				else {
@@ -392,9 +406,11 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 			if(LOG.isDebugEnabled()){
 				LOG.debug("[EnviarEmail] XML de respuesta generado");
 			}
+
 			//creamos hilo para insertar los mensajes en ACtiveMq
 			levantarHilo(listaMensajesEncolar, ps, sender, mensajesManager);
 		
+
 		}catch (Exception e) {
 			LOG.error("EnvioMensajesImpl.enviarEmail", e);
 			listaErroresGenerales.add(WSPlataformaErrors.getErrorGeneral());
@@ -524,11 +540,13 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
 										mensajeJms.setDestinatarioMensajeId(desMensaje.toString());
 										mensajeJms.setIdLote(idLote.toString());
+
 										Long maxRetries = null;
+
 										TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioSMS
 												.getServicio()));
 										if (servicio.getNumeroMaxReenvios() != null
-												&& servicio.getNumeroMaxReenvios() > 0) {
+												&& servicio.getNumeroMaxReenvios() >= 0) {
 											maxRetries = servicio.getNumeroMaxReenvios().longValue();
 										} else {
 											maxRetries = Long.parseLong(ps.getMessage(
@@ -562,11 +580,13 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										mensajeJms.setDestinatarioMensajeId(desMensaje.toString());
 										mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
 										mensajeJms.setIdLote(idLote.toString());
+
 										Long maxRetries = null;
+
 										TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioSMS
 												.getServicio()));
 										if (servicio.getNumeroMaxReenvios() != null
-												&& servicio.getNumeroMaxReenvios() > 0) {
+												&& servicio.getNumeroMaxReenvios() >= 0) {
 											maxRetries = servicio.getNumeroMaxReenvios().longValue();
 										} else {
 											maxRetries = Long.parseLong(ps.getMessage(
@@ -627,7 +647,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
 						listaErroresLote);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error("EnvioMensajesImpl.enviarSMS --Error ActiveMq--", e);
+				LOG.error("EnvioMensajesImpl.enviarSMS --Error ActiveMq--", e1);
 			}
 		}catch (Exception e) {
 			LOG.error("EnvioMensajesImpl.enviarSMS", e);
@@ -646,8 +666,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 	@Override
 	public String enviarNotificacion(EnvioPushXMLBean notificacionPush) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
-		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		String xmlRespues = null;
 		String servicioPUSH = ps.getMessage("servicio.notificacionesPUSH", null, null, null);
 		ArrayList<es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje> listaMensajesProcesados = new ArrayList<es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje>();
@@ -800,7 +818,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 												if (!listaDispositivos.isEmpty()) {
 													for (Integer usuarioId : listaDispositivos) {
 														if (d == null || d.getIdentificadorUsuario().length() <= 0) {
-															error = WSPlataformaErrors.getErrorFaltaDestinatario();
 															Mensaje msj = new Mensaje();
 															
 															StringBuilder idExterno = new StringBuilder();
@@ -880,7 +897,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 															} else {
 
 																LOG.info("EnvioMensajeImpl [enviarNotificacion]: El usuario no esta suscrito al servicio movil indicado");
-																error = WSPlataformaErrors.getErrorFaltaCuerpo();
 																Mensaje msj = new Mensaje();
 																
 																StringBuilder idExterno = new StringBuilder();
@@ -955,8 +971,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 													// insertamos en tabla
 													// destinatarios-mensajes
-													// //TODO: ver si el
-													// destinatario esta bien
 													Long desMensaje = destinatariosMensajesManager
 															.insertarDestinatarioMensaje(mensajeCreado.getIdMensaje(),
 																	usuario.getIdUsuario().toString(),
@@ -1028,7 +1042,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									// activo
 
 									LOG.info("EnvioMensajeImpl [enviarNotificacion]: El servicio movil es incorrecto o no esta activo");
-									error = WSPlataformaErrors.getErrorFaltaCuerpo();
 									Mensaje msj = new Mensaje();
 									
 									StringBuilder idExterno = new StringBuilder();
@@ -1057,7 +1070,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 								// Error por id Servicio nulo o vacio
 
 								LOG.info("EnvioMensajeImpl [enviarNotificacion]: El servicio movil es obligatorio o viene mal informado");
-								error = WSPlataformaErrors.getErrorFaltaCuerpo();
 								Mensaje msj = new Mensaje();
 								
 								StringBuilder idExterno = new StringBuilder();
@@ -1344,6 +1356,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 			//creamos hilo para insertar los mensajes en ACtiveMq
 			levantarHilo(listaMensajesEncolar, ps, sender, mensajesManager);
 		} catch (Exception e) {
+
 			LOG.error("EnvioMensajesImpl.enviarNotificacion", e);
 			listaErroresGenerales.add(WSPlataformaErrors.getErrorGeneral());
 			try {
@@ -1372,7 +1385,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		TblServicios servicio = serviciosManager.getServicio(Long
 				.parseLong(notificacionPush.getServicio()));
 		if (servicio.getNumeroMaxReenvios() != null
-				&& servicio.getNumeroMaxReenvios() > 0) {
+				&& servicio.getNumeroMaxReenvios() >= 0) {
 			maxRetries = servicio.getNumeroMaxReenvios().longValue();
 		} else {
 			maxRetries = Long.parseLong(ps.getMessage(

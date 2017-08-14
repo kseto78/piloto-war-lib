@@ -65,6 +65,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 	 * 
 	 * @return RecibirSMSResponse
 	 */
+	@Override
 	public RecibirSMSResponse recibirSMS(RecibirSMSRequest recibirSMSRequest) {
         
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -176,7 +177,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 						mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null));
 						mensajeJms.setIdLote(idLote.toString());
 						mensajeJms.setDestinatarioMensajeId(desMensaje.toString());
-						Long maxRetries = null;
+						Long maxRetries;
 						TblServicios servicio = serviciosManager.getServicio(Long.parseLong(envioSMS.getServicio()));
 						if(servicio.getPremium()!=null && servicio.getPremium()) {
 							premium = true;

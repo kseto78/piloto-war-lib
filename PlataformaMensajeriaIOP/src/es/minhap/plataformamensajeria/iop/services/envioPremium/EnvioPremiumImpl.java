@@ -9,6 +9,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 
+import es.map.sim.jms.sender.SIMMessageSender;
+import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
@@ -111,8 +113,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-//	@Resource(name = "messageSender")
-//	private SIMMessageSender sender;
+	@Resource(name = "messageSender")
+	private SIMMessageSender sender;
 
 	@Override
 	public String enviarSMSPremium(EnvioAEATXMLBean envio, String username, String password, Integer servicio,
@@ -237,7 +239,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		return res;
 	}
 
-
+	
 	private es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta peticionCorrectaSMSMultiOrganismo(
 			String codOrganismoPagador, String cuerpo, String idExterno, String destinatario, String deliveryUrl,
 			boolean organismoActivo, PropertiesServices ps) {
@@ -304,6 +306,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String cod2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2006_GENERAL", null);
 		String des2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2006_GENERAL", null);
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
 		
 		TblMensajes mensaje = mensajesManager.getMensaje(idMensaje.longValue());
 		String status = mensaje.getEstadoactual();
@@ -322,6 +325,9 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 							destinatario.getDestinatariosmensajes(), estadoPendienteId, username);
 //					mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendiente, null, false, destinatario.getDestinatariosmensajes(),
 //							null, username, null);
+					if ("S".equals(utilizarActiveMq)){
+						encolarMensaje(envio, username, servicio, ps, mensajesManager.getIdLoteByIdMensaje(mensaje.getMensajeid()).intValue(), idMensaje, destinatario);
+					}
 				}
 				
 				resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
@@ -351,7 +357,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String statusOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK", null);
 		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
-
+		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
+		
 		Integer idLote;
 		Integer idMensaje = null;
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
@@ -386,7 +393,9 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 						.getDestinatarioMensajes(idMensaje.longValue())) {
 					hitoricosManager.creaHistoricoPremium(idMensaje.longValue(),
 							destinatario.getDestinatariosmensajes(), estadoId, username);
-
+					if ("S".equals(utilizarActiveMq)){
+						encolarMensaje(envio, username, servicio, ps, idLote, idMensaje, destinatario);
+					}
 				}
 			}
 
@@ -403,7 +412,23 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		return respuesta;
 	}
 
-	
+	private void encolarMensaje(EnvioAEATXMLBean envio, String username, Integer servicio, PropertiesServices ps,
+			Integer idLote, Integer idMensaje, TblDestinatariosMensajes destinatario) {
+		MensajeJMS mensajeJms = new MensajeJMS();
+		mensajeJms.setIdMensaje(idMensaje.toString());
+		mensajeJms.setIdExterno(envio.getIdExterno());
+		mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+		mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+		mensajeJms.setIdLote((null != idLote) ? idLote.toString() : "0");
+		mensajeJms.setUsuarioAplicacion(username);
+		TblServicios servicioAEAT = serviciosManager.getServicio(Long.parseLong(servicio.toString()));
+		
+		if(servicioAEAT.getCaducidad() !=null && servicioAEAT.getCaducidad() > 0){
+			mensajeJms.setCaducidad(servicioAEAT.getCaducidad().toString());
+		}
+
+		sender.send(mensajeJms, 0, servicioAEAT.getServicioid().toString(), true);
+	}
 
 	private void insertarUrlPremium(String deliveryReportURL, Integer idMensaje) {
 		TblUrlMensajePremium tbl = new TblUrlMensajePremium();

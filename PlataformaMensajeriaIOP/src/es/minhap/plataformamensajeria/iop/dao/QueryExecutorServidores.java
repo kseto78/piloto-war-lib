@@ -46,5 +46,22 @@ public interface QueryExecutorServidores {
 	public Long getIdServicioByIdMensaje(Long idMensaje);
 
 
+	/**
+	 * Se recupera el id servidor a partir del mensaje
+	 * 
+	 * @param idMensaje
+	 * @return
+	 */
+	public Long getIdServicioByIdMensajeHist(Long idMensaje);
+
+	
+	/**
+	 * Se recupera el id lote a partir del mensaje
+	 * 
+	 * @param idMensaje
+	 * @return
+	 */
+	public Long getIdLoteByIdMensaje(Long idMensaje);
+	
 	
 }

@@ -64,6 +64,13 @@ public class InvocarEnvioEmailPassbook implements Callable {
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
 			
+			NodeList nodoLoteId = doc.getElementsByTagName("idLote");
+			
+			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
+				String idLote=nodoLoteId.item(0).getTextContent();
+				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+			}	
+			
 			SOAPMessage responseMessage=getSoapMessageFromString(respuestaCompleta);
 			
 	        try{
@@ -80,8 +87,11 @@ public class InvocarEnvioEmailPassbook implements Callable {
 						eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 			        }
 				    
-				    System.out.println("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
-					soapPayload.setSoapAction(initPayload.getSoapAction());
+				    if(LOG.isInfoEnabled()){
+			        	LOG.info("RESPONSE: " + XMLUtils.dom2xml(XMLUtils.soap2dom(responseMessage)));
+			        }
+				    
+				    soapPayload.setSoapAction(initPayload.getSoapAction());
 					soapPayload.setSoapMessage(XMLUtils.soap2dom(responseMessage));
 			
 					eventContext.getMessage().setPayload(soapPayload);

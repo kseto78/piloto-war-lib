@@ -51,7 +51,7 @@ public class TblAdjuntosHistQuery extends
 	public static final String MODIFICADOPOR = "modificadopor";
 	public static final String IMAGEN = "imagen";
 	public static final String FECHAHISTORIFICACION = "fechahistorificacion";
-
+	 public static final String CONTENIDOFILE = "contenidofile";
 	/**
 	 * Valor de busqueda de campo adjuntoid
 	 */
@@ -217,6 +217,31 @@ public class TblAdjuntosHistQuery extends
 	 */
 	private boolean fechahistorificacionIsNotNull = false;
 
+	 /**
+     * Valor de busqueda de campo contenidofile
+     */
+    private String contenidofile;
+
+    /**
+     * Tipo de comparador para la busqueda por campo contenidofile
+     */
+    private TextComparator contenidofileComparator = TextComparator.CONTAINS;
+
+    /**
+     * Lista de valores del campo contenidofile para busquedas tipo IN
+     */
+    private List<String> contenidofileIn = new ArrayList<String>(0);
+
+    /**
+     * Permite buscar cuando campo contenidofile es NULL
+     */
+    private boolean contenidofileIsNull = false;
+
+    /**
+     * Permite buscar cuando campo contenidofile es NOT NULL
+     */
+    private boolean contenidofileIsNotNull = false;
+	
 	/**
 	 * Constructor default
 	 */
@@ -901,6 +926,98 @@ public class TblAdjuntosHistQuery extends
 	}
 
 	/**
+	 * Valor de busqueda de campo contenidofile
+	 * @return String.
+	 */
+	public String getContenidofile() {
+	    if (contenidofile != null) {
+	        switch (contenidofileComparator) {
+	            case STARTS_WITH:
+	                return contenidofile + "%";
+	            case CONTAINS:
+	                return "%" + contenidofile + "%";
+	            case ENDS_WITH:
+	                return "%" + contenidofile;
+	            case EQUALS:
+	            	return contenidofile;
+	          	default:
+	            	break;
+	        }
+	    }
+	    return contenidofile;
+	}
+
+	/**
+	 * Valor de busqueda de campo contenidofile
+	 * @param cuerpo Valor de seteo.
+	 */
+	public void setContenidofile(String contenidofile) {
+	    this.contenidofile = contenidofile;
+	}
+
+	/**
+	 * Tipo de comparador para la busqueda por campo contenidofile
+	 * @return contenidofileComparator.
+	 */
+	public TextComparator getContenidofileComparator() {
+	    return contenidofileComparator;
+	}
+
+	/**
+	 * Tipo de comparador para la busqueda por campo contenidofile
+	 * @param contenidofileComparator Valor de seteo.
+	 */
+	public void setContenidofileComparator(TextComparator contenidofileComparator) {
+	    this.contenidofileComparator = contenidofileComparator;
+	}
+
+	/**
+	 * @return List<String>.
+	 */
+	public List<String> getContenidofileIn() {
+	    return this.contenidofileIn;
+	}
+
+	/**
+	 * @param contenidofile Valor a agregar.
+	 */
+	public void addContenidofileIn(String contenidofile) {
+	    this.contenidofileIn.add(contenidofile);
+	}
+
+	/**
+	 * Permite buscar cuando campo contenidofile es NULL
+	 * @return boolean.
+	 */
+	public boolean isContenidofileIsNull() {
+	    return contenidofileIsNull;
+	}
+
+	/**
+	 * Permite buscar cuando campo contenidofile es NULL
+	 * @param contenidofileIsNull Valor de seteo.
+	 */
+	public void setContenidofileIsNull(boolean contenidofileIsNull) {
+	    this.contenidofileIsNull = contenidofileIsNull;
+	}
+
+	/**
+	 * Permite buscar cuando campo contenidofile es NOT NULL
+	 * @return boolean.
+	 */
+	public boolean isContenidofileIsNotNull() {
+	    return contenidofileIsNotNull;
+	}
+
+	/**
+	 * Permite buscar cuando campo contenidofile es NOT NULL
+	 * @param contenidofileIsNotNull Valor de seteo.
+	 */
+	public void setContenidofileIsNotNull(boolean contenidofileIsNotNull) {
+	    this.contenidofileIsNotNull = contenidofileIsNotNull;
+	}
+	
+	/**
 	 * Agrega recursivamente criterios al Criteria de Hibernate para la
 	 * utilizacion en busquedas
 	 */
@@ -1061,6 +1178,34 @@ public class TblAdjuntosHistQuery extends
 		if (isFechahistorificacionIsNotNull()) {
 			criteria.add(Restrictions.isNotNull(FECHAHISTORIFICACION));
 		}
+		
+		if (getContenidofile() != null) {
+            if (getContenidofileComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(CONTENIDOFILE, getContenidofile()));
+            } 
+            else if (getContenidofileComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(CONTENIDOFILE, getContenidofile()));
+            }
+            else if (getContenidofileComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(CONTENIDOFILE, getContenidofile())));
+            }
+            else {
+                criteria.add(Restrictions.like(CONTENIDOFILE, getContenidofile()));
+            }
+        }
+
+        if (getContenidofileIn().size() > 0) {
+            criteria.add(Restrictions.in(CONTENIDOFILE, getContenidofileIn()));
+        }
+
+        if (isContenidofileIsNull()) {
+            criteria.add(Restrictions.isNull(CONTENIDOFILE));
+        }
+
+        if (isContenidofileIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(CONTENIDOFILE));
+        }
+		
 		// Aplica ordenamiento solo si corresponde. En count y searchUnique no
 		// se utiliza.
 		if (useOrder) {

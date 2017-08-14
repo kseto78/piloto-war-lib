@@ -38,6 +38,17 @@
 	  <url-pattern>/ServletSAML</url-pattern>
 	</servlet-mapping>
 	
+	
+	<servlet>
+	  <servlet-name>fileSystemServlet</servlet-name>
+	  <servlet-class>es.minhap.misim.bus.webapp.servlet.ServletFileSystem</servlet-class>
+	</servlet>
+ 	<servlet-mapping>
+	  <servlet-name>fileSystemServlet</servlet-name>
+	  <url-pattern>/ServletFilesystem</url-pattern>
+	</servlet-mapping>
+	
+	
 	<filter>
 		<filter-name>recuperarHeaders</filter-name>
 		<filter-class>es.minhap.misim.bus.webapp.threadlocal.RecuperarHeadersFilter</filter-class>

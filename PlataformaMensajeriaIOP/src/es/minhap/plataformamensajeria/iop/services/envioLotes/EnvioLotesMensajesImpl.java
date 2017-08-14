@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +66,12 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 						
 				if (mensajePeticionLotes.getDestinatariosMail()!=null && mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail()!=null && !mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail().isEmpty()){
 					MensajesXMLBean mensaje = new MensajesXMLBean();
+					attachedFilesProcess(mensajePeticionLotes, mensaje);
 					for (int i = 0; i< mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail().size(); i++){
 						setGenericAttributes(peticionXML, mensajePeticionLotes, mensaje);
-						attachedFilesProcess(mensajePeticionLotes, mensaje);
+						
 						try {
-							attachedPassbookProcess(mensajePeticionLotes, mensaje, ps);
+							attachedPassbookProcess(mensajePeticionLotes, mensaje, envioEmail.getServicio(), ps);
 						} catch (Exception e) {
 							LOG.error(ERROR_GENERACION_PASSBOOK, e);
 							erroresGeneracionPassbook.add(ERROR_GENERACION_PASSBOOK);
@@ -82,7 +86,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 					setGenericAttributes(peticionXML, mensajePeticionLotes, mensaje);
 					attachedFilesProcess(mensajePeticionLotes, mensaje);
 					try {
-						attachedPassbookProcess(mensajePeticionLotes, mensaje, ps);
+						attachedPassbookProcess(mensajePeticionLotes, mensaje, envioEmail.getServicio(), ps);
 					} catch (Exception e) {
 						LOG.error(ERROR_GENERACION_PASSBOOK, e);
 						erroresGeneracionPassbook.add(ERROR_GENERACION_PASSBOOK);
@@ -126,7 +130,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 		}
 	}
 	
-	private void attachedPassbookProcess(MensajePeticionLotesEmailXMLBean mensajePeticionLotes, MensajesXMLBean mensaje, PropertiesServices ps) throws Exception {
+	private void attachedPassbookProcess(MensajePeticionLotesEmailXMLBean mensajePeticionLotes, MensajesXMLBean mensaje, String servicio, PropertiesServices ps) throws Exception {
 		
 		if (mensajePeticionLotes.getPassbook() != null) {
 			if (mensaje.getListaAdjuntos() != null) {
@@ -143,8 +147,11 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				String organizationName = ps.getMessage("passbook.organizationName", null, null, null);
 				String passTypeIdentifier = ps.getMessage("passbook.passTypeIdentifier", null, null, null);
 				
-				String templatePath = ps.getMessage("passbook.templatePath", null, null, null);
-				String tempPath = ps.getMessage("passbook.tempPath", null, null, null);
+//				String templatePath = ps.getMessage("passbook.templatePath", null, null, null);
+//				String tempPath = ps.getMessage("passbook.tempPath", null, null, null);
+				
+				String templatePath = getTemplatePath(mensaje, servicio, ps);
+				String tempPath = getTempPath(mensaje, servicio, ps);
 				
 				String appleWWDRCA = ps.getMessage("passbook.appleWWDRCA", null, null, null);
 				String keyStorePath = ps.getMessage("passbook.keyStorePath", null, null, null);
@@ -185,6 +192,53 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 		}
 	}
 	
+	private String getTempPath(MensajesXMLBean mensaje,
+			String servicio, PropertiesServices ps) {
+		Path ruta;
+		String rutaBase = ps.getMessage("passbook.tempBasePath", null, null, null);
+		
+		String temp = rutaBase+"/"+servicio;
+		ruta = Paths.get(temp);
+		
+		//comprobamos si existe ruta con el servicio
+		if (Files.exists(ruta)){
+			//comprobamos si existe ruta con el organismo
+			temp = temp + "/" + mensaje.getCodOrganismo();
+			ruta = Paths.get(temp);
+			if (Files.exists(ruta)){
+				return temp;
+			}else{//no existe que tome la general del servicio
+				return rutaBase+"/"+servicio;
+			}
+		}else{//no existe, que tome la general de properties
+			return rutaBase;
+		}
+	}
+
+	private String getTemplatePath(MensajesXMLBean mensaje,
+			String servicio, PropertiesServices ps) {
+		Path ruta;
+		String rutaBase = ps.getMessage("passbook.templateBasePath", null, null, null);
+		
+		String temp = rutaBase+"/"+servicio;
+		ruta = Paths.get(temp);
+		
+		//comprobamos si existe ruta con el servicio
+		if (Files.exists(ruta)){
+			//comprobamos si existe ruta con el organismo
+			temp = temp + "/" + mensaje.getCodOrganismo();
+			ruta = Paths.get(temp);
+			if (Files.exists(ruta)){
+				return temp;
+			}else{//no existe que tome la general del servicio
+				return rutaBase+"/"+servicio;
+			}
+		}else{//no existe, que tome la general de properties
+			return rutaBase;
+		}
+		
+	}
+
 	private byte[] decodeFile(String fichero) throws IOException {
 		return Base64.decodeBase64(fichero);
 	}

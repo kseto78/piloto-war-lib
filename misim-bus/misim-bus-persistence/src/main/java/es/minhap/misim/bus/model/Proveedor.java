@@ -36,6 +36,13 @@ public class Proveedor implements java.io.Serializable {
 	private String cifrado;
 	private String nodoCifrado;
 	private String esquemaCifrado;
+	private String encoding;
+	private String basicAutentication;
+	private String userAutentication;
+	private String passAutentication;
+	private String method;
+	private String mediaType;
+	private String anadirUim;
 
 	public Proveedor() {
 	}
@@ -187,5 +194,88 @@ public class Proveedor implements java.io.Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	@Column(name = "ENCODING", length = 40)
+	public String getEncoding() {
+		return encoding;
+	}
+
+	
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	@Column(name = "BASIC_AUTENTICATION", length = 2)
+	public String getBasicAutentication() {
+		return basicAutentication;
+	}
+
+
+	public void setBasicAutentication(String basicAutentication) {
+		this.basicAutentication = basicAutentication;
+	}
+
+	
+	@Column(name = "USUARIO_AUTENTICATION", length = 40)
+	public String getUserAutentication() {
+		return userAutentication;
+	}
+
+	/**
+	 * @param userAutentication the userAutentication to set
+	 */
+	public void setUserAutentication(String userAutentication) {
+		this.userAutentication = userAutentication;
+	}
+
+	@Column(name = "PASS_AUTENTICATION", length = 40)
+	public String getPassAutentication() {
+		return passAutentication;
+	}
+
+	/**
+	 * @param passAutentication the passAutentication to set
+	 */
+	public void setPassAutentication(String passAutentication) {
+		this.passAutentication = passAutentication;
+	}
+
+	@Column(name = "METHOD", length = 40)
+	public String getMethod() {
+		return method;
+	}
+
+	/**
+	 * @param method the method to set
+	 */
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	@Column(name = "MEDIA_TYPE", length = 40)
+	public String getMediaType() {
+		return mediaType;
+	}
+
+	/**
+	 * @param mediaType the mediaType to set
+	 */
+	public void setMediaType(String mediaType) {
+		this.mediaType = mediaType;
+	}
+
+	@Column(name = "ANADIR_UIM", length = 2)
+	public String getAnadirUim() {
+		return anadirUim;
+	}
+
+	/**
+	 * @param anadirUim the anadirUim to set
+	 */
+	public void setAnadirUim(String anadirUim) {
+		this.anadirUim = anadirUim;
+	}
+
+
 
 }

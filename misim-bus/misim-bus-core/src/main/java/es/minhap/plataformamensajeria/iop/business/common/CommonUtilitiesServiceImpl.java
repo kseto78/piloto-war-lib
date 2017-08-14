@@ -43,6 +43,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManage
 import es.minhap.plataformamensajeria.iop.manager.TblErrorMensajeLogManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
+import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosProveedor;
 import es.minhap.plataformamensajeria.sm.modelo.SMSData;
 import es.minhap.plataformamensajeria.sm.modelo.Servicio;
@@ -83,8 +84,11 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 	@Resource
 	private TblErrorMensajeLogManager errorMensajeLogManager;
 	
+	@Resource(name="UtilCreateFile")
+	private UtilCreateFile utilFile;
+	
 	private MuleContext muleContext;
-
+	private static final CharSequence CONSTANTEUIM = "#UIM#";
 
 	
 	@Override
@@ -105,7 +109,16 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 				
 				TblMensajes mensaje = mensajesManager.getMensaje(mensajeId);
 				data.Telefono = mensaje.getTelefono();
-				data.Body = mensaje.getCuerpo();
+				
+				//comprueba si el cuerpo está en fichero
+				if (null == mensaje.getCuerpofile()){
+					data.Body = mensaje.getCuerpo();
+				}else{
+					//recuperamos el cuerpo. 
+					data.Body = utilFile.getCuerpoMensajeFromFile(mensaje.getCuerpofile());
+				}
+				
+				
 				data.destinatarioMensajeId = detallesMensajesBean.getDestinatariosMensajes();
 				if (smsDataComun.ServiceData.getMultiOrganismo() == 1) {
 					data.Servers = (ArrayList<ParametrosProveedor>) queryExecutorServidores.getProveedoresMultiorganismo(mensajeId);
@@ -145,7 +158,7 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 	}
 
 	@Override
-	public String sendMessage(Object data, String soapAction, String receptQueue) throws Exception {
+	public String sendMessage(Object data, String soapAction, String receptQueue, Long mensajeId) throws Exception {
 		SoapPayload<?> payload = new PeticionPayload();
 		payload.setSoapAction(soapAction);
 		String xml = "";
@@ -177,7 +190,7 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 		final MuleMessage muleResponse = muleContext.getClient().send(receptQueue, payload, null, 10000);
 		Document respuestaSOAP = muleResponse.getPayload(SoapPayload.class).getSoapMessage();
 
-		NodeList nodoRespuesta = respuestaSOAP.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Respuesta");//("ns2:Respuesta");
+		NodeList nodoRespuesta = respuestaSOAP.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Respuesta");
 		String xmlRespuesta = XMLUtils.nodeToString(nodoRespuesta.item(0));
 				
 		JAXBContext jaxbContext = JAXBContext.newInstance(Respuesta.class);
@@ -185,6 +198,9 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 
 		StringReader reader = new StringReader(xmlRespuesta);
 		Respuesta respuesta = (Respuesta) unmarshaller.unmarshal(reader);
+		if(null != respuesta && respuesta.getStatus().getStatusText().contains(CONSTANTEUIM)){
+			respuesta.getStatus().setStatusText(respuesta.getStatus().getStatusText().replace(CONSTANTEUIM, String.valueOf(mensajeId)));
+		}
 		return isConsulta? xmlRespuesta : respuesta.getStatus().getStatusText();
 	}
 	

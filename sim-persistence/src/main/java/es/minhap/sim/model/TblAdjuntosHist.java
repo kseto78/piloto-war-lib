@@ -49,6 +49,9 @@ public class TblAdjuntosHist implements java.io.Serializable {
 	@Column(name = "FECHAHISTORIFICACION", length = 7)
 	private Date fechahistorificacion;
 
+	@Column(name = "CONTENIDOFILE")
+	private String contenidofile;
+
 	public TblAdjuntosHist() {
 	}
 
@@ -172,6 +175,7 @@ public class TblAdjuntosHist implements java.io.Serializable {
 		this.fechahistorificacion = fechahistorificacion;
 	}
 
+	
 	/**
 	 * @return the contenido
 	 */
@@ -185,6 +189,21 @@ public class TblAdjuntosHist implements java.io.Serializable {
 	 */
 	public void setContenido(byte[] contenido) {
 		this.contenido = contenido;
+	}
+
+	/**
+	 * @return the contenidofile
+	 */
+	public String getContenidofile() {
+		return contenidofile;
+	}
+
+	/**
+	 * @param contenidofile
+	 *            the contenidofile to set
+	 */
+	public void setContenidofile(String contenidofile) {
+		this.contenidofile = contenidofile;
 	}
 
 }

@@ -23,6 +23,7 @@ import org.w3c.dom.NodeList;
 
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.misim.bus.model.seguridad.CifradoService;
+import es.minhap.misim.transformers.peticionesrest.Parameters;
 
 /**
  * Component to call the Encryption Service SRV-CFR-01
@@ -60,7 +61,9 @@ public class Encriptar implements Callable {
 			
 			//encriptamos la respuesta directa del operador si existe.
 			xml = eventContext.getMessage().getOutboundProperty("xmlRespuestaDirectaOperador");
-			
+			if (null != xml){
+				xml = xml.replace("&lt;", "<").replace("&gt;", ">");
+			}
 			if (null != xml && xml.length() >= 0){
 				encriptarMensajeOriginal(eventContext, xml);
 			}
@@ -158,4 +161,47 @@ public class Encriptar implements Callable {
 		}
 	}
 
+	public String encriptarParametersHTTP(CifradoService cifrado, String xml, Properties ps) throws Exception {
+				
+		Parameters parameters = new Parameters();
+		parameters = parameters.loadObjectFromXML(xml);
+		
+		Document documento =XMLUtils.setPayloadFromObject(parameters, Charset.forName("UTF-8"), Parameters.class);
+		
+		NodeList nodeList = documento.getElementsByTagNameNS(
+				"http://schemas.xmlsoap.org/soap/envelope/",
+				"Body");
+
+		// Si no existen no se realiza el cifrado
+		if(nodeList!=null && nodeList.getLength()>0){
+			
+			// Se prepara la lista de nodos a cifrar
+			List<Node> nodosACifrar = new ArrayList<Node>();
+			nodosACifrar.add(nodeList.item(0));
+			
+			Document docCifrado = cifrado.cifrar(
+					documento, 
+					ps.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
+					ps.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
+					ps.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
+					ps.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
+					ps.getProperty(KeyStoreUtils.KEY_STORE_FILE),
+				nodosACifrar);
+			
+			// Verificamos que el documento ha sido cifrado
+			
+			//Comprobamos el nodo de cifrado
+			NodeList cipherValue = docCifrado.getElementsByTagNameNS(
+				"http://www.w3.org/2001/04/xmlenc#", 
+				"CipherValue");
+
+			if(cipherValue == null || !(cipherValue.getLength() > 0)){
+				LOG.error("Cifrado: No se ha cifrado correctamente");
+				throw new ModelException("No se ha cifrado correctamente", 320);
+			}
+			return XMLUtils.dom2xml(docCifrado);
+			
+		}
+		return null;
+	}
 }

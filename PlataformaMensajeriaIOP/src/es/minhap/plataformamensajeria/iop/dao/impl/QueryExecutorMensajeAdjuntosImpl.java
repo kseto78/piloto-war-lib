@@ -1,8 +1,9 @@
 package es.minhap.plataformamensajeria.iop.dao.impl;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
@@ -14,6 +15,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorMensajeAdjuntos;
+import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.sm.modelo.Adjunto;
 
 /**
@@ -27,6 +29,9 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorMensajeAdjuntosImpl.class);
 	
+	@Resource(name="UtilCreateFile")
+	private UtilCreateFile utilFile;
+	
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
 	public void setSessionFactoryApp(SessionFactory sessionFactory) {
@@ -37,7 +42,7 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 	public List<Adjunto> getAttachment(Long mensajeId) {
 		List<Adjunto> adjuntos = new ArrayList<>();
 		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-				"SELECT NOMBRE, CONTENIDO FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A "
+				"SELECT NOMBRE, CONTENIDOFILE FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A "
 							+ " ON MA.ADJUNTOID = A.ADJUNTOID WHERE MA.MENSAJEID = "
 							+ mensajeId);
 		@SuppressWarnings("unchecked")
@@ -45,7 +50,7 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 		for (Object[] row : rows) {
 			Adjunto adjunto= new Adjunto();
 		    adjunto.setNombre((String) row[0]);
-		    adjunto.setContenido((Blob) row[1]);
+		    adjunto.setContenido(utilFile.getAdjuntoMensaje((String)row[1]));
 		    adjuntos.add(adjunto);
 		}
 		if(LOG.isDebugEnabled()){
@@ -59,7 +64,7 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 	public List<Adjunto> getImage(Long mensajeId) {
 		List<Adjunto> adjuntos = new ArrayList<>();
 		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-				"SELECT NOMBRE, CONTENIDO FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A "
+				"SELECT NOMBRE, CONTENIDOFILE FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A "
 						+ " ON MA.ADJUNTOID = A.ADJUNTOID WHERE MA.MENSAJEID = "
 						+ mensajeId + "" + "AND IMAGEN = 1");
 		@SuppressWarnings("unchecked")
@@ -67,7 +72,7 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 		for (Object[] row : rows) {
 			Adjunto adjunto= new Adjunto();
 		    adjunto.setNombre((String) row[0]);
-		    adjunto.setContenido((Blob) row[1]);
+		    adjunto.setContenido(utilFile.getAdjuntoMensaje((String)row[1]));
 		    adjuntos.add(adjunto);
 		}
 		if(LOG.isDebugEnabled()){

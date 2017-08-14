@@ -48,6 +48,7 @@ import es.minhap.plataformamensajeria.iop.manager.ViewLotesEnviosDetalladaManage
 import es.minhap.plataformamensajeria.iop.manager.ViewUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.util.MensajesAuditoria;
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
+import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.dao.TblMensajesDAO;
 import es.minhap.sim.model.TblAplicaciones;
@@ -62,8 +63,7 @@ import es.minhap.sim.query.ViewLotesEnviosDetalladaQuery;
 import es.minhap.sim.query.ViewUsuariosPushQuery;
 
 /**
- * Clase manager encargada de la l�gica de negocios relacionada con los
- * mensajes
+ * Clase manager encargada de la l�gica de negocios relacionada con los mensajes
  * 
  * @author everis
  * 
@@ -96,35 +96,41 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 	@Autowired
 	private TblDestinatariosMensajesManager destinatariosMensajesManager;
-	
+
 	@Autowired
 	private TblUsuariosPushManager usuariosPushManager;
 
 	@Autowired
-    private SessionFactory sessionFactorySIMApp;
+	private SessionFactory sessionFactorySIMApp;
 
 	@Autowired
 	private QueryExecutorServidores queryExecutorServidores;
 
 	@Autowired
 	private QueryExecutorLotesEnvios queryExecutorLotesEnvios;
-	
+
 	@Autowired
 	private QueryExecutorMensajes queryExecutorMensajes;
 
 	@Resource
 	private TblMensajesDAO tblMensajesDAO;
-	
+
 	@Autowired
 	private TblServiciosManager serviciosManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
-	
+
 	@Resource(name = "messageSender")
 	private SIMMessageSender sender;
 
+	@Resource(name = "UtilCreateFile")
+	private UtilCreateFile utilFile;
+
 	private ViewLotesEnviosDetalladaQuery query;
+
+	private static final String ESTADOPENDIENTE = "constantes.ESTADO_PENDIENTE";
+	private static final String TIPOMENSAJESMS = "constantes.TIPO_MENSAJE_SMS";
 
 	/**
 	 * @see es.minhap.TblMensajesManager.insertarMensajeSMS
@@ -161,9 +167,17 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		TblMensajes mens = crearMensaje(idLote, mensaje.getCuerpo(), mensaje.getDocUsuario(), mensaje.getCodSIA(),
 				mensaje.getCodOrganismo(), mensaje.getCodOrganismoPagador(), mensaje.getIdExterno(), usuario,
-				ps.getMessage("constantes.TIPO_MENSAJE_SMS", null),null);
+				ps.getMessage(TIPOMENSAJESMS, null), null);
 
 		mens.setMensajeid(tblMensajesDAO.insert(mens));
+
+		// sacamos el cuerpo a file si es necesario
+		if (null == mens.getCuerpo()) {
+			mens.setCuerpofile(utilFile.createFileMensaje(mens.getMensajeid(), mensaje.getCuerpo(), mens
+					.getTblLotesEnvios().getTblServicios().getServicioid(), mens.getTblLotesEnvios().getTblServicios()
+					.getConservacion(), mens.getFechacreacion()));
+			tblMensajesDAO.update(mens);
+		}
 
 		if (null != mens.getMensajeid()) {
 
@@ -224,6 +238,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		mens.setMensajeid(tblMensajesDAO.insert(mens));
 
+		// sacamos el cuerpo a file si es necesario
+		if (null == mens.getCuerpo()) {
+			mens.setCuerpofile(utilFile.createFileMensaje(mens.getMensajeid(), smsText, mens.getTblLotesEnvios()
+					.getTblServicios().getServicioid(), mens.getTblLotesEnvios().getTblServicios().getConservacion(),
+					mens.getFechacreacion()));
+			tblMensajesDAO.update(mens);
+		}
+
 		return getReturn(mens.getMensajeid(), userAplicacion, passwordAplicacion, idLote);
 	}
 
@@ -254,7 +276,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	@Override
 	@Transactional
 	public Mensaje insertarMensajeEmail(Long idLote, MensajesXMLBean mensaje, EnvioEmailXMLBean envio, String to,
-			String cc, String bcc) { 
+			String cc, String bcc) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		// Se comprueba si EXISTE LOTE PARA EL USUARIO/PASSWORD
@@ -295,12 +317,21 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		TblMensajes mens = crearMensajeEmail(idLote, mensaje, envio);
 
+		mens.setMensajeid(tblMensajesDAO.insert(mens));
+
+		// sacamos el cuerpo a file si es necesario
+		if (null == mens.getCuerpo()) {
+			mens.setCuerpofile(utilFile.createFileMensaje(mens.getMensajeid(), mensaje.getCuerpo(), mens
+					.getTblLotesEnvios().getTblServicios().getServicioid(), mens.getTblLotesEnvios().getTblServicios()
+					.getConservacion(), mens.getFechacreacion()));
+			tblMensajesDAO.update(mens);
+		}
+
 		if(mensaje.getIdMensaje() == null || mensaje.getIdMensaje().isEmpty()){
 			// creamos el mensaje
 			mens.setMensajeid(tblMensajesDAO.insert(mens));
 			
 			if (null != mens.getMensajeid()) {
-
 				// auditoria mensaje correcto
 				auditarMensaje(idLote, mens.getMensajeid(), envio.getUsuario(), envio.getPassword(),
 						MensajesAuditoria.MENSAJE_EMAIL_CORRECTO, MensajesAuditoria.OPERACION_MENSAJE_EMAIL_CREAR,
@@ -335,7 +366,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		String res = null;
 		List<String> lista = new ArrayList<>();
 		// analizamos destinatarios TO
-		if (null != to){
+		if (null != to) {
 			lista = Arrays.asList(to.split(";"));
 			for (String email : lista) {
 				if (!Utils.validarEmail(email.trim())) {
@@ -343,9 +374,9 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				}
 			}
 		}
-		
+
 		// analizamos destinatarios CC
-		if (null != cc){
+		if (null != cc) {
 			lista = Arrays.asList(cc.split(";"));
 			for (String email : lista) {
 				if (!Utils.validarEmail(email.trim())) {
@@ -353,9 +384,9 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				}
 			}
 		}
-	
+
 		// analizamos destinatarios BCC
-		if (null != bcc){
+		if (null != bcc) {
 			lista = Arrays.asList(bcc.split(";"));
 			for (String email : lista) {
 				if (!Utils.validarEmail(email.trim())) {
@@ -363,11 +394,11 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				}
 			}
 		}
-		
-		if(to == null && cc == null && bcc == null) {
+
+		if (to == null && cc == null && bcc == null) {
 			return MensajesAuditoria.ERROR_DESTINATARIOS_EMAIL_TO;
 		}
-	
+
 		return res;
 	}
 
@@ -419,6 +450,15 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				notificacion.getUsuario(), ps.getMessage("constantes.TIPO_MENSAJE_PUSH", null), mensaje.getTitulo());
 
 		mens.setMensajeid(tblMensajesDAO.insert(mens));
+
+		// sacamos el cuerpo a file si es necesario
+		if (null == mens.getCuerpo()) {
+			mens.setCuerpofile(utilFile.createFileMensaje(mens.getMensajeid(), mensaje.getCuerpo(), mens
+					.getTblLotesEnvios().getTblServicios().getServicioid(), mens.getTblLotesEnvios().getTblServicios()
+					.getConservacion(), mens.getFechacreacion()));
+			tblMensajesDAO.update(mens);
+		}
+
 		if (null != mens.getMensajeid()) {
 
 			// auditoria mensaje correcto
@@ -439,12 +479,12 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		return generarRespuesta(null, null, null, destinatario.getIdExterno(), mens.getMensajeid());
 
 	}
-	
+
 	@Override
 	@Transactional
 	public Integer getPrioridadByIdMessage(Long mensajeId) { 
 		Integer prioridad = null;
-		TblMensajes mens =tblMensajesDAO.get(mensajeId);
+		TblMensajes mens = tblMensajesDAO.get(mensajeId);
 		if (null != mens) {
 			prioridad = mens.getPrioridad();
 		}
@@ -522,11 +562,17 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	private TblMensajes crearMensaje(Long idLote, String cuerpo, String docUsuario, String codSIA, String codOrganismo,
 			String codOrganismoPagador, String idExterno, String usuario, String tipoMensaje, String cabecera) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		Integer maxTamMensajeBBDD = Integer.parseInt(ps.getMessage("filesystem.maxTamMensajeBBDD", null));
 
 		TblMensajes res = new TblMensajes();
 		res.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(idLote));
-		TblEstados tblEstado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null));
-		res.setCuerpo(cuerpo.trim());
+		TblEstados tblEstado = estadosManager.getEstadoByName(ps.getMessage(ESTADOPENDIENTE, null));
+		if (!checkCuerpo(cuerpo, maxTamMensajeBBDD)) {
+			res.setCuerpo(cuerpo);
+		} else {
+			res.setCuerpo(null);
+			res.setCuerpofile(null);
+		}
 		res.setCodigoexterno(idExterno);
 		res.setTblEstados(tblEstado);
 		res.setEstadoactual(tblEstado.getNombre());
@@ -541,17 +587,23 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		res.setCodorganismo(codOrganismo);
 		res.setCodorganismopagador(codOrganismoPagador);
 		res.setCabecera(cabecera);
-		
+
 		return res;
 	}
 
 	private TblMensajes crearMensajeEmail(Long idLote, MensajesXMLBean mensaje, EnvioEmailXMLBean envio) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		Integer maxTamMensajeBBDD = Integer.parseInt(ps.getMessage("filesystem.maxTamMensajeBBDD", null));
 
 		TblMensajes res = new TblMensajes();
 		res.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(idLote));
-		TblEstados tblEstado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null));
-		res.setCuerpo(mensaje.getCuerpo());
+		TblEstados tblEstado = estadosManager.getEstadoByName(ps.getMessage(ESTADOPENDIENTE, null));
+		if (!checkCuerpo(mensaje.getCuerpo(), maxTamMensajeBBDD)) {
+			res.setCuerpo(mensaje.getCuerpo());
+		} else {
+			res.setCuerpo(null);
+			res.setCuerpofile(null);
+		}
 		res.setCodigoexterno(mensaje.getIdExterno());
 		res.setCabecera(mensaje.getAsunto());
 		res.setEstadoactual(tblEstado.getNombre());
@@ -567,9 +619,12 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		res.setCodsia(mensaje.getCodSIA());
 		res.setCodorganismo(mensaje.getCodOrganismo());
 		res.setModo(getModo(mensaje.getModo()));
-		
 
 		return res;
+	}
+
+	private boolean checkCuerpo(String cuerpo, Integer maxTamMensajeBBDD) {
+		return cuerpo.length() > maxTamMensajeBBDD ? true : false;
 	}
 
 	private Integer getModo(String modo) {
@@ -636,7 +691,6 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		return mensajeId.intValue();
 	}
 
-	
 	@Override
 	@Transactional
 	public List<TblMensajes> getMensajesByLote(Long idLote) {
@@ -658,12 +712,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	public Long getIdServicioByIdMensaje(Long idMensaje) {
 		return queryExecutorServidores.getIdServicioByIdMensaje(idMensaje);
 	}
+
 	
 	@Override
 	@Transactional
 	public Long getIdLoteByIdMensaje(Long idMensaje) {
 		return queryExecutorLotesEnvios.getIdLoteByIdMensaje(idMensaje);
 	}
+
 
 	@Override
 	@Transactional
@@ -689,7 +745,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		Long codErrorBBDD = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_BBDD", null));
 		Long codCorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_CORRECTO", null));
 		String estadoEnviado = ps.getMessage("constantes.ESTADO_ENVIADO", null);
-		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null)).getNombre();
+		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null))
+				.getNombre();
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		TblMensajes tblMensaje = null;
 
@@ -745,17 +802,18 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
 						usuario, password, codCorrecto, operacionReenviarCorrecto);
 				auditoriaManager.insertarAuditoria(auditoria);
-				
+
 				if (!estadoFinal.equalsIgnoreCase(estadoAnulado)) {
-					List<TblDestinatariosMensajes> destinatarios = destinatariosMensajesManager.getDestinatarioMensajes(idMensaje);
+					List<TblDestinatariosMensajes> destinatarios = destinatariosMensajesManager
+							.getDestinatarioMensajes(idMensaje);
 					Long canal = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
 					Integer modo = Integer.parseInt(ps.getMessage("constantes.email.modo", null));
 					if (tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().equals(canal)) {
-						checkEmailMode(idMensaje, tblMensaje, destinatarios, modo);//aqui hace lo del JMS ver pero creo que tblMensaje tiene el valor del servicio.
+						checkEmailMode(idMensaje, tblMensaje, destinatarios, modo);
 					} else {
 						sendMessages(idMensaje, tblMensaje, destinatarios);
 					}
-					
+
 				}
 				return codCorrecto.intValue();
 			} else {
@@ -764,18 +822,19 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				auditoriaManager.insertarAuditoria(auditoria);
 				return codErrorBBDD.intValue();
 			}
-		}catch (CannotCreateTransactionException e) {
+		} catch (CannotCreateTransactionException e) {
 			LOG.error("TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
-			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
-			if(servicio.getPremium()!=null && servicio.getPremium()) { //Es premium revolvemos KO y anulamos
-				setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, 
-							false, null, null, usuario, null);
+			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios()
+					.getServicioid());
+			if (servicio.getPremium() != null && servicio.getPremium()) { //Es premium revolvemos KO y anulamos
+				setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, false, null, null,
+						usuario, null);
 				return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
-			}else{//no es premium devolvemos OK
+			} else {// no es premium devolvemos OK
 				return codCorrecto.intValue();
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
 			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
 		}
@@ -787,7 +846,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		if (tblMensaje.getModo().equals(modo)) {
 			StringBuilder destBuilder = new StringBuilder();
 			for (TblDestinatariosMensajes destinatario : destinatarios) {
-				destBuilder.append(destinatario.getDestinatariosmensajes()+";");
+				destBuilder.append(destinatario.getDestinatariosmensajes() + ";");
 			}
 			MensajeJMS mensajeJms = new MensajeJMS();
 			mensajeJms.setIdMensaje(idMensaje.toString());
@@ -795,9 +854,11 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			mensajeJms.setDestinatarioMensajeId(destBuilder.toString());
 			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
-			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
-			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
-			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid()
+					.toString());
+			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios()
+					.getServicioid());
+			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
 				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
@@ -814,12 +875,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			MensajeJMS mensajeJms = new MensajeJMS();
 			mensajeJms.setIdMensaje(idMensaje.toString());
 			mensajeJms.setIdExterno(tblMensaje.getCodigoexterno());
-			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
+			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid()
+					.toString());
 			mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
 			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
-			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
-			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios()
+					.getServicioid());
+			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
 				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
@@ -830,14 +893,15 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 	@Override
 	@Transactional
-	public synchronized Integer setEstadoMensaje(Long idMensaje, String estado, String descripcion, Boolean controlReintentos,
-			Long destinatarioMensajeId, String subEstadoCode, String usuario, Long proveedorId) {
+	public synchronized Integer setEstadoMensaje(Long idMensaje, String estado, String descripcion,
+			Boolean controlReintentos, Long destinatarioMensajeId, String subEstadoCode, String usuario,
+			Long proveedorId) {
 
 		Integer res = 1;
 		String uim = null;
 		Long servidorId = null;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-	
+
 		try {
 			if (null == proveedorId)
 				servidorId = queryExecutorServidores.obtenerServidorByIdMensaje(idMensaje);
@@ -847,16 +911,17 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			// Actualizamos la tabla mensaje
 
 			TblMensajes mensaje = tblMensajesDAO.get(idMensaje);
-			
-			if (ps.getMessage("constantes.TIPO_MENSAJE_SMS", null).equals(mensaje.getTipomensaje()) && null != descripcion && descripcion.contains("|") && descripcion.contains("OK"))
-				uim = descripcion.substring(descripcion.indexOf("|")+1).trim();
-			
+
+			if (ps.getMessage(TIPOMENSAJESMS, null).equals(mensaje.getTipomensaje()) && null != descripcion
+					&& descripcion.contains("|") && descripcion.contains("OK"))
+				uim = descripcion.substring(descripcion.indexOf("|") + 1).trim();
+
 			// aumentamos el numero de envios para todos los mensajes GISS y los
 			// demas cuando el estado siguiente es
 			// INCIDENCIA
 			if (ps.getMessage("constantes.ESTADO_INCIDENCIA", null).equals(estado)) {
 				mensaje.setNumeroenvios(mensaje.getNumeroenvios() + 1);
-			} else if (ps.getMessage("constantes.ESTADO_PENDIENTE", null).equals(estado)) {
+			} else if (ps.getMessage(ESTADOPENDIENTE, null).equals(estado)) {
 				mensaje.setNumeroenvios(0);
 			}
 			mensaje.setEstadoactual(estado);
@@ -865,9 +930,9 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			tblMensajesDAO.update(mensaje);
 
 			List<TblDestinatariosMensajes> destinatariosMensaje = new ArrayList<>();
-			if (null != destinatarioMensajeId){
+			if (null != destinatarioMensajeId) {
 				destinatariosMensaje.add(destinatariosMensajesManager.getDestinatarioMensaje(destinatarioMensajeId));
-			}else{
+			} else {
 				destinatariosMensaje = destinatariosMensajesManager.getDestinatarioMensajes(idMensaje);
 			}
 			if (mensaje.getTblLotesEnvios().getMultidestinatario()) {
@@ -878,21 +943,23 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 					destinatarioMensaje.setModificadopor(usuario);
 					destinatarioMensaje.setFechamodificacion(new Date());
 					destinatarioMensaje.setUltimoenvio(new Date());
-					if (uim != null){
+					if (uim != null) {
 						destinatarioMensaje.setUim(uim);
 					}
 					destinatariosMensajesManager.update(destinatarioMensaje);
 				}
 			}
 			sessionFactorySIMApp.getCurrentSession().flush();
-						
+
 			if (mensaje.getTblLotesEnvios().getMultidestinatario()) {
 				for (TblDestinatariosMensajes destinatarioMensaje : destinatariosMensaje) {
-					hitoricosManager.creaHistorico(idMensaje, destinatarioMensaje.getDestinatariosmensajes(), estadosManager.getEstadoByName(estado).getEstadoid(),
-							servidorId, descripcion, subEstadoCode, usuario);
+					hitoricosManager.creaHistorico(idMensaje, destinatarioMensaje.getDestinatariosmensajes(),
+							estadosManager.getEstadoByName(estado).getEstadoid(), servidorId, descripcion,
+							subEstadoCode, usuario);
 				}
 			} else {
-				hitoricosManager.creaHistorico(idMensaje, null, estadosManager.getEstadoByName(estado).getEstadoid(), servidorId, descripcion, subEstadoCode, usuario);
+				hitoricosManager.creaHistorico(idMensaje, null, estadosManager.getEstadoByName(estado).getEstadoid(),
+						servidorId, descripcion, subEstadoCode, usuario);
 			}
 
 		} catch (Exception e) {
@@ -906,19 +973,21 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	@Transactional
 	public TblMensajes getMensajeIDByUIM(String uim){
 		TblMensajes mensaje;
-		
-		try{
+
+		try {
 			TblDestinatariosMensajes dm = destinatariosMensajesManager.getDestinatarioMensajeByUim(uim);
-			if (null == dm){//no es multidestinatario
+			if (null == dm) {// no es multidestinatario
 				mensaje = getMensajeByUim(uim);
-			}else{
+			} else {
 				mensaje = tblMensajesDAO.get(dm.getMensajeid());
 			}
+
 			mensaje.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(mensaje.getTblLotesEnvios().getLoteenvioid()));
+
 		} catch (Exception e) {
 			LOG.debug("[TblMensajesManagerImpl] - Error en bbdd", e);
 			return null;
-		} 
+		}
 		return mensaje;
 	}
 
@@ -959,30 +1028,28 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		
 		return res;
 	}
-		
-	
+
 	@Override
 	public Boolean isMessageUser(List<String> usersId, Long mensajeId) {
-		if (tblMensajesDAO.get(mensajeId).getTblLotesEnvios().getMultidestinatario()){
-			return (!destinatariosMensajesManager.getDestinatarioMensajesUsuarios(mensajeId, usersId, null).isEmpty()) 
-					? true : false;
-		}else{
+		if (tblMensajesDAO.get(mensajeId).getTblLotesEnvios().getMultidestinatario()) {
+			return (!destinatariosMensajesManager.getDestinatarioMensajesUsuarios(mensajeId, usersId, null).isEmpty()) ? true
+					: false;
+		} else {
 			TblMensajesQuery queryM = new TblMensajesQuery();
 			queryM.setMensajeid(mensajeId);
-			for(String s : usersId) 
+			for (String s : usersId)
 				queryM.addUsuarioidIn(Long.parseLong(s));
 			return (!tblMensajesDAO.search(queryM).getResults().isEmpty()) ? true : false;
 		}
 	}
-	
-	@Override
-	public Integer setEstadoMensajeUsuarios(Map<Long, List<Long>> mapMensajesMult, String estadoInicial,
-			String estadoFinal, String usuarioPeticion) {
 
+	@Override
+	public synchronized Integer setEstadoMensajeUsuarios(Map<Long, List<Long>> mapMensajesMult, String estadoInicial,
+			String estadoFinal, String usuarioPeticion) {
 		Integer res = -1;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		try {
-			
+
 			for (Long mensajeId : mapMensajesMult.keySet()) {
 				Long servidorId = queryExecutorServidores.obtenerServidorByIdMensaje(mensajeId);
 				List<Long> listaDestinatarios = mapMensajesMult.get(mensajeId);
@@ -1016,39 +1083,39 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	public List<Aviso> getAvisosUsuario(String idDispositivo, String idPlataforma, String idServicio, String idUsuario,
 			String numPagina, String tamPagina, PropertiesServices ps) {
 		List<Long> listaUsuarios = new ArrayList<>();
-		
+
 		if (null != idUsuario)
-			listaUsuarios.add(usuariosPushManager.getDatosUsuario(idServicio, idPlataforma, idDispositivo, idUsuario, true).getUsuarioid());
+			listaUsuarios.add(usuariosPushManager.getDatosUsuario(idServicio, idPlataforma, idDispositivo, idUsuario,
+					true).getUsuarioid());
 		else
 			listaUsuarios = usuariosPushManager.getDatosUsuario(idServicio, idPlataforma, idDispositivo);
-		
-		String usuarios = listaUsuarios.toString().replace("[", "'").replace("]", "'")
-	            .replace(", ", "','");
-		
+
+		String usuarios = listaUsuarios.toString().replace("[", "'").replace("]", "'").replace(", ", "','");
+
 		return queryExecutorMensajes.getAvisosMensajeUsuario(usuarios, numPagina, tamPagina, ps);
 	}
 
 	@Override
 	public Boolean getMultidestinatarioByMensaje(Long mensajeId) {
 		return tblMensajesDAO.get(mensajeId).getTblLotesEnvios().getMultidestinatario();
-		
+
 	}
-	
+
 	@Override
 	public Map<Long, List<MensajeJMS>> getMensajesReenviar() {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
+		String estadoPend = ps.getMessage(ESTADOPENDIENTE, null);
 		List<Long> listaMensajes = queryExecutorMensajes.getMensajesPendientes();
 		Long canalMail = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
 		Map<Long, List<MensajeJMS>> map = new HashMap<>();
-		
+
 		for (Long mensajeId : listaMensajes) {
 			TblMensajes mensaje = tblMensajesDAO.get(mensajeId);
 			mensaje.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(mensaje.getTblLotesEnvios().getLoteenvioid()));
-			TblServicios servicio = serviciosManager.getServicio((mensaje.getTblLotesEnvios().getTblServicios()
-					.getServicioid()));
+			TblServicios servicio = serviciosManager.getServicio(mensaje.getTblLotesEnvios().getTblServicios()
+					.getServicioid());
 			List<TblDestinatariosMensajes> listaDestinatarios = destinatariosMensajesManager
-					.getDestinatarioMensajesPendientes(mensaje.getMensajeid(), estadoPendiente);
+					.getDestinatarioMensajesPendientes(mensaje.getMensajeid(), estadoPend);
 
 			if (!servicio.getTblCanales().getCanalid().equals(canalMail)) {
 				destinatariosStandart(map, mensaje, servicio, listaDestinatarios);
@@ -1065,6 +1132,23 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		return map;
 	}
 
+	@Override
+	public List<TblMensajes> getMensajesByQuery(TblMensajesQuery query) {
+		return tblMensajesDAO.search(query).getResults();
+	}
+	
+	@Override
+	public Integer countMensajesByQuery(TblMensajesQuery query) {
+		return tblMensajesDAO.count(query);
+	}
+	
+	
+	@Override
+	public TblServicios getServicioByMensaje(Long mensajeId) {
+		TblMensajes mensaje = tblMensajesDAO.get(mensajeId);
+		return mensaje.getTblLotesEnvios().getTblServicios();
+	}
+
 	private void destinatariosUnidos(Map<Long, List<MensajeJMS>> map, TblMensajes mensaje, TblServicios servicio,
 			List<TblDestinatariosMensajes> listaDestinatarios) {
 		StringBuilder mensajes = new StringBuilder();
@@ -1075,10 +1159,10 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		}
 		if (map.containsKey(servicio.getServicioid())) {
 			addNewMensajeJMSToArray(map, mensaje, servicio, mensajes.toString(), idExterno);
-			
+
 		} else {
 			addNewItemMap(map, mensaje, servicio, mensajes.toString(), idExterno);
-			
+
 		}
 	}
 
@@ -1086,7 +1170,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			List<TblDestinatariosMensajes> listaDestinatarios) {
 		for (TblDestinatariosMensajes dm : listaDestinatarios) {
 			if (map.containsKey(servicio.getServicioid())) {
-				addNewMensajeJMSToArray(map, mensaje, servicio, dm.getDestinatariosmensajes().toString(), dm.getCodigoexterno());
+				addNewMensajeJMSToArray(map, mensaje, servicio, dm.getDestinatariosmensajes().toString(),
+						dm.getCodigoexterno());
 			} else {
 				addNewItemMap(map, mensaje, servicio, dm.getDestinatariosmensajes().toString(), dm.getCodigoexterno());
 			}
@@ -1102,7 +1187,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		mensajeJms.setIdCanal(servicio.getTblCanales().getCanalid().toString());
 		mensajeJms.setServicio(servicio.getServicioid().toString());
 		mensajeJms.setIdLote(mensaje.getTblLotesEnvios().getLoteenvioid().toString());
-		
+
 		List<MensajeJMS> listado = new ArrayList<>();
 		listado.add(mensajeJms);
 		map.put(servicio.getServicioid(), listado);
@@ -1129,7 +1214,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		mensaje = tblMensajesDAO.searchUnique(q);
 		return mensaje;
 	}
-	
+
 	/**
 	 * @return the sessionFactorySIMApp
 	 */
@@ -1138,7 +1223,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param sessionFactorySIMApp the sessionFactorySIMApp to set
+	 * @param sessionFactorySIMApp
+	 *            the sessionFactorySIMApp to set
 	 */
 	public void setSessionFactorySIMApp(SessionFactory sessionFactorySIMApp) {
 		this.sessionFactorySIMApp = sessionFactorySIMApp;
@@ -1152,7 +1238,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param aplicacionesManager the aplicacionesManager to set
+	 * @param aplicacionesManager
+	 *            the aplicacionesManager to set
 	 */
 	public void setAplicacionesManager(TblAplicacionesManager aplicacionesManager) {
 		this.aplicacionesManager = aplicacionesManager;
@@ -1166,7 +1253,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param viewLotesManager the viewLotesManager to set
+	 * @param viewLotesManager
+	 *            the viewLotesManager to set
 	 */
 	public void setViewLotesManager(ViewLotesEnviosDetalladaManager viewLotesManager) {
 		this.viewLotesManager = viewLotesManager;
@@ -1180,7 +1268,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param auditoriaManager the auditoriaManager to set
+	 * @param auditoriaManager
+	 *            the auditoriaManager to set
 	 */
 	public void setAuditoriaManager(TblAuditoriaManager auditoriaManager) {
 		this.auditoriaManager = auditoriaManager;
@@ -1194,7 +1283,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param hitoricosManager the hitoricosManager to set
+	 * @param hitoricosManager
+	 *            the hitoricosManager to set
 	 */
 	public void setHitoricosManager(TblHistoricosManager hitoricosManager) {
 		this.hitoricosManager = hitoricosManager;
@@ -1208,7 +1298,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param viewUsiariosPushManager the viewUsiariosPushManager to set
+	 * @param viewUsiariosPushManager
+	 *            the viewUsiariosPushManager to set
 	 */
 	public void setViewUsiariosPushManager(ViewUsuariosPushManager viewUsiariosPushManager) {
 		this.viewUsiariosPushManager = viewUsiariosPushManager;
@@ -1222,7 +1313,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param lotesEnviosManager the lotesEnviosManager to set
+	 * @param lotesEnviosManager
+	 *            the lotesEnviosManager to set
 	 */
 	public void setLotesEnviosManager(TblLotesEnviosManager lotesEnviosManager) {
 		this.lotesEnviosManager = lotesEnviosManager;
@@ -1236,7 +1328,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param estadosManager the estadosManager to set
+	 * @param estadosManager
+	 *            the estadosManager to set
 	 */
 	public void setEstadosManager(TblEstadosManager estadosManager) {
 		this.estadosManager = estadosManager;
@@ -1250,7 +1343,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param destinatariosMensajesManager the destinatariosMensajesManager to set
+	 * @param destinatariosMensajesManager
+	 *            the destinatariosMensajesManager to set
 	 */
 	public void setDestinatariosMensajesManager(TblDestinatariosMensajesManager destinatariosMensajesManager) {
 		this.destinatariosMensajesManager = destinatariosMensajesManager;
@@ -1264,7 +1358,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param usuariosPushManager the usuariosPushManager to set
+	 * @param usuariosPushManager
+	 *            the usuariosPushManager to set
 	 */
 	public void setUsuariosPushManager(TblUsuariosPushManager usuariosPushManager) {
 		this.usuariosPushManager = usuariosPushManager;
@@ -1278,7 +1373,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param queryExecutorServidores the queryExecutorServidores to set
+	 * @param queryExecutorServidores
+	 *            the queryExecutorServidores to set
 	 */
 	public void setQueryExecutorServidores(QueryExecutorServidores queryExecutorServidores) {
 		this.queryExecutorServidores = queryExecutorServidores;
@@ -1292,7 +1388,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param queryExecutorLotesEnvios the queryExecutorLotesEnvios to set
+	 * @param queryExecutorLotesEnvios
+	 *            the queryExecutorLotesEnvios to set
 	 */
 	public void setQueryExecutorLotesEnvios(QueryExecutorLotesEnvios queryExecutorLotesEnvios) {
 		this.queryExecutorLotesEnvios = queryExecutorLotesEnvios;
@@ -1306,7 +1403,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param queryExecutorMensajes the queryExecutorMensajes to set
+	 * @param queryExecutorMensajes
+	 *            the queryExecutorMensajes to set
 	 */
 	public void setQueryExecutorMensajes(QueryExecutorMensajes queryExecutorMensajes) {
 		this.queryExecutorMensajes = queryExecutorMensajes;
@@ -1320,7 +1418,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param tblMensajesDAO the tblMensajesDAO to set
+	 * @param tblMensajesDAO
+	 *            the tblMensajesDAO to set
 	 */
 	public void setTblMensajesDAO(TblMensajesDAO tblMensajesDAO) {
 		this.tblMensajesDAO = tblMensajesDAO;
@@ -1334,7 +1433,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param serviciosManager the serviciosManager to set
+	 * @param serviciosManager
+	 *            the serviciosManager to set
 	 */
 	public void setServiciosManager(TblServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
@@ -1348,7 +1448,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param reloadableResourceBundleMessageSource the reloadableResourceBundleMessageSource to set
+	 * @param reloadableResourceBundleMessageSource
+	 *            the reloadableResourceBundleMessageSource to set
 	 */
 	public void setReloadableResourceBundleMessageSource(
 			ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource) {
@@ -1363,7 +1464,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param sender the sender to set
+	 * @param sender
+	 *            the sender to set
 	 */
 	public void setSender(SIMMessageSender sender) {
 		this.sender = sender;
@@ -1377,10 +1479,15 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	/**
-	 * @param query the query to set
+	 * @param query
+	 *            the query to set
 	 */
 	public void setQuery(ViewLotesEnviosDetalladaQuery query) {
 		this.query = query;
 	}
+
 	
+
+	
+
 }

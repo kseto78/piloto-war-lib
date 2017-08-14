@@ -161,6 +161,9 @@ public class TblServicios implements java.io.Serializable {
 
 	@Column(name = "REINTENTOSCONSULTAESTADO", precision = 22, scale = 0)
 	private Integer reintentosConsultaEStado;
+	
+	@Column(name = "CADUCIDAD", precision = 22, scale = 0)
+	private Integer caducidad;	
 
 
 	public TblServicios() {
@@ -839,4 +842,12 @@ public class TblServicios implements java.io.Serializable {
 		this.reintentosConsultaEStado = reintentosConsultaEStado;
 	}
 
+	public Integer getCaducidad() {
+		return caducidad;
+	}
+
+	public void setCaducidad(Integer caducidad) {
+		this.caducidad = caducidad;
+	}
+	
 }

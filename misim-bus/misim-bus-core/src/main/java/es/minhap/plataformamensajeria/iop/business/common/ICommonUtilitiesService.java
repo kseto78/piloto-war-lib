@@ -47,6 +47,7 @@ public interface ICommonUtilitiesService {
 	 * @param data
 	 * @param soapAction
 	 * @param receptQueue TODO
+	 * @param idMensaje 
 	 * @return
 	 * @throws PlataformaBusinessException
 	 * @throws ParserConfigurationException
@@ -56,7 +57,7 @@ public interface ICommonUtilitiesService {
 	 * @throws MuleException
 	 * @throws Exception
 	 */
-	public String sendMessage(Object data, String soapAction, String receptQueue) throws PlataformaBusinessException,
+	public String sendMessage(Object data, String soapAction, String receptQueue, Long idMensaje) throws PlataformaBusinessException,
 	ParserConfigurationException, SAXException, IOException, UnsupportedEncodingException, MuleException, Exception;
 	
 	/**

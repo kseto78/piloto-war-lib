@@ -13,6 +13,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 
+import es.map.sim.jms.sender.SIMMessageSender;
+import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Atributos;
@@ -106,8 +108,8 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-//	@Resource(name = "messageSender")
-//	private SIMMessageSender sender;
+	@Resource(name = "messageSender")
+	private SIMMessageSender sender;
 
 	/**
 	 * 
@@ -120,6 +122,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
 		Integer idLote = null;
 		Integer idMensaje = null;
 		Long estadoId;
@@ -176,7 +179,9 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 					
 					hitoricosManager.creaHistoricoPremium(idMensaje.longValue(), destinatario.getDestinatariosmensajes(),
 							estadoId, username);
-//					encolarMensaje(envio, username, ps, idLote, idMensaje, serv, destinatario);
+					if ("S".equals(utilizarActiveMq)){
+							encolarMensaje(envio, username, ps, idLote, idMensaje, serv, destinatario);
+					}
 				}
 				resp = codificarRespuesta(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.generales.STATUS_OK", null),
@@ -196,7 +201,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			try {
 				return respFault.toXMLSMS(respFault);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error("EnvioPremiumGISSImpl.enviarSMSGISS --Error ActiveMq--", e);
+				LOG.error("EnvioPremiumGISSImpl.enviarSMSGISS --Error ActiveMq--", e1);
 			}
 		} catch (Exception e) {
 			LOG.error("Se ha producido un error", e);
@@ -206,7 +211,7 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			try {
 				return respFault.toXMLSMS(respFault);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error("Se ha producido un error", e);
+				LOG.error("Se ha producido un error", e1);
 			}
 		}
 		return "";
@@ -228,25 +233,29 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		return resp;
 	}
 
-//	private void encolarMensaje(EnvioGISSXMLBean envio, String username, PropertiesServices ps, Integer idLote,
-//			Integer idMensaje, TblServicios serv, TblDestinatariosMensajes destinatario) {
-//		MensajeJMS mensajeJms = new MensajeJMS();
-//		mensajeJms.setIdMensaje(idMensaje.toString());
-//		mensajeJms.setIdExterno(envio.getIdExterno());
-//		mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
-//		mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
-//		mensajeJms.setIdLote(idLote.toString());
-//		mensajeJms.setUsuarioAplicacion(username);
-//		Long maxRetries;
-//
-//		
-//		if (serv.getNumeroMaxReenvios() != null && serv.getNumeroMaxReenvios() > 0) {
-//			maxRetries = serv.getNumeroMaxReenvios().longValue();
-//		} else {
-//			maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
-//		}
-//		sender.send(mensajeJms, maxRetries, serv.getServicioid().toString(), true);
-//	}
+	private void encolarMensaje(EnvioGISSXMLBean envio, String username, PropertiesServices ps, Integer idLote,
+			Integer idMensaje, TblServicios serv, TblDestinatariosMensajes destinatario) {
+		MensajeJMS mensajeJms = new MensajeJMS();
+		mensajeJms.setIdMensaje(idMensaje.toString());
+		mensajeJms.setIdExterno(envio.getIdExterno());
+		mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_SMS", null));
+		mensajeJms.setDestinatarioMensajeId(destinatario.getDestinatariosmensajes().toString());
+		mensajeJms.setIdLote(idLote.toString());
+		mensajeJms.setUsuarioAplicacion(username);
+		
+		if(serv.getCaducidad() !=null && serv.getCaducidad() > 0){
+			mensajeJms.setCaducidad(serv.getCaducidad().toString());
+		}
+		
+		Long maxRetries;
+		
+		if (serv.getNumeroMaxReenvios() != null && serv.getNumeroMaxReenvios() >= 0) {
+			maxRetries = serv.getNumeroMaxReenvios().longValue();
+		} else {
+			maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+		}
+		sender.send(mensajeJms, maxRetries, serv.getServicioid().toString(), true);
+	}
 
 	private Respuesta comprobarOrgSerApl(Integer servicio, EnvioGISSXMLBean envio, PropertiesServices ps) {
 		Respuesta resp = null;

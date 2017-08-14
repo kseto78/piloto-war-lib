@@ -2,7 +2,6 @@ package es.minhap.sim.model;
 
 // Generated 18-jul-2016 10:57:14 by Hibernate Tools 3.4.0.CR1
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -24,38 +23,39 @@ public class TblAdjuntos implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -2009977707514782192L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ADJUNTOID_SEC")
-    @SequenceGenerator(name="ADJUNTOID_SEC", sequenceName="ADJUNTOID_SEC", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADJUNTOID_SEC")
+	@SequenceGenerator(name = "ADJUNTOID_SEC", sequenceName = "ADJUNTOID_SEC", allocationSize = 1)
 	@Column(name = "ADJUNTOID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long adjuntoid;
-	
+
 	@Column(name = "NOMBRE", length = 100)
 	private String nombre;
-	
+
 	@Column(name = "FECHACREACION", length = 7)
 	private Date fechacreacion;
-	
+
 	@Column(name = "CREADOPOR", length = 100)
 	private String creadopor;
-	
+
 	@Column(name = "FECHAMODIFICACION", length = 7)
 	private Date fechamodificacion;
-	
+
 	@Column(name = "MODIFICADOPOR", length = 100)
 	private String modificadopor;
-	
+
 	@Column(name = "CONTENIDO")
 	private byte[] contenido;
-	
+
 	@Column(name = "IMAGEN", precision = 22, scale = 0)
 	private Long imagen;
-	
-	
+
+	@Column(name = "CONTENIDOFILE")
+	private String contenidofile;
+
 	public TblAdjuntos() {
 	}
-
 
 	/**
 	 * @return the adjuntoid
@@ -65,7 +65,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param adjuntoid the adjuntoid to set
+	 * @param adjuntoid
+	 *            the adjuntoid to set
 	 */
 	public void setAdjuntoid(Long adjuntoid) {
 		this.adjuntoid = adjuntoid;
@@ -79,7 +80,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -93,7 +95,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param fechacreacion the fechacreacion to set
+	 * @param fechacreacion
+	 *            the fechacreacion to set
 	 */
 	public void setFechacreacion(Date fechacreacion) {
 		this.fechacreacion = fechacreacion;
@@ -107,7 +110,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param creadopor the creadopor to set
+	 * @param creadopor
+	 *            the creadopor to set
 	 */
 	public void setCreadopor(String creadopor) {
 		this.creadopor = creadopor;
@@ -121,7 +125,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param fechamodificacion the fechamodificacion to set
+	 * @param fechamodificacion
+	 *            the fechamodificacion to set
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
@@ -135,12 +140,14 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param modificadopor the modificadopor to set
+	 * @param modificadopor
+	 *            the modificadopor to set
 	 */
 	public void setModificadopor(String modificadopor) {
 		this.modificadopor = modificadopor;
 	}
 
+	
 	/**
 	 * @return the contenido
 	 */
@@ -149,7 +156,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param contenido the contenido to set
+	 * @param contenido
+	 *            the contenido to set
 	 */
 	public void setContenido(byte[] contenido) {
 		this.contenido = contenido;
@@ -163,7 +171,8 @@ public class TblAdjuntos implements java.io.Serializable {
 	}
 
 	/**
-	 * @param imagen the imagen to set
+	 * @param imagen
+	 *            the imagen to set
 	 */
 	public void setImagen(Long imagen) {
 		this.imagen = imagen;
@@ -176,5 +185,19 @@ public class TblAdjuntos implements java.io.Serializable {
 		return serialVersionUID;
 	}
 
-	
+	/**
+	 * @return the contenidofile
+	 */
+	public String getContenidofile() {
+		return contenidofile;
+	}
+
+	/**
+	 * @param contenidofile
+	 *            the contenidofile to set
+	 */
+	public void setContenidofile(String contenidofile) {
+		this.contenidofile = contenidofile;
+	}
+
 }

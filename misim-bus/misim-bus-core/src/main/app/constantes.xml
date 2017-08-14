@@ -158,6 +158,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		<spring:bean id="XML_FAULT" class="java.lang.String">
 			<spring:constructor-arg value="xmlFault" />
 		</spring:bean>
+		<spring:bean id="PETICION_HTTP" class="java.lang.String">
+			<spring:constructor-arg value="peticionHTTP" />
+		</spring:bean>
 		
 		<!-- SOAP Message -->
 		<spring:bean id="SOAP_MESSAGE" class="java.lang.String">
@@ -173,6 +176,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		</spring:bean>
 		<spring:bean id="PUSH" class="java.lang.String">
 			<spring:constructor-arg value="${comunicacion.push}" />
+		</spring:bean>
+		<spring:bean id="RPC" class="java.lang.String">
+			<spring:constructor-arg value="${comunicacion.rcp}" />
 		</spring:bean>
 		
 		<!-- Tipo de petición -->

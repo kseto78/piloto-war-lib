@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.minhap.sim</groupId>
 	<artifactId>JMSComponent</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.2.1.RELEASE</spring.version>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-spring</artifactId>
-			<version>5.10.0</version>
+			<version>5.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

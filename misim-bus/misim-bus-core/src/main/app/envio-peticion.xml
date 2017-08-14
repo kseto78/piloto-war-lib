@@ -31,7 +31,8 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<spring:bean id="updateAuditFault" name="updateAuditFault" class="es.minhap.misim.components.ActualizarAuditoriaFault"/>
 		
 		<spring:bean id="invocarEmisor" name="invocarEmisor" class="es.minhap.misim.components.InvocarEmisor"/>
-		<spring:bean id="invocarEmisorHTTP" name="invocarEmisorHTTP" class="es.minhap.misim.components.InvocarEmisorHTTP"/>
+		<spring:bean id="invocarEmisorHTTP" name="invocarEmisorHTTP" class="es.minhap.misim.components.InvocarEmisorHTTP2"/>
+		<spring:bean id="invocarEmisorRPC" name="invocarEmisorRPC" class="es.minhap.misim.components.InvocarEmisorRPC"/>
 		<spring:bean id="invocarEmisorPush" name="invocarEmisorPush" class="es.minhap.misim.components.InvocarEmisorPush"/>
 		
 		<spring:bean id="gestionErrores" name="gestionErrores" class="es.minhap.misim.components.GestionErroresEnvioSMS"/>
@@ -79,6 +80,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<!-- LOGGER PROVEEDOR -->
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - PROVEEDOR #[message.outboundProperties['${ID_PROVEEDOR}']]" />
 
+	<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - COMUNICACION #[message.outboundProperties['${ID_COMUNICACION}']]" />
 		<!-- ENCRIPTACION -->
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Encriptacion para la auditoria" />
 		<processor-chain doc:name="Processor Chain">
@@ -146,6 +148,14 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion HTTP" />
 					<component	doc:name="Invocar via HTTP" >
 						<spring-object bean="invocarEmisorHTTP" />
+					</component>
+				</processor-chain>
+			</when>
+			<when expression="#[message.outboundProperties['${ID_COMUNICACION}'] == '${RPC}']">
+				<processor-chain doc:name="Processor Chain">
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion RPC" />
+					<component	doc:name="Invocar via RPC" >
+						<spring-object bean="invocarEmisorRPC" />
 					</component>
 				</processor-chain>
 			</when>

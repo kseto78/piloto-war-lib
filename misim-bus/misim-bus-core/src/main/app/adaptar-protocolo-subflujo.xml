@@ -10,19 +10,41 @@
 	<sub-flow name="FLW-MSG-ADP" doc:name="FLW-MSG-ADP">
 		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - Adaptar protocol] Inicio del flujo FLW-MSG-ADP - Payload: #[payload]" />
 		
-		<processor-chain doc:name="Processor Chain">
-			<set-variable value="#[payload]" variableName="${PETICION_BACKUP}" doc:name="Backup del payload" />
-			
-			<set-payload
-				value="#[groovy:es.minhap.misim.tranformers.XSLTransformer.process(payload.soapMessage, flowVars['${XSL_SHEET}'])]"
-				doc:name="Transformación del mensaje XML a DOM" />
-			<expression-component doc:name="Inyección del nuevo DOM al SOAPPayload original">
-				<![CDATA[flowVars['${PETICION_BACKUP}'].soapMessage = payload]]>
-			</expression-component>
-			<set-payload value="#[flowVars['${PETICION_BACKUP}']]" doc:name="Recarga del payload actualizado" />
+		<choice doc:name="Adaptar la peticion"> 
+			<when expression="#[message.outboundProperties['${ID_COMUNICACION}'] == '${HTTP}']">
+				<processor-chain doc:name="Processor Chain">
+				<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion HTTP" />
+				<set-variable value="#[payload]" variableName="${XML_PETICION}" doc:name="Backup del payload" />
 				
-		</processor-chain>
-
+				<set-payload
+					value="#[groovy:es.minhap.misim.tranformers.XSLTransformer.process(payload.soapMessage, flowVars['${XSL_SHEET}'])]"
+					doc:name="Transformación del mensaje XML a DOM" />
+				<expression-component doc:name="Inyección del nuevo DOM al SOAPPayload original">
+					<![CDATA[flowVars['${XML_PETICION}'].soapMessage = payload]]>
+				</expression-component>
+				<set-payload value="#[flowVars['${XML_PETICION}']]" doc:name="Recarga del payload actualizado" />
+					
+				</processor-chain>
+			</when>
+			
+			
+			
+			<otherwise>
+				<processor-chain doc:name="Processor Chain">
+				<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion OTROCASO" />
+				<set-variable value="#[payload]" variableName="${PETICION_BACKUP}" doc:name="Backup del payload" />
+				
+				<set-payload
+					value="#[groovy:es.minhap.misim.tranformers.XSLTransformer.process(payload.soapMessage, flowVars['${XSL_SHEET}'])]"
+					doc:name="Transformación del mensaje XML a DOM" />
+				<expression-component doc:name="Inyección del nuevo DOM al SOAPPayload original">
+					<![CDATA[flowVars['${PETICION_BACKUP}'].soapMessage = payload]]>
+				</expression-component>
+				<set-payload value="#[flowVars['${PETICION_BACKUP}']]" doc:name="Recarga del payload actualizado" />
+					
+				</processor-chain>
+			</otherwise>
+</choice>
 		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - Adaptar protocol] Fin del flujo FLW-MSG-ADP - Payload: #[payload]" />
 	</sub-flow>
 </mule>

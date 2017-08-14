@@ -98,7 +98,7 @@ public class ActualizarAuditoria implements Callable {
 			}
 			
 			peticion.setEstado(estado);
-			peticion.setMensajeRespuesta(xmlRespuesta);
+			peticion.setMensajeRespuesta(xmlRespuesta.replace("&lt;", "<").replace("&gt;", ">"));
 			
 			if(!peticionManager.updatePeticion(peticion)){
 				// Lanzar error

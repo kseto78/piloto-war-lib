@@ -1,5 +1,8 @@
 package es.minhap.plataformamensajeria.iop.business;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.business.common.ICommonUtilitiesService;
 import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
 import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.sim.model.TblMensajes;
 
 /**
@@ -42,6 +46,9 @@ public class SIMMessageDispatcher {
 	
 	@Resource(name = "TblHistoricosManagerImpl")
 	private TblHistoricosManager tblHistoricosManager;
+	
+	@Resource(name = "TblMensajesManagerImpl")
+	private TblMensajesManager mensajesManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
@@ -88,8 +95,26 @@ public class SIMMessageDispatcher {
 				LOG.info("El mensaje " + msg.getIdMensaje() + " con destinatario: " + msg.getDestinatarioMensajeId() + " ya ha sido enviado anteriormente");
 			}
 
+			//comprobamos si el mensaje esta vigente y no caducado.
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(mensaje.getFechacreacion());
+			
+			if(msg.getCaducidad()!= null){
+				calendar.add(Calendar.MINUTE, Integer.valueOf(msg.getCaducidad()));
+			}
+			
+			Date fechaCaducidad = calendar.getTime();
+			Boolean vigente = true;
+			
+			if(msg.getCaducidad() != null && Integer.valueOf(msg.getCaducidad()) > 0 && fechaCaducidad.compareTo(new Date()) < 0){
+					mensajesManager.setEstadoMensaje(Long.valueOf(msg.getIdMensaje()), 
+							ps.getMessage("constantes.ESTADO_ANULADO", null), "SMS_ID: " + msg.getIdMensaje()
+									+ ". Error: El mensaje ha caducado", false, Long.valueOf(msg.getDestinatarioMensajeId()), null, ps.getMessage("constantes.usuarioActiveMQ", null), null);
+					vigente = false;
+			}
+			
 			if (mensaje.getEstadoactual() != null && !mensaje.getEstadoactual().equals(ps.getMessage("constantes.ESTADO_ANULADO", null)) 
-					&& !yaEnviado) {
+					&& !yaEnviado && vigente) {
 				switch (canal) {
 				case 1:
 					getSendMessageService().postMail(mensajeId, msg.getDestinatarioMensajeId());

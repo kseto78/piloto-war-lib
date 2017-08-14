@@ -40,14 +40,13 @@ public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPu
 	
 	private static final Logger LOG = LoggerFactory.getLogger(GestionNotificacionesPushAppImpl.class);
 
-	public static String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
-	public static String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
-	public static String ERROR_PARAMETROS = "Error en Parametros de entrada";
+	public static final String ERROR_AUTENTIFICACION = "Error en Autentificacion - La clave no se corresponde con ninguna aplicacion";
+	public static final String ERROR_REQUESTTIMEOUT = "Error en Peticion - La peticion se ha caducado";
+	public static final String ERROR_PARAMETROS = "Error en Parametros de entrada";
 
 	public static final String RECEPT_QUEUE = "vm://gestion-notificaciones-push";
 	public static final String SOAP_ACTION = "notificacionEstado";
 
-	private StringTokenizer tokenizer = null;
 	private String username = null;
 	private String password = null;
 
@@ -62,6 +61,8 @@ public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPu
 		RespuestaNotificacionesPush respuesta = new RespuestaNotificacionesPush();
 		String decoded;
 		try {
+			
+			StringTokenizer tokenizer = null;
 			
 			// Get the Authorisation Header from Request
 			String header = request.getHeader("authorization");
@@ -170,15 +171,14 @@ public class GestionNotificacionesPushAppImpl implements GestionNotificacionesPu
 			respuesta.setStatus(response);
 		}
 
-		String respuestaJson = this.getJsonResponse(respuesta);
+		return this.getJsonResponse(respuesta);
 
-		return respuestaJson;
 	}
 
 	public String getJsonResponse(Object conResponse) {
 		Gson gson = new Gson();
 
-		String result = gson.toJson(conResponse);
-		return result;
+		return gson.toJson(conResponse);
+		
 	}
 }

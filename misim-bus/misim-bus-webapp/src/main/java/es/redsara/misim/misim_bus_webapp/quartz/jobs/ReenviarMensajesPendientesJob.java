@@ -147,7 +147,7 @@ public class ReenviarMensajesPendientesJob {
 
 	private void encolarMensaje(PropertiesServices ps, Long servicioId, TblServicios servicio, MensajeJMS mensajeJMS) {
 		Long maxRetries = null;
-		if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+		if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 			maxRetries = servicio.getNumeroMaxReenvios().longValue();
 		} else {
 			maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));

@@ -2,6 +2,8 @@ package es.minhap.plataformamensajeria.iop.managerimpl;
 
 import java.util.Date;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,17 +16,19 @@ import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewMensajeAdjuntosDetalladaManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewMensajesDetalladaManager;
 import es.minhap.plataformamensajeria.iop.util.MensajesAuditoria;
+import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.dao.TblAdjuntosDAO;
 import es.minhap.sim.model.TblAdjuntos;
 import es.minhap.sim.model.TblMensajesAdjuntos;
+import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.query.ViewMensajeAdjuntosDetalladaQuery;
 import es.minhap.sim.query.ViewMensajesDetalladaQuery;
 
 /**
  * 
  * @author everis
- *
+ * 
  */
 @Service("TblAdjuntosManagerImpl")
 public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
@@ -46,6 +50,9 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 
 	@Autowired
 	private ViewMensajeAdjuntosDetalladaManager viewMensajeAdjuntosDetalladaDAO;
+	
+	@Resource(name="UtilCreateFile")
+	private UtilCreateFile utilFile;
 
 	/**
 	 * @see es.minhap.TblLotesEnviosManager.insertarLote
@@ -68,11 +75,14 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		TblAdjuntos adjunto = new TblAdjuntos();
 		adjunto.setNombre(nombre);
 		adjunto.setImagen(0L);
-		adjunto.setContenido(contenido);
 		adjunto.setFechacreacion(new Date());
 		adjunto.setCreadopor(usuario);
 
 		Long adjuntoId = getAdjuntosDAO().insert(adjunto);
+		
+		////guardamos el fichero
+		TblServicios servicio = mensajesManager.getServicioByMensaje(mensajeId);
+		adjunto.setContenidofile(utilFile.createFileAdjunto(adjuntoId, contenido, servicio.getServicioid(), servicio.getConservacion(), adjunto.getFechacreacion()));
 
 		if (null == adjuntoId) {
 			auditarMensaje(null, mensajeId, usuario, password, MensajesAuditoria.ERROR_BBDD,
@@ -94,8 +104,6 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return adjuntoId.intValue();
 
 	}
-
-	
 
 	@Override
 	@Transactional
@@ -120,7 +128,7 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 					MensajesAuditoria.OPERACION_ASOCIAR_ANEXO, MensajesAuditoria.COD_ERROR_2);
 			return MensajesAuditoria.COD_ERROR_2.intValue();
 		}
-		
+
 		// ASOCIAR ANEXO AL EMAIL EN LA TABLA "TBL_EMAILSADJUNTOS"
 		Long mensajesAdjuntosId = insertarTablaMensajesAdjuntos(mensajeId, idAdjunto);
 
@@ -134,6 +142,17 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 				MensajesAuditoria.OPERACION_ASOCIAR_ANEXO, null);
 
 		return res;
+	}
+	
+	@Override
+	public TblAdjuntos getAdjuntoById(Long adjuntoid) {
+		return adjuntosDAO.get(adjuntoid);
+	}
+
+	@Override
+	public void update(TblAdjuntos adjunto) {
+		adjuntosDAO.update(adjunto);
+		
 	}
 	
 	/**
@@ -178,7 +197,6 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		query.setUsuario(usuario);
 		query.setPassword(Utils.encode64(password));
 		query.setMensajeid(mensajeId);
-		
 
 		return getViewMensajesDetalladaDAO().countViewMensajeDetallada(query);
 	}
@@ -190,8 +208,6 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		getAuditoriaManager().insertarAuditoria(auditoria);
 	}
 
-
-
 	/**
 	 * @return the adjuntosDAO
 	 */
@@ -199,16 +215,13 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return adjuntosDAO;
 	}
 
-
-
 	/**
-	 * @param adjuntosDAO the adjuntosDAO to set
+	 * @param adjuntosDAO
+	 *            the adjuntosDAO to set
 	 */
 	public void setAdjuntosDAO(TblAdjuntosDAO adjuntosDAO) {
 		this.adjuntosDAO = adjuntosDAO;
 	}
-
-
 
 	/**
 	 * @return the viewMensajesDetalladaDAO
@@ -217,16 +230,13 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return viewMensajesDetalladaDAO;
 	}
 
-
-
 	/**
-	 * @param viewMensajesDetalladaDAO the viewMensajesDetalladaDAO to set
+	 * @param viewMensajesDetalladaDAO
+	 *            the viewMensajesDetalladaDAO to set
 	 */
 	public void setViewMensajesDetalladaDAO(ViewMensajesDetalladaManager viewMensajesDetalladaDAO) {
 		this.viewMensajesDetalladaDAO = viewMensajesDetalladaDAO;
 	}
-
-
 
 	/**
 	 * @return the auditoriaManager
@@ -235,16 +245,13 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return auditoriaManager;
 	}
 
-
-
 	/**
-	 * @param auditoriaManager the auditoriaManager to set
+	 * @param auditoriaManager
+	 *            the auditoriaManager to set
 	 */
 	public void setAuditoriaManager(TblAuditoriaManager auditoriaManager) {
 		this.auditoriaManager = auditoriaManager;
 	}
-
-
 
 	/**
 	 * @return the mensajesAdjuntosManager
@@ -253,16 +260,13 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return mensajesAdjuntosManager;
 	}
 
-
-
 	/**
-	 * @param mensajesAdjuntosManager the mensajesAdjuntosManager to set
+	 * @param mensajesAdjuntosManager
+	 *            the mensajesAdjuntosManager to set
 	 */
 	public void setMensajesAdjuntosManager(TblMensajesAdjuntosManager mensajesAdjuntosManager) {
 		this.mensajesAdjuntosManager = mensajesAdjuntosManager;
 	}
-
-
 
 	/**
 	 * @return the mensajesManager
@@ -271,16 +275,13 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return mensajesManager;
 	}
 
-
-
 	/**
-	 * @param mensajesManager the mensajesManager to set
+	 * @param mensajesManager
+	 *            the mensajesManager to set
 	 */
 	public void setMensajesManager(TblMensajesManager mensajesManager) {
 		this.mensajesManager = mensajesManager;
 	}
-
-
 
 	/**
 	 * @return the viewMensajeAdjuntosDetalladaDAO
@@ -289,13 +290,16 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		return viewMensajeAdjuntosDetalladaDAO;
 	}
 
-
-
 	/**
-	 * @param viewMensajeAdjuntosDetalladaDAO the viewMensajeAdjuntosDetalladaDAO to set
+	 * @param viewMensajeAdjuntosDetalladaDAO
+	 *            the viewMensajeAdjuntosDetalladaDAO to set
 	 */
 	public void setViewMensajeAdjuntosDetalladaDAO(ViewMensajeAdjuntosDetalladaManager viewMensajeAdjuntosDetalladaDAO) {
 		this.viewMensajeAdjuntosDetalladaDAO = viewMensajeAdjuntosDetalladaDAO;
 	}
+
+	
+
+	
 
 }

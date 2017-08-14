@@ -32,9 +32,7 @@ public class TblMensajesHist implements java.io.Serializable {
 	@JoinColumn(name = "ESTADOID")
 	private TblEstados tblEstados;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "LOTEENVIOID", nullable = false)
-	private TblLotesEnviosHist tblLotesEnviosHist;
+	private Long loteenvioid;
 
 	@Column(name = "CODIGOEXTERNO", length = 100)
 	private String codigoexterno;
@@ -66,8 +64,8 @@ public class TblMensajesHist implements java.io.Serializable {
 	@Column(name = "ULTIMOIDHISTORICO", precision = 22, scale = 0)
 	private Long ultimoidhistorico;
 
-	@Column(name = "CUERPO")
-	private String cuerpo;
+	@Column(name = "CUERPO_CLOB")
+	private String cuerpo_clob;
 
 	@Column(name = "TIPOCUERPO", length = 10)
 	private String tipocuerpo;
@@ -114,6 +112,12 @@ public class TblMensajesHist implements java.io.Serializable {
 	@Column(name = "SONIDO", length = 100)
 	private String sonido;
 
+	@Column(name = "CUERPO", length = 1000)
+	private String cuerpo;
+
+	@Column(name = "CUERPOFILE")
+	private String cuerpofile;
+
 	public TblMensajesHist() {
 	}
 
@@ -148,18 +152,18 @@ public class TblMensajesHist implements java.io.Serializable {
 	}
 
 	/**
-	 * @return the tblLotesEnviosHist
+	 * @return the loteenvioid
 	 */
-	public TblLotesEnviosHist getTblLotesEnviosHist() {
-		return tblLotesEnviosHist;
+	public Long getLoteenvioid() {
+		return loteenvioid;
 	}
 
 	/**
-	 * @param tblLotesEnviosHist
-	 *            the tblLotesEnviosHist to set
+	 * @param loteenvioid
+	 *            the loteenvioid to set
 	 */
-	public void setTblLotesEnviosHist(TblLotesEnviosHist tblLotesEnviosHist) {
-		this.tblLotesEnviosHist = tblLotesEnviosHist;
+	public void setLoteenvioid(Long loteenvioid) {
+		this.loteenvioid = loteenvioid;
 	}
 
 	/**
@@ -550,6 +554,36 @@ public class TblMensajesHist implements java.io.Serializable {
 	 */
 	public void setSonido(String sonido) {
 		this.sonido = sonido;
+	}
+
+	/**
+	 * @return the cuerpo_clob
+	 */
+	public String getCuerpo_clob() {
+		return cuerpo_clob;
+	}
+
+	/**
+	 * @param cuerpo_clob
+	 *            the cuerpo_clob to set
+	 */
+	public void setCuerpo_clob(String cuerpo_clob) {
+		this.cuerpo_clob = cuerpo_clob;
+	}
+
+	/**
+	 * @return the cuerpofile
+	 */
+	public String getCuerpofile() {
+		return cuerpofile;
+	}
+
+	/**
+	 * @param cuerpofile
+	 *            the cuerpofile to set
+	 */
+	public void setCuerpofile(String cuerpofile) {
+		this.cuerpofile = cuerpofile;
 	}
 
 }

@@ -146,6 +146,12 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 		// obtenemos el UIM
 		uim = tblDestinatariosMensajesManager.getUim(smsData.destinatarioMensajeId);
 
+		
+		//Se fuerza el delay de consulta de estado a traves de propiedades en ms.
+		long refreshStatusDelay = Long.valueOf(ps.getMessage("constantes.consultaEstado.refreshStatusDelay", null, "0"));
+		Thread.sleep(refreshStatusDelay);
+		
+		
 		if ("S".equals(ejecutarTodosServidores)) {
 			sendOK = consultaTodosProveedores(mensajeId, mapServicios, uim, smsData, numServidores, loteId, aplicacionPremium);
 
@@ -174,9 +180,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 			mns.setIdMensaje(mensaje.getMensajeid().toString());
 			mns.setIdLote(loteId.toString());
 			mns.setUsuarioAplicacion(usuarioAplicacion);
-			//Se fuerza el delay de consulta de estado a traves de propiedades en ms.
-			long refreshStatusDelay = Long.valueOf(ps.getMessage("constantes.consultaEstado.refreshStatusDelay", null, "0"));
-			Thread.sleep(refreshStatusDelay);
+
 			messageSender.sendRefresh(mns, numMaxReintentos);
 		}
 
@@ -267,7 +271,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 			
 			pet.setDatosEspecificos(de);
 			
-			String respuesta = commonUtilitiesService.sendMessage(pet, pa.getMessage("constantes.SOAP_ACTION", null), pa.getMessage("constantes.RECEPT_QUEUE", null));
+			String respuesta = commonUtilitiesService.sendMessage(pet, pa.getMessage("constantes.SOAP_ACTION", null), pa.getMessage("constantes.RECEPT_QUEUE", null), mensajeId);
 			
 			
 			res = codificaRespuesta(mensajeId, smsData, respuesta, aplicacionPremium, pa);			
@@ -299,9 +303,9 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 			String estadoFinal;
 			
 			Long ultimoEstadoHistorialId = tblHistoricosManager.getUltimoEstadoHistorico(mensajeId, smsData.destinatarioMensajeId);
-			if ("OK".equals(exito)) {
+			if (exito.contains("OK")) {
 				cod = st.nextToken();
-				EstadosBean estadoMensaje = queryExecutorSubestados.getEstadoByCode(cod);
+				EstadosBean estadoMensaje = queryExecutorSubestados.getEstadoByCode(cod.trim());
 				estadoFinal = tblEstadosManager.getEstadoById(estadoMensaje.getEstadoId()).getNombre();
 				descripcion = estadoMensaje.getDescripcion();
 				if (ultimoEstadoHistorialId != estadoMensaje.getEstadoId()){
@@ -319,6 +323,9 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 				estadoFinal = tblEstadosManager.getEstadoById(estadoMensaje.getEstadoId()).getNombre();
 				descripcion = estadoMensaje.getDescripcion();
 				tblMensajesManager.setEstadoMensaje(mensajeId, estadoFinal, descripcion, false, smsData.destinatarioMensajeId, cod, null, null);
+				
+				//				tblMensajesManager.setEstadoMensaje(mensajeId,tblEstadosManager.getEstadoByName(pa.getMessage("constantes.ESTADO_ANULADO", null)).getNombre(), "SMS_ID: " + mensajeId
+				//		+ ". Error: Anulado por operadora", false, smsData.destinatarioMensajeId, null, pa.getMessage("constantes.usuarioActiveMQ", null), null);	
 				
 				//Si es AEAT invocar a AEAT
 				if (aplicacionPremium.contains(aplicacionAEAT)){

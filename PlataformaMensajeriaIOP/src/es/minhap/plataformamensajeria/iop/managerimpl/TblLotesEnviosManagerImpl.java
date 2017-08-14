@@ -505,7 +505,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			Long maxRetries = null;
 			mensajeJms.setIdCanal(tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().toString());
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
-			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
 				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
@@ -527,7 +527,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			mensajeJms.setIdLote(tblMensaje.getTblLotesEnvios().getLoteenvioid().toString());
 			Long maxRetries = null;
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios().getServicioid());
-			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() > 0) {
+			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
 				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));

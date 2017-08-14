@@ -28,7 +28,7 @@ import es.minhap.sim.query.TblLotesEnviosHistQuery;
 /**
  * Implementacion de DAO basico con Hibernate
  */
-@Service
+@Service("TblLotesEnviosHistDAOImpl")
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 public class TblLotesEnviosHistDAOImpl extends AbstractHibernateDAO<TblLotesEnviosHist, Long, TblLotesEnviosHistQuery>
 		implements TblLotesEnviosHistDAO {

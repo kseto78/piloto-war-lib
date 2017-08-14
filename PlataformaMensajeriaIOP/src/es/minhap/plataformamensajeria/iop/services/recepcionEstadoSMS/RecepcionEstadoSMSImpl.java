@@ -125,6 +125,11 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 //				idHistorico = hitoricosManager.creaHistorico(mensaje.getMensajeid(),destinatarioMensajeId, estadoFinalId, null, 
 //					descripcion, cod.toString(), recepcionEstadoSMS.getUser());
 				mensajesManager.setEstadoMensaje(mensaje.getMensajeid(),tblEstadosManager.getEstadoById(estadoFinalId).getNombre(), descripcion, false, destinatarioMensajeId, cod.toString(), recepcionEstadoSMS.getUser(), null);
+			
+				if(estadoFinalId.intValue() == 2){
+					mensajesManager.setEstadoMensaje(mensaje.getMensajeid(),tblEstadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null)).getNombre(), "SMS_ID: " + mensaje.getMensajeid()
+							+ ". Error: Anulado por operadora", false, destinatarioMensajeId, null, ps.getMessage("constantes.usuarioActiveMQ", null), null);			
+				}
 			}
 
 			ResponseStatusType status;

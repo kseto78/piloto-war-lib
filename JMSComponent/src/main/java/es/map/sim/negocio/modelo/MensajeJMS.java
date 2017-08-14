@@ -45,6 +45,8 @@ public class MensajeJMS implements Serializable {
 	private String destinatarioMensajeId;
 	
 	private String idLote;
+	
+	private String caducidad;
 
 	
 	
@@ -275,6 +277,13 @@ public class MensajeJMS implements Serializable {
 		this.idLote = idLote;
 	}
 	
+	public String getCaducidad() {
+		return caducidad;
+	}
+	
+	public void setCaducidad(String caducidad) {
+		this.caducidad = caducidad;
+	}
 	
 	@Override
 	 public boolean equals(Object object){

@@ -28,7 +28,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import es.minhap.common.properties.PropertiesServices;
+import es.minhap.misim.bus.model.Proveedor;
 import es.minhap.misim.bus.model.exception.ModelException;
+import es.minhap.misim.bus.model.servicios.ProveedorManager;
 import es.minhap.misim.tranformers.GMCSendMessage;
 import es.minhap.misim.tranformers.NotificacionDataRequest;
 import es.minhap.misim.tranformers.PushNotificationSender;
@@ -49,6 +51,9 @@ public class InvocarEmisorPush implements Callable {
 
 	@Resource
 	IRegistroUsuarioPushService registroUsuarioPushImpl;
+	
+	@Resource(name="proveedorManager")
+	private ProveedorManager proveedorManager; 
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
@@ -63,21 +68,27 @@ public class InvocarEmisorPush implements Callable {
 	private static final String KO_RESPONSE = "KO";
 
 	private static final String DESC_ERROR = "ERROR ";
+	
+	private static final String COMPANY_GOOGLE = "Google";
+	
+	private static final String COMPANY_APPLE = "Apple";
 
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
-
+		String company ="";
 		LOG.debug("Empezando el proceso de invocación al emisor...");
 		final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload()).getSoapMessage();
 
 		String idMensaje = String.class.cast(eventContext.getMessage().getOutboundProperty("idMensaje"));
-
+		Long proveedorId = eventContext.getMessage().getOutboundProperty("idProveedor");
+				
 		ResponseStatusType response = new ResponseStatusType();
 
 		try {
 
 			NotificacionDataRequest parametros = leerParametros(docOriginal);
 
+			Proveedor p = proveedorManager.getProveedorById(proveedorId);
 			// Obtiene la información del endpoint y la request
 			PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
@@ -89,7 +100,14 @@ public class InvocarEmisorPush implements Callable {
 					keystore = keystore + servicio[0] + "/";
 				}
 			}
-			String company = String.class.cast(eventContext.getMessage().getOutboundProperty("company"));
+			
+			if (p.getNombre().startsWith(COMPANY_GOOGLE)){
+				company = COMPANY_GOOGLE;
+			}
+			if (p.getNombre().startsWith(COMPANY_APPLE)){
+				company = COMPANY_APPLE;
+			}
+			
 
 			response = sendPushNotification(idMensaje, parametros, keystore, company);
 

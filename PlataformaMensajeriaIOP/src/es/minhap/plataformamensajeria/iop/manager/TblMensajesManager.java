@@ -14,6 +14,8 @@ import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesP
 import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje;
 import es.minhap.sim.model.TblMensajes;
+import es.minhap.sim.model.TblServicios;
+import es.minhap.sim.query.TblMensajesQuery;
 
 /**
  * 
@@ -236,7 +238,31 @@ public interface TblMensajesManager {
 	 */
 	public Map<Long, List<MensajeJMS>> getMensajesReenviar();
 
-	
 
-		
+	/**
+	 * Obtiene Los mensajes a partir de query
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public List<TblMensajes> getMensajesByQuery(TblMensajesQuery query);
+
+	
+	/**
+	 * Obtiene El servicio a partir del IdMensaje
+	 * 
+	 * @param mensajeId
+	 * @return TblServicios
+	 */
+	public TblServicios getServicioByMensaje(Long mensajeId);
+
+	
+	/**
+	 * Cuenta el número de mensajes por query
+	 * 
+	 * @param query
+	 * @return Integer
+	 */
+	public Integer countMensajesByQuery(TblMensajesQuery query);
+
 }

@@ -76,6 +76,8 @@ public class InvocarEnvioGiss implements Callable {
 		String codCorrecto =  ps.getMessage("clave.respuestaOK.GISS", null, null, null); 
 
 		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
+		
+		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -92,7 +94,6 @@ public class InvocarEnvioGiss implements Callable {
 			envioGISSXML.loadObjectFromXML(xmlPeticion);
 			String respuesta = envioPremiumGISSServiceImpl.enviarSMSGISS(envioGISSXML, usuarioGISS, passwordGISS,
 					idServicioGISS, usuarioMISIM, passwordMISIM);
-
 			if(respuesta.contains(codCorrecto)){
 				List<Long> listaMensajes = new ArrayList<>();
 				if (null != envioGISSXML.getIdExterno()){
@@ -102,10 +103,15 @@ public class InvocarEnvioGiss implements Callable {
 				for (Long idMensaje : listaMensajes) {
 					Long idLote = tblMensajesManager.getIdLoteByIdMensaje(idMensaje);
 					eventContext.getMessage().setOutboundProperty("idLote", idLote);
-					levantarHilo(estadoPendiente, idMensaje, idLote);
+					
+					//utilizamos el hilo según configuracion properties
+					if (!"S".equals(utilizarActiveMq)){
+						levantarHilo(estadoPendiente, idMensaje, idLote);
+					}
 				}
+
 			}
-			
+
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 
@@ -172,4 +178,6 @@ public class InvocarEnvioGiss implements Callable {
 			}
 		}
 	}
+
+
 }

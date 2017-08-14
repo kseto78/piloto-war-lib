@@ -72,10 +72,14 @@ public class InvocarEnvio001 implements Callable {
 		String usuarioMISIM = ps.getMessage("misim.aplicacion.aeat.usuario.sms", null, null, null);
 		String passwordMISIM = ps.getMessage("misim.aplicacion.aeat.contrasena.sms", null, null, null);
 		Integer reintentos = new Integer(ps.getMessage("aeat.reintentos.sms.premium", null, null, null));
-		
+	
 		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
 		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
 		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
+		
+		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
+
+
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -91,16 +95,22 @@ public class InvocarEnvio001 implements Callable {
 			envioAEATXML.loadObjectFromXML(xmlPeticion);
 			String respuesta = envioPremiumAEATService.enviarSMSPremium(envioAEATXML, usuarioAEAT, passwordAEAT,
 					idServicioAEAT, usuarioMISIM, passwordMISIM, reintentos);
+
 			es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp = new es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta();
 			resp.loadObjectFromXML(respuesta);
 			
 			Long idMensaje = (null != resp.getIdMensaje() && resp.getIdMensaje().length()>0)? Long.parseLong(resp.getIdMensaje()) : null;
-			Long idLote = null;
+			Long idLote;
 			
 			if (null != idMensaje){
 				idLote = tblMensajesManager.getIdLoteByIdMensaje(idMensaje);
 				eventContext.getMessage().setOutboundProperty("idLote", idLote);
-				levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje, idLote);
+			
+				//utilizamos el hilo según configuracion properties
+				if (!"S".equals(utilizarActiveMq)){
+					levantarHilo(estadoPendiente, estadoAnulado, estadoIncidencia, resp, idMensaje, idLote);
+				}
+
 			}
 		
 							

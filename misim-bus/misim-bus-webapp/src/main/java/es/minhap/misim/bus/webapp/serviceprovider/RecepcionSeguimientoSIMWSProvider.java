@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
@@ -21,9 +20,9 @@ import misim.bus.common.util.XMLUtils;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -44,6 +43,7 @@ public class RecepcionSeguimientoSIMWSProvider extends WSProvider {
 	 * Cola de recepción VM de peticiones sincronas
 	 */
 	public static final String RECEPT_QUEUE = "vm://recepcion-sim";
+	public static final String ACTION_HISTORIAL = "consultarHistorial";
 	
 	
 	@Override
@@ -66,27 +66,33 @@ public class RecepcionSeguimientoSIMWSProvider extends WSProvider {
 			}
 			try {
 				
-				SeguimientoMensajesImpl seguimientoMensajesImpl = (SeguimientoMensajesImpl) getMuleContext().getRegistry().lookupObject("seguimientoMensajesImpl");
-				
 				SoapPayload<?> payload = new PeticionPayload();
 				payload.setSoapAction(String.class.cast(getContext().getMessageContext().get(SOAP_ACTION)));
 				payload.setSoapMessage(XMLUtils.soap2dom(request));
 				
-				final Document docOriginal = XMLUtils.soap2dom(request);
-				
-				NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "PeticionEstado");
-				String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
-				
-				ConsultaEstadoXMLBean consultaEstado = new ConsultaEstadoXMLBean();
-				consultaEstado.loadObjectFromXML(xmlPeticion);
-				
-				String respuesta=seguimientoMensajesImpl.consultarEstado(consultaEstado);
-				
-				Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
-				String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
-				
-				responseSOAP = getSoapMessageFromString(respuestaCompleta);
-				
+				if(payload.getSoapAction().equals(ACTION_HISTORIAL)){
+					final MuleMessage muleResponse = getMuleClient().send(RECEPT_QUEUE,payload, null, 10000);
+					
+					responseSOAP = XMLUtils.dom2soap(muleResponse.getPayload(SoapPayload.class).getSoapMessage());
+
+				}else{
+					SeguimientoMensajesImpl seguimientoMensajesImpl = (SeguimientoMensajesImpl) getMuleContext().getRegistry().lookupObject("seguimientoMensajesImpl");
+					
+					final Document docOriginal = XMLUtils.soap2dom(request);
+					
+					NodeList peticion = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "PeticionEstado");
+					String xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
+					
+					ConsultaEstadoXMLBean consultaEstado = new ConsultaEstadoXMLBean();
+					consultaEstado.loadObjectFromXML(xmlPeticion);
+					
+					String respuesta=seguimientoMensajesImpl.consultarEstado(consultaEstado);
+					
+					Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
+					String respuestaCompleta = XMLUtils.createSOAPFaultString((Node)doc.getDocumentElement());
+					
+					responseSOAP = getSoapMessageFromString(respuestaCompleta);
+				}
 				
 
 			} catch (final Exception e) {

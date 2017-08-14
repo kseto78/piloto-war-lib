@@ -2,6 +2,7 @@ package es.minhap.misim.components;
 
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.w3c.dom.Document;
 
@@ -23,6 +25,7 @@ import es.minhap.misim.bus.model.Peticion;
 import es.minhap.misim.bus.model.Producto;
 import es.minhap.misim.bus.model.Proveedor;
 import es.minhap.misim.bus.model.exception.ModelException;
+import es.minhap.misim.bus.model.seguridad.CifradoService;
 import es.minhap.misim.bus.model.servicios.AplicacionManager;
 import es.minhap.misim.bus.model.servicios.AuditoriaManager;
 import es.minhap.misim.bus.model.servicios.EstadoManager;
@@ -40,6 +43,12 @@ import es.minhap.misim.bus.model.servicios.ProveedorManager;
 public class Auditar implements Callable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Auditar.class);
+	
+	@Autowired
+	CifradoService cifradoService;
+	
+	@Resource(name = "cifradoPrivadoProperties")
+	Properties props;
 	
 	@Resource
 	private AuditoriaManager auditoriaManager;
@@ -77,7 +86,8 @@ public class Auditar implements Callable {
 			
 			Long idAplicacion = Long.class.cast(eventContext.getMessage().getOutboundProperty("idAplicacion"));
 			Long idProducto = Long.class.cast(eventContext.getMessage().getOutboundProperty("idProducto"));
-			Long idProovedor = Long.class.cast(eventContext.getMessage().getOutboundProperty("idProveedor"));		
+			Long idProovedor = Long.class.cast(eventContext.getMessage().getOutboundProperty("idProveedor"));	
+			Long idComunicacion = Long.class.cast(eventContext.getMessage().getOutboundProperty("idComunicacion"));
 			
 			Long idMensaje=null;
 			Long idLote = null;
@@ -102,7 +112,17 @@ public class Auditar implements Callable {
 			Proveedor proveedor = new Proveedor();
 			proveedor.setIdProveedor(idProovedor);
 			
-			final String xmlPeticion = XMLUtils.dom2xml(docOriginal);
+			String xmlPeticion;
+			
+			if (idComunicacion == 2){
+				Encriptar en = new Encriptar();
+				xmlPeticion = en.encriptarParametersHTTP(cifradoService, (String)eventContext.getMessage().getOutboundProperty("xmlPeticion"), props);
+				if (null == xmlPeticion){
+					xmlPeticion = XMLUtils.dom2xml(docOriginal);
+				}
+			}else{
+				xmlPeticion = XMLUtils.dom2xml(docOriginal);
+			}
 			
 			Peticion peticion = new Peticion();
 			peticion.setEstado(estado);

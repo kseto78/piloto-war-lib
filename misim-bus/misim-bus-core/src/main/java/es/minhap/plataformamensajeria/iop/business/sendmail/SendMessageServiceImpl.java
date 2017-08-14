@@ -369,7 +369,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			envio.setDatosEspecificos(de);
 
 			String res = commonUtilitiesService.sendMessage(envio, ps.getMessage("constantes.SOAP_ACTION", null),
-					ps.getMessage("constantes.RECEPT_QUEUE", null));
+					ps.getMessage("constantes.RECEPT_QUEUE", null), idMensaje);
 
 			if (res.contains("OK")) {
 				TblMensajes mensaje = mensajesManager.getMensaje(Long.valueOf(idMensaje));
@@ -983,7 +983,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						}
 					} catch (Exception e) {
 						String errorMessage = e.getMessage();
-						LOG.error("Excepcion :" + errorMessage + " (postRecepcionSMS)", e);
+						LOG.error("Excepcion :" + errorMessage + " (postNotificacionPush)", e);
 						TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 						tblErrorMensajeLog.setCodigoerror(new Long("0"));
 						tblErrorMensajeLog.setDescripcionerror("SMS_ID: " + mensajeId + ". Error: (" + e.hashCode()
@@ -1015,7 +1015,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						}
 					} catch (Exception e) {
 						String errorMessage = e.getMessage();
-						LOG.error("Excepcion :" + errorMessage + " (postRecepcionSMS)", e);
+						LOG.error("Excepcion :" + errorMessage + " (postNotificacionPush)", e);
 
 						TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 						tblErrorMensajeLog.setCodigoerror(new Long("0"));
@@ -1121,7 +1121,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		peticionPush.setDatosEspecificos(datosEspecificosPush);
 
 		String res = commonUtilitiesService.sendMessage(peticionPush, ps.getMessage("constantes.SOAP_ACTION", null),
-				ps.getMessage("constantes.RECEPT_QUEUE", null));
+				ps.getMessage("constantes.RECEPT_QUEUE", null), messageId);
 
 		return res;
 	}
@@ -1324,7 +1324,6 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		envioAplicacionRequest.setSender(smsData.Telefono);
 		envioAplicacionRequest.setRecipient(smsData.HeaderSMS);
 		envioAplicacionRequest.setSMSText(smsData.Body);
-		envioAplicacionRequest.setLoteId(smsData.LoteEnvioId);
 		envioAplicacionRequest.setMessageId(messageId.toString());
 
 		DatosEspecificosRecepcionSMS datosEspecificos = new DatosEspecificosRecepcionSMS();
@@ -1337,8 +1336,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		peticion.setDatosEspecificos(datosEspecificos);
 		peticion.setProveedor(proveedor);
 		peticion.setProducto("SMS_APLICACION");
+		peticion.setLoteId(smsData.LoteEnvioId);		
 		String res = commonUtilitiesService.sendMessage(peticion, ps.getMessage("constantes.SOAP_ACTION", null),
-				ps.getMessage("constantes.RECEPT_QUEUE", null));
+				ps.getMessage("constantes.RECEPT_QUEUE", null), messageId);
 
 		return res;
 

@@ -71,8 +71,8 @@ public class TblMensajes implements java.io.Serializable {
 	@Column(name = "ULTIMOIDHISTORICO", precision = 22, scale = 0)
 	private Long ultimoidhistorico;
 
-	@Column(name = "CUERPO")
-	private String cuerpo;
+	@Column(name = "CUERPO_CLOB")
+	private String cuerpo_clob;
 
 	@Column(name = "TIPOCUERPO", length = 10)
 	private String tipocuerpo;
@@ -127,6 +127,12 @@ public class TblMensajes implements java.io.Serializable {
 
 	@Column(name = "MODO", precision = 1, scale = 0)
 	private Integer modo;
+	
+	@Column(name = "CUERPO", length = 1000)
+	private String cuerpo ;
+	
+	@Column(name = "CUERPOFILE")
+	private String cuerpofile ;
 
 	public TblMensajes() {
 	}
@@ -611,4 +617,34 @@ public class TblMensajes implements java.io.Serializable {
 		this.modo = modo;
 	}
 
+	/**
+	 * @return the cuerpo_clob
+	 */
+	public String getCuerpo_clob() {
+		return cuerpo_clob;
+	}
+
+	/**
+	 * @param cuerpo_clob the cuerpo_clob to set
+	 */
+	public void setCuerpo_clob(String cuerpo_clob) {
+		this.cuerpo_clob = cuerpo_clob;
+	}
+
+	/**
+	 * @return the cuerpofile
+	 */
+	public String getCuerpofile() {
+		return cuerpofile;
+	}
+
+	/**
+	 * @param cuerpofile the cuerpofile to set
+	 */
+	public void setCuerpofile(String cuerpofile) {
+		this.cuerpofile = cuerpofile;
+	}
+
+	
+	
 }

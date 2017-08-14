@@ -30,6 +30,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorUsuariosPush;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorViewServidoresPushPrioridad;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
+import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.sm.modelo.DatosServicio;
 import es.minhap.plataformamensajeria.sm.modelo.MailData;
 import es.minhap.plataformamensajeria.sm.modelo.NotificacionPushData;
@@ -68,6 +69,9 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 
 	@Resource
 	private QueryExecutorUsuariosPush queryExecutorUsuariosPush;
+	
+	@Resource(name="UtilCreateFile")
+	private UtilCreateFile utilFile;
 
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
@@ -455,21 +459,29 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query = getSessionFactory()
 					.getCurrentSession()
 					.createSQLQuery(
-							" SELECT m.CABECERA as CABECERA ,m.CUERPO AS CUERPO ,m.TIPOCUERPO AS TIPOCUERPO, m.TIPOCODIFICACION AS TIPOCODIFICACION  FROM TBL_MENSAJES m "
+							" SELECT m.CABECERA as CABECERA ,m.CUERPO AS CUERPO ,m.TIPOCUERPO AS TIPOCUERPO, m.TIPOCODIFICACION AS TIPOCODIFICACION, m.CUERPOFILE AS CUERPOFILE  FROM TBL_MENSAJES m "
 									+ " WHERE m.MENSAJEID = " + mensajeId);
 			query.addScalar("CABECERA", new StringType());
 			query.addScalar("CUERPO", new StringType());
 			query.addScalar("TIPOCUERPO", new StringType());
 			query.addScalar("TIPOCODIFICACION", new StringType());
+			query.addScalar("CUERPOFILE", new StringType());
 			Object[] row = (Object[]) query.uniqueResult();
 
 			data.Subject = (String) row[0];
-			data.Body = (String) row[1];
+			
 			if ((String) row[2] != null) {
 				data.TipoCuerpo = (String) row[2];
 			}
 			if ((String) row[3] != null) {
 				data.TipoCodificacion = (String) row[3];
+			}
+			//comprueba si el cuerpo está en fichero
+			if (null == row[4]){
+				data.Body = (null != row[1]) ? (String) row[1] : "";
+			}else{
+				//recuperamos el cuerpo. 
+				data.Body = utilFile.getCuerpoMensajeFromFile((String)row[4]);
 			}
 
 		} catch (Exception e) {
@@ -488,22 +500,31 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				LOG.debug(LOG_START);
 			}
 			query = getSessionFactory().getCurrentSession().createSQLQuery(
-					" SELECT CABECERA,CUERPO,TIPOCUERPO,TIPOCODIFICACION FROM TBL_MENSAJES" + " WHERE MENSAJEID = "
+					" SELECT CABECERA,CUERPO,TIPOCUERPO,TIPOCODIFICACION, CUERPOFILE FROM TBL_MENSAJES" + " WHERE MENSAJEID = "
 							+ mensajeId);
 			query.addScalar("CABECERA", new StringType());
 			query.addScalar("CUERPO", new StringType());
 			query.addScalar("TIPOCUERPO", new StringType());
 			query.addScalar("TIPOCODIFICACION", new StringType());
+			query.addScalar("CUERPOFILE", new StringType());
 
 			Object[] row = (Object[]) query.uniqueResult();
 
 			data.Subject = (String) row[0];
-			data.Body = (String) row[1];
+			
 			if ((String) row[2] != null) {
 				data.TipoCuerpo = (String) row[2];
 			}
 			if ((String) row[3] != null) {
 				data.TipoCodificacion = (String) row[3];
+			}
+			
+			//comprueba si el cuerpo está en fichero
+			if (null == row[4]){
+				data.Body = (null != row[1]) ? (String) row[1] : "";
+			}else{
+				//recuperamos el cuerpo. 
+				data.Body = utilFile.getCuerpoMensajeFromFile((String)row[4]);
 			}
 
 		} catch (Exception e) {
@@ -529,7 +550,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 									+ "up.NOMBREUSUARIO as NOMBREUSUARIO, dm.DESTINATARIO as DESTINATARIO, up.PLATAFORMAID as PLATAFORMA, "
 									+ "dm.DESTINATARIOSMENSAJES as DESTINATARIOSMENSAJES, S.GCMPROJECTKEY as GCMPROJECTKEY, "
 									+ "S.APNSRUTACERTIFICADO as APNSRUTACERTIFICADO, S.APNSPASSWORDCERTIFICADO as APNSPASSWORDCERTIFICADO, "
-									+ "S.BADGE as BADGE FROM TBL_MENSAJES M "
+									+ "S.BADGE as BADGE, m.CUERPOFILE as CUERPOFILE FROM TBL_MENSAJES M "
 									+ " INNER JOIN TBL_LOTESENVIOS LE ON LE.LOTEENVIOID = M.LOTEENVIOID"
 									+ " INNER JOIN TBL_SERVICIOS S ON S.SERVICIOID = LE.SERVICIOID"
 									+ " INNER JOIN TBL_DESTINATARIOS_MENSAJES dm on dm.MENSAJEID = M.MENSAJEID"
@@ -553,12 +574,12 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query.addScalar("APNSRUTACERTIFICADO", new StringType());
 			query.addScalar("APNSPASSWORDCERTIFICADO", new StringType());
 			query.addScalar("BADGE", new StringType());
+			query.addScalar("CUERPOFILE", new StringType());
 
 			Object[] row = (Object[]) query.uniqueResult();
 
 			if (null != row) {
 				data.cabecera = (String) row[0];
-				data.cuerpo = (String) row[1];
 				data.icono = (String) row[2];
 				data.sonido = (String) row[3];
 				data.nombreUsuario = (String) row[4];
@@ -569,6 +590,15 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				data.rutaCertificadoAPNS = (String) row[9];
 				data.passwordCertificadoAPNS = (String) row[10];
 				data.badge = (String) row[11];
+				
+				//comprueba si el cuerpo está en fichero
+				if (null == row[12]){
+					data.cuerpo = (null != row[1]) ? (String) row[1] : "";
+				}else{
+					//recuperamos el cuerpo. 
+					data.cuerpo = utilFile.getCuerpoMensajeFromFile((String)row[12]);
+				}
+								
 				TblUsuariosPush tblUsuariosPush = getTblUsuariosPushManager().getUsuarioPush(data.UsuarioId);
 				List<String> tokenUsuario = new ArrayList<>();
 				tokenUsuario.add(tblUsuariosPush.getTokenusuario());
@@ -601,7 +631,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 							"SELECT M.CABECERA as CABECERA, M.CUERPO as CUERPO, M.ICONO as ICONO, M.SONIDO as SONIDO, "
 									+ "M.NOMBREUSUARIO as NOMBREUSUARIO, S.GCMPROJECTKEY as GCMPROJECTKEY, "
 									+ "S.APNSRUTACERTIFICADO as APNSRUTACERTIFICADO, S.APNSPASSWORDCERTIFICADO as APNSPASSWORDCERTIFICADO, "
-									+ "S.BADGE as BADGE FROM TBL_MENSAJES M "
+									+ "S.BADGE as BADGE, m.CUERPOFILE as CUERPOFILE FROM TBL_MENSAJES M "
 									+ " INNER JOIN TBL_LOTESENVIOS LE ON LE.LOTEENVIOID = M.LOTEENVIOID"
 									+ " INNER JOIN TBL_SERVIDORES_SERVICIOS SS ON SS.SERVICIOID = LE.SERVICIOID"
 									+ " INNER JOIN TBL_SERVICIOS S ON S.SERVICIOID = LE.SERVICIOID"
@@ -616,12 +646,12 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query.addScalar("APNSRUTACERTIFICADO", new StringType());
 			query.addScalar("APNSPASSWORDCERTIFICADO", new StringType());
 			query.addScalar("BADGE", new StringType());
+			query.addScalar("CUERPOFILE", new StringType());
 
 			Object[] row = (Object[]) query.uniqueResult();
 
 			if (null != row) {
 				data.cabecera = (String) row[0];
-				data.cuerpo = (String) row[1];
 				data.icono = (String) row[2];
 				data.sonido = (String) row[3];
 				data.nombreUsuario = (String) row[4];
@@ -629,6 +659,14 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				data.rutaCertificadoAPNS = (String) row[6];
 				data.passwordCertificadoAPNS = (String) row[7];
 				data.badge = (String) row[8];
+
+				//comprueba si el cuerpo está en fichero
+				if (null == row[9]){
+					data.cuerpo = (null != row[1]) ? (String) row[1] : "";
+				}else{
+					//recuperamos el cuerpo. 
+					data.cuerpo = utilFile.getCuerpoMensajeFromFile((String)row[9]);
+				}
 
 				data.esMultidestinatario = false;
 				Integer plataforma = getQueryExecutorUsuariosPush().getPlataformaUsuario(mensajeId);
@@ -662,7 +700,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query = getSessionFactory().getCurrentSession().createSQLQuery(
 					"SELECT M.LOTEENVIOID as LOTEENVIOID, M.CUERPO as CUERPO, dm.DESTINATARIO as DESTINATARIO, "
 							+ "dm.DESTINATARIOSMENSAJES as DESTINATARIOSMENSAJES, S.HEADERSMS as HEADERSMS, "
-							+ "AP.USUARIO as USUARIO, AP.PASSWORD as PASSWORD FROM TBL_MENSAJES M"
+							+ "AP.USUARIO as USUARIO, AP.PASSWORD as PASSWORD, m.CUERPOFILE as CUERPOFILE FROM TBL_MENSAJES M"
 							+ " INNER JOIN TBL_LOTESENVIOS LE ON M.LOTEENVIOID = LE.LOTEENVIOID"
 							+ " INNER JOIN TBL_SERVICIOS S ON LE.SERVICIOID = S.SERVICIOID"
 							+ " INNER JOIN TBL_APLICACIONES AP ON S.APLICACIONID = AP.APLICACIONID"
@@ -677,16 +715,25 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query.addScalar("HEADERSMS", new StringType());
 			query.addScalar("USUARIO", new StringType());
 			query.addScalar("PASSWORD", new StringType());
+			query.addScalar("CUERPOFILE", new StringType());
 
 			Object[] row = (Object[]) query.uniqueResult();
 
 			data.LoteEnvioId = (null != row[0]) ? ((Long) row[0]).toString() : "";
-			data.Body = (null != row[1]) ? (String) row[1] : "";
 			data.Telefono = (null != row[2]) ? (String) row[2] : "";
 			data.destinatarioMensajeId = (null != row[3]) ? ((Long) row[3]).longValue() : null;
 			data.HeaderSMS = (null != row[4]) ? (String) row[4] : "";
 			data.User = (null != row[5]) ? (String) row[5] : "";
 			data.Password = (null != row[6]) ? (String) row[6] : "";
+			
+			//comprueba si el cuerpo está en fichero
+			if (null == row[7]){
+				data.Body = (null != row[1]) ? (String) row[1] : "";
+			}else{
+				//recuperamos el cuerpo. 
+				data.Body = utilFile.getCuerpoMensajeFromFile((String)row[7]);
+			}
+			
 			data.esMultidestinatario = true;
 			data.Servers = receptorSMSData.Servers;
 			data.ServiceData = receptorSMSData.ServiceData;
@@ -710,7 +757,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					.getCurrentSession()
 					.createSQLQuery(
 							"SELECT M.LOTEENVIOID as LOTEENVIOID, M.CUERPO as CUERPO, M.TELEFONO as TELEFONO, "
-									+ "S.HEADERSMS as HEADERSMS, AP.USUARIO as USUARIO, AP.PASSWORD as PASSWORD FROM TBL_MENSAJES M"
+									+ "S.HEADERSMS as HEADERSMS, AP.USUARIO as USUARIO, AP.PASSWORD as PASSWORD, m.CUERPOFILE as CUERPOFILE FROM TBL_MENSAJES M"
 									+ " INNER JOIN TBL_LOTESENVIOS LE ON M.LOTEENVIOID = LE.LOTEENVIOID"
 									+ " INNER JOIN TBL_SERVICIOS S ON LE.SERVICIOID = S.SERVICIOID"
 									+ " INNER JOIN TBL_APLICACIONES AP ON S.APLICACIONID = AP.APLICACIONID"
@@ -729,9 +776,16 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			data.Password = (null != row[5]) ? (String) row[5] : "";
 			data.Telefono = (null != row[2]) ? (String) row[2] : "";
 			data.LoteEnvioId = (null != row[0]) ? ((Long) row[0]).toString() : "";
-			data.Body = (null != row[1]) ? (String) row[1] : "";
 			data.HeaderSMS = (null != row[3]) ? (String) row[3] : "";
 
+			//comprueba si el cuerpo está en fichero
+			if (null == row[6]){
+				data.Body = (null != row[1]) ? (String) row[1] : "";
+			}else{
+				//recuperamos el cuerpo. 
+				data.Body = utilFile.getCuerpoMensajeFromFile((String)row[6]);
+			}
+			
 			data.Servers = receptorSMSData.Servers;
 			data.ServiceData = receptorSMSData.ServiceData;
 
@@ -755,8 +809,8 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					.getCurrentSession()
 					.createSQLQuery(
 							" SELECT m.CABECERA as CABECERA,m.CUERPO AS CUERPO ,m.TIPOCUERPO AS TIPOCUERPO ,m.TIPOCODIFICACION AS TIPOCODIFICACION,"
-									+ "dm.DESTINATARIO AS DESTINATARIO, dm.DESTINATARIOSMENSAJES AS DESTINATARIOSMENSAJES"
-									+ "  FROM TBL_MENSAJES m "
+									+ "dm.DESTINATARIO AS DESTINATARIO, dm.DESTINATARIOSMENSAJES AS DESTINATARIOSMENSAJES, m.CUERPOFILE AS CUERPOFILE,"
+									+ "m.FECHACREACION AS FECHACREACION FROM TBL_MENSAJES m "
 									+ " inner join TBL_DESTINATARIOS_MENSAJES dm on dm.MENSAJEID = m.MENSAJEID "
 									+ " WHERE dm.DESTINATARIOSMENSAJES = "
 									+ destinatarioMensajeId
@@ -767,14 +821,22 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query.addScalar("TIPOCODIFICACION", new StringType());
 			query.addScalar("DESTINATARIO", new StringType());
 			query.addScalar("DESTINATARIOSMENSAJES", new LongType());
+			query.addScalar("CUERPOFILE", new StringType());
 
 			Object[] row = (Object[]) query.uniqueResult();
 			data.Telefono = (null != row[4]) ? (String) row[4] : "";
 			data.destinatarioMensajeId = (null != row[5]) ? (Long) row[5] : 0;
-			data.Body = (null != row[1]) ? (String) row[1] : "";
 			data.Servers = smsDataComun.Servers;
 			data.ServiceData = smsDataComun.ServiceData;
 			data.esMultidestinatario = true;
+			
+			//comprueba si el cuerpo está en fichero
+			if (null == row[6]){
+				data.Body = (null != row[1]) ? (String) row[1] : "";
+			}else{
+				//recuperamos el cuerpo. 
+				data.Body = utilFile.getCuerpoMensajeFromFile((String)row[6]);
+			}
 
 		} catch (Exception e) {
 			LOG.error(HAS_ERROR, e);

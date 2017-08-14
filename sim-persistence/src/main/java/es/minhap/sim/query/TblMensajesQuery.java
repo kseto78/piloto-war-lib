@@ -59,6 +59,7 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
     public static final String ULTIMOENVIO = "ultimoenvio";
     public static final String ULTIMOIDHISTORICO = "ultimoidhistorico";
     public static final String CUERPO = "cuerpo";
+    public static final String CUERPOFILE = "cuerpofile";
     public static final String TIPOCUERPO = "tipocuerpo";
     public static final String TIPOCODIFICACION = "tipocodificacion";
     public static final String PRIORIDAD = "prioridad";
@@ -380,6 +381,34 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
      * Permite buscar cuando campo cuerpo es NOT NULL
      */
     private boolean cuerpoIsNotNull = false;
+    
+    
+    /**
+     * Valor de busqueda de campo cuerpofile
+     */
+    private String cuerpofile;
+
+    /**
+     * Tipo de comparador para la busqueda por campo cuerpofile
+     */
+    private TextComparator cuerpofileComparator = TextComparator.CONTAINS;
+
+    /**
+     * Lista de valores del campo cuerpofile para busquedas tipo IN
+     */
+    private List<String> cuerpofileIn = new ArrayList<String>(0);
+
+    /**
+     * Permite buscar cuando campo cuerpofile es NULL
+     */
+    private boolean cuerpofileIsNull = false;
+
+    /**
+     * Permite buscar cuando campo cuerpofile es NOT NULL
+     */
+    private boolean cuerpofileIsNotNull = false;
+    
+    
 
     /**
      * Valor de busqueda de campo tipocuerpo
@@ -1863,6 +1892,99 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
      */
     public void setCuerpoIsNotNull(boolean cuerpoIsNotNull) {
         this.cuerpoIsNotNull = cuerpoIsNotNull;
+    }
+
+ 
+    /**
+     * Valor de busqueda de campo cuerpofile
+     * @return String.
+     */
+    public String getCuerpofile() {
+        if (cuerpofile != null) {
+            switch (cuerpofileComparator) {
+	            case STARTS_WITH:
+	                return cuerpofile + "%";
+	            case CONTAINS:
+	                return "%" + cuerpofile + "%";
+	            case ENDS_WITH:
+	                return "%" + cuerpofile;
+	            case EQUALS:
+                	return cuerpofile;
+              	default:
+	            	break;
+            }
+        }
+        return cuerpofile;
+    }
+
+    /**
+     * Valor de busqueda de campo cuerpofile
+     * @param cuerpofile Valor de seteo.
+     */
+    public void setCuerpofile(String cuerpofile) {
+        this.cuerpofile = cuerpofile;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo cuerpofile
+     * @return cuerpofileComparator.
+     */
+    public TextComparator getCuerpofileComparator() {
+        return cuerpofileComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo cuerpo
+     * @param cuerpoComparator Valor de seteo.
+     */
+    public void setCuerpofileComparator(TextComparator cuerpofileComparator) {
+        this.cuerpofileComparator = cuerpofileComparator;
+    }
+
+    /**
+     * @return List<String>.
+     */
+    public List<String> getCuerpofileIn() {
+        return this.cuerpofileIn;
+    }
+
+    /**
+     * @param cuerpofile Valor a agregar.
+     */
+    public void addCuerpofileIn(String cuerpofile) {
+        this.cuerpofileIn.add(cuerpofile);
+    }
+
+    /**
+     * Permite buscar cuando campo cuerpofile es NULL
+     * @return boolean.
+     */
+    public boolean isCuerpofileIsNull() {
+        return cuerpofileIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo cuerpofile es NULL
+     * @param cuerpofileIsNull Valor de seteo.
+     */
+    public void setCuerpofileIsNull(boolean cuerpofileIsNull) {
+        this.cuerpofileIsNull = cuerpofileIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo cuerpofile es NOT NULL
+     * @return boolean.
+     */
+    public boolean isCuerpofileIsNotNull() {
+        return cuerpofileIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo cuerpofile es NOT NULL
+     * @param cuerpofileIsNotNull Valor de seteo.
+     */
+    public void setCuerpofileIsNotNull(boolean cuerpofileIsNotNull) {
+        this.cuerpofileIsNotNull = cuerpofileIsNotNull;
     }
 
     /**
@@ -3694,6 +3816,37 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
             criteria.add(Restrictions.isNotNull(CUERPO));
         }
 
+        
+        
+        if (getCuerpofile() != null) {
+            if (getCuerpofileComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(CUERPOFILE, getCuerpofile()));
+            } 
+            else if (getCuerpofileComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(CUERPOFILE, getCuerpofile()));
+            }
+            else if (getCuerpofileComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(CUERPOFILE, getCuerpofile())));
+            }
+            else {
+                criteria.add(Restrictions.like(CUERPOFILE, getCuerpofile()));
+            }
+        }
+
+        if (getCuerpofileIn().size() > 0) {
+            criteria.add(Restrictions.in(CUERPOFILE, getCuerpofileIn()));
+        }
+
+        if (isCuerpofileIsNull()) {
+            criteria.add(Restrictions.isNull(CUERPOFILE));
+        }
+
+        if (isCuerpofileIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(CUERPOFILE));
+        }
+        
+        
+        
         if (getTipocuerpo() != null) {
             if (getTipocuerpoComparator() == TextComparator.EQUALS) {
                 criteria.add(Restrictions.eq(TIPOCUERPO, getTipocuerpo()));

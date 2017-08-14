@@ -182,8 +182,56 @@ public class QueryExecutorServidoresImpl extends HibernateDaoSupport implements 
 		}
 		return res.longValue();	
 	}
+	
+	@Override
+	@Transactional
+	public Long getIdServicioByIdMensajeHist(Long idMensaje) {
+		BigDecimal res = null;
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			SQLQuery query = getSessionFactory().getCurrentSession()
+					.createSQLQuery("SELECT servicioid "
+							+ "FROM tbl_mensajes_hist m inner join tbl_lotesenvios_hist l on m.loteenvioid = l.loteenvioid "
+							+ "WHERE mensajeid = "
+							+ idMensaje);
+			res = (BigDecimal) query.uniqueResult();
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
+			}
+
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res.longValue();	
+	}
 
 	
-	
+	@Override
+	@Transactional
+	public Long getIdLoteByIdMensaje(Long idMensaje) {
+		BigDecimal res = null;
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			SQLQuery query = getSessionFactory().getCurrentSession()
+					.createSQLQuery("SELECT loteenvioid "
+							+ "FROM tbl_mensajes "
+							+ "WHERE mensajeid = "
+							+ idMensaje);
+			res = (BigDecimal) query.uniqueResult();
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
+			}
+
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res.longValue();	
+	}
 	
 }

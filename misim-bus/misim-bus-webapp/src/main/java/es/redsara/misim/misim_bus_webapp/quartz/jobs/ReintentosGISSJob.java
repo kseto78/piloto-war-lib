@@ -49,8 +49,9 @@ public class ReintentosGISSJob {
 		Long idServicioGISS = new Long(ps.getMessage("giss.servicio.sms.premium", null, null, null));
 		Integer reintentosDefault = new Integer(ps.getMessage("giss.reintentos.sms.premium", null, null, null));
 		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
+		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
 
-		if ("S".equals(ps.getMessage("activemq.job.activarReenvio", null, null, null))) {
+		if ("S".equals(ps.getMessage("activemq.job.activarReenvio", null, null, null)) && !"S".equals(utilizarActiveMq)) {
 			List<EnvioGISSXMLBean> reenvios = envioGISSService.reenviarSMSGISS(idServicioGISS, reintentosDefault);
 			LOG.debug("Se procede a reintentar los SMS fallidos");
 			for (EnvioGISSXMLBean envio : reenvios) {

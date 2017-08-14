@@ -49,19 +49,18 @@
 	<!-- ***************DEFINICION JOB ReintentosGISSJob **************-->
 	<bean name="reintentosGISSJob" class="es.redsara.misim.misim_bus_webapp.quartz.jobs.ReintentosGISSJob"/>
 		
-	
 	<bean name="reintentosGISSJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="reintentosGISSJob" />
 		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="${activemq.job.concurrencia.mensajesReenvio}" />
 	</bean>
 
 	<bean id="reintentosGISSTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 	    <property name="jobDetail" ref="reintentosGISSJobDetail" />
 	    <property name="cronExpression" value="${activemq.job.intervaloReintentosGISS}" />
 	</bean>
-	
-	
+
 	<!-- ***************DEFINICION JOB EliminarRegistroUsuarioMovilJob **************-->
 	<bean name="eliminarRegistroUsuarioJob" class="es.redsara.misim.misim_bus_webapp.quartz.jobs.EliminarRegistroUsuarioMovilJob"/>
 	
@@ -77,7 +76,6 @@
 	    <property name="cronExpression" value="${eliminarRegistroUsuario.job.cronReenvio}" />
 	</bean>
 	
-	
 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="jobDetails">
@@ -85,8 +83,7 @@
 				 <ref bean="enviarMensajeJobDetail" /> 
 				 <ref bean="reenviarMensajesJobDetail" /> 
 				 <ref bean="reintentosGISSJobDetail" /> 
-				 <ref bean="eliminarRegistroUsuarioJobDetail" />  
-
+				 <ref bean="eliminarRegistroUsuarioJobDetail" /> 
 			</list>
 		</property>
 
@@ -96,7 +93,7 @@
 				 <ref bean="reenviarMensajesTrigger" /> 
 				 <ref bean="reintentosGISSTrigger" /> 
 				  <ref bean="eliminarRegistroUsuarioTrigger" />   
-			</list>
+ 			</list>
 		</property>
 	</bean>
 </beans>
