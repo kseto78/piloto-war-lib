@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:s="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+	
+	<s:http auto-config="false" entry-point-ref="entryPoint">
+		<s:custom-filter position="BASIC_AUTH_FILTER" ref="authenticationProcessingFilter"/>
+
+		<s:intercept-url pattern="/homecert**" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
+		<s:intercept-url pattern="/admin**" access="ROLE_ADMINFWK" />
+		<s:intercept-url pattern="/services/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/css/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/html/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/applet/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/images/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/img/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>			
+		<s:intercept-url pattern="/utils/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<s:intercept-url pattern="/struts/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<s:intercept-url pattern="/js/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/infoUsuario.action"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<s:intercept-url pattern="/public/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<s:intercept-url pattern="/services/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>
+		<s:intercept-url pattern="/logon.jsp"
+			access="IS_AUTHENTICATED_ANONYMOUSLY"  />
+		<s:intercept-url pattern="/**"
+			access="IS_AUTHENTICATED_REMEMBERED"/>
+ 		<s:intercept-url pattern="/PlataformaMensajeria/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>	
+		
+		<!-- Interceptor para AuntenticA -->
+		<s:intercept-url pattern="/infoHome.action"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" filters="none"/>	
+		
+    	<s:anonymous/>
+    	<s:logout logout-success-url="/logon.jsp"
+				  invalidate-session="true" logout-url="/logout" />
+				  
+		<!-- Puertos HTTP y HTTPS -->
+		<s:port-mappings>
+    		<s:port-mapping http="80" https="443" />
+    	</s:port-mappings>
+    	
+	</s:http>
+
+	<s:global-method-security secured-annotations="enabled"
+		jsr250-annotations="enabled" />
+
+<bean id="authenticationProcessingFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+<!-- 		<property name="defaultTargetUrl" value="/home.action" /> -->
+		<property name="authenticationManager" ref="authenticationManager" />
+<!-- 		<property name="authenticationFailureUrl" value="/logon.jsp" /> -->
+		<property name="authenticationSuccessHandler" ref="successHandler" />
+		<property name="authenticationFailureHandler" ref="failureHandler" />
+		<property name="allowSessionCreation" value="true" />
+<!-- 		<property name="alwaysUseDefaultTargetUrl" value="true" /> -->
+	</bean>
+	
+	<bean id="successHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler" >
+		<property name="defaultTargetUrl" value="/home.action" />
+		<property name="alwaysUseDefaultTargetUrl" value="true" />
+	</bean>
+	
+	<bean id="failureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler" >
+		<property name="defaultFailureUrl" value="/home.action" />
+	</bean>
+	
+	<!-- ************************************************************************** X509 INICIO ******************* -->
+	
+	<bean class="org.springframework.security.authentication.event.LoggerListener" />
+
+    <bean class="org.springframework.security.access.event.LoggerListener" />
+	
+	<!-- ************************************************************************** X509 FIN ******************* -->
+	
+	<bean id="entryPoint"
+		class="es.mpr.plataformamensajeria.autentica.AutenticaAuthenticationEntryPoint">
+		<property name="loginFormUrl" value="/logon.jsp" />
+		<property name="forceHttps" value="false" />
+	</bean>
+
+	<s:authentication-manager alias="authenticationManager" />
+
+	<!-- Automatically receives AuthenticationEvent messages -->
+
+
+</beans>

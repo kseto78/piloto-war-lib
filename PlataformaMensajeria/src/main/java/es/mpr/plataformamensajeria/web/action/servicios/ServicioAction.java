@@ -1,0 +1,2764 @@
+package es.mpr.plataformamensajeria.web.action.servicios;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.google.gson.Gson;
+import com.map.j2ee.exceptions.BaseException;
+import com.map.j2ee.exceptions.BusinessException;
+import com.map.j2ee.pagination.PaginatedList;
+import com.map.j2ee.util.KeyValueObject;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Preparable;
+
+import es.mpr.plataformamensajeria.beans.AplicacionBean;
+import es.mpr.plataformamensajeria.beans.CanalBean;
+import es.mpr.plataformamensajeria.beans.OrganismoBean;
+import es.mpr.plataformamensajeria.beans.PlanificacionBean;
+import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
+import es.mpr.plataformamensajeria.beans.ReceptorSMSBean;
+import es.mpr.plataformamensajeria.beans.ResultOptions;
+import es.mpr.plataformamensajeria.beans.SelectOption;
+import es.mpr.plataformamensajeria.beans.ServicioBean;
+import es.mpr.plataformamensajeria.beans.ServicioOrganismosBean;
+import es.mpr.plataformamensajeria.beans.ServidorBean;
+import es.mpr.plataformamensajeria.beans.ServidorPushBean;
+import es.mpr.plataformamensajeria.beans.ServidoresOrganismosBean;
+import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
+import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioCanal;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush;
+import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
+import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
+
+/**
+ * <p>
+ * Clase Action de Struts2 para la gesti&oacute;n de los servicios.
+ * 
+ * <p>
+ * Proporciona m&eacute;todos para la creaci&oacute;n, modificaci&oacute;n,
+ * borrado y listado de los Servicios
+ * 
+ * @author i-nercya
+ * 
+ */
+@Controller("serviciosAction")
+@Scope("prototype")
+public class ServicioAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
+
+	private static final long serialVersionUID = 1L;
+
+	private static Logger logger = Logger.getLogger(ServicioAction.class);
+
+	@Resource(name = "servicioOrganismoImpl")
+	private ServicioOrganismo servicioOrganismo;
+
+	@Resource(name = "servicioServicioImpl")
+	private ServicioServicio servicioServicio;
+
+	@Resource(name = "servicioAplicacionImpl")
+	private ServicioAplicacion servicioAplicacion;
+
+	@Resource(name = "servicioProveedorSMSImpl")
+	private ServicioProveedorSMS servicioProveedorSMS;
+
+	@Resource(name = "servicioReceptorSMSImpl")
+	private ServicioReceptorSMS servicioReceptorSMS;
+
+	@Resource(name = "servicioServidorImpl")
+	private ServicioServidor servicioServidor;
+
+	@Resource(name = "servicioServidorPushImpl")
+	private ServicioServidorPush servicioServidorPush;
+
+	@Resource(name = "servicioCanalImpl")
+	private ServicioCanal servicioCanal;
+
+	@Resource(name = "servicioPlanificacionImpl")
+	private ServicioPlanificacion servicioPlanificacion;
+
+	@Resource(name = "plataformaMensajeriaProperties")
+	private PlataformaMensajeriaProperties properties;
+
+	private ServidoresServiciosBean servidorServicio;
+	private ServicioOrganismosBean servicioOrganismos;
+	private ServidoresOrganismosBean servidorOrganismos;
+	private PlanificacionBean planificacionServidor;
+	private OrganismoBean organismo;
+	private ServicioBean servicio;
+
+	private SendMailService sendMailService = new SendMailService();
+
+	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboConfiguraciones = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboConfiguracionesPlan = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServicioOrganismos = new ArrayList<KeyValueObject>();
+
+	public List<ServicioBean> listaServicios = null;
+	public List<PlanificacionBean> listaPlanificacionesServicio = null;
+	public List<ServidoresServiciosBean> listaServidoresServicios = null;
+	public List<ServicioOrganismosBean> listaServicioOrganismos = null;
+	private List<ServidorBean> listaServidoresDetalle = new ArrayList<ServidorBean>();
+	private List<ProveedorSMSBean> listaProveedorSMSDetalle = new ArrayList<ProveedorSMSBean>();
+
+	private String[] checkDelList;
+	private String[] checkDelListPlanificaciones;
+	private String[] checkDelListServidorServicios;
+	private String[] checkDelListServiciosOrganismos;
+
+	private String servicioServidorId;
+	private String idAplicacion;
+	private String idPlanificacion;
+	private String idOrganismo;
+	private String idServicioOrganismo;
+	private String servidorServicioId;
+	private String servicioOrganismoId;
+	private String idServicio;
+	private String parametroServidorId;
+	private String planificacionId;
+
+	private String newActivo;
+	private String newPremium;
+	private String newPlataformaAndroid;
+	private String newPlataformaiOS;
+	private String canalDisabled = null;
+	private String readonly = "false";
+	private String checkPassword;
+	private String newInformeActivo;
+	private String newAgrupacionEstado;
+	private String newAgrupacionCodOrg;
+	private String newAgrupacionCodSia;
+	private String newAgrupacionCodOrgPagador;
+	private String newInformesDestinatarios;
+	private String recovery = "";
+	private String activo = "";
+	private String resultCount;
+	String json;
+	private boolean isMultiorganismo;
+	private Integer newHistorificacion = 1;
+	private Integer newConservacion = 1;
+	private Map session;
+
+	private String requestAttributeTotalsize;
+	private String requestAttributePagesize;
+	private Integer pagesize;
+	private Integer canalSMTPId;
+	private Integer canalSMSId;
+	private Integer canalRecepcionSMSId;
+	private Integer canalServidorPushId;
+	private Integer valorMaximoPredefinidoHistorificacion;
+	private Integer valorMaximoPredefinidorConservacion;
+	private Integer valor1Historificacion;
+	private Integer valor2Historificacion;
+	private Integer valor3Historificacion;
+	private Integer valor1Conservacion;
+	private Integer valor2Conservacion;
+	private Integer valor3Conservacion;
+	private String txtRecovery;
+	private String accionUpdateServicio;
+	private Long accionIdUpdateServicio;
+	private String sourceUpdateServicio;
+	private String accionUpdateOrganismo;
+	private Long accionIdUpdateOrganismo;
+	private String sourceUpdateOrganismo;
+
+	public String newSearch() throws BaseException {
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	@SkipValidation
+	public String searchServicios() throws BaseException {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+
+		int page = getPage("tableId"); // Pagina a mostrar
+		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+											// descendente
+		String columnSort = getColumnSort("tableId"); // Columna usada para
+														// ordenar
+
+		if (servicio != null)
+			if (servicio.getNombre() != null && servicio.getNombre().length() <= 0)
+				servicio.setNombre(null);
+
+		int inicio = (page - 1) * pagesize;
+		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
+		PaginatedList<ServicioBean> result = servicioServicio.getServicios(inicio, (export) ? -1 : pagesize, order,
+				columnSort, servicio);
+		Integer totalSize = result.getTotalList();
+
+		listaServicios = result.getPageList();
+
+		// Atributos de request
+		getRequest().setAttribute(requestAttributeTotalsize, totalSize);
+
+		if (!export) {
+			getRequest().setAttribute(requestAttributePagesize, pagesize);
+		} else {
+			getRequest().setAttribute(requestAttributePagesize, totalSize);
+		}
+
+		if (listaServicios != null && !listaServicios.isEmpty()) {
+			for (int indice = 0; indice < listaServicios.size(); indice++) {
+
+				ServicioBean servicio = listaServicios.get(indice);
+				servicio.setNombre(StringEscapeUtils.escapeHtml(servicio.getNombre()));
+				servicio.setAplicacionnombre(org.apache.commons.lang3.StringEscapeUtils.escapeCsv(servicio.getAplicacionnombre()));
+				servicio.setDescripcion(StringEscapeUtils.escapeHtml(servicio.getDescripcion()));
+			}
+		}
+
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String ajaxLoadServicios() {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idAplicacion == null) {
+			addFieldErrorSession("Datos incorrectos");
+		} else {
+			ResultOptions rOptions = new ResultOptions();
+			try {
+				ArrayList<ServicioBean> listado = new ArrayList<ServicioBean>();
+				if (idAplicacion != null && idAplicacion.length() > 0) {
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServiciosByAplicacionId(Integer
+							.valueOf(idAplicacion));
+				} else {
+					String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+					Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
+				}
+
+				for (ServicioBean servicio : listado) {
+					rOptions.getItems()
+							.add(new SelectOption(servicio.getServicioId().toString(), servicio.getNombre()));
+				}
+			} catch (Exception e) {
+				logger.error("ServicioAction - ajaxLoadServicios:" + e);
+			}
+			json = new Gson().toJson(rOptions);
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String aplicacionSelectEvent() {
+
+		if (servicio != null) {
+			AplicacionBean aplicacion = new AplicacionBean();
+			aplicacion.setId(servicio.getAplicacionid());
+			try {
+				aplicacion = servicioAplicacion.loadAplicacion(aplicacion);
+				servicio.setResponsablefuncionalemail(aplicacion.getRespFuncionalEmail());
+				servicio.setResponsablefuncionalnombre(aplicacion.getRespFuncionalNombre());
+				servicio.setResponsabletecnicoemail(aplicacion.getRespTecnicoEmail());
+				servicio.setResponsabletecniconombre(aplicacion.getRespTecnicoNombre());
+
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - aplicacionSelectEvent:" + e);
+			}
+
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String activarMultiorganismoSelectEvent() {
+		boolean sw = true;
+		if (servicio != null) {
+
+			try {
+				ServicioBean servicioBBDD;
+				servicio.setId(Integer.valueOf(idServicio));
+				servicioBBDD = servicioServicio.loadServicio(servicio);
+
+				comboConfiguraciones = getComboConfiguracion(servicioBBDD.getCanalid());
+				comboConfiguracionesPlan = getComboConfiguracionesPlan(servicioBBDD.getCanalid());
+				comboServicioOrganismos = cargarComboServicioOrganismos();
+
+				listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByServicioID(Integer
+						.parseInt(idServicio));
+				listaServicioOrganismos = servicioServicio.getServicioOrganismo(idServicio);
+				listaServidoresServicios = loadServidoresServicio();
+
+				if ((listaPlanificacionesServicio != null && listaPlanificacionesServicio.size() > 0)
+						|| (listaServidoresServicios != null && listaServidoresServicios.size() > 0)) {
+					canalDisabled = "disable";
+				} else {
+					canalDisabled = null;
+				}
+
+				if (null != servicioBBDD.getMultiorganismo() && servicioBBDD.getMultiorganismo()) {
+					if (null != listaServicioOrganismos && listaServicioOrganismos.size() > 0) {
+						addFieldErrorSession(this
+								.getText("plataforma.servicio.servidorservicio.field.listaOrganismosNoVacia"));
+						sw = false;
+					}
+					servicioBBDD.setMultiorganismo(false);
+					servicioBBDD.setIsMultiorganismo("false");
+
+				} else {
+					servicioBBDD.setMultiorganismo(true);
+					servicioBBDD.setIsMultiorganismo("true");
+
+				}
+				if (sw) {
+					servicioServicio.updateServicio(servicioBBDD, sourceUpdateServicio, accionUpdateServicio,
+							accionIdUpdateServicio);
+
+				}
+				servicio = servicioServicio.loadServicio(servicioBBDD);
+
+				// Historificacion
+				Integer historificacion = servicio.getHistorificacion();
+
+				if (null != historificacion) {
+					switch (historificacion) {
+					case 30:
+						servicio.setHistorificacion(1);
+						break;
+					case 60:
+						servicio.setHistorificacion(2);
+						break;
+					case 90:
+						servicio.setHistorificacion(3);
+						break;
+					default:
+						servicio.setHistorificacionInput(servicio.getHistorificacion());
+						servicio.setHistorificacion(4);
+						break;
+					}
+				} else {
+					servicio.setHistorificacion(historificacion);
+				}
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - activarMultiorganismoSelectEvent:" + e);
+			}
+
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String create() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+
+		if (servicio == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.create.error"));
+			return ERROR;
+		} else {
+			if (newActivo != null && newActivo.equals("true")) {
+				servicio.setActivo(true);
+			} else {
+				servicio.setActivo(false);
+			}
+			if (newPremium != null && newPremium.equals("true")) {
+				servicio.setPremium(true);
+			} else {
+				servicio.setPremium(false);
+			}
+			if (servicio.getCanalid() != null && servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+				if (newPlataformaAndroid != null && newPlataformaAndroid.equals("true")) {
+					servicio.setAndroidplataforma(true);
+				} else {
+					servicio.setAndroidplataforma(false);
+				}
+				if (newPlataformaiOS != null && newPlataformaiOS.equals("true")) {
+					servicio.setIosplataforma(true);
+				} else {
+					servicio.setIosplataforma(false);
+				}
+			}
+
+			// Informes
+			if (newInformeActivo != null && newInformeActivo.equals("true")) {
+				servicio.setInformesactivo(true);
+			} else {
+				servicio.setInformesactivo(false);
+			}
+
+			if (servicio.getInformesactivo() != null && servicio.getInformesactivo()) {
+
+				if (newInformesDestinatarios != null && !newInformesDestinatarios.isEmpty()) {
+					servicio.setInformesdestinatarios(newInformesDestinatarios.trim()); // Eliminamos
+																						// los
+																						// espacios
+				}
+
+				if (newAgrupacionEstado != null && newAgrupacionEstado.equals("true")) {
+					servicio.setAgrupacionestado(true);
+				} else {
+					servicio.setAgrupacionestado(false);
+				}
+
+				if (servicio.getCanalid().equals(Integer.valueOf(canalSMTPId))
+						|| servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+					if (newAgrupacionCodOrg != null && newAgrupacionCodOrg.equals("true")) {
+						servicio.setAgrupacioncodorg(true);
+					} else {
+						servicio.setAgrupacioncodorg(false);
+					}
+					if (newAgrupacionCodSia != null && newAgrupacionCodSia.equals("true")) {
+						servicio.setAgrupacioncodsia(true);
+					} else {
+						servicio.setAgrupacioncodsia(false);
+					}
+				} else if (servicio.getCanalid().equals(Integer.valueOf(canalSMSId))) {
+					if (newAgrupacionCodOrg != null && newAgrupacionCodOrg.equals("true")) {
+						servicio.setAgrupacioncodorg(true);
+					} else {
+						servicio.setAgrupacioncodorg(false);
+					}
+					if (newAgrupacionCodSia != null && newAgrupacionCodSia.equals("true")) {
+						servicio.setAgrupacioncodsia(true);
+					} else {
+						servicio.setAgrupacioncodsia(false);
+					}
+					if (newAgrupacionCodOrgPagador != null && newAgrupacionCodOrgPagador.equals("true")) {
+						servicio.setAgrupacioncodorgpagador(true);
+					} else {
+						servicio.setAgrupacioncodorgpagador(false);
+					}
+				}
+			}
+
+			if (newHistorificacion != null) {
+				servicio.setHistorificacion(newHistorificacion);
+			}
+			if (newConservacion != null) {
+				servicio.setConservacion(newConservacion);
+			}
+
+			// Historificacion
+			Integer historificacion = servicio.getHistorificacion();
+			if (null != historificacion) {
+				switch (historificacion) {
+				case 1:
+					servicio.setHistorificacion(valor1Historificacion);
+					break;
+				case 2:
+					servicio.setHistorificacion(valor2Historificacion);
+					break;
+				case 3:
+					servicio.setHistorificacion(valor3Historificacion);
+					break;
+				case 4:
+					servicio.setHistorificacion(servicio.getHistorificacionInput());
+					break;
+				default:
+					servicio.setHistorificacion(valor1Historificacion);
+					break;
+				}
+			} else {
+				servicio.setHistorificacion(historificacion);
+			}
+
+			// Conservacion
+			Integer conservacion = servicio.getConservacion();
+			if (null != conservacion) {
+				switch (conservacion) {
+				case 1:
+					servicio.setConservacion(valor1Conservacion);
+					break;
+				case 2:
+					servicio.setConservacion(valor2Conservacion);
+					break;
+				case 3:
+					servicio.setConservacion(valor3Conservacion);
+					break;
+				case 4:
+					servicio.setConservacion(servicio.getConservacionInput());
+					break;
+				default:
+					servicio.setConservacion(valor1Conservacion);
+					break;
+				}
+
+			} else {
+				servicio.setConservacion(conservacion);
+			}
+			ServicioBean servicioBean = servicioServicio.createServicioBean(servicio);
+
+			boolean validServicio = false;
+
+			if (servicio != null) {
+				validServicio = validServicio(servicioBean);
+			}
+
+			if (!validServicio) {
+				return ERROR;
+			} else {
+
+				Integer idServicio = servicioServicio.newServicio(servicioBean, source, accion, accionId);
+				this.idServicio = idServicio.toString();
+
+				addActionMessageSession(this.getText("plataforma.servicio.create.ok"));
+			}
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String createServicioAplicacion() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (servicio == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.create.error"));
+			return ERROR;
+		} else {
+
+			if (servicio.getCanalid() != null && servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+				if (newPlataformaAndroid != null && newPlataformaAndroid.equals("true")) {
+					servicio.setAndroidplataforma(true);
+				} else {
+					servicio.setAndroidplataforma(false);
+				}
+				if (newPlataformaiOS != null && newPlataformaiOS.equals("true")) {
+					servicio.setIosplataforma(true);
+				} else {
+					servicio.setIosplataforma(false);
+				}
+			}
+
+			// El servicio se crea desactivado y pendiente de aprobacion
+			servicio.setActivo(false);
+			servicio.setPendienteaprobacion(true);
+			servicio.setPremium(false);
+
+			// Informes
+			if (newInformeActivo != null && newInformeActivo.equals("true")) {
+				servicio.setInformesactivo(true);
+			} else {
+				servicio.setInformesactivo(false);
+			}
+
+			if (servicio.getInformesactivo() != null && servicio.getInformesactivo()) {
+
+				if (newInformesDestinatarios != null && !newInformesDestinatarios.isEmpty()) {
+					servicio.setInformesdestinatarios(newInformesDestinatarios.trim()); // Eliminamos
+																						// los
+																						// espacios
+				}
+
+				if (newAgrupacionEstado != null && newAgrupacionEstado.equals("true")) {
+					servicio.setAgrupacionestado(true);
+				} else {
+					servicio.setAgrupacionestado(false);
+				}
+
+				if (servicio.getCanalid().equals(Integer.valueOf(canalSMTPId))
+						|| servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+					if (newAgrupacionCodOrg != null && newAgrupacionCodOrg.equals("true")) {
+						servicio.setAgrupacioncodorg(true);
+					} else {
+						servicio.setAgrupacioncodorg(false);
+					}
+					if (newAgrupacionCodSia != null && newAgrupacionCodSia.equals("true")) {
+						servicio.setAgrupacioncodsia(true);
+					} else {
+						servicio.setAgrupacioncodsia(false);
+					}
+				} else if (servicio.getCanalid().equals(Integer.valueOf(canalSMSId))) {
+					if (newAgrupacionCodOrg != null && newAgrupacionCodOrg.equals("true")) {
+						servicio.setAgrupacioncodorg(true);
+					} else {
+						servicio.setAgrupacioncodorg(false);
+					}
+					if (newAgrupacionCodSia != null && newAgrupacionCodSia.equals("true")) {
+						servicio.setAgrupacioncodsia(true);
+					} else {
+						servicio.setAgrupacioncodsia(false);
+					}
+					if (newAgrupacionCodOrgPagador != null && newAgrupacionCodOrgPagador.equals("true")) {
+						servicio.setAgrupacioncodorgpagador(true);
+					} else {
+						servicio.setAgrupacioncodorgpagador(false);
+					}
+				}
+			}
+
+			if (newHistorificacion != null) {
+				servicio.setHistorificacion(newHistorificacion);
+				if (!newHistorificacion.equals(4)) {
+					servicio.setHistorificacionInput(null);
+				}
+			}
+			if (newConservacion != null) {
+				servicio.setConservacion(newConservacion);
+				if (!newConservacion.equals(4)) {
+					servicio.setConservacionInput(null);
+				}
+			}
+
+			// Historificacion
+			Integer historificacion = servicio.getHistorificacion();
+
+			if (null != historificacion) {
+				switch (historificacion) {
+				case 1:
+					servicio.setHistorificacion(valor1Historificacion);
+					break;
+				case 2:
+					servicio.setHistorificacion(valor2Historificacion);
+					break;
+				case 3:
+					servicio.setHistorificacion(valor3Historificacion);
+					break;
+				case 4:
+					servicio.setHistorificacion(servicio.getHistorificacionInput());
+					break;
+				default:
+					servicio.setHistorificacion(valor1Historificacion);
+					break;
+				}
+
+			} else {
+				servicio.setHistorificacion(null);
+			}
+			// Conservacion
+			Integer conservacion = servicio.getConservacion();
+			if (conservacion != null) {
+				switch (conservacion) {
+				case 1:
+					servicio.setConservacion(valor1Conservacion);
+					break;
+				case 2:
+					servicio.setConservacion(valor2Conservacion);
+					break;
+				case 3:
+					servicio.setConservacion(valor3Conservacion);
+					break;
+				case 4:
+					servicio.setConservacion(servicio.getConservacionInput());
+					break;
+				default:
+					servicio.setConservacion(valor1Conservacion);
+					break;
+				}
+
+			} else {
+				servicio.setConservacion(null);
+			}
+
+			ServicioBean servicioBean = servicioServicio.createServicioBean(servicio);
+
+			boolean validServicio = false;
+
+			if (servicio != null) {
+				validServicio = validServicio(servicioBean);
+			}
+
+			if (!validServicio) {
+				return ERROR;
+			} else {
+
+				Integer idServicio = servicioServicio.newServicio(servicioBean, source, accion, accionId);
+				this.idServicio = idServicio.toString();
+
+				addActionMessageSession(this.getText("plataforma.servicio.create.ok"));
+
+				// Se envia un correo informativo a la lista de correo
+				try {
+					List<AplicacionBean> listaAplicaciones = servicioAplicacion.getAplicaciones();
+					if (null != listaAplicaciones && !listaAplicaciones.isEmpty()) {
+						for (AplicacionBean aplicacion : listaAplicaciones) {
+							if (aplicacion.getAplicacionId().equals(servicio.getAplicacionid())) {
+								sendMailService.initServicio(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombre(),
+										aplicacion.getNombre(), idServicio.toString(), properties);
+								break;
+							}
+						}
+					}
+				} catch (ServletException e) {
+					logger.error("ServicioAction - createServicioAplicacion:" + e);
+					return SUCCESS;
+				}
+
+			}
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	private boolean validServicio(ServicioBean servicio) {
+		boolean sw = true;
+		if (PlataformaMensajeriaUtil.isEmptyNumber(servicio.getAplicacionid())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.aplicacionId.error"));
+			sw = false;
+		}
+		if (PlataformaMensajeriaUtil.isEmptyNumber(servicio.getCanalid())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.canal.error"));
+			sw = false;
+		}
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getNombre())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.nombre.error"));
+			sw = false;
+		}
+		if (PlataformaMensajeriaUtil.isEmptyNumber(servicio.getNmaxenvios())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.nmaxenvios.error"));
+			sw = false;
+		} else if (!PlataformaMensajeriaUtil.isNumber(servicio.getNmaxenvios())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.nmaxenvios.format.error"));
+			sw = false;
+		}
+		if (PlataformaMensajeriaUtil.isEmptyNumber(servicio.getHistorificacion())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.historificacion.empty"));
+			sw = false;
+		} else if (servicio.getHistorificacion() > valorMaximoPredefinidoHistorificacion && servicio.getMotivohistorificacion().isEmpty()) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.motivoHistorificacion.empty"));
+			sw = false;
+		}
+		if (PlataformaMensajeriaUtil.isEmptyNumber(servicio.getConservacion())) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.conservacion.empty"));
+			sw = false;
+		} else if (servicio.getConservacion() > valorMaximoPredefinidorConservacion && servicio.getMotivoconservacion().isEmpty()) {
+			addActionErrorSession(this.getText("plataforma.servicio.field.motivoConservacion.empty"));
+			sw = false;
+		}
+
+		if (servicio.getCanalid() != null && servicio.getCanalid().intValue() == 3) {
+			if (PlataformaMensajeriaUtil.isEmpty(servicio.getNombreloteenvio())) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.nombreloteenvio.error"));
+				sw = false;
+			}
+			if (PlataformaMensajeriaUtil.isEmpty(servicio.getEndpoint())) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.endpoint.error"));
+				sw = false;
+			}
+
+		}
+		if (servicio.getCanalid() != null && servicio.getCanalid().intValue() == 4) {
+			if (!servicio.getAndroidplataforma() && !servicio.getIosplataforma()) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.plataforma.error"));
+				sw = false;
+			} else {
+				if (servicio.getAndroidplataforma() && PlataformaMensajeriaUtil.isEmpty(servicio.getGcmprojectkey())) {
+					addActionErrorSession(this.getText("plataforma.servicio.field.plataformaAndroid.error"));
+					sw = false;
+				}
+				if (servicio.getIosplataforma() && (PlataformaMensajeriaUtil.isEmpty(servicio.getApnsrutacertificado()) || PlataformaMensajeriaUtil.isEmpty(servicio.getApnspasswordcertificado()))) {
+					addActionErrorSession(this.getText("plataforma.servicio.field.plataformaiOS.error"));
+					sw = false;
+				}
+			}
+			if (PlataformaMensajeriaUtil.isEmptyNumber(servicio.getBadge())) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.badge.error"));
+				sw = false;
+			}
+		}
+		if (servicio.getInformesactivo() != null && servicio.getInformesactivo()) {
+			if (PlataformaMensajeriaUtil.isEmpty(servicio.getInformesdestinatarios())) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.informesdestinatarios.error"));
+				sw = false;
+			} else {
+				String[] emails = servicio.getInformesdestinatarios().split(";");
+				if (emails.length > 0) {
+					for (int i = 0; i < emails.length; i++) {
+						if (!PlataformaMensajeriaUtil.validateEmail(emails[i])) {
+							
+							addActionErrorSession(this.getText("plataforma.servicio.field.informesdestinatarios.email.error"));
+							sw = false;
+							break;
+						}
+					}
+				}
+			}
+			if (servicio.getCanalid() != null && servicio.getCanalid().intValue() == 2) {
+				if (!servicio.getAgrupacionestado() && !servicio.getAgrupacioncodorg() && !servicio.getAgrupacioncodsia() && !servicio.getAgrupacioncodorgpagador()) {
+					addActionErrorSession(this.getText("plataforma.servicio.field.informesagrupaciones.error"));
+					sw = false;
+				}
+			}else{
+				if (!servicio.getAgrupacionestado() && !servicio.getAgrupacioncodorg() && !servicio.getAgrupacioncodsia()) {
+					addActionErrorSession(this.getText("plataforma.servicio.field.informesagrupaciones.error"));
+					sw = false;
+				}
+			}
+			
+		}
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getResponsablefuncionalnombre())) {
+			addActionErrorSession(this.getText("plataforma.aplicacion.field.responsable.funcional.nombre"));
+			sw = false;
+		}
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getResponsablefuncionalemail())) {
+			addActionErrorSession(this.getText("plataforma.aplicacion.field.responsable.funcional.email"));
+			sw = false;
+		}
+
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getResponsabletecniconombre())) {
+			addActionErrorSession(this.getText("plataforma.aplicacion.field.responsable.tecnico.nombre"));
+			sw = false;
+		}
+
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getResponsabletecnicoemail())) {
+			addActionErrorSession(this.getText("plataforma.aplicacion.field.responsable.tecnico.email"));
+			sw = false;
+		}
+		return sw;
+	}
+
+	///MIGRADO
+	public String update() throws BaseException {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		ServicioBean servicioBBDD = null;
+		if (servicio == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.update.error"));
+		} else {
+			if (servicio.getServicioId() == null) {
+				if (idServicio != null) {
+					servicio.setServicioId(Integer.valueOf(idServicio));
+					servicioBBDD = servicioServicio.loadServicio(servicio);
+				} else {
+					String idServicio = (String) request.getAttribute("idServicio");
+					if (idServicio != null) {
+						servicio.setId(Integer.valueOf(idServicio));
+						servicioBBDD = servicioServicio.loadServicio(servicio);
+					}
+				}
+
+			} else {
+				servicioBBDD = servicioServicio.loadServicio(servicio);
+
+			}
+
+			if (servicioBBDD != null) {
+				servicioBBDD.setNombre(servicio.getNombre());
+				servicioBBDD.setDescripcion(servicio.getDescripcion());
+				servicioBBDD.setActivo(servicio.getActivo());
+				servicioBBDD.setPremium(servicio.getPremium());
+				servicioBBDD.setMultiorganismo(servicio.getMultiorganismo());
+				servicioBBDD.setAplicacionid(servicio.getAplicacionid());
+				servicioBBDD.setCanalid(servicio.getCanalid());
+				servicioBBDD.setNmaxenvios(servicio.getNmaxenvios());
+				servicioBBDD.setFrommail(servicio.getFrommail());
+				servicioBBDD.setFrommailname(servicio.getFrommailname());
+				servicioBBDD.setNumeroMaxReenvios(servicio.getNumeroMaxReenvios());
+				servicioBBDD.setResponsablefuncionalemail(servicio.getResponsablefuncionalemail());
+				servicioBBDD.setResponsablefuncionalnombre(servicio.getResponsablefuncionalnombre());
+				servicioBBDD.setResponsabletecnicoemail(servicio.getResponsabletecnicoemail());
+				servicioBBDD.setResponsabletecniconombre(servicio.getResponsabletecniconombre());
+
+				if (null != servicio.getEndpoint() && !servicio.getEndpoint().isEmpty()) {
+					servicioBBDD.setEndpoint(servicio.getEndpoint().trim()); // Eliminamos
+																				// los
+																				// espacios
+				}
+				if (servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+					servicioBBDD.setBadge(servicio.getBadge());
+					if ("true".equals(servicio.getIsAndroidPlataforma())) {
+						servicio.setAndroidplataforma(true);
+						servicioBBDD.setGcmprojectkey(servicio.getGcmprojectkey());
+					} else {
+						servicio.setAndroidplataforma(false);
+						servicioBBDD.setGcmprojectkey(null);
+					}
+					if ("true".equals(servicio.getIsIosPlataforma())) {
+						servicio.setIosplataforma(true);
+						servicioBBDD.setApnsrutacertificado(servicio.getApnsrutacertificado());
+						if (null != servicio.getApnspasswordcertificado()
+								&& !servicio.getApnspasswordcertificado().isEmpty()) {
+							servicioBBDD.setApnspasswordcertificado(servicio.getApnspasswordcertificado().trim()); // Eliminamos
+																													// los
+																													// espacios
+						}
+					} else {
+						servicio.setIosplataforma(false);
+						servicioBBDD.setApnsrutacertificado(null);
+						servicioBBDD.setApnspasswordcertificado(null);
+					}
+					servicioBBDD.setIsAndroidPlataforma(servicio.getIsAndroidPlataforma());
+					servicioBBDD.setIsIosPlataforma(servicio.getIsIosPlataforma());
+				}
+
+				// Informes
+				if (servicio.getIsInformesActivo() != null && "true".equals(servicio.getIsInformesActivo())) {
+					servicioBBDD.setInformesactivo(true);
+				} else {
+					servicioBBDD.setInformesactivo(false);
+				}
+
+				if (servicio.getIsInformesActivo() != null && "true".equals(servicio.getIsInformesActivo())) {
+
+					if (servicio.getInformesdestinatarios() != null && !servicio.getInformesdestinatarios().isEmpty()) {
+						servicioBBDD.setInformesdestinatarios(servicio.getInformesdestinatarios().trim()); // Eliminamos
+																											// los
+																											// espacios
+					}
+					// //VER//////////COMPARACION TRUE/////
+					if (servicio.getIsAgrupacionEstado() != null && "true".equals(servicio.getIsAgrupacionEstado())) {
+						servicioBBDD.setAgrupacionestado(true);
+					} else {
+						servicioBBDD.setAgrupacionestado(false);
+					}
+
+					if (servicio.getCanalid().equals(Integer.valueOf(canalSMTPId))
+							|| servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+						if (servicio.getIsAgrupacionCodOrg() != null && "true".equals(servicio.getIsAgrupacionCodOrg())) {
+							servicioBBDD.setAgrupacioncodorg(true);
+						} else {
+							servicioBBDD.setAgrupacioncodorg(false);
+						}
+						if (servicio.getIsAgrupacionCodSia() != null && "true".equals(servicio.getIsAgrupacionCodSia())) {
+							servicioBBDD.setAgrupacioncodsia(true);
+						} else {
+							servicioBBDD.setAgrupacioncodsia(false);
+						}
+					} else if (servicio.getCanalid().equals(Integer.valueOf(canalSMSId))) {
+						if (servicio.getIsAgrupacionCodOrg() != null && "true".equals(servicio.getIsAgrupacionCodOrg())) {
+							servicioBBDD.setAgrupacioncodorg(true);
+						} else {
+							servicioBBDD.setAgrupacioncodorg(false);
+						}
+						if (servicio.getIsAgrupacionCodSia() != null && "true".equals(servicio.getIsAgrupacionCodSia())) {
+							servicioBBDD.setAgrupacioncodsia(true);
+						} else {
+							servicioBBDD.setAgrupacioncodsia(false);
+						}
+						if (servicio.getIsAgrupacionCodOrgPagador() != null
+								&& "true".equals(servicio.getIsAgrupacionCodOrgPagador())) {
+							servicioBBDD.setAgrupacioncodorgpagador(true);
+						} else {
+							servicioBBDD.setAgrupacioncodorgpagador(false);
+						}
+					}
+				} else {
+					servicioBBDD.setInformesdestinatarios(null);
+					servicioBBDD.setAgrupacionestado(null);
+					servicioBBDD.setAgrupacioncodorg(null);
+					servicioBBDD.setAgrupacioncodsia(null);
+					servicioBBDD.setAgrupacioncodorgpagador(null);
+				}
+
+				// Historificacion
+				Integer historificacion = servicio.getHistorificacion();
+				if (null != historificacion) {
+					switch (historificacion) {
+					case 1:
+						servicioBBDD.setHistorificacion(valor1Historificacion);
+						break;
+					case 2:
+						servicioBBDD.setHistorificacion(valor2Historificacion);
+						break;
+					case 3:
+						servicioBBDD.setHistorificacion(valor3Historificacion);
+						break;
+					case 4:
+						if (null == servicio.getHistorificacionInput()) {
+							servicioBBDD.setHistorificacion(null);
+						} else {
+							servicioBBDD.setHistorificacion(servicio.getHistorificacionInput());
+						}
+						break;
+					default:
+						servicioBBDD.setHistorificacion(valor1Historificacion);
+						break;
+					}
+					servicioBBDD.setMotivohistorificacion(servicio.getMotivohistorificacion());
+
+				} else {
+					servicioBBDD.setHistorificacion(null);
+				}
+
+				// Conservacion
+				Integer conservacion = servicio.getConservacion();
+				if (conservacion != null) {
+					switch (conservacion) {
+					case 1:
+						servicioBBDD.setConservacion(valor1Conservacion);
+						break;
+					case 2:
+						servicioBBDD.setConservacion(valor2Conservacion);
+						break;
+					case 3:
+						servicioBBDD.setConservacion(valor3Conservacion);
+						break;
+					case 4:
+						servicioBBDD.setConservacion(servicio.getConservacionInput());
+						break;
+					default:
+						servicioBBDD.setConservacion(valor1Conservacion);
+						break;
+					}
+					if (null != servicio.getMotivoconservacion()) {
+						servicioBBDD.setMotivoconservacion(servicio.getMotivoconservacion());
+					} else {
+						servicioBBDD.setMotivoconservacion(null);
+					}
+
+				} else {
+					servicioBBDD.setConservacion(null);
+				}
+
+				boolean validServicio = false;
+
+				if (servicioBBDD != null) {
+					validServicio = validServicio(servicioBBDD);
+				}
+				if (null == servicioBBDD.getHistorificacion()) {
+					validServicio = false;
+					addActionErrorSession(this.getText("plataforma.servicio.field.historificacion.empty"));
+				}
+
+				if (!validServicio) {
+					return SUCCESS;
+					// Si el servicio esta pendiente de aprobacion, se aprueba
+					// dicho servicio
+				} else if (null != servicioBBDD.getPendienteaprobacion()
+						&& servicioBBDD.getPendienteaprobacion().equals(Integer.valueOf(1))) {
+					servicioBBDD.setPendienteaprobacion(false);
+				}
+
+			}
+			servicioServicio.updateServicio(servicioBBDD, sourceUpdateServicio, accionUpdateServicio,
+					accionIdUpdateServicio);
+
+			addActionMessageSession(this.getText("plataforma.servicio.update.ok"));
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String updateServicioAplicacion() throws BaseException {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		ServicioBean servicioBBDD = null;
+		if (servicio == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.update.error"));
+		} else {
+			if (servicio.getServicioId() == null) {
+				if (idServicio != null) {
+					servicio.setServicioId(Integer.valueOf(idServicio));
+					servicioBBDD = servicioServicio.loadServicio(servicio);
+				} else {
+					String idServicio = (String) request.getAttribute("idServicio");
+					if (idServicio != null) {
+						servicio.setId(Integer.valueOf(idServicio));
+						servicioBBDD = servicioServicio.loadServicio(servicio);
+					}
+				}
+
+			} else {
+				servicioBBDD = servicioServicio.loadServicio(servicio);
+
+			}
+			if (servicioBBDD != null) {
+				servicioBBDD.setNombre(servicio.getNombre());
+				servicioBBDD.setDescripcion(servicio.getDescripcion());
+				servicioBBDD.setActivo(servicio.getActivo());
+				servicioBBDD.setAplicacionid(servicio.getAplicacionid());
+				servicioBBDD.setCanalid(servicio.getCanalid());
+				servicioBBDD.setNmaxenvios(servicio.getNmaxenvios());
+				servicioBBDD.setFrommail(servicio.getFrommail());
+				servicioBBDD.setFrommailname(servicio.getFrommailname());
+				servicioBBDD.setNumeroMaxReenvios(servicio.getNumeroMaxReenvios());
+				servicioBBDD.setResponsablefuncionalemail(servicio.getResponsablefuncionalemail());
+				servicioBBDD.setResponsablefuncionalnombre(servicio.getResponsablefuncionalnombre());
+				servicioBBDD.setResponsabletecnicoemail(servicio.getResponsabletecnicoemail());
+				servicioBBDD.setResponsabletecniconombre(servicio.getResponsabletecniconombre());
+
+				if (null != servicio.getEndpoint() && !servicio.getEndpoint().isEmpty()) {
+					servicioBBDD.setEndpoint(servicio.getEndpoint().trim()); // Eliminamos los espacios
+				}
+				if (servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+					servicioBBDD.setBadge(servicio.getBadge());
+					if (servicio.getIsAndroidPlataforma().equals("true")) {
+						servicio.setAndroidplataforma(true);
+						servicioBBDD.setGcmprojectkey(servicio.getGcmprojectkey());
+					} else {
+						servicio.setAndroidplataforma(false);
+						servicioBBDD.setGcmprojectkey(null);
+					}
+					if (servicio.getIsIosPlataforma().equals("true")) {
+						servicio.setIosplataforma(true);
+						servicioBBDD.setApnsrutacertificado(servicio.getApnsrutacertificado());
+						if (null != servicio.getApnspasswordcertificado()
+								&& !servicio.getApnspasswordcertificado().isEmpty()) {
+							servicioBBDD.setApnspasswordcertificado(servicio.getApnspasswordcertificado().trim()); // Eliminamos
+																													// los
+																													// espacios
+						}
+					} else {
+						servicio.setIosplataforma(false);
+						servicioBBDD.setApnsrutacertificado(null);
+						servicioBBDD.setApnspasswordcertificado(null);
+					}
+					servicioBBDD.setIsAndroidPlataforma(servicio.getIsAndroidPlataforma());
+					servicioBBDD.setIsIosPlataforma(servicio.getIsIosPlataforma());
+				}
+
+				// Informes
+				if (servicio.getIsInformesActivo() != null && servicio.getIsInformesActivo().equals("true")) {
+					servicioBBDD.setInformesactivo(true);
+				} else {
+					servicioBBDD.setInformesactivo(false);
+				}
+
+				if (servicio.getIsInformesActivo() != null && servicio.getIsInformesActivo().equals("true")) {
+
+					if (servicio.getInformesdestinatarios() != null && !servicio.getInformesdestinatarios().isEmpty()) {
+						servicioBBDD.setInformesdestinatarios(servicio.getInformesdestinatarios().trim()); // Eliminamos
+																											// los
+																											// espacios
+					}
+
+					if (servicio.getIsAgrupacionEstado() != null && servicio.getIsAgrupacionEstado().equals("true")) {
+						servicioBBDD.setAgrupacionestado(true);
+					} else {
+						servicioBBDD.setAgrupacionestado(false);
+					}
+
+					if (servicio.getCanalid().equals(Integer.valueOf(canalSMTPId))
+							|| servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
+						if (servicio.getIsAgrupacionCodOrg() != null && servicio.getIsAgrupacionCodOrg().equals("true")) {
+							servicioBBDD.setAgrupacioncodorg(true);
+						} else {
+							servicioBBDD.setAgrupacioncodorg(false);
+						}
+						if (servicio.getIsAgrupacionCodSia() != null && servicio.getIsAgrupacionCodSia().equals("true")) {
+							servicioBBDD.setAgrupacioncodsia(true);
+						} else {
+							servicioBBDD.setAgrupacioncodsia(false);
+						}
+					} else if (servicio.getCanalid().equals(Integer.valueOf(canalSMSId))) {
+						if (servicio.getIsAgrupacionCodOrg() != null && servicio.getIsAgrupacionCodOrg().equals("true")) {
+							servicioBBDD.setAgrupacioncodorg(true);
+						} else {
+							servicioBBDD.setAgrupacioncodorg(false);
+						}
+						if (servicio.getIsAgrupacionCodSia() != null && servicio.getIsAgrupacionCodSia().equals("true")) {
+							servicioBBDD.setAgrupacioncodsia(true);
+						} else {
+							servicioBBDD.setAgrupacioncodsia(false);
+						}
+						if (servicio.getIsAgrupacionCodOrgPagador() != null
+								&& servicio.getIsAgrupacionCodOrgPagador().equals("true")) {
+							servicioBBDD.setAgrupacioncodorgpagador(true);
+						} else {
+							servicioBBDD.setAgrupacioncodorgpagador(false);
+						}
+					}
+				} else {
+					servicioBBDD.setInformesdestinatarios(null);
+					servicioBBDD.setAgrupacionestado(null);
+					servicioBBDD.setAgrupacioncodorg(null);
+					servicioBBDD.setAgrupacioncodsia(null);
+					servicioBBDD.setAgrupacioncodorgpagador(null);
+				}
+
+				// Historificacion
+				Integer historificacion = servicio.getHistorificacion();
+				if (historificacion != null) {
+					switch (historificacion) {
+					case 1:
+						servicioBBDD.setHistorificacion(valor1Historificacion);
+						break;
+					case 2:
+						servicioBBDD.setHistorificacion(valor2Historificacion);
+						break;
+					case 3:
+						servicioBBDD.setHistorificacion(valor3Historificacion);
+						break;
+					case 4:
+						servicioBBDD.setHistorificacion(servicio.getHistorificacionInput());
+						break;
+					default:
+						servicioBBDD.setHistorificacion(valor1Historificacion);
+						break;
+					}
+					servicioBBDD.setMotivohistorificacion(servicio.getMotivohistorificacion());
+
+				} else {
+					servicioBBDD.setHistorificacion(null);
+				}
+				// Conservacion
+				Integer conservacion = servicio.getConservacion();
+				if (conservacion != null) {
+					switch (conservacion) {
+					case 1:
+						servicioBBDD.setConservacion(valor1Conservacion);
+						break;
+					case 2:
+						servicioBBDD.setConservacion(valor2Conservacion);
+						break;
+					case 3:
+						servicioBBDD.setConservacion(valor3Conservacion);
+						break;
+					case 4:
+						servicioBBDD.setConservacion(servicio.getConservacionInput());
+						break;
+					default:
+						servicioBBDD.setConservacion(valor1Conservacion);
+						break;
+					}
+					if (null != servicio.getMotivoconservacion()) {
+						servicioBBDD.setMotivoconservacion(servicio.getMotivoconservacion());
+					} else {
+						servicioBBDD.setMotivoconservacion(null);
+					}
+
+				} else {
+					servicioBBDD.setConservacion(null);
+				}
+
+				boolean validServicio = false;
+
+				if (servicio != null) {
+					validServicio = validServicio(servicio);
+				}
+
+				if (!validServicio) {
+					return SUCCESS;
+				}
+			}
+			servicioServicio.updateServicio(servicioBBDD, sourceUpdateServicio, accionUpdateServicio,
+					accionIdUpdateServicio);
+			addActionMessageSession(this.getText("plataforma.servicio.update.ok"));
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String load() throws BaseException {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idServicio == null)
+			throw new BusinessException("EL idServicio recibido es nulo");
+		try {
+			servicio = new ServicioBean();
+			servicio.setServicioId(Integer.valueOf(idServicio));
+			servicio = servicioServicio.loadServicio(servicio);
+
+			comboConfiguraciones = getComboConfiguracion(servicio.getCanalid());
+			comboConfiguracionesPlan = getComboConfiguracionesPlan(servicio.getCanalid());
+			comboServicioOrganismos = cargarComboServicioOrganismos();
+
+			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByServicioID(Integer
+					.parseInt(idServicio));
+			listaServicioOrganismos = servicioServicio.getServicioOrganismo(idServicio);
+			listaServidoresServicios = loadServidoresServicio();
+
+			if ((listaPlanificacionesServicio != null && listaPlanificacionesServicio.size() > 0)
+					|| (listaServidoresServicios != null && listaServidoresServicios.size() > 0)) {
+				canalDisabled = "disable";
+			} else {
+				canalDisabled = null;
+			}
+
+			// Historificacion
+			Integer historificacion = servicio.getHistorificacion();
+
+			if (null != historificacion) {
+				switch (historificacion) {
+				case 30:
+					servicio.setHistorificacion(1);
+					break;
+				case 60:
+					servicio.setHistorificacion(2);
+					break;
+				case 90:
+					servicio.setHistorificacion(3);
+					break;
+				default:
+					servicio.setHistorificacionInput(servicio.getHistorificacion());
+					servicio.setHistorificacion(4);
+					break;
+				}
+			} else {
+				servicio.setHistorificacion(historificacion);
+			}
+			// Conservacion
+			Integer conservacion = servicio.getConservacion();
+			if (conservacion != null) {
+				switch (conservacion) {
+				case 1:
+					servicio.setConservacion(1);
+					break;
+				case 2:
+					servicio.setConservacion(2);
+					break;
+				case 3:
+					servicio.setConservacion(3);
+					break;
+				default:
+					servicio.setConservacionInput(servicio.getConservacion());
+					servicio.setConservacion(4);
+					break;
+				}
+			} else {
+				servicio.setConservacion(conservacion);
+			}
+
+			return SUCCESS;
+		} catch (NumberFormatException e) {
+			logger.error("ServicioAction - load:" + e);
+			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { servicio
+					.getServicioId().toString() });
+			throw new BusinessException(mensg);
+		} catch (BusinessException e) {
+			logger.error("ServicioAction - load:" + e);
+			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { servicio
+					.getServicioId().toString() });
+			throw new BusinessException(mensg);
+		}
+
+	}
+
+	///MIGRADO
+	public String deleteServicioAplicacion() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idAplicacion == null && idServicio == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deleteServicioAplicacion.error"));
+		} else {
+			ServicioBean servicio = new ServicioBean();
+			servicio.setServicioId(Integer.valueOf(idServicio));
+			ServicioBean servBBDD = servicioServicio.loadServicio(servicio);
+			servBBDD.setAplicacionid(null);
+			servBBDD.setEliminado("S");
+			servicioServicio.updateServicio(servBBDD, source, accion, accionId);
+			addActionMessageSession(this.getText("plataforma.servicio.deleteServicioAplicacion.ok"));
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String deleteServicioAplicacionSelected() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (checkDelList == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deleteSelected.error"));
+		} else {
+			for (String idServicio : checkDelList) {
+				ServicioBean servicio = new ServicioBean();
+				servicio.setServicioId(Integer.valueOf(idServicio));
+				ServicioBean servBBDD = servicioServicio.loadServicio(servicio);
+				servBBDD.setAplicacionid(null);
+				servicioServicio.updateServicio(servBBDD, source, accion, accionId);
+				addActionMessageSession(this.getText("plataforma.servicio.deleteServicioAplicacion.ok"));
+			}
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String delete() throws BaseException {
+		String accionPlanificacion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String accionServicio = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionIdServicio = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String descripcionServidorServicio = properties.getProperty(
+				"log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO", null);
+
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idServicio == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.delete.error"));
+		} else {
+			servicio = new ServicioBean();
+			servicio.setServicioId(Integer.valueOf(idServicio));
+			servicioServicio.deleteServicio(servicio, accionServicio, accionIdServicio, source, accionPlanificacion,
+					accionIdPlanificacion, descripcionPlanificacion, descripcionServidorServicio);
+			addActionMessageSession(this.getText("plataforma.servicio.delete.ok"));
+
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String deleteSelected() throws BaseException {
+		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String accionServicio = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionIdServicio = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String descripcionServidorServicio = properties.getProperty(
+				"log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (checkDelList == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deleteSelected.error"));
+		} else {
+			for (String idServicio : checkDelList) {
+				servicio = new ServicioBean();
+				servicio.setServicioId(Integer.valueOf(idServicio));
+				servicioServicio.deleteServicio(servicio, accionServicio, accionIdServicio, source,
+						accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion,
+						descripcionServidorServicio);
+			}
+			addActionMessageSession(this.getText("plataforma.servicio.deleteSelected.ok"));
+		}
+		return SUCCESS;
+
+	}
+
+	///MIGRADO
+	public String deletePlanificacionesSelected() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (checkDelListPlanificaciones == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deletePlanificacionesSelected.error"));
+
+		} else {
+			for (String idPlanificacion : checkDelListPlanificaciones) {
+				PlanificacionBean planificacion = new PlanificacionBean();
+				planificacion.setPlanificacionId(Integer.valueOf(idPlanificacion));
+				servicioPlanificacion.deletePlanificacion(planificacion, source, accion, accionId, descripcion);
+			}
+			addActionMessageSession(this.getText("plataforma.servicio.deletePlanificacionesSelected.ok"));
+
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String addPlanificacionServicio() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
+
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (planificacionServidor != null && planificacionValida(planificacionServidor)) {
+			if (servicio != null && servicio.getCanalid() != null && servicio.getCanalid().intValue() == 2) {
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(2));
+			} else if (servicio != null && servicio.getCanalid() != null && servicio.getCanalid().intValue() == 1) {
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(1));
+			} else if (servicio != null && servicio.getCanalid() != null && servicio.getCanalid().intValue() == 3) {
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(3));
+			} else if (servicio != null && servicio.getCanalid() != null && servicio.getCanalid().intValue() == 4) {
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(4));
+			}
+
+			int valido = servicioPlanificacion.validaPlanificacionOptima(idPlanificacion,
+					planificacionServidor.getTipoPlanificacionId(), planificacionServidor.getServidorId(),
+					planificacionServidor.getServicioId(), planificacionServidor.getLunes(),
+					planificacionServidor.getMartes(), planificacionServidor.getMiercoles(),
+					planificacionServidor.getJueves(), planificacionServidor.getViernes(),
+					planificacionServidor.getSabado(), planificacionServidor.getDomingo(),
+					planificacionServidor.getHoraHasta(), planificacionServidor.getHoraDesde());
+
+			if (valido == 1) {
+				planificacionServidor.setActivo(true);
+				servicioPlanificacion.newPlanificacion(planificacionServidor, source, accion, accionId, descripcion);
+
+				addActionMessageSession(this.getText("plataforma.servidores.planificacion.add.ok"));
+			} else if (valido == 2) {
+				addActionErrorSession("No se ha guardado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
+			} else {
+				addActionErrorSession("No se ha guardado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes");
+			}
+		} else {
+			return ERROR;
+		}
+
+		return SUCCESS;
+	}
+
+	/**
+	 * Verifica que se ha introducido por lo menos un día de la semana y las
+	 * horas de inicio y fin
+	 * 
+	 * @param planificacionServidor
+	 */
+	///MIGRADO
+	private boolean planificacionValida(PlanificacionBean planificacionServidor) {
+		boolean sw = true;
+		if (planificacionServidor != null) {
+			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getHoraDesde())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getHoraHasta())) {
+				addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.error"));
+				sw = false;
+
+			}
+			if (!PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getHoraDesde())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getHoraHasta())) {
+				addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaHasta.error"));
+				sw = false;
+			}
+			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getHoraDesde())
+					&& !PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getHoraHasta())) {
+				addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.error"));
+				sw = false;
+			}
+			if (sw) {
+				if (!validoFormatoHora(planificacionServidor.getHoraDesde())) {
+					addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.formato.error"));
+					sw = false;
+				}
+				if (!validoFormatoHora(planificacionServidor.getHoraHasta())) {
+					addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaHasta.formato.error"));
+					sw = false;
+				}
+				if (sw) {
+					if (!validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
+						sw = false;
+					}
+				}
+			}
+			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getMartes())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getMiercoles())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getJueves())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getViernes())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getSabado())
+					&& PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getDomingo())) {
+				addFieldErrorSession(this.getText("plataforma.servidores.planificacion.dias.error"));
+				sw = false;
+			}
+			
+		}
+		return sw;
+	}
+
+	///MIGRADO
+	public String deletePlanificacionServicio() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		if (idPlanificacion == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deletePlanificacion.error"));
+
+		} else {
+			PlanificacionBean planificacion = new PlanificacionBean();
+			planificacion.setPlanificacionId(Integer.valueOf(idPlanificacion));
+			servicioPlanificacion.deletePlanificacion(planificacion, source, accion, accionId, descripcion);
+			addActionMessageSession(this.getText("plataforma.servicio.deletePlanificacion.ok"));
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String addServidorServicio() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVIDOR", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		boolean sw = true;
+		if (servidorServicio != null) {
+
+			if (PlataformaMensajeriaUtil.isEmptyNumber(servidorServicio.getServidorId())) {
+				addFieldErrorSession(this.getText("plataforma.servicio.servidorservicio.field.servidorId"));
+				sw = false;
+			}
+
+			if (servicio.getCanalid() == canalSMSId) {
+				if (PlataformaMensajeriaUtil.isEmpty(servidorServicio.getHeaderSMS())) {
+					addFieldErrorSession(this.getText("plataforma.servicio.servidorservicio.field.headerSMS"));
+					sw = false;
+				}
+				if (PlataformaMensajeriaUtil.isEmpty(servidorServicio.getProveedorUsuarioSMS())) {
+					addFieldErrorSession(this.getText("plataforma.servicio.servidorservicio.field.proveedorUsuarioSMS"));
+					sw = false;
+				}
+				if (PlataformaMensajeriaUtil.isEmpty(servidorServicio.getProveedorPasswordSMS())) {
+					addFieldErrorSession(this
+							.getText("plataforma.servicio.servidorservicio.field.proveedorPasswordSMS"));
+					sw = false;
+				}
+			}
+			if (sw) {
+				ServicioBean sBean = new ServicioBean();
+				sBean.setServicioId(Integer.valueOf(idServicio));
+				ServicioBean servBean = servicioServicio.loadServicio(sBean);
+				servBean.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+				servBean.setFechamodificacion(new Date());
+				servicioServicio.updateServicio(servBean, null, null,
+						null);
+				servidorServicio.setServicioId(servicio.getServicioId());
+				servicioServicio.newServidoresServicio(servidorServicio, source, accion, accionId, descripcion);
+				addActionMessageSession(this.getText("plataforma.servicio.servidorservicio.add.ok"));
+			} else {
+				return ERROR;
+			}
+		} else {
+			addActionErrorSession(this.getText("plataforma.servicio.servidorservicio.add.error"));
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	@Transactional
+	public String addServicioOrganismos() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_ORGANISMO", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		boolean sw = true;
+
+		if (servicioOrganismos != null) {
+			servicio.setServicioId(Integer.valueOf(idServicio));
+			ServicioBean servicioBBDD = servicioServicio.loadServicio(servicio);
+			if (!servicioBBDD.getMultiorganismo()) {
+				addFieldErrorSession(this.getText("plataforma.servicio.servidorServicio.field.multiorganismo"));
+				sw = false;
+			}
+			if (PlataformaMensajeriaUtil.isEmptyNumber(servicioOrganismos.getOrganismoId())) {
+				addFieldErrorSession(this
+						.getText("plataforma.servicio.servidorServicio.field.multiorganismo.servicio.vacio"));
+				sw = false;
+			}
+
+			if (null != listaServicioOrganismos) {
+				for (ServicioOrganismosBean s : listaServicioOrganismos) {
+					if (s.getOrganismoId().equals(servicioOrganismos.getOrganismoId())) {
+						addFieldErrorSession(this
+								.getText("plataforma.servicio.servidorServicio.field.multiorganismo.organismo.repetido"));
+						sw = false;
+					}
+				}
+			}
+
+			if (sw) {
+
+				ServicioBean sBean = new ServicioBean();
+				sBean.setServicioId(Integer.valueOf(idServicio));
+				ServicioBean servBean = servicioServicio.loadServicio(sBean);
+				servicioServicio.updateServicio(servBean, null, null, null);
+
+				// modificamos el organismo
+				OrganismoBean oBean = new OrganismoBean();
+				oBean.setOrganismoId(servicioOrganismos.getOrganismoId());
+				OrganismoBean orgBean = servicioOrganismo.loadOrganismo(oBean);
+				servicioOrganismo.updateOrganismo(orgBean, null, null, null);
+
+				servicioOrganismos.setServicioId(sBean.getServicioId());
+				servicioOrganismos.setOrganismoId(servicioOrganismos.getOrganismoId());
+
+				servicioServicio.newServicioOrganismo(servicioOrganismos, source, accion, accionId, descripcion);
+				addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.add.ok"));
+			} else {
+				return ERROR;
+			}
+		} else {
+			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.add.error"));
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String deleteServidoresServiciosSelected() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String sourceServicios = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcionServidores = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR", null);
+		String sourceOrganismo = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String descripcionServidorOrganismo = properties.getProperty(
+				"log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_ORGANISMO", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (checkDelListServidorServicios == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.servidorservicio.deleteSelected.error"));
+		} else {
+			for (String servidorServicioId : checkDelListServidorServicios) {
+				ServidoresServiciosBean servidorServicio = new ServidoresServiciosBean();
+				servidorServicio.setServidorServicioId(Integer.valueOf(servidorServicioId));
+				ServidoresOrganismosBean servidorOrg = new ServidoresOrganismosBean();
+				servidorOrg.setServidorOrganismoId(Long.valueOf(servidorServicioId));
+
+				ServidoresOrganismosBean so = servicioServidor.loadServidorOrganismoBean(servidorOrg);
+				if (so != null) {
+					// se borran de los organismos
+					servidorOrganismos = new ServidoresOrganismosBean();
+					servidorOrganismos.setServidorOrganismoId(Long.valueOf(servidorServicioId));
+					OrganismoBean oBean = new OrganismoBean();
+					oBean.setOrganismoId(so.getOrganismoId().intValue());
+					OrganismoBean orgBean = servicioOrganismo.loadOrganismo(oBean);
+					orgBean.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+					orgBean.setFechamodificacion(new Date());
+					servicioOrganismo.updateOrganismo(orgBean, null, null,null);
+
+					Long id = servicioServidor.loadServidorOrganismoBean(servidorOrganismos).getServidorId();
+					// ////borrar planificaciones del organismo
+					List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion
+							.getPlanificacionesByOrganismoID(oBean.getOrganismoId());
+					if (null != listaPlanificacionesOrganismos) {
+						for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+							if (o.getServidorId().equals(id.intValue())) {
+								servicioPlanificacion.deletePlanificacion(o, sourceOrganismo, accionPlanificacion,
+										accionIdPlanificacion, descripcionPlanificacion);
+							}
+						}
+					}
+
+					servicioServidor.deleteServidorOrganismos(servidorOrganismos, sourceOrganismo, accion, accionId,
+							descripcionServidorOrganismo);
+				} else {
+					ServicioBean sBean = new ServicioBean();
+					sBean.setServicioId(Integer.valueOf(idServicio));
+					ServicioBean servBean = servicioServicio.loadServicio(sBean);
+					servBean.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+					servBean.setFechamodificacion(new Date());
+					servicioServicio.updateServicio(servBean, null, null,null);
+					servicioServicio.deleteServidoresServicios(servidorServicio, sourceServicios, accion, accionId,
+							descripcionServidores);
+				}
+
+			}
+			addActionMessageSession(this.getText("plataforma.servicio.servidorservicio.deleteSelected.ok"));
+
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String deleteServicioOrganismosSelected() throws BaseException {
+		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String sourceOrganismo = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_ORGANISMO_SERVICIO", null);
+
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (checkDelListServiciosOrganismos == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.deleteSelected.error"));
+
+		} else {
+
+			for (String serOrg : checkDelListServiciosOrganismos) {
+				ServicioOrganismosBean servicioOrganismo = new ServicioOrganismosBean();
+				servicioOrganismo.setServicioOrganismoId(Integer.valueOf(serOrg));
+
+				// ////borrar planificaciones del organismo
+				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion
+						.getPlanificacionesByOrganismoID(Integer.valueOf(serOrg));
+				if (null != listaPlanificacionesOrganismos) {
+					for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+						if (o.getServicioId().equals(Integer.valueOf(idServicio))) {
+							servicioPlanificacion.deletePlanificacion(o, sourceOrganismo, accionPlanificacion,
+									accionIdPlanificacion, descripcionPlanificacion);
+						}
+					}
+				}
+
+				servicioServicio.deleteServicioOrganismos(servicioOrganismo, source, accion, accionId, descripcion);
+
+			}
+			addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.delete.ok"));
+
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String deleteServicioOrganismo() throws BaseException {
+		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String sourceOrganismo = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_ORGANISMO", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idServicioOrganismo == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.delete.error"));
+		} else {
+			// ////borrar planificaciones del organismo
+			List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion
+					.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
+			if (null != listaPlanificacionesOrganismos) {
+				for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+					if (o.getServicioId().equals(Integer.valueOf(idServicio))) {
+						servicioPlanificacion.deletePlanificacion(o, sourceOrganismo, accionPlanificacion,
+								accionIdPlanificacion, descripcionPlanificacion);
+					}
+				}
+			}
+
+			ServicioOrganismosBean servicioOrganismo = new ServicioOrganismosBean();
+			servicioOrganismo.setServicioOrganismoId(Integer.valueOf(idServicioOrganismo));
+			servicioServicio.deleteServicioOrganismos(servicioOrganismo, source, accion, accionId, descripcion);
+			addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.delete.ok"));
+
+		}
+
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	public String deleteServidorServicio() throws BaseException {
+		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
+		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR", null);
+		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String sourceServicio = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		String sourceOrganismo = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String descripcionServidorOrganismo = properties.getProperty(
+				"log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_ORGANISMO", null);
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (servidorServicioId == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.servidorservicio.delete.error"));
+
+		} else {
+
+			if (null != idOrganismo && idOrganismo.length() > 0) {
+				servidorOrganismos = new ServidoresOrganismosBean();
+				servidorOrganismos.setServidorOrganismoId(Long.valueOf(servidorServicioId));
+				OrganismoBean oBean = new OrganismoBean();
+				oBean.setOrganismoId(Integer.valueOf(idOrganismo));
+				OrganismoBean orgBean = servicioOrganismo.loadOrganismo(oBean);
+				orgBean.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+				orgBean.setFechamodificacion(new Date());
+				servicioOrganismo.updateOrganismo(orgBean, sourceUpdateOrganismo, accionUpdateOrganismo,
+						accionIdUpdateOrganismo);
+
+				Long id = servicioServidor.loadServidorOrganismoBean(servidorOrganismos).getServidorId();
+				// ////borrar planificaciones del organismo que tienen el mismo servidor y servicio ///////
+				////Esto antes no se hacía y no se tenía en cuenta el servicio////////
+				////Comprobar si está bien/////
+				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion
+						.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
+				if (null != listaPlanificacionesOrganismos) {
+					for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+						if (o.getServidorId().equals(id.intValue()) && o.getServicioId().equals(Integer.valueOf(idServicio))) {
+							servicioPlanificacion.deletePlanificacion(o, sourceServicio, accionPlanificacion,
+									accionIdPlanificacion, descripcionPlanificacion);
+						}
+					}
+				}
+
+				servicioServidor.deleteServidorOrganismos(servidorOrganismos, sourceOrganismo, accion, accionId,
+						descripcionServidorOrganismo);
+			} else {
+				servidorServicio = new ServidoresServiciosBean();
+				servidorServicio.setServidorServicioId(Integer.valueOf(servidorServicioId));
+				ServicioBean sBean = new ServicioBean();
+				sBean.setServicioId(Integer.valueOf(idServicio));
+				ServicioBean servBean = servicioServicio.loadServicio(sBean);
+				servBean.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+				servBean.setFechamodificacion(new Date());
+				servicioServicio.updateServicio(servBean, sourceUpdateServicio, accionUpdateServicio,
+						accionIdUpdateServicio);
+				servicioServicio.deleteServidoresServicios(servidorServicio, source, accion, accionId, descripcion);
+			}
+			addActionMessageSession(this.getText("plataforma.servicio.servidorservicio.delete.ok"));
+		}
+		return SUCCESS;
+	}
+
+	///MIGRADO
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void prepare() throws Exception {
+		this.validate();
+		cargarCtes();
+		session = (Map) ActionContext.getContext().get("session");
+		recovery = (String) session.get(txtRecovery);
+
+		comboAplicaciones = getComboValues();
+		comboCanales = getComboValuesCanales();
+
+		// Si se viene de Aplicaciones para crear un nuevo servicio
+		if (idAplicacion != null && idAplicacion.length() > 0 && idServicio == null) {
+			servicio = new ServicioBean();
+			servicio.setAplicacionid(Integer.valueOf(idAplicacion));
+
+			AplicacionBean detalleApp = new AplicacionBean();
+			detalleApp.setAplicacionId(Integer.valueOf(idAplicacion));
+			detalleApp = servicioAplicacion.loadAplicacion(detalleApp);
+			if (null != detalleApp) {
+				servicio.setAplicacionnombre(detalleApp.getNombre());
+			}
+		}
+		if (idServicio != null) {
+			if (servicio == null)
+				load();
+		}
+	}
+
+	///MIGRADO
+	private void cargarCtes() {
+		requestAttributeTotalsize = properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null);
+		requestAttributePagesize = properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null);
+		canalSMTPId = Integer.parseInt(properties.getProperty("generales.CANAL_SMTP_ID", null));
+		canalSMSId = Integer.parseInt(properties.getProperty("generales.CANAL_SMS_ID", null));
+		canalRecepcionSMSId = Integer.parseInt(properties.getProperty("generales.CANAL_RECEPCION_SMS_ID", null));
+		canalServidorPushId = Integer.parseInt(properties.getProperty("generales.CANAL_SERVIDOR_PUSH_ID", null));
+		valorMaximoPredefinidoHistorificacion = Integer.parseInt(properties.getProperty(
+				"servicioAction.VALOR_MAXIMO_PREDEFINIDO_HISTORIFICACION", null));
+		valorMaximoPredefinidorConservacion = Integer.parseInt(properties.getProperty(
+				"servicioAction.VALOR_MAXIMO_PREDEFINIDO_CONSERVACION", null));
+		valor1Historificacion = Integer
+				.parseInt(properties.getProperty("servicioAction.VALOR_1_HISTORIFICACION", null));
+		valor2Historificacion = Integer
+				.parseInt(properties.getProperty("servicioAction.VALOR_2_HISTORIFICACION", null));
+		valor3Historificacion = Integer
+				.parseInt(properties.getProperty("servicioAction.VALOR_3_HISTORIFICACION", null));
+		valor1Conservacion = Integer.parseInt(properties.getProperty("servicioAction.VALOR_1_CONSERVACION", null));
+		valor2Conservacion = Integer.parseInt(properties.getProperty("servicioAction.VALOR_2_CONSERVACION", null));
+		valor3Conservacion = Integer.parseInt(properties.getProperty("servicioAction.VALOR_3_CONSERVACION", null));
+		txtRecovery = properties.getProperty("servicioAction.RECOVERY", null);
+		pagesize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		accionUpdateServicio = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		accionIdUpdateServicio = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		sourceUpdateServicio = properties.getProperty("log.SOURCE_SERVICIOS", null);
+		accionUpdateOrganismo = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		accionIdUpdateOrganismo = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
+		sourceUpdateOrganismo = properties.getProperty("log.SOURCE_SERVICIOS", null);
+	}
+
+	///MIGRADO
+	private boolean validoHoras(String horaDesde, String horaHasta) {
+		boolean sw = true;
+		String[] horaDesdeArray = horaDesde.split(":");
+		String[] horaHastaArray = horaHasta.split(":");
+		int hDesde = Integer.valueOf(horaDesdeArray[0]);
+		int mDesde = Integer.valueOf(horaDesdeArray[1]);
+		int hHasta = Integer.valueOf(horaHastaArray[0]);
+		int mHasta = Integer.valueOf(horaHastaArray[1]);
+		if (hDesde > hHasta) {
+			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			sw = false;
+		} else if (hDesde == hHasta && mDesde > mHasta) {
+			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			sw = false;
+		} else if (hDesde == hHasta && mDesde == mHasta) {
+			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.iguales.error"));
+			sw = false;
+		}
+		return sw;
+	}
+
+	///MIGRADO
+	private boolean validoFormatoHora(String hora) {
+		boolean sw = true;
+		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
+			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+				sw = false;
+			}
+		}
+		return sw;
+	}
+
+	///MIGRADO
+	private List<KeyValueObject> getComboConfiguracion(Integer idCanal) {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+
+		KeyValueObject option = null;
+		ArrayList<ProveedorSMSBean> keysSMS = null;
+		ArrayList<ReceptorSMSBean> keysReceptorSMS = null;
+		ArrayList<ServidorBean> keysSMTP = null;
+		ArrayList<ServidorPushBean> keysServidorPush = null;
+		if (idCanal != null && idCanal.intValue() == canalSMSId) {
+			try {
+				keysSMS = (ArrayList<ProveedorSMSBean>) servicioProveedorSMS.getProveedoresSMSNoAsignados(
+						Integer.valueOf(idServicio),
+						Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMS", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracion:" + e);
+			}
+
+			if (keysSMS != null && keysSMS.size() > 0) {
+				for (ProveedorSMSBean key : keysSMS) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getProveedorSMSId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+			}
+		} else if (idCanal != null && idCanal.intValue() == canalRecepcionSMSId) {
+			try {
+				keysReceptorSMS = (ArrayList<ReceptorSMSBean>) servicioReceptorSMS.getReceptoresSMSNoAsignados(
+						Integer.valueOf(idServicio),
+						Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_RECEPCION", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracion:" + e);
+			}
+
+			if (keysReceptorSMS != null && keysReceptorSMS.size() > 0) {
+				for (ReceptorSMSBean key : keysReceptorSMS) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getReceptorSMSId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+			}
+		} else if (idCanal != null && idCanal.intValue() == canalSMTPId) {
+			try {
+				keysSMTP = (ArrayList<ServidorBean>) servicioServidor.getServidoresNoAsignados(
+						Integer.valueOf(idServicio),
+						Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMTP", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracion:" + e);
+			}
+			if (keysSMTP != null && keysSMTP.size() > 0)
+				for (ServidorBean key : keysSMTP) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getServidorid().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+		} else if (idCanal != null && idCanal.intValue() == canalServidorPushId) {
+			try {
+				keysServidorPush = (ArrayList<ServidorPushBean>) servicioServidorPush.getServidoresPushNoAsignados(
+						Integer.valueOf(idServicio),
+						Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_PUSH", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracion:" + e);
+			}
+			if (keysServidorPush != null && keysServidorPush.size() > 0)
+				for (ServidorPushBean key : keysServidorPush) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getServidorPushId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+		}
+
+		return result;
+	}
+
+	///MIGRADO
+	private List<KeyValueObject> getComboConfiguracionesPlan(Integer idCanal) {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+
+		KeyValueObject option = null;
+		ArrayList<ProveedorSMSBean> keysSMS = null;
+		ArrayList<ReceptorSMSBean> keysReceptorSMS = null;
+		ArrayList<ServidorBean> keysSMTP = null;
+		ArrayList<ServidorPushBean> keysServidoresPush = null;
+		if (idCanal != null && idCanal.intValue() == canalSMSId) {
+			try {
+				keysSMS = (ArrayList<ProveedorSMSBean>) servicioProveedorSMS.getProveedoresSMS(Integer
+						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMS", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracionesPlan:" + e);
+			}
+
+			if (keysSMS != null && keysSMS.size() > 0) {
+				for (ProveedorSMSBean key : keysSMS) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getProveedorSMSId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+			}
+		} else if (idCanal != null && idCanal.intValue() == canalRecepcionSMSId) {
+			try {
+				keysReceptorSMS = (ArrayList<ReceptorSMSBean>) servicioReceptorSMS.getReceptoresSMS(Integer
+						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_RECEPCION", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracionesPlan:" + e);
+			}
+
+			if (keysReceptorSMS != null && keysReceptorSMS.size() > 0) {
+				for (ReceptorSMSBean key : keysReceptorSMS) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getReceptorSMSId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+			}
+		} else if (idCanal != null && idCanal.intValue() == canalSMTPId) {
+			try {
+				keysSMTP = (ArrayList<ServidorBean>) servicioServidor.getServidores(Integer.parseInt(properties
+						.getProperty("generales.TIPO_SERVIDOR_SMTP", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracionesPlan:" + e);
+			}
+
+			if (keysSMTP != null && keysSMTP.size() > 0)
+				for (ServidorBean key : keysSMTP) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getServidorid().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+		} else if (idCanal != null && idCanal.intValue() == canalServidorPushId) {
+			try {
+				keysServidoresPush = (ArrayList<ServidorPushBean>) servicioServidorPush.getServidoresPush(Integer
+						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_PUSH", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracionesPlan:" + e);
+			}
+
+			if (keysServidoresPush != null && keysServidoresPush.size() > 0) {
+				for (ServidorPushBean key : keysServidoresPush) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getServidorPushId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+			}
+		}
+		return result;
+	}
+
+	///MIGRADO
+	private List<KeyValueObject> cargarComboServicioOrganismos() {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+
+		KeyValueObject option = null;
+
+		ArrayList<OrganismoBean> keys = null;
+		try {
+			keys = (ArrayList<OrganismoBean>) servicioOrganismo.getOrganismos();
+		} catch (BusinessException e) {
+			logger.error("ServicioAction - cargarComboServicioOrganismos:" + e);
+		}
+
+		if (keys != null && keys.size() > 0)
+			for (OrganismoBean key : keys) {
+				option = new KeyValueObject();
+				option.setCodigo(key.getOrganismoId().toString());
+				option.setDescripcion(key.getDir3());
+				result.add(option);
+			}
+		return result;
+	}
+
+	///MIGRADO
+	private List<KeyValueObject> getComboValuesCanales() {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+
+		KeyValueObject option = null;
+		ArrayList<CanalBean> keys = null;
+		try {
+			keys = (ArrayList<CanalBean>) servicioCanal.getCanales();
+		} catch (BusinessException e) {
+			logger.error("ServicioAction - getComboValuesCanales:" + e);
+		}
+
+		if (keys != null && keys.size() > 0)
+			for (CanalBean key : keys) {
+
+				option = new KeyValueObject();
+				option.setCodigo(key.getCanalId().toString());
+				option.setDescripcion(key.getNombre());
+				result.add(option);
+			}
+		return result;
+	}
+
+	///MIGRADO
+	private List<KeyValueObject> getComboValues() {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		KeyValueObject option = null;
+		ArrayList<AplicacionBean> keys = null;
+		try {
+			keys = (ArrayList<AplicacionBean>) servicioAplicacion.getAplicaciones();
+		} catch (BusinessException e) {
+			logger.error("ServicioAction - getComboValues:" + e);
+		}
+		if (keys != null && keys.size() > 0)
+			for (AplicacionBean key : keys) {
+
+				option = new KeyValueObject();
+				option.setCodigo(key.getAplicacionId().toString());
+				option.setDescripcion(key.getNombre());
+				result.add(option);
+			}
+		return result;
+	}
+
+	///MIGRADO
+	private List<ServidoresServiciosBean> loadServidoresServicio() {
+		List<ServidoresServiciosBean> res = null;
+		List<Integer> listaOrganismos = new ArrayList<Integer>();
+		if (idServicio != null && idServicio.length() > 0) {
+			try {
+				res = servicioServicio.getServidoresServicios(idServicio);
+				if (null == res)
+					res = new ArrayList<ServidoresServiciosBean>();
+				// tenemos los id de los organismo
+				if (listaServicioOrganismos != null && listaServicioOrganismos.size() > 0) {
+					for (ServicioOrganismosBean l : listaServicioOrganismos) {
+						if (!listaOrganismos.contains(l.getOrganismoId()))
+							listaOrganismos.add(l.getOrganismoId());
+					}
+					res.addAll(servicioServidor.getServidorOrganismo(listaOrganismos));
+				}
+			} catch (NumberFormatException e) {
+				logger.error("ServicioAction - loadServidoresServicio:" + e);
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - loadServidoresServicio:" + e);
+			}
+		}
+		return res;
+	}
+
+	///MIGRADO
+	/**
+	 * Método que resuelve el lugar donde tiene que volver
+	 */
+	@SuppressWarnings("unchecked")
+	public String getVolver() {
+		String volver = "buscarServicios.action";
+		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
+			volver = from + "?" + var + "=" + idFrom;
+			session.put(txtRecovery, volver);
+		} else if (session.get(txtRecovery) != null) {
+			volver = (String) session.get(txtRecovery);
+			session.put(txtRecovery, null);
+		}
+		return volver;
+	}
+
+	///MIGRADO
+	/**
+	 * Método que resuelve el lugar donde tiene que volver
+	 */
+	public String getVolverAplicacion() {
+		String volverAplicacion = "viewAplicacion.action?idAplicacion=" + servicio.getAplicacionid();
+		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
+			volverAplicacion = from + "?" + var + "=" + idFrom;
+		}
+		return volverAplicacion;
+	}
+
+	public List<KeyValueObject> getComboConfiguracionesPlan() {
+		return comboConfiguracionesPlan;
+	}
+
+	public void setComboConfiguracionesPlan(List<KeyValueObject> comboConfiguracionesPlan) {
+		this.comboConfiguracionesPlan = comboConfiguracionesPlan;
+	}
+
+	public void setCanalDisabled(String canalDisabled) {
+		this.canalDisabled = canalDisabled;
+	}
+
+	public List<KeyValueObject> getComboServicioOrganismos() {
+		return comboServicioOrganismos;
+	}
+
+	public void setComboServicioOrganismos(List<KeyValueObject> comboServicioOrganismos) {
+		this.comboServicioOrganismos = comboServicioOrganismos;
+	}
+
+	public List<KeyValueObject> getComboCanales() {
+		return comboCanales;
+	}
+
+	public void setComboCanales(List<KeyValueObject> comboCanales) {
+		this.comboCanales = comboCanales;
+	}
+
+	public String getResultCount() {
+		return resultCount;
+	}
+
+	public void setResultCount(String resultCount) {
+		this.resultCount = resultCount;
+	}
+
+	public String[] getCheckDelList() {
+		return checkDelList;
+	}
+
+	public void setCheckDelList(String[] checkDelList) {
+		this.checkDelList = checkDelList;
+	}
+
+	public void setParametroServidorId(String parametroServidorId) {
+		this.parametroServidorId = parametroServidorId;
+	}
+
+	public List<KeyValueObject> getComboAplicaciones() {
+		return comboAplicaciones;
+	}
+
+	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
+		this.comboAplicaciones = comboAplicaciones;
+	}
+
+	public List<ServicioBean> getListaServicios() {
+		return listaServicios;
+	}
+
+	public void setListaServicios(List<ServicioBean> listaServicios) {
+		this.listaServicios = listaServicios;
+	}
+
+	public ServicioServicio getServicioServicio() {
+		return servicioServicio;
+	}
+
+	public void setServicioServicio(ServicioServicio servicioServicio) {
+		this.servicioServicio = servicioServicio;
+	}
+
+	public ServicioAplicacion getServicioAplicacion() {
+		return servicioAplicacion;
+	}
+
+	public void setServicioAplicacion(ServicioAplicacion servicioAplicacion) {
+		this.servicioAplicacion = servicioAplicacion;
+	}
+
+	public String getIdServicio() {
+		return idServicio;
+	}
+
+	public void setIdServicio(String idServicio) {
+		this.idServicio = idServicio;
+	}
+
+	public ServicioBean getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(ServicioBean servicio) {
+		this.servicio = servicio;
+	}
+
+	public List<ServidorBean> getListaServidoresDetalle() {
+		return listaServidoresDetalle;
+	}
+
+	public void setListaServidoresDetalle(List<ServidorBean> listaServidoresDetalle) {
+		this.listaServidoresDetalle = listaServidoresDetalle;
+	}
+
+	public List<ProveedorSMSBean> getListaProveedorSMSDetalle() {
+		return listaProveedorSMSDetalle;
+	}
+
+	public void setListaProveedorSMSDetalle(List<ProveedorSMSBean> listaProveedorSMSDetalle) {
+		this.listaProveedorSMSDetalle = listaProveedorSMSDetalle;
+	}
+
+	public String getParametroServidorId() {
+		return parametroServidorId;
+	}
+
+	public List<KeyValueObject> getComboConfiguraciones() {
+		return comboConfiguraciones;
+	}
+
+	public void setComboConfiguraciones(List<KeyValueObject> comboConfiguraciones) {
+		this.comboConfiguraciones = comboConfiguraciones;
+	}
+
+	public ServicioProveedorSMS getServicioProveedorSMS() {
+		return servicioProveedorSMS;
+	}
+
+	public void setServicioProveedorSMS(ServicioProveedorSMS servicioProveedorSMS) {
+		this.servicioProveedorSMS = servicioProveedorSMS;
+	}
+
+	public ServicioReceptorSMS getServicioReceptorSMS() {
+		return servicioReceptorSMS;
+	}
+
+	public void setServicioReceptorSMS(ServicioReceptorSMS servicioReceptorSMS) {
+		this.servicioReceptorSMS = servicioReceptorSMS;
+	}
+
+	public ServicioServidor getServicioServidor() {
+		return servicioServidor;
+	}
+
+	public void setServicioServidor(ServicioServidor servicioServidor) {
+		this.servicioServidor = servicioServidor;
+	}
+
+	public ServicioCanal getServicioCanal() {
+		return servicioCanal;
+	}
+
+	public void setServicioCanal(ServicioCanal servicioCanal) {
+		this.servicioCanal = servicioCanal;
+	}
+
+	public List<ServidoresServiciosBean> getListaServidoresServicios() {
+		return listaServidoresServicios;
+	}
+
+	public void setListaServidoresServicios(List<ServidoresServiciosBean> listaServidoresServicios) {
+		this.listaServidoresServicios = listaServidoresServicios;
+	}
+
+	public List<ServicioOrganismosBean> getListaServicioOrganismos() {
+		return listaServicioOrganismos;
+	}
+
+	public void setListaSeerviciosOrganismos(List<ServicioOrganismosBean> listaServicioOrganismos) {
+		this.listaServicioOrganismos = listaServicioOrganismos;
+	}
+
+	public List<PlanificacionBean> getListaPlanificacionesServicio() {
+		return listaPlanificacionesServicio;
+	}
+
+	public void setListaPlanificacionesServicio(List<PlanificacionBean> listaPlanificacionesServicio) {
+		this.listaPlanificacionesServicio = listaPlanificacionesServicio;
+	}
+
+	public ServicioPlanificacion getServicioPlanificacion() {
+		return servicioPlanificacion;
+	}
+
+	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
+		this.servicioPlanificacion = servicioPlanificacion;
+	}
+
+	public Integer getNewHistorificacion() {
+		return newHistorificacion;
+	}
+
+	public void setNewHistorificacion(Integer newHistorificacion) {
+		this.newHistorificacion = newHistorificacion;
+	}
+
+	public Integer getNewConservacion() {
+		return newConservacion;
+	}
+
+	public void setNewConservacion(Integer newConservacion) {
+		this.newConservacion = newConservacion;
+	}
+
+	public String getCheckPassword() {
+		return checkPassword;
+	}
+
+	public void setCheckPassword(String checkPassword) {
+		this.checkPassword = checkPassword;
+	}
+
+	public ServicioServidorPush getServicioServidorPush() {
+		return servicioServidorPush;
+	}
+
+	public void setServicioServidorPush(ServicioServidorPush servicioServidorPush) {
+		this.servicioServidorPush = servicioServidorPush;
+	}
+
+	public String getNewPlataformaAndroid() {
+		return newPlataformaAndroid;
+	}
+
+	public void setNewPlataformaAndroid(String newPlataformaAndroid) {
+		this.newPlataformaAndroid = newPlataformaAndroid;
+	}
+
+	public String getNewPlataformaiOS() {
+		return newPlataformaiOS;
+	}
+
+	public void setNewPlataformaiOS(String newPlataformaiOS) {
+		this.newPlataformaiOS = newPlataformaiOS;
+	}
+
+	public String getNewInformeActivo() {
+		return newInformeActivo;
+	}
+
+	public void setNewInformeActivo(String newInformeActivo) {
+		this.newInformeActivo = newInformeActivo;
+	}
+
+	public String getNewAgrupacionEstado() {
+		return newAgrupacionEstado;
+	}
+
+	public void setNewAgrupacionEstado(String newAgrupacionEstado) {
+		this.newAgrupacionEstado = newAgrupacionEstado;
+	}
+
+	public String getNewAgrupacionCodOrg() {
+		return newAgrupacionCodOrg;
+	}
+
+	public void setNewAgrupacionCodOrg(String newAgrupacionCodOrg) {
+		this.newAgrupacionCodOrg = newAgrupacionCodOrg;
+	}
+
+	public String getNewAgrupacionCodSia() {
+		return newAgrupacionCodSia;
+	}
+
+	public void setNewAgrupacionCodSia(String newAgrupacionCodSia) {
+		this.newAgrupacionCodSia = newAgrupacionCodSia;
+	}
+
+	public String getNewAgrupacionCodOrgPagador() {
+		return newAgrupacionCodOrgPagador;
+	}
+
+	public void setNewAgrupacionCodOrgPagador(String newAgrupacionCodOrgPagador) {
+		this.newAgrupacionCodOrgPagador = newAgrupacionCodOrgPagador;
+	}
+
+	public String getNewInformesDestinatarios() {
+		return newInformesDestinatarios;
+	}
+
+	public void setNewInformesDestinatarios(String newInformesDestinatarios) {
+		this.newInformesDestinatarios = newInformesDestinatarios;
+	}
+
+	public ServicioOrganismosBean getServicioOrganismos() {
+		return servicioOrganismos;
+	}
+
+	public void setServicioOrganismos(ServicioOrganismosBean servicioOrganismos) {
+		this.servicioOrganismos = servicioOrganismos;
+	}
+
+	public void setListaServicioOrganismos(List<ServicioOrganismosBean> listaServicioOrganismos) {
+		this.listaServicioOrganismos = listaServicioOrganismos;
+	}
+
+	public ServicioOrganismo getServicioOrganismo() {
+		return servicioOrganismo;
+	}
+
+	public void setServicioOrganismo(ServicioOrganismo servicioOrganismo) {
+		this.servicioOrganismo = servicioOrganismo;
+	}
+
+	public OrganismoBean getOrganismo() {
+		return organismo;
+	}
+
+	public void setOrganismo(OrganismoBean organismo) {
+		this.organismo = organismo;
+	}
+
+	public String getIdOrganismo() {
+		return idOrganismo;
+	}
+
+	public void setIdOrganismo(String idOrganismo) {
+		this.idOrganismo = idOrganismo;
+	}
+
+	public String getIdServicioOrganismo() {
+		return idServicioOrganismo;
+	}
+
+	public void setIdServicioOrganismo(String idServicioOrganismo) {
+		this.idServicioOrganismo = idServicioOrganismo;
+	}
+
+	public boolean isMultiorganismo() {
+		return isMultiorganismo;
+	}
+
+	public void setMultiorganismo(boolean isMultiorganismo) {
+		this.isMultiorganismo = isMultiorganismo;
+	}
+
+	public ServidoresOrganismosBean getServidorOrganismos() {
+		return servidorOrganismos;
+	}
+
+	public void setServidorOrganismos(ServidoresOrganismosBean servidorOrganismos) {
+		this.servidorOrganismos = servidorOrganismos;
+	}
+
+	public String[] getCheckDelListServiciosOrganismos() {
+		return checkDelListServiciosOrganismos;
+	}
+
+	public void setCheckDelListServiciosOrganismos(String[] checkDelListServiciosOrganismos) {
+		this.checkDelListServiciosOrganismos = checkDelListServiciosOrganismos;
+	}
+
+	public String getActivo() {
+		return activo;
+	}
+
+	public void setActivo(String activo) {
+		this.activo = activo;
+	}
+
+	public String getCanalDisabled() {
+		return canalDisabled;
+	}
+
+	public String getReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(String readonly) {
+		this.readonly = readonly;
+	}
+
+	public String getNewActivo() {
+		return newActivo;
+	}
+
+	public void setNewActivo(String newActivo) {
+		this.newActivo = newActivo;
+	}
+
+	public String getNewPremium() {
+		return newPremium;
+	}
+
+	public void setNewPremium(String newPremium) {
+		this.newPremium = newPremium;
+	}
+
+	public String getIdPlanificacion() {
+		return idPlanificacion;
+	}
+
+	public void setIdPlanificacion(String idPlanificacion) {
+		this.idPlanificacion = idPlanificacion;
+	}
+
+	public String getServidorServicioId() {
+		return servidorServicioId;
+	}
+
+	public void setServidorServicioId(String servidorServicioId) {
+		this.servidorServicioId = servidorServicioId;
+	}
+
+	public String getServicioOrganismoId() {
+		return servicioOrganismoId;
+	}
+
+	public void setServicioOrganismoId(String servicioOrganismoId) {
+		this.servicioOrganismoId = servicioOrganismoId;
+	}
+
+	public String getIdAplicacion() {
+		return idAplicacion;
+	}
+
+	public void setIdAplicacion(String idAplicacion) {
+		this.idAplicacion = idAplicacion;
+	}
+
+	public String getServicioServidorId() {
+		return servicioServidorId;
+	}
+
+	public void setServicioServidorId(String servicioServidorId) {
+		this.servicioServidorId = servicioServidorId;
+	}
+
+	public ServidoresServiciosBean getServidorServicio() {
+		return servidorServicio;
+	}
+
+	public void setServidorServicio(ServidoresServiciosBean servidorServicio) {
+		this.servidorServicio = servidorServicio;
+	}
+
+	public String[] getCheckDelListServidorServicios() {
+		return checkDelListServidorServicios;
+	}
+
+	public void setCheckDelListServidorServicios(String[] checkDelListServidorServicios) {
+		this.checkDelListServidorServicios = checkDelListServidorServicios;
+	}
+
+	public String[] getCheckDelListPlanificaciones() {
+		return checkDelListPlanificaciones;
+	}
+
+	public void setCheckDelListPlanificaciones(String[] checkDelListPlanificaciones) {
+		this.checkDelListPlanificaciones = checkDelListPlanificaciones;
+	}
+
+	public String getPlanificacionId() {
+		return planificacionId;
+	}
+
+	public void setPlanificacionId(String planificacionId) {
+		this.planificacionId = planificacionId;
+	}
+
+	public String getJson() {
+		return json;
+	}
+
+	public void setJson(String json) {
+		this.json = json;
+	}
+
+	public PlanificacionBean getPlanificacionServidor() {
+		return planificacionServidor;
+	}
+
+	public void setPlanificacionServidor(PlanificacionBean planificacionServidor) {
+		this.planificacionServidor = planificacionServidor;
+	}
+}
