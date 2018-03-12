@@ -21,6 +21,7 @@
 			<element maxOccurs="unbounded" minOccurs="0" name="MensajeSMS" type="impl:MensajeSMS"/>
 			<element maxOccurs="unbounded" minOccurs="0" name="MensajeEmail" type="impl:MensajeEmail"/>
 			<element maxOccurs="unbounded" minOccurs="0" name="MensajePush" type="impl:MensajePush"/>
+			<element maxOccurs="unbounded" minOccurs="0" name="MensajeWebPush" type="impl:MensajeWebPush"/>
 		</sequence>
 	</complexType>
 
@@ -121,6 +122,28 @@
 	</complexType>
 
 	<complexType name="DestinatarioPush">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="0" name="DocUsuario" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="IdExterno" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="IdentificadorUsuario" type="xsd:string"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="MensajeWebPush">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Titulo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Cuerpo" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="DestinatariosWebPush" type="impl:DestinatariosWebPush"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="DestinatariosWebPush">
+		<sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="1" name="DestinatarioWebPush" type="impl:DestinatarioWebPush"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="DestinatarioWebPush">
 		<sequence>
 			<xsd:element maxOccurs="1" minOccurs="0" name="DocUsuario" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="0" name="IdExterno" type="xsd:string"/>

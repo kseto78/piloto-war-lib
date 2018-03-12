@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -17,8 +18,10 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  
  *  @author jgonzvil
  */
-public class UsuariosPushBean implements Audit{
+public class UsuariosPushBean implements Audit, Serializable{
 							  
+	private static final long serialVersionUID = 1L;
+
 	public UsuariosPushBean() {
 		super();
 		this.usuarioId = null;

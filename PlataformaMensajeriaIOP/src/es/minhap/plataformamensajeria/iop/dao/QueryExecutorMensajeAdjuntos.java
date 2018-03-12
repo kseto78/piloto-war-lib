@@ -13,4 +13,5 @@ public interface QueryExecutorMensajeAdjuntos {
 	public List<Adjunto> getAttachment(Long mensajeId);
 	
 	public List<Adjunto> getImage(Long mensajeId);
+
 }

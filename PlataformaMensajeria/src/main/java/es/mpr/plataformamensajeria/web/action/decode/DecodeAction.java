@@ -143,7 +143,7 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 		String xmlDescifrado = XMLUtils.dom2xml(docDescifrado);
 		decodeBean.setXmlDescifrado(xmlDescifrado);
 		
-		LOGGER.debug("[DecodeController] - decode: XML decodificado: " + xmlDescifrado);
+		LOGGER.debug("[DecodeAction] - decode: XML decodificado: " + xmlDescifrado);
 		return decodeBean;
 	}
 

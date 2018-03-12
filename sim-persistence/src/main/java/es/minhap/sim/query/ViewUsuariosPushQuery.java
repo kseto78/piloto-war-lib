@@ -285,6 +285,16 @@ public class ViewUsuariosPushQuery extends AbstractHibernateQueryEntity<ViewUsua
     private boolean fechaIsNotNull = false;
 
     /**
+	 * Establece el máximo de resultados
+	 */
+	private Integer maxResultados;
+	
+	/**
+	 * Establece el primer resultados
+	 */
+	private Integer primerResultado;
+    
+    /**
      * Constructor default
      */
     public ViewUsuariosPushQuery() {
@@ -1329,6 +1339,15 @@ public class ViewUsuariosPushQuery extends AbstractHibernateQueryEntity<ViewUsua
         if (isFechaIsNotNull()) {
             criteria.add(Restrictions.isNotNull(FECHA));
         }
+        
+        if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
+		
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -1371,5 +1390,33 @@ public class ViewUsuariosPushQuery extends AbstractHibernateQueryEntity<ViewUsua
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+
+	/**
+	 * @return the primerResultado
+	 */
+	public Integer getPrimerResultado() {
+		return primerResultado;
+	}
+
+	/**
+	 * @param primerResultado the primerResultado to set
+	 */
+	public void setPrimerResultado(Integer primerResultado) {
+		this.primerResultado = primerResultado;
+	}
+
+	/**
+	 * @return the maxResultados
+	 */
+	public Integer getMaxResultados() {
+		return maxResultados;
+	}
+
+	/**
+	 * @param maxResultados the maxResultados to set
+	 */
+	public void setMaxResultados(Integer maxResultados) {
+		this.maxResultados = maxResultados;
+	}
 }
  

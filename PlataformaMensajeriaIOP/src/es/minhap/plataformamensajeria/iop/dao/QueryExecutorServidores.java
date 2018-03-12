@@ -2,6 +2,7 @@ package es.minhap.plataformamensajeria.iop.dao;
 
 import java.util.List;
 
+import es.minhap.plataformamensajeria.iop.beans.UsoServidoresBean;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosProveedor;
 
 /**
@@ -47,6 +48,14 @@ public interface QueryExecutorServidores {
 
 
 	/**
+	 * Se recupera el id lote a partir del mensaje
+	 * 
+	 * @param idMensaje
+	 * @return
+	 */
+	public Long getIdLoteByIdMensaje(Long idMensaje);
+
+	/**
 	 * Se recupera el id servidor a partir del mensaje
 	 * 
 	 * @param idMensaje
@@ -54,14 +63,16 @@ public interface QueryExecutorServidores {
 	 */
 	public Long getIdServicioByIdMensajeHist(Long idMensaje);
 
-	
 	/**
-	 * Se recupera el id lote a partir del mensaje
+	 * Se recupera el uso de cada servidor
 	 * 
-	 * @param idMensaje
+	 * @param anoActual
+	 * @param mesActual
 	 * @return
 	 */
-	public Long getIdLoteByIdMensaje(Long idMensaje);
+	public List<UsoServidoresBean> getUsoServidores(String anoActual, String mesActual);
 	
+
 	
+
 }

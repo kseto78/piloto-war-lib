@@ -1,5 +1,9 @@
 package es.minhap.plataformamensajeria.iop.manager;
 
+import java.util.List;
+
+import es.minhap.sim.model.TblPlataformas;
+
 
 public interface TblPlataformasManager {
 
@@ -11,6 +15,11 @@ public interface TblPlataformasManager {
 	 */
 	public Boolean existPlataforma(Long plataformaID );
 	
-	
+	/**
+	 * Obtiene todas las plataformas activas
+	 * 
+	 * @return 
+	 */
+	public List<TblPlataformas> getPlataformasActivas();
 
 }

@@ -123,7 +123,6 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 
 			if (null != criterio && null != criterio.getNombre()) {
 				nombre = criterio.getNombre();
-
 			}
 
 			List<TblServiciosMoviles> lista = tblServiciosMovilesManager.getServiciosMovilesPaginado(start, size, order, column, 

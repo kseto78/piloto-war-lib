@@ -1,3 +1,4 @@
+
 /*
  *
  * archivo: TblServidoresOrganismosDAOImpl.java
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.minhap.common.persistence.hibernate.dao.AbstractHibernateDAO;
 import es.minhap.sim.dao.TblServidoresOrganismosDAO;
 import es.minhap.sim.model.TblServidoresOrganismos;
-import es.minhap.sim.model.TblServidoresOrganismosId;
 import es.minhap.sim.query.TblServidoresOrganismosQuery;
 
 /**
@@ -31,21 +31,19 @@ import es.minhap.sim.query.TblServidoresOrganismosQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class TblServidoresOrganismosDAOImpl extends
-		AbstractHibernateDAO<TblServidoresOrganismos, TblServidoresOrganismosId, TblServidoresOrganismosQuery>
-		implements TblServidoresOrganismosDAO {
+public class TblServidoresOrganismosDAOImpl extends AbstractHibernateDAO<TblServidoresOrganismos,Long,TblServidoresOrganismosQuery> implements TblServidoresOrganismosDAO {
 
-	@Override
-	protected Class<TblServidoresOrganismos> getEntityClass() {
-		return TblServidoresOrganismos.class;
-	}
+    @Override
+    protected Class<TblServidoresOrganismos> getEntityClass() {
+        return TblServidoresOrganismos.class;
+    }
 
-	@Override
-	protected Class<TblServidoresOrganismosId> getIdentifierClass() {
-		return TblServidoresOrganismosId.class;
-	}
-
-	@Override
+    @Override
+    protected Class<Long> getIdentifierClass() {
+        return Long.class;
+    }
+    
+    @Override
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
 	public void setSessionFactoryApp(SessionFactory sessionFactory) {

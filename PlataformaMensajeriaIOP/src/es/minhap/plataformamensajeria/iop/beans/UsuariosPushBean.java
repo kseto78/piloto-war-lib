@@ -22,17 +22,20 @@ public class UsuariosPushBean {
 	
 	private Integer usuarioId;
 	private String nombreUsuario;
-	private Integer ServicioId;
-	private Integer PlataformaId;
-	private Date FechaCreacion;
-	private Date FechaModificacion;
+	private Integer servicioId;
+	private Integer plataformaId;
+	private Date fechaCreacion;
+	private Date fechaModificacion;
 	private String tokenUsuario;
 	private String dispositivoId;
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
-	
-	
+	protected String plataforma;
+	private Integer aplicacionId;
+	private Date fechaDesde;
+	private Date fechaHasta;
+		
 	public Integer getUsuarioId() {
 		return usuarioId;
 	}
@@ -46,28 +49,28 @@ public class UsuariosPushBean {
 		this.nombreUsuario = nombreUsuario;
 	}
 	public Integer getServicioId() {
-		return ServicioId;
+		return servicioId;
 	}
 	public void setServicioId(Integer servicioId) {
-		ServicioId = servicioId;
+		this.servicioId = servicioId;
 	}
 	public Integer getPlataformaId() {
-		return PlataformaId;
+		return plataformaId;
 	}
 	public void setPlataformaId(Integer plataformaId) {
-		PlataformaId = plataformaId;
+		this.plataformaId = plataformaId;
 	}
 	public Date getFechaCreacion() {
-		return FechaCreacion;
+		return fechaCreacion;
 	}
 	public void setFechaCreacion(Date fechaCreacion) {
-		FechaCreacion = fechaCreacion;
+		this.fechaCreacion = fechaCreacion;
 	}
 	public Date getFechaModificacion() {
-		return FechaModificacion;
+		return fechaModificacion;
 	}
 	public void setFechaModificacion(Date fechaModificacion) {
-		FechaModificacion = fechaModificacion;
+		this.fechaModificacion = fechaModificacion;
 	}
 	public String getTokenUsuario() {
 		return tokenUsuario;
@@ -99,8 +102,35 @@ public class UsuariosPushBean {
 	public void setApellido2(String apellido2) {
 		this.apellido2 = apellido2;
 	}
+	public Integer getAplicacionId() {
+		return aplicacionId;
+	}
+	public void setAplicacionId(Integer aplicacionId) {
+		this.aplicacionId = aplicacionId;
+	}
+	public Date getFechaDesde() {
+		return fechaDesde;
+	}
+	public void setFechaDesde(Date fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+	public Date getFechaHasta() {
+		return fechaHasta;
+	}
+	public void setFechaHasta(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
+	/**
+	 * @return the plataforma
+	 */
+	public String getPlataforma() {
+		return plataforma;
+	}
+	/**
+	 * @param plataforma the plataforma to set
+	 */
+	public void setPlataforma(String plataforma) {
+		this.plataforma = plataforma;
+	}
 	
-	
-	
-
 }

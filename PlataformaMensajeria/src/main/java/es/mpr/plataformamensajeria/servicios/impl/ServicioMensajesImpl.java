@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.map.j2ee.exceptions.BusinessException;
 
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorMensajes;
-import es.minhap.plataformamensajeria.iop.dao.impl.QueryExecutorMensajesImpl;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes;
 

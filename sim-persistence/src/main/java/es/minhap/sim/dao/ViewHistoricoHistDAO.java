@@ -14,14 +14,11 @@ package es.minhap.sim.dao;
 
 import es.minhap.common.dao.EntityDAO;
 import es.minhap.sim.model.ViewHistoricoHist;
-import es.minhap.sim.model.ViewHistoricoHistId;
 import es.minhap.sim.query.ViewHistoricoHistQuery;
 
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface ViewHistoricoHistDAO
-		extends
-		EntityDAO<ViewHistoricoHist, ViewHistoricoHistId, ViewHistoricoHistQuery> {
+public interface ViewHistoricoHistDAO extends EntityDAO<ViewHistoricoHist,Long,ViewHistoricoHistQuery> {
 
 }

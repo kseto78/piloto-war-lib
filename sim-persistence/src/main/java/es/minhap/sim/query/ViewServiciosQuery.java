@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -833,6 +834,17 @@ public class ViewServiciosQuery extends AbstractHibernateQueryEntity<ViewServici
 	 * Permite buscar cuando campo premium es NOT NULL
 	 */
 	private boolean premiumIsNotNull = false;
+	
+	/**
+	 * Establece el máximo de resultados
+	 */
+	private Integer maxResultados;
+	
+	/**
+	 * Establece el primer resultados
+	 */
+	private Integer primerResultado;
+	
 
 	/**
 	 * Constructor default
@@ -4164,7 +4176,9 @@ public class ViewServiciosQuery extends AbstractHibernateQueryEntity<ViewServici
 		}
 
 		if (isEliminadoIsNull()) {
-			criteria.add(Restrictions.isNull(ELIMINADO));
+			Criterion c1 = Restrictions.isNull(ELIMINADO);
+        	Criterion c2 = Restrictions.eq("eliminado", "N");
+            criteria.add(Restrictions.or(c1,c2));
 		}
 
 		if (isEliminadoIsNotNull()) {
@@ -4547,6 +4561,14 @@ public class ViewServiciosQuery extends AbstractHibernateQueryEntity<ViewServici
 		if (isPremiumIsNotNull()) {
 			criteria.add(Restrictions.isNotNull(PREMIUM));
 		}
+		
+		if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
 		// Aplica ordenamiento solo si corresponde. En count y searchUnique no
 		// se utiliza.
 		if (useOrder) {
@@ -4590,5 +4612,33 @@ public class ViewServiciosQuery extends AbstractHibernateQueryEntity<ViewServici
 	 */
 	private String normalizeParam(String param) {
 		return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+	}
+
+	/**
+	 * @return the maxResultados
+	 */
+	public Integer getMaxResultados() {
+		return maxResultados;
+	}
+
+	/**
+	 * @param maxResultados the maxResultados to set
+	 */
+	public void setMaxResultados(Integer maxResultados) {
+		this.maxResultados = maxResultados;
+	}
+
+	/**
+	 * @return the primerResultado
+	 */
+	public Integer getPrimerResultado() {
+		return primerResultado;
+	}
+
+	/**
+	 * @param primerResultado the primerResultado to set
+	 */
+	public void setPrimerResultado(Integer primerResultado) {
+		this.primerResultado = primerResultado;
 	}
 }

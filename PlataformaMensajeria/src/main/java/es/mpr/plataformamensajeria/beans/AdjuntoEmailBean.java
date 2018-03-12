@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -11,7 +12,10 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  
  *  @author Altran
  */
-public class AdjuntoEmailBean implements Audit{
+public class AdjuntoEmailBean implements Audit, Serializable{
+
+
+	private static final long serialVersionUID = 1L;
 
 	public AdjuntoEmailBean() {
 		this.adjuntoId = null;

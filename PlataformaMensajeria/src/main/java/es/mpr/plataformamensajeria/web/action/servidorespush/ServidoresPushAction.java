@@ -48,39 +48,47 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ServidoresPushAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	private static final String GENERALES_TIPO_SERVIDOR_PUSH = "generales.TIPO_SERVIDOR_PUSH";
+
+	private static final String GENERALES_PAGESIZE = "generales.PAGESIZE";
+
+	private static final String NO_USER = "noUser";
+
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = Logger.getLogger(ServidoresPushAction.class);
 
 	@Resource(name = "servicioServidorPushImpl")
-	private ServicioServidorPush servicioServidorPush;
+	private transient ServicioServidorPush servicioServidorPush;
 
 	@Resource(name = "servicioTipoParametroImpl")
-	private ServicioTipoParametro servicioTipoParametro;
+	private transient ServicioTipoParametro servicioTipoParametro;
 
 	@Resource(name = "servicioParametroServidorImpl")
-	private ServicioParametroServidor servicioParametroServidor;
+	private transient ServicioParametroServidor servicioParametroServidor;
 
 	@Resource(name = "servicioPlanificacionImpl")
-	private ServicioPlanificacion servicioPlanificacion;
+	private transient ServicioPlanificacion servicioPlanificacion;
 
 	@Resource(name = "servicioPlataformaImpl")
-	private ServicioPlataforma servicioPlataforma;
+	private transient ServicioPlataforma servicioPlataforma;
 
 	@Resource(name = "plataformaMensajeriaProperties")
-	private PlataformaMensajeriaProperties properties;
+	private transient PlataformaMensajeriaProperties properties;
 
 	private ParametroServidorBean parametroServidor;
 	private ServidorPushBean servidorPush;
 	private PlanificacionBean planificacionServidor;
 
-	List<KeyValueObject> comboTipoParametros = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboPlataformas = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboTipoParametros = new ArrayList<>();
+	List<KeyValueObject> comboPlataformas = new ArrayList<>();
 
-	public List<ServidorPushBean> listaServidoresPush = null;
+	public transient List<ServidorPushBean> listaServidoresPush = null;
 	private List<ParametroServidorBean> listaParametrosServidor = null;
 	private List<PlanificacionBean> listaPlanificacionesServidor = null;
-	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<TipoParametroBean>();
+	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<>();
 	private String[] checkDelList;
 
 	private String tipoParametroId;
@@ -96,7 +104,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	// //MIGRADO
 	public String search() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		int page = getPage("tableId"); // Pagina a mostrar
 		String order = getOrder("tableId"); // Ordenar de modo ascendente o
 											// descendente
@@ -107,12 +115,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 			if (servidorPush.getNombre() != null && servidorPush.getNombre().length() <= 0)
 				servidorPush.setNombre(null);
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20"));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServidorPushBean> result = servicioServidorPush.getServidoresPush(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				(export) ? -1 : Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")), order,
 				columnSort, servidorPush,
-				Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_PUSH", null)));
+				Integer.parseInt(properties.getProperty(GENERALES_TIPO_SERVIDOR_PUSH, null)));
 		Integer totalSize = result.getTotalList();
 
 		listaServidoresPush = result.getPageList();
@@ -121,10 +129,10 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
+					Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 
 		if (listaServidoresPush != null && !listaServidoresPush.isEmpty()) {
@@ -142,7 +150,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	// //MIGRADO
 	public String execute() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		int page = getPage("tableId"); // Pagina a mostrar
 		String order = getOrder("tableId"); // Ordenar de modo ascendente o
 											// descendente
@@ -153,12 +161,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 			if (servidorPush.getNombre() != null && servidorPush.getNombre().length() <= 0)
 				servidorPush.setNombre(null);
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20"));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServidorPushBean> result = servicioServidorPush.getServidoresPush(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				(export) ? -1 : Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")), order,
 				columnSort, servidorPush,
-				Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_PUSH", null)));
+				Integer.parseInt(properties.getProperty(GENERALES_TIPO_SERVIDOR_PUSH, null)));
 		Integer totalSize = result.getTotalList();
 
 		listaServidoresPush = result.getPageList();
@@ -166,10 +174,10 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
+					Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 
 		if (listaServidoresPush != null && !listaServidoresPush.isEmpty()) {
@@ -191,7 +199,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
 		
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (servidorPush != null) {
 			if (servidorPush.getIsActivo() != null && servidorPush.getIsActivo().indexOf("'activo'") != -1) {
 				servidorPush.setActivo(true);
@@ -199,7 +207,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 				servidorPush.setActivo(false);
 			}
 			if (validaServidor(servidorPush)) {
-				Long idServidorPush = servicioServidorPush.newServidorPush(servidorPush, Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_PUSH",null)), 
+				Long idServidorPush = servicioServidorPush.newServidorPush(servidorPush, Integer.parseInt(properties.getProperty(GENERALES_TIPO_SERVIDOR_PUSH,null)), 
 						source, accion, accionId);
 				this.idServidorPush = idServidorPush.toString();
 				addActionMessageSession(this.getText("plataforma.servidorpush.create.ok"));
@@ -220,7 +228,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
 		
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		ServidorPushBean servidorPushBBDD = null;
 		if (servidorPush == null) {
 			// throw new BusinessException("EL servidorPush recibido es nulo");
@@ -267,7 +275,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	// //MIGRADO
 	public String load() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (idServidorPush == null)
 			throw new BusinessException("EL idServidorPush recibido es nulo");
 		try {
@@ -295,7 +303,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PARAMETRO", null);
 
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (parametroServidorId == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.parametro.delete.error"));
 		} else {
@@ -316,7 +324,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
 
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (planificacionId == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.planificacion.delete.error"));
 
@@ -339,7 +347,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
 		
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (idServidorPush == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.delete.error"));
 		} else {
@@ -363,7 +371,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
 		
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.deleteSelected.error"));
 		} else {
@@ -387,7 +395,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PARAMETRO", null);
 
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (parametroServidor != null) {
 			if (!validaParametro(parametroServidor)) {
 				return ERROR;
@@ -415,7 +423,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
 
 		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+			return ServidoresPushAction.NO_USER;
 		if (planificacionServidor != null && PlataformaMensajeriaUtil.isEmpty(idServidorPush)) {
 			if (planificacionValida(planificacionServidor)) {
 				planificacionServidor.setActivo(true);

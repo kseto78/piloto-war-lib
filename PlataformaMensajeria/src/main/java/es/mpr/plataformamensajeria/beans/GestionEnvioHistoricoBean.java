@@ -89,6 +89,7 @@ public class GestionEnvioHistoricoBean implements Audit {
 	private Integer vistaEnviosId;
 	private Integer multidestinatario;
 	private Long destinatariosMensajes;
+	private Boolean botonIntercambios;
 
 	public void setMensajeId(Long mensajeId) {
 		this.mensajeId = mensajeId;
@@ -106,6 +107,14 @@ public class GestionEnvioHistoricoBean implements Audit {
 		this.ultimoEnvioStr = ultimoEnvioStr;
 	}
 
+	public boolean isBotonIntercambios() {
+		return botonIntercambios;
+	}
+	
+	public void setBotonIntercambios(boolean botonIntercambios) {
+		this.botonIntercambios = botonIntercambios;
+	}
+	
 	public Long getIdLote() {
 		return idLote;
 	}

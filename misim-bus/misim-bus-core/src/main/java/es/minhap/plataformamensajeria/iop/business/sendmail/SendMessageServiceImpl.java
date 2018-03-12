@@ -50,8 +50,10 @@ import es.minhap.plataformamensaferia.iop.beans.envioPremium.DatosEspecificos;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionEnvioXML;
 import es.minhap.plataformamensajeria.iop.beans.SMTPAuthenticator;
 import es.minhap.plataformamensajeria.iop.business.beans.push.DatosEspecificosPush;
+import es.minhap.plataformamensajeria.iop.business.beans.push.DatosEspecificosWebPush;
 import es.minhap.plataformamensajeria.iop.business.beans.push.NotificacionDataRequest;
 import es.minhap.plataformamensajeria.iop.business.beans.push.PeticionPush;
+import es.minhap.plataformamensajeria.iop.business.beans.push.PeticionWebPush;
 import es.minhap.plataformamensajeria.iop.business.beans.recepcionsms.DatosEspecificosRecepcionSMS;
 import es.minhap.plataformamensajeria.iop.business.beans.recepcionsms.EnvioAplicacionRequest;
 import es.minhap.plataformamensajeria.iop.business.beans.recepcionsms.PeticionRecepcionSMS;
@@ -76,10 +78,12 @@ import es.minhap.plataformamensajeria.sm.modelo.Adjunto;
 import es.minhap.plataformamensajeria.sm.modelo.DestinatarioDMensaje;
 import es.minhap.plataformamensajeria.sm.modelo.MailData;
 import es.minhap.plataformamensajeria.sm.modelo.NotificacionPushData;
+import es.minhap.plataformamensajeria.sm.modelo.NotificacionWebPushData;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosProveedor;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosReceptor;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidor;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorPush;
+import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorWebPush;
 import es.minhap.plataformamensajeria.sm.modelo.ReceptorSMSData;
 import es.minhap.plataformamensajeria.sm.modelo.SMSData;
 import es.minhap.plataformamensajeria.sm.modelo.Servicio;
@@ -475,22 +479,6 @@ public class SendMessageServiceImpl implements ISendMessageService {
 							sendOK = false;
 							errorMessage.append(e.getMessage());
 							Exception ex = e;
-							if ((ex instanceof SMTPAddressFailedException)) {
-								SMTPAddressFailedException smtpEx = (SMTPAddressFailedException) ex;
-								errorMessage.append(". Address: " + smtpEx.getAddress());
-								errorMessage.append(". Command failed: " + smtpEx.getCommand()
-										+ ". Reason for the failure: ");
-								errorMessage.append(smtpEx.getReturnCode() + ". Error: " + smtpEx.getMessage());
-							} else if ((ex instanceof SendFailedException)) {
-								SendFailedException sfex = (SendFailedException) ex;
-								Address[] invalid = sfex.getInvalidAddresses();
-								if (invalid.length <= 0) {
-									errorMessage.append(". Causa: " + sfex.getCause());
-								} else {
-									errorMessage.append(". Mail: " + invalid[0].toString() + " Causa: "
-											+ sfex.getCause());
-								}
-							}
 							LOG.error("Excepcion :" + errorMessage + " (postMail)", e);
 
 							TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
@@ -500,6 +488,23 @@ public class SendMessageServiceImpl implements ISendMessageService {
 							tblErrorMensajeLog.setFecha(new Date());
 							tblErrorMensajeLog.setOperacion("postMail");
 							errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
+//							if ((ex instanceof SMTPAddressFailedException)) {
+//								SMTPAddressFailedException smtpEx = (SMTPAddressFailedException) ex;
+//								errorMessage.append(". Address: " + smtpEx.getAddress());
+//								errorMessage.append(". Command failed: " + smtpEx.getCommand()
+//										+ ". Reason for the failure: ");
+//								errorMessage.append(smtpEx.getReturnCode() + ". Error: " + smtpEx.getMessage());
+//							} else if ((ex instanceof SendFailedException)) {
+//								SendFailedException sfex = (SendFailedException) ex;
+//								Address[] invalid = sfex.getInvalidAddresses();
+//								if (invalid.length <= 0) {
+//									errorMessage.append(". Causa: " + sfex.getCause());
+//								} else {
+//									errorMessage.append(". Mail: " + invalid[0].toString() + " Causa: "
+//											+ sfex.getCause());
+//								}
+//							}
+							
 
 							sendOK = false;
 
@@ -923,7 +928,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String okEnvio = ps.getMessage("constantes.ESTADO_ENVIADO", null);
 		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
-		String ejecutarTodosServidores = ps.getMessage("mail.ejecutarTodosServidores", null);
+		String ejecutarTodosServidores = ps.getMessage("push.ejecutarTodosServidores", null);
 		String usuarioMISIM = ps.getMessage("usuarioMISIM", null);
 		String passMISIM = ps.getMessage("passwordMISIM", null);
 		Integer servidorPushID = Integer.valueOf(0);
@@ -1172,6 +1177,224 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	}
 
 	// ---- Fin tratamiento notificaciones PUSH
+	
+	/******************************************/
+	/*** TRATAMIENTO NOTIFICACIONES PUSH *****/
+	/******************************************/
+	
+	@Override
+	public void postNotificacionWebPush(Long mensajeId, Long idLote, Long destinatarioMensajeId) throws Exception {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String okEnvio = ps.getMessage("constantes.ESTADO_ENVIADO", null);
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
+		String ejecutarTodosServidores = ps.getMessage("webpush.ejecutarTodosServidores", null);
+		String usuarioMISIM = ps.getMessage("usuarioMISIM", null);
+		String passMISIM = ps.getMessage("passwordMISIM", null);
+		Integer servidorWebPushID = Integer.valueOf(0);
+		NotificacionWebPushData notificacionWebPushData;
+		int indice = 0;
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Intentamos recuperar los datos de la notificacion Push con id: " + mensajeId
+					+ " (postNotificacionPush)");
+		}
+		notificacionWebPushData = getNotificacionWebPushData(mensajeId, destinatarioMensajeId);
+		if (notificacionWebPushData != null) { //comprobar si lo he eliminado y viene vacío, anulo el mensaje del tiron.
+			LOG.info("getNotificacionPushData distinto a null y mayor que 0");
+		} else {
+			LOG.info("getNotificacionPushData null o vacio");
+		}
+
+		boolean sendOK = false;
+		String resultNotificacionPush = "";
+		if (null == notificacionWebPushData.servers || notificacionWebPushData.servers.isEmpty()) {
+			if (null == notificacionWebPushData.getUsuarioId()){
+				mensajesManager.setEstadoMensaje(mensajeId, estadoAnulado, "Error: El usuario ha sido eliminado",
+						false, destinatarioMensajeId, null, null, null);
+				LOG.info("Mensaje Anulado, el usuario ha sido eliminado");
+			}else{
+				mensajesManager.setEstadoMensaje(mensajeId, koEnvio, "Error: No existe ningun Servidor Push Disponible",
+						false, notificacionWebPushData.getDestinatarioMensajeId(), null, null, null);
+				TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
+				tblErrorMensajeLog.setCodigoerror(new Long("0"));
+				tblErrorMensajeLog.setDescripcionerror("Error: No existe ningun Servidor Web Push Disponible");
+				tblErrorMensajeLog.setFecha(new Date());
+				tblErrorMensajeLog.setOperacion("postNotificacionWebPush");
+				errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
+				throw new Exception("[SendMessageServiceImpl.postNotificacionWebPush] -ERROR ENVIANDO WEB PUSH- No existe ningun Servidor Disponible: " + mensajeId);
+			}
+		} else {
+			registerServidorWebPushDetailsDebug(notificacionWebPushData);
+			mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),
+					ps.getMessage("constantes.ESTADO_ENVIANDO", null), "", false,
+					notificacionWebPushData.getDestinatarioMensajeId(), null, null, null);
+
+			int numServidoresPush = notificacionWebPushData.servers.size();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Numero de servidores Push: " + numServidoresPush);
+			}
+			if ("S".equals(ejecutarTodosServidores)) {
+				while ((indice < numServidoresPush) && (!sendOK)) {
+					registerServidorWebPushDetailsDebug(notificacionWebPushData);
+
+					servidorWebPushID = Integer
+							.valueOf((notificacionWebPushData.servers.get(indice))
+									.getServidorWebPushId());
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Llamamos a Envio Notificacion Push (postNotificacionPush)");
+					}
+					try {
+						resultNotificacionPush = sendServidorWebPushByMISIM(notificacionWebPushData, mensajeId, idLote,
+								indice, usuarioMISIM, passMISIM);
+						if (LOG.isInfoEnabled()) {
+							LOG.info("Respuesta: " + resultNotificacionPush);
+						}
+						if (resultNotificacionPush.contains("OK")) {
+							sendOK = true;
+						}
+					} catch (Exception e) {
+						String errorMessage = e.getMessage();
+						LOG.error("Excepcion :" + errorMessage + " (postNotificacionPush)", e);
+						TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
+						tblErrorMensajeLog.setCodigoerror(new Long("0"));
+						tblErrorMensajeLog.setDescripcionerror("SMS_ID: " + mensajeId + ". Error: (" + e.hashCode()
+								+ ") " + errorMessage);
+						tblErrorMensajeLog.setFecha(new Date());
+						tblErrorMensajeLog.setOperacion("postNotificacionPush");
+						errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
+					}
+					indice++;
+				}
+			} else {
+				if (numServidoresPush > 0) {
+					registerServidorWebPushDetailsDebug(notificacionWebPushData);
+
+					servidorWebPushID = Integer.valueOf((notificacionWebPushData.servers.get(indice))
+									.getServidorWebPushId());
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Llamamos a Envio Notificacion Push (postNotificacionPush)");
+					}
+					try {
+						resultNotificacionPush = sendServidorWebPushByMISIM(notificacionWebPushData, mensajeId, idLote,
+								indice, usuarioMISIM, passMISIM);
+						if (LOG.isInfoEnabled()) {
+							LOG.info("Respuesta: " + resultNotificacionPush);
+						}
+						if (resultNotificacionPush.contains("OK")) {
+							sendOK = true;
+						}
+					} catch (Exception e) {
+						String errorMessage = e.getMessage();
+						LOG.error("Excepcion :" + errorMessage + " (postNotificacionWebPush)", e);
+
+						TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
+						tblErrorMensajeLog.setCodigoerror(new Long("0"));
+						tblErrorMensajeLog.setDescripcionerror("WebPushId: " + mensajeId + ". Error: (" + e.hashCode()
+								+ ") " + errorMessage);
+						tblErrorMensajeLog.setFecha(new Date());
+						tblErrorMensajeLog.setOperacion("postNotificacionWebPush");
+						errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
+					}
+				}
+			}
+
+			if (sendOK) {
+				if (LOG.isInfoEnabled()) {
+					LOG.info("Notificacion numero " + mensajeId + " enviado (postNotificacionPush)");
+				}
+				mensajesManager.setEstadoMensaje(mensajeId, okEnvio, resultNotificacionPush, false,
+						notificacionWebPushData.getDestinatarioMensajeId(), null, null, servidorWebPushID.longValue());
+
+			} else {
+				mensajesManager.setEstadoMensaje(mensajeId, koEnvio, resultNotificacionPush, false,
+						notificacionWebPushData.getDestinatarioMensajeId(), null, null, servidorWebPushID.longValue());
+				throw new Exception("[SendMessageServiceImpl.postNotificacionPush] -ERROR ENVIANDO PUSH- KO Recibido enviando PUSH: " + mensajeId + " Descripcion: " +resultNotificacionPush);
+			}
+		}
+	}
+	
+	private String sendServidorWebPushByMISIM(NotificacionWebPushData messageData, Long messageId, Long loteId,
+			Integer indice, String usuarioMISIM, String passMISIM) throws Exception {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String resultado = "";
+		messageData.setIndice("" + indice);
+		messageData.setMessageID("" + messageId);
+		PeticionWebPush peticionWebPush = new PeticionWebPush();
+		peticionWebPush.setMensajeId(messageId.toString());
+		peticionWebPush.setProducto("WEB_PUSH");
+		peticionWebPush.setUsuario(usuarioMISIM);
+		peticionWebPush.setPassword(passMISIM);
+		peticionWebPush.setIdLote(loteId.toString());
+
+		ParametrosServidorWebPush psw = messageData.getServers().get(indice);
+		TblServidoresQuery query = new TblServidoresQuery();
+		query.setServidorid(Long.valueOf(psw.getServidorWebPushId()));
+		TblServidores servidor = servidoresManager.getServidor(query);
+		if (servidor != null) {
+			LOG.debug("Recuperado servidor web push: " + servidor.getServidorid());
+		} else {
+			LOG.debug("No encontrado servidor web push");
+			return null;
+		}
+		peticionWebPush.setProveedor(servidor.getNombre()); 
+			
+		if (!resultado.equals("")) {
+			return resultado;
+		}
+			
+		DatosEspecificosWebPush datosEspecificosWebPush = new DatosEspecificosWebPush();
+				
+		datosEspecificosWebPush.setAuth(messageData.getAuth());
+		datosEspecificosWebPush.setEndpoint(messageData.getEndpoint());
+		datosEspecificosWebPush.setPdh(messageData.getPdh());
+		datosEspecificosWebPush.setVapidPrivateKey(messageData.getVapidPrivateKey());
+		datosEspecificosWebPush.setVapidPublicKey(messageData.getVapidPublicKey());
+		datosEspecificosWebPush.setCabecera(messageData.getCabecera());
+		datosEspecificosWebPush.setCuerpo(messageData.getCuerpo());
+		
+		//caducidad mensaje webpush
+		datosEspecificosWebPush.setCaducidad((null != messageData.getCaducidadWebPush())? String.valueOf(messageData.getCaducidadWebPush()) : ps.getMessage("webpush.caducidadDefectoWEBPUSH", null, "30"));
+		
+		peticionWebPush.setDatosEspecificos(datosEspecificosWebPush);
+		
+		return commonUtilitiesService.sendMessage(peticionWebPush, ps.getMessage("constantes.SOAP_ACTION", null),
+				ps.getMessage("constantes.RECEPT_QUEUE", null), messageId);
+
+	}
+
+
+	private void registerServidorWebPushDetailsDebug(NotificacionWebPushData notificacionWebPushData) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("----------------------------------------------------------");
+			LOG.debug("DATOS DE ENVIO DE NOTIFICACION WEB PUSH (postNotificacionWebPush)");
+			LOG.debug("----------------------------------------------------------");
+			LOG.debug("Titulo: " + notificacionWebPushData.cabecera + " (postNotificacionWebPush)");
+
+			LOG.debug("Cuerpo: " + notificacionWebPushData.cuerpo + " (postNotificacionWebPush)");
+		}
+	}
+	
+	private NotificacionWebPushData getNotificacionWebPushData(Long mensajeId, Long destinatarioMensajeId)
+			throws Exception {
+		NotificacionWebPushData res = new NotificacionWebPushData();
+		try {
+			NotificacionWebPushData smsDataComun = new NotificacionWebPushData();
+			smsDataComun.setEsMultidestinatario(true);
+				res = queryExecutorMensajes.getDetailsServidorWebPushMultidestinatario(mensajeId, destinatarioMensajeId);
+			
+		} catch (Exception e) {
+			TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
+			tblErrorMensajeLog.setCodigoerror(new Long("0"));
+			tblErrorMensajeLog.setDescripcionerror("Error: GetNotificacionWebPushData : " + e.getMessage());
+			tblErrorMensajeLog.setFecha(new Date());
+			tblErrorMensajeLog.setOperacion("postNotificacionWebPush");
+			errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
+			LOG.error("getNotificacionWebPushData : " + e.getMessage(), e);
+		}
+		return res;
+	}
+	
+	// ---- Fin tratamiento notificaciones WEBPUSH
 
 	/***********************************/
 	/****** RECEPCION SMS ***********/
@@ -1685,6 +1908,5 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		this.serviciosManager = serviciosManager;
 	}
 
-	// ---- Fin tratamiento recepcion sms
 
 }

@@ -28,6 +28,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
+import es.minhap.plataformamensajeria.iop.manager.TblUsuariosWebPushManager;
 import es.minhap.sim.dao.TblHistoricosDAO;
 import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblCanales;
@@ -71,6 +72,9 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	
 	@Resource
 	private TblUsuariosPushManager usuariosPushManager;
+	
+	@Resource(name="tblUsuariosWebPushManagerImpl")
+	private TblUsuariosWebPushManager usuariosWebPushManager;
 	
 	@Resource
 	private TblGestionEnviosManager gestionEnviosManager;
@@ -245,6 +249,12 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		return (null != lista && !lista.isEmpty())? lista.get(0).getTblEstados().getEstadoid() : 0;
 	}
 
+	@Override
+	@Transactional
+	public void delete(Long historicoid) {
+		historicosDAO.delete(historicoid);
+		
+	}
 	
 	@Override
 	public Boolean checkMensajeYaEnviado(Long mensajeId, Long destinatarioMensajeId, Long estado) {
@@ -257,7 +267,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		queryEstados.setEstadoid(estado);
 		query.setTblEstados(queryEstados);
 		List<Long> historicosEnviados = historicosDAO.searchId(query).getResults();
-		return (null != historicosEnviados && historicosEnviados.size()>0)? true : false;
+		return (null != historicosEnviados && !historicosEnviados.isEmpty())? true : false;
 	}
 	
 	
@@ -299,7 +309,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		TblServicios servicio = lote.getTblServicios();
 		TblCanales canal = servicio.getTblCanales();
 				
-		//comprobamos si hay que insertar o actualizar, seg�n exista o no
+		//comprobamos si hay que insertar o actualizar, segun exista o no
 		TblGestionEnviosQuery query = new TblGestionEnviosQuery(Long.parseLong(mensajeId));
 		ge = gestionEnviosManager.getGestionEnvios(query);
 		
@@ -387,6 +397,14 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 			List<String> listaDestinatariosPush = usuariosPushManager.getNombresUsuariosMensaje(Long.parseLong(mensajeId));
 			if (null != listaDestinatariosPush && listaDestinatariosPush.size() > 0){
 				for (String d : listaDestinatariosPush) {
+					res.append(d + ";");
+				}
+				break;
+			}
+		case 5:
+			List<String> listaDestinatariosWebPush = usuariosWebPushManager.getUsuarioIdMensaje(Long.parseLong(mensajeId));
+			if (null != listaDestinatariosWebPush && !listaDestinatariosWebPush.isEmpty()){
+				for (String d : listaDestinatariosWebPush) {
 					res.append(d + ";");
 				}
 				break;
@@ -582,12 +600,5 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	public void setSessionFactorySIMApp(SessionFactory sessionFactorySIMApp) {
 		this.sessionFactorySIMApp = sessionFactorySIMApp;
 	}
-
-
-
-	
-
-	
-	
 
 }

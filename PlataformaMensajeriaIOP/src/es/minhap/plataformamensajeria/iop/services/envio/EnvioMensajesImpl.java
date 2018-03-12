@@ -28,7 +28,10 @@ import es.minhap.plataformamensajeria.iop.beans.UsuariosServiciosMovilesBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesMailXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesSMSXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesWebPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesWebPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.ResponseStatusType;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Respuesta;
@@ -46,6 +49,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblServiciosMovilesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosServiciosMovilesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblUsuariosWebPushManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.threads.HiloEncolarMensajesActiveMq;
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
@@ -95,6 +99,9 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 	@Resource
 	private TblEstadosManager estadosManager;
+	
+	@Resource(name = "tblUsuariosWebPushManagerImpl")
+	private TblUsuariosWebPushManager usuariosWebPushManager;
 
 	@Autowired
 	private QueryExecutorOrganismos queryExecutorOrganismos;
@@ -380,7 +387,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 					for (MensajesXMLBean mensaje : listaMensajes) {
 						if(mensaje.getListaDestinatarios()!=null) {
 							for (DestinatarioPeticionLotesMailXMLBean em : mensaje.getListaDestinatarios()) {
-								if(!idExterno.toString().contains(em.getIdExterno())) {
+								if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 									if(idExterno.toString().length()>0) {
 										idExterno.append(",");
 									}
@@ -501,7 +508,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 								StringBuilder idExterno = new StringBuilder();
 								if(mensaje.getListaDestinatarios()!=null) {
 									for (DestinatarioPeticionLotesSMSXMLBean em : mensaje.getListaDestinatarios()) {
-										if(!idExterno.toString().contains(em.getIdExterno())) {
+										if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 											if(idExterno.toString().length()>0) {
 												idExterno.append(",");
 											}
@@ -614,7 +621,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 					for (MensajeSMSXMLBean mensaje : listaMensajes) {
 						if(mensaje.getListaDestinatarios()!=null) {
 							for (DestinatarioPeticionLotesSMSXMLBean em : mensaje.getListaDestinatarios()) {
-								if(!idExterno.toString().contains(em.getIdExterno())) {
+								if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 									if(idExterno.toString().length()>0) {
 										idExterno.append(",");
 									}
@@ -664,6 +671,176 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 	}
 
 	@Override
+	public String enviarWebPush(PeticionXMLBean peticionXML) {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		Long estadoId = Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null, "3"));
+		String xmlRespues = null;
+		ArrayList<es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje> listaMensajesProcesados = new ArrayList<es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje>();
+		ArrayList<String> listaErroresGenerales = new ArrayList<>();
+		ArrayList<String> listaErroresLote = new ArrayList<>();
+		List<MensajeEncolarBean> listaMensajesEncolar = new ArrayList<>();
+		Integer idLote = null;
+		Respuesta respuesta = new Respuesta();
+		Mensaje mensajeCreado = null;
+
+		try {
+			String error = peticionCorrecta(peticionXML.getNombreLote(), peticionXML.getServicio(),
+					peticionXML.getUsuario(), peticionXML.getPassword());
+			if (error != null) {
+				listaErroresGenerales.add(error);
+			}
+
+			if (listaErroresGenerales.isEmpty()) {
+				idLote = lotesManager.insertarLote(Long.parseLong(peticionXML.getServicio()),
+						peticionXML.getNombreLote(), peticionXML.getUsuario(), peticionXML.getPassword());
+
+				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+							listaErroresLote);
+
+					return xmlRespues;
+				}
+
+				ArrayList<MensajePeticionLotesWebPushXMLBean> listaMensajes = (ArrayList<MensajePeticionLotesWebPushXMLBean>) peticionXML
+						.getMensajes().getMensajeWebPush();
+
+	
+				// Gestion numero maximo envios
+				TblServicios servicioNmaxenvios = serviciosManager
+						.getServicio(Long.parseLong(peticionXML.getServicio()));
+				if (servicioNmaxenvios.getNmaxenvios() == null
+						|| (servicioNmaxenvios.getNmaxenvios() != null && servicioNmaxenvios.getNmaxenvios() > 0 && listaMensajes
+								.size() <= servicioNmaxenvios.getNmaxenvios())) {
+
+					for (MensajePeticionLotesWebPushXMLBean mensaje : listaMensajes) {
+
+						String faltaCampoObligatorio = evaluarMensajeNotificacionCompletoServicio(mensaje.getTitulo(),
+								mensaje.getCuerpo());
+						if (faltaCampoObligatorio == null) {
+							if (null != mensaje.getDestinatariosWebPush()) {
+								for (DestinatarioPeticionLotesWebPushXMLBean d : mensaje.getDestinatariosWebPush()
+										.getDestinatarioWebPush()) {
+
+									// no viene informado el usuario en por lo que se envia a todos
+									if (null == d.getIdentificadorUsuario()
+											|| d.getIdentificadorUsuario().length() <= 0) {
+										List<Long> listaUsuariosWebPushPorServicio = usuariosWebPushManager
+												.getUsuariosPorServicio(peticionXML.getServicio());
+										ResponseStatusType status = new ResponseStatusType();
+										// Existen usuarioWeb push para ese
+										// servicio
+										if (!listaUsuariosWebPushPorServicio.isEmpty()) {
+
+											mensajeCreado = mensajesManager.insertarMensajeWebPush(
+													Long.valueOf(idLote), mensaje, peticionXML, d,
+													peticionXML.getUsuario(), peticionXML.getPassword());
+											listaMensajesProcesados.add(mensajeCreado);
+
+											// ahora insertamos en la tabla
+											// destinatariosMensajes
+											if (!mensajeCreado.getIdMensaje().isEmpty()) {
+												for (Long idUsuario : listaUsuariosWebPushPorServicio) {
+													Long desMensaje = destinatariosMensajesManager
+															.insertarDestinatarioMensaje(mensajeCreado.getIdMensaje(),
+																	idUsuario.toString(), d.getIdExterno(),
+																	peticionXML.getUsuario());
+													mensajeCreado.setIdExterno(d.getIdExterno());
+													historicosManager.creaHistorico(
+															Long.parseLong(mensajeCreado.getIdMensaje()), desMensaje,
+															estadoId, null, null, null, peticionXML.getUsuario());
+													sendMensajeJMSWebPush(listaMensajesEncolar, peticionXML.getServicio(), ps, mensajeCreado, d,
+															desMensaje, idLote);
+												}
+											}
+
+										} else {
+											anadirMensajeSinUsuarios(listaMensajesProcesados, mensaje, status, ps);
+										}
+									} else {// se indica el idUsuario
+										ResponseStatusType status = new ResponseStatusType();
+										List<Long> listaDispositivosWebPushPorUsuarioServicio = usuariosWebPushManager
+												.getDispositivosUsuarioServicio(d.getIdentificadorUsuario(),
+														peticionXML.getServicio());
+										if (!listaDispositivosWebPushPorUsuarioServicio.isEmpty()) {
+											mensajeCreado = mensajesManager.insertarMensajeWebPush(
+													Long.valueOf(idLote), mensaje, peticionXML, d,
+													peticionXML.getUsuario(), peticionXML.getPassword());
+											listaMensajesProcesados.add(mensajeCreado);
+
+											// ahora insertamos en la tabla
+											// destinatariosMensajes
+											if (!mensajeCreado.getIdMensaje().isEmpty()) {
+												for (Long idUsuario : listaDispositivosWebPushPorUsuarioServicio) {
+													Long desMensaje = destinatariosMensajesManager
+															.insertarDestinatarioMensaje(mensajeCreado.getIdMensaje(),
+																	idUsuario.toString(), d.getIdExterno(),
+																	peticionXML.getUsuario());
+													mensajeCreado.setIdExterno(d.getIdExterno());
+													historicosManager.creaHistorico(
+															Long.parseLong(mensajeCreado.getIdMensaje()), desMensaje,
+															estadoId, null, null, null, peticionXML.getUsuario());
+													sendMensajeJMSWebPush(listaMensajesEncolar, peticionXML.getServicio(), ps, mensajeCreado, d,
+															desMensaje, idLote);
+												}
+											}
+
+										} else {
+											anadirMensajeSinUsuarios(listaMensajesProcesados, mensaje, status, ps);
+										}
+									}// fin else se indica idUsuario
+								} // for destinatarioPeticionLotesWebPush
+							}// if getDestinatarios
+						}else{// if falta campo olbigatorio
+							Mensaje msj = new Mensaje();
+							
+							StringBuilder idExterno = new StringBuilder();
+							if(mensaje.getDestinatariosWebPush()!=null && mensaje.getDestinatariosWebPush().getDestinatarioWebPush()!=null) {
+								for (DestinatarioPeticionLotesWebPushXMLBean em : mensaje.getDestinatariosWebPush().getDestinatarioWebPush()) {
+									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+										if(idExterno.toString().length()>0) {
+											idExterno.append(",");
+										}
+										idExterno.append(em.getIdExterno());
+									}
+									
+								}
+							}
+							
+							msj.setIdExterno(idExterno.toString());
+							msj.setIdMensaje("");
+							ResponseStatusType status = new ResponseStatusType();
+							status.setStatusCode(PlataformaErrores.STATUSCODE_KO_CAMPOS_OBLIGATORIOS);
+							status.setDetails(PlataformaErrores.STATUSDETAILS_KO_CAMPOS_OBLIGATORIOS);
+							status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
+							msj.setErrorMensaje(status);
+							listaMensajesProcesados.add(msj);
+						}
+					}// for listaMensajes
+				}
+			}// fin listaErroresGenerales vacia
+			xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales, listaErroresLote);
+			
+			//creamos hilo para insertar los mensajes en ACtiveMq
+			levantarHilo(listaMensajesEncolar, ps, sender, mensajesManager);
+		} catch (Exception e) {
+
+			LOG.error("EnvioMensajesImpl.enviarNotificacion", e);
+			listaErroresGenerales.add(WSPlataformaErrors.getErrorGeneral());
+			try {
+				xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+						listaErroresLote);
+			} catch (PlataformaBusinessException e1) {
+				LOG.error("EnvioMensajesImpl.enviarNotificacion", e1);
+			}
+		}
+
+		return Utils.convertToUTF8(xmlRespues);
+	}
+
+	
+	
+	@Override
 	public String enviarNotificacion(EnvioPushXMLBean notificacionPush) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String xmlRespues = null;
@@ -684,19 +861,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				listaErroresGenerales.add(error);
 			}
 			if (listaErroresGenerales.isEmpty()) {
-				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
-						.getEstadoid();
-				idLote = lotesManager
-						.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-								notificacionPush.getUsuario(), notificacionPush.getPassword());
-
-				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
-					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
-					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
-							listaErroresLote);
-
-					return xmlRespues;
-				}
+				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null)).getEstadoid();
 				ArrayList<MensajePeticionLotesPushXMLBean> listaMensajes = notificacionPush.getListadoMensajes();
 
 				if (notificacionPush.getServicio().equalsIgnoreCase(servicioPUSH)) {
@@ -734,6 +899,16 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 														.getUsuarioPorServicio(Integer.parseInt(idServicioMovil));
 												ResponseStatusType status = new ResponseStatusType();
 												if (!listaDispositivos.isEmpty()) {
+													idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
+															notificacionPush.getUsuario(), notificacionPush.getPassword());
+													if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+														listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+														xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+																listaErroresLote);
+		
+														return xmlRespues;
+													}
+													
 													for (UsuariosServiciosMovilesBean usuario : listaDispositivos) {
 														if (null == mensajeCreado) {
 															mensajeCreado = mensajesManager.insertarMensajePush(
@@ -787,7 +962,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 													StringBuilder idExterno = new StringBuilder();
 													if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 														for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-															if(!idExterno.toString().contains(em.getIdExterno())) {
+															if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 																if(idExterno.toString().length()>0) {
 																	idExterno.append(",");
 																}
@@ -816,6 +991,16 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 																Integer.parseInt(idServicioMovil));
 												ResponseStatusType status = new ResponseStatusType();
 												if (!listaDispositivos.isEmpty()) {
+													idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
+															notificacionPush.getUsuario(), notificacionPush.getPassword());
+													if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+														listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+														xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+																listaErroresLote);
+		
+														return xmlRespues;
+													}
+													
 													for (Integer usuarioId : listaDispositivos) {
 														if (d == null || d.getIdentificadorUsuario().length() <= 0) {
 															Mensaje msj = new Mensaje();
@@ -823,7 +1008,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 															StringBuilder idExterno = new StringBuilder();
 															if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 																for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-																	if(!idExterno.toString().contains(em.getIdExterno())) {
+																	if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 																		if(idExterno.toString().length()>0) {
 																			idExterno.append(",");
 																		}
@@ -902,7 +1087,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 																StringBuilder idExterno = new StringBuilder();
 																if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 																	for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-																		if(!idExterno.toString().contains(em.getIdExterno())) {
+																		if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 																			if(idExterno.toString().length()>0) {
 																				idExterno.append(",");
 																			}
@@ -932,7 +1117,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 													StringBuilder idExterno = new StringBuilder();
 													if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 														for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-															if(!idExterno.toString().contains(em.getIdExterno())) {
+															if(em.getIdExterno()!=null &&  !idExterno.toString().contains(em.getIdExterno())) {
 																if(idExterno.toString().length()>0) {
 																	idExterno.append(",");
 																}
@@ -1015,7 +1200,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 											StringBuilder idExterno = new StringBuilder();
 											if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 												for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-													if(!idExterno.toString().contains(em.getIdExterno())) {
+													if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 														if(idExterno.toString().length()>0) {
 															idExterno.append(",");
 														}
@@ -1047,7 +1232,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									StringBuilder idExterno = new StringBuilder();
 									if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 										for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-											if(!idExterno.toString().contains(em.getIdExterno())) {
+											if(em.getIdExterno()!=null &&  !idExterno.toString().contains(em.getIdExterno())) {
 												if(idExterno.toString().length()>0) {
 													idExterno.append(",");
 												}
@@ -1075,7 +1260,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 								StringBuilder idExterno = new StringBuilder();
 								if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 									for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-										if(!idExterno.toString().contains(em.getIdExterno())) {
+										if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 											if(idExterno.toString().length()>0) {
 												idExterno.append(",");
 											}
@@ -1102,7 +1287,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							StringBuilder idExterno = new StringBuilder();
 							if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 								for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-									if(!idExterno.toString().contains(em.getIdExterno())) {
+									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -1130,7 +1315,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							for (MensajePeticionLotesPushXMLBean mensaje : listaMensajes) {
 								if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 									for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-										if(!idExterno.toString().contains(em.getIdExterno())) {
+										if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 											if(idExterno.toString().length()>0) {
 												idExterno.append(",");
 											}
@@ -1172,7 +1357,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									StringBuilder idExterno = new StringBuilder();
 									if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 										for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-											if(!idExterno.toString().contains(em.getIdExterno())) {
+											if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 												if(idExterno.toString().length()>0) {
 													idExterno.append(",");
 												}
@@ -1201,6 +1386,16 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 									ResponseStatusType status = new ResponseStatusType();
 									if (!litaDispositvos.isEmpty()) {
+										idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
+												notificacionPush.getUsuario(), notificacionPush.getPassword());
+										if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+											listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+											xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+													listaErroresLote);
+		
+											return xmlRespues;
+										}
+										
 										for (Long usuarioId : litaDispositvos) {
 											if (d == null || d.getIdentificadorUsuario().length() <= 0) {
 												Mensaje msj = new Mensaje();
@@ -1208,7 +1403,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 												StringBuilder idExterno = new StringBuilder();
 												if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 													for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-														if(!idExterno.toString().contains(em.getIdExterno())) {
+														if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 															if(idExterno.toString().length()>0) {
 																idExterno.append(",");
 															}
@@ -1274,7 +1469,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										StringBuilder idExterno = new StringBuilder();
 										if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 											for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-												if(!idExterno.toString().contains(em.getIdExterno())) {
+												if(null != em.getIdExterno() && !idExterno.toString().contains(em.getIdExterno())) {
 													if(idExterno.toString().length()>0) {
 														idExterno.append(",");
 													}
@@ -1303,7 +1498,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							StringBuilder idExterno = new StringBuilder();
 							if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 								for (DestinatarioPeticionLotesPushXMLBean d : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-									if(!idExterno.toString().contains(d.getIdExterno())) {
+									if(d.getIdExterno()!=null &&  !idExterno.toString().contains(d.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -1331,7 +1526,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						for (MensajePeticionLotesPushXMLBean mensaje : listaMensajes) {
 							if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 								for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-									if(!idExterno.toString().contains(em.getIdExterno())) {
+									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -1370,6 +1565,39 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		return Utils.convertToUTF8(xmlRespues);
 	}
 
+	
+	private void anadirMensajeSinUsuarios(
+			ArrayList<es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje> listaMensajesProcesados,
+			MensajePeticionLotesWebPushXMLBean mensaje, ResponseStatusType status, PropertiesServices ps) {
+		String statusCode = ps.getMessage("plataformaErrores.registroWebPush.COD_ERROR_NO_USUARIOS", null, "");
+		String statusKO = ps.getMessage("plataformaErrores.registroWebPush.STATUSTEXT_KO", null, "");
+		String statusDetails = ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_NO_USUARIOS", null, "");
+		
+		Mensaje msj = new Mensaje();
+		
+		StringBuilder idExterno = new StringBuilder();
+		if(mensaje.getDestinatariosWebPush()!=null && mensaje.getDestinatariosWebPush().getDestinatarioWebPush()!=null) {
+			for (DestinatarioPeticionLotesWebPushXMLBean em : mensaje.getDestinatariosWebPush().getDestinatarioWebPush()) {
+				if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+					if(idExterno.toString().length()>0) {
+						idExterno.append(",");
+					}
+					idExterno.append(em.getIdExterno());
+				}
+				
+			}
+		}
+		
+		msj.setIdExterno(idExterno.toString());
+		msj.setIdMensaje("");
+		status.setStatusCode(statusCode);
+		status.setDetails(statusDetails);
+		status.setStatusText(statusKO);
+		msj.setErrorMensaje(status);
+		listaMensajesProcesados.add(msj);
+	}
+	
+	
 	private void sendMensajeJMS(List<MensajeEncolarBean> listaMensajesEncolar, EnvioPushXMLBean notificacionPush, PropertiesServices ps, Mensaje mensajeCreado,
 			DestinatarioPeticionLotesPushXMLBean d, Long desMensaje, Integer idLote) {
 		MensajeJMS mensajeJms = new MensajeJMS();
@@ -1384,6 +1612,36 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				
 		TblServicios servicio = serviciosManager.getServicio(Long
 				.parseLong(notificacionPush.getServicio()));
+		if (servicio.getNumeroMaxReenvios() != null
+				&& servicio.getNumeroMaxReenvios() >= 0) {
+			maxRetries = servicio.getNumeroMaxReenvios().longValue();
+		} else {
+			maxRetries = Long.parseLong(ps.getMessage(
+					"constantes.servicio.numMaxReenvios", null));
+		}
+		
+		if(servicio.getPremium()!=null && servicio.getPremium()) {
+			premium = true;
+		}
+		listaMensajesEncolar.add(new MensajeEncolarBean(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium));
+//		sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
+		
+	}
+	
+	private void sendMensajeJMSWebPush(List<MensajeEncolarBean> listaMensajesEncolar, String idServicio, PropertiesServices ps, Mensaje mensajeCreado,
+			DestinatarioPeticionLotesWebPushXMLBean d, Long desMensaje, Integer idLote) {
+		MensajeJMS mensajeJms = new MensajeJMS();
+		mensajeJms.setIdMensaje(mensajeCreado.getIdMensaje());
+		mensajeJms.setIdExterno(d.getIdExterno());
+		mensajeJms.setDestinatarioMensajeId(desMensaje.toString());
+		mensajeJms.setIdCanal(ps.getMessage("constantes.CANAL_WEBPUSH",
+				null));
+		mensajeJms.setIdLote(idLote.toString());
+		Long maxRetries = null;
+		boolean premium = false;
+				
+		TblServicios servicio = serviciosManager.getServicio(Long
+				.parseLong(idServicio));
 		if (servicio.getNumeroMaxReenvios() != null
 				&& servicio.getNumeroMaxReenvios() >= 0) {
 			maxRetries = servicio.getNumeroMaxReenvios().longValue();
@@ -1796,5 +2054,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 	public void setQueryExecutorOrganismos(QueryExecutorOrganismos queryExecutorOrganismos) {
 		this.queryExecutorOrganismos = queryExecutorOrganismos;
 	}
+
+	
 
 }

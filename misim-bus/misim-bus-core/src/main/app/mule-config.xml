@@ -47,6 +47,7 @@
  		<spring:import resource="${classpath}recepcion-AEAT.xml" />
  		<spring:import resource="${classpath}get-auth.xml" />
  		<spring:import resource="${classpath}suscripcion-servicio-movil.xml" />
+ 		<spring:import resource="${classpath}registro-usuario-webpush.xml" />
 		<spring:bean
 			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 			<spring:property name="locations">

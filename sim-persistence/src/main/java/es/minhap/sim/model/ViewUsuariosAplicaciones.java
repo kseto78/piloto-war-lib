@@ -2,11 +2,11 @@ package es.minhap.sim.model;
 
 // Generated 18-jul-2016 10:57:14 by Hibernate Tools 3.4.0.CR1
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
+import java.util.Date;
+
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -16,35 +16,194 @@ import javax.persistence.Table;
 @Table(name = "VIEW_USUARIOS_APLICACIONES")
 public class ViewUsuariosAplicaciones implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -4808829895827432046L;
-	private ViewUsuariosAplicacionesId id;
+	
+	@Id
+	@Column(name = "USUARIOAPLICACIONID", precision = 22, scale = 0)
+	private Long usuarioaplicacionid;
 
+	@Column(name = "USUARIOID", nullable = false, precision = 22, scale = 0)
+	private Long usuarioid;
+
+	@Column(name = "APLICACIONID", precision = 22, scale = 0)
+	private Long aplicacionid;
+
+	@Column(name = "MODO", precision = 1, scale = 0)
+	private Integer modo;
+
+	@Column(name = "FECHACREACION", length = 7)
+	private Date fechacreacion;
+
+	@Column(name = "CREADOPOR", length = 100)
+	private String creadopor;
+
+	@Column(name = "NOMBREAPLICACION", length = 100)
+	private String nombreaplicacion;
+
+	@Column(name = "NOMBREUSUARIO", nullable = false, length = 100)
+	private String nombreusuario;
+
+	@Column(name = "ROLID", precision = 22, scale = 0)
+	private Long rolid;
+
+	@Column(name = "ACTIVO", precision = 1, scale = 0)
+	private Integer activo;
+
+	@Column(name = "ELIMINADO", length = 1)
+	private String eliminado;
+
+	@Column(name = "ROLUSUARIO", length = 22)
+	private String rolusuario;
+	
 	public ViewUsuariosAplicaciones() {
 	}
-
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "usuarioaplicacionid", column = @Column(name = "USUARIOAPLICACIONID", precision = 22, scale = 0)),
-			@AttributeOverride(name = "usuarioid", column = @Column(name = "USUARIOID", nullable = false, precision = 22, scale = 0)),
-			@AttributeOverride(name = "aplicacionid", column = @Column(name = "APLICACIONID", precision = 22, scale = 0)),
-			@AttributeOverride(name = "modo", column = @Column(name = "MODO", precision = 1, scale = 0)),
-			@AttributeOverride(name = "fechacreacion", column = @Column(name = "FECHACREACION", length = 7)),
-			@AttributeOverride(name = "creadopor", column = @Column(name = "CREADOPOR", length = 100)),
-			@AttributeOverride(name = "nombreaplicacion", column = @Column(name = "NOMBREAPLICACION", length = 100)),
-			@AttributeOverride(name = "nombreusuario", column = @Column(name = "NOMBREUSUARIO", nullable = false, length = 100)),
-			@AttributeOverride(name = "rolid", column = @Column(name = "ROLID", precision = 22, scale = 0)),
-			@AttributeOverride(name = "activo", column = @Column(name = "ACTIVO", precision = 1, scale = 0)),
-			@AttributeOverride(name = "eliminado", column = @Column(name = "ELIMINADO", length = 1)),
-			@AttributeOverride(name = "rolusuario", column = @Column(name = "ROLUSUARIO", length = 22)) })
-	public ViewUsuariosAplicacionesId getId() {
-		return this.id;
+	
+	/**
+	 * @return the usuarioaplicacionid
+	 */
+	public Long getUsuarioaplicacionid() {
+		return usuarioaplicacionid;
+	}
+	/**
+	 * @param usuarioaplicacionid the usuarioaplicacionid to set
+	 */
+	public void setUsuarioaplicacionid(Long usuarioaplicacionid) {
+		this.usuarioaplicacionid = usuarioaplicacionid;
+	}
+	/**
+	 * @return the usuarioid
+	 */
+	public Long getUsuarioid() {
+		return usuarioid;
+	}
+	/**
+	 * @param usuarioid the usuarioid to set
+	 */
+	public void setUsuarioid(Long usuarioid) {
+		this.usuarioid = usuarioid;
+	}
+	/**
+	 * @return the aplicacionid
+	 */
+	public Long getAplicacionid() {
+		return aplicacionid;
+	}
+	/**
+	 * @param aplicacionid the aplicacionid to set
+	 */
+	public void setAplicacionid(Long aplicacionid) {
+		this.aplicacionid = aplicacionid;
+	}
+	/**
+	 * @return the modo
+	 */
+	public Integer getModo() {
+		return modo;
+	}
+	/**
+	 * @param modo the modo to set
+	 */
+	public void setModo(Integer modo) {
+		this.modo = modo;
+	}
+	/**
+	 * @return the fechacreacion
+	 */
+	public Date getFechacreacion() {
+		return fechacreacion;
+	}
+	/**
+	 * @param fechacreacion the fechacreacion to set
+	 */
+	public void setFechacreacion(Date fechacreacion) {
+		this.fechacreacion = fechacreacion;
+	}
+	/**
+	 * @return the creadopor
+	 */
+	public String getCreadopor() {
+		return creadopor;
+	}
+	/**
+	 * @param creadopor the creadopor to set
+	 */
+	public void setCreadopor(String creadopor) {
+		this.creadopor = creadopor;
+	}
+	/**
+	 * @return the nombreaplicacion
+	 */
+	public String getNombreaplicacion() {
+		return nombreaplicacion;
+	}
+	/**
+	 * @param nombreaplicacion the nombreaplicacion to set
+	 */
+	public void setNombreaplicacion(String nombreaplicacion) {
+		this.nombreaplicacion = nombreaplicacion;
+	}
+	/**
+	 * @return the nombreusuario
+	 */
+	public String getNombreusuario() {
+		return nombreusuario;
+	}
+	/**
+	 * @param nombreusuario the nombreusuario to set
+	 */
+	public void setNombreusuario(String nombreusuario) {
+		this.nombreusuario = nombreusuario;
+	}
+	/**
+	 * @return the rolid
+	 */
+	public Long getRolid() {
+		return rolid;
+	}
+	/**
+	 * @param rolid the rolid to set
+	 */
+	public void setRolid(Long rolid) {
+		this.rolid = rolid;
+	}
+	/**
+	 * @return the activo
+	 */
+	public Integer getActivo() {
+		return activo;
+	}
+	/**
+	 * @param activo the activo to set
+	 */
+	public void setActivo(Integer activo) {
+		this.activo = activo;
+	}
+	/**
+	 * @return the eliminado
+	 */
+	public String getEliminado() {
+		return eliminado;
+	}
+	/**
+	 * @param eliminado the eliminado to set
+	 */
+	public void setEliminado(String eliminado) {
+		this.eliminado = eliminado;
+	}
+	/**
+	 * @return the rolusuario
+	 */
+	public String getRolusuario() {
+		return rolusuario;
+	}
+	/**
+	 * @param rolusuario the rolusuario to set
+	 */
+	public void setRolusuario(String rolusuario) {
+		this.rolusuario = rolusuario;
 	}
 
-	public void setId(ViewUsuariosAplicacionesId id) {
-		this.id = id;
-	}
+	
 
 }

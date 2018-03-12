@@ -1,6 +1,5 @@
 package es.minhap.plataformamensajeria.iop.beans;
 
-import java.util.ArrayList;
 
 public class FiltroXMLBean {
 	

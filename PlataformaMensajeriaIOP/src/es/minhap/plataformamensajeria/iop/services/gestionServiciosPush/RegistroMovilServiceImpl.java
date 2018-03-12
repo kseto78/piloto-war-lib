@@ -198,7 +198,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 			} else {
 
 				// Se crea entrada en TBL_USUARIOSPUSH con el nombreUsuario con el telefono
-				if (!insertarUsuarioPush(tblAltaNumMovil.getNumMovil(), tblAltaNumMovil.getUidDispositivo(), ps)) {
+				if (!insertarUsuarioPush(tblAltaNumMovil.getNumMovil(), tblAltaNumMovil.getUidDispositivo(), peticionBean.getIdDispositivo(), ps)) {
 
 					// Error en la insercion se indica el error
 					return generarRespuestaConfirmarAlta(statusTextKO, codeInsertKO, detailsInsertKO);
@@ -253,7 +253,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 
 	
 
-	private Boolean insertarUsuarioPush(String numMovil, String uidDispositivo, PropertiesServices ps) {
+	private Boolean insertarUsuarioPush(String numMovil, String uidDispositivo, String idDispositivo, PropertiesServices ps) {
 		Long servicioId = Long.parseLong(ps.getMessage("servicio.notificacionesPUSH", null));
 		Boolean res = false;
 		
@@ -277,6 +277,9 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 			}else{//actualizo
 				up.setNombreusuario(numMovil);
 				up.setFechamodificacion(new Date());
+				up.setDispositivoid(idDispositivo);
+				up.setTokenusuario(usuario.getTokenusuario());
+				up.setTokensession(usuario.getTokensession());
 				return usuariosPushManager.updateUsuario(up);
 			}
 		}		

@@ -129,6 +129,9 @@ public class SIMMessageDispatcher {
 				case 3:
 					getSendMessageService().postRecepcionSMS(mensajeId, destinatarioMensajeId);
 					break;
+				case 5:
+					getSendMessageService().postNotificacionWebPush(mensajeId,idLote, destinatarioMensajeId);
+					break;
 				default:
 					LOG.error((null != aplicacionPremium)? errorClave : "" + " [SIMMessageDispatcher] Error procesando el mensaje: canal indefinido");
 					throw new RuntimeException("");

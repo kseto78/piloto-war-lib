@@ -169,4 +169,5 @@ public interface TblUsuariosPushManager {
 	public TblUsuariosPush getUsuarioPushByQuery(TblUsuariosPushQuery query);
 
 
+
 }

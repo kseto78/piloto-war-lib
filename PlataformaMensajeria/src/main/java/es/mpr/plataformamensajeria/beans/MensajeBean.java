@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,7 +13,10 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  
  *  @author Altran
  */
-public class MensajeBean implements Audit{
+public class MensajeBean implements Audit, Serializable{
+
+	private static final long serialVersionUID = 374535803073748956L;
+
 
 	public MensajeBean() {
 		this.mensajeId=null;

@@ -132,6 +132,10 @@ public class CifradoServiceImpl implements CifradoService {
 
 			final Node encriptedKey = nl.item(0);
 
+			if (encriptedKey == null) {
+				return documento;
+				}
+			
 			JCEMapper.registerDefaultAlgorithms();
 			
 			KeyStore ks;

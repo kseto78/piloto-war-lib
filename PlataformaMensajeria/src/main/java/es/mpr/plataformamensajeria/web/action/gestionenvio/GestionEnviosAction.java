@@ -3,10 +3,15 @@ package es.mpr.plataformamensajeria.web.action.gestionenvio;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -14,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.w3c.dom.Document;
 
 import com.map.j2ee.exceptions.BaseException;
 import com.map.j2ee.exceptions.BusinessException;
@@ -22,10 +28,15 @@ import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.Preparable;
 
 import es.minhap.common.spring.ApplicationContextProvider;
+import es.minhap.misim.bus.model.ViewMisim;
+import es.minhap.misim.bus.query.ViewMisimQuery;
+import es.minhap.plataformamensajeria.iop.misim.manager.PeticionManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ViewMisimManager;
 import es.minhap.sim.model.TblGestionEnvios;
 import es.mpr.plataformamensajeria.beans.AdjuntoEmailBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.CanalBean;
+import es.mpr.plataformamensajeria.beans.DecodeBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesBean;
 import es.mpr.plataformamensajeria.beans.DetalleEnvioBean;
 import es.mpr.plataformamensajeria.beans.DetalleLoteBean;
@@ -33,20 +44,22 @@ import es.mpr.plataformamensajeria.beans.EstadoBean;
 import es.mpr.plataformamensajeria.beans.GestionEnvioBean;
 import es.mpr.plataformamensajeria.beans.HistoricoBean;
 import es.mpr.plataformamensajeria.beans.MensajeBean;
+import es.mpr.plataformamensajeria.beans.PeticionBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServidorBean;
-import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
+import es.mpr.plataformamensajeria.beans.ViewMisimBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
+import es.mpr.plataformamensajeria.servicios.ifaces.CifradoService;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioCanal;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioEstado;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios;
-import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
+import es.mpr.plataformamensajeria.util.XMLUtils;
 
 /**
  * <p>
@@ -60,36 +73,52 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class GestionEnviosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	private static final String GENERALES_PAGESIZEM = "generales.PAGESIZEM";
+
+	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	private static final String TABLE_ID = "tableId";
+
+	private static final String INFO_USER = "infoUser";
+
+	private static final String NO_USER = "noUser";
+
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = Logger.getLogger(GestionEnviosAction.class);
 
 	@Resource(name = "servicioAplicacionImpl")
-	private ServicioAplicacion servicioAplicacion;
+	private transient ServicioAplicacion servicioAplicacion;
 
 	@Resource(name = "servicioServidorImpl")
-	private ServicioServidor servicioServidor;
+	private transient ServicioServidor servicioServidor;
 
 	@Resource(name = "servicioServicioImpl")
-	private ServicioServicio servicioServicio;
+	private transient ServicioServicio servicioServicio;
 
 	@Resource(name = "servicioEstadoImpl")
-	private ServicioEstado servicioEstado;
+	private transient ServicioEstado servicioEstado;
 
 	@Resource(name = "servicioCanalImpl")
-	private ServicioCanal servicioCanal;
+	private transient ServicioCanal servicioCanal;
 
 	@Resource(name = "servicioGestionEnviosImpl")
-	private ServicioGestionEnvios servicioGestionEnvios;
+	private transient ServicioGestionEnvios servicioGestionEnvios;
 	
 	@Resource(name = "servicioUsuarioAplicacionImpl")
-	private ServicioUsuarioAplicacion servicioUsuarioAplicacion;
+	private transient ServicioUsuarioAplicacion servicioUsuarioAplicacion;
 	
 	@Resource(name = "plataformaMensajeriaProperties")
-	private PlataformaMensajeriaProperties properties;
+	private transient PlataformaMensajeriaProperties properties;
 	
-
+	@Resource(name="ViewMisimManagerImpl")
+	private transient ViewMisimManager viewMisimManager;
 	
+	@Resource(name="PeticionManagerImpl")
+	private transient PeticionManager peticionManager;
+	
+	@Resource
+	private transient CifradoService cifradoService;
 	
 	private GestionEnvioBean gestionEnvioBean;
 	private DetalleEnvioBean detalleEmail;
@@ -101,13 +130,14 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	private List<MensajeBean> listaGestionEnviosMensajes = null;
 	private List<DestinatariosMensajesBean> listaGestionEnviosDestinatariosMensaje = null;
 	private List<HistoricoBean> listaHistoricosMensaje = null;
+	private List<ViewMisimBean> listaIntercambiosMisim = null;
 
-	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboEstados = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboPageSize = new ArrayList<KeyValueObject>();
+	transient List<KeyValueObject> comboAplicaciones = new ArrayList<>();
+	transient List<KeyValueObject> comboServidores = new ArrayList<>();
+	transient List<KeyValueObject> comboServicios = new ArrayList<>();
+	transient List<KeyValueObject> comboEstados = new ArrayList<>();
+	transient List<KeyValueObject> comboCanales = new ArrayList<>();
+	transient List<KeyValueObject> comboPageSize = new ArrayList<>();
 	private List<ArrayList<String>> aaData;
 	private String[] checkDelList;
 
@@ -116,57 +146,32 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	private String idAdjunto;
 	private String idEmail;
 	private String idLote;
+	private String idPeticion;
 	private String idMensaje;
 	private String idDestinatariosMensajes;
 	private String operacionMsg;
 	private String CheckAllS;
 	private String vistaEnviosIdSelected;
 	private String adjuntoDescargable;
+	private String search;
 	private InputStream fileInputStream;
 	private Integer pageSize = 20;
+	
+	public static final String FORMATO_FECHA_TITULO_AUDITORIA = "yyyyMMdd HHmmss";
+	public static final String TIPO_FICHERO = "xml";
 
 	////MIGRADO
 	public String newSearch() throws BusinessException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		if (validUsuario()) {
-			int page = getPage("tableId"); // Pagina a mostrar
-			String order = getOrder("tableId"); // Ordenar de modo ascendente o
-												// descendente
-			String columnSort = getColumnSort("tableId"); // Columna usada para
-															// ordenar
-			int inicio = (page - 1) * pageSize;
-			if (gestionEnvioBean == null) {
-				gestionEnvioBean = new GestionEnvioBean();
-			}
-			if (gestionEnvioBean != null && gestionEnvioBean.getVistaEnviosId() != null) {
-				vistaEnviosIdSelected = gestionEnvioBean.getVistaEnviosId().toString();
-			} else {
-				vistaEnviosIdSelected = "1";
-			}
-
-//			gestionEnvioBean.setFechaDesde(new Date(new Date().getTime() * 2));
-//			gestionEnvioBean.setFechaHasta(new Date(new Date().getTime() * 2));
-
-			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-
-			PaginatedList<GestionEnvioBean> result = servicioGestionEnvios.getGestionDeEnvios(inicio, (export) ? -1
-					: pageSize, order, columnSort,
-					gestionEnvioBean, request, false);
-			Integer totalSize = result.getTotalList();
-			gestionEnvioBean.setFechaDesde(null);
-			gestionEnvioBean.setFechaHasta(null);
-			listaGestionEnvios = result.getPageList();
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
-			// Atributos de request
+		
+			gestionEnvioBean = new GestionEnvioBean();
+			vistaEnviosIdSelected = "1";
+			
+			Integer totalSize = 0;
 			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
-			if (!export) {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-						pageSize);
-			} else {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-						totalSize);
-			}
+			listaGestionEnvios =new ArrayList<>();
 			return SUCCESS;
 		} else {
 			return ERROR;
@@ -175,15 +180,15 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 ////MIGRADO
 	public String search() throws BaseException {
-		PaginatedList<GestionEnvioBean> result = null;
-		Integer totalSize = null;
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		PaginatedList<GestionEnvioBean> result;
+		Integer totalSize;
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		if (validUsuario()) {
-			int page = getPage("tableId"); // Pagina a mostrar
-			String order = getOrder("tableId"); // Ordenar de modo ascendente o
+			int page = getPage(GestionEnviosAction.TABLE_ID); // Pagina a mostrar
+			String order = getOrder(GestionEnviosAction.TABLE_ID); // Ordenar de modo ascendente o
 												// descendente
-			String columnSort = getColumnSort("tableId"); // Columna usada para
+			String columnSort = getColumnSort(GestionEnviosAction.TABLE_ID); // Columna usada para
 															// ordenar
 			int inicio = (page - 1) * pageSize;
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
@@ -193,12 +198,19 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			} else {
 				vistaEnviosIdSelected = "1";
 			}
-			if (vistaEnviosIdSelected.equals("1")) {
+			if (null != gestionEnvioBean && search != null && search.length() > 0) {
+				if (-1 != search.indexOf('|')){
+					gestionEnvioBean.setCodOrganismo(search.substring(0,search.indexOf('|')).trim());
+				}else{
+					gestionEnvioBean.setCodOrganismo(search);
+				}
+			}
+			if ("1".equals(vistaEnviosIdSelected)) {
 				result = servicioGestionEnvios.getGestionDeEnvios(inicio,
 						(export) ? -1 : pageSize, order,
 						columnSort, gestionEnvioBean, request, false);
 				totalSize = result.getTotalList();
-			} else if (vistaEnviosIdSelected.equals("3")) {
+			} else if ("3".equals(vistaEnviosIdSelected)) {
 				result = servicioGestionEnvios.getGestionDeEnviosDestinatarios(inicio,
 						(export) ? -1 : pageSize, order,
 						columnSort, gestionEnvioBean, request);
@@ -211,15 +223,34 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			}
 
 			listaGestionEnvios = result.getPageList();
+			
+			for(GestionEnvioBean geb: listaGestionEnvios){
+				
+				geb.setBotonIntercambios(true);
+				
+				//se quita esta comprobacion por la lentitud de los mensajes en GestionEnvios
+								
+//								geb.setBotonIntercambios(true);
+//								
+//								ViewMisimQuery query = new ViewMisimQuery();
+//								query.setIdLote(geb.getIdLote());
+//								List<ViewMisim> viewMisim = viewMisimManager.getIntercambiosMisimByQuery(query, 0, 20);
+//								
+//								if(viewMisim == null || viewMisim.isEmpty()){
+//									geb.setBotonIntercambios(false);
+//								}
+		   }
+
+			
 			resultCount = (totalSize != null) ? totalSize.toString() : "0";
 			// Atributos de request
 			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
-
+			gestionEnvioBean.setCodOrganismo(search);
 			if (!export) {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
+				getRequest().setAttribute(properties.getProperty(GestionEnviosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
 						pageSize);
 			} else {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
+				getRequest().setAttribute(properties.getProperty(GestionEnviosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
 						totalSize);
 			}
 			return SUCCESS;
@@ -230,8 +261,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 	// //MIGRADO
 	public String loadContenidoMensaje() throws BusinessException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		if (idEnvio == null) {
 			throw new BusinessException("EL idEnvio recibido es nulo");
 		}
@@ -249,19 +280,19 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 	////MIGRADO
 	public String loadLote() throws BusinessException {
-		Integer totalSize = null;
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		Integer totalSize;
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		if (idLote == null) {
 			throw new BusinessException("EL idLote recibido es nulo");
 		}
 		try {
 			int page = getPage("tableLotesId");
-			int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20"));
+			int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20"));
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 			detalleLote = servicioGestionEnvios.loadLote(idLote);
 			PaginatedList<MensajeBean> result = servicioGestionEnvios.getMensajesLotes(inicio,
-					(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), detalleLote.getIdLoteEnvio().longValue());
+					(export) ? -1 : Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20")), detalleLote.getIdLoteEnvio().longValue());
 			totalSize = result.getTotalList();
 			resultCount = (totalSize != null) ? totalSize.toString() : "0";
 			listaGestionEnviosMensajes = result.getPageList();
@@ -277,8 +308,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public String loadHistoricoMsj() throws BusinessException {
 		destinatariosMensajes = null;
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		if (idMensaje == null) {
 			throw new BusinessException("EL idMensaje recibido es nulo");
 		}
@@ -307,12 +338,270 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			throw new BusinessException(this.getText("errors.action.organismo.loadHistoricos"));
 		}
 	}
+	
+	public String loadMisim() throws BusinessException {
+		
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idLote == null) {
+			throw new BusinessException("EL idLote recibido es nulo");
+		}
+		
+		if(idMensaje == null) {
+			throw new BusinessException("El idMensaje recibido es nulo");
+		}
+		
+		try {
+			
+			idEmail = idMensaje;
+			
+			detalleEmail = servicioGestionEnvios.loadMensaje(idEmail);
+
+			Integer totalSize = null;
+			int page = getPage("tableMisimId");
+			int inicio = (page - 1) * pageSize;
+			PaginatedList<ViewMisimBean> result = null;
+			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
+			
+			result = servicioGestionEnvios.getIntercambiosMisim(inicio, (export) ? -1
+					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), Long.valueOf(idLote));
+			totalSize = result.getTotalList();
+			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			listaIntercambiosMisim = result.getPageList();
+			
+			return SUCCESS;
+
+		} catch (BusinessException e) {
+			logger.error("GestionEnviosAction - loadMisim:" + e);
+			throw new BusinessException(this.getText("errors.action.gestionEnvios.loadMisim"));
+		}
+	}
+	
+	public void loadXmlPeticion() throws BusinessException {
+		
+//		if (getRequest().getSession().getAttribute("infoUser") == null)
+//			return "noUser";
+		
+		if (idPeticion == null) {
+			throw new BusinessException("EL idPeticion recibido es nulo");
+		}
+		
+		try {
+			
+		PeticionBean peticionBean = PlataformaMensajeriaUtil.loadXmlPeticion(idPeticion, peticionManager);
+		
+		DecodeBean decodeBean = new DecodeBean();
+		
+		decodeBean.setXmlCifrado(peticionBean.getMensajePeticion());
+		
+		if (decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())){
+				
+				String certificado;
+				if(decodeBean.getCertificado()!=null && !"".equals(decodeBean.getCertificado())){
+					certificado = decodeBean.getCertificado();
+				}else{
+					certificado = properties.getProperty("decode.keystore.alias.defecto",null);
+				}
+				
+				String xmlCifrado = decodeBean.getXmlCifrado();
+
+				final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				dbf.setNamespaceAware(true);
+				
+				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName("UTF-8"));
+				
+				logger.debug("[GestionEnviosAction] - decode: XML a decodificar: " + xmlCifrado);
+
+				String keystoreType = properties.getProperty("decode.keystore.type", null);
+				String keystore = properties.getProperty("decode.keystore.path", null);
+				String keystorePassword = properties.getProperty("decode.keystore.password", null);
+				String alias = properties.getProperty("decode.keystore.alias." + certificado, null);
+				String aliasPassword = properties.getProperty("decode.keystore.alias.password." + certificado, null);
+				
+				// Desciframos el documento cifrado
+				Document docDescifrado = cifradoService.descifrarKey(
+						docOriginal,
+						keystoreType,
+						keystorePassword,
+						alias,
+						aliasPassword,
+						keystore);
+
+				docDescifrado = cifradoService.descifrar(
+						docDescifrado,
+						keystoreType,
+						keystorePassword,
+						alias,
+						aliasPassword,
+						keystore);
+				
+				String xmlDescifrado = XMLUtils.dom2xml(docDescifrado);
+				decodeBean.setXmlDescifrado(xmlDescifrado);
+		
+			}
+		
+		peticionBean.setMensajePeticion(decodeBean.getXmlDescifrado());
+		
+		ViewMisimQuery query = new ViewMisimQuery();
+		query.setIdPeticion(Long.valueOf(idPeticion));
+		
+		ViewMisim viewMisim = viewMisimManager.getViewMisim(query);
+		
+		logger.debug("[GestionEnviosAction] - descargaFichero - inicio");
+		String fechaTitulo = null;
+		String horaTitulo = null;
+		String[] itemsTitulo = null;
+
+		SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA_TITULO_AUDITORIA);
+		Calendar fechaCal = new GregorianCalendar();
+		fechaCal.setTime(viewMisim.getFechaCreacion());
+		fechaTitulo = sdf.format(fechaCal.getTime());
+			
+		if(fechaTitulo!=null){
+			itemsTitulo = fechaTitulo.split(" ");
+		}
+		if(itemsTitulo!=null && itemsTitulo.length>0){
+			fechaTitulo = itemsTitulo[0];
+			horaTitulo = itemsTitulo[1];
+		}
+
+		String contenido = peticionBean.getMensajePeticion();
+
+		StringBuilder titulo =new  StringBuilder();
+		titulo.append(fechaTitulo).append("_").append(horaTitulo).append("_").append(idPeticion).append("_Peticion");
+		
+		PlataformaMensajeriaUtil.descargaFicheroXml(response, titulo.toString(), contenido, TIPO_FICHERO);
+
+		}
+		
+		catch (BusinessException e) {
+			logger.error("[GestionEnviosAction] - loadXmlPeticion:" + e);
+			throw new BusinessException(e);
+		}
+		
+		catch (Exception e){
+				logger.error("[GestionEnviosAction] Error al descifrar el XML: ",e);
+				addActionErrorSession(this.getText("plataforma.decodificador.decodeDescifrar.error"));
+			}
+		
+//		return SUCCESS;
+	}
+	
+	public void loadXmlRespuesta() throws BusinessException {
+		
+//			if (getRequest().getSession().getAttribute("infoUser") == null)
+//			return "noUser";
+	
+		if (idPeticion == null) {
+			throw new BusinessException("EL idPeticion recibido es nulo");
+		}
+		
+		try {
+			
+		PeticionBean peticionBean = PlataformaMensajeriaUtil.loadXmlRespuesta(idPeticion, peticionManager);
+		
+		DecodeBean decodeBean = new DecodeBean();
+		
+		decodeBean.setXmlCifrado(peticionBean.getMensajeRespuesta());
+		
+		if (decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())){
+				
+				String certificado;
+				if(decodeBean.getCertificado()!=null && !"".equals(decodeBean.getCertificado())){
+					certificado = decodeBean.getCertificado();
+				}else{
+					certificado = properties.getProperty("decode.keystore.alias.defecto",null);
+				}
+				
+				String xmlCifrado = decodeBean.getXmlCifrado();
+	
+				final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				dbf.setNamespaceAware(true);
+				
+				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName("UTF-8"));
+				
+				logger.debug("[GestionEnviosAction] - decode: XML a decodificar: " + xmlCifrado);
+	
+				String keystoreType = properties.getProperty("decode.keystore.type", null);
+				String keystore = properties.getProperty("decode.keystore.path", null);
+				String keystorePassword = properties.getProperty("decode.keystore.password", null);
+				String alias = properties.getProperty("decode.keystore.alias." + certificado, null);
+				String aliasPassword = properties.getProperty("decode.keystore.alias.password." + certificado, null);
+				
+				// Desciframos el documento cifrado
+				Document docDescifrado = cifradoService.descifrarKey(
+						docOriginal,
+						keystoreType,
+						keystorePassword,
+						alias,
+						aliasPassword,
+						keystore);
+	
+				docDescifrado = cifradoService.descifrar(
+						docDescifrado,
+						keystoreType,
+						keystorePassword,
+						alias,
+						aliasPassword,
+						keystore);
+				
+				String xmlDescifrado = XMLUtils.dom2xml(docDescifrado);
+				decodeBean.setXmlDescifrado(xmlDescifrado);
+		
+			}
+		
+		peticionBean.setMensajeRespuesta(decodeBean.getXmlDescifrado());
+		
+		ViewMisimQuery query = new ViewMisimQuery();
+		query.setIdPeticion(Long.valueOf(idPeticion));
+		
+		ViewMisim viewMisim = viewMisimManager.getViewMisim(query);
+		
+		logger.debug("[GestionEnviosAction] - descargaFichero - inicio");
+		String fechaTitulo = null;
+		String horaTitulo = null;
+		String[] itemsTitulo = null;
+	
+		SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA_TITULO_AUDITORIA);
+		Calendar fechaCal = new GregorianCalendar();
+		fechaCal.setTime(viewMisim.getFechaCreacion());
+		fechaTitulo = sdf.format(fechaCal.getTime());
+			
+		if(fechaTitulo!=null){
+			itemsTitulo = fechaTitulo.split(" ");
+		}
+		if(itemsTitulo!=null && itemsTitulo.length>0){
+			fechaTitulo = itemsTitulo[0];
+			horaTitulo = itemsTitulo[1];
+		}
+	
+		String contenido = peticionBean.getMensajeRespuesta();
+	
+		StringBuffer titulo =new  StringBuffer();
+		titulo.append(fechaTitulo).append("_").append(horaTitulo).append("_").append(idPeticion).append("_Respuesta");
+		
+		PlataformaMensajeriaUtil.descargaFicheroXml(response, titulo.toString(), contenido, TIPO_FICHERO);
+	
+		}
+		
+		catch (BusinessException e) {
+			logger.error("[GestionEnviosAction] - loadXmlRespuesta:" + e);
+			throw new BusinessException(e);
+		}
+		
+		catch (Exception e){
+				logger.error("[GestionEnviosAction] Error al descifrar el XML: ",e);
+				addActionErrorSession(this.getText("plataforma.decodificador.decodeDescifrar.error"));
+			}
+		
+	//	return SUCCESS;
+	}
 
 	////MIGRADO
 	public String loadMensaje() throws BusinessException {
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		if (idMensaje == null) {
 			throw new BusinessException("EL idMensaje recibido es nulo");
 		}
@@ -324,22 +613,22 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			detalleEmail = servicioGestionEnvios.loadMensaje(idEmail);
 			
 			// Carga Destinatarios_mensajes
-			Integer totalSize = null;
+			Integer totalSize;
 			int page = getPage("tableMensajesId");
 			int inicio = (page - 1) * pageSize;
-			PaginatedList<DestinatariosMensajesBean> result = null;
+			PaginatedList<DestinatariosMensajesBean> result;
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 
 			if (servicioGestionEnvios.isMultidestinatario(detalleEmail.getMensajeId())) {
 				// sacar destinatarios de tabla destinatario_mensaje
 				result = servicioGestionEnvios.getDestinatariosMensajesMultidestinatario(inicio, (export) ? -1
-						: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), detalleEmail.getMensajeId());
+						: Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20")), detalleEmail.getMensajeId());
 				totalSize = result.getTotalList();
 				resultCount = (totalSize != null) ? totalSize.toString() : "0";
 				listaGestionEnviosDestinatariosMensaje = result.getPageList();
 			} else {
 				result = servicioGestionEnvios.getDestinatariosMensajes(inicio,
-						(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), detalleEmail.getMensajeId());
+						(export) ? -1 : Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20")), detalleEmail.getMensajeId());
 				totalSize = result.getTotalList();
 				resultCount = (totalSize != null) ? totalSize.toString() : "0";
 				listaGestionEnviosDestinatariosMensaje = result.getPageList();
@@ -355,8 +644,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 	/////MIGRADO
 	public String loadAdjunto() throws IOException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		// Comprobar primero si se ha cargado alguna vez el fichero
 		//AdjuntoEmailBean adjunto = servicioGestionEnvios.loadAdjuntoBean(idAdjunto, idEmail);
 		try {
@@ -377,9 +666,9 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public String accionSeleccionados() {
 		try{
-		List<TblGestionEnvios> listaEnvios = new ArrayList<TblGestionEnvios>();
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		List<TblGestionEnvios> listaEnvios = new ArrayList<>();
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+			return GestionEnviosAction.NO_USER;
 		boolean sw = true;
 		boolean algunoEnviado = false;
 
@@ -440,7 +729,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 								}
 
 							} else if (operacionMsg != null && operacionMsg.equals("R")) {
-								boolean reenvioCorrecto = false;
+								Boolean reenvioCorrecto = false;
 								if (idArray.length > 1) {
 									reenvioCorrecto = servicioGestionEnvios.reenviarEnvio(new Integer(idArray[1]),context);
 								} else {
@@ -452,8 +741,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 									}
 									break;
 								}
-								if(reenvioCorrecto){
-									addActionMessageSession("Envios seleccionados reenviados correctamente");
+								if(reenvioCorrecto!=null){
+									if(reenvioCorrecto){
+										addActionMessageSession("Envios seleccionados reenviados correctamente");
+									}else if(!reenvioCorrecto){
+										addActionErrorSession("El mensaje ya ha sido enviado y no se puede reenviar");
+									}
 								}else{
 									addActionErrorSession("Ha ocurrido un error reenviando los envios, pongase en contacto con el administrador");
 								}
@@ -641,7 +934,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	///MIGRADO
 	@Override
 	public void prepare() throws Exception {
-		pageSize = (Integer) getRequest().getAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null));
+		pageSize = (Integer) getRequest().getAttribute(properties.getProperty(GestionEnviosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null));
 		if (null == pageSize){
 			pageSize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
 		}
@@ -735,19 +1028,19 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	public void setComboServidores(List<KeyValueObject> comboServidores) {
-		this.comboServidores = new ArrayList<KeyValueObject>(comboServidores);
+		this.comboServidores = new ArrayList<>(comboServidores);
 	}
 
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
-		this.comboServicios = new ArrayList<KeyValueObject>(comboServicios);
+		this.comboServicios = new ArrayList<>(comboServicios);
 	}
 
 	public void setComboEstados(List<KeyValueObject> comboEstados) {
-		this.comboEstados = new ArrayList<KeyValueObject>(comboEstados);
+		this.comboEstados = new ArrayList<>(comboEstados);
 	}
 
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
-		this.comboCanales = new ArrayList<KeyValueObject>(comboCanales);
+		this.comboCanales = new ArrayList<>(comboCanales);
 	}
 
 	/**
@@ -825,6 +1118,14 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	public void setIdLote(String idLote) {
 		this.idLote = idLote;
 	}
+	
+	public String getIdPeticion() {
+		return idPeticion;
+	}
+
+	public void setIdPeticion(String idPeticion) {
+		this.idPeticion = idPeticion;
+	}
 
 	public List<MensajeBean> getListaGestionEnviosMensajes() {
 		return listaGestionEnviosMensajes;
@@ -881,6 +1182,14 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 	public void setListaHistoricosMensaje(List<HistoricoBean> listaHistoricosMensaje) {
 		this.listaHistoricosMensaje = listaHistoricosMensaje;
+	}
+
+	public List<ViewMisimBean> getListaIntercambiosMisim() {
+		return listaIntercambiosMisim;
+	}
+
+	public void setListaIntercambiosMisim(List<ViewMisimBean> listaIntercambiosMisim) {
+		this.listaIntercambiosMisim = listaIntercambiosMisim;
 	}
 
 	public List<ArrayList<String>> getAaData() {
@@ -946,6 +1255,20 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	/**
+	 * @return the search
+	 */
+	public String getSearch() {
+		return search;
+	}
+
+	/**
+	 * @param search the search to set
+	 */
+	public void setSearch(String search) {
+		this.search = search;
 	}
 
 

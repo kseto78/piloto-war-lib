@@ -1,16 +1,11 @@
 package es.minhap.plataformamensajeria.sm.modelo;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-import org.w3c.dom.Element;
-
-
-
-import java.util.ArrayList;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -216,6 +211,22 @@ public class NotificacionPushData {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+	/**
+	 * @return the UsuarioId
+	 */
+	public Long getUsuarioId() {
+		return UsuarioId;
+	}
+
+	/**
+	 * @param UsuarioId the UsuarioId to set
+	 */
+	public void setUsuarioId(Long UsuarioId) {
+		this.UsuarioId = UsuarioId;
+	}
+	
+	
 	
 	
 

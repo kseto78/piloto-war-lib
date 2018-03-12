@@ -65,25 +65,25 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	private static Logger logger = Logger.getLogger(OrganismosAction.class);
 	
 	@Resource(name="servicioOrganismoImpl")
-	private ServicioOrganismo servicioOrganismo;
+	private transient ServicioOrganismo servicioOrganismo;
 	
 	@Resource(name="servicioServicioImpl")
-	private ServicioServicio servicioServicio;
+	private transient ServicioServicio servicioServicio;
 	
 	@Resource(name="servicioPlanificacionImpl")
-	private ServicioPlanificacion servicioPlanificacion;
+	private transient ServicioPlanificacion servicioPlanificacion;
 	
 	@Resource(name="servicioUsuarioAplicacionImpl")
-	private ServicioUsuarioAplicacion servicioUsuarioAplicacion;
+	private transient ServicioUsuarioAplicacion servicioUsuarioAplicacion;
 	
 	@Resource(name="servicioServidorImpl")
-	private ServicioServidor servicioServidor;
+	private transient ServicioServidor servicioServidor;
 	
 	@Resource(name = "plataformaMensajeriaProperties")
-	private PlataformaMensajeriaProperties properties;
+	private transient PlataformaMensajeriaProperties properties;
 	
 	
-	private OrganismoBean organismo;
+	private OrganismoBean organismo; 
 	private ServidoresOrganismosBean servidorOrganismo;
 	private AplicacionBean aplicacion;
 	private ServicioOrganismosBean servicioOrganismos;
@@ -96,11 +96,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	public List<ServidoresOrganismosBean> listaServidoresOrganismos = null;
 	public List<PlanificacionBean> listaPlanificacionesServicio = null;
 	
-	List<KeyValueObject> comboServicioOrganismos = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServidoresOrganismos = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServidoresPlan = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServiciosPlan = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
+	transient List<KeyValueObject> comboServicioOrganismos = new ArrayList<>();
+	transient List<KeyValueObject> comboServidoresOrganismos = new ArrayList<>();
+	transient List<KeyValueObject> comboServidoresPlan = new ArrayList<>();
+	transient List<KeyValueObject> comboServiciosPlan = new ArrayList<>();
+	transient List<KeyValueObject> comboServidores = new ArrayList<>();
+	transient List<KeyValueObject> comboTiposEstados = new ArrayList<>();
 	
 	private String[] checkDelList;
 	private String[] checkDelListOrganismosServicios;
@@ -121,53 +122,81 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	private String checkPassword;
 	private String recovery = "";
 	private Map session;
+	
+	private static final String INFO_USER = "infoUser";
+
+	private static final String NO_USER = "noUser";
+
+	private static final String TABLE_ID = "tableId";
+
+	private static final String GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	private static final String LOG_ACCIONID_ACTUALIZAR = "log.ACCIONID_ACTUALIZAR";
+
+	private static final String LOG_ACCION_ACTUALIZAR = "log.ACCION_ACTUALIZAR";
+
+	private static final String GENERALES_PAGESIZE = "generales.PAGESIZE";
+
+	private static final String LOG_ACCIONID_ELIMINAR = "log.ACCIONID_ELIMINAR";
+
+	private static final String LOG_ACCION_ELIMINAR = "log.ACCION_ELIMINAR";
+
+	private static final String LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	private static final String LOG_SOURCE_ORGANISMOS = "log.SOURCE_ORGANISMOS";
+	
 	private static final String RECOVERY = "recovery";
+	
+	private static final String SEPARADOR_OPCIONES_VALUES = "#";
+
+	private static final String SEPARADOR_OPCIONES = "&&";
 
 
 	public String newSearch() throws BaseException {
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
+		
+		organismo = (OrganismoBean) getRequest().getSession().getAttribute("organismo");
+		
+		
+		Integer totalSize = 0;
+		getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE, null), totalSize);
+		listaOrganismos =new ArrayList<>();
+		
 		return SUCCESS;
 	}
 
 	///MIGRADO
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		int page = getPage(OrganismosAction.TABLE_ID); // Pagina a mostrar
+		String order = getOrder(OrganismosAction.TABLE_ID); // Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(OrganismosAction.TABLE_ID); // Columna usada para ordenar
 
-		if (organismo != null)
-			if (organismo.getNombre() != null && organismo.getNombre().length() <= 0)
-				organismo.setNombre(null);
-
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20"));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, (export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, organismo);
+		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, export ? -1 : Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")), order, columnSort, organismo);
 		Integer totalSize = result.getTotalList();
 
 		listaOrganismos = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE, null), totalSize);
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), 
+					Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
+			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), 
 					totalSize);
 		}
 
-		if (listaOrganismos != null && !listaOrganismos.isEmpty()) {
-			for (int indice = 0; indice < listaOrganismos.size(); indice++) {
-
-				OrganismoBean organismo = new OrganismoBean();
-				organismo = listaOrganismos.get(indice);
-				organismo.setNombre(StringEscapeUtils.escapeHtml(organismo.getNombre()));
-				organismo.setDescripcion(StringEscapeUtils.escapeHtml(organismo.getDescripcion()));
-			}
-		}
+		//guardamos el organismo para que al volver tengamos la ultima busqueda
+		getRequest().getSession().setAttribute("organismo", organismo);
 
 		return SUCCESS;
 	}
@@ -178,30 +207,30 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			return "noUser";
+			return OrganismosAction.NO_USER;
 		}
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		int page = getPage(OrganismosAction.TABLE_ID); // Pagina a mostrar
+		String order = getOrder(OrganismosAction.TABLE_ID); // Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(OrganismosAction.TABLE_ID); // Columna usada para ordenar
 
 		if (organismo != null)
 			if (organismo.getNombre() != null && organismo.getNombre().length() <= 0)
 				organismo.setNombre(null);
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20"));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, (export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, organismo);
+		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, (export) ? -1 : Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")), order, columnSort, organismo);
 		Integer totalSize = result.getTotalList();
 
 		listaOrganismos = result.getPageList();
 
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE, null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
+					Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaOrganismos != null && !listaOrganismos.isEmpty()) {
 			for (int indice = 0; indice < listaOrganismos.size(); indice++) {
@@ -219,14 +248,15 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
 			logger.error("OrganismosAction - create:" + e);
-			return "noUser";
+			return OrganismosAction.NO_USER;
 		}
 		if (organismo != null) {
+			organismo.setManual(true);
 			if (organismo.getIsActivo() != null && organismo.getIsActivo().contains("inactivo")) {
 				organismo.setActivo(false);
 			} else {
@@ -235,10 +265,19 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			if (!validaObligatorios(organismo, true)) {
 				return ERROR;
 			}
-			Integer id = servicioOrganismo.newOrganismo(organismo, source, accion, accionId);
-			this.idOrganismo = id.toString();
+			boolean existeOrganismo = servicioOrganismo.existeOrganimo(organismo);
+			
+			if(!existeOrganismo){
+				Integer id = servicioOrganismo.newOrganismo(organismo, source, accion, accionId);
+				this.idOrganismo = id.toString();
+				addActionMessageSession(this.getText("plataforma.organismo.create.ok"));
+			}else{
+				addActionErrorSession(this.getText("plataforma.organismo.create.organismoExiste"));
+				return ERROR;
+			}
+			
 
-			addActionMessageSession(this.getText("plataforma.organismo.create.ok"));
+			
 		} else {
 			addActionErrorSession(this.getText("plataforma.organismo.create.error"));
 		}
@@ -246,15 +285,15 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 
 	}
-
+	
 	////MIGRADO
 	private boolean validaObligatorios(OrganismoBean aplicacion2, boolean isUpdate) {
 		boolean sw = true;
-		if (PlataformaMensajeriaUtil.isEmpty(aplicacion2.getDir3())) {
+		if (PlataformaMensajeriaUtil.isEmpty(aplicacion2.getDir3()) && aplicacion2.getManual()) {
 			addActionErrorSession(this.getText("plataforma.organismo.field.DIR3.error"));
 			sw = false;
 		}
-		if (PlataformaMensajeriaUtil.isEmpty(aplicacion2.getNombre())) {
+		if (PlataformaMensajeriaUtil.isEmpty(aplicacion2.getNombre()) && aplicacion2.getManual()) {
 			addActionErrorSession(this.getText("plataforma.organismo.field.nombre.error"));
 			sw = false;
 		}
@@ -264,14 +303,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
 			logger.error("OrganismosAction - update:" + e);
-			return "noUser";
+			return OrganismosAction.NO_USER;
 		}
 		OrganismoBean organismoBBDD = null;
 		if (organismo == null) {
@@ -296,9 +335,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 			}
 			if (organismoBBDD != null) {
-				organismoBBDD.setDir3(organismo.getDir3());
-				organismoBBDD.setNombre(organismo.getNombre());
-				organismoBBDD.setDescripcion(organismo.getDescripcion());
+				if (organismoBBDD.getManual()){
+					organismoBBDD.setDir3(organismo.getDir3());
+					organismoBBDD.setNombre(organismo.getNombre());
+					organismoBBDD.setDescripcion(organismo.getDescripcion());
+				}
 				organismoBBDD.setActivo(organismo.getActivo());
 				organismo = organismoBBDD;
 				if (validaObligatorios(organismoBBDD, true)) {
@@ -318,7 +359,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
 			logger.error("OrganismosAction - load:" + e);
-			return "noUser";
+			return OrganismosAction.NO_USER;
 		}
 		if (idOrganismo == null)
 			throw new BusinessException("EL idOrganismo recibido es nulo");
@@ -338,16 +379,16 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	///MIGRADO
 	public String delete() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String sourcePlanificacion = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accionPlanificacion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
+		String descripcionPlanificacion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		String sourcePlanificacion = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 				
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		if (idOrganismo == null) {
 			addActionErrorSession(this.getText("plataforma.organismo.delete.error"));
 
@@ -383,16 +424,16 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String sourcePlanificacion = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accionPlanificacion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
+		String descripcionPlanificacion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		String sourcePlanificacion = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.organimo.deleteSelected.error"));
 
@@ -430,13 +471,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	/////MIGRADO
 	public String deleteOrganismoServicioSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		if (checkDelListOrganismosServicios == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.deleteSelected.error"));
 
@@ -469,12 +510,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
     ///MIGRADO
 	public String deleteServidorOrganismosSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
+
 		if (checkDelListServidorOrganismos == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servidorOrganismo.deleteSelected.error"));
 
@@ -504,12 +546,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String deletePlanificacionesOrganismoSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		if (checkDelListPlanificacionesOrganismos == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.deletePlanificacionesSelected.error"));
 
@@ -528,8 +570,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	///MIGRADO
 	public String loadDetalleOrganismo() throws BusinessException, IllegalAccessException, InvocationTargetException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		OrganismoBean detalleApp = new OrganismoBean();
 		DetalleAplicacionBean detalle = new DetalleAplicacionBean();
 		if (idOrganismo != null) {
@@ -541,7 +583,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			DateConverter converter = new DateConverter(defaultValue);
 			ConvertUtils.register(converter, java.util.Date.class);
 			BeanUtils.copyProperties(detalle, detalleApp);
-			detalle.setActivo(true);//detalleApp.getActivo());
+			detalle.setActivo(true);
 			detalle.setFechacreacion(detalleApp.getFechacreacion());
 			detalle.setFechamodificacion(detalleApp.getFechamodificacion());
 			List<ServicioBean> listServicioBean = servicioServicio.getServiciosByAplicacionId(detalle.getAplicacionId().intValue());
@@ -607,12 +649,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String addPlanificacionOrganismo() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 
 		boolean sw = true;
 
@@ -746,6 +788,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 		listaServicioOrganismos = loadSeviciosOrganismo();
 		listaServidoresOrganismos = loadServidoresOrganismos();
+		comboTiposEstados = getTipoEstados();
 
 		if (idOrganismo != null) {
 			if (organismo == null)
@@ -760,10 +803,10 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String deletePlanificacionOrganismo() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
 		if (idPlanificacion == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.deletePlanificacion.error"));
 
@@ -872,12 +915,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	///MIGRADO
 	@Transactional
 	public String addOrganismoServicios() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVICIO", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		boolean sw = true;
 
 		if (servicioOrganismos != null) {
@@ -925,12 +970,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	//@Transactional(noRollbackFor = Exception.class)
 	///MIGRADO
 	public String addServidorOrganismo() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVIDOR", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
 		boolean sw = true;
 
 		if (servidorOrganismo != null) {
@@ -982,12 +1028,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String deleteOrganismoServicio() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
+
 		if (idServicioOrganismo == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.delete.error"));
 		} else {
@@ -1017,9 +1064,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	private void deleteServicioOrganismo(Integer servicioOrganismoId) throws BusinessException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_ORGANISMO_SERVICIO", null);
 		ServicioOrganismosBean servidorOrganismos = new ServicioOrganismosBean();
 		servidorOrganismos.setServicioOrganismoId(servicioOrganismoId);
@@ -1029,9 +1076,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	///MIGRADO
 	private void deleteServidorOrganismo(Long servidorOrganismoId) throws BusinessException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_ORGANISMO", null);
 		ServidoresOrganismosBean servidorOrganismos = new ServidoresOrganismosBean();
 		servidorOrganismos.setServidorOrganismoId(servidorOrganismoId);
@@ -1068,12 +1115,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	///MIGRADO
 	public String deleteServidorOrganismo() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
+		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
+		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
+		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+			return OrganismosAction.NO_USER;
+
 		if (servidorOrganismoId == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servidorOrganismo.delete.error"));
 		} else {
@@ -1110,7 +1158,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	@SuppressWarnings("unchecked")
 	public String getVolver() {
-		String volver = "buscarOrganismos.action";
+		String volver = "listarOrganismos.action";
 		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
 			volver = from + "?" + var + "=" + idFrom;
 			session.put(RECOVERY, volver);
@@ -1120,6 +1168,31 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		}
 		return volver;
 	}
+	
+	public List<KeyValueObject> getTipoEstados() throws BusinessException {
+		
+		try {
+			String options = properties.getProperty("generales.DIR3.ESTADOS_FILTRO", null);
+			
+			String[] opciones = options.split(SEPARADOR_OPCIONES);
+			List<KeyValueObject> result = new ArrayList<>();
+
+			for (String combo : opciones) {
+				KeyValueObject option =  new KeyValueObject();
+				String [] valores = combo.split(SEPARADOR_OPCIONES_VALUES);
+				option.setDescripcion(valores[1]);
+				option.setCodigo(valores[0]);
+				result.add(option);
+			}
+			
+			return result;
+		} 
+		catch (Exception e){
+			LOG.error("[CifradoServiceImpl] - getCertificados:" + e);
+			throw new BusinessException(e,"errors.decode.getCertificados");	
+		}
+	}
+	
 	
 	public void setServidor(AplicacionBean aplicacion) {
 		this.aplicacion = aplicacion;
@@ -1421,4 +1494,19 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	public void setIdPlanificacion(String idPlanificacion) {
 		this.idPlanificacion = idPlanificacion;
 	}
+
+	/**
+	 * @return the comboTiposEstados
+	 */
+	public List<KeyValueObject> getComboTiposEstados() {
+		return comboTiposEstados;
+	}
+
+	/**
+	 * @param comboTiposEstados the comboTiposEstados to set
+	 */
+	public void setComboTiposEstados(List<KeyValueObject> comboTiposEstados) {
+		this.comboTiposEstados = comboTiposEstados;
+	}
+	
 }

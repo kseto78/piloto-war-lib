@@ -25,7 +25,7 @@ public class ViewLotesEnviosDetalladaManagerImpl implements ViewLotesEnviosDetal
 	 */
 	@Override
 	public Integer countViewLoteDetallado(ViewLotesEnviosDetalladaQuery query) {
-		return getViewLotesDAO().count(query);
+		return viewLotesDAO.search(query).size();
 	}
 
 	@Override

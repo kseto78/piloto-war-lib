@@ -21,6 +21,7 @@
 		<property name="locations">
 			<list>
 				<value>${sim.properties.confsim}confSIM.properties</value>
+				<value>${sim.properties.confsim}passbook.properties</value>
 				<value>classpath:/framework.properties</value>
 			</list>
 		</property>
@@ -32,6 +33,7 @@
 			<list>
 				<!-- <value>classpath:confSIMEnviroiment</value>  -->
 				<value>${sim.properties.confsim}confSIM</value> 
+				<value>${sim.properties.confsim}passbook</value> 
 			</list>
 		</property>
 		<property name="cacheSeconds" value="600" />

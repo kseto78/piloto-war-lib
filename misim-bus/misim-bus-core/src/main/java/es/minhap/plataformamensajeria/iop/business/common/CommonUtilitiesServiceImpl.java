@@ -34,6 +34,7 @@ import es.minhap.plataformamensajeria.iop.beans.entity.DetallesMensajesBean;
 import es.minhap.plataformamensajeria.iop.business.beans.consultaestado.PeticionConsultaEstado;
 import es.minhap.plataformamensajeria.iop.business.beans.enviarmensaje.Respuesta;
 import es.minhap.plataformamensajeria.iop.business.beans.push.PeticionPush;
+import es.minhap.plataformamensajeria.iop.business.beans.push.PeticionWebPush;
 import es.minhap.plataformamensajeria.iop.business.beans.recepcionsms.PeticionRecepcionSMS;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorLotesEnvios;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorMensajes;
@@ -172,6 +173,8 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 			isConsulta = true;
 		}else if (data instanceof PeticionRecepcionSMS){
 			xml = ((PeticionRecepcionSMS) data).toXML();
+		}else if (data instanceof PeticionWebPush){
+			xml = ((PeticionWebPush) data).toXML();
 		}
 		
 		StringBuilder soapRequest = new StringBuilder();

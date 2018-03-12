@@ -1,5 +1,10 @@
 package es.mpr.plataformamensajeria.servicios.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,9 +16,10 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.axis.encoding.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +27,9 @@ import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
 import es.minhap.common.entity.OrderType;
-import es.minhap.common.properties.PropertiesServices;
 import es.minhap.common.spring.ApplicationContextProvider;
+import es.minhap.misim.bus.model.ViewMisim;
+import es.minhap.misim.bus.query.ViewMisimQuery;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorAdjuntos;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorDestinatariosMensajes;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorGestionEnvios;
@@ -37,6 +44,8 @@ import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewHistoricoManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewLotesEnviosDetalladaManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.PeticionManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ViewMisimManager;
 import es.minhap.sim.model.TblAdjuntos;
 import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblDestinatarios;
@@ -54,20 +63,50 @@ import es.minhap.sim.query.ViewHistoricoMultidestQuery;
 import es.minhap.sim.query.ViewHistoricoQuery;
 import es.minhap.sim.query.ViewLotesEnviosDetalladaQuery;
 import es.mpr.plataformamensajeria.beans.AdjuntoEmailBean;
+import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesBean;
 import es.mpr.plataformamensajeria.beans.DetalleEnvioBean;
 import es.mpr.plataformamensajeria.beans.DetalleLoteBean;
+import es.mpr.plataformamensajeria.beans.EnvioMensajesAplicacionBean;
 import es.mpr.plataformamensajeria.beans.GestionEnvioBean;
 import es.mpr.plataformamensajeria.beans.HistoricoBean;
 import es.mpr.plataformamensajeria.beans.MensajeBean;
+import es.mpr.plataformamensajeria.beans.ViewMisimBean;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 import es.mpr.plataformamensajeria.util.UtilCreateFile;
+import es.redsara.misim.misim_bus_webapp.EnvioMensajes;
+import es.redsara.misim.misim_bus_webapp.EnvioMensajesServiceWSBindingPortType;
 import es.redsara.misim.misim_bus_webapp.OperacionMensajes;
 import es.redsara.misim.misim_bus_webapp.OperacionMensajesServicePortType;
+import es.redsara.misim.misim_bus_webapp.peticion.Adjunto;
+import es.redsara.misim.misim_bus_webapp.peticion.Adjuntos;
+import es.redsara.misim.misim_bus_webapp.peticion.CamposAuxiliares;
+import es.redsara.misim.misim_bus_webapp.peticion.CamposDetalleTrasero;
+import es.redsara.misim.misim_bus_webapp.peticion.CamposPrincipales;
+import es.redsara.misim.misim_bus_webapp.peticion.CamposSecundarios;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatarioMail;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatarioPush;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatarioSMS;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatarioWebPush;
+import es.redsara.misim.misim_bus_webapp.peticion.Destinatarios;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatariosMail;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatariosPush;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatariosSMS;
+import es.redsara.misim.misim_bus_webapp.peticion.DestinatariosWebPush;
+import es.redsara.misim.misim_bus_webapp.peticion.MensajeEmail;
+import es.redsara.misim.misim_bus_webapp.peticion.MensajePush;
+import es.redsara.misim.misim_bus_webapp.peticion.MensajeSMS;
+import es.redsara.misim.misim_bus_webapp.peticion.MensajeWebPush;
+import es.redsara.misim.misim_bus_webapp.peticion.Mensajes;
+import es.redsara.misim.misim_bus_webapp.peticion.Passbook;
+import es.redsara.misim.misim_bus_webapp.peticion.Peticion;
+import es.redsara.misim.misim_bus_webapp.peticion.PkFields;
 import es.redsara.misim.misim_bus_webapp.peticionOperacion.Mensaje;
 import es.redsara.misim.misim_bus_webapp.peticionOperacion.PeticionLote;
 import es.redsara.misim.misim_bus_webapp.peticionOperacion.PeticionMensaje;
+import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 
 
 /**
@@ -82,8 +121,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
 	Logger logger = Logger.getLogger(ServicioGestionEnviosImpl.class);
 
+	@Resource(name = "servicioAplicacionImpl")
+	private ServicioAplicacion servicioAplicacion;
+	
 	@Resource(name="TblGestionEnviosManagerImpl")
 	private TblGestionEnviosManager tblGestionEnviosManager;
+	
+	@Resource(name="ViewMisimManagerImpl")
+	private ViewMisimManager viewMisimManager;
 	
 	@Resource(name="TblAdjuntosManagerImpl")
 	private TblAdjuntosManager tblAdjuntosManager;
@@ -121,6 +166,15 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	@Resource(name = "operacionMensajesService")
 	OperacionMensajesServicePortType operacionMensajesService;
 	
+	@Resource(name = "envioMensajesService")
+	EnvioMensajesServiceWSBindingPortType envioMensajesService;
+	
+	@Resource(name="PeticionManagerImpl")
+	private PeticionManager peticionManager;
+
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+	
 //	@Resource(name = "AplicacionManagerImp")
 //	AplicacionManager aplicacionManager;
 	
@@ -142,16 +196,29 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	private static final Integer VISTALOTES = 2;
 	private static final Integer VISTAMENSAJES= 1;
 	private static final String OK = "OK";
+	private String adjunto;
+	private String adjunto64;
+	
+	private static HashMap<String,String> binaryTypes = new HashMap<>();
+	private static HashMap<String,String> textTypes = new HashMap<>();
+	static {        
+        binaryTypes.put("gif", "image/gif");
+        binaryTypes.put("jpg", "image/jpeg");
+        binaryTypes.put("png", "image/png");
+        binaryTypes.put("jpeg", "image/jpeg");   
+        textTypes.put("htm", "text/html");
+        textTypes.put("html", "text/html");
+        textTypes.put("xml", "application/xml");
+        textTypes.put("xhtml", "application/xhtml+xml");  
+        textTypes.put("js", "application/x-javascript");
+        textTypes.put("css", "text/css");
+        textTypes.put("txt", "text/plain");
+    }    
 
 	///MIGRADO
 	@SuppressWarnings("unchecked")
 	@Override
 	public PaginatedList<GestionEnvioBean> getGestionDeEnvios(int inicio, Integer pagesize, String order, String columnSort, GestionEnvioBean criterio, HttpServletRequest request, boolean porLotes) throws BusinessException {
-		// Columna para ordenar
-		List<GestionEnvioBean> listaAuditoriaBean = new ArrayList<GestionEnvioBean>();
-
-//		AplicacionQuery query = new AplicacionQuery();
-//		List<Aplicacion> a = aplicacionManager.getAplicacionesByQuery(query);
 		
 		// listaAuditoriaBean
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
@@ -429,6 +496,28 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return detalleEmail;
 	}
 
+	@Override
+	public ViewMisimBean loadMisim(String idLote) throws BusinessException {
+		ViewMisimBean detalleMisim = new ViewMisimBean();
+
+		ViewMisimQuery query = new ViewMisimQuery();
+		query.setIdLote(Long.parseLong(idLote));
+		
+		try {
+			ViewMisim misim = viewMisimManager.getViewMisim(query);
+
+			detalleMisim.setIdLote(misim.getIdLote());
+			detalleMisim.setFechaCreacion(misim.getFechaCreacion());
+			detalleMisim.setIdPeticion(misim.getIdPeticion());
+			detalleMisim.setProveedorProducto(misim.getProveedorProducto());
+			
+		} catch (Exception e) {
+			logger.error("ServicioGestionEnviosImpl - loadMisim:" + e);
+			throw new BusinessException(e);
+		}
+		return detalleMisim;
+	}	
+
 	////MIGRADO
 	@Override
 	public DetalleLoteBean loadLote(String idLote) throws BusinessException {
@@ -489,41 +578,46 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 	@Override
 	@Transactional
-	public boolean reenviarEnvio(Integer mensajeId,  ApplicationContextProvider applicationContext) {
-		
-			try {
-				PropertiesServices ps = new PropertiesServices(applicationContext);
-				TblAplicaciones aplicacion = queryExecutorMensajes.getAplicacionFromMensaje(mensajeId.longValue());
-				String usuario = aplicacion.getUsuario();
-				byte[] valueDecoded= Base64.decode(aplicacion.getPassword());
-				String pass = new String(valueDecoded);
-				OperacionMensajes operacion = OperacionMensajes.getInstance();
-				PeticionMensaje pm = new PeticionMensaje();
-				Mensaje m = new Mensaje();
-				m.setIdMensaje(mensajeId);
-				pm.setMensaje(m);
-				operacion.setContext(applicationContext);
-				operacion.setPeticionMensaje(pm);
-				operacion.getPeticionMensaje().setUsuario(usuario);
-				operacion.getPeticionMensaje().setPassword(pass);
-				es.redsara.misim.misim_bus_webapp.respuestaOperacion.RespuestaOperacion respuesta = operacion.sendReenviarMensajeRequest(operacionMensajesService);
-				
-				boolean a = (respuesta.getStatus().getStatusText().contains(OK))? true: false;
-				return a;
-			} catch (Exception e) {
-				logger.error("ServicioGestionEnviosImpl - reenviarEnvio:" + e);
+	public Boolean reenviarEnvio(Integer mensajeId,  ApplicationContextProvider applicationContext) {
+
+		Boolean resultado = null;
+		try {
+			TblAplicaciones aplicacion = queryExecutorMensajes.getAplicacionFromMensaje(mensajeId.longValue());
+			String usuario = aplicacion.getUsuario();
+			byte[] valueDecoded= Base64.decodeBase64(aplicacion.getPassword());
+			String pass = new String(valueDecoded);
+			OperacionMensajes operacion = OperacionMensajes.getInstance();
+			PeticionMensaje pm = new PeticionMensaje();
+			Mensaje m = new Mensaje();
+			m.setIdMensaje(mensajeId);
+			pm.setMensaje(m);
+			operacion.setContext(applicationContext);
+			operacion.setPeticionMensaje(pm);
+			operacion.getPeticionMensaje().setUsuario(usuario);
+			operacion.getPeticionMensaje().setPassword(pass);
+			es.redsara.misim.misim_bus_webapp.respuestaOperacion.RespuestaOperacion respuesta = operacion.sendReenviarMensajeRequest(operacionMensajesService);
+
+			if(respuesta.getStatus()!=null && respuesta.getStatus().getStatusText()!=null 
+					&& respuesta.getStatus().getStatusText().contains(OK)){
+				resultado = true;
+			}else{
+				resultado = false;
 			}
-			return false;
+
+		} catch (Exception e) {
+			logger.error("ServicioGestionEnviosImpl - reenviarEnvio:" + e);
+		}
+		
+		return resultado;
 	}
 
 	@Override
 	@Transactional
 	public boolean anulaEnvio(Integer mensajeId,  ApplicationContextProvider applicationContext) {
 		try {
-			PropertiesServices ps = new PropertiesServices(applicationContext);
 			TblAplicaciones aplicacion = queryExecutorMensajes.getAplicacionFromMensaje(mensajeId.longValue());
 			String usuario = aplicacion.getUsuario();
-			byte[] valueDecoded= Base64.decode(aplicacion.getPassword());
+			byte[] valueDecoded= Base64.decodeBase64(aplicacion.getPassword());
 			String pass = new String(valueDecoded);
 			OperacionMensajes operacion = OperacionMensajes.getInstance();
 			PeticionMensaje pm = new PeticionMensaje();
@@ -549,10 +643,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	@Override
 	public boolean anulaEnvioLote(Integer idLote,  ApplicationContextProvider applicationContext) {
 		try {
-			PropertiesServices ps = new PropertiesServices(applicationContext);
 			TblAplicaciones aplicacion = queryExecutorMensajes.getAplicacionFromLote(idLote);
 			String usuario = aplicacion.getUsuario();
-			byte[] valueDecoded= Base64.decode(aplicacion.getPassword());
+			byte[] valueDecoded= Base64.decodeBase64(aplicacion.getPassword());
 			String pass = new String(valueDecoded);
 			OperacionMensajes operacion = OperacionMensajes.getInstance();
 			PeticionLote pm = new PeticionLote();
@@ -577,10 +670,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	@Override
 	public boolean reenviarEnvioLote(Integer idLote,  ApplicationContextProvider applicationContext) {
 		try {
-			PropertiesServices ps = new PropertiesServices(applicationContext);
 			TblAplicaciones aplicacion = queryExecutorMensajes.getAplicacionFromLote(idLote);
 			String usuario = aplicacion.getUsuario();
-			byte[] valueDecoded= Base64.decode(aplicacion.getPassword());
+			byte[] valueDecoded= Base64.decodeBase64(aplicacion.getPassword());
 			String pass = new String(valueDecoded);
 			OperacionMensajes operacion = OperacionMensajes.getInstance();
 			PeticionLote pm = new PeticionLote();
@@ -694,6 +786,29 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 		return result;
 	}
+	
+	protected List<ViewMisimBean> getListViewMisimBean(List<ViewMisim> lista) throws BusinessException {
+		List<ViewMisimBean> result = null;
+		
+		if (lista != null && !lista.isEmpty()) {
+			result = new ArrayList<>();
+
+			for (ViewMisim v : lista) {
+				ViewMisimBean viewMisimBean = new ViewMisimBean();
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				viewMisimBean.setFechaCreacionStr(sdf.format(v.getFechaCreacion()));
+				viewMisimBean.setIdLote(v.getIdLote());
+				viewMisimBean.setIdPeticion(v.getIdPeticion());
+				viewMisimBean.setProveedorProducto(v.getProveedorProducto());
+								
+				result.add(viewMisimBean);
+			}
+		}
+
+		return result;
+	}
 
 	///MIGRADO
 	@Override
@@ -705,6 +820,18 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		} catch (Exception e) {
 			logger.error("ServicioGestionEnviosImpl - getEnvio:" + e);
 			throw new BusinessException(e, "errors.organismo.loadOrganismo");
+		}
+	}
+	
+	@Override
+	public ViewMisim getViewMisim(String idLote) throws BusinessException {
+		try {
+			ViewMisimQuery query = new ViewMisimQuery();
+			query.setIdLote(Long.parseLong(idLote));
+			return viewMisimManager.getViewMisim(query);
+		} catch (Exception e) {
+			logger.error("ServicioGestionEnviosImpl - getViewMisim:" + e);
+			throw new BusinessException(e, "errors.gestionEnvios.getViewMisim");
 		}
 	}
 
@@ -982,7 +1109,32 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 		}
 	}
+	
+	@Override
+	public PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote) throws BusinessException {
+		PaginatedList<ViewMisimBean> result = new PaginatedList<>();
 
+		try {
+			//traemos los intercambios
+			ViewMisimQuery query = new ViewMisimQuery();
+			query.setIdLote(idLote);
+			List<ViewMisim> listaViewMisimTO = viewMisimManager.getIntercambiosMisimByQuery(query, start, size);
+			
+			if(!listaViewMisimTO.isEmpty()){
+				List<ViewMisimBean> listaIntercambiosMisim = getListViewMisimBean(listaViewMisimTO);
+				Integer rowcount = listaIntercambiosMisim.size();
+				result.setPageList(listaIntercambiosMisim);
+				result.setTotalList(rowcount);
+			}
+
+			return result;
+		} catch (Exception e) {
+			logger.error("ServicioGestionEnviosImpl - getIntercambiosMisim: " + e);
+			throw new BusinessException(e, "errors.gestionEnvios.getIntercambiosMisim");
+
+		}
+	}
+	
 	///MIGRADO
 	private es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean createGestionEnvioBean(GestionEnvioBean gestionEnvio,
 			es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean ge) throws BusinessException{
@@ -1035,12 +1187,11 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 	////MIGRADO
 	private List<GestionEnvioBean> getListGestionEnvioBean(List<TblGestionEnvios> lista, boolean porLote) {
-		List<GestionEnvioBean> result = null;
+		List<GestionEnvioBean> result = new ArrayList<>();
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		if (lista!=null && !lista.isEmpty())
 		{
-			result = new ArrayList<>();
-		
+					
 			for (TblGestionEnvios ge : lista) {
 				GestionEnvioBean gestionEnvio =  new GestionEnvioBean();
 			
@@ -1070,12 +1221,11 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
 ////MIGRADO
 	private List<GestionEnvioBean> getListGestionEnvioBeanFromDestinatario(List<ViewGestionEnviosDestId> lista) {
-		List<GestionEnvioBean> result = null;
+		List<GestionEnvioBean> result = new ArrayList<>();
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		if (lista!=null && !lista.isEmpty())
 		{
-			result = new ArrayList<>();
-		
+					
 			for (ViewGestionEnviosDestId ge : lista) {
 				GestionEnvioBean gestionEnvio = new GestionEnvioBean();
 				gestionEnvio.setAplicacion(ge.getAplicacion());
@@ -1098,6 +1248,236 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 			
 		return result;
 	}
+	
+//	nat
+	public Respuesta enviarPeticion(ApplicationContextProvider applicationContext,EnvioMensajesAplicacionBean envioMensajesAplicacionBean) {
 
+		Respuesta respuesta = null;
+		
+		try {
+			
+			String usuario = null;
+			String pass = null;
+			
+			AplicacionBean aplicacion = new AplicacionBean();
+			aplicacion.setId(envioMensajesAplicacionBean.getAplicacionId());
+			try {
+				aplicacion = servicioAplicacion.loadAplicacion(aplicacion);
+				usuario = aplicacion.getUsuario();
+				byte[] valueDecoded= Base64.decodeBase64(aplicacion.getPassword());
+				pass = new String(valueDecoded);
+			} catch (BusinessException e) {
+				logger.error("EnviosMensajesAcyion - aplicacionSelectEvent:" + e);
+			}
+
+			
+			EnvioMensajes envio = EnvioMensajes.getInstance();			
+			Peticion peticion = new Peticion();
+			Mensajes m = new Mensajes();
+			
+//			sms
+			MensajeSMS sms =  new MensajeSMS();
+			DestinatariosSMS destinariosSms = new DestinatariosSMS();
+			DestinatarioSMS destSms = new DestinatarioSMS();
+			
+//			email
+			MensajeEmail email = new MensajeEmail();
+			Adjuntos adjuntos = new Adjuntos();
+			Adjunto adj = new Adjunto();
+			DestinatariosMail destinatariosMail = new DestinatariosMail();
+			DestinatarioMail destMail = new DestinatarioMail();
+			Destinatarios destinatarios = new Destinatarios();
+			
+			Passbook passbook = new Passbook();
+			CamposPrincipales camposPrinc = new CamposPrincipales();
+			PkFields pkfieldsPrinc = new PkFields();
+			CamposSecundarios camposSec = new CamposSecundarios();
+			PkFields pkfieldsSec = new PkFields();
+			CamposAuxiliares camposAux =  new CamposAuxiliares();
+			PkFields pkfieldsAux = new PkFields();
+			CamposDetalleTrasero camposTras = new CamposDetalleTrasero();
+			PkFields pkfieldsTras = new PkFields();
+			
+//			notificaciones push
+			MensajePush push = new MensajePush();
+			DestinatariosPush destinatariosPush = new DestinatariosPush();
+			DestinatarioPush destPush = new DestinatarioPush();
+			
+//			web push
+			MensajeWebPush webPush = new MensajeWebPush();
+			DestinatariosWebPush destinatariosWebPush = new DestinatariosWebPush();
+			DestinatarioWebPush destWebPush = new DestinatarioWebPush();
+			
+		
+			//Datos de la peticion comunes a los distintos tipos de mensajes
+			peticion.setUsuario(usuario);
+			peticion.setPassword(pass);
+			
+			peticion.setNombreLote(envioMensajesAplicacionBean.getNombreLote());			
+			peticion.setServicio(envioMensajesAplicacionBean.getServicioId());
+			
+				
+			
+			if(envioMensajesAplicacionBean.getCanalId() != null){
+				if(envioMensajesAplicacionBean.getCanalId().equals("1")){//Email
+					peticion.setCodOrganismo(envioMensajesAplicacionBean.getOrganismo());
+					destinatarios.setTo(envioMensajesAplicacionBean.getTo());
+					if(!envioMensajesAplicacionBean.getCc().equals("")){
+						destinatarios.setCC(envioMensajesAplicacionBean.getCc());
+					}
+					if(!envioMensajesAplicacionBean.getCco().equals("")){
+						destinatarios.setBcc(envioMensajesAplicacionBean.getCco());
+					}
+					destMail.setDestinatarios(destinatarios);
+					destMail.setIdExterno(envioMensajesAplicacionBean.getIdExterno());
+					
+					destinatariosMail.getDestinatarioMail().add(destMail);
+					
+					if(envioMensajesAplicacionBean.getAdjunto() != null){
+
+						Path path = Paths.get(envioMensajesAplicacionBean.getAdjunto().getPath());
+						if(Files.exists(path, LinkOption.NOFOLLOW_LINKS)){
+							adjunto = path.toString();									
+							adjunto64 = generateDataURI(path);
+							
+							adj.setContenido(adjunto64);
+//							adj.setNombre(envioMensajesAplicacionBean.getAdjunto().getName());
+							adj.setNombre("descarga.jpg");
+						}
+			    		
+						adjuntos.getAdjunto().add(adj);
+					}
+					email.setAsunto(envioMensajesAplicacionBean.getAsunto());
+					email.setCuerpo(envioMensajesAplicacionBean.getMensaje());
+					email.setAdjuntos(adjuntos);
+					email.setDestinatariosMail(destinatariosMail);
+
+					if (envioMensajesAplicacionBean.getPassbook().equals("true")){
+					    pkfieldsPrinc.setKey(envioMensajesAplicacionBean.getKeyPrinc());
+					    pkfieldsPrinc.setLabel(envioMensajesAplicacionBean.getLabelPrinc());
+					    pkfieldsPrinc.setValue(envioMensajesAplicacionBean.getValuePrinc());
+					    
+					    camposPrinc.setPkFields(pkfieldsPrinc);
+					    
+					    pkfieldsSec.setKey(envioMensajesAplicacionBean.getKeySec());
+					    pkfieldsSec.setLabel(envioMensajesAplicacionBean.getLabelSec());
+					    pkfieldsSec.setValue(envioMensajesAplicacionBean.getValueSec());
+					    
+					    camposSec.getPkFields().add(pkfieldsSec);
+					    
+					    pkfieldsAux.setKey(envioMensajesAplicacionBean.getKeyAux());
+					    pkfieldsAux.setLabel(envioMensajesAplicacionBean.getLabelAux());
+					    pkfieldsAux.setValue(envioMensajesAplicacionBean.getValueAux());
+					    
+					    camposAux.getPkFields().add(pkfieldsAux);
+					    
+					    pkfieldsTras.setKey(envioMensajesAplicacionBean.getKeyTras());
+					    pkfieldsTras.setLabel(envioMensajesAplicacionBean.getLabelTras());
+					    pkfieldsTras.setValue(envioMensajesAplicacionBean.getValueTras());
+					    
+					    camposTras.getPkFields().add(pkfieldsTras);
+					    
+					    passbook.setURL(envioMensajesAplicacionBean.getUrl());
+					    passbook.setLogoText(envioMensajesAplicacionBean.getLogoPassbook());
+					    passbook.setDescription(envioMensajesAplicacionBean.getDescripcionPassbook());
+					    passbook.setCamposPrincipales(camposPrinc);
+					    passbook.setCamposSecundarios(camposSec);
+					    passbook.setCamposAuxiliares(camposAux);
+					    passbook.setCamposDetalleTrasero(camposTras);
+					    
+					    email.setPassBook(passbook);
+					}
+				    
+					m.getMensajeEmail().add(email);
+					
+					peticion.setMensajes(m);
+					
+				}else if(envioMensajesAplicacionBean.getCanalId().equals("2")){//SMS
+								
+					destSms.setDestinatario(envioMensajesAplicacionBean.getMovil());
+	
+					destinariosSms.getDestinatarioSMS().add(destSms);
+					
+					sms.setCuerpo(envioMensajesAplicacionBean.getMensaje());
+					sms.setDestinatariosSMS(destinariosSms);
+					
+				    m.getMensajeSMS().add(sms);
+				    
+				    peticion.setCodOrganismo(envioMensajesAplicacionBean.getOrganismo());
+					peticion.setCodOrganismoPagadorSMS(envioMensajesAplicacionBean.getOrganismoPagador());			
+					peticion.setMensajes(m);
+								
+				}else if(envioMensajesAplicacionBean.getCanalId().equals("4")){//Notificaciones Push
+					
+					destPush.setIdExterno(envioMensajesAplicacionBean.getIdExterno());
+					destPush.setIdentificadorUsuario(envioMensajesAplicacionBean.getIdUsuario());
+					
+					destinatariosPush.getDestinatarioPush().add(destPush);
+					
+					push.setTitulo(envioMensajesAplicacionBean.getTitulo());
+					push.setCuerpo(envioMensajesAplicacionBean.getMensaje());
+//					push.setIcono(envioMensajesAplicacionBean.getIcono());
+//					push.setSonido(envioMensajesAplicacionBean.getSonido());
+					push.setDestinatariosPush(destinatariosPush);
+					
+					m.getMensajePush().add(push);
+					
+					peticion.setMensajes(m);
+					
+				}else if(envioMensajesAplicacionBean.getCanalId().equals("5")){//Web Push
+					
+					destWebPush.setIdExterno(envioMensajesAplicacionBean.getIdExterno());
+					destWebPush.setIdentificadorUsuario(envioMensajesAplicacionBean.getIdUsuario());
+					
+					destinatariosWebPush.getDestinatarioWebPush().add(destWebPush);
+					
+					webPush.setTitulo(envioMensajesAplicacionBean.getTitulo());
+					webPush.setCuerpo(envioMensajesAplicacionBean.getCuerpo());
+//					push.setIcono(envioMensajesAplicacionBean.getIcono());
+//					push.setSonido(envioMensajesAplicacionBean.getSonido());
+					webPush.setDestinatariosWebPush(destinatariosWebPush);
+					
+					m.getMensajeWebPush().add(webPush);
+					
+					peticion.setMensajes(m);
+				}
+					
+			}
+			
+			envio.setContext(applicationContext);
+			envio.setPeticion(peticion);
+			
+//			Respuesta respuesta = envio.sendMessage(envioMensajesService);
+			respuesta = envio.sendMessage(envioMensajesService);
+			
+//			if(!respuesta.getStatus().getStatusCode().equals("100")){
+//				dato =  respuesta.getStatus().getStatusText();
+//			}else{
+//				if(respuesta.getLote().getIdLote() != null){
+//					dato = respuesta.getStatus().getDetails()+" El Id Lote es: "+respuesta.getLote().getIdLote();
+//				}
+//			}
+
+		} catch (Exception e) {
+			logger.error("ServicioGestionEnviosImpl - enviarPeticion:" + e);
+		}
+//		return dato;
+		return respuesta;
+}
+	
+	private String generateDataURI(Path path) {
+		StringBuffer buffer = null;
+		try{
+			byte[] bytes = Files.readAllBytes(path);
+							
+	        buffer = new StringBuffer();        
+
+	        buffer.append(new String(Base64.encodeBase64(bytes)));
+		}catch(IOException e){
+			return null;
+		}
+       return buffer.toString();        
+
+	}
 	
 }

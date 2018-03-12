@@ -41,6 +41,7 @@ import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblServidores;
 import es.minhap.sim.query.TblAplicacionesQuery;
+import es.minhap.sim.query.TblLotesEnviosQuery;
 import es.minhap.sim.query.TblServiciosQuery;
 import es.minhap.sim.query.TblServidoresQuery;
 import es.minhap.sim.query.TblServidoresServiciosQuery;
@@ -489,6 +490,18 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		return res;
 	}
 	
+	
+	@Override
+	public List<Long> getIdLotesEnviosByQuery(TblLotesEnviosQuery query) {
+		return lotesDAO.searchId(query).getResults();
+	}
+	
+	@Override
+	public void delete(Long loteenvioid) {
+		lotesDAO.delete(loteenvioid);
+		
+	}
+	
 	private void checkEmailMode(Long idMensaje, TblMensajes tblMensaje, List<TblDestinatariosMensajes> destinatarios,
 			Integer modo) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -535,4 +548,8 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		}
 	}
+
+	
+
+
 }

@@ -263,6 +263,10 @@
 					<groupId>${project.groupId}</groupId>
 					<artifactId>misim-bus-persistence</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk16</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -561,7 +565,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>PlataformaMensajeriaIOP</artifactId>
-			<version>2.0.0-SNAPSHOT</version> 
+			<version>3.0.0-SNAPSHOT</version> 
 			<exclusions>
 			<exclusion> 
  				<groupId>org.bouncycastle</groupId> 
@@ -730,7 +734,7 @@
 </dependency>-->
 
 
-	</dependencies>
+</dependencies>
 
 	<repositories>
 		<repository>

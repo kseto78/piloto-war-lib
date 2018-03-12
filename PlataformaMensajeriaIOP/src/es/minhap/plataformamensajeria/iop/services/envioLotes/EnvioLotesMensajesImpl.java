@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import javax.annotation.Resource;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Service;
 
 import de.brendamour.jpasskit.PKField;
@@ -41,7 +43,6 @@ import es.minhap.plataformamensajeria.iop.services.envio.IEnvioMensajesService;
 
 @Service("envioLotesMensajesImpl")
 public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
-	
 	private static Logger LOG = LoggerFactory.getLogger(EnvioLotesMensajesImpl.class);
 
 	private static final String ERROR_GENERACION_PASSBOOK = "Se ha producido un error en la generacion del fichero passbook";
@@ -231,7 +232,14 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 			if (Files.exists(ruta)){
 				return temp;
 			}else{//no existe que tome la general del servicio
-				return rutaBase+"/"+servicio;
+				String rutaServicioLogo = rutaBase+"/"+servicio + "/logo.png";
+				String rutaServicioBack = rutaBase+"/"+servicio + "/background.png";
+				String rutaServicioIcon = rutaBase+"/"+servicio + "/icon.png";
+				if (Files.exists(Paths.get(rutaServicioLogo)) && Files.exists(Paths.get(rutaServicioBack))  && Files.exists(Paths.get(rutaServicioIcon))){
+						return rutaBase+"/"+servicio;
+					}else{//no existe la imagen del logo en el servicio tomamos las de por defecto
+						return rutaBase;
+					}	
 			}
 		}else{//no existe, que tome la general de properties
 			return rutaBase;
@@ -346,6 +354,18 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				
 			}
 			res =  getEnvioMensajes().enviarNotificacion(envioPush);
+		}
+		
+		return res;
+	}
+	
+	
+	@Override
+	public String enviarLotesWebPush(PeticionXMLBean peticionXML) {
+		String res ="";
+		
+		if (!peticionXML.getMensajes().getMensajeWebPush().isEmpty()){
+			res = getEnvioMensajes().enviarWebPush(peticionXML);
 		}
 		
 		return res;

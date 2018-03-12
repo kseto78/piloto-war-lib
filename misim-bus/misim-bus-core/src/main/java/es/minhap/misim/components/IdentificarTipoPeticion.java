@@ -71,6 +71,16 @@ public class IdentificarTipoPeticion implements Callable {
 				operation = "enviarPush";
 			}
 			
+			NodeList listWebPush = docOriginal.getElementsByTagName("MensajeWebPush");
+			if(listWebPush.item(0)!=null){
+				operation = "enviarWebPush";
+			}
+			
+			NodeList listWebPush2 = docOriginal.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion","MensajeWebPush");
+			if(listWebPush2.item(0)!=null){
+				operation = "enviarWebPush";
+			}
+			
 			if(operation==null || "".equals(operation)){
 				
 				String soapAction=SoapPayload.class.cast(eventContext.getMessage().getOriginalPayload()).getSoapAction();

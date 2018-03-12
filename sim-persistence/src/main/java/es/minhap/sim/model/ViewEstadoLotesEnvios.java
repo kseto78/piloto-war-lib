@@ -4,11 +4,9 @@ package es.minhap.sim.model;
 
 import java.util.Date;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -22,7 +20,10 @@ public class ViewEstadoLotesEnvios implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -1562213434728252228L;
-	private ViewEstadoLotesEnviosId id;
+	
+	@Id
+	@Column(name = "LOTEENVIOID", precision = 22, scale = 0)
+	private Long loteenvioid;
 
 	@Column(name = "NOMBRELOTE", length = 100)
 	private String nombrelote;
@@ -57,15 +58,7 @@ public class ViewEstadoLotesEnvios implements java.io.Serializable {
 	public ViewEstadoLotesEnvios() {
 	}
 
-	@EmbeddedId
-	@AttributeOverrides({ @AttributeOverride(name = "loteenvioid", column = @Column(name = "LOTEENVIOID", precision = 22, scale = 0)) })
-	public ViewEstadoLotesEnviosId getId() {
-		return this.id;
-	}
-
-	public void setId(ViewEstadoLotesEnviosId id) {
-		this.id = id;
-	}
+	
 
 	public String getNombrelote() {
 		return nombrelote;
@@ -145,6 +138,24 @@ public class ViewEstadoLotesEnvios implements java.io.Serializable {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+
+
+	/**
+	 * @return the loteenvioid
+	 */
+	public Long getLoteenvioid() {
+		return loteenvioid;
+	}
+
+
+
+	/**
+	 * @param loteenvioid the loteenvioid to set
+	 */
+	public void setLoteenvioid(Long loteenvioid) {
+		this.loteenvioid = loteenvioid;
 	}
 
 }

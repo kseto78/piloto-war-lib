@@ -8,7 +8,41 @@ import es.minhap.sim.query.TblMensajesHistQuery;
 
 public interface TblMensajesHistManager {
 
+
 	/**
+	 * Inserta el mensaje historicos
+	 * 
+	 * @param m
+	 * @return Long
+	 */
+	public Long insert(TblMensajesHist m);
+
+	/**
+	 * Elimina el mensaje historicos
+	 * 
+	 * @param mensajeId
+	 */
+	public void delete(Long mensajeId);
+
+
+	/**
+	 * REcupera el mensaje por ID
+	 * 
+	 * @param mensajeId
+	 */
+	public TblMensajesHist getMensaje(Long mensajeid);
+
+	/**
+	 * Obtiene una Lista de  TblMensajesHist que pertenecen a un lote con límites
+	 * 
+	 * @param idLote
+	 * @param max
+	 * @param firstResult
+	 * @return
+	 */
+	public List<TblMensajesHist> getMensajesByLote(Long loteId, int max, int firstResult);
+
+/**
 	 * Obtiene Los mensajes a partir de query
 	 * 
 	 * @param query

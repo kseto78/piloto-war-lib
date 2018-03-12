@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.minhap.common.entity.SearchResult;
 import es.minhap.common.entity.TextComparator;
 import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
 import es.minhap.sim.dao.TblEstadosDAO;
@@ -43,6 +44,14 @@ public class TblEstadosManagerImpl implements TblEstadosManager {
 		return getEstadosDAO().get(idEstado);
 	}
 
+	/**
+	 * @see es.minhap.TblEstadosManager.getEstadoById
+	 */
+	@Override
+	public SearchResult<TblEstados> getEstados() {
+		TblEstadosQuery query = new TblEstadosQuery();
+		return getEstadosDAO().search(query);
+	}
 
 	/**
 	 * @return the estadosDAO

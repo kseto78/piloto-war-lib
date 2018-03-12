@@ -7,9 +7,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -25,6 +28,8 @@ public class TblServicios implements java.io.Serializable {
 	private static final long serialVersionUID = -7547535234802815763L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SERVICIOID_SEC")
+    @SequenceGenerator(name="SERVICIOID_SEC", sequenceName="SERVICIOID_SEC", allocationSize=1)
 	@Column(name = "SERVICIOID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long servicioid;
 
@@ -164,6 +169,15 @@ public class TblServicios implements java.io.Serializable {
 	
 	@Column(name = "CADUCIDAD", precision = 22, scale = 0)
 	private Integer caducidad;	
+	
+	@Column(name = "CADUCIDADWEBPUSH", precision = 22, scale = 0)
+	private Integer caducidadWebPush;
+	
+	@Column(name = "VAPIDPUBLICKEY", length = 200)
+	private String vapidPublicKey;
+	
+	@Column(name = "VAPIDPRIVATEKEY", length = 200)
+	private String vapidPrivateKey;
 
 
 	public TblServicios() {
@@ -848,6 +862,48 @@ public class TblServicios implements java.io.Serializable {
 
 	public void setCaducidad(Integer caducidad) {
 		this.caducidad = caducidad;
+	}
+
+	/**
+	 * @return the caducidadWebPush
+	 */
+	public Integer getCaducidadWebPush() {
+		return caducidadWebPush;
+	}
+
+	/**
+	 * @param caducidadWebPush the caducidadWebPush to set
+	 */
+	public void setCaducidadWebPush(Integer caducidadWebPush) {
+		this.caducidadWebPush = caducidadWebPush;
+	}
+
+	/**
+	 * @return the vapidPublicKey
+	 */
+	public String getVapidPublicKey() {
+		return vapidPublicKey;
+	}
+
+	/**
+	 * @param vapidPublicKey the vapidPublicKey to set
+	 */
+	public void setVapidPublicKey(String vapidPublicKey) {
+		this.vapidPublicKey = vapidPublicKey;
+	}
+
+	/**
+	 * @return the vapidPrivateKey
+	 */
+	public String getVapidPrivateKey() {
+		return vapidPrivateKey;
+	}
+
+	/**
+	 * @param vapidPrivateKey the vapidPrivateKey to set
+	 */
+	public void setVapidPrivateKey(String vapidPrivateKey) {
+		this.vapidPrivateKey = vapidPrivateKey;
 	}
 	
 }

@@ -338,6 +338,17 @@ public class TblDestinatariosMensHistQuery extends AbstractHibernateQueryEntity<
     private boolean ultimoenvioIsNotNull = false;
 
     /**
+     * Valor primer resultado
+     */
+    private Integer firstResult;
+    
+    
+    /**
+     * Valor max resultados
+     */
+    private Integer maxResult;
+    
+    /**
      * Constructor default
      */
     public TblDestinatariosMensHistQuery() {
@@ -1607,6 +1618,14 @@ public class TblDestinatariosMensHistQuery extends AbstractHibernateQueryEntity<
         if (isUltimoenvioIsNotNull()) {
             criteria.add(Restrictions.isNotNull(ULTIMOENVIO));
         }
+        
+        if (null != firstResult){
+        	criteria.setFirstResult(firstResult);
+        }
+        
+        if (null != maxResult){
+        	criteria.setMaxResults(maxResult);
+        }
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -1649,5 +1668,34 @@ public class TblDestinatariosMensHistQuery extends AbstractHibernateQueryEntity<
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+    
+
+	/**
+	 * @return the firstResult
+	 */
+	public Integer getFirstResult() {
+		return firstResult;
+	}
+
+	/**
+	 * @param firstResult the firstResult to set
+	 */
+	public void setFirstResult(Integer firstResult) {
+		this.firstResult = firstResult;
+	}
+
+	/**
+	 * @return the maxResult
+	 */
+	public Integer getMaxResult() {
+		return maxResult;
+	}
+
+	/**
+	 * @param maxResult the maxResult to set
+	 */
+	public void setMaxResult(Integer maxResult) {
+		this.maxResult = maxResult;
+	}
 }
  

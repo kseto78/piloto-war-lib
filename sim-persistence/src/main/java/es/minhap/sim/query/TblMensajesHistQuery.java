@@ -47,7 +47,7 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
     // problemas de compilacion
     public static final String MENSAJEID = "mensajeid";
     public static final String TBLESTADOS = "tblEstados";
-    public static final String LOTEENVIOID = "loteenvioid";
+    public static final String TBLLOTESENVIOSHIST = "tblLotesEnviosHist";
     public static final String CODIGOEXTERNO = "codigoexterno";
     public static final String CABECERA = "cabecera";
     public static final String ESTADOACTUAL = "estadoactual";
@@ -109,14 +109,25 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
     private boolean tblEstadosIsNotNull = false;
 
     /**
-     * Valor de busqueda de campo mensajeid
+     * Valor de busqueda de campo tblLotesEnviosHist
      */
-    private Long loteenvioid;
+    private TblLotesEnviosHistQuery tblLotesEnviosHist;
 
     /**
-     * Lista de valores del campo mensajeid para busquedas tipo IN
+     * Lista de valores del ID del campo tblLotesEnviosHist para busquedas tipo IN
+     * Solo se consideran los ID dentro de los TblLotesEnviosHist
      */
-    private List<Long> loteenvioidIn = new ArrayList<Long>(0);
+    private List<TblLotesEnviosHist> tblLotesEnviosHistIdIn = new ArrayList<TblLotesEnviosHist>(0);
+
+    /**
+     * Permite buscar cuando campo tblLotesEnviosHist es NULL
+     */
+    private boolean tblLotesEnviosHistIsNull = false;
+
+    /**
+     * Permite buscar cuando campo tblLotesEnviosHist es NOT NULL
+     */
+    private boolean tblLotesEnviosHistIsNotNull = false;
 
     /**
      * Valor de busqueda de campo codigoexterno
@@ -764,9 +775,28 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
      */
     private boolean leftJoinTblEstados = false;
 
-    
-   
+    /**
+     * Indica si en la consulta se hace un inner join con el padre tblLotesEnviosHist
+     */
+    private boolean innerJoinTblLotesEnviosHist = false;
 
+    /**
+     * Indica si en la consulta se hace un left join con el padre tblLotesEnviosHist
+     */
+    private boolean leftJoinTblLotesEnviosHist = false;
+
+    /**
+     * Valor primer resultado
+     */
+    private Integer firstResult;
+    
+    
+    /**
+     * Valor max resultados
+     */
+    private Integer maxResult;
+    
+    
     /**
      * Constructor default
      */
@@ -873,37 +903,68 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
         this.tblEstadosIsNotNull = tblEstadosIsNotNull;
     }
 
-  
     /**
-     * Valor de busqueda de campo mensajeid
-     * @return Long.
+     * Valor de busqueda de campo tblLotesEnviosHist
+     * @return TblLotesEnviosHist.
      */
-    public Long getLoteenvioid() {
-        return loteenvioid;
+    public TblLotesEnviosHistQuery getTblLotesEnviosHist() {
+        return tblLotesEnviosHist;
     }
 
     /**
-     * Valor de busqueda de campo mensajeid
-     * @param mensajeid Valor de seteo.
+     * Valor de busqueda de campo tblLotesEnviosHist
+     * @param tblLotesEnviosHist Valor de seteo.
      */
-    public void setLoteenvioid(Long loteenvioid) {
-        this.loteenvioid = loteenvioid;
+    public void setTblLotesEnviosHist(TblLotesEnviosHistQuery tblLotesEnviosHist) {
+        this.tblLotesEnviosHist = tblLotesEnviosHist;
     }
 
     /**
-     * @return List<Long>.
+     * @return List<TblLotesEnviosHist>.
      */
-    public List<Long> getLoteenvioidIn() {
-        return this.loteenvioidIn;
+    public List<TblLotesEnviosHist> getTblLotesEnviosHistIdIn() {
+        return this.tblLotesEnviosHistIdIn;
     }
 
     /**
-     * @param mensajeid Valor a agregar.
+     * @param tblLotesEnviosHist Valor a agregar.
      */
-    public void addLoteenvioidIn(Long loteenvioid) {
-        this.loteenvioidIn.add(loteenvioid);
+    public void addTblLotesEnviosHistIdIn(TblLotesEnviosHist tblLotesEnviosHist) {
+        this.tblLotesEnviosHistIdIn.add(tblLotesEnviosHist);
     }
-    
+
+    /**
+     * Permite buscar cuando campo tblLotesEnviosHist es NULL
+     * @return boolean.
+     */
+    public boolean isTblLotesEnviosHistIsNull() {
+        return tblLotesEnviosHistIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo tblLotesEnviosHist es NULL
+     * @param tblLotesEnviosHistIsNull Valor de seteo.
+     */
+    public void setTblLotesEnviosHistIsNull(boolean tblLotesEnviosHistIsNull) {
+        this.tblLotesEnviosHistIsNull = tblLotesEnviosHistIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo tblLotesEnviosHist es NOT NULL
+     * @return boolean.
+     */
+    public boolean isTblLotesEnviosHistIsNotNull() {
+        return tblLotesEnviosHistIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo tblLotesEnviosHist es NOT NULL
+     * @param tblLotesEnviosHistIsNotNull Valor de seteo.
+     */
+    public void setTblLotesEnviosHistIsNotNull(boolean tblLotesEnviosHistIsNotNull) {
+        this.tblLotesEnviosHistIsNotNull = tblLotesEnviosHistIsNotNull;
+    }
+
     /**
      * Valor de busqueda de campo codigoexterno
      * @return String.
@@ -3209,7 +3270,33 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
         this.leftJoinTblEstados = leftJoinTblEstados;
     }
 
-   
+    /**
+     * @return boolean.
+     */
+    public boolean isInnerJoinTblLotesEnviosHist() {
+        return innerJoinTblLotesEnviosHist;
+    }
+
+    /**
+     * @param innerJoinTblLotesEnviosHist Valor de seteo.
+     */
+    public void setInnerJoinTblLotesEnviosHist(boolean innerJoinTblLotesEnviosHist) {
+        this.innerJoinTblLotesEnviosHist = innerJoinTblLotesEnviosHist;
+    }
+
+    /**
+     * @return boolean.
+     */
+    public boolean isLeftJoinTblLotesEnviosHist() {
+        return leftJoinTblLotesEnviosHist;
+    }
+
+    /**
+     * @param leftJoinTblLotesEnviosHist Valor de seteo.
+     */
+    public void setLeftJoinTblLotesEnviosHist(boolean leftJoinTblLotesEnviosHist) {
+        this.leftJoinTblLotesEnviosHist = leftJoinTblLotesEnviosHist;
+    }
     /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
      */ 
@@ -3246,8 +3333,39 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
             }
         }
 
-        if (getTblEstadosIdIn().size() > 0) {
-            criteria.add(Restrictions.in(TBLESTADOS, getTblEstadosIdIn()));
+                // Campo entidad padre tblLotesEnviosHist
+        
+        // Si se hace join fetch con el padre
+        Criteria tblLotesEnviosHistCriteria = null;
+        if (isInnerJoinTblLotesEnviosHist()) {
+            tblLotesEnviosHistCriteria = criteria.createCriteria(TBLLOTESENVIOSHIST, "a_" + TBLLOTESENVIOSHIST, CriteriaSpecification.INNER_JOIN);
+        } else if (isLeftJoinTblLotesEnviosHist()) {
+            tblLotesEnviosHistCriteria = criteria.createCriteria(TBLLOTESENVIOSHIST, "a_" + TBLLOTESENVIOSHIST, CriteriaSpecification.LEFT_JOIN);
+        }
+        
+        if (getTblLotesEnviosHist() != null) {
+            if (getTblLotesEnviosHist().getLoteenvioid() == null) {
+                if (tblLotesEnviosHistCriteria == null) {
+                    tblLotesEnviosHistCriteria = criteria.createCriteria(TBLLOTESENVIOSHIST, "a_" + TBLLOTESENVIOSHIST);
+                }
+                getTblLotesEnviosHist().addCriteria(tblLotesEnviosHistCriteria, useOrder);
+            } else {
+                TblLotesEnviosHist parent = new TblLotesEnviosHist();
+                parent.setLoteenvioid(getTblLotesEnviosHist().getLoteenvioid());
+                criteria.add(Restrictions.eq(TBLLOTESENVIOSHIST, parent));
+            }
+        }
+
+        if (getTblLotesEnviosHistIdIn().size() > 0) {
+            criteria.add(Restrictions.in(TBLLOTESENVIOSHIST, getTblLotesEnviosHistIdIn()));
+        }
+
+        if (isTblLotesEnviosHistIsNull()) {
+            criteria.add(Restrictions.isNull(TBLLOTESENVIOSHIST));
+        }
+
+        if (isTblLotesEnviosHistIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(TBLLOTESENVIOSHIST));
         }
 
         if (isTblEstadosIsNull()) {
@@ -3257,16 +3375,6 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
         if (isTblEstadosIsNotNull()) {
             criteria.add(Restrictions.isNotNull(TBLESTADOS));
         }
-
-        if (getLoteenvioid() != null) {
-            criteria.add(Restrictions.eq(LOTEENVIOID, getLoteenvioid()));
-        }
-
-        if (getLoteenvioidIn().size() > 0) {
-            criteria.add(Restrictions.in(LOTEENVIOID, getLoteenvioidIn()));
-        }
-        
-       
 
         if (getCodigoexterno() != null) {
             if (getCodigoexternoComparator() == TextComparator.EQUALS) {
@@ -3909,6 +4017,15 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
         if (isSonidoIsNotNull()) {
             criteria.add(Restrictions.isNotNull(SONIDO));
         }
+        
+        if (null != firstResult){
+        	criteria.setFirstResult(firstResult);
+        }
+        
+        if (null != maxResult){
+        	criteria.setMaxResults(maxResult);
+        }
+        
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -3951,5 +4068,33 @@ public class TblMensajesHistQuery extends AbstractHibernateQueryEntity<TblMensaj
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+    
+    /**
+	 * @return the firstResult
+	 */
+	public Integer getFirstResult() {
+		return firstResult;
+	}
+
+	/**
+	 * @param firstResult the firstResult to set
+	 */
+	public void setFirstResult(Integer firstResult) {
+		this.firstResult = firstResult;
+	}
+
+	/**
+	 * @return the maxResult
+	 */
+	public Integer getMaxResult() {
+		return maxResult;
+	}
+
+	/**
+	 * @param maxResult the maxResult to set
+	 */
+	public void setMaxResult(Integer maxResult) {
+		this.maxResult = maxResult;
+	}
 }
  

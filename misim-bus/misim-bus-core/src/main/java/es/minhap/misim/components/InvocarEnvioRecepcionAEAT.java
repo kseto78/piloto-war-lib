@@ -187,6 +187,7 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 	private Document getSoapDOM(String operationName, String endpointUrl, Long timeout, String respuestaCompleta, QName serviceQName, QName portQName,MuleEventContext eventContext)
 			throws ParserConfigurationException, SAXException, IOException, UnsupportedEncodingException, ModelException {
 		String xml =this.invoke(serviceQName, portQName, endpointUrl, operationName, respuestaCompleta, timeout,eventContext);
+
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
 		DocumentBuilder db = null;

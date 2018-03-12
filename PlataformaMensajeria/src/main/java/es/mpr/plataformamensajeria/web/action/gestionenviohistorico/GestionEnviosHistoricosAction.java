@@ -19,6 +19,9 @@ import com.map.j2ee.pagination.PaginatedList;
 import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.Preparable;
 
+import es.minhap.misim.bus.model.ViewMisim;
+import es.minhap.misim.bus.query.ViewMisimQuery;
+import es.minhap.plataformamensajeria.iop.misim.manager.ViewMisimManager;
 import es.mpr.plataformamensajeria.beans.AdjuntoEmailHistoricosBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.CanalBean;
@@ -31,10 +34,13 @@ import es.mpr.plataformamensajeria.beans.HistoricoHistBean;
 import es.mpr.plataformamensajeria.beans.MensajeHistoricosBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServidorBean;
+import es.mpr.plataformamensajeria.beans.ViewMisimBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
+import es.mpr.plataformamensajeria.servicios.ifaces.CifradoService;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioCanal;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioEstado;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
@@ -73,9 +79,18 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 
 	@Resource(name = "servicioGestionEnviosHistoricosImpl")
 	private ServicioGestionEnviosHistoricos servicioGestionEnviosHistoricos;
+	
+	@Resource(name = "servicioGestionEnviosImpl")
+	private ServicioGestionEnvios servicioGestionEnvios;
     
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
+	
+	@Resource(name="ViewMisimManagerImpl")
+	private ViewMisimManager viewMisimManager;
+	
+	@Resource
+	private CifradoService cifradoService;
 	
 	private GestionEnvioHistoricoBean gestionEnvioHistoricoBean;
 	private DetalleEnvioHistBean detalleEmail;
@@ -88,13 +103,14 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	private List<MensajeHistoricosBean> listaGestionEnviosMensajesHistoricos = null;
 	private List<DestinatariosMensajesHistoricosBean> listaGestionEnviosDestinatariosMensajeHistoricos = null;
 	private List<HistoricoHistBean> listaHistoricosMensajeHistoricos = null;
+	private List<ViewMisimBean> listaIntercambiosMisim = null;
 	
-	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboEstados = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboPageSize = new ArrayList<KeyValueObject>();
+	transient List<KeyValueObject> comboAplicaciones = new ArrayList<>();
+	transient List<KeyValueObject> comboServidores = new ArrayList<>();
+	transient List<KeyValueObject> comboServicios = new ArrayList<>();
+	transient List<KeyValueObject> comboEstados = new ArrayList<>();
+	transient List<KeyValueObject> comboCanales = new ArrayList<>();
+	transient List<KeyValueObject> comboPageSize = new ArrayList<>();
 	private String[] checkDelList;
 	
 	private String resultCount;
@@ -108,6 +124,9 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
     private String CheckAllS;
     private String vistaEnviosIdSelected;
 	private Integer pageSize = 20;
+	
+	public static final String FORMATO_FECHA_TITULO_AUDITORIA = "yyyyMMdd HHmmss";
+	public static final String TIPO_FICHERO = "xml";
 
 	////MIGRADO
 	public String newSearch() throws BusinessException {
@@ -140,6 +159,20 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 			gestionEnvioHistoricoBean.setFechaDesde(null);
 			gestionEnvioHistoricoBean.setFechaHasta(null);
 			listaGestionEnviosHistoricos = result.getPageList();
+			
+			for(GestionEnvioHistoricoBean geb: listaGestionEnviosHistoricos){
+				
+				geb.setBotonIntercambios(true);
+				
+				ViewMisimQuery query = new ViewMisimQuery();
+				query.setIdLote(geb.getIdLote());
+				List<ViewMisim> viewMisim = viewMisimManager.getIntercambiosMisimByQuery(query, 0, 20);
+				
+				if(viewMisim == null || viewMisim.isEmpty()){
+					geb.setBotonIntercambios(false);
+				}
+			}
+			
 			resultCount = (totalSize != null) ? totalSize.toString() : "0";
 			// Atributos de request
 			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
@@ -188,6 +221,20 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	    	
 	    	
 	    	listaGestionEnviosHistoricos =  result.getPageList();
+	    	
+			for(GestionEnvioHistoricoBean geb: listaGestionEnviosHistoricos){
+				
+				geb.setBotonIntercambios(true);
+				
+				ViewMisimQuery query = new ViewMisimQuery();
+				query.setIdLote(geb.getIdLote());
+				List<ViewMisim> viewMisim = viewMisimManager.getIntercambiosMisimByQuery(query, 0, 20);
+				
+				if(viewMisim == null || viewMisim.isEmpty()){
+					geb.setBotonIntercambios(false);
+				}
+			}
+	    	
 	    	resultCount = (totalSize!=null)?totalSize.toString():"0";
 	    	//Atributos de request
 	    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
@@ -286,8 +333,46 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 						
 			return SUCCESS;
 		} catch (BusinessException e) {
-			logger.error("GestionEnviosHistoricosAction - loadMensaje:" + e);
+			logger.error("[GestionEnviosHistoricosAction] - loadMensaje:" + e);
 			throw new BusinessException(this.getText("errors.action.organismo.loadOrganismo"));
+		}
+	}
+	
+	public String loadMisimHistorico() throws BusinessException {
+		
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idLote == null) {
+			throw new BusinessException("El idLote recibido es nulo");
+		}
+		
+		if(idMensaje == null) {
+			throw new BusinessException("El idMensaje recibido es nulo");
+		}
+		
+		try {
+			
+			idEmail = idMensaje;
+			
+			detalleEmail = servicioGestionEnviosHistoricos.loadMensaje(idEmail);
+
+			Integer totalSize = null;
+			int page = getPage("tableMisimId");
+			int inicio = (page - 1) * pageSize;
+			PaginatedList<ViewMisimBean> result = null;
+			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
+			
+			result = servicioGestionEnvios.getIntercambiosMisim(inicio, (export) ? -1
+					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), Long.valueOf(idLote));
+			totalSize = result.getTotalList();
+			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			listaIntercambiosMisim = result.getPageList();
+			
+			return SUCCESS;
+
+		} catch (BusinessException e) {
+			logger.error("[GestionEnviosHistoricosAction] - loadMisimHistorico:" + e);
+			throw new BusinessException(this.getText("errors.action.gestionEnvios.loadMisimHistorico"));
 		}
 	}
 	
@@ -558,6 +643,15 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	public void setListaGestionEnviosHistoricos(List<GestionEnvioHistoricoBean> listaGestionEnviosHistoricos) {
 		this.listaGestionEnviosHistoricos = new ArrayList<GestionEnvioHistoricoBean>(listaGestionEnviosHistoricos);
 	}
+	
+	public List<ViewMisimBean> getListaIntercambiosMisim() {
+		return listaIntercambiosMisim;
+	}
+
+	public void setListaIntercambiosMisim(List<ViewMisimBean> listaIntercambiosMisim) {
+		this.listaIntercambiosMisim = listaIntercambiosMisim;
+	}
+
 	/**
 	 * 
 	 * @return

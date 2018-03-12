@@ -50,7 +50,7 @@
      <bean id="dataSourceSIMApp" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName">
 		<!-- Esto se declara en \jboss-5.1.0.GA\server\default\deploy\plataformaMensajeria-ds.xml -->
-			 <!-- <value>java:dsOraclePlataformaFRONT</value> --> 
+			 <!--  <value>java:dsOraclePlataformaFRONT</value> -->
 			<value>java:dsOraclePlataforma</value>
 		</property>
 	</bean> 

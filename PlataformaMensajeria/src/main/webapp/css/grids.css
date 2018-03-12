@@ -151,39 +151,76 @@ td.buttons a:hover {
 	opacity: 0.5;
 }
 
-.btnEdit,.btnDelete,.btnView,.btnDecline,.btnReply {
+.btnEdit,.btnDelete,.btnView,.btnDecline,.btnReply,.btnPassbook{
 	display: inline-block;
 	height: 16px;
+}
+
+.btnMagGlass,.btnDetails,.btnDetailsOff{
+	display: inline-block;
+	height: 25px;
 }
 
 .btnEdit {
 	background: url("../img/grids/btnEdit.gif") no-repeat scroll left top
 		transparent;
 	width: 23px;
+	cursor: pointer;
+}
+
+.btnPassbook {
+	background: url("../img/grids/btnPassbook.gif") no-repeat scroll top
+		transparent;
+	width: 23px;
+	cursor: pointer;
 }
 
 .btnDelete {
 	background: url("../img/grids/btnDelete.gif") no-repeat scroll left top
 		transparent;
 	width: 15px;
+	cursor: pointer;
 }
 
 .btnView {
 	background: url("../img/grids/btnView.gif") no-repeat scroll left top
 		transparent;
 	width: 29px;
+	cursor: pointer;
+}
+
+.btnDetails {
+	background: url("../img/grids/btnDetails.gif") no-repeat scroll left top
+		transparent;
+	width: 32px;
+	cursor: pointer;
+}
+
+.btnDetailsOff {
+	background: url("../img/grids/btnDetailsOff.gif") no-repeat scroll left top
+		transparent;
+	width: 32px;
+}
+
+.btnMagGlass {
+	background: url("../img/grids/btnMagGlass.gif") no-repeat scroll left top
+		transparent;
+	width: 20px;
+	cursor: pointer;
 }
 
 .btnDecline {
 	background: url("../img/grids/btnDecline.gif") no-repeat scroll left top
 		transparent;
 	width: 16px;
+	cursor: pointer;
 }
 
 .btnReply {
 	background: url("../img/grids/btnReply.gif") no-repeat scroll left top
 		transparent;
 	width: 18px;
+	cursor: pointer;
 }
 
 span.activo,span.inactivo {

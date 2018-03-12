@@ -14,14 +14,11 @@ package es.minhap.sim.dao;
 
 import es.minhap.common.dao.EntityDAO;
 import es.minhap.sim.model.ViewLotesEnviosDetHist;
-import es.minhap.sim.model.ViewLotesEnviosDetHistId;
 import es.minhap.sim.query.ViewLotesEnviosDetHistQuery;
 
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface ViewLotesEnviosDetHistDAO
-		extends
-		EntityDAO<ViewLotesEnviosDetHist, ViewLotesEnviosDetHistId, ViewLotesEnviosDetHistQuery> {
+public interface ViewLotesEnviosDetHistDAO extends EntityDAO<ViewLotesEnviosDetHist,Long,ViewLotesEnviosDetHistQuery> {
 
 }

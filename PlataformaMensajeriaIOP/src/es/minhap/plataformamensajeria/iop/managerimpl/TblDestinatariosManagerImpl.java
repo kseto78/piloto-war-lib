@@ -85,6 +85,16 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 		return res;
 	}
 
+	@Override
+	@Transactional
+	public void delete(Long destinatarioid) {
+		destinatariosDAO.delete(destinatarioid);
+	}
+	
+	@Override
+	public TblDestinatarios getDestinatario(Long destinatarioId) {
+		return destinatariosDAO.get(destinatarioId);
+	}
 
 	/**
 	 * @param mensajeId
@@ -129,5 +139,7 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 	public void setDestinatariosDAO(TblDestinatariosDAO destinatariosDAO) {
 		this.destinatariosDAO = destinatariosDAO;
 	}
+
+
 
 }

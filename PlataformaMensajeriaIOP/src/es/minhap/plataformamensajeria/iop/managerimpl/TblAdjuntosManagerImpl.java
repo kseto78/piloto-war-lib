@@ -19,6 +19,7 @@ import es.minhap.plataformamensajeria.iop.util.MensajesAuditoria;
 import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.dao.TblAdjuntosDAO;
+import es.minhap.sim.dao.ViewAdjuntosDAO;
 import es.minhap.sim.model.TblAdjuntos;
 import es.minhap.sim.model.TblMensajesAdjuntos;
 import es.minhap.sim.model.TblServicios;
@@ -36,6 +37,9 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 	@Autowired
 	private TblAdjuntosDAO adjuntosDAO;
 
+	@Autowired
+	private ViewAdjuntosDAO viewAdjuntosDAO;
+	
 	@Autowired
 	private ViewMensajesDetalladaManager viewMensajesDetalladaDAO;
 
@@ -145,6 +149,19 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 	}
 	
 	@Override
+	@Transactional
+	public void delete(Long adjuntoid) {
+		adjuntosDAO.delete(adjuntoid);
+		
+	}
+	
+	@Override
+	@Transactional
+	public TblAdjuntos getById(Long idAdjunto) {
+		return adjuntosDAO.get(idAdjunto);
+	}
+
+	@Override
 	public TblAdjuntos getAdjuntoById(Long adjuntoid) {
 		return adjuntosDAO.get(adjuntoid);
 	}
@@ -155,6 +172,7 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		
 	}
 	
+
 	/**
 	 * @param mensajeId
 	 * @param adjuntoId

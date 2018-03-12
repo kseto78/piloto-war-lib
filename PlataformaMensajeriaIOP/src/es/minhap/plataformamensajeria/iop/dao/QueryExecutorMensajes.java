@@ -1,5 +1,6 @@
 package es.minhap.plataformamensajeria.iop.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +10,10 @@ import es.minhap.plataformamensajeria.iop.beans.getAvisosUsuario.Aviso;
 import es.minhap.plataformamensajeria.sm.modelo.DatosServicio;
 import es.minhap.plataformamensajeria.sm.modelo.MailData;
 import es.minhap.plataformamensajeria.sm.modelo.NotificacionPushData;
+import es.minhap.plataformamensajeria.sm.modelo.NotificacionWebPushData;
 import es.minhap.plataformamensajeria.sm.modelo.ReceptorSMSData;
 import es.minhap.plataformamensajeria.sm.modelo.SMSData;
+import es.minhap.sim.model.TblAplicaciones;
 
 /**
  * 
@@ -122,6 +125,15 @@ public interface QueryExecutorMensajes {
 	 */
 	public NotificacionPushData getDetailsServidorPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId, DatosServicio smsServiceData);
 	
+	/**
+	 * Se recupera un listado de los servidores push a partir del mensaje id y los datos del servicio para multidestinatarios
+	 * 
+	 * @param mensajeId
+	 * @param destinatarioMensajeId
+	 * @param smsServiceData
+	 * @return
+	 */
+	public NotificacionWebPushData getDetailsServidorWebPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId);
 	
 	/**
 	 * Se recupera un listado de los servidores push a partir del mensaje id y los datos del servicio
@@ -167,4 +179,48 @@ public interface QueryExecutorMensajes {
 	 * @return
 	 */
 	public List<Long> getMensajesPendientes();
+	
+	/***
+	 * Numero de mensajes enviados/anulados por lote y fecha 
+	 * 
+	 * @param loteId
+	 * @param fecha
+	 * @return
+	 */
+	public Integer countMensajesHistorificacion(Long loteId, Date fecha);
+
+
+	/***
+	 * Recupera una lista con los Id mensajes 
+	 * 
+	 * @param loteId
+	 * @return
+	 */
+	List<Long> getIdMensajesByLote(Long loteEnvioID);
+
+	/***
+	 * Numero de mensajes enviados/anulados por lote 
+	 * 
+	 * @param loteId
+	 * @return
+	 */
+	public Integer countMensajesByLote(Long loteId);
+
+	/***
+	 * Obtenemos la aplicacion desde el mensaje
+	 * 
+	 * @param mensajeId
+	 * @return
+	 */
+	public TblAplicaciones getAplicacionFromMensaje(Long mensajeId);
+
+	/***
+	 * Obtenemos la  aplicacion desde el lote
+	 * 
+	 * @param loteId
+	 * @return
+	 */
+	public TblAplicaciones getAplicacionFromLote(Integer idLote);
+
+
 }

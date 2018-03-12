@@ -108,6 +108,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	private String idProveedorSMS;
 	private String idReceptorSMS;
 	private String idServidorPush;
+	private String idServidorWebPush;
 	private String idOrganismo;
 		
 	private String nAction;
@@ -1273,4 +1274,17 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	public void setComboConfiguraciones(List<KeyValueObject> comboConfiguraciones) {
 		this.comboConfiguraciones = comboConfiguraciones;
 	}
+	/**
+	 * @return the idServidorWebPush
+	 */
+	public String getIdServidorWebPush() {
+		return idServidorWebPush;
+	}
+	/**
+	 * @param idServidorWebPush the idServidorWebPush to set
+	 */
+	public void setIdServidorWebPush(String idServidorWebPush) {
+		this.idServidorWebPush = idServidorWebPush;
+	}
+	
 }

@@ -6,7 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -31,6 +34,8 @@ public class Transformacion implements java.io.Serializable {
 
 	@Id
 	@Column(name = "ID_TRANSFORMACION", unique = true, nullable = false, precision = 20, scale = 0)
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="generator")
+	@SequenceGenerator(name="generator",sequenceName="SEQ_TRANSFORMACION")
 	public Long getIdTransformacion() {
 		return this.idTransformacion;
 	}

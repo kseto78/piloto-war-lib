@@ -10,6 +10,10 @@
 <!-- Criterios de la busqueda   -->
 <!-- ************************** -->
 <div class="mainContent">
+       <h3 class="pageNameButtons">
+    		<span class="floatRight"></span>
+	        <label>Auditoría</label>
+       </h3>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/validadoresJS.jsp"%>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp"%>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp"%>

@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -13,18 +14,24 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * 
  * @author i-nercya
  */
-public class JobBean implements Audit {
+public class JobBean implements Audit, Serializable {
+
+	private static final long serialVersionUID = 6053798532526486070L;
+
+
 
 	public JobBean() {
 		this.servicioId = null;
 		this.nombreJob = null;
 		this.fecha = null;
+		this.fechaFin = null;
 		
 	}
 
 	private Long servicioId;
 	private Date fecha;
 	private String nombreJob;
+	private Date fechaFin;
 	
 	
 
@@ -85,6 +92,24 @@ public class JobBean implements Audit {
 	 */
 	public void setNombreJob(String nombreJob) {
 		this.nombreJob = nombreJob;
+	}
+
+
+
+	/**
+	 * @return the fechaFin
+	 */
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+
+
+	/**
+	 * @param fechaFin the fechaFin to set
+	 */
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
 	}
 
 

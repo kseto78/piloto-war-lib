@@ -1,6 +1,11 @@
 package es.mpr.plataformamensajeria.util;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -11,7 +16,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.locale.LocaleBeanUtils;
@@ -19,8 +26,14 @@ import org.apache.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.security.perm.model.UserVO;
 
+import es.minhap.misim.bus.model.Peticion;
+import es.minhap.misim.bus.query.PeticionQuery;
+import es.minhap.plataformamensajeria.iop.misim.manager.PeticionManager;
+import es.minhap.plataformamensajeria.iop.util.Utils;
+import es.mpr.plataformamensajeria.beans.PeticionBean;
 import es.mpr.plataformamensajeria.beans.UsuarioAplicacionBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
@@ -126,7 +139,15 @@ public class PlataformaMensajeriaUtil {
 			return false;
 		}
 	}
-			
+		
+	///MIGRADO
+	public static boolean isEmptyNumberLong(Long value){
+		if(value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1))){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
 	/**
 	 * Valida el formato de las horas introducidas para las planificaciones a través de una expresión regular.
@@ -255,7 +276,7 @@ public class PlataformaMensajeriaUtil {
 		if (nmaxenvios == null || nmaxenvios.toString().length() == 0 || !(nmaxenvios.toString().length()==9)){
             return false;
 		}else{
-	        for (int i = 0; i < nmaxenvios.toString().length(); i++) {
+	        for (int i = 0; i < nmaxenvios.toString().length() - 1; i++) {
 	            if (!Character.isDigit(nmaxenvios.toString().charAt(i))){
 	            	return false;
 	            }
@@ -324,7 +345,112 @@ public class PlataformaMensajeriaUtil {
 		return matcher.matches();
 	}
 	
+
+	public static PeticionBean loadXmlPeticion(String idPeticion, PeticionManager peticionManager) throws BusinessException {
+		PeticionBean peticionBean = new PeticionBean();
+	
+		PeticionQuery query = new PeticionQuery();
+		query.setIdPeticion(Long.parseLong(idPeticion));
+		
+		try {
+			Peticion peticion = peticionManager.getPeticionByQuery(query);
+			String xmlPeticion = peticion.getMensajePeticion();
+			peticionBean.setMensajePeticion(xmlPeticion);
+			peticionBean.setIdPeticion(Long.parseLong(idPeticion));
+			
+		} catch (Exception e) {
+			logger.error("PlataformaMensajeriaUtil - loadXmlPeticion:" + e);
+			throw new BusinessException(e);
+		}
+		return peticionBean;
+	}
+	
+	
+	public static PeticionBean loadXmlRespuesta(String idPeticion, PeticionManager peticionManager) throws BusinessException {
+		PeticionBean peticionBean = new PeticionBean();
+	
+		PeticionQuery query = new PeticionQuery();
+		query.setIdPeticion(Long.parseLong(idPeticion));
+		
+		try {
+			Peticion peticion = peticionManager.getPeticionByQuery(query);
+			String xmlRespuesta = peticion.getMensajeRespuesta();
+			peticionBean.setMensajeRespuesta(xmlRespuesta);
+			peticionBean.setIdPeticion(Long.parseLong(idPeticion));
+			
+		} catch (Exception e) {
+			logger.error("PlataformaMensajeriaUtil - loadXmlRespuesta:" + e);
+			throw new BusinessException(e);
+		}
+		return peticionBean;
+	}
+	
+	public static void descargaFicheroXml(HttpServletResponse response, String nombreFichero, 
+			String contenidoFichero, String tipoFichero) {
+
+		logger.info("[PlataformaMensajeriaUtil] - descargaFicheroXml - inicio");
+		
+		String contenidoFicheroUTF8 = Utils.convertToUTF8(contenidoFichero);
+		
+		String contentDisposition = "attachment; filename=\"" + nombreFichero + "." + tipoFichero + "\"";
+
+		response.setHeader("Content-Disposition", contentDisposition);
+
+		response.setContentType("text/xml");
+
+			byte bFichero[] = contenidoFicheroUTF8.getBytes();
+            ServletOutputStream sOutStream;
+			try {
+				sOutStream = response.getOutputStream();
+				sOutStream.write(bFichero);
+				response.flushBuffer();
+				
+			} catch (IOException e) {
+				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroXml - ERROR: Se ha producido al descargar el fichero");
+				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroXml - ERROR: " + e.toString(), e);
+			}
+	        
+			logger.info("[PlataformaMensajeriaUtil] - descargaFicheroXml - fin");
+	}
+	
+	public static void descargaFicheroPkPass(HttpServletResponse response, String nombreFichero, 
+			String contenidoFichero, String tipoFichero) {
+
+		logger.info("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - inicio");
+		//Path pathFile = Paths.get(contenidoFichero);
+		String old = contenidoFichero.substring(contenidoFichero.lastIndexOf('/') + 1);
+		String f = contenidoFichero;
+		f = f.replace(old, nombreFichero) + "." + tipoFichero;
+		Path pathFile = Paths.get(contenidoFichero);
+		Path destinationPath = Paths.get(f);
+					
+            ServletOutputStream sOutStream;
+			try {
+				Files.move(pathFile, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+				byte bFichero[] = Files.readAllBytes(destinationPath);
+				
+				String contentDisposition = "attachment; filename=\"" + nombreFichero + "." + tipoFichero + "\"";
+
+				response.setHeader("Content-Disposition", contentDisposition);
+
+				response.setContentType("application/vnd-com.apple.pkpass");
+				
+				sOutStream = response.getOutputStream();
+				sOutStream.write(bFichero);
+				response.flushBuffer();
+				sOutStream.close();
+				
+				Files.delete(destinationPath);
+			} catch (IOException e) {
+				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - ERROR: Se ha producido al descargar el fichero");
+				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - ERROR: " + e.toString(), e);
+			}
+	        
+			logger.info("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - fin");
+	}
+	
 }
+
 
 ///MIGRADO
 class ValidaFormatoHora{

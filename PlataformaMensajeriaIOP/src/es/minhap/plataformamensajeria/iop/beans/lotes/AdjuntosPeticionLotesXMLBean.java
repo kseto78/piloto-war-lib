@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import es.minhap.plataformamensajeria.sm.modelo.Adjunto;
+
 
 /**
  * <p>Clase Java para adjuntos complex type.

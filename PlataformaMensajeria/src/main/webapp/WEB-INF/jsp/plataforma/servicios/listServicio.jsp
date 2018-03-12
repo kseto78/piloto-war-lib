@@ -12,14 +12,28 @@
 <!-- Criterios de la busqueda   -->
 <!-- ************************** -->
         <div class="mainContent">
+                 <h3 class="pageNameButtons">
+    			<span class="floatRight"></span>
+	            <label>Servicios</label>
+          	</h3>  
         <%@include file="/WEB-INF/jsp/plataforma/validation/validadoresJS.jsp" %>	
 		<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp" %>
+            
+        <s:form id="frmBuscarServicios" method="POST" action="buscarServicios" validate="false" theme="css_xhtml">            	
             <div class="criteria">
-		<s:form id="frmBuscarServicios" method="POST" action="buscarServicios" validate="false" theme="css_xhtml">            	
+            		<p class="criteria">
+                    	<label class="fieldText" style="width: 150px;">Identificador del servicio:</label>
+                    	<s:textfield
+							name="servicio.servicioId" id="servicio.servicioId"
+							theme="simple" 
+							key="field.general.id" labelposition="left"
+							size="9" maxlength="60"
+							cssClass="input_tablas_registro" />
+               	   </p>
                    <p class="criteria">
-                       <label style="width: 100px;" class="fieldText">Aplicaciones:</label>
+                       <label style="width: 150px;" class="fieldText">Aplicaciones:</label>
                        <s:select
 						id="servicio.aplicacionid" name="servicio.aplicacionid" 
 						emptyOption="false" theme="simple" 
@@ -29,7 +43,7 @@
 						value="%{servicio.aplicacionid}" disabled="false" />
            	      </p> 
             	<p class="criteria">
-                    <label class="fieldText" style="width: 100px;">Nombre:</label>
+                    <label class="fieldText" style="width: 150px;">Nombre:</label>
                     <s:textfield
 							name="servicio.nombre" id="servicio.nombre"
 							theme="simple" 
@@ -109,10 +123,10 @@
 					<center>
 					
 					<input type="checkbox" onclick="checkBotonEliminarSeleccionados()" id="checkDelList" name="checkDelList" value="${tableId.servicioId }"/></center> 
-					<input type="hidden" idd="__checkbox_checkDelList" name="__checkbox_checkDelList"/>
+					<input type="hidden" id="__checkbox_checkDelList" name="__checkbox_checkDelList"/>
  				
 				</display:column>
-				<display:column property="servicioId" titleKey="field.planificacion.id" sortable="false"
+				<display:column property="servicioId" titleKey="field.servicio.id" sortable="false"
 					headerClass="TH30 separator center" class="center" />
 				<%-- nombre aplicacion--%>
 				<display:column property="aplicacionnombre" titleKey="field.servicio.aplicacionNombre" sortable="true"

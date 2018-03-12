@@ -299,7 +299,7 @@ h3.pageNameButtons {
 	background-color: #003366;
 	color: #FFF;
 	height: 24px;
-	width: 800px;
+	/*width: 800px;*/
 	font-size: 10px;
 	padding: 0 0 0 5px;
 	vertical-align: middle;
@@ -472,7 +472,13 @@ label.fieldTextNoIco {
 }
 
 a.button {
-	font-weight: normal;
+    font-family: Verdana, Arial, Sans Serif;
+    border: solid 1px #ffffff;
+    background: #4889af;
+    color: #ffffff;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px 10px 2px 10px;
 }
 
 a.button:hover {
@@ -931,4 +937,14 @@ td.op-update{
 }
 .listRadioButtons{
      width: 30px;
+}
+
+/*Desplegables*/
+
+.menuDesplegable{
+	cursor: pointer;
+}
+
+.selector{
+	backgroundColor: "#003366";
 }

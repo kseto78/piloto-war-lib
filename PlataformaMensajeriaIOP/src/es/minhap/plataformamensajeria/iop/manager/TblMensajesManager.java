@@ -11,7 +11,10 @@ import es.minhap.plataformamensajeria.iop.beans.MensajeSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.MensajesXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.getAvisosUsuario.Aviso;
 import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesWebPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesWebPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje;
 import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServicios;
@@ -34,6 +37,20 @@ public interface TblMensajesManager {
 	 */
 	public Mensaje insertarMensajeSMS(Long idLote, MensajeSMSXMLBean mensaje, String usuario, String password);
 
+	/**
+	 * Inserta un mensaje nuevo con los datos necesarios del envío
+	 * 
+	 * @param idLote
+	 * @param mensaje
+	 * @param peticion
+	 * @param destinatario
+	 * @param usuario
+	 * @return 
+	 */
+	Mensaje insertarMensajeWebPush(Long idLote, MensajePeticionLotesWebPushXMLBean mensaje,
+			PeticionXMLBean peticion, DestinatarioPeticionLotesWebPushXMLBean destinatario, String usuario, String password);
+
+	
 	/**
 	 * Inserta un mensaje nuevo tras una recepcion sms
 	 * 
@@ -109,6 +126,17 @@ public interface TblMensajesManager {
 	 */
 	public List<TblMensajes> getMensajesByLote(Long idLote);
 	
+	/**
+	 * Obtiene una Lista de  TblMensajes que pertenecen a un lote con límites
+	 * 
+	 * @param idLote
+	 * @param max
+	 * @param firstResult
+	 * @return
+	 */
+	List<TblMensajes> getMensajesByLote(Long idLote, Integer max, Integer firstResult);
+	
+		
 	/**
 	 * Se actualiza el mensaje en la tabla TBL_MENSAJES
 	 * 
@@ -240,6 +268,14 @@ public interface TblMensajesManager {
 
 
 	/**
+	 * Elimina un mensaje
+	 * 
+	 * @param mensajeid
+	 */
+	public void delete(Long mensajeid);
+
+
+	/**
 	 * Obtiene Los mensajes a partir de query
 	 * 
 	 * @param query
@@ -247,7 +283,7 @@ public interface TblMensajesManager {
 	 */
 	public List<TblMensajes> getMensajesByQuery(TblMensajesQuery query);
 
-	
+
 	/**
 	 * Obtiene El servicio a partir del IdMensaje
 	 * 
@@ -255,6 +291,7 @@ public interface TblMensajesManager {
 	 * @return TblServicios
 	 */
 	public TblServicios getServicioByMensaje(Long mensajeId);
+
 
 	
 	/**
@@ -265,4 +302,5 @@ public interface TblMensajesManager {
 	 */
 	public Integer countMensajesByQuery(TblMensajesQuery query);
 
+	
 }

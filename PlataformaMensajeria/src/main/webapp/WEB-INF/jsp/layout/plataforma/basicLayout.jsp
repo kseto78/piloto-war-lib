@@ -38,6 +38,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-ui-timepicker-addon.js" ></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-ui-timepicker-es.js" ></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/plataformaMensajeria.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/autocompleter.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/custom-theme/jquery-ui-1.8.custom.css"/> 
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/custom-theme/jquery-ui-timepicker-addon.css"/>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/aplicacionesExternas.css" type="text/css" />
@@ -164,9 +165,6 @@ function showRepPass(){
 	//	});
 	
 	    
-
-		
-		
 	});
 	function checkItem(formName,isPlan,prefix){
 		var valid=true;
@@ -174,7 +172,7 @@ function showRepPass(){
 		var i=0;
 		var msg = "Atención\n";
 		if(!isPlan){
-			if (prefix == "1" || prefix == "4"){
+			if (prefix == "1" || prefix == "4" || prefix == "5"){
 				for(i=0;i<2;i++){
 					var obj = frm.elements[i];
 					if(obj.value==""){
@@ -345,6 +343,292 @@ function showRepPass(){
         );
         return false;	    
 	           
+	}
+
+	function loadMisim(enlace,idLote,tipoEnvio, idMensaje) {
+		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
+		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+		var url =tipoEnvio;
+// 	   	url += ".action?idLote="+idLote;
+	   	url += ".action?idLote="+idLote+"&idMensaje="+idMensaje;
+
+	    var dialogoMisim = $('#dialogMisim');
+	    dialogoMisim.load(
+        		url,
+        		{
+   	    			autoOpen: true,
+   	    			width: 810,
+   	    			modal: true,
+   	    			show: 'blind',
+   	    			hide: 'blind'
+   	    		},
+                function(responseText, textStatus, XMLHttpRequest) {
+   	    			dialogoMisim.dialog({
+		           	 			autoOpen: true,
+		           				width: 950,
+		           				modal: true,
+		           				show: 'blind',
+		           				hide: 'blind',
+		           			});
+		           	    		$('div#ajaxloader_'+enlace.id).html(auxHTML);
+                }
+
+        );
+        return false;	    
+	           
+	}
+
+	function loadPassbook(enlace,idServicioOrganismo,idServicio,idOrganismo) {
+		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
+		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+		var url = "viewPassbook.action?idServicioOrganismo="+idServicioOrganismo+"&idServicio="+idServicio+"&idOrganismo="+idOrganismo;
+
+	    var dialogoPassbook = $('#dialogPassbook');
+	    dialogoPassbook.load(
+        		url,
+        		{
+   	    			autoOpen: true,
+   	    			width: 810,
+   	    			modal: true,
+   	    			show: 'blind',
+   	    			hide: 'blind'
+   	    		},
+                function(responseText, textStatus, XMLHttpRequest) {
+   	    			dialogoPassbook.dialog({
+		           	 			autoOpen: true,
+		           				width: 810,
+		           				modal: true,
+		           				show: 'blind',
+		           				hide: 'blind',
+		           			});
+		           	    		$('div#ajaxloader_'+enlace.id).html(auxHTML);
+		           	    		$('#formSaveViewPassbook').on('submit', function(e){
+			           	 			e.preventDefault();
+
+									var formData = new FormData($('#formSaveViewPassbook')[0]);
+			           	 			
+			           	 			$.ajax({
+				           	 			type: 'post',
+				           	 			url: 'saveViewPassbook.action',
+				           	 			data: formData,
+				           	 			processData: false,
+				           	 			contentType: false,
+				           	 			success: function () {
+				           	 				loadPassbook(enlace,idServicioOrganismo,idServicio,idOrganismo);
+					           	 		}
+				           	 		});
+			           	 		});
+                }
+
+        );
+        return false;	    
+	           
+	}
+
+	function deleteImagenLogo(enlace,idServicioOrganismo,idServicio,idOrganismo) {
+			var auxHTML = $('div#ajaxloader_'+enlace.id).html();
+			$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+			var url = "deleteImagenLogo.action?idServicioOrganismo="+idServicioOrganismo+"&idServicio="+idServicio+"&idOrganismo="+idOrganismo;
+	
+		       	var dialogoPassbook = $('#dialogPassbook');
+		       	    	dialogoPassbook.load(
+		       	    			url,
+		               		{
+		          	    			autoOpen: true,
+		          	    			width: 810,
+		          	    			modal: true,
+		          	    			show: 'blind',
+		          	    			hide: 'blind'
+		          	    		},
+		                       function(responseText, textStatus, XMLHttpRequest) {
+		          	    			dialogoPassbook.dialog({
+		       		           	 			autoOpen: true,
+		       		           				width: 810,
+		       		           				modal: true,
+		       		           				show: 'blind',
+		       		           				hide: 'blind',
+		       		           			});
+		       		           	    		$('div#ajaxloader_'+enlace.id).html(auxHTML);
+		    		           	    		$('#formSaveViewPassbook').on('submit', function(e){
+		    			           	 			e.preventDefault();
+
+		    									var formData = new FormData($('#formSaveViewPassbook')[0]);
+		    			           	 			
+		    			           	 			$.ajax({
+		    				           	 			type: 'post',
+		    				           	 			url: 'saveViewPassbook.action',
+		    				           	 			data: formData,
+		    				           	 			processData: false,
+		    				           	 			contentType: false,
+		    				           	 			success: function () {
+		    				           	 				loadPassbook(enlace,idServicioOrganismo,idServicio,idOrganismo);
+		    					           	 		}
+		    				           	 		});
+		    			           	 		});
+		                       }
+	
+		               );
+	        return false;	    
+// 		}
+	}
+
+	function deleteImagenBackground(enlace,idServicioOrganismo,idServicio,idOrganismo) {
+		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
+		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+		var url = "deleteImagenBackground.action?idServicioOrganismo="+idServicioOrganismo+"&idServicio="+idServicio+"&idOrganismo="+idOrganismo;
+
+	       	var dialogoPassbook = $('#dialogPassbook');
+	       	    	dialogoPassbook.load(
+	       	    			url,
+	               		{
+	          	    			autoOpen: true,
+	          	    			width: 810,
+	          	    			modal: true,
+	          	    			show: 'blind',
+	          	    			hide: 'blind'
+	          	    		},
+	                       function(responseText, textStatus, XMLHttpRequest) {
+	          	    			dialogoPassbook.dialog({
+	       		           	 			autoOpen: true,
+	       		           				width: 810,
+	       		           				modal: true,
+	       		           				show: 'blind',
+	       		           				hide: 'blind',
+	       		           			});
+	       		           	    		$('div#ajaxloader_'+enlace.id).html(auxHTML);
+	    		           	    		$('#formSaveViewPassbook').on('submit', function(e){
+	    			           	 			e.preventDefault();
+
+	    									var formData = new FormData($('#formSaveViewPassbook')[0]);
+	    			           	 			
+	    			           	 			$.ajax({
+	    				           	 			type: 'post',
+	    				           	 			url: 'saveViewPassbook.action',
+	    				           	 			data: formData,
+	    				           	 			processData: false,
+	    				           	 			contentType: false,
+	    				           	 			success: function () {
+	    				           	 				loadPassbook(enlace,idServicioOrganismo,idServicio,idOrganismo);
+	    					           	 		}
+	    				           	 		});
+	    			           	 		});
+	                       }
+
+	               );
+        return false;	    
+	}
+
+	function deleteImagenIcon(enlace,idServicioOrganismo,idServicio,idOrganismo) {
+		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
+		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+		var url = "deleteImagenIcon.action?idServicioOrganismo="+idServicioOrganismo+"&idServicio="+idServicio+"&idOrganismo="+idOrganismo;
+
+	       	var dialogoPassbook = $('#dialogPassbook');
+	       	    	dialogoPassbook.load(
+	       	    			url,
+	               		{
+	          	    			autoOpen: true,
+	          	    			width: 810,
+	          	    			modal: true,
+	          	    			show: 'blind',
+	          	    			hide: 'blind'
+	          	    		},
+	                       function(responseText, textStatus, XMLHttpRequest) {
+	          	    			dialogoPassbook.dialog({
+	       		           	 			autoOpen: true,
+	       		           				width: 810,
+	       		           				modal: true,
+	       		           				show: 'blind',
+	       		           				hide: 'blind',
+	       		           			});
+	       		           	    		$('div#ajaxloader_'+enlace.id).html(auxHTML);
+	    		           	    		$('#formSaveViewPassbook').on('submit', function(e){
+	    			           	 			e.preventDefault();
+
+	    									var formData = new FormData($('#formSaveViewPassbook')[0]);
+	    			           	 			
+	    			           	 			$.ajax({
+	    				           	 			type: 'post',
+	    				           	 			url: 'saveViewPassbook.action',
+	    				           	 			data: formData,
+	    				           	 			processData: false,
+	    				           	 			contentType: false,
+	    				           	 			success: function () {
+	    				           	 				loadPassbook(enlace,idServicioOrganismo,idServicio,idOrganismo);
+	    					           	 		}
+	    				           	 		});
+	    			           	 		});
+	                       }
+
+	               );
+        return false;	    
+	}
+
+	function previsualizar(enlace,idServicioOrganismo,idServicio,idOrganismo) {
+		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
+		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+		var url = "previsualizar.action?idServicioOrganismo="+idServicioOrganismo+"&idServicio="+idServicio+"&idOrganismo="+idOrganismo;
+
+		$.ajax({
+	           type: "POST",
+	           url: url,
+	           error: function(data)
+	           {
+  	 				loadPassbook(enlace,idServicioOrganismo,idServicio,idOrganismo);
+	           }
+	         });
+        return false;	    
+	}
+
+	function generarClaves() {
+		var vapidPublicKey =  document.getElementById('servicio.vapidPublicKey').value;
+		var vapidPrivateKey =  document.getElementById('servicio.vapidPrivateKey').value;
+		if(null != vapidPublicKey && null != vapidPrivateKey && vapidPublicKey.length > 0 && vapidPrivateKey.length > 0){
+
+			if (confirm('Si modifica las claves los usuarios registrados con la clave anterior dejarán de recibir notificaciones. Además se deberán realizar modificaciones en el código de la acplicación cliente. ¿Desea Continuar?')) {
+				$.ajax({
+			           type: "POST",
+			           url: "generarClavesServicio.action",
+			           dataType : "json",
+			           success: function(data)
+				        {	
+			        	    json = JSON.parse(data);
+					        
+				     	 	$("input[id='servicio.vapidPublicKey']").val(json.PublicKey);
+				     		$("input[id='servicio.vapidPrivateKey']").val(json.PrivateKey);
+				     		$("input[id='vapidPublicKey']").val(json.PublicKey);
+				     		$("input[id='vapidPrivateKey']").val(json.PrivateKey);
+				     		
+				        },
+				        error: function(data)
+				        {
+				     	   	alert("error..."); 
+				        }
+				      });
+			} else {
+			    // Do nothing!
+			}
+		}else{
+			$.ajax({
+		           type: "POST",
+		           url: "generarClavesServicio.action",
+		           dataType : "json",
+		           success: function(data)
+			        {	
+		        	    json = JSON.parse(data);
+				        
+		        	    $("input[id='servicio.vapidPublicKey']").val(json.PublicKey);
+			     		$("input[id='servicio.vapidPrivateKey']").val(json.PrivateKey);
+			     		$("input[id='vapidPublicKey']").val(json.PublicKey);
+			     		$("input[id='vapidPrivateKey']").val(json.PrivateKey);
+			     		
+			        },
+			        error: function(data)
+			        {
+			     	   	alert("Se ha producido un error durante la generación. Inténtelo más tarde"); 
+			        }
+			      });
+			}
 	}
 
 	function loadLoteHist(enlace,loteId,tipoEnvio) {
@@ -585,6 +869,8 @@ function showRepPass(){
 		   url = "loadPlanificacionesReceptorSMS.action?idPlanificacion="+idplanificacion+"&idReceptorSMS="+idRetorno;
 	   }else if(varRetorno=="idServidorPush"){
 		   url = "loadPlanificacionesServidorPush.action?idPlanificacion="+idplanificacion+"&idServidorPush="+idRetorno;
+	   }else if(varRetorno=="idServidorWebPush"){
+		   url = "loadPlanificacionesServidorWebPush.action?idPlanificacion="+idplanificacion+"&idServidorWebPush="+idRetorno;
 	   }else if(varRetorno=="idOrganismo"){
 		   url = "loadPlanificacionesOrganismo.action?idPlanificacion="+idplanificacion+"&idOrganismo="+idRetorno;
 		   height="height:150px";heightN=150;

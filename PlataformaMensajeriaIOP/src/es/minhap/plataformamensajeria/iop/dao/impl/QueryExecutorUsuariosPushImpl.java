@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.exception.ApplicationException;
+import es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean;
 import es.minhap.plataformamensajeria.iop.beans.UsuariosServiciosMovilesBean;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorUsuariosPush;
 
@@ -32,6 +33,8 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 	private static final String LOG_END= "search - end";
 	
 	private static final String LOG_START = "search - start";
+	
+	private static final String HAS_ERROR = "Se ha producido un error ";
 
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
@@ -78,6 +81,51 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 		return listaIdUsuarios;
 	}
 
+	@Override
+	@Transactional
+	public List<UsuariosPushBean> listaUsuariosPushbyServicioMovilId(Long servicioMovilId) {
+		List<UsuariosPushBean> res = new ArrayList<>();
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			
+			StringBuilder queryBuilder = new StringBuilder();
+			
+			queryBuilder.append("select t2.nombreusuario, t2.nombre as nomuser, t2.apellido1, t2.apellido2, t2.dispositivoid, t3.nombre as nomplat");
+			queryBuilder.append(" from tbl_usuarios_Serviciosmoviles t1 ");
+			queryBuilder.append(" inner join tbl_usuarios_push t2 on t1.usuariosid = t2.usuarioid");
+			queryBuilder.append(" inner join tbl_plataformas t3 on t2.plataformaid = t3.plataformaid");
+			queryBuilder.append(" where serviciosmovilesid= " + servicioMovilId +""); 
+
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
+					.createSQLQuery(queryBuilder.toString());
+			
+			@SuppressWarnings("unchecked")
+			List<Object[]> rows = query.list();
+			for (Object[] row : rows) {
+				UsuariosPushBean usupush = new UsuariosPushBean();
+				usupush.setNombreUsuario((String)row[0]);
+				usupush.setNombre((String) row[1]);
+				usupush.setApellido1((String) row[2]);
+				usupush.setApellido2((String) row[3]);
+				usupush.setDispositivoId((String) row[4]);
+				usupush.setPlataforma((String) row[5]);
+				res.add(usupush);
+			}
+			
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_END);
+			}
+
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res;
+	}
+
+	
 	@Override
 	@Transactional
 	public Integer getNextDispositivo() {

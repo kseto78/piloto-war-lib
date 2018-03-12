@@ -155,8 +155,9 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 			this.filtroMesLotes = mesActual;
 		}
 		logger.info("### INFO HOME ### INICIO UsoServidores: " + sdfInicio.format(Calendar.getInstance().getTime()));
-
-		listaUso = serviciosListadoHome.getUsoServidoresBean(filtroAnyo, filtroMes);
+		if(filtroAnyo != null && filtroMes != null){
+			listaUso = serviciosListadoHome.getUsoServidoresBean(filtroAnyo, filtroMes);
+		}
 		logger.info("### INFO HOME ### FIN    UsoServidores: " + sdfInicio.format(Calendar.getInstance().getTime()));
 		// Caluclar listados usos servidores, proveedores, receptores y
 		// servidores push.

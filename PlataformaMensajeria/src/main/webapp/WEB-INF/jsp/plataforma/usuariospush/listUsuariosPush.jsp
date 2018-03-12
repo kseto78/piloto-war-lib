@@ -45,6 +45,10 @@ function makeRequest(){
 }
 </script>
 <div class="mainContent">
+    <h3 class="pageNameButtons">
+    	<span class="floatRight"></span>
+	    <label>Usuarios Push</label>
+    </h3>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/validadoresJS.jsp"%>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp"%>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp"%>
@@ -53,6 +57,15 @@ function makeRequest(){
 		<s:form id="frmBuscarUsuariosPush" method="POST"
 			action="listUsuariosPush" validate="false" theme="css_xhtml">
 			<p class="criteria">
+                    	<label class="fieldText" style="width: 100px;">Id:</label>
+                    	<s:textfield
+							name="usuariosPush.usuarioId" id="usuariosPush.usuarioId"
+							theme="simple" 
+							key="field.general.id" labelposition="left"
+							size="9" maxlength="60" 
+							cssClass="input_tablas_registro" />
+               	   </p>
+			<p class="criteria">			
 				<span> <label style="width: 100px;" class="fieldText">Aplicación:</label>
 					<s:select id="usuariosPush.aplicacionId"
 						name="usuariosPush.aplicacionId" emptyOption="false"

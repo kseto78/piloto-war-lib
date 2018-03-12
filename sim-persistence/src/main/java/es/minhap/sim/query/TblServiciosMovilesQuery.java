@@ -372,6 +372,16 @@ public class TblServiciosMovilesQuery extends AbstractHibernateQueryEntity<TblSe
      * Permite buscar cuando campo estado es NOT NULL
      */
     private boolean estadoIsNotNull = false;
+    
+	/**
+	 * Establece el máximo de resultados
+	 */
+	private Integer maxResultados;
+	
+	/**
+	 * Establece el primer resultados
+	 */
+	private Integer primerResultado;
 
     /**
      * Constructor default
@@ -1508,7 +1518,7 @@ public class TblServiciosMovilesQuery extends AbstractHibernateQueryEntity<TblSe
     public void setEstadoIsNotNull(boolean estadoIsNotNull) {
         this.estadoIsNotNull = estadoIsNotNull;
     }
-
+    
     /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
      */ 
@@ -1828,6 +1838,14 @@ public class TblServiciosMovilesQuery extends AbstractHibernateQueryEntity<TblSe
         if (isEstadoIsNotNull()) {
             criteria.add(Restrictions.isNotNull(ESTADO));
         }
+        
+		if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -1870,5 +1888,33 @@ public class TblServiciosMovilesQuery extends AbstractHibernateQueryEntity<TblSe
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+    
+	/**
+	 * @return the maxResultados
+	 */
+	public Integer getMaxResultados() {
+		return maxResultados;
+	}
+
+	/**
+	 * @param maxResultados the maxResultados to set
+	 */
+	public void setMaxResultados(Integer maxResultados) {
+		this.maxResultados = maxResultados;
+	}
+
+	/**
+	 * @return the primerResultado
+	 */
+	public Integer getPrimerResultado() {
+		return primerResultado;
+	}
+
+	/**
+	 * @param primerResultado the primerResultado to set
+	 */
+	public void setPrimerResultado(Integer primerResultado) {
+		this.primerResultado = primerResultado;
+	}
 }
  

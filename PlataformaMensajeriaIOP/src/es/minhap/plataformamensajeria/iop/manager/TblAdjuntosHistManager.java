@@ -2,9 +2,31 @@ package es.minhap.plataformamensajeria.iop.manager;
 
 import es.minhap.sim.model.TblAdjuntosHist;
 
-
 public interface TblAdjuntosHistManager {
 
+	/**
+	 * Inserta una entrada 
+	 * 
+	 * @param adjunto
+	* @return idAdjunto
+	 */
+	public Long insertar(TblAdjuntosHist adjunto);
+
+	/**
+	 * Elimina una entrada 
+	 * 
+	 * @param adjunto
+	 */
+	public void eliminar(Long adjunto);
+
+	/**
+	 * Recupera el adjunto por id
+	 * 
+	 * @param idAdjunto
+	 * @return TblAdjuntos
+	 */
+	public TblAdjuntosHist getById(Long idAdjunto);
+	
 	/**
 	 * Inserta una entrada en la tabla adjuntos
 	 * 
@@ -28,5 +50,6 @@ public interface TblAdjuntosHistManager {
 	 * @param adjunto
 	 */
 	public void update(TblAdjuntosHist adjunto);
+	
 
 }

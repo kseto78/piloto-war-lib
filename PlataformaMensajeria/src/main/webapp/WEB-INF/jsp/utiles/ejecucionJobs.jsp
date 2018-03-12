@@ -47,16 +47,32 @@
                     
            	      </p> 
             	 <p class="criteria">
-                 	 <span>
-                       <label style="width: 100px;" class="fieldText">Servicio:</label>
-                       <s:select 
-						id="jobBean.servicioId" name="jobBean.servicioId" 
-						emptyOption="false" theme="simple" 
-						labelposition="left"
-						list="comboServicios" listKey="codigo" headerKey="" headerValue="Todos"
-						listValue="descripcion" cssClass="W240" 
-						value="%{jobBean.servicioId}" disabled="false" />     	      	
-           	      	</span>
+                 	 <s:if test="%{jobBean == null || jobBean.nombreJob == 'HISTORIFICACION' }"> 
+	                 	 <span>
+	                       <label style="width: 100px;" class="fieldText">Servicio:</label>
+	                       <s:select 
+							id="jobBean.servicioId" name="jobBean.servicioId" 
+							emptyOption="false" theme="simple" 
+							labelposition="left"
+							list="comboServicios" listKey="codigo" headerKey="" headerValue="Todos"
+							listValue="descripcion" cssClass="W240" 
+							value="%{jobBean.servicioId}" disabled="false" />     	      	
+	           	      	</span>
+           	      	</s:if>
+           	      	<s:if test="%{jobBean.nombreJob == 'CONSERVACION' }"> 
+	                 	 <span>
+	                       <label style="width: 100px;" class="fieldText">Servicio:</label>
+	                       <s:select 
+							id="jobBean.servicioId" name="jobBean.servicioId" 
+							emptyOption="false" theme="simple" 
+							labelposition="left"
+							list="comboServicios" listKey="codigo" headerKey="" headerValue="Todos"
+							listValue="descripcion" cssClass="W240" 
+							value="%{jobBean.servicioId}" disabled="false" />     	      	
+	           	      	</span>
+           	      	</s:if>
+           	      </p>
+           	      <p class="criteria">
                     <span>
                      <label style="width: 100px;" class="fieldText"> Hasta Fecha:</label>
                       <s:textfield
@@ -68,8 +84,21 @@
     							<s:date name="jobBean.fecha" format="dd/MM/yyyy"/>
   						</s:param>
 						</s:textfield>
-           	      	</span>                    
-                    
+           	      	</span>  
+           	      	<s:if test="%{jobBean.nombreJob == 'DIR3' }"> 
+	           	      	<span>
+	                     <label style="width: 100px;" class="fieldText"> Fin Fecha:</label>
+	                      <s:textfield
+									name="jobBean.fechaFin" value="%{jobBean.fechaFin}" id="jobBean.fechaFin"
+									theme="simple"  style="width:60px;"
+									size="10" maxlength="10"
+									cssClass="datepickerEstadisticas">
+									<s:param name="value">
+	    							<s:date name="jobBean.fechaFin" format="dd/MM/yyyy"/>
+	  						</s:param>
+							</s:textfield>
+	           	      	</span>                                  
+                    </s:if>
            	      </p> 
                 
                 <div class="footerCriteria">
@@ -80,9 +109,7 @@
                 </div>
             </div>
            </s:form>
-           		<textarea id="subscription"></textarea>
-		<textarea id="message"></textarea>
-
+           		
 
    <script>
 	function cargarNuevoJob() {              

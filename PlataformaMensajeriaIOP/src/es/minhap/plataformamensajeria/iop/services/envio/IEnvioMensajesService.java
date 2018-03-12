@@ -7,6 +7,7 @@ import javax.jws.WebService;
 import es.minhap.plataformamensajeria.iop.beans.EnvioEmailXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioSMSXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 
 /** La interfaz del servicio web se anota con @WebService y el resto de las
  * anotaciones estandar de JWS. Con esta unica anotacion es suficiente para
@@ -29,6 +30,7 @@ public interface IEnvioMensajesService {
      * 
      * @param xmlMensaje
      * @return Devuelve el XML del proceso
+     * 
      */
     String enviarSMS(EnvioSMSXMLBean envioSMS);
     
@@ -38,4 +40,6 @@ public interface IEnvioMensajesService {
 	boolean asociadoAlOrganismo(String servicio, String OrganismoPagador);
 
 	boolean esMultiorganismo(String servicio);
+
+	String enviarWebPush(PeticionXMLBean peticionXML);
 }

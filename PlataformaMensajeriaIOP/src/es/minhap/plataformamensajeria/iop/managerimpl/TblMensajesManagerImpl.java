@@ -29,7 +29,10 @@ import es.minhap.plataformamensajeria.iop.beans.MensajesXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.entity.AuditoriaBean;
 import es.minhap.plataformamensajeria.iop.beans.getAvisosUsuario.Aviso;
 import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatarioPeticionLotesWebPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesWebPushXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.ResponseStatusType;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorLotesEnvios;
@@ -194,6 +197,72 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		}
 
 		return generarRespuesta(null, null, null, mensaje.getIdExterno(), mens.getMensajeid());
+
+	}
+	
+	/**
+	 * @see es.minhap.TblMensajesManager.insertarMensajeSMS
+	 */
+
+	@Override
+	@Transactional
+	public Mensaje insertarMensajeWebPush(Long idLote, MensajePeticionLotesWebPushXMLBean mensaje,
+			PeticionXMLBean peticion, DestinatarioPeticionLotesWebPushXMLBean destinatario, String usuario, String password) {
+
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+
+		// Se comprueba si EXISTE LOTE PARA EL USUARIO/PASSWORD
+		Integer count = comprobarLote(idLote, usuario, password);
+
+		// Auditamos con error -1
+		if (null == count || count <= 0) {
+			auditarMensaje(idLote, null, usuario, password, MensajesAuditoria.ERROR_LOTE_APLICACION,
+					MensajesAuditoria.OPERACION_MENSAJE_SMS_CREAR, MensajesAuditoria.COD_ERROR_LOTE_APLICACION);
+			return generarRespuesta(PlataformaErrores.COD_0001_GENERAL, PlataformaErrores.STATUSTEXT_KO,
+					MensajesAuditoria.ERROR_LOTE_APLICACION, destinatario.getIdExterno(), null);
+		}
+
+		// COMPROBAR EL CANAL SI ES CORRECTO
+		count = comprobarCanal(idLote, Long.parseLong(ps.getMessage("constantes.CANAL_WEBPUSH", null, "5")));
+
+		// Auditamos con error -2
+		if (null == count || count <= 0) {
+			auditarMensaje(idLote, null, usuario, password, MensajesAuditoria.ERROR_CANAL_MENSAJE,
+					MensajesAuditoria.OPERACION_MENSAJE_SMS_CREAR, MensajesAuditoria.COD_ERROR_CANAL_MENSAJE);
+			return generarRespuesta(PlataformaErrores.COD_0018_GENERAL, PlataformaErrores.STATUSTEXT_KO,
+					MensajesAuditoria.ERROR_CANAL_MENSAJE, destinatario.getIdExterno(), null);
+
+		}
+
+		TblMensajes mens = crearMensaje(idLote, mensaje.getCuerpo(), destinatario.getDocUsuario(), peticion.getCodSia(),
+				peticion.getCodOrganismo(), null, destinatario.getIdExterno(), usuario,
+				ps.getMessage("constantes.TIPO_MENSAJE_WEBPUSH", null), mensaje.getTitulo());
+
+		mens.setMensajeid(tblMensajesDAO.insert(mens));
+
+		// sacamos el cuerpo a file si es necesario
+		if (null == mens.getCuerpo()) {
+			mens.setCuerpofile(utilFile.createFileMensaje(mens.getMensajeid(), mensaje.getCuerpo(), mens
+					.getTblLotesEnvios().getTblServicios().getServicioid(), mens.getTblLotesEnvios().getTblServicios()
+					.getConservacion(), mens.getFechacreacion()));
+			tblMensajesDAO.update(mens);
+		}
+
+		if (null != mens.getMensajeid()) {
+
+			// auditoria mensaje correcto
+			auditarMensaje(idLote, mens.getMensajeid(), usuario, password, MensajesAuditoria.MENSAJE_SMS_CORRECTO,
+					MensajesAuditoria.OPERACION_MENSAJE_SMS_CREAR, mens.getMensajeid());
+		} else {
+
+			// auditoria mensaje incorrecto
+			auditarMensaje(idLote, null, usuario, password, MensajesAuditoria.ERROR_BBDD,
+					MensajesAuditoria.OPERACION_MENSAJE_SMS_CREAR, MensajesAuditoria.COD_ERROR_BBDD);
+			return generarRespuesta(MensajesAuditoria.COD_ERROR_BBDD.toString(), PlataformaErrores.STATUSTEXT_KO,
+					MensajesAuditoria.ERROR_BBDD, destinatario.getIdExterno(), null);
+		}
+
+		return generarRespuesta(null, null, null, destinatario.getIdExterno(), mens.getMensajeid());
 
 	}
 
@@ -700,6 +769,19 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		mensajesQuery.setTblLotesEnvios(tblLotesEnviosQuery);
 		return tblMensajesDAO.search(mensajesQuery).getResults();
 	}
+	
+	@Override
+	@Transactional
+	public List<TblMensajes> getMensajesByLote(Long idLote, Integer max, Integer firstResult) {
+		TblLotesEnviosQuery tblLotesEnviosQuery = new TblLotesEnviosQuery();
+		tblLotesEnviosQuery.setLoteenvioid(idLote);
+		TblMensajesQuery mensajesQuery = new TblMensajesQuery();
+		mensajesQuery.setTblLotesEnvios(tblLotesEnviosQuery);
+		mensajesQuery.setMaxResult(max);
+		mensajesQuery.setFirstResult(firstResult);
+		return tblMensajesDAO.search(mensajesQuery).getResults();
+	}
+	
 
 	@Override
 	@Transactional
@@ -1013,14 +1095,16 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				res = setEstadoMensajeUsuarios(mapMensajesMult, estadoInicial, estadoFinal, usuarioPeticion);
 			}
 			
-			//recuperamos mensajes no MULTIDESTINATARIO
-			listaMensajes = queryExecutorMensajes.getMensajesPorUsuariosPushYEstado(usuarios, estadoInicial);
-			if (null != listaMensajes && !listaMensajes.isEmpty()){
-				for (Long mensajeId : listaMensajes) {
-					res = setEstadoMensaje(mensajeId, estadoFinal, null, false, null, null, usuarioPeticion, null);
-				}
-				
-			}
+			//comentado porque la query tarda mucho y no es necesarioa, porque nunca ha existido un mensaje push
+			//que NO sea multidestinatario
+//			//recuperamos mensajes no MULTIDESTINATARIO
+//			listaMensajes = queryExecutorMensajes.getMensajesPorUsuariosPushYEstado(usuarios, estadoInicial);
+//			if (null != listaMensajes && !listaMensajes.isEmpty()){
+//				for (Long mensajeId : listaMensajes) {
+//					res = setEstadoMensaje(mensajeId, estadoFinal, null, false, null, null, usuarioPeticion, null);
+//				}
+//				
+//			}
 		}catch(Exception e){
 			LOG.error("[TblMensajesManagerImpl.updateMessagesUsers]", e);
 			res = -1;
@@ -1130,6 +1214,12 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}
 		}
 		return map;
+	}
+	
+	@Override
+	@Transactional
+	public void delete(Long mensajeid) {
+		tblMensajesDAO.delete(mensajeid);
 	}
 
 	@Override

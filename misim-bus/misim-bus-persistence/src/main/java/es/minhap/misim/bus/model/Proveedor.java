@@ -3,9 +3,12 @@ package es.minhap.misim.bus.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 // Generated 09-sep-2015 11:41:17 by Hibernate Tools 3.4.0.CR1
@@ -48,6 +51,8 @@ public class Proveedor implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="generator")
+	@SequenceGenerator(name="generator",sequenceName="SEQ_PROVEEDOR")
 	@Column(name = "ID_PROVEEDOR", unique = true, nullable = false, precision = 20, scale = 0)
 	public Long getIdProveedor() {
 		return this.idProveedor;

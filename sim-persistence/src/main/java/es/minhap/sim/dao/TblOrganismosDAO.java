@@ -19,7 +19,6 @@ import es.minhap.sim.query.TblOrganismosQuery;
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface TblOrganismosDAO extends
-		EntityDAO<TblOrganismos, Long, TblOrganismosQuery> {
+public interface TblOrganismosDAO extends EntityDAO<TblOrganismos,Long,TblOrganismosQuery> {
 
 }

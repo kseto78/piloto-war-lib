@@ -31,4 +31,28 @@ public interface TblServiciosManager {
 	 */
 	public boolean isMultiOrganismo(Integer servicioId);
 
+	/**
+	 * Insertamos un nuevo servicio
+	 *
+	 * @param servicio
+	 * @param source
+	 * @param accion
+	 * @param accionId
+	 * @return
+	 */
+	public Long insert(TblServicios servicio, String source, String accion, Long accionId);
+
+	/**
+	 * Actualizamos el servicio
+	 *
+	 * @param servicio
+	 * @param source
+	 * @param accion
+	 * @param accionId
+	 * @return
+	 */
+	public void update(TblServicios servicio, String source, String accion, Long accionId);
+
+	
+
 }

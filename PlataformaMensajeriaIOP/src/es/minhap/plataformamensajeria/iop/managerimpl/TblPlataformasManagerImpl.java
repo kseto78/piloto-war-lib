@@ -1,5 +1,7 @@
 package es.minhap.plataformamensajeria.iop.managerimpl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -7,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.plataformamensajeria.iop.manager.TblPlataformasManager;
 import es.minhap.sim.dao.TblPlataformasDAO;
+import es.minhap.sim.model.TblPlataformas;
+import es.minhap.sim.query.TblPlataformasQuery;
 
 /**
  * 
@@ -27,6 +31,14 @@ public class TblPlataformasManagerImpl implements TblPlataformasManager {
 	@Transactional
 	public Boolean existPlataforma(Long plataformaID) {
 		return (null == getPlataformasDAO().get(plataformaID))? false : true;		
+	}
+	
+	@Override
+	@Transactional
+	public List<TblPlataformas> getPlataformasActivas() {
+		TblPlataformasQuery query = new TblPlataformasQuery();
+		query.setActivo(true);
+		return plataformasDAO.search(query).getResults();
 	}
 
 

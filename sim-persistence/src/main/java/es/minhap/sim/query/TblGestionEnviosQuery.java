@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -634,6 +635,12 @@ public class TblGestionEnviosQuery extends AbstractHibernateQueryEntity<TblGesti
      */
     private boolean estadoloteIsNotNull = false;
 
+    private Integer primerResultado;
+    
+    private Integer maxResultados;
+    
+    
+    
     /**
      * Constructor default
      */
@@ -3185,6 +3192,15 @@ public class TblGestionEnviosQuery extends AbstractHibernateQueryEntity<TblGesti
         if (isEstadoloteIsNotNull()) {
             criteria.add(Restrictions.isNotNull(ESTADOLOTE));
         }
+        
+        if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
+        
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -3227,5 +3243,33 @@ public class TblGestionEnviosQuery extends AbstractHibernateQueryEntity<TblGesti
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+
+	/**
+	 * @return the primerResultado
+	 */
+	public Integer getPrimerResultado() {
+		return primerResultado;
+	}
+
+	/**
+	 * @param primerResultado the primerResultado to set
+	 */
+	public void setPrimerResultado(Integer primerResultado) {
+		this.primerResultado = primerResultado;
+	}
+
+	/**
+	 * @return the maxResultados
+	 */
+	public Integer getMaxResultados() {
+		return maxResultados;
+	}
+
+	/**
+	 * @param maxResultados the maxResultados to set
+	 */
+	public void setMaxResultados(Integer maxResultados) {
+		this.maxResultados = maxResultados;
+	}
 }
  

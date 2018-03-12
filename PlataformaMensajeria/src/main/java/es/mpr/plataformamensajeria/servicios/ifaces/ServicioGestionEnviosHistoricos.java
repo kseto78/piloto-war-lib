@@ -61,4 +61,6 @@ public interface ServicioGestionEnviosHistoricos {
 	
 	TblGestionEnviosHist getEnvio(String idMensaje) throws BusinessException;
 
+//	PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size,Long idLote) throws BusinessException;
+
 }

@@ -118,8 +118,6 @@
     </servlet>
 <!-- FIN JASPERREPORTS -->
 
-	
-
 <!-- MAPEO DE SERVLETS -->	
 	
 	<!-- JASPERREPORTS -->
@@ -163,4 +161,19 @@
 		<url-pattern>/QuartzInicializarJobs</url-pattern>
 	</servlet-mapping> 
 	<!-- FIN QUARTZ -->
+	
+	<!-- *************************** -->
+	<!-- RECURSOS -->
+	<!-- *************************** -->
+	
+	<servlet>
+		<display-name>resources</display-name>
+		<servlet-name>resources</servlet-name>
+		<servlet-class>es.mpr.plataformamensajeria.servlet.DownloadFile</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>resources</servlet-name>
+		<url-pattern>/resources/*</url-pattern>
+	</servlet-mapping> 		
 </web-app>

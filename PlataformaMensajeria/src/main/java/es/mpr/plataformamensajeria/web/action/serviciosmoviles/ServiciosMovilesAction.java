@@ -208,15 +208,15 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 		if (servicioMovil != null) {
 	    				
 			if (servicioMovil.getIsEstado() != null && servicioMovil.getIsEstado().indexOf("'activo'")!=-1) {
-				servicioMovil.setEstado(new Long(1));
+				servicioMovil.setEstado(new Integer(1));
 			} else {
-				servicioMovil.setEstado(new Long(0));
+				servicioMovil.setEstado(new Integer(0));
 			}
 
 			if (servicioMovil.getIsIndSuscripcion() != null && servicioMovil.getIsIndSuscripcion().indexOf("'activo'")!=-1) {
-				servicioMovil.setIndSuscripcion(new Long(1));
+				servicioMovil.setIndSuscripcion(new Integer(1));
 			} else {
-				servicioMovil.setIndSuscripcion(new Long(0));
+				servicioMovil.setIndSuscripcion(new Integer(0));
 			}
 			
 			if (!validaObligatorios(servicioMovil, true)) {

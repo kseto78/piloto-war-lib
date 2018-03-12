@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.exception.ApplicationException;
+import es.minhap.plataformamensajeria.iop.beans.UsoServidoresBean;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServidores;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosProveedor;
 
@@ -191,12 +192,60 @@ public class QueryExecutorServidoresImpl extends HibernateDaoSupport implements 
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_START);
 			}
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT servicioid FROM tbl_mensajes_hist m inner join tbl_lotesenvios_hist l on m.loteenvioid = l.loteenvioid "
+					+ "WHERE mensajeid = " + idMensaje);
 			SQLQuery query = getSessionFactory().getCurrentSession()
-					.createSQLQuery("SELECT servicioid "
-							+ "FROM tbl_mensajes_hist m inner join tbl_lotesenvios_hist l on m.loteenvioid = l.loteenvioid "
-							+ "WHERE mensajeid = "
-							+ idMensaje);
+					.createSQLQuery(sql.toString());
 			res = (BigDecimal) query.uniqueResult();
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
+			}
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res.longValue();	
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<UsoServidoresBean> getUsoServidores(String anoActual, String mesActual) {
+		List<UsoServidoresBean> res = new ArrayList<>();
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			SQLQuery query = getSessionFactory().getCurrentSession()
+					.createSQLQuery("SELECT B.SERVIDORID as SERVIDORID, S.NOMBRE as NOMBRE, SUM(NENVIOS) AS NENVIOS, B.CANALID AS TIPOSERVIDOR FROM ("
+							+ "SELECT SERVIDORID, ESTADOID, SUM(1) AS NENVIOS, CANALID, "
+							+ "CASE WHEN CANALID = 1 THEN 1 WHEN CANALID = 2 THEN 2 WHEN CANALID = 3 THEN 3 ELSE 4 END AS TIPOSERVIDOR "
+							+ "FROM TBL_GESTIONENVIOS WHERE ESTADOID = 1 AND ANIO = " + anoActual + " AND MES =  " + mesActual + " GROUP BY "
+							+ "SERVIDORID, ESTADOID, CANALID "
+							+ "UNION ALL "
+							+ "SELECT SERVIDORID, ESTADOID, SUM(1) AS NENVIOS, CANALID, "
+							+ "CASE WHEN CANALID = 1 THEN 1 WHEN CANALID = 2 THEN 2 WHEN CANALID = 3 THEN 3 ELSE 4 END AS TIPOSERVIDOR "
+							+ "FROM TBL_GESTIONENVIOS_HIST WHERE ESTADOID = 1 AND ANIO = " + anoActual + " AND MES = " + mesActual + " GROUP BY "
+							+ "SERVIDORID, ESTADOID, CANALID "
+							+ "UNION ALL "
+							+ "SELECT SERVIDORID, ESTADOID, SUM(NUMTOTAL) AS NENVIOS, CANALID, "
+							+ "CASE WHEN CANALID = 1 THEN 1 WHEN CANALID = 2 THEN 2 WHEN CANALID = 3 THEN 3 ELSE 4 END AS TIPOSERVIDOR "
+							+ "FROM TBL_ESTADISTICAS_CONS WHERE ESTADOID = 1 AND ANNO = " + anoActual + " AND MES ='" + mesActual + "_" + anoActual+ "' "
+							+ "GROUP BY SERVIDORID, ESTADOID, CANALID) B "
+							+ "INNER JOIN TBL_SERVIDORES S ON S.SERVIDORID = B.SERVIDORID "
+							+ "GROUP BY B.SERVIDORID, S.NOMBRE, B.CANALID");
+			 
+			List<Object[]> rows = query.list();
+			for (Object[] row : rows) {
+				UsoServidoresBean u = new UsoServidoresBean();
+				u.setServidorId((null != row[0])? ((BigDecimal) row[0]).longValue() : null);
+				u.setNombre((null != row[1])? (String) row[1] : "");
+				u.setnEnvios((null != row[2])? ((BigDecimal) row[2]).intValue() : null);
+				u.setTipoServidor((null != row[3])? ((BigDecimal) row[3]).longValue() : null);
+				res.add(u);
+			}
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_END);
 			}
@@ -205,9 +254,8 @@ public class QueryExecutorServidoresImpl extends HibernateDaoSupport implements 
 			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
-		return res.longValue();	
+		return res;	
 	}
-
 	
 	@Override
 	@Transactional

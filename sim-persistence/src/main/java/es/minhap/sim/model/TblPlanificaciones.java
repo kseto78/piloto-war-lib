@@ -7,9 +7,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -25,6 +28,8 @@ public class TblPlanificaciones implements java.io.Serializable {
 	private static final long serialVersionUID = -6455537199115355652L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PLANIFICACIONID_SEC")
+    @SequenceGenerator(name="PLANIFICACIONID_SEC", sequenceName="PLANIFICACIONID_SEC", allocationSize=1)
 	@Column(name = "PLANIFICACIONID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long planificacionid;
 
@@ -409,5 +414,25 @@ public class TblPlanificaciones implements java.io.Serializable {
 	public void setOrganismoid(Long organismoid) {
 		this.organismoid = organismoid;
 	}
-
+	
+	
+	public void parseDias(){
+		if(l!=null&&l.equals("true")){ l = "S"; }else{ l = "N";}
+		if(m!=null&&m.equals("true")){ m = "S"; }else{ m = "N";}
+		if(x!=null&&x.equals("true")){ x = "S"; }else{ x = "N";}
+		if(j!=null&&j.equals("true")){ j = "S"; }else{ j = "N";}
+		if(v!=null&&v.equals("true")){ v = "S"; }else{ v = "N";}
+		if(s!=null&&s.equals("true")){ s = "S"; }else{ s = "N";}
+		if(d!=null&&d.equals("true")){ d = "S"; }else{ d = "N";}
+	}
+	
+	public void reverseParseDias(){
+		if(l!=null&&l.equals("S")){ l = "true"; }else{ l = "false";}
+		if(m!=null&&m.equals("S")){ m = "true"; }else{ m = "false";}
+		if(x!=null&&x.equals("S")){ x = "true"; }else{ x = "false";}
+		if(j!=null&&j.equals("S")){ j = "true"; }else{ j = "false";}
+		if(v!=null&&v.equals("S")){ v = "true"; }else{ v = "false";}
+		if(s!=null&&s.equals("S")){ s = "true"; }else{ s = "false";}
+		if(d!=null&&d.equals("S")){ d = "true"; }else{ d = "falseS";}		
+	}
 }

@@ -8,11 +8,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
-import org.quartz.JobDataMap;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -27,6 +22,7 @@ import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.quartz.jobs.EstadisticasConsolidadasJob;
 import es.mpr.plataformamensajeria.quartz.jobs.HistorificacionJob;
 import es.mpr.plataformamensajeria.quartz.jobs.InformesServiciosJob;
+import es.mpr.plataformamensajeria.quartz.jobs.RecuperarInforDIRJob;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
@@ -51,35 +47,45 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	private static Logger logger = Logger.getLogger(EjecucionJobAction.class);
 
 	@Resource(name = "servicioServicioImpl")
-	private ServicioServicio servicioServicio;
+	private transient ServicioServicio servicioServicio;
 	
 	@Resource(name = "estadisticasConsolidadasJob")
-	private EstadisticasConsolidadasJob estadisticasConsolidadasJob;
+	private transient EstadisticasConsolidadasJob estadisticasConsolidadasJob;
 	
 	@Resource(name = "historificacionJob")
-	private HistorificacionJob historificacionJob;
+	private transient HistorificacionJob historificacionJob;
 	
 	@Resource(name = "informesServiciosJob")
-	private InformesServiciosJob informesServiciosJob;
+	private transient InformesServiciosJob informesServiciosJob;
+	
+	@Resource(name = "recuperarInforDIRJob")
+	private transient RecuperarInforDIRJob recuperarInforDIRJob;
 
 	@Resource(name = "plataformaMensajeriaProperties")
-	private PlataformaMensajeriaProperties properties;
+	private transient PlataformaMensajeriaProperties properties;
+	
+//	@Resource(name = "pushServiceImpl")
+//	private IPushService pushServiceImpl;
 
 	private JobBean jobBean;
+	
+	private static final String INFO_USER = "infoUser";
 
+	private static final String NO_USER = "noUser";
 
-
-	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
-	List<KeyValueObject> comboJobs = new ArrayList<KeyValueObject>();
+	transient List<KeyValueObject> comboServicios = new ArrayList<>();
+	transient List<KeyValueObject> comboJobs = new ArrayList<>();
 	
 	private static final String PROC_HIST = "HISTORIFICACION";
 	private static final String PROC_CONS = "CONSERVACION";
+	private static final String PROC_INFORMES = "INFORMES_SERVICIOS";
+	private static final String PROC_DIR3 = "DIR3";
 	
 
 	/////MIGRADO
 	public String ejecucionJobAction() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+			return EjecucionJobAction.NO_USER;
 
 		comboServicios = getComboServicios();
 		comboJobs = getComboJobs();
@@ -88,39 +94,49 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	
 	// ///MIGRADO
 	public String seleccionarJobAction() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+			return EjecucionJobAction.NO_USER;
 		
 		try {
 			ServletContext servletContext= getRequest().getSession().getServletContext();
-			
-			if (jobBean.getNombreJob().equals(PROC_HIST)){
-				historificacionJob.lanzarJob(servletContext, jobBean);
-			}else if (jobBean.getNombreJob().equals(PROC_CONS)){
-				estadisticasConsolidadasJob.lanzarJob(servletContext, jobBean);
-			}else{
-				informesServiciosJob.lanzarJob(servletContext, jobBean);
+			if(jobBean != null){
+				if (jobBean.getNombreJob().equals(PROC_HIST)){
+					historificacionJob.lanzarJob(servletContext, jobBean);
+				}else if (jobBean.getNombreJob().equals(PROC_CONS)){
+					estadisticasConsolidadasJob.lanzarJob(servletContext, jobBean);
+				}else if (jobBean.getNombreJob().equals(PROC_INFORMES)){
+					informesServiciosJob.lanzarJob(servletContext, jobBean);
+	//				pushServiceImpl.sendPush(null, null);
+				}else{
+					recuperarInforDIRJob.lanzarJob(servletContext, jobBean);
+				}
 			}
-			
-			
+
 		} catch (Exception e1) {
 			logger.error("EjecucionJobAction - seleccionarJobAction", e1);
 			addActionErrorSession("Ha ocurrido un error en la ejecucion del job, pongase en contacto con el administrador");
 		}
-		addActionMessageSession("Job ejecutandose en segundo plano");
+		if(jobBean != null){
+			addActionMessageSession("Job ejecutandose en segundo plano");
+		}
 		return SUCCESS;
 	}
 
 /////MIGRADO
 	public String cargarServiciosConservacionEvent() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+			return EjecucionJobAction.NO_USER;
 
-		if (null == jobBean || jobBean.getNombreJob().equals(PROC_HIST)){
-			comboServicios = getComboServicios();
+		if (null != jobBean){
+			if(jobBean.getNombreJob().equals(PROC_HIST)){
+				comboServicios = getComboServicios();
+			}else if(jobBean.getNombreJob().equals(PROC_CONS)){
+				comboServicios = getComboServiciosConservacion();
+			}
 		}else{
-			comboServicios = getComboServiciosConservacion();
+			comboServicios = getComboServicios();
 		}
+		
 		return SUCCESS;
 	}
 	
@@ -194,12 +210,20 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		KeyValueObject option;
 
 		option = new KeyValueObject();
-		option.setCodigo("HISTORIFICACION");
-		option.setDescripcion("HISTORIFICACION");
+		option.setCodigo(PROC_HIST);
+		option.setDescripcion(PROC_HIST);
 		result.add(option);
 		option = new KeyValueObject();
-		option.setCodigo("CONSERVACION");
-		option.setDescripcion("CONSERVACION");
+		option.setCodigo(PROC_CONS);
+		option.setDescripcion(PROC_CONS);
+		result.add(option);
+		option = new KeyValueObject();
+		option.setCodigo(PROC_INFORMES);
+		option.setDescripcion(PROC_INFORMES);
+		result.add(option);
+		option = new KeyValueObject();
+		option.setCodigo(PROC_DIR3);
+		option.setDescripcion(PROC_DIR3);
 		result.add(option);
 
 		return result;

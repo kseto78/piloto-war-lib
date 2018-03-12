@@ -1,5 +1,7 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
+
 import com.map.j2ee.auditoria.ifaces.Audit;
 
 /**
@@ -10,7 +12,11 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * 
  * @author i-nercya
  */
-public class DetalleLoteBean implements Audit {
+public class DetalleLoteBean implements Audit, Serializable {
+
+	private static final long serialVersionUID = -7720405961205898287L;
+
+
 
 	public DetalleLoteBean() {
 		this.nombreAplicacion = null;

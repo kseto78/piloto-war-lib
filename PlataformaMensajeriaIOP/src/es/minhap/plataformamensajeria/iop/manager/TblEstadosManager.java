@@ -1,5 +1,6 @@
 package es.minhap.plataformamensajeria.iop.manager;
 
+import es.minhap.common.entity.SearchResult;
 import es.minhap.sim.model.TblEstados;
 
 public interface TblEstadosManager {
@@ -20,6 +21,9 @@ public interface TblEstadosManager {
 	 * @return TblEstados
 	 */
 	public TblEstados getEstadoById(Long idEstado);
+
+
+	SearchResult<TblEstados> getEstados();
 	
 	/**
 	 * recupera el id del estado pasado en properties

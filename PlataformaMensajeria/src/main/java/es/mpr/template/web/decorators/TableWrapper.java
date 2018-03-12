@@ -18,13 +18,16 @@ import es.mpr.plataformamensajeria.beans.MensajeBean;
 import es.mpr.plataformamensajeria.beans.MensajeHistoricosBean;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
 import es.mpr.plataformamensajeria.beans.PlanificacionBean;
+import es.mpr.plataformamensajeria.beans.ProveedorMisimBean;
 import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
 import es.mpr.plataformamensajeria.beans.ReceptorSMSBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServicioMovilBean;
 import es.mpr.plataformamensajeria.beans.ServidorBean;
 import es.mpr.plataformamensajeria.beans.ServidorPushBean;
+import es.mpr.plataformamensajeria.beans.ServidorWebPushBean;
 import es.mpr.plataformamensajeria.beans.UsuarioBean;
+import es.mpr.plataformamensajeria.beans.ViewMisimBean;
 
 /**
  * <p>
@@ -120,6 +123,14 @@ public class TableWrapper extends TableDecorator {
 
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + proveedorSMS.getNombre() + "');\" href=\"deleteProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a>";
 	}
+	
+	public String getProveedorMisimAction() {
+
+		ProveedorMisimBean proveedorMisim = (ProveedorMisimBean) getCurrentRowObject();
+		String idProveedor = proveedorMisim.getIdProveedor().toString();
+
+		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editProveedorMisim.action?idProveedor=" + idProveedor + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + proveedorMisim.getNombre() + "');\" href=\"deleteProveedorMisim.action?idProveedor=" + idProveedor + "\"></a>";
+	}
 
 	public String getReceptorSMSAction() {
 
@@ -136,7 +147,14 @@ public class TableWrapper extends TableDecorator {
 
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editServidorPush.action?idServidorPush=" + idServidorPush + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + servidorPush.getNombre() + "');\" href=\"deleteServidorPush.action?idServidorPush=" + idServidorPush + "\"></a>";
 	}
+	
+	public String getServidorWebPushAction() {
 
+		ServidorWebPushBean servidorWebPush = (ServidorWebPushBean) getCurrentRowObject();
+		String idServidorWebPush = servidorWebPush.getServidorWebPushId().toString();
+
+		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editServidorWebPush.action?idServidorWebPush=" + idServidorWebPush + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + servidorWebPush.getNombre() + "');\" href=\"deleteServidorWebPush.action?idServidorWebPush=" + idServidorWebPush + "\"></a>";
+	}
 	public String getAplicacionAction() {
 
 		AplicacionBean aplicacion = (AplicacionBean) getCurrentRowObject();
@@ -175,12 +193,12 @@ public class TableWrapper extends TableDecorator {
 		// filtrado por lotes
 		if (null == gestionEnvioBean.getMensajeId() || gestionEnvioBean.getMensajeId() == 0) {
 			String tipoEnvio = "viewLote";
-			String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioBean.getIdLote() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadLote(this,'" + gestionEnvioBean.getIdLote() + "','" + tipoEnvio + "')\" name=\"ajax\" id=\"ajax_" + gestionEnvioBean
+			String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioBean.getIdLote() + "\" class=\"center\"><span class=\"btnMagGlass gestionEnvio_link\" title=\"Ver Detalle\" onclick=\"return loadLote(this,'" + gestionEnvioBean.getIdLote() + "','" + tipoEnvio + "')\" name=\"ajax\" id=\"ajax_" + gestionEnvioBean
 					.getIdLote() + "\"></span><div>";
 			return btnAjax;
 		} else if(null != gestionEnvioBean.getVistaEnviosId() && gestionEnvioBean.getVistaEnviosId().equals(3)){
 			String tipoEnvio = "viewHistorico";
-			String btnAjax = "<div id=\"ajaxloader_ajax_historico" + gestionEnvioBean.getDestinatariosMensajes() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensajeHistorico(this,'" + gestionEnvioBean.getMensajeId() + "','" + tipoEnvio + "','" + gestionEnvioBean.getDestinatariosMensajes() + "',' ')"
+			String btnAjax = "<div id=\"ajaxloader_ajax_historico" + gestionEnvioBean.getDestinatariosMensajes() + "\" class=\"center\"><span class=\"btnMagGlass gestionEnvio_link\" title=\"Ver Detalle\" onclick=\"return loadMensajeHistorico(this,'" + gestionEnvioBean.getMensajeId() + "','" + tipoEnvio + "','" + gestionEnvioBean.getDestinatariosMensajes() + "',' ')"
 					+ "\" name=\"ajax\" id=\"ajax_historico" + gestionEnvioBean.getDestinatariosMensajes() + "\"></span><div>";
 			return btnAjax;
 		}else{
@@ -200,26 +218,69 @@ public class TableWrapper extends TableDecorator {
 				break;
 			}
 			String tipoEnvio = "viewMensaje";
-			String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioBean.getMensajeId() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensaje(this,'" + gestionEnvioBean.getMensajeId() + "','" + tipoEnvio + "','" + tipoMensaje + "','" + gestionEnvioBean
+			String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioBean.getMensajeId() + "\" class=\"center\"><span class=\"btnMagGlass gestionEnvio_link\" title=\"Ver Detalle\" onclick=\"return loadMensaje(this,'" + gestionEnvioBean.getMensajeId() + "','" + tipoEnvio + "','" + tipoMensaje + "','" + gestionEnvioBean
 					.getIdLote() + "')\" name=\"ajax\" id=\"ajax_" + gestionEnvioBean.getMensajeId() + "\"></span><div>";
 			
 			return btnAjax;
 		}
 	}
+	
+	public String getVerMisimAction() {
+		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
+		String btnAjax = null;
+		
+		if(gestionEnvioBean.isBotonIntercambios()){
+			String tipoEnvio = "viewMisim";
+			btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioBean.getIdLote() + "_" + gestionEnvioBean.getMensajeId() + "\" class=\"center\"><span class=\"btnDetails gestionEnvio_link\" title=\"Ver Intercambios\" onclick=\"return loadMisim(this,'" + gestionEnvioBean.getIdLote() + "','" + tipoEnvio +  "','" + gestionEnvioBean.getMensajeId() + "')\" name=\"ajax\" id=\"ajax_" + 
+					gestionEnvioBean.getIdLote() + "_" + gestionEnvioBean.getMensajeId() + "\"></span><div>";
+		}
+		
+		else {
+			btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioBean.getIdLote() + "_" + gestionEnvioBean.getMensajeId() + "\" class=\"center\"><span class=\"btnDetailsOff gestionEnvio_link\" disabled=\"true\" title=\"Sin intercambios\" name=\"ajax\" id=\"ajax_" + gestionEnvioBean.getIdLote() + "_" + gestionEnvioBean.getMensajeId() + "\"></span><div>";
+		}
+		return btnAjax;
+	}
+	
+//	public String getVerPassbookAction() {
+//		OrganismoBean organismoBean = (OrganismoBean) getCurrentRowObject();
+//		
+//		String btnAjax = null;
+//
+//			String tipoEnvio = "viewPassbook";
+//			btnAjax = "<div id=\"ajaxloader_ajax_" + organismoBean.getOrganismoId() + "\" class=\"center\"><span class=\"btnPassbook organismo_link\" title=\"Ver Passbook\" onclick=\"return loadPassbook(this,'" + organismoBean.getOrganismoId() + "','" + tipoEnvio + "')\" name=\"ajax\" id=\"ajax_" + 
+//					organismoBean.getOrganismoId() + "\"></span><div>";
+//		
+//		return btnAjax;
+//	}
+	
+	public String getXmlPeticionAction() {
+		ViewMisimBean viewMisimBean = (ViewMisimBean) getCurrentRowObject();
+		String idPeticion = viewMisimBean.getIdPeticion().toString();
+
+			return "<a  class=\"button\" title=\"Descargar\" href=\"loadXmlPeticion.action?idPeticion=" + idPeticion + "\">Descargar</a>";
+			
+	}
+	
+	public String getXmlRespuestaAction() {
+		ViewMisimBean viewMisimBean = (ViewMisimBean) getCurrentRowObject();
+		String idPeticion = viewMisimBean.getIdPeticion().toString();
+		
+			return "<a  class=\"button\" title=\"Descargar\" href=\"loadXmlRespuesta.action?idPeticion=" + idPeticion + "\">Descargar</a>";
+	}
 
 	public String getGestionLotesAction() {
 		MensajeBean mensajeBean = (MensajeBean) getCurrentRowObject();
 		String tipoEnvio = "viewMensaje";
-		String btnAjax = "<div id=\"ajaxloader_ajax_" + mensajeBean.getMensajeId() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensaje(this,'" + mensajeBean.getMensajeId() + "','" + tipoEnvio + "','" + mensajeBean.getTipoMensaje() + "','" + mensajeBean
-				.getLoteEnvioId() + "')\" name=\"ajax\" id=\"ajax_" + mensajeBean.getMensajeId() + "\"></span><div>";
+		String btnAjax = "<div id=\"ajaxloader_ajax_" + mensajeBean.getMensajeId() + "\" class=\"center\"><span class=\"button\" title=\"Ver\" onclick=\"return loadMensaje(this,'" + mensajeBean.getMensajeId() + "','" + tipoEnvio + "','" + mensajeBean.getTipoMensaje() + "','" + mensajeBean
+				.getLoteEnvioId() + "')\" name=\"ajax\" id=\"ajax_" + mensajeBean.getMensajeId() + "\">Ver</span><div>";
 		return btnAjax;
 	}
 	
 	public String getGestionLotesHistoricosAction() {
 		MensajeHistoricosBean mensajeBean = (MensajeHistoricosBean) getCurrentRowObject();
 		String tipoEnvio = "viewMensaje";
-		String btnAjax = "<div id=\"ajaxloader_ajax_" + mensajeBean.getMensajeId() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensajeHist(this,'" + mensajeBean.getMensajeId() + "','" + tipoEnvio + "','" + mensajeBean.getTipoMensaje() + "','" + mensajeBean
-				.getLoteEnvioId() + "')\" name=\"ajax\" id=\"ajax_" + mensajeBean.getMensajeId() + "\"></span><div>";
+		String btnAjax = "<div id=\"ajaxloader_ajax_" + mensajeBean.getMensajeId() + "\" class=\"center\"><span class=\"button\" title=\"Ver\" onclick=\"return loadMensajeHist(this,'" + mensajeBean.getMensajeId() + "','" + tipoEnvio + "','" + mensajeBean.getTipoMensaje() + "','" + mensajeBean
+				.getLoteEnvioId() + "')\" name=\"ajax\" id=\"ajax_" + mensajeBean.getMensajeId() + "\">Ver</span><div>";
 		return btnAjax;
 	}
 
@@ -229,12 +290,12 @@ public class TableWrapper extends TableDecorator {
 		// filtrado por lotes
 				if (null == gestionEnvioHistoricoBean.getMensajeId() || gestionEnvioHistoricoBean.getMensajeId() == 0) {
 					String tipoEnvio = "viewLoteHistorico";
-					String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioHistoricoBean.getIdLote() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadLoteHist(this,'" + gestionEnvioHistoricoBean.getIdLote() + "','" + tipoEnvio + "')\" name=\"ajax\" id=\"ajax_" + gestionEnvioHistoricoBean
+					String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioHistoricoBean.getIdLote() + "\" class=\"center\"><span class=\"btnMagGlass gestionEnvio_link\" title=\"Ver Detalle\" onclick=\"return loadLoteHist(this,'" + gestionEnvioHistoricoBean.getIdLote() + "','" + tipoEnvio + "')\" name=\"ajax\" id=\"ajax_" + gestionEnvioHistoricoBean
 							.getIdLote() + "\"></span><div>";
 					return btnAjax;
 				}else if(null != gestionEnvioHistoricoBean.getVistaEnviosId() && gestionEnvioHistoricoBean.getVistaEnviosId().equals(3)){
 					String tipoEnvio = "viewHistoricoHist";
-					String btnAjax = "<div id=\"ajaxloader_ajax_historico" + gestionEnvioHistoricoBean.getDestinatariosMensajes() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensajeHistorico(this,'" + gestionEnvioHistoricoBean.getMensajeId() + "','" + tipoEnvio + "','" + gestionEnvioHistoricoBean.getDestinatariosMensajes() + "',' ')"
+					String btnAjax = "<div id=\"ajaxloader_ajax_historico" + gestionEnvioHistoricoBean.getDestinatariosMensajes() + "\" class=\"center\"><span class=\"btnMagGlass gestionEnvio_link\" title=\"Ver Detalle\" onclick=\"return loadMensajeHistorico(this,'" + gestionEnvioHistoricoBean.getMensajeId() + "','" + tipoEnvio + "','" + gestionEnvioHistoricoBean.getDestinatariosMensajes() + "',' ')"
 							+ "\" name=\"ajax\" id=\"ajax_historico" + gestionEnvioHistoricoBean.getDestinatariosMensajes() + "\"></span><div>";
 					return btnAjax;
 				} else {
@@ -254,18 +315,34 @@ public class TableWrapper extends TableDecorator {
 						break;
 					}
 					String tipoEnvio = "viewMensaje";
-					String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioHistoricoBean.getMensajeId() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensajeHist(this,'" + gestionEnvioHistoricoBean.getMensajeId() + "','" + tipoEnvio + "','" + tipoMensaje + "','" + gestionEnvioHistoricoBean
+					String btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioHistoricoBean.getMensajeId() + "\" class=\"center\"><span class=\"btnMagGlass gestionEnvio_link\" title=\"Ver Detalle\" onclick=\"return loadMensajeHist(this,'" + gestionEnvioHistoricoBean.getMensajeId() + "','" + tipoEnvio + "','" + tipoMensaje + "','" + gestionEnvioHistoricoBean
 							.getIdLote() + "')\" name=\"ajax\" id=\"ajax_" + gestionEnvioHistoricoBean.getMensajeId() + "\"></span><div>";
 					return btnAjax;
 				}
 
 	}
-
+	
+	public String getVerMisimHistoricoAction() {
+		GestionEnvioHistoricoBean gestionEnvioHistoricoBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
+		String btnAjax = null;
+	
+		if(gestionEnvioHistoricoBean.isBotonIntercambios()){
+			String tipoEnvio = "viewMisimHistorico";
+			btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioHistoricoBean.getIdLote() + "_" + gestionEnvioHistoricoBean.getMensajeId() + "\" class=\"center\"><span class=\"btnDetails gestionEnvio_link\" title=\"Ver Intercambios\" onclick=\"return loadMisim(this,'" + gestionEnvioHistoricoBean.getIdLote() + "','" + tipoEnvio +  "','" + gestionEnvioHistoricoBean.getMensajeId() + "')\" name=\"ajax\" id=\"ajax_" + 
+				gestionEnvioHistoricoBean.getIdLote() + "_" + gestionEnvioHistoricoBean.getMensajeId() + "\"></span><div>";
+		}
+	
+		else {
+			btnAjax = "<div id=\"ajaxloader_ajax_" + gestionEnvioHistoricoBean.getIdLote() + "_" + gestionEnvioHistoricoBean.getMensajeId() + "\" class=\"center\"><span class=\"btnDetailsOff gestionEnvio_link\" disabled=\"true\" title=\"Sin intercambios\" name=\"ajax\" id=\"ajax_" + gestionEnvioHistoricoBean.getIdLote() + "_" + gestionEnvioHistoricoBean.getMensajeId() + "\"></span><div>";
+		}
+		return btnAjax;
+	}
+	
 	public String getHistoricoDestinatarioAction() {
 		DestinatariosMensajesBean dmBean = (DestinatariosMensajesBean) getCurrentRowObject();
 		String tipoEnvio = "viewHistorico";
-		String btnAjax = "<div id=\"ajaxloader_ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensajeHistorico(this,'" + dmBean.getMensajeId() + "','" + tipoEnvio + "','" + dmBean.getDestinatariosMensajes() + "','" + dmBean
-				.getTipoMensaje() + "')\" name=\"ajax\" id=\"ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\"></span><div>";
+		String btnAjax = "<div id=\"ajaxloader_ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\" class=\"center\"><span class=\"button\" title=\"Ver\" onclick=\"return loadMensajeHistorico(this,'" + dmBean.getMensajeId() + "','" + tipoEnvio + "','" + dmBean.getDestinatariosMensajes() + "','" + dmBean
+				.getTipoMensaje() + "')\" name=\"ajax\" id=\"ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\">Ver</span><div>";
 		return btnAjax;
 
 	}
@@ -273,8 +350,8 @@ public class TableWrapper extends TableDecorator {
 	public String getHistoricoHistDestinatarioAction() {
 		DestinatariosMensajesHistoricosBean dmBean = (DestinatariosMensajesHistoricosBean) getCurrentRowObject();
 		String tipoEnvio = "viewHistoricoHist";
-		String btnAjax = "<div id=\"ajaxloader_ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\"><span class=\"btnView gestionEnvio_link\" title=\"Ver\" onclick=\"return loadMensajeHistorico(this,'" + dmBean.getMensajeId() + "','" + tipoEnvio + "','" + dmBean.getDestinatariosMensajes() + "','" + dmBean
-				.getTipoMensaje() + "')\" name=\"ajax\" id=\"ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\"></span><div>";
+		String btnAjax = "<div id=\"ajaxloader_ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\" class=\"center\"><span class=\"button\" title=\"Ver\" onclick=\"return loadMensajeHistorico(this,'" + dmBean.getMensajeId() + "','" + tipoEnvio + "','" + dmBean.getDestinatariosMensajes() + "','" + dmBean
+				.getTipoMensaje() + "')\" name=\"ajax\" id=\"ajax_historico_destinatario" + dmBean.getDestinatariosMensajes() + "\">Ver</span><div>";
 		return btnAjax;
 
 	}
@@ -291,6 +368,12 @@ public class TableWrapper extends TableDecorator {
 		return spanTitle;
 	}
 	
+	public String getNombreServicioAction() {
+		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
+		String spanTitle = "<span title=\""+gestionEnvioBean.getServicio()+"\">"+gestionEnvioBean.getServicio()+"</span>";
+		return spanTitle;
+	}
+	
 	public String getDestinatarioHistoricoAction() {
 		GestionEnvioHistoricoBean gestionEnvioBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getDestinatario()+"\">"+gestionEnvioBean.getDestinatario()+"</span>";
@@ -302,4 +385,11 @@ public class TableWrapper extends TableDecorator {
 		String spanTitle = "<span title=\""+gestionEnvioBean.getLoteEnvio()+"\">"+gestionEnvioBean.getLoteEnvio()+"</span>";
 		return spanTitle;
 	}
+	
+	public String getNombreServicioHistoricoAction() {
+		GestionEnvioHistoricoBean gestionEnvioBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
+		String spanTitle = "<span title=\""+gestionEnvioBean.getServicio()+"\">"+gestionEnvioBean.getServicio()+"</span>";
+		return spanTitle;
+	}
+	
 }

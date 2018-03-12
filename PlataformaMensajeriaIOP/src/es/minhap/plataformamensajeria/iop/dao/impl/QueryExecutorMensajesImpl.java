@@ -2,12 +2,14 @@ package es.minhap.plataformamensajeria.iop.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.IntegerType;
@@ -34,9 +36,12 @@ import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
 import es.minhap.plataformamensajeria.sm.modelo.DatosServicio;
 import es.minhap.plataformamensajeria.sm.modelo.MailData;
 import es.minhap.plataformamensajeria.sm.modelo.NotificacionPushData;
+import es.minhap.plataformamensajeria.sm.modelo.NotificacionWebPushData;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorPush;
+import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorWebPush;
 import es.minhap.plataformamensajeria.sm.modelo.ReceptorSMSData;
 import es.minhap.plataformamensajeria.sm.modelo.SMSData;
+import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblUsuariosPush;
 
 /**
@@ -241,7 +246,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					"SELECT dm.MENSAJEID,dm.DESTINATARIOSMENSAJES from TBL_DESTINATARIOS_MENSAJES dm inner join TBL_MENSAJES m "
 							+ "on dm.MENSAJEID = m.MENSAJEID inner join TBL_LOTESENVIOS l on "
 							+ "l.LOTEENVIOID = m.LOTEENVIOID where dm.DESTINATARIO in (" + usersId + ") and "
-							+ "l.MULTIDESTINATARIO = 1 and m.TIPOMENSAJE like '%PUSH%' and dm.ESTADO = '" + estado
+							+ "l.MULTIDESTINATARIO = 1 and m.TIPOMENSAJE = 'NOTIFICACION PUSH' and dm.ESTADO = '" + estado
 							+ "'");
 
 			List<Object[]> rows = query.list();
@@ -277,7 +282,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query = getSessionFactory().getCurrentSession().createSQLQuery(
 					"SELECT m.MENSAJEID from TBL_MENSAJES m inner join TBL_LOTESENVIOS l on "
 							+ "l.LOTEENVIOID = m.LOTEENVIOID where m.USUARIOID in  (" + usersId + ") and "
-							+ "l.MULTIDESTINATARIO = 0 and m.TIPOMENSAJE like '%PUSH%' and m.ESTADOACTUAL = '" + estado
+							+ "l.MULTIDESTINATARIO = 0 and m.TIPOMENSAJE = 'NOTIFICACION PUSH' and m.ESTADOACTUAL = '" + estado
 							+ "'");
 			res = query.list();
 
@@ -382,20 +387,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 
 			sql = "select * from "
 					+ "(select a.*, ROWNUM rnum from "
-					+ "(select * from ((SELECT m.MENSAJEID as MENSAJEID,"
-					+ "m.CABECERA as CABECERA, m.CUERPO as CUERPO,"
-					+ "m.ESTADOACTUAL as ESTADO, "
-					+ "(SELECT TO_CHAR(MAX(FECHA),'dd/mm/yyyy hh24:mi:ss') FROM USR_MSGPLT.TBL_HISTORICOS T2 WHERE T2.MENSAJEID = m.MENSAJEID AND T2.ESTADOID IN (1,7)) as ULTIMOENVIO "
-					+ "from TBL_MENSAJES m inner join TBL_LOTESENVIOS l on "
-					+ "l.LOTEENVIOID = m.LOTEENVIOID WHERE m.USUARIOID in ("
-					+ usuarios
-					+ ") "
-					+ "and m.ESTADOACTUAL in ("
-					+ listaEstadosSeleccionados
-					+ ") "
-					+ "AND l.MULTIDESTINATARIO = 0 "
-					+ "UNION ALL "
-					+ "SELECT m.MENSAJEID as MENSAJEID,m.CABECERA as CABECERA, "
+					+ "(select * from ((SELECT m.MENSAJEID as MENSAJEID,m.CABECERA as CABECERA, "
 					+ "m.CUERPO as CUERPO,dm.ESTADO as ESTADO, "
 					+ "(SELECT TO_CHAR(MAX(FECHA),'dd/mm/yyyy hh24:mi:ss') FROM TBL_HISTORICOS T2 WHERE T2.MENSAJEID = dm.MENSAJEID AND T2.ESTADOID IN (1,7)) as ULTIMOENVIO "
 					+ "from TBL_MENSAJES m inner join TBL_LOTESENVIOS l "
@@ -408,7 +400,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					+ ") "
 					+ "AND l.MULTIDESTINATARIO = 1) )order by MENSAJEID desc) a where ROWNUM <= "
 					+ cantidad
-					+ " ) where rnum  > " + pagina;
+					+ " ) where rnum  >= " + pagina;
 
 		}
 
@@ -583,7 +575,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				data.icono = (String) row[2];
 				data.sonido = (String) row[3];
 				data.nombreUsuario = (String) row[4];
-				data.UsuarioId = (Long) row[5];
+				data.usuarioId = (Long) row[5];
 				data.plataformaId = (Integer) row[6];
 				data.destinatarioMensajeId = (Long) row[7];
 				data.gCMApiKey = (String) row[8];
@@ -599,7 +591,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					data.cuerpo = utilFile.getCuerpoMensajeFromFile((String)row[12]);
 				}
 								
-				TblUsuariosPush tblUsuariosPush = getTblUsuariosPushManager().getUsuarioPush(data.UsuarioId);
+				TblUsuariosPush tblUsuariosPush = getTblUsuariosPushManager().getUsuarioPush(data.usuarioId);
 				List<String> tokenUsuario = new ArrayList<>();
 				tokenUsuario.add(tblUsuariosPush.getTokenusuario());
 				data.tokensUsuario = (ArrayList<String>) tokenUsuario;
@@ -616,6 +608,79 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 		return data;
 	}
 
+	@Override
+	public NotificacionWebPushData getDetailsServidorWebPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId) {
+		NotificacionWebPushData data = new NotificacionWebPushData();
+		SQLQuery query = null;
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("Select m.cabecera as cabecera, m.cuerpo as cuerpo,m.cuerpofile as cuerpofile, uwp.usuariowebpushid as usuariowebpushid, "
+					+ "dm.destinatariosmensajes as destinatariosmensajes, s.caducidadwebpush as caducidadwebpush, "
+					+ "s.vapidpublickey as vapidpublickey, s.vapidprivatekey as vapidprivatekey, "
+					+ "uwp.endpoint as endpoint, uwp.auth as auth, uwp.p256dh as pdh ");
+			sb.append("From tbl_mensajes m inner join tbl_lotesenvios le on le.loteenvioid = m.loteenvioid inner join "
+					+ "tbl_servicios s on s.servicioid = le.servicioid inner join tbl_destinatarios_mensajes dm on dm.mensajeid = m.mensajeid "
+					+ "inner join tbl_usuarios_webpush uwp on uwp.usuariowebpushid = dm.destinatario where m.mensajeid = ");
+			sb.append(mensajeId);
+			sb.append(" and dm.destinatariosmensajes = ");
+			sb.append(destinatarioMensajeId);
+			sb.append(" and (uwp.eliminado != 'S' or uwp.eliminado is null and (estado not like 'ENVIADO' and estado not like 'ANULADO'))" );
+			
+			query = getSessionFactory()
+					.getCurrentSession()
+					.createSQLQuery(sb.toString());
+
+			query.addScalar("cabecera", new StringType());
+			query.addScalar("cuerpo", new StringType());
+			query.addScalar("cuerpofile", new StringType());
+			query.addScalar("usuariowebpushid", new LongType());
+			query.addScalar("destinatariosmensajes", new LongType());
+			query.addScalar("caducidadwebpush", new IntegerType());
+			query.addScalar("vapidpublickey", new StringType());
+			query.addScalar("vapidprivatekey", new StringType());
+			query.addScalar("endpoint", new StringType());
+			query.addScalar("auth", new StringType());
+			query.addScalar("pdh", new StringType());
+
+			Object[] row = (Object[]) query.uniqueResult();
+
+			if (null != row) {
+				data.cabecera = (String) row[0];
+				data.setUsuarioId((Long) row[3]) ;
+				data.setDestinatarioMensajeId((Long) row[4]);
+				data.setCaducidadWebPush((Integer) row[5]);
+				data.setVapidPublicKey((String) row[6]);
+				data.setVapidPrivateKey((String) row[7]);
+				data.setEndpoint((String) row[8]);
+				data.setAuth((String) row[9]);
+				data.setPdh((String) row[10]);
+				
+				//comprueba si el cuerpo está en fichero
+				if (null == row[2]){
+					data.cuerpo = (null != row[1]) ? (String) row[1] : "";
+				}else{
+					//recuperamos el cuerpo. 
+					data.cuerpo = utilFile.getCuerpoMensajeFromFile((String)row[2]);
+				}
+								
+
+				data.setEsMultidestinatario(true);
+				data.servers = (ArrayList<ParametrosServidorWebPush>) getQueryExecutorViewServidoresPushPrioridad()
+						.getServidoresWebPush(mensajeId);
+			}
+
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return data;
+	}
+	
+	
 	@Override
 	public NotificacionPushData getDetailsServidorPush(Long mensajeId, DatosServicio serviceData) {
 		NotificacionPushData data = new NotificacionPushData();
@@ -678,7 +743,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				List<String> tokenUsuario = new ArrayList<>();
 				tokenUsuario.add(tblUsuariosPush.getTokenusuario());
 				data.tokensUsuario = (ArrayList<String>) tokenUsuario;
-				data.UsuarioId = idUsuario;
+				data.usuarioId = idUsuario;
 			}
 
 		} catch (Exception e) {
@@ -845,36 +910,143 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 		return data;
 	}
 
-	@SuppressWarnings("unchecked")
+
+@SuppressWarnings("unchecked")
+@Override
+@Transactional
+public List<Long> getMensajesPendientes() {
+	List<Long> res = new ArrayList<>();
+	try {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(LOG_START);
+		}
+		String sql = "select MENSAJEID from TBL_MENSAJES where MENSAJEID in "
+				+ "(select MENSAJEID from TBL_DESTINATARIOS_MENSAJES where ESTADO = 'PENDIENTE DE ENVIO' or ESTADO = 'PENDIENTE') "
+				+ "order by MENSAJEID desc";
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
+
+		List<Object> rows = query.list();
+		for (Object row : rows) {
+			res.add(((BigDecimal) row).longValue());
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(LOG_END);
+		}
+
+	} catch (Exception e) {
+		LOG.error(HAS_ERROR, e);
+		throw new ApplicationException(e);
+	}
+	return res;
+}
+
+	
+	
 	@Override
 	@Transactional
-	public List<Long> getMensajesPendientes() {
-		List<Long> res = new ArrayList<>();
+	public Integer countMensajesHistorificacion(Long loteId, Date fecha) {
 		try {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_START);
 			}
-			String sql = "select MENSAJEID from TBL_MENSAJES m inner join TBL_LOTESENVIOS l on l.LOTEENVIOID= m.LOTEENVIOID "
-					+ " inner join TBL_SERVICIOS s on l.SERVICIOID = s.SERVICIOID  where m.MENSAJEID in "
-					+ " (select MENSAJEID from TBL_DESTINATARIOS_MENSAJES where ESTADO = 'PENDIENTE DE ENVIO') and (s.PREMIUM is null or s.PREMIUM = 0) "
-					+ " order by MENSAJEID desc";
+
+			String sql = "select count(m.mensajeid) from TBL_GESTIONENVIOS ge inner join TBL_MENSAJES m on ge.mensajeid = m.mensajeid where m.loteenvioid = :lote and "
+					+ "(m.estadoactual = 'ENVIADO' or m.estadoactual = 'ANULADO') and ge.ultimoenvio <= :fecha";
+
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
+			query.setLong("lote", loteId);
+			query.setDate("fecha", fecha);
 
-			List<Object> rows = query.list();
-			for (Object row : rows) {
-				res.add(((BigDecimal) row).longValue());
-			}
-
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
-			}
-
+			return ((BigDecimal)query.uniqueResult()).intValue();
+			 			
 		} catch (Exception e) {
 			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
-		return res;
+		
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Long> getIdMensajesByLote(Long loteEnvioID) {
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			String sql = "select m.mensajeid from TblMensajes m where m.tblLotesEnvios.loteenvioid = :lote ";
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			query.setLong("lote", loteEnvioID);
+			
+			 return query.list();
+			 			
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
+	
+	@Override
+	@Transactional
+	public Integer countMensajesByLote(Long loteId) {
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			String sql = "select count(m.mensajeid) from TBL_MENSAJES m  where m.loteenvioid = :lote ";
+			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
+			query.setLong("lote", loteId);
+			
+			return ((BigDecimal)query.uniqueResult()).intValue();
+			 			
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public TblAplicaciones getAplicacionFromMensaje(Long mensajeId) {
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			String sql = "select ap from TblMensajes m inner join m.tblLotesEnvios le inner join le.tblServicios s inner join s.tblAplicaciones ap "
+					+ "where m.mensajeid = :mensajeId";
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			query.setLong("mensajeId", mensajeId);
+			
+			return (TblAplicaciones) query.uniqueResult();
+			 			
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+
+	@Override
+	@Transactional
+	public TblAplicaciones getAplicacionFromLote(Integer loteId) {
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			String sql = "select ap from TblLotesEnvios le inner join le.tblServicios s inner join s.tblAplicaciones ap "
+					+ "where le.loteenvioid = :loteId";
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			query.setInteger("loteId", loteId);
+			
+			return (TblAplicaciones) query.uniqueResult();
+			 			
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
 
 	/**
 	 * @return the tblUsuariosPushManager
@@ -921,4 +1093,5 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 	public void setQueryExecutorUsuariosPush(QueryExecutorUsuariosPush queryExecutorUsuariosPush) {
 		this.queryExecutorUsuariosPush = queryExecutorUsuariosPush;
 	}
+	
 }

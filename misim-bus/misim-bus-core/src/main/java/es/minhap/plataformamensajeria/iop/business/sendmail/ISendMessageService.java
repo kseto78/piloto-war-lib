@@ -19,4 +19,6 @@ public interface ISendMessageService {
 	public void postNotificacionPush(Long mensajeId, Long loteId, Long destinatarioMensajeId) throws Exception;
 	
 	public void postRecepcionSMS(Long mensajeId, Long destinatarioMensajeId) throws Exception;
+
+	public void postNotificacionWebPush(Long mensajeId, Long idLote, Long destinatarioMensajeId) throws Exception;
 }

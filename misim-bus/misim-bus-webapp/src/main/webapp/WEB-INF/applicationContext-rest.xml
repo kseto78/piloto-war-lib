@@ -92,6 +92,15 @@
            <ref bean="confirmarAltaUsuarioBean"/>
         </jaxrs:serviceBeans>
      </jaxrs:server> 
+      <jaxrs:server id="registrarUsuarioWebPush" address="/rest/gestionServiciosPush/registroUsuarioWebPush">
+         <jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+        <jaxrs:serviceBeans>
+           <ref bean="registrarUsuarioWebPushBean"/>
+        </jaxrs:serviceBeans>
+     </jaxrs:server> 
+     
      
      <jaxrs:server id="getAvisosUsuarioPush" address="/rest/getAvisosUsuario">
          <jaxrs:providers>
@@ -148,6 +157,7 @@
 	
 	
 	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.ConfirmarAltaUsuarioImpl" id="confirmarAltaUsuarioBean" /> 
+	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.RegistroUsuarioWebPushImpl" id="registrarUsuarioWebPushBean" />
 	
 	
 	<bean class="es.minhap.misim.bus.webapp.restserviceprovider.GetAvisosUsuarioImpl" id="getAvisosUsuarioPushBean" />

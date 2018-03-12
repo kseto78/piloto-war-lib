@@ -6,7 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +25,8 @@ public class TblQueryLog implements java.io.Serializable {
 	private static final long serialVersionUID = 7954311699437826729L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="QUERYLOG_SEC")
+    @SequenceGenerator(name="QUERYLOG_SEC", sequenceName="QUERYLOG_SEC", allocationSize=1)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long id;
 

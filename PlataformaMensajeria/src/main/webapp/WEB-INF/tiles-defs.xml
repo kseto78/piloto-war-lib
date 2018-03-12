@@ -19,13 +19,13 @@
 	<definition name="site.mainLayout" template="/WEB-INF/jsp/layout/plataforma/basicLayout.jsp">
 		<put-attribute name="title">Plataforma de Mensajería</put-attribute>
 		<put-attribute name="header" value="/WEB-INF/jsp/layout/plataforma/header.jsp" />
-		<put-attribute name="menu" value="/WEB-INF/jsp/layout/template/menuplataforma.jsp" />
+ 		<put-attribute name="menu" value="/WEB-INF/jsp/layout/template/menuplataforma.jsp" />
 		<put-attribute name="footer" value="/WEB-INF/jsp/layout/template/footer.jsp" />		
 	</definition>	
 	<definition name="site.mainLayout2" template="/WEB-INF/jsp/layout/basicLayout.jsp">
 		<put-attribute name="title">Plataforma de Mensajería</put-attribute>
 		<put-attribute name="header" value="/WEB-INF/jsp/layout/plataforma/header.jsp" />
-<!-- 		<put-attribute name="menu" value="/WEB-INF/jsp/layout/template/menuplataforma.jsp" /> -->
+<!--   		<put-attribute name="menu" value="/WEB-INF/jsp/layout/template/menuplataforma.jsp"/> -->
 		<put-attribute name="footer" value="/WEB-INF/jsp/layout/template/footer.jsp" />		
 	</definition>	
 
@@ -341,7 +341,43 @@
 		</put-list-attribute>
 	</definition>	
 	
-		
+	<!--
+		******************************************************************
+	-->
+	<!--
+		Servidores WEB Push
+	-->
+	<!--
+		******************************************************************
+	-->
+	
+	<definition name="pages.searchServidorWebPush" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.searchServidorWebPush.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/servidorWebPush/listServidorWebPush.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.general|home.action" />
+			<add-attribute value="panel.configuracion.general.servidoreswebpush|buscarServidorWebPush.action" />
+		</put-list-attribute>
+	</definition>
+
+	<definition name="pages.servidorWebPush.create" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.createServidorWebPush.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/servidorWebPush/newServidorWebPush.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.general|home.action" />
+			<add-attribute value="panel.configuracion.general.servidoreswebpush|buscarServidorWebPush.action" />
+		</put-list-attribute>
+	</definition>	
+
+	<definition name="pages.servidorWebPush.edit" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.editServidorWebPush.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/servidorWebPush/editServidorWebPush.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.general|home.action" />
+			<add-attribute value="panel.configuracion.general.servidoreswebpush|buscarServidorWebPush.action" />
+		</put-list-attribute>
+	</definition>	
+	
 		
 	<!--
 		******************************************************************
@@ -357,7 +393,7 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/organismos/listOrganismo.jsp" />
 		<put-list-attribute name="crumbs">
 			<add-attribute value="panel.configuracion.organismos|home.action" />
-			<add-attribute value="panel.configuracion.organismos.organismos|buscarOrganismos.action" />
+			<add-attribute value="panel.configuracion.organismos.organismos|listarOrganismos.action" />
 		</put-list-attribute>
 	</definition>
 	<definition name="pages.organismo.create" extends="site.mainLayout">
@@ -365,7 +401,7 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/organismos/newOrganismo.jsp" />
 		<put-list-attribute name="crumbs">
 			<add-attribute value="panel.configuracion.organismos|home.action" />
-			<add-attribute value="panel.configuracion.organismos.organismos|buscarOrganismos.action" />
+			<add-attribute value="panel.configuracion.organismos.organismos|listarOrganismos.action" />
 		</put-list-attribute>
 	</definition>	
 	<definition name="pages.organismo.edit" extends="site.mainLayout">
@@ -373,7 +409,7 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/organismos/editOrganismo.jsp" />
 		<put-list-attribute name="crumbs">
 			<add-attribute value="panel.configuracion.organismos|home.action" />
-			<add-attribute value="panel.configuracion.organismos.organismos|buscarOrganismos.action" />
+			<add-attribute value="panel.configuracion.organismos.organismos|listarOrganismos.action" />
 		</put-list-attribute>
 	</definition>	
 	<definition name="pages.organismo.detalle" extends="site.mainLayout">
@@ -439,6 +475,8 @@
 	</definition>
 	<definition name="pages.aplicacion.editplanificacionservidorpush" template="/WEB-INF/jsp/plataforma/aplicaciones/editPlanificacionServidorPush.jsp">
 	</definition>
+	<definition name="pages.aplicacion.editplanificacionservidorwebpush" template="/WEB-INF/jsp/plataforma/aplicaciones/editPlanificacionServidorWebPush.jsp">
+	</definition>
 	<definition name="pages.aplicacion.newplanificacionapp" template="/WEB-INF/jsp/plataforma/aplicaciones/newPlanificacionApp.jsp">
 
 	</definition>
@@ -496,6 +534,9 @@
 			<add-attribute value="panel.aplicaciones|home.action" />
 		</put-list-attribute>
 	</definition>	
+	
+	<definition name="pages.servicio.viewPassbook" template="/WEB-INF/jsp/plataforma/servicios/viewPassbook.jsp">
+	</definition>
 	
 	<!-- 
 		******************************************************************
@@ -571,6 +612,81 @@
 			<add-attribute value="panel.configuracion.job.ejecucionJob|ejecucionJob.action" />
 		</put-list-attribute>
 	</definition>
+	
+	<!--
+		******************************************************************
+	-->
+	<!--
+		MISIM
+	-->
+	<!--
+		******************************************************************
+	-->
+
+	<definition name="pages.searchProveedoresMisim" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.searchProveedoresMisim.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/proveedorMisim/listProveedorMisim.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.aplicaciones|home.action" />
+			<add-attribute value="panel.configuracion.aplicaciones.misim|buscarProveedoresMisim.action" />
+		</put-list-attribute>
+	</definition>
+
+	<definition name="pages.proveedorMisim.create" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.createProveedoresMisim.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/proveedorMisim/newProveedorMisim.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.aplicaciones|home.action" />
+			<add-attribute value="panel.configuracion.aplicaciones.misim|buscarProveedoresMisim.action" />
+		</put-list-attribute>
+	</definition>	
+
+	<definition name="pages.proveedorMisim.edit" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.editProveedoresMisim.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/proveedorMisim/editProveedorMisim.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.aplicaciones|home.action" />
+			<add-attribute value="panel.configuracion.aplicaciones.misim|buscarProveedoresMisim.action" />
+		</put-list-attribute>
+	</definition>	
+		
+	<!--
+		******************************************************************
+	-->
+	<!--
+		MISIM
+	-->
+	<!--
+		******************************************************************
+	-->
+
+	<definition name="pages.searchProveedoresMisim" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.searchProveedoresMisim.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/proveedorMisim/listProveedorMisim.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.aplicaciones|home.action" />
+			<add-attribute value="panel.configuracion.aplicaciones.misim|buscarProveedoresMisim.action" />
+		</put-list-attribute>
+	</definition>
+
+	<definition name="pages.proveedorMisim.create" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.createProveedoresMisim.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/proveedorMisim/newProveedorMisim.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.aplicaciones|home.action" />
+			<add-attribute value="panel.configuracion.aplicaciones.misim|buscarProveedoresMisim.action" />
+		</put-list-attribute>
+	</definition>	
+
+	<definition name="pages.proveedorMisim.edit" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.editProveedoresMisim.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/proveedorMisim/editProveedorMisim.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.aplicaciones|home.action" />
+			<add-attribute value="panel.configuracion.aplicaciones.misim|buscarProveedoresMisim.action" />
+		</put-list-attribute>
+	</definition>	
+		
 	<!--
 		******************************************************************
 	-->
@@ -726,6 +842,8 @@
 	<definition name="pages.gestionEnvios.viewMensajeGeneral" template="/WEB-INF/jsp/plataforma/gestionenvios/viewMensaje.jsp">
 	</definition>
 	<definition name="pages.gestionEnvios.viewHistoricoMensaje" template="/WEB-INF/jsp/plataforma/gestionenvios/viewHistoricoMensaje.jsp">
+	</definition>
+	<definition name="pages.gestionEnvios.viewMisim" template="/WEB-INF/jsp/plataforma/gestionenvios/viewMisim.jsp">
 	</definition>
 	<!--
 		******************************************************************
@@ -980,5 +1098,28 @@
 			<add-attribute value="menu.ajax" />
 		</put-list-attribute>
 	</definition>
+	
+	
+<!-- 	nat -->
+	
+	<!--
+		******************************************************************
+		
+		Envío de Mensajes
 
+		******************************************************************
+	-->	
+	
+	<definition name="pages.envioMensajes" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.envioMensajes.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/servicios/envioMensajesAplicacion.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.enviomensajes|envioMensajesHome.action" />		
+		</put-list-attribute>
+	</definition>
+
+	
+<!-- 	nat -->	
+	
+	
 </tiles-definitions>

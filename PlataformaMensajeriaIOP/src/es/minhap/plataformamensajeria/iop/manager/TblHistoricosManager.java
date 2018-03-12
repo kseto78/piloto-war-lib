@@ -62,6 +62,12 @@ public interface TblHistoricosManager {
 	 */
 	public Long getUltimoEstadoHistorico(Long mensajeId, Long destinatariosMensajes);
 
+	/**
+	 * Elimina un Historico
+	 * 
+	 * @param historicoid
+	 */
+	public void delete(Long historicoid);
 
 	/**
 	 * Comprueba si un mensaje ya ha tenido un estado enviado para el destinatario si lo tuviera

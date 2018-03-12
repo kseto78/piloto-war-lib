@@ -52,26 +52,26 @@ public class ServidoresAction extends PlataformaPaginationAction implements
 	private static Logger logger = Logger.getLogger(ServidoresAction.class);
 	
 	@Resource(name="servicioServidorImpl")
-	private ServicioServidor servicioServidor;
+	private transient ServicioServidor servicioServidor;
 	
 	@Resource(name="servicioTipoParametroImpl")
-	private ServicioTipoParametro servicioTipoParametro;
+	private transient ServicioTipoParametro servicioTipoParametro;
 	
 	@Resource(name="servicioParametroServidorImpl")
-	private ServicioParametroServidor servicioParametroServidor;
+	private transient ServicioParametroServidor servicioParametroServidor;
 	
 	@Resource(name="servicioPlanificacionImpl")
-	private ServicioPlanificacion servicioPlanificacion;
+	private transient ServicioPlanificacion servicioPlanificacion;
 	
 	@Resource(name = "plataformaMensajeriaProperties")
-	private PlataformaMensajeriaProperties properties;
+	private transient PlataformaMensajeriaProperties properties;
 
-	List<KeyValueObject> comboTipoParametros = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboTipoParametros = new ArrayList<>();
 	
 	private ParametroServidorBean parametroServidor;
 	private ServidorBean servidor;
 	private PlanificacionBean planificacionServidor;
-	
+	 
 	public List<ServidorBean> listaServidores = null;
 	private List<ParametroServidorBean> listaParametrosServidor = null;
 	private List<PlanificacionBean> listaPlanificacionesServidor = null;

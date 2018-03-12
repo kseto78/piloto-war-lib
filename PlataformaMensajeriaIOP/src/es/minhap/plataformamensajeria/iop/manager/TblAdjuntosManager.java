@@ -28,6 +28,25 @@ public interface TblAdjuntosManager {
 	 */
 	public Integer asociarAnexo(Long mensajeId, Long idAdjunto, String usuario, String password);
 
+
+	/**
+	 * Elimina un adjunto
+	 * 
+	 * @param adjuntoid
+	 * @return idAdjunto
+	 */
+	public void delete(Long adjuntoid);
+
+
+	/**
+	 * Recupera el adjunto por id
+	 * 
+	 * @param idAdjunto
+	 * @return TblAdjuntos
+	 */
+	public TblAdjuntos getById(Long idAdjunto);
+
+
 	/**
 	 * Obtiene un adjunto por Id
 	 * 

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean;
 import es.minhap.plataformamensajeria.iop.beans.UsuariosServiciosMovilesBean;
 
 public interface QueryExecutorUsuariosPush {
@@ -66,6 +67,9 @@ public interface QueryExecutorUsuariosPush {
 	 */
 	public ArrayList<Integer> getDispositivosUsuarioServicioMovil(String identificadorUsuario, Integer servicioID,
 			Integer idServicioMovil);
+
+	
+	List<UsuariosPushBean> listaUsuariosPushbyServicioMovilId(Long servicioMovilId);
 
 
 }

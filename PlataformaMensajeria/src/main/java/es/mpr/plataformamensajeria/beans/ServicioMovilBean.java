@@ -13,7 +13,7 @@ public class ServicioMovilBean implements Audit{
 	protected String nombre = null;
 	protected String descripcion = null;
 	protected Long tipo = null;
-	protected Long estado = null;
+	protected Integer estado = null;
 	protected String urlServicio = null;
 	protected String nombreContacto = null;
 	protected String telefonoContacto = null;
@@ -22,7 +22,7 @@ public class ServicioMovilBean implements Audit{
 	protected String creadoPor = null;
 	protected String modificadoPor = null;
 	protected String isEstado = null;
-	protected Long indSuscripcion = null;
+	protected Integer indSuscripcion = null;
 	protected String urlAvisoSuscripcion = null;
 	protected String isIndSuscripcion = null;
 	protected String endpointUser = null;
@@ -45,7 +45,7 @@ public class ServicioMovilBean implements Audit{
 		this.creadoPor = null;
 		this.modificadoPor = null;
 		this.isEstado = null;
-		this.indSuscripcion = (long) 0;
+		this.indSuscripcion = (Integer) 0;
 		this.urlAvisoSuscripcion = null;
 		this.isIndSuscripcion = null;
 		this.endpointUser = null;
@@ -184,21 +184,21 @@ public class ServicioMovilBean implements Audit{
 	}
 	
 		
-	public Long getEstado() {
+	public Integer getEstado() {
 		return estado;
 	}
 
 
-	public void setEstado(Long estado) {
+	public void setEstado(Integer estado) {
 		this.estado = estado;
 	}
 	
 	
 	public void setActivado(String activado){
 		if(activado!=null&&activado.equals("true")){
-			this.estado = new Long(1);
+			this.estado = new Integer(1);
 		}else{
-			this.estado = new Long(0);
+			this.estado = new Integer(0);
 		}
 	}
 	
@@ -224,18 +224,18 @@ public class ServicioMovilBean implements Audit{
 	
 	public void setIsEstado(String isEstado) {
 		if(isEstado!=null&&isEstado.equals("true")){
-			this.estado = new Long(1);
+			this.estado = new Integer(1);
 		}else{
-			this.estado = new Long(0);
+			this.estado = new Integer(0);
 		}
 		this.isEstado   = isEstado;
 	}
 
 	public void setSuscrito(String suscrito){
 		if(suscrito != null && suscrito.equals("true")){
-			this.indSuscripcion = new Long(1);
+			this.indSuscripcion = new Integer(1);
 		}else{
-			this.indSuscripcion = new Long(0);
+			this.indSuscripcion = new Integer(0);
 		}
 	}
 	
@@ -261,19 +261,19 @@ public class ServicioMovilBean implements Audit{
 	
 	public void setIsIndSuscripcion(String isIndSuscripcion) {
 		if(isIndSuscripcion!=null && isIndSuscripcion.equals("true")){
-			this.indSuscripcion = new Long(1);
+			this.indSuscripcion = new Integer(1);
 		}else{
-			this.indSuscripcion = new Long(0);
+			this.indSuscripcion = new Integer(0);
 		}
 		this.isIndSuscripcion   = isIndSuscripcion;
 	}
 
-	public Long getIndSuscripcion() {
+	public Integer getIndSuscripcion() {
 		return indSuscripcion;
 	}
 
 
-	public void setIndSuscripcion(Long indSuscripcion) {
+	public void setIndSuscripcion(Integer indSuscripcion) {
 		this.indSuscripcion = indSuscripcion;
 	}
 

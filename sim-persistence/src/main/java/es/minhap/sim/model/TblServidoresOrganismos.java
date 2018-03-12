@@ -2,14 +2,14 @@ package es.minhap.sim.model;
 
 // Generated 18-jul-2016 10:57:14 by Hibernate Tools 3.4.0.CR1
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
+import java.util.Date;
+
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -18,81 +18,323 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TBL_SERVIDORES_ORGANISMOS")
 public class TblServidoresOrganismos implements java.io.Serializable {
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -176536502820441192L;
+	private static final long serialVersionUID = -2097101506953252930L;
 
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "servidororganismoid", column = @Column(name = "SERVIDORORGANISMOID", nullable = false, precision = 22, scale = 0)),
-			@AttributeOverride(name = "servidorid", column = @Column(name = "SERVIDORID", nullable = false, precision = 22, scale = 0)),
-			@AttributeOverride(name = "organismoid", column = @Column(name = "ORGANISMOID", nullable = false, precision = 22, scale = 0)),
-			@AttributeOverride(name = "numintentos", column = @Column(name = "NUMINTENTOS", precision = 22, scale = 0)),
-			@AttributeOverride(name = "headersms", column = @Column(name = "HEADERSMS", length = 50)),
-			@AttributeOverride(name = "proveedorusuariosms", column = @Column(name = "PROVEEDORUSUARIOSMS", length = 20)),
-			@AttributeOverride(name = "proveedorpasswordsms", column = @Column(name = "PROVEEDORPASSWORDSMS", length = 20)),
-			@AttributeOverride(name = "creadopor", column = @Column(name = "CREADOPOR", length = 100)),
-			@AttributeOverride(name = "fechacreacion", column = @Column(name = "FECHACREACION", length = 7)),
-			@AttributeOverride(name = "modificadopor", column = @Column(name = "MODIFICADOPOR", length = 100)),
-			@AttributeOverride(name = "fechamodificacion", column = @Column(name = "FECHAMODIFICACION", length = 7)) })
-	private TblServidoresOrganismosId id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ORGANISMOSSERVIDORID_SEC")
+    @SequenceGenerator(name="ORGANISMOSSERVIDORID_SEC", sequenceName="ORGANISMOSSERVIDORID_SEC", allocationSize=1)
+	@Column(name = "SERVIDORORGANISMOID", nullable = false, precision = 22, scale = 0)
+	private Long servidororganismoid;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SERVIDORID", nullable = false, insertable = false, updatable = false)
-	private TblServidores tblServidores;
+	@Column(name = "SERVIDORID", nullable = false, precision = 22, scale = 0)
+	private Long servidorid;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ORGANISMOID", nullable = false, insertable = false, updatable = false)
-	private TblOrganismos tblOrganismos;
+	@Column(name = "ORGANISMOID", nullable = false, precision = 22, scale = 0)
+	private Long organismoid;
+
+	@Column(name = "NUMINTENTOS", precision = 10, scale = 0)
+	private Integer numintentos;
+
+	@Column(name = "HEADERSMS", length = 50)
+	private String headersms;
+
+	@Column(name = "PROVEEDORUSUARIOSMS", length = 20)
+	private String proveedorusuariosms;
+
+	@Column(name = "PROVEEDORPASSWORDSMS", length = 20)
+	private String proveedorpasswordsms;
+
+	@Column(name = "CREADOPOR", length = 100)
+	private String creadopor;
+
+	@Column(name = "FECHACREACION", length = 7)
+	private Date fechacreacion;
+
+	@Column(name = "MODIFICADOPOR", length = 100)
+	private String modificadopor;
+
+	@Column(name = "FECHAMODIFICACION", length = 7)
+	private Date fechamodificacion;
 
 	public TblServidoresOrganismos() {
 	}
 
-	/**
-	 * @return the id
-	 */
-	public TblServidoresOrganismosId getId() {
-		return id;
+	public boolean equals(Object other) {
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof TblServidoresOrganismosId))
+			return false;
+		TblServidoresOrganismosId castOther = (TblServidoresOrganismosId) other;
+
+		return ((this.getServidororganismoid() == castOther
+				.getServidororganismoid()) || (this.getServidororganismoid() != null
+				&& castOther.getServidororganismoid() != null && this
+				.getServidororganismoid().equals(
+						castOther.getServidororganismoid())))
+				&& ((this.getServidorid() == castOther.getServidorid()) || (this
+						.getServidorid() != null
+						&& castOther.getServidorid() != null && this
+						.getServidorid().equals(castOther.getServidorid())))
+				&& ((this.getOrganismoid() == castOther.getOrganismoid()) || (this
+						.getOrganismoid() != null
+						&& castOther.getOrganismoid() != null && this
+						.getOrganismoid().equals(castOther.getOrganismoid())))
+				&& ((this.getNumintentos() == castOther.getNumintentos()) || (this
+						.getNumintentos() != null
+						&& castOther.getNumintentos() != null && this
+						.getNumintentos().equals(castOther.getNumintentos())))
+				&& ((this.getHeadersms() == castOther.getHeadersms()) || (this
+						.getHeadersms() != null
+						&& castOther.getHeadersms() != null && this
+						.getHeadersms().equals(castOther.getHeadersms())))
+				&& ((this.getProveedorusuariosms() == castOther
+						.getProveedorusuariosms()) || (this
+						.getProveedorusuariosms() != null
+						&& castOther.getProveedorusuariosms() != null && this
+						.getProveedorusuariosms().equals(
+								castOther.getProveedorusuariosms())))
+				&& ((this.getProveedorpasswordsms() == castOther
+						.getProveedorpasswordsms()) || (this
+						.getProveedorpasswordsms() != null
+						&& castOther.getProveedorpasswordsms() != null && this
+						.getProveedorpasswordsms().equals(
+								castOther.getProveedorpasswordsms())))
+				&& ((this.getCreadopor() == castOther.getCreadopor()) || (this
+						.getCreadopor() != null
+						&& castOther.getCreadopor() != null && this
+						.getCreadopor().equals(castOther.getCreadopor())))
+				&& ((this.getFechacreacion() == castOther.getFechacreacion()) || (this
+						.getFechacreacion() != null
+						&& castOther.getFechacreacion() != null && this
+						.getFechacreacion()
+						.equals(castOther.getFechacreacion())))
+				&& ((this.getModificadopor() == castOther.getModificadopor()) || (this
+						.getModificadopor() != null
+						&& castOther.getModificadopor() != null && this
+						.getModificadopor()
+						.equals(castOther.getModificadopor())))
+				&& ((this.getFechamodificacion() == castOther
+						.getFechamodificacion()) || (this
+						.getFechamodificacion() != null
+						&& castOther.getFechamodificacion() != null && this
+						.getFechamodificacion().equals(
+								castOther.getFechamodificacion())));
+	}
+
+	public int hashCode() {
+		int result = 17;
+
+		result = 37
+				* result
+				+ (getServidororganismoid() == null ? 0 : this
+						.getServidororganismoid().hashCode());
+		result = 37
+				* result
+				+ (getServidorid() == null ? 0 : this.getServidorid()
+						.hashCode());
+		result = 37
+				* result
+				+ (getOrganismoid() == null ? 0 : this.getOrganismoid()
+						.hashCode());
+		result = 37
+				* result
+				+ (getNumintentos() == null ? 0 : this.getNumintentos()
+						.hashCode());
+		result = 37 * result
+				+ (getHeadersms() == null ? 0 : this.getHeadersms().hashCode());
+		result = 37
+				* result
+				+ (getProveedorusuariosms() == null ? 0 : this
+						.getProveedorusuariosms().hashCode());
+		result = 37
+				* result
+				+ (getProveedorpasswordsms() == null ? 0 : this
+						.getProveedorpasswordsms().hashCode());
+		result = 37 * result
+				+ (getCreadopor() == null ? 0 : this.getCreadopor().hashCode());
+		result = 37
+				* result
+				+ (getFechacreacion() == null ? 0 : this.getFechacreacion()
+						.hashCode());
+		result = 37
+				* result
+				+ (getModificadopor() == null ? 0 : this.getModificadopor()
+						.hashCode());
+		result = 37
+				* result
+				+ (getFechamodificacion() == null ? 0 : this
+						.getFechamodificacion().hashCode());
+		return result;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @return the servidororganismoid
 	 */
-	public void setId(TblServidoresOrganismosId id) {
-		this.id = id;
+	public Long getServidororganismoid() {
+		return servidororganismoid;
 	}
 
 	/**
-	 * @return the tblServidores
+	 * @param servidororganismoid
+	 *            the servidororganismoid to set
 	 */
-	public TblServidores getTblServidores() {
-		return tblServidores;
+	public void setServidororganismoid(Long servidororganismoid) {
+		this.servidororganismoid = servidororganismoid;
 	}
 
 	/**
-	 * @param tblServidores
-	 *            the tblServidores to set
+	 * @return the servidorid
 	 */
-	public void setTblServidores(TblServidores tblServidores) {
-		this.tblServidores = tblServidores;
+	public Long getServidorid() {
+		return servidorid;
 	}
 
 	/**
-	 * @return the tblOrganismos
+	 * @param servidorid
+	 *            the servidorid to set
 	 */
-	public TblOrganismos getTblOrganismos() {
-		return tblOrganismos;
+	public void setServidorid(Long servidorid) {
+		this.servidorid = servidorid;
 	}
 
 	/**
-	 * @param tblOrganismos
-	 *            the tblOrganismos to set
+	 * @return the organismoid
 	 */
-	public void setTblOrganismos(TblOrganismos tblOrganismos) {
-		this.tblOrganismos = tblOrganismos;
+	public Long getOrganismoid() {
+		return organismoid;
+	}
+
+	/**
+	 * @param organismoid
+	 *            the organismoid to set
+	 */
+	public void setOrganismoid(Long organismoid) {
+		this.organismoid = organismoid;
+	}
+
+	/**
+	 * @return the numintentos
+	 */
+	public Integer getNumintentos() {
+		return numintentos;
+	}
+
+	/**
+	 * @param numintentos
+	 *            the numintentos to set
+	 */
+	public void setNumintentos(Integer numintentos) {
+		this.numintentos = numintentos;
+	}
+
+	/**
+	 * @return the headersms
+	 */
+	public String getHeadersms() {
+		return headersms;
+	}
+
+	/**
+	 * @param headersms
+	 *            the headersms to set
+	 */
+	public void setHeadersms(String headersms) {
+		this.headersms = headersms;
+	}
+
+	/**
+	 * @return the proveedorusuariosms
+	 */
+	public String getProveedorusuariosms() {
+		return proveedorusuariosms;
+	}
+
+	/**
+	 * @param proveedorusuariosms
+	 *            the proveedorusuariosms to set
+	 */
+	public void setProveedorusuariosms(String proveedorusuariosms) {
+		this.proveedorusuariosms = proveedorusuariosms;
+	}
+
+	/**
+	 * @return the proveedorpasswordsms
+	 */
+	public String getProveedorpasswordsms() {
+		return proveedorpasswordsms;
+	}
+
+	/**
+	 * @param proveedorpasswordsms
+	 *            the proveedorpasswordsms to set
+	 */
+	public void setProveedorpasswordsms(String proveedorpasswordsms) {
+		this.proveedorpasswordsms = proveedorpasswordsms;
+	}
+
+	/**
+	 * @return the creadopor
+	 */
+	public String getCreadopor() {
+		return creadopor;
+	}
+
+	/**
+	 * @param creadopor
+	 *            the creadopor to set
+	 */
+	public void setCreadopor(String creadopor) {
+		this.creadopor = creadopor;
+	}
+
+	/**
+	 * @return the fechacreacion
+	 */
+	public Date getFechacreacion() {
+		return fechacreacion;
+	}
+
+	/**
+	 * @param fechacreacion
+	 *            the fechacreacion to set
+	 */
+	public void setFechacreacion(Date fechacreacion) {
+		this.fechacreacion = fechacreacion;
+	}
+
+	/**
+	 * @return the modificadopor
+	 */
+	public String getModificadopor() {
+		return modificadopor;
+	}
+
+	/**
+	 * @param modificadopor
+	 *            the modificadopor to set
+	 */
+	public void setModificadopor(String modificadopor) {
+		this.modificadopor = modificadopor;
+	}
+
+	/**
+	 * @return the fechamodificacion
+	 */
+	public Date getFechamodificacion() {
+		return fechamodificacion;
+	}
+
+	/**
+	 * @param fechamodificacion
+	 *            the fechamodificacion to set
+	 */
+	public void setFechamodificacion(Date fechamodificacion) {
+		this.fechamodificacion = fechamodificacion;
 	}
 
 }

@@ -36,11 +36,6 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 <!-- 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" /> -->
 
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIM001] - Inicio peticion" />
-
-		<!-- INVOCACION DEL ENVIADOR -->
-		<component doc:name="Invocar envio SMS AEAT">
-			<spring-object bean="invocarEnvio001SMS" />
-		</component>
 		
 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" />
 		
@@ -48,6 +43,11 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIM001] - Auditoria de la peticion recibida" />
 		<component	doc:name="Audita" >
 			<spring-object bean="audit" />
+		</component>
+
+		<!-- INVOCACION DEL ENVIADOR -->
+		<component doc:name="Invocar envio SMS AEAT">
+			<spring-object bean="invocarEnvio001SMS" />
 		</component>
 		
 		<!-- ADAPTAR PETICION -->
@@ -87,7 +87,13 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		
 		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIM001] - Peticion procesada" />
 		
-
+		<!-- ACTUALIZACION DE AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioSIM001] - Actualizacion de la auditoria" />
+		<component doc:name="Actualizacon de Auditoria">
+			<spring-object bean="updateAudit" />
+		</component>
+		
+		
 		<!-- GESTION DE ERRORES -->
 
 		<catch-exception-strategy doc:name="Catch Exception Strategy">

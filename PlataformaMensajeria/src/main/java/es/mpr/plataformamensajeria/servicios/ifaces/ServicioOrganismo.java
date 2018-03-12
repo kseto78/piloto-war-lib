@@ -29,6 +29,12 @@ public interface ServicioOrganismo {
 	OrganismoBean loadOrganismo(OrganismoBean organismo)throws BusinessException;
 	
 	void deleteOrganismo(Long organismoId, String source, String accion, Long accionId)throws BusinessException;
+
+	List<String> listAutocomplete(String term);
+
+	Integer getOrganismoIdByDir3(String search);
+
+	Boolean existeOrganimo(OrganismoBean organismo);
 	
 }
 

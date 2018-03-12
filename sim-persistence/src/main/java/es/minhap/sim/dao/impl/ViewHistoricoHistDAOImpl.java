@@ -1,3 +1,4 @@
+
 /*
  *
  * archivo: ViewHistoricoHistDAOImpl.java
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.minhap.common.persistence.hibernate.dao.AbstractHibernateDAO;
 import es.minhap.sim.dao.ViewHistoricoHistDAO;
 import es.minhap.sim.model.ViewHistoricoHist;
-import es.minhap.sim.model.ViewHistoricoHistId;
 import es.minhap.sim.query.ViewHistoricoHistQuery;
 
 /**
@@ -31,21 +31,19 @@ import es.minhap.sim.query.ViewHistoricoHistQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class ViewHistoricoHistDAOImpl extends
-		AbstractHibernateDAO<ViewHistoricoHist, ViewHistoricoHistId, ViewHistoricoHistQuery> implements
-		ViewHistoricoHistDAO {
+public class ViewHistoricoHistDAOImpl extends AbstractHibernateDAO<ViewHistoricoHist,Long,ViewHistoricoHistQuery> implements ViewHistoricoHistDAO {
 
-	@Override
-	protected Class<ViewHistoricoHist> getEntityClass() {
-		return ViewHistoricoHist.class;
-	}
+    @Override
+    protected Class<ViewHistoricoHist> getEntityClass() {
+        return ViewHistoricoHist.class;
+    }
 
-	@Override
-	protected Class<ViewHistoricoHistId> getIdentifierClass() {
-		return ViewHistoricoHistId.class;
-	}
-
-	@Override
+    @Override
+    protected Class<Long> getIdentifierClass() {
+        return Long.class;
+    }
+    
+    @Override
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
 	public void setSessionFactoryApp(SessionFactory sessionFactory) {

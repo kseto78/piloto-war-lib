@@ -223,6 +223,16 @@ public class TblLogQuery extends AbstractHibernateQueryEntity<TblLog> {
     private boolean sourcedescriptionIsNotNull = false;
 
     /**
+   	 * Establece el máximo de resultados
+   	 */
+   	private Integer maxResultados;
+   	
+   	/**
+   	 * Establece el primer resultados
+   	 */
+   	private Integer primerResultado;
+    
+    /**
      * Constructor default
      */
     public TblLogQuery() {
@@ -671,9 +681,6 @@ public class TblLogQuery extends AbstractHibernateQueryEntity<TblLog> {
      * @return ${field.getName()}Min.
      */
     public Date getAdtfechaMin() {
-        if (adtfechaMin != null) {
-            return DateUtil.toDayBegin(adtfechaMin);
-        }
         return adtfechaMin;
     }
 
@@ -690,10 +697,7 @@ public class TblLogQuery extends AbstractHibernateQueryEntity<TblLog> {
      * @return adtfechaMax.
      */
     public Date getAdtfechaMax() {
-        if (adtfechaMax != null) {
-            return DateUtil.toDayEnd(adtfechaMax);
-        }
-        return adtfechaMax;
+       return adtfechaMax;
     }
 
     /**
@@ -827,6 +831,34 @@ public class TblLogQuery extends AbstractHibernateQueryEntity<TblLog> {
     public void setSourcedescriptionIsNotNull(boolean sourcedescriptionIsNotNull) {
         this.sourcedescriptionIsNotNull = sourcedescriptionIsNotNull;
     }
+    
+    /**
+	 * @return the maxResultados
+	 */
+	public Integer getMaxResultados() {
+		return maxResultados;
+	}
+
+	/**
+	 * @param maxResultados the maxResultados to set
+	 */
+	public void setMaxResultados(Integer maxResultados) {
+		this.maxResultados = maxResultados;
+	}
+
+	/**
+	 * @return the primerResultado
+	 */
+	public Integer getPrimerResultado() {
+		return primerResultado;
+	}
+
+	/**
+	 * @param primerResultado the primerResultado to set
+	 */
+	public void setPrimerResultado(Integer primerResultado) {
+		this.primerResultado = primerResultado;
+	}
 
     /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
@@ -996,6 +1028,14 @@ public class TblLogQuery extends AbstractHibernateQueryEntity<TblLog> {
         if (isSourcedescriptionIsNotNull()) {
             criteria.add(Restrictions.isNotNull(SOURCEDESCRIPTION));
         }
+        
+        if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);

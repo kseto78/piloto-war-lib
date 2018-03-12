@@ -22,6 +22,15 @@ public interface TblMensajesAdjuntosManager {
 	 */
 	public List<TblMensajesAdjuntos> listaAdjuntosByMensaje(Long mensajeId);
 
+
+	/**
+	 * Elimina en tabla Mensajes Adjuntos
+	 * 
+	 * @param TblMensajesAdjuntos
+	 * @return id
+	 */
+	public void delete(Long idMensajeAdjunto);
+
 	/**
 	 * obtiene el listado de los idAdjuntos de un mensaje
 	 * 
@@ -30,4 +39,5 @@ public interface TblMensajesAdjuntosManager {
 	 */
 	public Integer countAdjuntosByMensaje(Long mensajeId);
 	
+
 }

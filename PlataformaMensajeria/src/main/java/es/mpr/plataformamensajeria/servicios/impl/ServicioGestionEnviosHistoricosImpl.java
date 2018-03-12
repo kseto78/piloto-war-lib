@@ -33,6 +33,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblMensajesHistManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewHistoricoHistManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewLotesEnviosDetHistManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ViewMisimManager;
 import es.minhap.sim.model.TblAdjuntosHist;
 import es.minhap.sim.model.TblDestinatariosHist;
 import es.minhap.sim.model.TblDestinatariosMensHist;
@@ -68,6 +69,9 @@ import es.mpr.plataformamensajeria.util.UtilCreateFile;
 @Service("servicioGestionEnviosHistoricosImpl")
 public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnviosHistoricos {
 	Logger logger = Logger.getLogger(ServicioGestionEnviosHistoricosImpl.class);
+	
+	@Resource(name="ViewMisimManagerImpl")
+	private ViewMisimManager viewMisimManager;
 	
 	@Resource(name = "TblGestionEnviosHistManagerImpl")
 	private TblGestionEnviosHistManager tblGestionEnviosHistManager;
@@ -843,12 +847,11 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	///MIGRADO
 	private List<GestionEnvioHistoricoBean> getListGestionEnvioHistoricoBean(List<TblGestionEnviosHist> lista,
 			boolean porLote) {
-		List<GestionEnvioHistoricoBean> result = null;
+		List<GestionEnvioHistoricoBean> result = new ArrayList<>();
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		if (lista!=null && !lista.isEmpty())
 		{
-			result = new ArrayList<>();
-		
+					
 			for (TblGestionEnviosHist ge : lista) {
 				GestionEnvioHistoricoBean gestionEnvio =  new GestionEnvioHistoricoBean();
 			
@@ -926,12 +929,11 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	
 ////MIGRADO
 	private List<GestionEnvioHistoricoBean> getListGestionEnvioHistBeanFromDestinatario(List<ViewGestionEnviosDestHistId> lista) {
-		List<GestionEnvioHistoricoBean> result = null;
+		List<GestionEnvioHistoricoBean> result = new ArrayList<>();
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		if (lista!=null && !lista.isEmpty())
 		{
-			result = new ArrayList<>();
-		
+					
 			for (ViewGestionEnviosDestHistId ge : lista) {
 				GestionEnvioHistoricoBean gestionEnvio = new GestionEnvioHistoricoBean();
 				gestionEnvio.setAplicacion(ge.getAplicacion());

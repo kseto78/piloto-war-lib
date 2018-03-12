@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -840,6 +841,17 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
      */
     private boolean leftJoinTblLotesEnvios = false;
 
+    /**
+     * Valor primer resultado
+     */
+    private Integer firstResult;
+    
+    
+    /**
+     * Valor max resultados
+     */
+    private Integer maxResult;
+    
     /**
      * Constructor default
      */
@@ -4258,7 +4270,16 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
         if (isModoIsNotNull()) {
             criteria.add(Restrictions.isNotNull(MODO));
         }
-        //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
+        
+        if (null != firstResult){
+        	criteria.setFirstResult(firstResult);
+        }
+        
+        if (null != maxResult){
+        	criteria.setMaxResults(maxResult);
+        }
+        
+      //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
         }
@@ -4300,5 +4321,35 @@ public class TblMensajesQuery extends AbstractHibernateQueryEntity<TblMensajes> 
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+
+	/**
+	 * @return the firstResult
+	 */
+	public Integer getFirstResult() {
+		return firstResult;
+	}
+
+	/**
+	 * @param firstResult the firstResult to set
+	 */
+	public void setFirstResult(Integer firstResult) {
+		this.firstResult = firstResult;
+	}
+
+	/**
+	 * @return the maxResult
+	 */
+	public Integer getMaxResult() {
+		return maxResult;
+	}
+
+	/**
+	 * @param maxResult the maxResult to set
+	 */
+	public void setMaxResult(Integer maxResult) {
+		this.maxResult = maxResult;
+	}
+    
+    
 }
  

@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
@@ -298,7 +298,6 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		return (usuariosPushDAO.count(query) <= 0)? true : false;
 	}
 	
-	
 	@Override
 	@Transactional
 	public TblUsuariosPush existeUimDispositivo(String uidDispositivo, Long servicioId) {
@@ -401,7 +400,6 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		
 	}
 
-	
 	/**
 	 * @return the queryExecutor
 	 */
@@ -529,5 +527,4 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		this.reloadableResourceBundleMessageSource = reloadableResourceBundleMessageSource;
 	}
 
-	
 }

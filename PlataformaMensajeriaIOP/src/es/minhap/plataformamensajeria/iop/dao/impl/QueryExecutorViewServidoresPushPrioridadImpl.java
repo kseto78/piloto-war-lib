@@ -20,6 +20,7 @@ import es.minhap.common.exception.ApplicationException;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorViewServidoresPushPrioridad;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorPush;
+import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorWebPush;
 
 /**
  * Query Executor encargado de lanzar las consultas especificas para la tabla
@@ -91,6 +92,42 @@ public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSu
 				ps.setPuertoUrlFeedback((null != row[5])? Integer.parseInt((String) row[5]) : 0);
 				ps.setServicioId((null != row[6])? ((BigDecimal) row[6]).intValue() : 0);
 				ps.setPrioridad((null != row[7])? ((BigDecimal) row[7]).intValue() : 0);
+				pss.add(ps);
+			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("search - end");
+			}
+
+		} catch (Exception e) {
+			LOG.error("Se ha producido un error ", e);
+			throw new ApplicationException(e);
+		}
+		return pss;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ParametrosServidorWebPush> getServidoresWebPush(Long mensajeId) {
+		List<ParametrosServidorWebPush> pss = new ArrayList<>();
+		try {
+
+			SQLQuery query;
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT distinct servidorwebpushid,servicioid, prioridad FROM VIEW_SERV_SERVIDOR_WEBPUSH ");
+			sb.append("WHERE ( servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid");
+			sb.append(" WHERE mensajeid  = ");
+			sb.append(mensajeId);
+			sb.append(") OR servicioId IS NULL) order by Prioridad");
+			query = getSessionFactory()
+					.getCurrentSession()
+					.createSQLQuery(sb.toString());
+
+			List<Object[]> rows = query.list();
+			for (Object[] row : rows) {
+				ParametrosServidorWebPush ps = new ParametrosServidorWebPush();
+				ps.setServidorWebPushId((null != row[0]) ? ((BigDecimal) row[0]).intValue() : 0);
+				ps.setServicioId((null != row[1]) ? ((BigDecimal) row[1]).intValue() : 0);
 				pss.add(ps);
 			}
 			if (LOG.isDebugEnabled()) {

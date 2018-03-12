@@ -80,4 +80,6 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 		}
 		return adjuntos;
 	}
+
+	
 }

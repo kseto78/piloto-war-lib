@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.minhap.common.persistence.hibernate.dao.AbstractHibernateDAO;
 import es.minhap.sim.dao.ViewPlanificacionesDAO;
 import es.minhap.sim.model.ViewPlanificaciones;
-import es.minhap.sim.model.ViewPlanificacionesId;
 import es.minhap.sim.query.ViewPlanificacionesQuery;
 
 /**
@@ -31,19 +30,17 @@ import es.minhap.sim.query.ViewPlanificacionesQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class ViewPlanificacionesDAOImpl extends
-		AbstractHibernateDAO<ViewPlanificaciones, ViewPlanificacionesId, ViewPlanificacionesQuery> implements
-		ViewPlanificacionesDAO {
+public class ViewPlanificacionesDAOImpl extends AbstractHibernateDAO<ViewPlanificaciones,Long,ViewPlanificacionesQuery> implements ViewPlanificacionesDAO {
 
-	@Override
-	protected Class<ViewPlanificaciones> getEntityClass() {
-		return ViewPlanificaciones.class;
-	}
+	  @Override
+	    protected Class<ViewPlanificaciones> getEntityClass() {
+	        return ViewPlanificaciones.class;
+	    }
 
-	@Override
-	protected Class<ViewPlanificacionesId> getIdentifierClass() {
-		return ViewPlanificacionesId.class;
-	}
+	    @Override
+	    protected Class<Long> getIdentifierClass() {
+	        return Long.class;
+	    }
 
 	@Override
 	@Autowired

@@ -1,18 +1,27 @@
 package es.mpr.plataformamensajeria.web.action.servicios;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +33,11 @@ import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 
+import de.brendamour.jpasskit.PKField;
+import de.brendamour.jpasskit.PassbookGenerator;
+import de.brendamour.jpasskit.enums.PKTextAlignment;
+import es.minhap.common.properties.PropertiesServices;
+import es.minhap.plataformamensajeria.iop.beans.lotes.PkFieldsXMLBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.CanalBean;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
@@ -36,6 +50,7 @@ import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServicioOrganismosBean;
 import es.mpr.plataformamensajeria.beans.ServidorBean;
 import es.mpr.plataformamensajeria.beans.ServidorPushBean;
+import es.mpr.plataformamensajeria.beans.ServidorWebPushBean;
 import es.mpr.plataformamensajeria.beans.ServidoresOrganismosBean;
 import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
@@ -48,6 +63,8 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorWebPush;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuariosWebPush;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
@@ -69,6 +86,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = Logger.getLogger(ServicioAction.class);
+	
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
 	@Resource(name = "servicioOrganismoImpl")
 	private ServicioOrganismo servicioOrganismo;
@@ -90,12 +110,18 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	@Resource(name = "servicioServidorPushImpl")
 	private ServicioServidorPush servicioServidorPush;
+	
+	@Resource(name = "servicioServidorWebPushImpl")
+	private ServicioServidorWebPush servicioServidorWebPush;
 
 	@Resource(name = "servicioCanalImpl")
 	private ServicioCanal servicioCanal;
 
 	@Resource(name = "servicioPlanificacionImpl")
 	private ServicioPlanificacion servicioPlanificacion;
+	
+	@Resource(name = "servicioUsuariosWebPushImpl")
+	private ServicioUsuariosWebPush servicioUsuariosWebPush;
 
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
@@ -137,6 +163,15 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	private String idServicio;
 	private String parametroServidorId;
 	private String planificacionId;
+	private String search;
+	private String logo;
+	private String logo64;
+	private String background;
+	private String icon;
+	private String background64;
+	private String icon64;
+	private String vapidPublicKey;
+	private String vapidPrivateKey;
 
 	private String newActivo;
 	private String newPremium;
@@ -167,6 +202,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	private Integer canalSMSId;
 	private Integer canalRecepcionSMSId;
 	private Integer canalServidorPushId;
+	private Integer canalServidorWebPushId;
 	private Integer valorMaximoPredefinidoHistorificacion;
 	private Integer valorMaximoPredefinidorConservacion;
 	private Integer valor1Historificacion;
@@ -182,6 +218,24 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	private String accionUpdateOrganismo;
 	private Long accionIdUpdateOrganismo;
 	private String sourceUpdateOrganismo;
+	
+	private static HashMap<String,String> binaryTypes = new HashMap<>();
+	private static HashMap<String,String> textTypes = new HashMap<>();
+	static {        
+        binaryTypes.put("gif", "image/gif");
+        binaryTypes.put("jpg", "image/jpeg");
+        binaryTypes.put("png", "image/png");
+        binaryTypes.put("jpeg", "image/jpeg");   
+        textTypes.put("htm", "text/html");
+        textTypes.put("html", "text/html");
+        textTypes.put("xml", "application/xml");
+        textTypes.put("xhtml", "application/xhtml+xml");  
+        textTypes.put("js", "application/x-javascript");
+        textTypes.put("css", "text/css");
+        textTypes.put("txt", "text/plain");
+    }    
+	
+	public static final String TIPO_FICHERO = "pkpass";
 
 	public String newSearch() throws BaseException {
 		return SUCCESS;
@@ -199,9 +253,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		String columnSort = getColumnSort("tableId"); // Columna usada para
 														// ordenar
 
-		if (servicio != null)
-			if (servicio.getNombre() != null && servicio.getNombre().length() <= 0)
+		if (servicio != null){
+			if (servicio.getNombre() != null && servicio.getNombre().length() <= 0){
 				servicio.setNombre(null);
+			}
+			if(servicio.getServicioId() != null && servicio.getServicioId() <= 0){
+				servicio.setServicioId(null);
+			}
+		}
 
 		int inicio = (page - 1) * pagesize;
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
@@ -298,7 +357,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 				comboConfiguraciones = getComboConfiguracion(servicioBBDD.getCanalid());
 				comboConfiguracionesPlan = getComboConfiguracionesPlan(servicioBBDD.getCanalid());
-				comboServicioOrganismos = cargarComboServicioOrganismos();
+				//comboServicioOrganismos = cargarComboServicioOrganismos();
 
 				listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByServicioID(Integer
 						.parseInt(idServicio));
@@ -398,7 +457,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					servicio.setIosplataforma(false);
 				}
 			}
+			if (servicio.getCanalid() != null && servicio.getCanalid().equals(Integer.valueOf(canalServidorWebPushId))) {
+				if ((vapidPrivateKey != null && vapidPrivateKey.length() > 0)
+						|| (vapidPublicKey != null && vapidPrivateKey.length() > 0)) {
+					servicio.setVapidPrivateKey(vapidPrivateKey);
+					servicio.setVapidPublicKey(vapidPublicKey);
+				}
 
+			}
 			// Informes
 			if (newInformeActivo != null && newInformeActivo.equals("true")) {
 				servicio.setInformesactivo(true);
@@ -506,6 +572,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			} else {
 				servicio.setConservacion(conservacion);
 			}
+						
 			ServicioBean servicioBean = servicioServicio.createServicioBean(servicio);
 
 			boolean validServicio = false;
@@ -780,6 +847,17 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				sw = false;
 			}
 		}
+		if (servicio.getCanalid() != null && servicio.getCanalid().intValue() == 5) {
+			if (PlataformaMensajeriaUtil.isEmpty(servicio.getVapidPublicKey())) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.vapidPublicKey.error"));
+				sw = false;
+			}
+			if (PlataformaMensajeriaUtil.isEmpty(servicio.getVapidPrivateKey())) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.vapidPrivateKey.error"));
+				sw = false;
+			}
+
+		}
 		if (servicio.getInformesactivo() != null && servicio.getInformesactivo()) {
 			if (PlataformaMensajeriaUtil.isEmpty(servicio.getInformesdestinatarios())) {
 				addActionErrorSession(this.getText("plataforma.servicio.field.informesdestinatarios.error"));
@@ -839,6 +917,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		if (servicio == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.update.error"));
 		} else {
+			
 			if (servicio.getServicioId() == null) {
 				if (idServicio != null) {
 					servicio.setServicioId(Integer.valueOf(idServicio));
@@ -853,7 +932,6 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 			} else {
 				servicioBBDD = servicioServicio.loadServicio(servicio);
-
 			}
 
 			if (servicioBBDD != null) {
@@ -904,7 +982,15 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					servicioBBDD.setIsAndroidPlataforma(servicio.getIsAndroidPlataforma());
 					servicioBBDD.setIsIosPlataforma(servicio.getIsIosPlataforma());
 				}
-
+				
+				if (servicio.getCanalid().equals(Integer.valueOf(canalServidorWebPushId))) {
+					if((vapidPrivateKey != null && vapidPrivateKey.length()> 0) || (vapidPublicKey != null && vapidPrivateKey.length()>0) ){
+						servicioBBDD.setVapidPrivateKey(vapidPrivateKey);
+						servicioBBDD.setVapidPublicKey(vapidPublicKey);
+					}
+					servicioBBDD.setCaducidadWebPush(servicio.getCaducidadWebPush());
+				}
+				
 				// Informes
 				if (servicio.getIsInformesActivo() != null && "true".equals(servicio.getIsInformesActivo())) {
 					servicioBBDD.setInformesactivo(true);
@@ -1267,7 +1353,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 			comboConfiguraciones = getComboConfiguracion(servicio.getCanalid());
 			comboConfiguracionesPlan = getComboConfiguracionesPlan(servicio.getCanalid());
-			comboServicioOrganismos = cargarComboServicioOrganismos();
+//			comboServicioOrganismos = cargarComboServicioOrganismos();
 
 			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByServicioID(Integer
 					.parseInt(idServicio));
@@ -1480,6 +1566,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(3));
 			} else if (servicio != null && servicio.getCanalid() != null && servicio.getCanalid().intValue() == 4) {
 				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(4));
+			}else if (servicio != null && servicio.getCanalid() != null && servicio.getCanalid().intValue() == 5) {
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(5));
 			}
 
 			int valido = servicioPlanificacion.validaPlanificacionOptima(idPlanificacion,
@@ -1504,6 +1592,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			return ERROR;
 		}
 
+		return SUCCESS;
+	}
+	
+	public String generarClavesServicio() throws BaseException {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+//		String a = "{\"PublicKey\": \"BHGsU5-_LWDAmckOy0a_u5Y59xDWkkSiptWCYdg1pGbJEkvFy8bpmpwGJZb_xOI8wuZHa4fs1bOnkFaYFCG8WgM=\",\"PrivateKey\": \"B_tmJfK_As_XUXD6dbbqYi4RHgTP-CBz3jw7D8w_vMU=\"}";
+		json = new Gson().toJson(servicioUsuariosWebPush.generarnuevasClaves());
 		return SUCCESS;
 	}
 
@@ -1633,7 +1729,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
-	///MIGRADO
+	// /MIGRADO
 	@Transactional
 	public String addServicioOrganismos() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -1643,55 +1739,60 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		if (getRequest().getSession().getAttribute("infoUser") == null)
 			return "noUser";
 		boolean sw = true;
+		servicioOrganismos = new ServicioOrganismosBean();
+		
+		if (search.length() > 0) {
+			servicioOrganismos.setOrganismoId(servicioOrganismo.getOrganismoIdByDir3(search.substring(0,
+					search.indexOf("|")).trim()));
+		}
+		if (PlataformaMensajeriaUtil.isEmptyNumber(servicioOrganismos.getOrganismoId())) {
+			addFieldErrorSession(this
+					.getText("plataforma.servicio.servidorServicio.field.multiorganismo.servicio.vacio"));
+			sw = false;
+		}
 
-		if (servicioOrganismos != null) {
-			servicio.setServicioId(Integer.valueOf(idServicio));
-			ServicioBean servicioBBDD = servicioServicio.loadServicio(servicio);
-			if (!servicioBBDD.getMultiorganismo()) {
-				addFieldErrorSession(this.getText("plataforma.servicio.servidorServicio.field.multiorganismo"));
-				sw = false;
-			}
-			if (PlataformaMensajeriaUtil.isEmptyNumber(servicioOrganismos.getOrganismoId())) {
-				addFieldErrorSession(this
-						.getText("plataforma.servicio.servidorServicio.field.multiorganismo.servicio.vacio"));
-				sw = false;
-			}
-
-			if (null != listaServicioOrganismos) {
-				for (ServicioOrganismosBean s : listaServicioOrganismos) {
-					if (s.getOrganismoId().equals(servicioOrganismos.getOrganismoId())) {
-						addFieldErrorSession(this
-								.getText("plataforma.servicio.servidorServicio.field.multiorganismo.organismo.repetido"));
-						sw = false;
-					}
+		servicio.setServicioId(Integer.valueOf(idServicio));
+		ServicioBean servicioBBDD = servicioServicio.loadServicio(servicio);
+		if (!servicioBBDD.getMultiorganismo()) {
+			addFieldErrorSession(this.getText("plataforma.servicio.servidorServicio.field.multiorganismo"));
+			sw = false;
+		}
+		listaServicioOrganismos = servicioServicio.getServicioOrganismo(idServicio);
+		if (null != listaServicioOrganismos) {
+			for (ServicioOrganismosBean s : listaServicioOrganismos) {
+				if (s.getOrganismoId().equals(servicioOrganismos.getOrganismoId())) {
+					addFieldErrorSession(this
+							.getText("plataforma.servicio.servidorservicio.field.multiorganismo.organismo.repetido"));
+					sw = false;
 				}
 			}
+		}
 
-			if (sw) {
+		if (sw) {
 
-				ServicioBean sBean = new ServicioBean();
-				sBean.setServicioId(Integer.valueOf(idServicio));
-				ServicioBean servBean = servicioServicio.loadServicio(sBean);
-				servicioServicio.updateServicio(servBean, null, null, null);
 
-				// modificamos el organismo
-				OrganismoBean oBean = new OrganismoBean();
-				oBean.setOrganismoId(servicioOrganismos.getOrganismoId());
-				OrganismoBean orgBean = servicioOrganismo.loadOrganismo(oBean);
-				servicioOrganismo.updateOrganismo(orgBean, null, null, null);
+			ServicioBean sBean = new ServicioBean();
+			sBean.setServicioId(Integer.valueOf(idServicio));
+			ServicioBean servBean = servicioServicio.loadServicio(sBean);
+			servicioServicio.updateServicio(servBean, null, null, null);
 
-				servicioOrganismos.setServicioId(sBean.getServicioId());
-				servicioOrganismos.setOrganismoId(servicioOrganismos.getOrganismoId());
 
-				servicioServicio.newServicioOrganismo(servicioOrganismos, source, accion, accionId, descripcion);
-				addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.add.ok"));
-			} else {
-				return ERROR;
-			}
+
+			// modificamos el organismo
+			OrganismoBean oBean = new OrganismoBean();
+			oBean.setOrganismoId(servicioOrganismos.getOrganismoId());
+			OrganismoBean orgBean = servicioOrganismo.loadOrganismo(oBean);
+			servicioOrganismo.updateOrganismo(orgBean, null, null, null);
+
+			servicioOrganismos.setServicioId(sBean.getServicioId());
+			servicioOrganismos.setOrganismoId(servicioOrganismos.getOrganismoId());
+
+			servicioServicio.newServicioOrganismo(servicioOrganismos, source, accion, accionId, descripcion);
+			addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.add.ok"));
 		} else {
-			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.add.error"));
 			return ERROR;
 		}
+
 		return SUCCESS;
 	}
 
@@ -1946,6 +2047,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		canalSMSId = Integer.parseInt(properties.getProperty("generales.CANAL_SMS_ID", null));
 		canalRecepcionSMSId = Integer.parseInt(properties.getProperty("generales.CANAL_RECEPCION_SMS_ID", null));
 		canalServidorPushId = Integer.parseInt(properties.getProperty("generales.CANAL_SERVIDOR_PUSH_ID", null));
+		canalServidorWebPushId = Integer.parseInt(properties.getProperty("generales.CANAL_SERVIDOR_WEBPUSH_ID", null));
 		valorMaximoPredefinidoHistorificacion = Integer.parseInt(properties.getProperty(
 				"servicioAction.VALOR_MAXIMO_PREDEFINIDO_HISTORIFICACION", null));
 		valorMaximoPredefinidorConservacion = Integer.parseInt(properties.getProperty(
@@ -2011,6 +2113,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		ArrayList<ReceptorSMSBean> keysReceptorSMS = null;
 		ArrayList<ServidorBean> keysSMTP = null;
 		ArrayList<ServidorPushBean> keysServidorPush = null;
+		ArrayList<ServidorWebPushBean> keysServidorWebPush = null;
 		if (idCanal != null && idCanal.intValue() == canalSMSId) {
 			try {
 				keysSMS = (ArrayList<ProveedorSMSBean>) servicioProveedorSMS.getProveedoresSMSNoAsignados(
@@ -2079,6 +2182,22 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					option.setDescripcion(key.getNombre());
 					result.add(option);
 				}
+		}else if (idCanal != null && idCanal.intValue() == canalServidorWebPushId) {
+			try {
+				keysServidorWebPush = (ArrayList<ServidorWebPushBean>) servicioServidorWebPush.getServidoresWebPushNoAsignados(
+						Integer.valueOf(idServicio),
+						Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_WEBPUSH", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracion:" + e);
+			}
+			if (keysServidorWebPush != null && !keysServidorWebPush.isEmpty())
+				for (ServidorWebPushBean key : keysServidorWebPush) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getServidorWebPushId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
 		}
 
 		return result;
@@ -2093,6 +2212,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		ArrayList<ReceptorSMSBean> keysReceptorSMS = null;
 		ArrayList<ServidorBean> keysSMTP = null;
 		ArrayList<ServidorPushBean> keysServidoresPush = null;
+		ArrayList<ServidorWebPushBean> keysServidoresWebPush = null;
 		if (idCanal != null && idCanal.intValue() == canalSMSId) {
 			try {
 				keysSMS = (ArrayList<ProveedorSMSBean>) servicioProveedorSMS.getProveedoresSMS(Integer
@@ -2156,6 +2276,23 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 					option = new KeyValueObject();
 					option.setCodigo(key.getServidorPushId().toString());
+					option.setDescripcion(key.getNombre());
+					result.add(option);
+				}
+			}
+		}else if (idCanal != null && idCanal.intValue() == canalServidorWebPushId) {
+			try {
+				keysServidoresWebPush = (ArrayList<ServidorWebPushBean>) servicioServidorWebPush.getServidoresWebPush(Integer
+						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_WEBPUSH", null)));
+			} catch (BusinessException e) {
+				logger.error("ServicioAction - getComboConfiguracionesPlan:" + e);
+			}
+
+			if (keysServidoresWebPush != null && !keysServidoresWebPush.isEmpty()) {
+				for (ServidorWebPushBean key : keysServidoresWebPush) {
+
+					option = new KeyValueObject();
+					option.setCodigo(key.getServidorWebPushId().toString());
 					option.setDescripcion(key.getNombre());
 					result.add(option);
 				}
@@ -2246,7 +2383,16 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 						if (!listaOrganismos.contains(l.getOrganismoId()))
 							listaOrganismos.add(l.getOrganismoId());
 					}
-					res.addAll(servicioServidor.getServidorOrganismo(listaOrganismos));
+					List<ServidoresServiciosBean> lista = servicioServidor.getServidorOrganismo(listaOrganismos);
+					
+					if (null != lista && !lista.isEmpty()){
+						for (ServidoresServiciosBean ss : lista) {
+							if (null != ss.getServicioId() && ss.getServicioId().toString().equals(idServicio)){
+								res.add(ss);
+							}
+						}
+				
+					}
 				}
 			} catch (NumberFormatException e) {
 				logger.error("ServicioAction - loadServidoresServicio:" + e);
@@ -2285,6 +2431,387 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		}
 		return volverAplicacion;
 	}
+	
+	
+	public String loadPassbook() throws BusinessException {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		String nombreOrganismo = "";
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		
+		if(idServicioOrganismo == null || idServicioOrganismo.isEmpty()) {
+			throw new BusinessException("El idServicioOrganismo recibido es nulo");
+		}
+		
+		if(idServicio == null || idServicio.isEmpty()) {
+			throw new BusinessException("El idServicio recibido es nulo");
+		}
+		
+		if(idOrganismo == null || idOrganismo.isEmpty()) {
+			throw new BusinessException("El idOrganismo recibido es nulo");
+		}
+		
+		servicioOrganismos = new ServicioOrganismosBean();
+		servicioOrganismos.setServicioOrganismoId(Integer.valueOf(idServicioOrganismo));
+		servicioOrganismos.setServicioId(Integer.valueOf(idServicio));
+		servicioOrganismos.setOrganismoId(Integer.valueOf(idOrganismo));
+		
+		OrganismoBean o = new OrganismoBean();
+		o.setOrganismoId(Integer.parseInt(idOrganismo));
+		o = servicioOrganismo.loadOrganismo(o);
+		
+		String l = pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "logo.png";
+				
+		Path pathLogo = Paths.get(l);
+		if(Files.exists(pathLogo, LinkOption.NOFOLLOW_LINKS)){
+			logo = pathLogo.toString();
+						
+			logo64 = generateDataURI(pathLogo);
+			servicioOrganismos.setLogo(logo);
+		}
+		
+		Path pathBackground = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "background.png");
+		if(Files.exists(pathBackground, LinkOption.NOFOLLOW_LINKS)){
+			background = pathBackground.toString();
+			
+			background64 = generateDataURI(pathBackground);
+			servicioOrganismos.setBackground(background);
+		}
+		
+		Path pathIcon = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "icon.png");
+		if(Files.exists(pathIcon, LinkOption.NOFOLLOW_LINKS)){
+			icon = pathIcon.toString();
+			
+			icon64 = generateDataURI(pathIcon);
+			servicioOrganismos.setIcon(icon);			
+		}
+			
+			return SUCCESS;
+
+	}
+	
+	private String generateDataURI(Path path) {
+		StringBuffer buffer = null;
+		try{
+			byte[] bytes = Files.readAllBytes(path);
+			String mimeType = getMimeType(path.toString());
+					
+			 //create the output
+	        buffer = new StringBuffer();        
+	        buffer.append("data:");        
+	        
+	        //add MIME type        
+	        buffer.append(mimeType);
+	        
+	        //output base64-encoding
+	        buffer.append(";base64,");
+	        buffer.append(new String(Base64.encodeBase64(bytes)));
+		}catch(IOException e){
+			return null;
+		}
+        //output to writer
+       return buffer.toString();        
+
+	}
+	
+	private String getMimeType(String filename) {
+		String res = "";
+		String type = getFileType(filename);
+		 
+		if (binaryTypes.containsKey(type)){    
+             res = (String) binaryTypes.get(type);        
+         } else if (textTypes.containsKey(type)){
+             res = (String) textTypes.get(type) + ";charset=UTF-8";    
+         } 
+		return res;
+	}
+	
+	 private static String getFileType(String filename){
+	        String type = "";
+
+	        int idx = filename.lastIndexOf('.');
+	        if (idx >= 0 && idx < filename.length() - 1) {
+	            type = filename.substring(idx + 1);
+	        }
+	        
+	        return type;
+	    }
+
+
+	public void savePassbook() throws BusinessException {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		Path path = null;
+		Path path2x = null;
+		
+//		if (getRequest().getSession().getAttribute("infoUser") == null)
+//			return "noUser";
+		
+		if(idServicioOrganismo == null) {
+			throw new BusinessException("El idServicioOrganismo recibido es nulo");
+		}
+		
+		if(idServicio == null) {
+			throw new BusinessException("El idServicio recibido es nulo");
+		}
+		
+		if(idOrganismo == null) {
+			throw new BusinessException("El idOrganismo recibido es nulo");
+		}
+		OrganismoBean o = new OrganismoBean();
+		o.setOrganismoId(Integer.parseInt(idOrganismo));
+		o = servicioOrganismo.loadOrganismo(o);
+		
+		try {
+			if(logo!=null){
+				Path logoFile = Paths.get(logo);
+				path = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "logo.png");
+				path2x = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "logo@2x.png");
+				Files.createDirectories(path.getParent());
+				Files.copy(logoFile, path, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(logoFile, path2x, StandardCopyOption.REPLACE_EXISTING);
+				addActionMessageSession(this.getText("plataforma.servicio.saveLogo.ok"));		
+			}
+			
+			if(background!=null){
+				Path backgroundFile = Paths.get(background);
+				path = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "background.png");
+				path2x = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "background@2x.png");
+				Files.createDirectories(path.getParent());
+				Files.copy(backgroundFile, path, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(backgroundFile, path2x, StandardCopyOption.REPLACE_EXISTING);
+				addActionMessageSession(this.getText("plataforma.servicio.saveBackground.ok"));		
+			}
+			
+			
+			if(icon!=null){
+				Path iconFile = Paths.get(icon);
+				path = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "icon.png");
+				path2x = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "icon@2x.png");
+				Files.createDirectories(path.getParent());
+				Files.copy(iconFile, path, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(iconFile, path2x, StandardCopyOption.REPLACE_EXISTING);
+				addActionMessageSession(this.getText("plataforma.servicio.saveIcon.ok"));		
+			}
+		}
+		
+		catch(IOException e){
+			LOG.error("[ServicioAction] Se ha producido un error al copiar un archivo del idServicioOrganismo:" + idServicioOrganismo, e);			
+		}
+		
+//		return SUCCESS;
+	}
+	
+	public String deleteImagenLogo() throws BaseException {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		Path path2x = null;
+		logger.info("entrando en deleteImagenLogo------");
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idServicioOrganismo == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deleteLogo.error"));
+			return ERROR;
+		} else {
+			OrganismoBean o = new OrganismoBean();
+			o.setOrganismoId(Integer.parseInt(idOrganismo));
+			o = servicioOrganismo.loadOrganismo(o);
+			try {
+				Path pathLogo = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "logo.png");
+				if(Files.exists(pathLogo, LinkOption.NOFOLLOW_LINKS)){
+					path2x = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "logo@2x.png");
+					Files.delete(pathLogo);
+					Files.delete(path2x);
+					addActionMessageSession(this.getText("plataforma.servicio.deleteLogo.ok"));					
+				}
+			}
+			
+			catch(IOException e){
+				LOG.error("[ServicioAction] Se ha producido un error al borrar el logo del idServicioOrganismo:" + idServicioOrganismo, e);			
+			}
+		}
+		return SUCCESS;
+	}
+	
+	public String deleteImagenBackground() throws BaseException {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		Path path2x = null;
+		logger.info("entrando en deleteImagenBackground------");
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idServicioOrganismo == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deleteBackground.error"));
+			return ERROR;
+		} else {
+			OrganismoBean o = new OrganismoBean();
+			o.setOrganismoId(Integer.parseInt(idOrganismo));
+			o = servicioOrganismo.loadOrganismo(o);
+			try {
+				Path pathBackground = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "background.png");
+				if(Files.exists(pathBackground, LinkOption.NOFOLLOW_LINKS)){
+					path2x = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "background@2x.png");
+					Files.delete(pathBackground);
+					Files.delete(path2x);
+					addActionMessageSession(this.getText("plataforma.servicio.deleteBackground.ok"));
+				}
+			}
+			
+			catch(IOException e){
+				LOG.error("[ServicioAction] Se ha producido un error al borrar el background del idServicioOrganismo:" + idServicioOrganismo, e);			
+			}
+		}
+		return SUCCESS;
+	}
+	
+	public String deleteImagenIcon() throws BaseException {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		Path path2x = null;
+		logger.info("entrando en deleteImagenIcon------");
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idServicioOrganismo == null) {
+			addActionErrorSession(this.getText("plataforma.servicio.deleteIcon.error"));
+			return ERROR;
+		} else {
+			OrganismoBean o = new OrganismoBean();
+			o.setOrganismoId(Integer.parseInt(idOrganismo));
+			o = servicioOrganismo.loadOrganismo(o);
+			try {
+				Path pathIcon = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "icon.png");
+				if(Files.exists(pathIcon, LinkOption.NOFOLLOW_LINKS)){
+					path2x = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "icon@2x.png");
+					Files.delete(pathIcon);
+					Files.delete(path2x);
+					addActionMessageSession(this.getText("plataforma.servicio.deleteIcon.ok"));
+				}
+			}
+			
+			catch(IOException e){
+				LOG.error("[ServicioAction] Se ha producido un error al borrar el icon del idServicioOrganismo:" + idServicioOrganismo, e);			
+			}
+		}
+		return SUCCESS;
+	}
+	
+	public void previsualizar() throws BusinessException {
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		
+		if(idServicioOrganismo == null || idServicioOrganismo.isEmpty()) {
+			throw new BusinessException("El idServicioOrganismo recibido es nulo");
+		}
+		
+		if(idServicio == null || idServicio.isEmpty()) {
+			throw new BusinessException("El idServicio recibido es nulo");
+		}
+		
+		if(idOrganismo == null || idOrganismo.isEmpty()) {
+			throw new BusinessException("El idOrganismo recibido es nulo");
+		}
+		OrganismoBean o = new OrganismoBean();
+		o.setOrganismoId(Integer.parseInt(idOrganismo));
+		o = servicioOrganismo.loadOrganismo(o);
+		Path pathLogo = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "logo.png");		
+		Path pathBackground = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "background.png");		
+		Path pathIcon = Paths.get(pathBase + "/" + idServicio + "/" + o.getDir3() + "/" + "icon.png");
+		
+		if(!Files.exists(pathLogo, LinkOption.NOFOLLOW_LINKS) || !Files.exists(pathBackground, LinkOption.NOFOLLOW_LINKS) || 
+				!Files.exists(pathIcon, LinkOption.NOFOLLOW_LINKS)){
+			addActionErrorSession(this.getText("plataforma.servicio.previsualizar.error"));
+		}
+
+		else{
+		
+			try {
+			
+			String url = ps.getMessage("passbook.url", null, null, null);
+			String logoText= ps.getMessage("passbook.logoText", null, null, null);
+			String description= ps.getMessage("passbook.description", null, null, null);
+			
+			String serialNumber = String.valueOf(System.currentTimeMillis());
+			String autheticationToken = Base64.encodeBase64String(serialNumber.getBytes());
+			
+			String teamIdentifier = ps.getMessage("passbook.teamIdentifier", null, null, null);
+			String organizationName = ps.getMessage("passbook.organizationName", null, null, null);
+			String passTypeIdentifier = ps.getMessage("passbook.passTypeIdentifier", null, null, null);
+			
+			String templatePath = (pathBase + "/" + idServicio + "/" + o.getDir3() + "/");
+			
+			String tempPath = ps.getMessage("passbook.tempPath", null, null, null);
+			
+			String appleWWDRCA = ps.getMessage("passbook.appleWWDRCA", null, null, null);
+			String keyStorePath = ps.getMessage("passbook.keyStorePath", null, null, null);
+			String keyStorePassword = ps.getMessage("passbook.keyStorePassword", null, null, null);
+			
+			String foregroundColor=ps.getMessage("passbook.foregroundColor", null, null, null);
+			String backgroundColor=ps.getMessage("passbook.backgroundColor", null, null, null);
+			String labelColor=ps.getMessage("passbook.labelColor", null, null, null);
+			
+			List<PKField> camposPrincipales = getPkFieldsListAlign(new ArrayList<PkFieldsXMLBean>());
+			List<PKField> camposSecundarios = getPkFieldsListAlign(new ArrayList<PkFieldsXMLBean>());
+			List<PKField> camposAuxiliares = getPkFieldsListAlign(new ArrayList<PkFieldsXMLBean>());
+			List<PKField> camposCabecera = getPkFieldsList(new ArrayList<PkFieldsXMLBean>() );
+			List<PKField> camposDetalleTrasera = getPkFieldsList(new ArrayList<PkFieldsXMLBean>());
+			String pkpassFile = null;
+			
+			pkpassFile = PassbookGenerator.generate(camposPrincipales, camposSecundarios, camposAuxiliares, camposCabecera, 
+					camposDetalleTrasera, url, logoText, description, backgroundColor, foregroundColor, labelColor,passTypeIdentifier, 
+					serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);
+				
+			logger.debug("[ServicioAction] - descargaFicheroPkPass - inicio");
+		
+			StringBuffer titulo =new  StringBuffer();
+			titulo.append("passbook").append("_").append("previsualizar").append("_").append(idServicio).append("_")
+			.append(idOrganismo).append("_").append(idServicioOrganismo);
+				
+			PlataformaMensajeriaUtil.descargaFicheroPkPass(response, titulo.toString(), pkpassFile, TIPO_FICHERO);
+			}
+		
+			catch (Exception e) {
+				LOG.error("[ServicioAction] Se ha producido un error al generar el passbook:" + idServicioOrganismo, e);	
+			}	
+		} 
+//		return SUCCESS;
+	}
+	
+	private List<PKField> getPkFieldsListAlign(List<PkFieldsXMLBean> pkFieldsList) {
+        List<PKField> camposPrincipales = new ArrayList<PKField>();
+        for (int i=0; i<pkFieldsList.size();i++) {
+            
+            PkFieldsXMLBean pkFieldXMLField = pkFieldsList.get(i);
+            
+            PKField field = new PKField();
+            field.setKey(pkFieldXMLField.getKey());
+            field.setLabel(pkFieldXMLField.getLabel());
+            field.setValue(pkFieldXMLField.getValue());
+            
+            if(i%2==0){
+                field.setTextAlignment(PKTextAlignment.PKTextAlignmentLeft);
+            }else{
+                field.setTextAlignment(PKTextAlignment.PKTextAlignmentRight);
+            }
+            
+            camposPrincipales.add(field);
+        }
+        
+        return camposPrincipales;
+    }
+	
+	private List<PKField> getPkFieldsList(List<PkFieldsXMLBean> pkFieldsList) {
+		List<PKField> camposPrincipales = new ArrayList<PKField>();
+		for (PkFieldsXMLBean pkFieldXMLField : pkFieldsList) {
+			PKField field = new PKField();
+			field.setKey(pkFieldXMLField.getKey());
+			field.setLabel(pkFieldXMLField.getLabel());
+			field.setValue(pkFieldXMLField.getValue());
+			camposPrincipales.add(field);
+		}
+		return camposPrincipales;
+	}
+	
 
 	public List<KeyValueObject> getComboConfiguracionesPlan() {
 		return comboConfiguracionesPlan;
@@ -2761,4 +3288,115 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	public void setPlanificacionServidor(PlanificacionBean planificacionServidor) {
 		this.planificacionServidor = planificacionServidor;
 	}
+
+	/**
+	 * @return the search
+	 */
+	public String getSearch() {
+		return search;
+	}
+
+	/**
+	 * @param search the search to set
+	 */
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	/**
+	 * @return the vapidPublicKey
+	 */
+	public String getVapidPublicKey() {
+		return vapidPublicKey;
+	}
+
+	/**
+	 * @param vapidPublicKey the vapidPublicKey to set
+	 */
+	public void setVapidPublicKey(String vapidPublicKey) {
+		this.vapidPublicKey = vapidPublicKey;
+	}
+
+	/**
+	 * @return the vapidPrivateKey
+	 */
+	public String getVapidPrivateKey() {
+		return vapidPrivateKey;
+	}
+
+	/**
+	 * @param vapidPrivateKey the vapidPrivateKey to set
+	 */
+	public void setVapidPrivateKey(String vapidPrivateKey) {
+		this.vapidPrivateKey = vapidPrivateKey;
+	}
+
+	/**
+	 * @return the logo64
+	 */
+	public String getLogo64() {
+		return logo64;
+	}
+
+	/**
+	 * @param logo64 the logo64 to set
+	 */
+	public void setLogo64(String logo64) {
+		this.logo64 = logo64;
+	}
+
+	/**
+	 * @return the background64
+	 */
+	public String getBackground64() {
+		return background64;
+	}
+
+	/**
+	 * @param background64 the background64 to set
+	 */
+	public void setBackground64(String background64) {
+		this.background64 = background64;
+	}
+
+	/**
+	 * @return the icon64
+	 */
+	public String getIcon64() {
+		return icon64;
+	}
+
+	/**
+	 * @param icon64 the icon64 to set
+	 */
+	public void setIcon64(String icon64) {
+		this.icon64 = icon64;
+	}
+
+
+
 }

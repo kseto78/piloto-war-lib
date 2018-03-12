@@ -34,6 +34,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<spring:bean id="invocarEmisorHTTP" name="invocarEmisorHTTP" class="es.minhap.misim.components.InvocarEmisorHTTP2"/>
 		<spring:bean id="invocarEmisorRPC" name="invocarEmisorRPC" class="es.minhap.misim.components.InvocarEmisorRPC"/>
 		<spring:bean id="invocarEmisorPush" name="invocarEmisorPush" class="es.minhap.misim.components.InvocarEmisorPush"/>
+		<spring:bean id="invocarEmisorWebPush" name="invocarEmisorWebPush" class="es.minhap.misim.components.InvocarEmisorWebPush"/>
 		
 		<spring:bean id="gestionErrores" name="gestionErrores" class="es.minhap.misim.components.GestionErroresEnvioSMS"/>
 	</spring:beans>
@@ -164,6 +165,14 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion Push" />
 					<component	doc:name="Invocar via Push" >
 						<spring-object bean="invocarEmisorPush" />
+					</component>
+				</processor-chain>
+			</when>
+			<when expression="#[message.outboundProperties['${ID_COMUNICACION}'] == '${WEBPUSH}']">
+				<processor-chain doc:name="Processor Chain">
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Invocacion Web Push" />
+					<component	doc:name="Invocar via Push" >
+						<spring-object bean="invocarEmisorWebPush" />
 					</component>
 				</processor-chain>
 			</when>

@@ -57,7 +57,7 @@ public class TblLotesEnviosHist implements java.io.Serializable {
 	private Date fechahistorificacion;
 
 	@Column(name = "MULTIDESTINATARIO", precision = 1, scale = 0)
-	private Integer multidestinatario;
+	private Boolean multidestinatario;
 
 	public TblLotesEnviosHist() {
 	}
@@ -215,7 +215,7 @@ public class TblLotesEnviosHist implements java.io.Serializable {
 	/**
 	 * @return the multidestinatario
 	 */
-	public Integer getMultidestinatario() {
+	public Boolean getMultidestinatario() {
 		return multidestinatario;
 	}
 
@@ -223,7 +223,7 @@ public class TblLotesEnviosHist implements java.io.Serializable {
 	 * @param multidestinatario
 	 *            the multidestinatario to set
 	 */
-	public void setMultidestinatario(Integer multidestinatario) {
+	public void setMultidestinatario(Boolean multidestinatario) {
 		this.multidestinatario = multidestinatario;
 	}
 

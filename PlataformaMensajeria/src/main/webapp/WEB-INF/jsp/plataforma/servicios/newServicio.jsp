@@ -241,7 +241,48 @@
 					<s:checkbox theme="simple" name="newPremium" id="newPremium"
 						value="%{newPremium}" />
 				</p>
+				
+								<!-- Inicio parte WEB push -->
+				<p class="criteria">
+					 <span>
+					<label id="caducidadWebPush" style="width: 120px; visibility: hidden; display: none;" class="fieldText">Caducidad Notificación</label>
+					<s:textfield name="servicio.caducidadWebPush"
+						value="%{servicio.caducidadWebPush}" id="servicio.caducidadWebPush"
+						theme="simple" cssStyle="visibility:hidden;display:none;"
+						onKeyPress="return numbersonly(this, event)"
+						labelposition="left" size="6" maxlength="6" cssClass="" />
+					</span>
+					 <span>
+						 <input id="botonclaves" type="button" value="Generar Claves" class="button"  style="visibility:hidden;display:none;disabled;"
+						 onclick="return generarClaves()"/>
+					</span>
+				</p>
+				
+				<p class="criteria">
+					<label id="vapidPublicKeyLabel"
+						style="width: 120px; visibility: hidden; display: none;" class="fieldText">
+						Clave Pública (*):</label>
+					<s:textfield name="servicio.vapidPublicKey"
+						value="%{servicio.vapidPublicKey}"
+						id="servicio.vapidPublicKey" theme="simple" disabled="true"
+						cssStyle="visibility:hidden;display:none;disabled;" labelposition="left" size="95"
+						maxlength="255" cssClass="" />
+				</p>
 
+				<p class="criteria">
+					<label id="vapidPrivateKeyLabel"
+						style="width: 120px; visibility: hidden; display: none;" class="fieldText">
+						Clave Privada (*):</label>
+					<s:textfield name="servicio.vapidPrivateKey"
+						value="%{servicio.vapidPrivateKey}"
+						id="servicio.vapidPrivateKey" theme="simple" disabled="true"
+						cssStyle="visibility:hidden;display:none;disabled=true;" labelposition="left" size="50"
+						maxlength="55" cssClass="" showPassword="true" />
+				</p>
+				
+				<!-- Fin parte WEB PUSH -->
+				<s:hidden theme="simple" id="vapidPublicKey" name="vapidPublicKey" value="%{vapidPublicKey}" />
+				<s:hidden theme="simple" id="vapidPrivateKey" name="vapidPrivateKey" value="%{vapidPublicKey}" />
 				<p class="criteria">
 					<label style="width: 150px;" class="fieldText"><i>(*)
 							Campos obligatorios</i></label>

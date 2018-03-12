@@ -1,12 +1,9 @@
 package es.mpr.plataformamensajeria.quartz;
 
-import java.io.IOException;
 import java.text.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.quartz.CronExpression;
@@ -29,9 +26,9 @@ public class QuartzInicializarJobs extends HttpServlet  {
 	
 	private static Logger logger = Logger.getLogger(QuartzInicializarJobs.class);
 	
-	private ApplicationContext applicationContext;
+	private static ApplicationContext applicationContext;
 	
-	private PlataformaMensajeriaProperties configProp;
+	private static PlataformaMensajeriaProperties configProp;
 	
 	private static final String HIST_JOB_NAME = "HISTORIFICACION";
 	private static final String HIST_TRIGGER_NAME = "HISTORIFICACION_TRIGGER";
@@ -39,6 +36,9 @@ public class QuartzInicializarJobs extends HttpServlet  {
 	private static final String CONS_TRIGGER_NAME = "CONSERVACION_TRIGGER";
 	private static final String INFORMES_SERVICIOS_JOB_NAME = "INFORMES_SERVICIOS";
 	private static final String INFORMES_SERVICIOS_TRIGGER_NAME = "INFORMES_SERVICIOS_TRIGGER";
+
+	private static final String DIR3_JOB_NAME = "DIR3";
+	private static final String DIR3_TRIGGER_NAME = "DIR3_TRIGGER";
 	
 	////MIGRADO
 	@Override
@@ -56,16 +56,6 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		super();
 		
 	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		super.doGet(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		super.doPost(req, resp);
-	}
 	
 ////MIGRADO
 	public void planificarJobs(){
@@ -73,6 +63,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			String activarJobHist = configProp.getProperty("jobHist.activacion", null);
 			String activarJobCons = configProp.getProperty("jobCons.activacion", null);
 			String activarJobInformesServicios = configProp.getProperty("jobInformesServicios.activacion", null);
+			String activarJobDIR3 = configProp.getProperty("jobDIR3.activacion", null);
 			
 			if((activarJobHist!=null && activarJobHist.equals("S")) ||
 					(activarJobCons!=null && activarJobCons.equals("S")) ||
@@ -83,14 +74,18 @@ public class QuartzInicializarJobs extends HttpServlet  {
 				Scheduler scheduler = sf.getScheduler();
 				scheduler.getContext().put("applicationContext",applicationContext);
 				
-				if(activarJobHist!=null && activarJobHist.equals("S")){
+				if(activarJobHist!=null && "S".equals(activarJobHist)){
 					this.planificarJobHist(scheduler);
 				}
-				if(activarJobCons!=null && activarJobCons.equals("S")){
+				if(activarJobCons!=null && "S".equals(activarJobCons)){
 					this.planificarJobCons(scheduler);
 				}
-				if(activarJobInformesServicios!=null && activarJobInformesServicios.equals("S")){
+				if(activarJobInformesServicios!=null && "S".equals(activarJobInformesServicios)){
 					this.planificarJobInformesServicios(scheduler);
+				}
+				
+				if(activarJobDIR3!= null && "S".equals(activarJobDIR3)){
+					this.planificarJobDIR3(scheduler);
 				}
 				scheduler.start();
 			}
@@ -128,15 +123,9 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			logger.debug("planificarJobHist - Iniciamos la tarea");
 			scheduler.scheduleJob(job, trigger);
 			
-		}catch (SchedulerException se){
+		}catch (SchedulerException | ParseException | ClassNotFoundException se){
 			logger.error("[QuartzInicializarJobs - planificarJobHist] ",se);
 			logger.debug("planificarJobHist - Error: " + se.getMessage());
-		}catch(ParseException pe){
-			logger.error("[QuartzInicializarJobs - planificarJobHist] ",pe);
-			logger.debug("planificarJobHist - Error: " + pe.getMessage());
-		}catch (ClassNotFoundException cnfe){
-			logger.error("[QuartzInicializarJobs - planificarJobHist] ",cnfe);
-			logger.debug("planificarJobHist - Error: " + cnfe.getMessage());
 		}
 	}
 	
@@ -167,15 +156,9 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			logger.debug("planificarJobCons - Iniciamos la tarea");
 			scheduler.scheduleJob(job, trigger);
 			
-		}catch (SchedulerException se){
+		}catch (SchedulerException | ParseException | ClassNotFoundException se){
 			logger.error("[QuartzInicializarJobs - planificarJobCons] ",se);
-			logger.debug("planificarJobHist - Error: " + se.getMessage());
-		}catch(ParseException pe){
-			logger.error("[QuartzInicializarJobs - planificarJobCons] ",pe);
-			logger.debug("planificarJobHist - Error: " + pe.getMessage());
-		}catch (ClassNotFoundException cnfe){
-			logger.error("[QuartzInicializarJobs - planificarJobCons] ",cnfe);
-			logger.debug("planificarJobHist - Error: " + cnfe.getMessage());
+			logger.debug("planificarJobCons - Error: " + se.getMessage());
 		}
 	}
 	
@@ -206,16 +189,41 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			logger.debug("planificarJobInformesServicios - Iniciamos la tarea");
 			scheduler.scheduleJob(job, trigger);
 			
-		}catch (SchedulerException se){
+		}catch (SchedulerException | ParseException | ClassNotFoundException se){
 			logger.error("[QuartzInicializarJobs - planificarJobInformesServicios] ",se);
-			logger.debug("planificarJobHist - Error: " + se.getMessage());
-		}catch(ParseException pe){
-			logger.error("[QuartzInicializarJobs - planificarJobInformesServicios] ",pe);
-			logger.debug("planificarJobHist - Error: " + pe.getMessage());
-		}catch (ClassNotFoundException cnfe){
-			logger.error("[QuartzInicializarJobs - planificarJobInformesServicios] ",cnfe);
-			logger.debug("planificarJobHist - Error: " + cnfe.getMessage());
+			logger.debug("planificarJobInformes - Error: " + se.getMessage());
 		}
 	}
 	
+	private void planificarJobDIR3(Scheduler scheduler){
+		try{
+			// Creación del job
+			logger.debug("planificarJobDIR3 - Definimos la tarea");
+	        // Definimos la tarea (nombre de la tarea, nombre del grupo de tareas, Clase que implementa la tarea)
+			JobDetailImpl job = new JobDetailImpl();
+			job.setName(DIR3_JOB_NAME);
+			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.RecuperarInforDIRJob");
+			job.setJobClass(clase);
+			String cronExpression = configProp.getProperty("cron.jobDIR3.expression", null);
+			logger.debug("planificarJobDIR3 - La cronExpression es: " + cronExpression);
+			CronExpression cronExp = new CronExpression(cronExpression);
+			// Creación del trigger
+	        logger.debug("planificarJobDIR3 - Configuramos el trigger que avisara al planificador");
+	        // Configuramos el Trigger que avisará al planificador de cuando debe ejecutar la tarea 
+			CronTriggerImpl trigger = new CronTriggerImpl();
+			trigger.setCronExpression(cronExp);
+			trigger.setDescription(DIR3_TRIGGER_NAME);
+			trigger.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			trigger.setName(DIR3_TRIGGER_NAME);
+			// Creación del planificador con el job y trigger creados anteriormente y arranque
+			// La tarea definida en JobDetail será ejecutada en los instantes especificados por el Trigger.
+			logger.debug("planificarJobDIR3 - Iniciamos la tarea");
+			scheduler.scheduleJob(job, trigger);
+			
+		}catch (SchedulerException | ParseException | ClassNotFoundException se){
+			logger.error("[QuartzInicializarJobs - planificarJobCons] ",se);
+			logger.debug("planificarJobDIR3 - Error: " + se.getMessage());
+		}
+	}
 }

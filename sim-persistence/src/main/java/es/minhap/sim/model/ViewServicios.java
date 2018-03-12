@@ -51,11 +51,11 @@ public class ViewServicios implements java.io.Serializable {
 	@Column(name = "MODIFICADOPOR", length = 100)
 	private String modificadopor;
 
-	@Column(name = "NMAXENVIOS", precision = 10, scale = 0)
-	private Integer nmaxenvios;
-
-	@Column(name = "HEADERSMS", length = 50)
-	private String headersms;
+//	@Column(name = "NMAXENVIOS", precision = 10, scale = 0)
+//	private Integer nmaxenvios;
+//
+//	@Column(name = "HEADERSMS", length = 50)
+//	private String headersms;
 
 	@Column(name = "CANALNOMBRE", length = 100)
 	private String canalnombre;
@@ -212,21 +212,21 @@ public class ViewServicios implements java.io.Serializable {
 		this.modificadopor = modificadopor;
 	}
 
-	public Integer getNmaxenvios() {
-		return nmaxenvios;
-	}
-
-	public void setNmaxenvios(Integer nmaxenvios) {
-		this.nmaxenvios = nmaxenvios;
-	}
-
-	public String getHeadersms() {
-		return headersms;
-	}
-
-	public void setHeadersms(String headersms) {
-		this.headersms = headersms;
-	}
+//	public Integer getNmaxenvios() {
+//		return nmaxenvios;
+//	}
+//
+//	public void setNmaxenvios(Integer nmaxenvios) {
+//		this.nmaxenvios = nmaxenvios;
+//	}
+//
+//	public String getHeadersms() {
+//		return headersms;
+//	}
+//
+//	public void setHeadersms(String headersms) {
+//		this.headersms = headersms;
+//	}
 
 	public String getCanalnombre() {
 		return canalnombre;

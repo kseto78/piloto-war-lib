@@ -23,4 +23,31 @@
 		  <http-conf:client Accept="text/xml" AllowChunking="false" CacheControl="No-Cache" ContentType="text/xml" />
 	</http-conf:conduit>  
 	
+
+	<!-- DIR3 -->
+  	<jaxws:client id="unidadesDir3WSClient" 
+    			  serviceClass="es.map.directorio.manager.impl.SD01UNDescargaUnidades"
+  				  address="${DIR3.URLSERVICE.UNIDADES}" />
+  				  
+  	<http-conf:conduit name="{http://www.map.es/xml-schemas}SD01UNDescargaUnidades.http-conduit">
+		  <http-conf:client Accept="text/xml" AllowChunking="false" CacheControl="No-Cache" ContentType="text/xml" />
+	</http-conf:conduit> 
+	
+<!-- 	nat -->
+	<jaxws:client id="envioMensajesService" 
+			serviceClass="es.redsara.misim.misim_bus_webapp.EnvioMensajesServiceWSBindingPortType"
+		address="${url.envio.mensajes}">
+		<jaxws:features>
+    		<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:client>
+  	
+<!--   	<http-conf:conduit name="{http://www.map.es/xml-schemas}EnvioMensajesServiceWSBindingPortType.http-conduit"> -->
+<!-- 		  <http-conf:client Accept="text/xml" AllowChunking="false" CacheControl="no-cache" ContentType="text/xml" /> -->
+		<http-conf:conduit name="{http://misim.redsara.es/misim-bus-webapp/}EnvioMensajesServiceWSBindingPortTypePort.http-conduit">
+ 		<http-conf:client Accept="text/xml" AllowChunking="false" CacheControl="no-cache" ContentType="text/xml"  />
+</http-conf:conduit>
+		
+<!-- 	nat -->
+
 </beans>

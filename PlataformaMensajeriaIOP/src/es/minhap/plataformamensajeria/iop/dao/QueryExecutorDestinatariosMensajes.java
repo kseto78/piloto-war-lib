@@ -76,5 +76,13 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @return
 	 */
 	public Recipients getRecipients(Long mensajeId);
+
+	/**
+	 * Cuenta los destinatarios a partir del identificador de mensaje
+	 * 
+	 * @param mensajeId
+	 * @return
+	 */
+	public Integer countDestinatariosByMensaje(Long mensajeId);
 	
 }

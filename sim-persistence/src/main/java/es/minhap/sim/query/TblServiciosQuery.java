@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -88,8 +89,13 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public static final String PROVEEDORPASSWORDSMS = "proveedorpasswordsms";
     public static final String MULTIORGANISMO = "multiorganismo";
     public static final String PREMIUM = "premium";
-
-
+    public static final String NMAXREENVIOS = "numeroMaxReenvios";
+    public static final String NUMEROMAXREENVIOS = "numeroMaxReenvios";
+    public static final String REINTENTOSCONSULTAESTADO = "reintentosConsultaEStado";
+    public static final String CADUCIDAD = "caducidad";
+    public static final String CADUCIDADWEBPUSH = "caducidadWebPush";
+    public static final String VAPIDPUBLICKEY = "vapidPublicKey";
+    public static final String VAPIDPRIVATEKEY = "vapidPrivateKey";
     /**
      * Valor de busqueda de campo servicioid
      */
@@ -318,25 +324,45 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     private boolean externalidIsNotNull = false;
 
     /**
-     * Valor de busqueda de campo nmaxenvios
+     * Valor de busqueda de campo nmaxreenvios
      */
     private Integer nmaxenvios;
 
     /**
-     * Lista de valores del campo nmaxenvios para busquedas tipo IN
+     * Lista de valores del campo nmaxreenvios para busquedas tipo IN
      */
     private List<Integer> nmaxenviosIn = new ArrayList<Integer>(0);
 
     /**
-     * Permite buscar cuando campo nmaxenvios es NULL
+     * Permite buscar cuando campo nmaxreenvios es NULL
      */
     private boolean nmaxenviosIsNull = false;
 
     /**
-     * Permite buscar cuando campo nmaxenvios es NOT NULL
+     * Permite buscar cuando campo nmaxreenvios es NOT NULL
      */
     private boolean nmaxenviosIsNotNull = false;
 
+    /**
+     * Valor de busqueda de campo nmaxenvios
+     */
+    private Integer nmaxreenvios;
+
+    /**
+     * Lista de valores del campo nmaxenvios para busquedas tipo IN
+     */
+    private List<Integer> nmaxreenviosIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo nmaxenvios es NULL
+     */
+    private boolean nmaxreenviosIsNull = false;
+
+    /**
+     * Permite buscar cuando campo nmaxenvios es NOT NULL
+     */
+    private boolean nmaxreenviosIsNotNull = false;
+    
     /**
      * Valor de busqueda de campo headersms
      */
@@ -996,6 +1022,136 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
      * Permite buscar cuando campo premium es NOT NULL
      */
     private boolean premiumIsNotNull = false;
+    
+    /**
+     * Valor de busqueda de campo numeroMaxReenvios
+     */
+    private Integer numeroMaxReenvios;
+
+    /**
+     * Lista de valores del campo numeroMaxReenvios para busquedas tipo IN
+     */
+    private List<Integer> numeroMaxReenviosIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo numeroMaxReenvios es NULL
+     */
+    private boolean numeroMaxReenviosIsNull = false;
+
+    /**
+     * Permite buscar cuando campo numeroMaxReenvios es NOT NULL
+     */
+    private boolean numeroMaxReenviosIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo reintentosConsultaEStado
+     */
+    private Integer reintentosConsultaEStado;
+
+    /**
+     * Lista de valores del campo reintentosConsultaEStado para busquedas tipo IN
+     */
+    private List<Integer> reintentosConsultaEStadoIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo reintentosConsultaEStado es NULL
+     */
+    private boolean reintentosConsultaEStadoIsNull = false;
+
+    /**
+     * Permite buscar cuando campo reintentosConsultaEStado es NOT NULL
+     */
+    private boolean reintentosConsultaEStadoIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo caducidad
+     */
+    private Integer caducidad;
+
+    /**
+     * Lista de valores del campo caducidad para busquedas tipo IN
+     */
+    private List<Integer> caducidadIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo caducidad es NULL
+     */
+    private boolean caducidadIsNull = false;
+
+    /**
+     * Permite buscar cuando campo caducidad es NOT NULL
+     */
+    private boolean caducidadIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo caducidadWebPush
+     */
+    private Integer caducidadWebPush;
+
+    /**
+     * Lista de valores del campo caducidadWebPush para busquedas tipo IN
+     */
+    private List<Integer> caducidadWebPushIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo caducidadWebPush es NULL
+     */
+    private boolean caducidadWebPushIsNull = false;
+
+    /**
+     * Permite buscar cuando campo caducidadWebPush es NOT NULL
+     */
+    private boolean caducidadWebPushIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo vapidPublicKey
+     */
+    private String vapidPublicKey;
+
+    /**
+     * Tipo de comparador para la busqueda por campo vapidPublicKey
+     */
+    private TextComparator vapidPublicKeyComparator = TextComparator.CONTAINS;
+
+    /**
+     * Lista de valores del campo vapidPublicKey para busquedas tipo IN
+     */
+    private List<String> vapidPublicKeyIn = new ArrayList<String>(0);
+
+    /**
+     * Permite buscar cuando campo vapidPublicKey es NULL
+     */
+    private boolean vapidPublicKeyIsNull = false;
+
+    /**
+     * Permite buscar cuando campo vapidPublicKey es NOT NULL
+     */
+    private boolean vapidPublicKeyIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo vapidPrivateKey
+     */
+    private String vapidPrivateKey;
+
+    /**
+     * Tipo de comparador para la busqueda por campo vapidPrivateKey
+     */
+    private TextComparator vapidPrivateKeyComparator = TextComparator.CONTAINS;
+
+    /**
+     * Lista de valores del campo vapidPrivateKey para busquedas tipo IN
+     */
+    private List<String> vapidPrivateKeyIn = new ArrayList<String>(0);
+
+    /**
+     * Permite buscar cuando campo vapidPrivateKey es NULL
+     */
+    private boolean vapidPrivateKeyIsNull = false;
+
+    /**
+     * Permite buscar cuando campo vapidPrivateKey es NOT NULL
+     */
+    private boolean vapidPrivateKeyIsNotNull = false;
 
     /**
      * Indica si en la consulta se hace un inner join con el padre tblAplicaciones
@@ -1865,6 +2021,68 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
         this.nmaxenviosIsNotNull = nmaxenviosIsNotNull;
     }
 
+    /**
+     * Valor de busqueda de campo nmaxenvios
+     * @return Integer.
+     */
+    public Integer getNmaxreenvios() {
+        return nmaxenvios;
+    }
+
+    /**
+     * Valor de busqueda de campo nmaxenvios
+     * @param nmaxenvios Valor de seteo.
+     */
+    public void setNmaxreenvios(Integer nmaxreenvios) {
+        this.nmaxreenvios = nmaxreenvios;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getNmaxreenviosIn() {
+        return this.nmaxreenviosIn;
+    }
+
+    /**
+     * @param nmaxenvios Valor a agregar.
+     */
+    public void addNmaxreenviosIn(Integer nmaxreenvios) {
+        this.nmaxreenviosIn.add(nmaxreenvios);
+    }
+
+    /**
+     * Permite buscar cuando campo nmaxenvios es NULL
+     * @return boolean.
+     */
+    public boolean isNmaxreenviosIsNull() {
+        return nmaxreenviosIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo nmaxenvios es NULL
+     * @param nmaxenviosIsNull Valor de seteo.
+     */
+    public void setNmaxreenviosIsNull(boolean nmaxreenviosIsNull) {
+        this.nmaxreenviosIsNull = nmaxreenviosIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo nmaxenvios es NOT NULL
+     * @return boolean.
+     */
+    public boolean isNmaxreenviosIsNotNull() {
+        return nmaxreenviosIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo nmaxenvios es NOT NULL
+     * @param nmaxenviosIsNotNull Valor de seteo.
+     */
+    public void setNmaxreenviosIsNotNull(boolean nmaxreenviosIsNotNull) {
+        this.nmaxreenviosIsNotNull = nmaxreenviosIsNotNull;
+    }
+    
     /**
      * Valor de busqueda de campo headersms
      * @return String.
@@ -4188,6 +4406,439 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     }
 
     /**
+     * Valor de busqueda de campo numeroMaxReenvios
+     * @return Integer.
+     */
+    public Integer getNumeroMaxReenvios() {
+        return numeroMaxReenvios;
+    }
+
+    /**
+     * Valor de busqueda de campo numeroMaxReenvios
+     * @param numeroMaxReenvios Valor de seteo.
+     */
+    public void setNumeroMaxReenvios(Integer numeroMaxReenvios) {
+        this.numeroMaxReenvios = numeroMaxReenvios;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getNumeroMaxReenviosIn() {
+        return this.numeroMaxReenviosIn;
+    }
+
+    /**
+     * @param numeroMaxReenvios Valor a agregar.
+     */
+    public void addNumeroMaxReenviosIn(Integer numeroMaxReenvios) {
+        this.numeroMaxReenviosIn.add(numeroMaxReenvios);
+    }
+
+    /**
+     * Permite buscar cuando campo numeroMaxReenvios es NULL
+     * @return boolean.
+     */
+    public boolean isNumeroMaxReenviosIsNull() {
+        return numeroMaxReenviosIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo numeroMaxReenvios es NULL
+     * @param numeroMaxReenviosIsNull Valor de seteo.
+     */
+    public void setNumeroMaxReenviosIsNull(boolean numeroMaxReenviosIsNull) {
+        this.numeroMaxReenviosIsNull = numeroMaxReenviosIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo numeroMaxReenvios es NOT NULL
+     * @return boolean.
+     */
+    public boolean isNumeroMaxReenviosIsNotNull() {
+        return numeroMaxReenviosIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo numeroMaxReenvios es NOT NULL
+     * @param numeroMaxReenviosIsNotNull Valor de seteo.
+     */
+    public void setNumeroMaxReenviosIsNotNull(boolean numeroMaxReenviosIsNotNull) {
+        this.numeroMaxReenviosIsNotNull = numeroMaxReenviosIsNotNull;
+    }
+
+    /**
+     * Valor de busqueda de campo reintentosConsultaEStado
+     * @return Integer.
+     */
+    public Integer getReintentosConsultaEStado() {
+        return reintentosConsultaEStado;
+    }
+
+    /**
+     * Valor de busqueda de campo reintentosConsultaEStado
+     * @param reintentosConsultaEStado Valor de seteo.
+     */
+    public void setReintentosConsultaEStado(Integer reintentosConsultaEStado) {
+        this.reintentosConsultaEStado = reintentosConsultaEStado;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getReintentosConsultaEStadoIn() {
+        return this.reintentosConsultaEStadoIn;
+    }
+
+    /**
+     * @param reintentosConsultaEStado Valor a agregar.
+     */
+    public void addReintentosConsultaEStadoIn(Integer reintentosConsultaEStado) {
+        this.reintentosConsultaEStadoIn.add(reintentosConsultaEStado);
+    }
+
+    /**
+     * Permite buscar cuando campo reintentosConsultaEStado es NULL
+     * @return boolean.
+     */
+    public boolean isReintentosConsultaEStadoIsNull() {
+        return reintentosConsultaEStadoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo reintentosConsultaEStado es NULL
+     * @param reintentosConsultaEStadoIsNull Valor de seteo.
+     */
+    public void setReintentosConsultaEStadoIsNull(boolean reintentosConsultaEStadoIsNull) {
+        this.reintentosConsultaEStadoIsNull = reintentosConsultaEStadoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo reintentosConsultaEStado es NOT NULL
+     * @return boolean.
+     */
+    public boolean isReintentosConsultaEStadoIsNotNull() {
+        return reintentosConsultaEStadoIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo reintentosConsultaEStado es NOT NULL
+     * @param reintentosConsultaEStadoIsNotNull Valor de seteo.
+     */
+    public void setReintentosConsultaEStadoIsNotNull(boolean reintentosConsultaEStadoIsNotNull) {
+        this.reintentosConsultaEStadoIsNotNull = reintentosConsultaEStadoIsNotNull;
+    }
+
+    /**
+     * Valor de busqueda de campo caducidad
+     * @return Integer.
+     */
+    public Integer getCaducidad() {
+        return caducidad;
+    }
+
+    /**
+     * Valor de busqueda de campo caducidad
+     * @param caducidad Valor de seteo.
+     */
+    public void setCaducidad(Integer caducidad) {
+        this.caducidad = caducidad;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getCaducidadIn() {
+        return this.caducidadIn;
+    }
+
+    /**
+     * @param caducidad Valor a agregar.
+     */
+    public void addCaducidadIn(Integer caducidad) {
+        this.caducidadIn.add(caducidad);
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad es NULL
+     * @return boolean.
+     */
+    public boolean isCaducidadIsNull() {
+        return caducidadIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad es NULL
+     * @param caducidadIsNull Valor de seteo.
+     */
+    public void setCaducidadIsNull(boolean caducidadIsNull) {
+        this.caducidadIsNull = caducidadIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad es NOT NULL
+     * @return boolean.
+     */
+    public boolean isCaducidadIsNotNull() {
+        return caducidadIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad es NOT NULL
+     * @param caducidadIsNotNull Valor de seteo.
+     */
+    public void setCaducidadIsNotNull(boolean caducidadIsNotNull) {
+        this.caducidadIsNotNull = caducidadIsNotNull;
+    }
+
+    /**
+     * Valor de busqueda de campo caducidadWebPush
+     * @return Integer.
+     */
+    public Integer getCaducidadWebPush() {
+        return caducidadWebPush;
+    }
+
+    /**
+     * Valor de busqueda de campo caducidadWebPush
+     * @param caducidadWebPush Valor de seteo.
+     */
+    public void setCaducidadWebPush(Integer caducidadWebPush) {
+        this.caducidadWebPush = caducidadWebPush;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getCaducidadWebPushIn() {
+        return this.caducidadWebPushIn;
+    }
+
+    /**
+     * @param caducidadWebPush Valor a agregar.
+     */
+    public void addCaducidadWebPushIn(Integer caducidadWebPush) {
+        this.caducidadWebPushIn.add(caducidadWebPush);
+    }
+
+    /**
+     * Permite buscar cuando campo caducidadWebPush es NULL
+     * @return boolean.
+     */
+    public boolean isCaducidadWebPushIsNull() {
+        return caducidadWebPushIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidadWebPush es NULL
+     * @param caducidadWebPushIsNull Valor de seteo.
+     */
+    public void setCaducidadWebPushIsNull(boolean caducidadWebPushIsNull) {
+        this.caducidadWebPushIsNull = caducidadWebPushIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidadWebPush es NOT NULL
+     * @return boolean.
+     */
+    public boolean isCaducidadWebPushIsNotNull() {
+        return caducidadWebPushIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidadWebPush es NOT NULL
+     * @param caducidadWebPushIsNotNull Valor de seteo.
+     */
+    public void setCaducidadWebPushIsNotNull(boolean caducidadWebPushIsNotNull) {
+        this.caducidadWebPushIsNotNull = caducidadWebPushIsNotNull;
+    }
+
+    /**
+     * Valor de busqueda de campo vapidPublicKey
+     * @return String.
+     */
+    public String getVapidPublicKey() {
+        if (vapidPublicKey != null) {
+            switch (vapidPublicKeyComparator) {
+	            case STARTS_WITH:
+	                return vapidPublicKey + "%";
+	            case CONTAINS:
+	                return "%" + vapidPublicKey + "%";
+	            case ENDS_WITH:
+	                return "%" + vapidPublicKey;
+	            case EQUALS:
+                	return vapidPublicKey;
+              	default:
+	            	break;
+            }
+        }
+        return vapidPublicKey;
+    }
+
+    /**
+     * Valor de busqueda de campo vapidPublicKey
+     * @param vapidPublicKey Valor de seteo.
+     */
+    public void setVapidPublicKey(String vapidPublicKey) {
+        this.vapidPublicKey = vapidPublicKey;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo vapidPublicKey
+     * @return vapidPublicKeyComparator.
+     */
+    public TextComparator getVapidPublicKeyComparator() {
+        return vapidPublicKeyComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo vapidPublicKey
+     * @param vapidPublicKeyComparator Valor de seteo.
+     */
+    public void setVapidPublicKeyComparator(TextComparator vapidPublicKeyComparator) {
+        this.vapidPublicKeyComparator = vapidPublicKeyComparator;
+    }
+
+    /**
+     * @return List<String>.
+     */
+    public List<String> getVapidPublicKeyIn() {
+        return this.vapidPublicKeyIn;
+    }
+
+    /**
+     * @param vapidPublicKey Valor a agregar.
+     */
+    public void addVapidPublicKeyIn(String vapidPublicKey) {
+        this.vapidPublicKeyIn.add(vapidPublicKey);
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPublicKey es NULL
+     * @return boolean.
+     */
+    public boolean isVapidPublicKeyIsNull() {
+        return vapidPublicKeyIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPublicKey es NULL
+     * @param vapidPublicKeyIsNull Valor de seteo.
+     */
+    public void setVapidPublicKeyIsNull(boolean vapidPublicKeyIsNull) {
+        this.vapidPublicKeyIsNull = vapidPublicKeyIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPublicKey es NOT NULL
+     * @return boolean.
+     */
+    public boolean isVapidPublicKeyIsNotNull() {
+        return vapidPublicKeyIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPublicKey es NOT NULL
+     * @param vapidPublicKeyIsNotNull Valor de seteo.
+     */
+    public void setVapidPublicKeyIsNotNull(boolean vapidPublicKeyIsNotNull) {
+        this.vapidPublicKeyIsNotNull = vapidPublicKeyIsNotNull;
+    }
+
+    /**
+     * Valor de busqueda de campo vapidPrivateKey
+     * @return String.
+     */
+    public String getVapidPrivateKey() {
+        if (vapidPrivateKey != null) {
+            switch (vapidPrivateKeyComparator) {
+	            case STARTS_WITH:
+	                return vapidPrivateKey + "%";
+	            case CONTAINS:
+	                return "%" + vapidPrivateKey + "%";
+	            case ENDS_WITH:
+	                return "%" + vapidPrivateKey;
+	            case EQUALS:
+                	return vapidPrivateKey;
+              	default:
+	            	break;
+            }
+        }
+        return vapidPrivateKey;
+    }
+
+    /**
+     * Valor de busqueda de campo vapidPrivateKey
+     * @param vapidPrivateKey Valor de seteo.
+     */
+    public void setVapidPrivateKey(String vapidPrivateKey) {
+        this.vapidPrivateKey = vapidPrivateKey;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo vapidPrivateKey
+     * @return vapidPrivateKeyComparator.
+     */
+    public TextComparator getVapidPrivateKeyComparator() {
+        return vapidPrivateKeyComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo vapidPrivateKey
+     * @param vapidPrivateKeyComparator Valor de seteo.
+     */
+    public void setVapidPrivateKeyComparator(TextComparator vapidPrivateKeyComparator) {
+        this.vapidPrivateKeyComparator = vapidPrivateKeyComparator;
+    }
+
+    /**
+     * @return List<String>.
+     */
+    public List<String> getVapidPrivateKeyIn() {
+        return this.vapidPrivateKeyIn;
+    }
+
+    /**
+     * @param vapidPrivateKey Valor a agregar.
+     */
+    public void addVapidPrivateKeyIn(String vapidPrivateKey) {
+        this.vapidPrivateKeyIn.add(vapidPrivateKey);
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPrivateKey es NULL
+     * @return boolean.
+     */
+    public boolean isVapidPrivateKeyIsNull() {
+        return vapidPrivateKeyIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPrivateKey es NULL
+     * @param vapidPrivateKeyIsNull Valor de seteo.
+     */
+    public void setVapidPrivateKeyIsNull(boolean vapidPrivateKeyIsNull) {
+        this.vapidPrivateKeyIsNull = vapidPrivateKeyIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPrivateKey es NOT NULL
+     * @return boolean.
+     */
+    public boolean isVapidPrivateKeyIsNotNull() {
+        return vapidPrivateKeyIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo vapidPrivateKey es NOT NULL
+     * @param vapidPrivateKeyIsNotNull Valor de seteo.
+     */
+    public void setVapidPrivateKeyIsNotNull(boolean vapidPrivateKeyIsNotNull) {
+        this.vapidPrivateKeyIsNotNull = vapidPrivateKeyIsNotNull;
+    }
+
+    
+    /**
      * @return boolean.
      */
     public boolean isInnerJoinTblAplicaciones() {
@@ -4509,6 +5160,22 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
         if (isNmaxenviosIsNotNull()) {
             criteria.add(Restrictions.isNotNull(NMAXENVIOS));
         }
+        
+        if (getNmaxreenvios() != null) {
+            criteria.add(Restrictions.eq(NMAXREENVIOS, getNmaxreenvios()));
+        }
+
+        if (getNmaxreenviosIn().size() > 0) {
+            criteria.add(Restrictions.in(NMAXREENVIOS, getNmaxreenviosIn()));
+        }
+
+        if (isNmaxreenviosIsNull()) {
+            criteria.add(Restrictions.isNull(NMAXREENVIOS));
+        }
+
+        if (isNmaxreenviosIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(NMAXREENVIOS));
+        }
 
         if (getHeadersms() != null) {
             if (getHeadersmsComparator() == TextComparator.EQUALS) {
@@ -4557,7 +5224,9 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
         }
 
         if (isEliminadoIsNull()) {
-            criteria.add(Restrictions.isNull(ELIMINADO));
+        	Criterion c1 = Restrictions.isNull(ELIMINADO);
+        	Criterion c2 = Restrictions.eq("eliminado", "N");
+            criteria.add(Restrictions.or(c1,c2));
         }
 
         if (isEliminadoIsNotNull()) {
@@ -5162,6 +5831,124 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
 
         if (isPremiumIsNotNull()) {
             criteria.add(Restrictions.isNotNull(PREMIUM));
+        }
+        
+        if (getNumeroMaxReenvios() != null) {
+            criteria.add(Restrictions.eq(NUMEROMAXREENVIOS, getNumeroMaxReenvios()));
+        }
+
+        if (getNumeroMaxReenviosIn().size() > 0) {
+            criteria.add(Restrictions.in(NUMEROMAXREENVIOS, getNumeroMaxReenviosIn()));
+        }
+
+        if (isNumeroMaxReenviosIsNull()) {
+            criteria.add(Restrictions.isNull(NUMEROMAXREENVIOS));
+        }
+
+        if (isNumeroMaxReenviosIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(NUMEROMAXREENVIOS));
+        }
+
+        if (getReintentosConsultaEStado() != null) {
+            criteria.add(Restrictions.eq(REINTENTOSCONSULTAESTADO, getReintentosConsultaEStado()));
+        }
+
+        if (getReintentosConsultaEStadoIn().size() > 0) {
+            criteria.add(Restrictions.in(REINTENTOSCONSULTAESTADO, getReintentosConsultaEStadoIn()));
+        }
+
+        if (isReintentosConsultaEStadoIsNull()) {
+            criteria.add(Restrictions.isNull(REINTENTOSCONSULTAESTADO));
+        }
+
+        if (isReintentosConsultaEStadoIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(REINTENTOSCONSULTAESTADO));
+        }
+
+        if (getCaducidad() != null) {
+            criteria.add(Restrictions.eq(CADUCIDAD, getCaducidad()));
+        }
+
+        if (getCaducidadIn().size() > 0) {
+            criteria.add(Restrictions.in(CADUCIDAD, getCaducidadIn()));
+        }
+
+        if (isCaducidadIsNull()) {
+            criteria.add(Restrictions.isNull(CADUCIDAD));
+        }
+
+        if (isCaducidadIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(CADUCIDAD));
+        }
+
+        if (getCaducidadWebPush() != null) {
+            criteria.add(Restrictions.eq(CADUCIDADWEBPUSH, getCaducidadWebPush()));
+        }
+
+        if (getCaducidadWebPushIn().size() > 0) {
+            criteria.add(Restrictions.in(CADUCIDADWEBPUSH, getCaducidadWebPushIn()));
+        }
+
+        if (isCaducidadWebPushIsNull()) {
+            criteria.add(Restrictions.isNull(CADUCIDADWEBPUSH));
+        }
+
+        if (isCaducidadWebPushIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(CADUCIDADWEBPUSH));
+        }
+
+        if (getVapidPublicKey() != null) {
+            if (getVapidPublicKeyComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(VAPIDPUBLICKEY, getVapidPublicKey()));
+            } 
+            else if (getVapidPublicKeyComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(VAPIDPUBLICKEY, getVapidPublicKey()));
+            }
+            else if (getVapidPublicKeyComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(VAPIDPUBLICKEY, getVapidPublicKey())));
+            }
+            else {
+                criteria.add(Restrictions.like(VAPIDPUBLICKEY, getVapidPublicKey()));
+            }
+        }
+
+        if (getVapidPublicKeyIn().size() > 0) {
+            criteria.add(Restrictions.in(VAPIDPUBLICKEY, getVapidPublicKeyIn()));
+        }
+
+        if (isVapidPublicKeyIsNull()) {
+            criteria.add(Restrictions.isNull(VAPIDPUBLICKEY));
+        }
+
+        if (isVapidPublicKeyIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(VAPIDPUBLICKEY));
+        }
+
+        if (getVapidPrivateKey() != null) {
+            if (getVapidPrivateKeyComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(VAPIDPRIVATEKEY, getVapidPrivateKey()));
+            } 
+            else if (getVapidPrivateKeyComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(VAPIDPRIVATEKEY, getVapidPrivateKey()));
+            }
+            else if (getVapidPrivateKeyComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(VAPIDPRIVATEKEY, getVapidPrivateKey())));
+            }
+            else {
+                criteria.add(Restrictions.like(VAPIDPRIVATEKEY, getVapidPrivateKey()));
+            }
+        }
+
+        if (getVapidPrivateKeyIn().size() > 0) {
+            criteria.add(Restrictions.in(VAPIDPRIVATEKEY, getVapidPrivateKeyIn()));
+        }
+
+        if (isVapidPrivateKeyIsNull()) {
+            criteria.add(Restrictions.isNull(VAPIDPRIVATEKEY));
+        }
+
+        if (isVapidPrivateKeyIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(VAPIDPRIVATEKEY));
         }
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {

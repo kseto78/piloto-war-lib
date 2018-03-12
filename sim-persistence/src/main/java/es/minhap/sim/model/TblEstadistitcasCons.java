@@ -4,7 +4,10 @@ package es.minhap.sim.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -20,6 +23,8 @@ public class TblEstadistitcasCons implements java.io.Serializable {
 	private static final long serialVersionUID = 7555596990199087286L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ESTADISTICASCONS_SEC")
+    @SequenceGenerator(name="ESTADISTICASCONS_SEC", sequenceName="ESTADISTICASCONS_SEC", allocationSize=1)
 	@Column(name = "ESTADISTICASCONSID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long estadisticasconsid;
 

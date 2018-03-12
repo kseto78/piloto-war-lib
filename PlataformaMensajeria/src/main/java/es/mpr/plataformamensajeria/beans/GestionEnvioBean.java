@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -7,7 +8,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  @version 1.0  
  *  @author Altran
  */
-public class GestionEnvioBean implements Audit{
+public class GestionEnvioBean implements Audit, Serializable{
+
+	private static final long serialVersionUID = 2205483197518833217L;
 
 	public GestionEnvioBean() {
 		this.aplicacion=null;
@@ -85,6 +88,7 @@ public class GestionEnvioBean implements Audit{
 	private Integer vistaEnviosId;
 	private Integer multidestinatario;
 	private Long destinatariosMensajes;
+	private Boolean botonIntercambios;
 	
 	public void setMensajeId(Long mensajeId) {
 		this.mensajeId = mensajeId;
@@ -99,7 +103,14 @@ public class GestionEnvioBean implements Audit{
 		this.ultimoEnvioStr = ultimoEnvioStr;
 	}
 
-
+	public boolean isBotonIntercambios() {
+		return botonIntercambios;
+	}
+	
+	public void setBotonIntercambios(boolean botonIntercambios) {
+		this.botonIntercambios = botonIntercambios;
+	}
+	
 	public Long getIdLote() {
 		return idLote;
 	}

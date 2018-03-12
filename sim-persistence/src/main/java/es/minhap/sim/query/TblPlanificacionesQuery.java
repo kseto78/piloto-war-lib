@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -2792,7 +2793,9 @@ public class TblPlanificacionesQuery extends AbstractHibernateQueryEntity<TblPla
         }
 
         if (isEliminadoIsNull()) {
-            criteria.add(Restrictions.isNull(ELIMINADO));
+        	Criterion c1 = Restrictions.isNull(ELIMINADO);
+        	Criterion c2 = Restrictions.eq("eliminado", "N");
+            criteria.add(Restrictions.or(c1,c2));
         }
 
         if (isEliminadoIsNotNull()) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.minhap.plataformamensajeria.iop.beans.respuestasServiciosMoviles.ServicioMovil;
 import es.minhap.sim.model.TblServiciosMoviles;
+import es.minhap.sim.query.TblServiciosMovilesQuery;
 
 
 
@@ -46,4 +47,23 @@ public interface TblServiciosMovilesManager {
 
 
 	TblServiciosMoviles getServicioMovilById(long idServicioMovil);
+
+
+	List<TblServiciosMoviles> getListaServiciosMovilesByQuery(TblServiciosMovilesQuery query);
+
+
+	Long insert(TblServiciosMoviles servicioMovil, String source, String accion, Long accionId);
+
+
+	void update(TblServiciosMoviles servicioMovil, String source, String accion, Long accionId);
+
+
+	TblServiciosMoviles getServicioMovil(Long servicioMovilId);
+
+
+	List<TblServiciosMoviles> getServiciosMovilesPaginado(int start, int size, String order, String columnSort, 
+			String nombreServicioMovil, boolean count);
+
+
+	public void delete(Long serviciosmovilesid, String source, String accionServicioMovil, Long accionIdServicioMovil);
 }

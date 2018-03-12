@@ -8,11 +8,21 @@ import java.io.IOException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
-//import es.mpr.plataformamensajeria.beans.DecodeBean;
-//import es.mpr.plataformamensajeria.servicios.ifaces.CifradoService;
+import es.minhap.misim.bus.model.Aplicacion;
+import es.minhap.misim.bus.model.Comunicacion;
+import es.minhap.misim.bus.model.Endpoint;
+import es.minhap.misim.bus.model.Producto;
+import es.minhap.misim.bus.model.Proveedor;
+import es.minhap.misim.bus.model.Transformacion;
+import es.mpr.plataformamensajeria.beans.AplicacionMisimBean;
+import es.mpr.plataformamensajeria.beans.ComunicacionBean;
+import es.mpr.plataformamensajeria.beans.EndpointBean;
+import es.mpr.plataformamensajeria.beans.ProductoBean;
+import es.mpr.plataformamensajeria.beans.ProveedorMisimBean;
+import es.mpr.plataformamensajeria.beans.TransformacionBean;
 
-
-public class Utiles {
+public class Utiles{
+	
 	private static final Logger LOGGER = Logger.getLogger(Utiles.class);
 	
 	private static final String ORDEN_LETRAS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -39,86 +49,6 @@ public class Utiles {
 		return decoded;
 	}
 	
-//	public static DecodeBean desencripta(HttpServletRequest request, DecodeBean decodeBean, CifradoService cifradoService){
-//
-////		Properties ps = new Properties (request);
-//		
-//		PlataformaMensajeriaProperties props = new PlataformaMensajeriaProperties();
-//		
-//		if (decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())){
-//		
-//			try {
-//				
-//				String certificado ="";
-//				if(decodeBean.getCertificado()!=null && !"".equals(decodeBean.getCertificado())){
-//					certificado = decodeBean.getCertificado();
-//				}else{
-//					certificado =  props.getProperty("decode.keystore.alias.defecto", null);;
-//				}
-//				
-//				String xmlCifrado = decodeBean.getXmlCifrado();
-//			
-//				final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//				dbf.setNamespaceAware(true);
-//				
-//				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName("UTF-8"));
-//
-//				String keystoreType = props.getProperty("decode.keystore.type", null);
-//				String keystore = props.getProperty("decode.keystore.path", null);
-//				String keystorePassword = props.getProperty("decode.keystore.password", null);
-//				String alias = props.getProperty("decode.keystore.alias." + certificado, null);
-//				String aliasPassword = props.getProperty("decode.keystore.alias.password." + certificado, null);
-//				
-//				// Desciframos el documento cifrado
-//				Document docDescifrado = cifradoService.descifrarKey(
-//						docOriginal,
-//						keystoreType,
-//						keystorePassword,
-//						alias,
-//						aliasPassword,
-//						keystore);
-//			
-//				docDescifrado = cifradoService.descifrar(
-//						docDescifrado,
-//						keystoreType,
-//						keystorePassword,
-//						alias,
-//						aliasPassword,
-//						keystore);
-//				
-//				NodeList node = docDescifrado.getElementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/", "Header");
-//				
-//				if(node.getLength()>0){
-//					for (int i=0;i< node.getLength();i++){
-//						
-//						NodeList node2 = node.item(i).getChildNodes();
-//						if(node2.getLength()>0){
-//							for (int j=0;j< node2.getLength();j++){
-//								if(node2.item(j)!=null && node2.item(j).getNodeName().contains("Security")){
-//									node.item(i).removeChild(node2.item(j));
-//								}
-//							}
-//						}
-//					}
-//				}
-//				
-////				SOAPMessage soapMessage = XMLUtils.dom2soap(docDescifrado);
-////				soapMessage.getSOAPHeader().removeContents();
-////				
-////				String xmlDescifrado = XMLUtils.dom2xml(XMLUtils.soap2dom(soapMessage));
-////				decodeBean.setXmlDescifrado(xmlDescifrado);
-//				
-//				String xmlDescifrado = XMLUtils.dom2xml(docDescifrado);
-//				decodeBean.setXmlDescifrado(xmlDescifrado);
-//				
-//				
-//			}catch (Exception e){
-//			}
-//			
-//		}
-//		return decodeBean;
-//	}
-	
 	public static String FiletoBase64String (File originalFile){
         String iconoBase64 = null;
         try {
@@ -133,6 +63,111 @@ public class Utiles {
         }
         
         return iconoBase64;
-		
 	}
+	
+	public static ProductoBean transformacionProducto (Producto producto){
+		
+		ProductoBean productoBean = new ProductoBean();
+		productoBean.setIdProducto(producto.getIdProducto());
+		productoBean.setNombre(producto.getNombre());
+		productoBean.setCodigo(producto.getCodigo());
+		
+		return productoBean;
+	}
+	
+	public static EndpointBean transformacionEndpoint (Endpoint endpoint){
+		
+		EndpointBean endpointBean = new EndpointBean();
+		endpointBean.setIdEndpoint(endpoint.getIdEndpoint());
+		endpointBean.setNombre(endpoint.getNombre());
+		endpointBean.setUrlOperation(endpoint.getOperation());
+		endpointBean.setPortName(endpoint.getPortName());
+		endpointBean.setServiceName(endpoint.getServiceName());
+		endpointBean.setUrlTargetName(endpoint.getTargetName());
+		endpointBean.setTimeout(endpoint.getTimeout());
+		endpointBean.setUrlEndpoint(endpoint.getUrlEndpoint());
+		endpointBean.setFechaCreacion(endpoint.getFechaCreacion());
+		endpointBean.setFechaActualizacion(endpoint.getFechaActualizacion());
+		
+		ComunicacionBean comunicacionBean = transformacionComunicacion(endpoint.getComunicacion());
+		endpointBean.setComunicacion(comunicacionBean);
+		
+		return endpointBean;
+	}
+	
+	public static AplicacionMisimBean transformacionAplicacionMisim (Aplicacion aplicacion){
+		
+		AplicacionMisimBean aplicacionMisimBean = new AplicacionMisimBean();
+		aplicacionMisimBean.setIdAplicacion(aplicacion.getIdAplicacion());
+		aplicacionMisimBean.setNombre(aplicacion.getNombre());
+		aplicacionMisimBean.setPassword(aplicacion.getPassword());
+		aplicacionMisimBean.setUsuario(aplicacion.getUsuario());
+		
+		return aplicacionMisimBean;
+	}
+	
+	public static ProveedorMisimBean transformacionProveedorMisim (Proveedor proveedor){
+		
+		ProveedorMisimBean proveedorMisimBean = new ProveedorMisimBean();
+		proveedorMisimBean.setIdProveedor(proveedor.getIdProveedor());
+		proveedorMisimBean.setCertificado(proveedor.getCertificado());
+		proveedorMisimBean.setCertificadoPass(proveedor.getCertificadoPass());
+		proveedorMisimBean.setCifrado(proveedor.getCifrado());
+		proveedorMisimBean.setCompany(proveedor.getCompany());
+		
+		/*DUDA proveedores*/
+		proveedorMisimBean.setEncoding(proveedor.getEncoding());
+		proveedorMisimBean.setBasicAutentication(proveedor.getBasicAutentication());
+		proveedorMisimBean.setMethod(proveedor.getMethod());
+		proveedorMisimBean.setMediaType(proveedor.getMediaType());
+		proveedorMisimBean.setAnadirUim(proveedor.getAnadirUim());
+		proveedorMisimBean.setUserAutentication(proveedor.getUserAutentication());
+		proveedorMisimBean.setPassAutentication(proveedor.getPassAutentication());	
+		
+		proveedorMisimBean.setEsquemaCifrado(proveedor.getEsquemaCifrado());
+		proveedorMisimBean.setFirma(proveedor.getFirma());
+		proveedorMisimBean.setNodoCifrado(proveedor.getNodoCifrado());
+		proveedorMisimBean.setNombre(proveedor.getNombre());
+		proveedorMisimBean.setPassword(proveedor.getPassword());
+		proveedorMisimBean.setTipoFirma(proveedor.getTipoFirma());
+		proveedorMisimBean.setType(proveedor.getType());
+		proveedorMisimBean.setUsuario(proveedor.getUsuario());
+
+		ProductoBean productoBean = transformacionProducto(proveedor.getProducto());
+		proveedorMisimBean.setProducto(productoBean);
+		
+		EndpointBean endpointBean = transformacionEndpoint(proveedor.getEndpoint());
+		proveedorMisimBean.setEndpoint(endpointBean);
+		
+		TransformacionBean transformacionBean = transformacionTransformacion(proveedor.getTransformacion());
+		proveedorMisimBean.setTransformacion(transformacionBean);
+		
+		return proveedorMisimBean;
+	}
+	
+	public static TransformacionBean transformacionTransformacion (Transformacion transformacion){
+		
+		TransformacionBean transformacionBean = new TransformacionBean();
+		transformacionBean.setIdTransformacion(transformacion.getIdTransformacion());
+		transformacionBean.setNombre(transformacion.getNombre());
+		transformacionBean.setXslPeticion(transformacion.getXslPeticion());
+		transformacionBean.setXslRespuesta(transformacion.getXslRespuesta());
+		transformacionBean.setXslFault(transformacion.getXslFault());
+		transformacionBean.setFechaCreacion(transformacion.getFechaCreacion());
+		transformacionBean.setFechaActualizacion(transformacion.getFechaActualizacion());
+		
+		return transformacionBean;
+	}
+	
+	public static ComunicacionBean transformacionComunicacion (Comunicacion comunicacion){
+		
+		ComunicacionBean comunicacionBean = new ComunicacionBean();
+		comunicacionBean.setIdComunicacion(comunicacion.getIdComunicacion());
+		comunicacionBean.setNombre(comunicacion.getNombre());
+		
+		return comunicacionBean;
+	}
+	
+	
+
 }

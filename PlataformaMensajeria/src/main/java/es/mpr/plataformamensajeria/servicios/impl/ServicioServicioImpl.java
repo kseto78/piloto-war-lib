@@ -200,6 +200,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			ServicioBean criterio) throws BusinessException {
 		String nombre = null;
 		Long aplicacionId = null;
+		int servicioId = 0;
 
 		try {
 			// Columna para ordenar
@@ -213,22 +214,37 @@ public class ServicioServicioImpl implements ServicioServicio {
 			if (column == null)
 				column = "aplicacionnombre";
 
+			
+			List<ViewServicios> lista = null;
+			
+			
+			if (null != criterio && null != criterio.getServicioId()) {
+				
+				servicioId = criterio.getServicioId();
+
+			}
 			if (null != criterio && null != criterio.getNombre()) {
+				
 				nombre = criterio.getNombre();
 
 			}
 			if (null != criterio && null != criterio.getAplicacionid()) {
+				
 				aplicacionId = criterio.getAplicacionid().longValue();
 
 			}
+				
+			lista = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre, aplicacionId, servicioId, false);
 
-			List<ViewServicios> lista = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre,
-					aplicacionId, false);
+
+//			lista = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre,
+//					aplicacionId, false);
 			List<ServicioBean> pageList = getListViewServicioBean(lista);
 			// Total de organismos
-			Integer rowcount = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre,
-					aplicacionId, true).size();
+//			Integer rowcount = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre, aplicacionId, true).size();
+			Integer rowcount = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre, aplicacionId, servicioId, true).size();
 
+			
 			PaginatedList<ServicioBean> result = new PaginatedList<ServicioBean>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
@@ -402,6 +418,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 					.getAplicacion(servicio.getAplicacionid().longValue()) : null);
 			sTO.setTblCanales((null != servicio.getCanalid()) ? tblCanalesManager.getCanalById(servicio
 					.getCanalid().longValue()) : null);
+			sTO.setVapidPrivateKey(servicio.getVapidPrivateKey());
+			sTO.setVapidPublicKey(servicio.getVapidPublicKey());
+			sTO.setCaducidadWebPush(servicio.getCaducidadWebPush());
 
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServicioJPA:" + e);
@@ -546,6 +565,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 			servicio.setAplicacionid((null != serv.getTblAplicaciones()) ? serv.getTblAplicaciones().getAplicacionid()
 					.intValue() : null);
 			servicio.setCanalid((null != serv.getTblCanales()) ? serv.getTblCanales().getCanalid().intValue() : null);
+			servicio.setVapidPrivateKey(serv.getVapidPrivateKey());
+			servicio.setVapidPublicKey(serv.getVapidPublicKey());
+			servicio.setCaducidadWebPush(serv.getCaducidadWebPush());
 			
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServicioBean:" + e);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.sim.model.TblDestinatariosMensajes;
+import es.minhap.sim.query.TblDestinatariosMensajesQuery;
 
 
 public interface TblDestinatariosMensajesManager {
@@ -41,6 +42,7 @@ public interface TblDestinatariosMensajesManager {
 	 * recupera un DetinatariosMensajes
 	 * 
 	 * @param destinatariomensajeId 
+	 * @return
 	 */
 	public TblDestinatariosMensajes getDestinatarioMensaje(Long destinatarioMensajeId);
 	
@@ -151,5 +153,20 @@ public interface TblDestinatariosMensajesManager {
 	 * @return TblMensajes
 	 */
 	public List<Long> getIdMensajeByIdExterno(String idExterno);
+
+	/**
+	 * Elimina los DetinatariosMensajes
+	 * 
+	 * @param destinatarioMensajeId 
+	 */
+	public void delete(Long destinatarioMensajeId);
+
+	/**
+	 * recupera los DetinatariosMensajes by query
+	 * 
+	 * @param query 
+	 * @return 
+	 */
+	List<TblDestinatariosMensajes> getDestinatarioMensajesByQuery(TblDestinatariosMensajesQuery query);
 
 }

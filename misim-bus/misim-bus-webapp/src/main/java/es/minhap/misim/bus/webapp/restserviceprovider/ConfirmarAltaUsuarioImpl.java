@@ -36,6 +36,7 @@ import es.minhap.plataformamensajeria.iop.beans.ResponseStatusTypeConfirmarAltaU
 import es.minhap.plataformamensajeria.iop.beans.RespuestaConfirmarAltaUsuario;
 
 
+
 public class ConfirmarAltaUsuarioImpl implements ConfirmarAltaUsuario {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ConfirmarAltaUsuarioImpl.class);

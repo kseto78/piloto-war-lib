@@ -185,6 +185,11 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 		option.setDescripcion("SERVIDORES PUSH");
 		result.add(option);
 		
+		option = new KeyValueObject();
+		option.setCodigo("SERVIDORES WEB PUSH");
+		option.setDescripcion("SERVIDORES WEB PUSH");
+		result.add(option);
+		
 		
 		
 		return result;

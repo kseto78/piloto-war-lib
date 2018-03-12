@@ -1,8 +1,14 @@
 package es.minhap.plataformamensajeria.iop.manager;
 
+import java.util.List;
+
 import es.minhap.plataformamensajeria.iop.beans.RecepcionSMSBean;
 import es.minhap.sim.model.TblLotesEnvios;
 import es.minhap.sim.model.TblServicios;
+
+import es.minhap.sim.query.TblLotesEnviosQuery;
+import es.minhap.sim.model.TblServicios;
+
 
 public interface TblLotesEnviosManager {
 
@@ -85,7 +91,20 @@ public interface TblLotesEnviosManager {
 	 */
 	public Integer setEstadoLote(Long idLote, String estado, String descripcion, Boolean controlReintentos, String usuario);
 
+	
+	/**
+	 * Realiza las operaciones reenviar y anular un lote
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public List<Long> getIdLotesEnviosByQuery(TblLotesEnviosQuery query);
 
-
+	/**
+	 * Elimina el lote indicado por id
+	 * 
+	 * @param loteenvioid
+	 */
+	public void delete(Long loteenvioid);
 
 }

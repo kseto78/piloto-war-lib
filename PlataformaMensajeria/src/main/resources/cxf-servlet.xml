@@ -23,6 +23,15 @@
 	 	<http-conf:client Accept="text/xml" AllowChunking="false" CacheControl="No-Cache" ContentType="text/xml" ConnectionTimeout="60000" ReceiveTimeout="60000" />
 	</http-conf:conduit>  
   				  
-
+<!-- nat -->
+	  	<jaxws:client id="envioMensajesService"
+    			  serviceClass="es.redsara.misim.misim_bus_webapp.EnvioMensajesServiceWSBindingPortType"
+  				  address="${url.envio.mensajes}"/>
+  				  
+  		<http-conf:conduit name="{http://misim.redsara.es/misim-bus-webapp/}{http://misim.redsara.es/misim-bus-webapp/}OperacionMensajesWSBindingPortTypePort.http-conduit">
+	 		<http-conf:client Accept="text/xml" AllowChunking="false" CacheControl="No-Cache" ContentType="text/xml" ConnectionTimeout="60000" ReceiveTimeout="60000" />
+		</http-conf:conduit>  
+  				  
+<!-- nat -->
  	 	 
 </beans>

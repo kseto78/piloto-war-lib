@@ -184,6 +184,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	public PaginatedList<AplicacionBean> getAplicaciones(int start, int size, String order, String columnSort,
 			AplicacionBean criterio) throws BusinessException {
 		String nombre = null;
+		int aplicacionId = 0;
 		
 		try {
 			// Columna para ordenar
@@ -197,13 +198,20 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			if (column == null) {
 				column = "nombre";
 			}
-
+			
 			if (null != criterio && null != criterio.getNombre()) {
+				
 				nombre = criterio.getNombre();
-			}
 
-			List<TblAplicaciones> lista = tblAplicacionesManager.getAplicacionesPaginado(start, size, order, column,
-					nombre);
+			}
+			if (null != criterio && null != criterio.getAplicacionId()) {
+				
+				aplicacionId = criterio.getAplicacionId();
+
+			}
+			
+			List<TblAplicaciones> lista = tblAplicacionesManager.getAplicacionesPaginado(start, size, order, column, nombre, aplicacionId);
+
 			List<AplicacionBean> pageList = getListViewAplicacionBean(lista);
 
 			// Total de organismos

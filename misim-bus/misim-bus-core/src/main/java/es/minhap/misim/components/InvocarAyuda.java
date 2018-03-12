@@ -38,12 +38,20 @@ public class InvocarAyuda implements Callable {
 
 	@Resource
 	IGestionAyudaService gestionAyudaImpl;
+	
+	@Resource(name="pushServiceImpl")
+	private es.minhap.plataformamensajeria.iop.services.usuariosplataformas.webpush.IPushService pushServiceImpl;
 
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
 		LOG.debug("Empezando el proceso de invocación del enviador...");
-
+		
+		pushServiceImpl.sendPush(null, null);
+		
+		
+		
+		
 		try {
 
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())

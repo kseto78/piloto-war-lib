@@ -3,6 +3,7 @@ package es.mpr.plataformamensajeria.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Blob;
@@ -18,7 +19,12 @@ public class UtilCreateFile {
 		StringBuilder sb = null;
 		FileReader fr = null;
 		try {
-			fr = new FileReader(ruta);
+			try {
+				fr = new FileReader(ruta);
+			} catch (FileNotFoundException e) {
+				logger.error("UtilCreateFile.getCuerpoMensajeFronFile", e);
+			}
+			
 			br = new BufferedReader(fr);
 		    sb = new StringBuilder();
 		    String line = br.readLine();
@@ -27,7 +33,7 @@ public class UtilCreateFile {
 		        sb.append(line);
 		        line = br.readLine();
 		    }
-		    
+		
 		} catch (IOException e) {
 			logger.error("UtilCreateFile.getCuerpoMensajeFronFile", e);
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * archivo: TblOrganismosDAOImpl.java
@@ -30,23 +31,22 @@ import es.minhap.sim.query.TblOrganismosQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class TblOrganismosDAOImpl extends AbstractHibernateDAO<TblOrganismos, Long, TblOrganismosQuery> implements
-		TblOrganismosDAO {
+public class TblOrganismosDAOImpl extends AbstractHibernateDAO<TblOrganismos,Long,TblOrganismosQuery> implements TblOrganismosDAO {
 
-	@Override
-	protected Class<TblOrganismos> getEntityClass() {
-		return TblOrganismos.class;
-	}
+    @Override
+    protected Class<TblOrganismos> getEntityClass() {
+        return TblOrganismos.class;
+    }
 
-	@Override
-	protected Class<Long> getIdentifierClass() {
-		return Long.class;
-	}
-
-	@Override
-	@Autowired
-	@Qualifier(value = "sessionFactorySIMApp")
-	public void setSessionFactoryApp(SessionFactory sessionFactory) {
-		super.setSessionFactory(sessionFactory);
-	}
+    @Override
+    protected Class<Long> getIdentifierClass() {
+        return Long.class;
+    }
+    
+    @Override
+  	@Autowired
+  	@Qualifier(value = "sessionFactorySIMApp")
+  	public void setSessionFactoryApp(SessionFactory sessionFactory) {
+  		super.setSessionFactory(sessionFactory);
+  	}
 }

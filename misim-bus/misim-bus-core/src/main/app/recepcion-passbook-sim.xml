@@ -19,6 +19,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<spring:bean id="invocarEnvioEmailPBK" name="invocarEnvioEmailPBK" class="es.minhap.misim.components.InvocarEnvioEmailPassbook" />
 		<spring:bean id="invocarEnvioSMSPBK" name="invocarEnvioSMSPBK" class="es.minhap.misim.components.InvocarEnvioSMS" />
 		<spring:bean id="invocarEnvioPushPBK" name="invocarEnvioPushPBK" 	class="es.minhap.misim.components.InvocarEnvioPush" />
+		<spring:bean id="invocarEnvioWebPushPBK" name="invocarEnvioWebPushPBK" 	class="es.minhap.misim.components.InvocarEnvioWebPush" />
 		
 		<spring:bean id="invocarConsultaEstadoPBK" name="invocarConsultaEstadoPBK" class="es.minhap.misim.components.InvocarConsultaEstado" />
 		<spring:bean id="invocarConsultaHistorialPBK" name="invocarConsultaHistorialPBK" class="es.minhap.misim.components.InvocarConsultaHistorial" />
@@ -116,6 +117,14 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Enviar PUSH" />
 					<component doc:name="Invocar envio PUSH">
 						<spring-object bean="invocarEnvioPushPBK" />
+					</component>
+				</processor-chain>
+			</when>
+			<when expression="#[message.outboundProperties['${TIPO_PETICION}'] == '${enviarWebPUSH}']">
+				<processor-chain doc:name="Processor Chain">
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionSIM] - Enviar WEB PUSH" />
+					<component doc:name="Invocar envio Web PUSH">
+						<spring-object bean="invocarEnvioWebPush" />
 					</component>
 				</processor-chain>
 			</when>

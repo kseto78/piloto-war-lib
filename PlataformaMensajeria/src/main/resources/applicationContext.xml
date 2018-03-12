@@ -34,7 +34,7 @@
 	<import resource="applicationContext-properties.xml"/> 	
 	<import resource="applicationContext-app.xml"/> 
 	<import resource="applicationContext-aop.xml"/>
-	<!-- <import resource="applicationContextMISIM-tx.xml"/>  -->
+	<import resource="applicationContextMISIM-tx.xml"/>
 	<import resource="applicationContext-tx.xml"/>   
  	<import resource="applicationContext-wsclient.xml"/> 
 <!--  	<import resource="cxf-servlet.xml"/>  -->

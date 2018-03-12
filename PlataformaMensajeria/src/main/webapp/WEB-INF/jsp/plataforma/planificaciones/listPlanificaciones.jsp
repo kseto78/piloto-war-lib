@@ -43,7 +43,7 @@ function checkServicio(){
 	document.getElementById('planificacion.servicioId').value=document.getElementById('sid').value;
 	return true;
 }
-</script/>
+</script>
 <!-- <div class="menu_cabecera">
 	<h1><framework:crumb/></h1><br>
 </div>-->
@@ -52,13 +52,26 @@ function checkServicio(){
 <!-- Criterios de la busqueda   -->
 <!-- ************************** -->
         <div class="mainContent">
+	        <h3 class="pageNameButtons">
+				<span class="floatRight"></span>
+		        <label>Planificaciones</label>
+	  		</h3>  
         <%@include file="/WEB-INF/jsp/plataforma/validation/validadoresJS.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp" %>
             <div class="criteria">
 		<s:form id="frmBuscarPlanificaciones" method="POST" action="buscarPlanificaciones"
-		validate="false" theme="css_xhtml">            	
+		validate="false" theme="css_xhtml">        
+		           <p class="criteria">
+                    	<label class="fieldText" style="width: 100px;">Id:</label>
+                    	<s:textfield
+							name="planificacion.planificacionId" id="planificacion.planificacionId"
+							theme="simple" 
+							key="field.general.id" labelposition="left"
+							size="9" maxlength="60"
+							cssClass="input_tablas_registro" />
+               	   </p>    	
                    <p class="criteria">
                      <span>
                        <label style="width: 120px;" class="fieldText">Aplicaciones:</label>

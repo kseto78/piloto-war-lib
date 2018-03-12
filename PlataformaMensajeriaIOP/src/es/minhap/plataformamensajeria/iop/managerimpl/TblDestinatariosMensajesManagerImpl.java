@@ -210,6 +210,21 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 		}
 		return res;
 	}
+	
+	@Override
+	@Transactional
+	public void delete(Long destinatarioMensajeId) {
+		destinatariosMensajesDAO.delete(destinatarioMensajeId);
+		
+	}
+	
+	
+	@Override
+	@Transactional
+	public List<TblDestinatariosMensajes> getDestinatarioMensajesByQuery(TblDestinatariosMensajesQuery query) {
+		return destinatariosMensajesDAO.search(query).getResults();
+	}
+	
 	/**
 	 * @return the destinatariosMensajesDAO
 	 */
@@ -294,8 +309,6 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	public void setQueryExecutorDestinatariosMensajes(QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes) {
 		this.queryExecutorDestinatariosMensajes = queryExecutorDestinatariosMensajes;
 	}
-
-	
 
 	
 }

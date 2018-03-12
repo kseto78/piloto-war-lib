@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.web.action.aplicacion;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.ws.security.util.Base64;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -58,29 +54,43 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
  */
 @Controller("aplicacionAction")
 @Scope("prototype")
-public class AplicacionAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
+public class AplicacionAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable, Serializable {
+
+	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	private static final String GENERALES_PAGESIZE = "generales.PAGESIZE";
+
+	private static final String TABLE_ID = "tableId";
+
+	private static final String INFO_USER = "infoUser";
+
+	private static final String LOG_ACCION_ACTUALIZAR = "log.ACCION_ACTUALIZAR";
+
+	private static final String NO_USER = "noUser";
 
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = Logger.getLogger(AplicacionAction.class);
 
 	@Resource(name = "servicioAplicacionImpl")
-	private ServicioAplicacion servicioAplicacion;
+	private transient ServicioAplicacion servicioAplicacion;
 
 	@Resource(name = "servicioServicioImpl")
-	private ServicioServicio servicioServicio;
+
+	private transient ServicioServicio servicioServicio;
 
 	@Resource(name = "servicioPlanificacionImpl")
-	private ServicioPlanificacion servicioPlanificacion;
+	private transient ServicioPlanificacion servicioPlanificacion;
 
 	@Resource(name = "servicioUsuarioAplicacionImpl")
-	private ServicioUsuarioAplicacion servicioUsuarioAplicacion;
+	private transient ServicioUsuarioAplicacion servicioUsuarioAplicacion;
 
 	@Resource(name = "servicioServidorImpl")
-	private ServicioServidor servicioServidor;
+	private transient ServicioServidor servicioServidor;
 
 	@Resource(name = "plataformaMensajeriaProperties")
-	private PlataformaMensajeriaProperties properties;
+	private transient PlataformaMensajeriaProperties properties;  
+	
 
 	private String idAplicacion;
 	private String idPlanificacion;
@@ -89,6 +99,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	private String idProveedorSMS;
 	private String idReceptorSMS;
 	private String idServidorPush;
+	private String idServidorWebPush;
 
 	private AplicacionBean aplicacion;
 	private PlanificacionBean planificacion;
@@ -98,7 +109,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	private List<ServicioBean> listaServiciosAplicacion;
 	private String[] checkDelList;
 
-	List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServidores = new ArrayList<>();
 
 	private String resultCount;
 	private String checkPassword;
@@ -112,23 +123,28 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 
 	/////MIGRADO
 	public String search() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+			return NO_USER;
+		
+		int page = getPage(AplicacionAction.TABLE_ID); // Pagina a mostrar
+		String order = getOrder(AplicacionAction.TABLE_ID); // Ordenar de modo ascendente o
 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(AplicacionAction.TABLE_ID); // Columna usada para
 														// ordenar
 
-		if (aplicacion != null)
+		if (aplicacion != null){
 			if (aplicacion.getNombre() != null && aplicacion.getNombre().length() <= 0)
 				aplicacion.setNombre(null);
+			if (aplicacion.getAplicacionId() != null && aplicacion.getAplicacionId() <= 0)
+				aplicacion.setAplicacionId(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20"));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<AplicacionBean> result = servicioAplicacion.getAplicaciones(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				(export) ? -1 : Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")), order,
 				columnSort, aplicacion);
 		Integer totalSize = result.getTotalList();
 
@@ -137,17 +153,17 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		// Atributos de request
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
+					Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaAplicaciones != null && !listaAplicaciones.isEmpty()) {
 			for (int indice = 0; indice < listaAplicaciones.size(); indice++) {
 
-				AplicacionBean aplicacion = listaAplicaciones.get(indice);
-				aplicacion.setNombre(StringEscapeUtils.escapeHtml(aplicacion.getNombre()));
-				aplicacion.setDescripcion(StringEscapeUtils.escapeHtml(aplicacion.getDescripcion()));
+				AplicacionBean apli = listaAplicaciones.get(indice);
+				apli.setNombre(StringEscapeUtils.escapeHtml(apli.getNombre()));
+				apli.setDescripcion(StringEscapeUtils.escapeHtml(apli.getDescripcion()));
 			}
 		}
 		return SUCCESS;
@@ -158,22 +174,22 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			return "noUser";
+			return NO_USER;
 		}
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		int page = getPage(AplicacionAction.TABLE_ID); // Pagina a mostrar
+		String order = getOrder(AplicacionAction.TABLE_ID); // Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(AplicacionAction.TABLE_ID); // Columna usada para
 														// ordenar
 
 		if (aplicacion != null)
 			if (aplicacion.getNombre() != null && aplicacion.getNombre().length() <= 0)
 				aplicacion.setNombre(null);
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20"));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<AplicacionBean> result = servicioAplicacion.getAplicaciones(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				(export) ? -1 : Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")), order,
 				columnSort, aplicacion);
 		Integer totalSize = result.getTotalList();
 
@@ -182,10 +198,10 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
+					Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaAplicaciones != null && !listaAplicaciones.isEmpty()) {
 			for (int indice = 0; indice < listaAplicaciones.size(); indice++) {
@@ -206,7 +222,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			return "noUser";
+			return NO_USER;
 		}
 		if (aplicacion != null) {
 
@@ -232,13 +248,13 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 
 	//////MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		String accion = properties.getProperty(AplicacionAction.LOG_ACCION_ACTUALIZAR, null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
 		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			return "noUser";
+			return NO_USER;
 		}
 		AplicacionBean aplicacionBBDD = null;
 		if (aplicacion == null) {
@@ -306,7 +322,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
 			logger.error("AplicacionAction - load:" + e);
-			return "noUser";
+			return NO_USER;
 		}
 		if (idAplicacion == null)
 			throw new BusinessException("EL idAplicacion recibido es nulo");
@@ -332,14 +348,14 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	////MIGRADO
 	public String delete() throws BaseException {
 		String accionEliminar = properties.getProperty("log.ACCION_ELIMINAR", null);
-		String accionActualizar = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		String accionActualizar = properties.getProperty(AplicacionAction.LOG_ACCION_ACTUALIZAR, null);
 		Long accionIdActualizar = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
 		Long accionIdEliminar = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
 		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
 		String descripcionServicio = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO", null);
 		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+			return NO_USER;
 		if (idAplicacion == null) {
 			addActionErrorSession(this.getText("plataforma.aplicacion.delete.error"));
 		} else {
@@ -356,14 +372,14 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	////MIGRADO
 	public String deleteSelected() throws BaseException {
 		String accionEliminar = properties.getProperty("log.ACCION_ELIMINAR", null);
-		String accionActualizar = properties.getProperty("log.ACCION_ACTUALIZAR", null);
+		String accionActualizar = properties.getProperty(AplicacionAction.LOG_ACCION_ACTUALIZAR, null);
 		Long accionIdActualizar = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
 		Long accionIdEliminar = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
 		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
 		String descripcionServicio = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO", null);
 		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+			return NO_USER;
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.aplicacion.deleteSelected.error"));
 
@@ -382,8 +398,8 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 
 	///MIGRADO
 	public String loadDetalleAplicacion() throws BusinessException, IllegalAccessException, InvocationTargetException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+			return NO_USER;
 		AplicacionBean detalleApp = new AplicacionBean();
 		DetalleAplicacionBean detalle = new DetalleAplicacionBean();
 		if (idAplicacion != null) {
@@ -460,8 +476,8 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 
 	////MIGRADO
 	public String loadPlanificaciones() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+			return NO_USER;
 		if (idPlanificacion == null)
 			throw new BusinessException("EL idPlanificacion recibido es nulo");
 		try {
@@ -835,4 +851,19 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	public List<KeyValueObject> getComboServidores() {
 		return comboServidores;
 	}
+
+	/**
+	 * @return the idServidorWebPush
+	 */
+	public String getIdServidorWebPush() {
+		return idServidorWebPush;
+	}
+
+	/**
+	 * @param idServidorWebPush the idServidorWebPush to set
+	 */
+	public void setIdServidorWebPush(String idServidorWebPush) {
+		this.idServidorWebPush = idServidorWebPush;
+	}
+	
 }

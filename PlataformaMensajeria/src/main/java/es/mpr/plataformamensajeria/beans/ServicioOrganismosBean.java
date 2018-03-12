@@ -6,8 +6,7 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 
 public class ServicioOrganismosBean implements Audit {
 
-	private static final long serialVersionUID = 1L;
-
+	
 	public ServicioOrganismosBean() {
 		super();
 		this.servicioOrganismoId = null;
@@ -22,6 +21,9 @@ public class ServicioOrganismosBean implements Audit {
 		this.fechaCreacion = null;
 		this.modificadoPor = null;
 		this.fechaModificacion = null;
+		this.logo = null;
+		this.background = null;
+		this.icon = null;
 	}
 
 	protected Integer servicioOrganismoId;
@@ -36,7 +38,10 @@ public class ServicioOrganismosBean implements Audit {
 	protected Date fechaCreacion;
 	protected String modificadoPor;
 	protected Date fechaModificacion;
-
+	protected String logo;
+	protected String background;
+	protected String icon;
+	
 	@Override
 	public String obtenerXML() {
 		// TODO Auto-generated method stub
@@ -137,6 +142,30 @@ public class ServicioOrganismosBean implements Audit {
 
 	public void setDescripcionServicio(String descripcionServicio) {
 		this.descripcionServicio = descripcionServicio;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 }

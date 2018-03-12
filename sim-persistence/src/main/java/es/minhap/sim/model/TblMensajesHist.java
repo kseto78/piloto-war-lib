@@ -32,7 +32,9 @@ public class TblMensajesHist implements java.io.Serializable {
 	@JoinColumn(name = "ESTADOID")
 	private TblEstados tblEstados;
 
-	private Long loteenvioid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "LOTEENVIOID", nullable = false)
+	private TblLotesEnviosHist tblLotesEnviosHist;
 
 	@Column(name = "CODIGOEXTERNO", length = 100)
 	private String codigoexterno;
@@ -152,18 +154,18 @@ public class TblMensajesHist implements java.io.Serializable {
 	}
 
 	/**
-	 * @return the loteenvioid
+	 * @return the tblLotesEnviosHist
 	 */
-	public Long getLoteenvioid() {
-		return loteenvioid;
+	public TblLotesEnviosHist getTblLotesEnviosHist() {
+		return tblLotesEnviosHist;
 	}
 
 	/**
-	 * @param loteenvioid
-	 *            the loteenvioid to set
+	 * @param tblLotesEnviosHist
+	 *            the tblLotesEnviosHist to set
 	 */
-	public void setLoteenvioid(Long loteenvioid) {
-		this.loteenvioid = loteenvioid;
+	public void setTblLotesEnviosHist(TblLotesEnviosHist tblLotesEnviosHist) {
+		this.tblLotesEnviosHist = tblLotesEnviosHist;
 	}
 
 	/**

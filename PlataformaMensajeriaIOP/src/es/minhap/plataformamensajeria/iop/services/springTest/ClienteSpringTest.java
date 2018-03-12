@@ -9,10 +9,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit38.AbstractJUnit38SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,8 +20,12 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import es.map.sim.jms.sender.SIMMessageSender;
 import es.map.sim.negocio.modelo.MensajeJMS;
+import es.minhap.common.entity.SearchResult;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.common.spring.ApplicationContextProvider;
+import es.minhap.misim.bus.dao.ViewMisimDAO;
+import es.minhap.misim.bus.model.ViewMisim;
+import es.minhap.misim.bus.query.ViewMisimQuery;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaHistoricoXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
@@ -113,11 +117,21 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 	
 	@Resource(name = "messageSender")
 	private SIMMessageSender sender;
+	
+	@Resource
+	private ViewMisimDAO viewMisimDao;
 
 	private PropertiesServices ps;
 
 	private ApplicationContextProvider context;
 
+	@Test
+	public final void testViewMisimDAO() throws InterruptedException {
+		logger.debug("Starting test testViewMisimDAO");
+		ViewMisimQuery query = new ViewMisimQuery();
+		SearchResult<ViewMisim> resultado = viewMisimDao.search(query);
+		assertNotNull(resultado);
+	}
 	
 	/**
 	 * Test de encolar mensajes premium, el listener enviarMensajeMessageReceiver se 
@@ -253,7 +267,7 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		logger.info("resultado -> " + result);
 	}
 
-	 @Test
+//	 @Test
 	public final void testReenvioLote() {
 
 		if (!ApplicationContextProvider.getInstance().isLoaded()) {

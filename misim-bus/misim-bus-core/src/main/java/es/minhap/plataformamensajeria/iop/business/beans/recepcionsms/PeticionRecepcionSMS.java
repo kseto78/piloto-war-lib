@@ -14,8 +14,6 @@ import javax.xml.bind.annotation.XmlType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.minhap.plataformamensajeria.iop.business.beans.push.PeticionPush;
-
 
 /**
  * <p>Clase Java para anonymous complex type.

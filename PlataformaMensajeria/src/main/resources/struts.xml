@@ -12,6 +12,17 @@
 	<constant name="struts.custom.i18n.resources" value="ApplicationResources,FrameworkResources" />
 	<constant name="struts.mapper.action.prefix.enabled" value="true" />
 
+  	 <package name="json" extends="json-default">
+		<action name="searchAction" class="es.mpr.plataformamensajeria.web.action.organismos.AutoCompleteAction">
+                        <result type="json">
+                           <param name="excludeNullProperties">true</param>
+                           <param name="encoding">UTF-8</param>
+                          <param name="noCache">true</param>
+                          <param name="parse">true</param> 
+						</result>
+                </action>
+	</package>  
+
 	<package name="fwk" extends="tiles-default">
 <!-- 
 		<result-types>
@@ -80,8 +91,7 @@
 
 	</package>
 
-
-	<package name="plataformamensajeriaapp2" extends="fwk">
+	<package name="plataformamensajeriaapp2" extends="json,fwk">
 
 		<action name="pool" class="es.mpr.template.pool.poolObject"
 			method="obtenerPool">
@@ -476,10 +486,10 @@
 			method="search"><!-- *se usa* -->
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success" type="tiles">pages.searchServidor</result>
-
+		
 		</action>
 		<action name="editServidor" class="servidoresAction" method="load"><!-- *se usa* -->
-
+			
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success"  type="tiles">pages.servidor.edit</result>
 		</action>
@@ -953,6 +963,105 @@
 		<!-- ******************************************* -->
 		<!-- FIN PLATAFORMA MENSAJERIA - SERVIDORESPUSH -->
 		<!-- ****************************************** -->
+		
+		<!-- ************************************** -->
+		<!-- PLATAFORMA MENSAJERIA - SERVIDORESWEBPUSH -->
+		<!-- ************************************** -->
+		<action name="buscarServidorWebPush" class="servidorWebPushAction"
+			method="search">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="tiles">pages.searchServidorWebPush</result>
+		</action>
+		
+		<action name="editServidorWebPush" class="servidorWebPushAction"
+			method="load"><!-- *se usa* -->
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="tiles">pages.servidorWebPush.edit</result>
+		</action>
+		
+		<action name="updateServidorWebPush" class="servidorWebPushAction"
+			method="update"><!-- *se usa* -->
+			<interceptor-ref name="storeStack" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param> 
+				<param name="idServidorWebPush">${servidorWebPush.servidorWebPushId}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+		<action name="deleteServidorWebPush" class="servidorWebPushAction"
+			method="delete"><!-- *se usa* -->
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">buscarServidorWebPush</param>
+			</result>	
+		</action>
+		
+		<action name="deleteServidoresWebPushSeleccionados" class="servidorWebPushAction"
+			method="deleteSelected"><!-- *se usa* -->
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">buscarServidorWebPush</param>
+			</result>
+		</action>
+
+		<action name="nuevoServidorWebPush" class="servidorWebPushAction"><!-- *se usa* -->
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="tiles">pages.servidorWebPush.create</result>
+		</action>
+		
+		<action name="saveServidorWebPush" class="servidorWebPushAction"
+			method="create"><!-- *se usa* -->
+			<result name="error" type="tiles">pages.servidorWebPush.create</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param> 
+				<param name="idServidorWebPush">${idServidorWebPush}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+				
+		<action name="addPlanificacionServidorWebPush" class="servidorWebPushAction"
+			method="addPlanificacionServidorWebPush"><!-- *se usa* -->
+			<result name="success" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param> 
+				<param name="idServidorWebPush">${planificacionServidor.servidorId}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>		
+			<result name="error" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param>
+				<param name="idServidorWebPush">${planificacionServidor.servidorId}</param>
+				<param name="planificacionServidor.lunes">${planificacionServidor.lunes}</param>
+				<param name="planificacionServidor.martes">${planificacionServidor.martes}</param>
+				<param name="planificacionServidor.miercoles">${planificacionServidor.miercoles}</param>
+				<param name="planificacionServidor.jueves">${planificacionServidor.jueves}</param>
+				<param name="planificacionServidor.viernes">${planificacionServidor.viernes}</param>
+				<param name="planificacionServidor.sabado">${planificacionServidor.sabado}</param>
+				<param name="planificacionServidor.domingo">${planificacionServidor.domingo}</param>
+				<param name="planificacionServidor.horaDesde">${planificacionServidor.horaDesde}</param>
+				<param name="planificacionServidor.horaHasta">${planificacionServidor.horaHasta}</param>
+			</result>
+		</action>
+		
+		<action name="deletePlanificacionServidorWebPush" class="servidorWebPushAction"
+			method="deletePlanificacionServidorWebPush"><!-- *se usa* -->
+			<result name="success" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param> 
+				<param name="idServidorWebPush">${idServidorWebPush}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>		
+		</action>
+		
+		<!-- ******************************************* -->
+		<!-- FIN PLATAFORMA MENSAJERIA - SERVIDORESWEBPUSH -->
+		<!-- ****************************************** -->
+		
+		
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - APLICACIONES -->
 		<!-- ************************************* -->
@@ -1043,6 +1152,12 @@
 			</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
+		<action name="loadPlanificacionesServidorWebPush" class="aplicacionAction"
+			method="loadPlanificaciones">
+			<result name="success" type="tiles">pages.aplicacion.editplanificacionservidorwebpush
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
 		<action name="loadPlanificacionesOrganismo" class="aplicacionAction"
 			method="loadPlanificaciones">
 			<result name="success" type="tiles">pages.aplicacion.editplanificacionorganismos
@@ -1061,9 +1176,14 @@
 			method="ajaxLoadServicios">
 			<result name="success">/uploadOK.jsp</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
-			
 		</action>
-		
+<!-- 		<action name="searchAction" class="es.mpr.plataformamensajeria.web.action.organismos.AutoCompleteAction">
+                        <result type="json">
+                           <param name="excludeNullProperties">true</param>
+                           <param name="encoding">UTF-8</param>
+                          <param name="noCache">true</param>
+                       </result>
+                </action> -->
 		<action name="buscarServicios" class="serviciosAction" method="searchServicios">
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success"  type="tiles">pages.searchServicios</result>
@@ -1288,6 +1408,105 @@
 			<result name="noUser" type="tiles">pages.nouser</result>
 			
 		</action>
+		
+		<action name="viewPassbook" class="serviciosAction"
+			method="loadPassbook">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.servicio.viewPassbook
+			</result>
+		</action>
+		
+		<action name="saveViewPassbook" class="serviciosAction"
+			method="savePassbook">
+			<result name="success" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+		<action name="deleteImagenLogo" class="serviciosAction"
+			method="deleteImagenLogo">
+			<result name="success" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="deleteImagenBackground" class="serviciosAction"
+			method="deleteImagenBackground">
+			<result name="success" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="deleteImagenIcon" class="serviciosAction"
+			method="deleteImagenIcon">
+			<result name="success" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">viewPassbook</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="idServicioOrganismo">${idServicioOrganismo}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="previsualizar" class="serviciosAction"
+			method="previsualizar">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editServicio</param>
+				<param name="parse">true</param> 
+				<param name="idServicio">${idServicio}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+		<action name="generarClavesServicio" class="serviciosAction"
+			method="generarClavesServicio">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
 
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - PLANIFICACIONES -->
@@ -1390,6 +1609,21 @@
 				<param name="actionName">editServidorPush</param>
 				<param name="parse">true</param> 
 				<param name="idServidorPush">${idServidorPush}</param>
+			</result>
+		</action>
+		<action name="updatePlanificacionServidorWebPush" class="planificacionAction"
+			method="updatePlanificacionServer">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param> 
+				<param name="idServidorWebPush">${idServidorWebPush}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		
+			<result name="error" type="redirectAction">
+				<param name="actionName">editServidorWebPush</param>
+				<param name="parse">true</param> 
+				<param name="idServidorWebPush">${idServidorWebPush}</param>
 			</result>
 		</action>
 
@@ -1658,6 +1892,27 @@
 			<result name="success" type="tiles">pages.usuariosPush</result>
 		</action>
 		
+<!-- 		nat -->
+		<!-- ************************************* -->
+		<!-- PLATAFORMA MENSAJERIA - ENVIO DE MENSAJES -->
+		<!-- ************************************* -->
+		
+		<action name="envioMensajesHome" class="envioMensajesAction" method="load">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.envioMensajes</result>
+		</action>
+
+		<action name="envioMensajesAplicacion" class="envioMensajesAction" method="enviarPeticion">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.envioMensajes</result>
+		</action>
+<!-- 		<action name="aplicacionSelectEditEvent" class="envioMensajesAction" method="aplicacionSelectEvent"> -->
+<!-- 			<result name="success" type="tiles">pages.envioMensajes</result>		 -->
+<!-- 		</action> -->
+		
+		
+<!-- 		nat -->		
+		
 		<!-- *************************************** -->
 		<!-- PÁGINA DE PERMISO DENEGADO -->
 		<action name="permisoDenegado" class="usuarioAction">
@@ -1706,6 +1961,16 @@
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success" type="tiles">pages.gestionEnvios.viewHistoricoMensaje
 			</result>
+		</action>
+		<action name="viewMisim" class="gestionEnvioAction"
+			method="loadMisim">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.gestionEnvios.viewMisim
+			</result>
+		</action>
+		<action name="loadXmlPeticion" class="gestionEnvioAction" method="loadXmlPeticion">
+		</action>
+		<action name="loadXmlRespuesta" class="gestionEnvioAction" method="loadXmlRespuesta">
 		</action>
 		<action name="viewMensajeNotificacionPush" class="gestionEnvioAction"
 			method="loadMensaje">
@@ -1794,6 +2059,12 @@
 			<result name="success" type="tiles">pages.gestionEnviosHistoricos.viewHistoricoMensaje
 			</result>
 		</action>
+		<action name="viewMisimHistorico" class="gestionEnvioHistoricoAction"
+			method="loadMisimHistorico">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.gestionEnvios.viewMisim
+			</result>
+		</action>
 		<action name="viewContentHistorico" class="gestionEnvioHistoricoAction"
 			method="loadContenidoMensaje">
 			<result name="noUser" type="tiles">pages.nouser</result>
@@ -1837,6 +2108,11 @@
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - ORGANISMOS -->
 		<!-- ************************************* -->
+		<action name="listarOrganismos" class="organismosAction"
+			method="newSearch">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.searchOrganismo</result>
+		</action>
 		<action name="buscarOrganismos" class="organismosAction"
 			method="search">
 			<result name="noUser" type="tiles">pages.nouser</result>
@@ -2080,6 +2356,7 @@
 		</action>
 		
 		
+
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - EjecucionJobAction -->
 		<!-- ************************************* -->
@@ -2098,6 +2375,105 @@
 			<result name="success" type="tiles">pages.ejecutarJob</result>		
 		</action>
 		
+		
+		
+		<!-- ************************************* -->
+		<!-- PLATAFORMA MENSAJERIA - MISIM -->
+		<!-- ************************************* -->
+		
+		<action name="ajaxLoadProducto" class="proveedorMisimAction" method="ajaxLoadProducto">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>	
+		
+		<action name="ajaxLoadEndpoint" class="proveedorMisimAction" method="ajaxLoadEndpoint">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+		<action name="ajaxLoadTransformacion" class="proveedorMisimAction" method="ajaxLoadTransformacion">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>					
+		
+		<action name="buscarProveedoresMisim" class="proveedorMisimAction" method="search">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="tiles">pages.searchProveedoresMisim</result>
+		</action>
+		<action name="editProveedorMisim" class="proveedorMisimAction" method="load">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="tiles">pages.proveedorMisim.edit</result>
+		</action>
+		<action name="updateProveedorMisim" class="proveedorMisimAction" method="update">
+			<result name="error" type="tiles">pages.proveedorMisim.edit</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProveedorMisim</param>
+				<param name="parse">true</param> 
+				<param name="idProveedor">${idProveedor}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		<action name="deleteProveedorMisim" class="proveedorMisimAction" method="delete">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">buscarProveedoresMisim</param>
+			</result>
+		</action>
+		<action name="deleteProveedoresMisimSeleccionados" class="proveedorMisimAction"
+			method="deleteSelected">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">buscarProveedoresMisim</param>
+			</result>
+		</action>
+		<action name="nuevoProveedorMisim" class="proveedorMisimAction">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="tiles">pages.proveedorMisim.create</result>
+		</action>
+		<action name="saveProveedorMisim" class="proveedorMisimAction" method="create">
+			<result name="error" type="tiles">pages.proveedorMisim.create</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProveedorMisim</param>
+				<param name="parse">true</param> 
+				<param name="idProveedor">${idProveedor}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>	
+		
+		<action name="addParametroProveedorMisim" class="proveedorMisimAction"
+			method="addParametroProveedorMisim">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProveedorMisim</param>
+				<param name="parse">true</param> 
+				<param name="idProveedor">${parametroProveedor.idProveedor}</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">editProveedorMisim</param>
+				<param name="parse">true</param> 
+				<param name="idProveedor">${parametroProveedor.idProveedor}</param>
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+		<action name="deleteParametroProveedorMisim" class="proveedorMisimAction"
+			method="deleteParametroProveedorMisim">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProveedorMisim</param>
+				<param name="parse">true</param>
+				<param name="idProveedor">${idProveedor}</param>
+			</result>
+		</action>
+		
+		<action name="deleteParametrosProveedorMisimSelected" class="proveedorMisimAction"
+			method="deleteParametrosProveedorMisimSelected">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProveedorMisim</param>
+				<param name="parse">true</param> 
+				<param name="idProveedor">${idProveedor}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+						
 	</package>
 
 </struts>

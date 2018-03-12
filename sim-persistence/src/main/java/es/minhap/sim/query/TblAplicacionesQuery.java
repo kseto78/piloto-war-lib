@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -68,6 +69,11 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
      * Lista de valores del campo aplicacionid para busquedas tipo IN
      */
     private List<Long> aplicacionidIn = new ArrayList<Long>(0);
+    
+    /**
+     * Lista de valores del campo aplicacionid para busquedas tipo NOT IN
+     */
+    private List<Long> aplicacionidNOTIn = new ArrayList<Long>(0);
 
     /**
      * Valor de busqueda de campo nombre
@@ -435,12 +441,26 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
     public List<Long> getAplicacionidIn() {
         return this.aplicacionidIn;
     }
+    
+    /**
+     * @return List<Long>.
+     */
+    public List<Long> getAplicacionidNOTIn() {
+        return this.aplicacionidNOTIn;
+    }
 
     /**
      * @param aplicacionid Valor a agregar.
      */
     public void addAplicacionidIn(Long aplicacionid) {
         this.aplicacionidIn.add(aplicacionid);
+    }
+    
+    /**
+     * @param aplicacionid Valor a agregar.
+     */
+    public void addAplicacionidNOTIn(Long aplicacionid) {
+        this.aplicacionidNOTIn.add(aplicacionid);
     }
 
     /**
@@ -1655,6 +1675,10 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
         if (!getAplicacionidIn().isEmpty()) {
             criteria.add(Restrictions.in(APLICACIONID, getAplicacionidIn()));
         }
+        
+        if (!getAplicacionidNOTIn().isEmpty()) {
+            criteria.add(Restrictions.not(Restrictions.in(APLICACIONID, getAplicacionidNOTIn())));
+        }
 
         if (getNombre() != null) {
             if (getNombreComparator() == TextComparator.EQUALS) {
@@ -1882,7 +1906,9 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
         }
 
         if (isEliminadoIsNull()) {
-            criteria.add(Restrictions.isNull(ELIMINADO));
+        	Criterion c1 = Restrictions.isNull(ELIMINADO);
+        	Criterion c2 = Restrictions.eq("eliminado", "N");
+            criteria.add(Restrictions.or(c1,c2));
         }
 
         if (isEliminadoIsNotNull()) {

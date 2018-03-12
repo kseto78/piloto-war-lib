@@ -50,7 +50,7 @@ public class TblUsuariosPush implements java.io.Serializable {
 
 	@Column(name = "DISPOSITIVOID", length = 200)
 	private String dispositivoid;
-
+	
 	@Column(name = "NOMBRE", length = 100)
 	private String nombre;
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * archivo: TblDestinatariosMensHistDAOImpl.java
@@ -29,21 +30,18 @@ import es.minhap.sim.query.TblDestinatariosMensHistQuery;
  * Implementacion de DAO basico con Hibernate
  */
 @Service
-@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class TblDestinatariosMensHistDAOImpl extends
-		AbstractHibernateDAO<TblDestinatariosMensHist, Long, TblDestinatariosMensHistQuery> implements
-		TblDestinatariosMensHistDAO {
+@Transactional(propagation= Propagation.REQUIRES_NEW, readOnly=false)
+public class TblDestinatariosMensHistDAOImpl extends AbstractHibernateDAO<TblDestinatariosMensHist,Long,TblDestinatariosMensHistQuery> implements TblDestinatariosMensHistDAO {
 
-	@Override
-	protected Class<TblDestinatariosMensHist> getEntityClass() {
-		return TblDestinatariosMensHist.class;
-	}
+    @Override
+    protected Class<TblDestinatariosMensHist> getEntityClass() {
+        return TblDestinatariosMensHist.class;
+    }
 
-	@Override
-	protected Class<Long> getIdentifierClass() {
-		return Long.class;
-	}
-
+    @Override
+    protected Class<Long> getIdentifierClass() {
+        return Long.class;
+    }
 	@Override
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")

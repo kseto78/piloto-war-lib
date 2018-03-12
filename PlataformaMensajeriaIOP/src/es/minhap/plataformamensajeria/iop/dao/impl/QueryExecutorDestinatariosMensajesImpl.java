@@ -343,6 +343,24 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 		return recipients;
 	}
 
+	@Override
+	public Integer countDestinatariosByMensaje(Long mensajeId) {
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			String sql = "select count(dm.destinatariosmensajes) from TBL_DESTINATARIOS_MENSAJES dm  where dm.mensajeid = :mensajeId ";
+			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
+			query.setLong("mensajeId", mensajeId);
+			
+			return ((BigDecimal)query.uniqueResult()).intValue();
+			 			
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
 	private void asignarDestinatario(Recipients recipients, DestinatarioDMensaje dm, String email,
 			String tipoDestinatario) {
 		String destinatario= null;
@@ -362,4 +380,6 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 			recipients.Bcc.add(dm);
 		}
 	}
+
+	
 }

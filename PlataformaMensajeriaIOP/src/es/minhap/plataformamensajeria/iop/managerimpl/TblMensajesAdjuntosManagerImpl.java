@@ -69,6 +69,11 @@ public class TblMensajesAdjuntosManagerImpl implements TblMensajesAdjuntosManage
 		
 	}
 
+	@Override
+	public void delete(Long idMensajeAdjunto) {
+		mensajesAdjuntosDAO.delete(idMensajeAdjunto);
+	}
+	
 	/**
 	 * @return the mensajesAdjuntosDAO
 	 */
@@ -82,5 +87,7 @@ public class TblMensajesAdjuntosManagerImpl implements TblMensajesAdjuntosManage
 	public void setMensajesAdjuntosDAO(TblMensajesAdjuntosDAO mensajesAdjuntosDAO) {
 		this.mensajesAdjuntosDAO = mensajesAdjuntosDAO;
 	}
+
+	
 
 }

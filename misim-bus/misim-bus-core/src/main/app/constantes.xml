@@ -180,6 +180,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		<spring:bean id="RPC" class="java.lang.String">
 			<spring:constructor-arg value="${comunicacion.rcp}" />
 		</spring:bean>
+		<spring:bean id="WEBPUSH" class="java.lang.String">
+			<spring:constructor-arg value="${comunicacion.webpush}" />
+		</spring:bean>
 		
 		<!-- Tipo de petición -->
 		<spring:bean id="enviarEmail" class="java.lang.String">
@@ -190,6 +193,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		</spring:bean>
 		<spring:bean id="enviarPUSH" class="java.lang.String">
 			<spring:constructor-arg value="enviarPush" />
+		</spring:bean>
+		<spring:bean id="enviarWebPUSH" class="java.lang.String">
+			<spring:constructor-arg value="enviarWebPush" />
 		</spring:bean>
 		<spring:bean id="consultarEstado" class="java.lang.String">
 			<spring:constructor-arg value="consultarEstado" />

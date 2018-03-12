@@ -38,15 +38,18 @@ import es.minhap.sim.model.TblMensajes;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUrlMensajePremium;
 
+
+
 /**
  * 
  * @author everis
  * 
  */
 @Service("envioPremiumAEATService")
-public class EnvioPremiumImpl implements IEnvioPremiumService {
-	public final static Logger LOG = LoggerFactory.getLogger(IEnvioPremiumService.class);
 
+public class EnvioPremiumImpl implements IEnvioPremiumService {
+
+	public final static Logger LOG = LoggerFactory.getLogger(IEnvioPremiumService.class);
 	private static String getStatusTextKo = "plataformaErrores.envioPremiumAEAT.STATUSTEXT_KO";
 
 	private static String getStatusTextOk = "plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK";
@@ -148,7 +151,6 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		}
 		return respuestaFinal;
 	}
-
 	@Override
 	public String cambiarEstadoSMSPremium(Integer idMensaje, String statusText) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -192,12 +194,10 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	public String gerUrlEndpoint(String messageId) {
 		String url = "";
 		try {
-
 			if (null != messageId && Integer.parseInt(messageId) > 0) {
 				TblUrlMensajePremium bean = urlMensajePremiunManager.getUrlByMensaje(Long.parseLong(messageId));
 				url = bean.getUrl();
 			}
-
 		} catch (Exception e) {
 			LOG.error("[EnvioPremiumImpl.gerUrlEndpoint] Obteniendo url Endpoint", e);
 		}
@@ -235,7 +235,6 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 			res.setIdMensaje("");
 		else
 			res.setIdMensaje(idMensaje.toString());
-
 		return res;
 	}
 
@@ -264,12 +263,10 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 
 		if (null == idExterno || idExterno.isEmpty()) {
 			res = codificarRespuesta(codIdExterno, desIdExterno, statusTextKO, "", null);
-
 		} else if (null == destinatario || destinatario.isEmpty()) {
 			res = codificarRespuesta(cod2002, des2002, statusTextKO, idExterno, null);
 		} else if (null == deliveryUrl || deliveryUrl.isEmpty()) {
 			res = codificarRespuesta(cod2020, des2020, statusTextKO, idExterno, null);
-
 		}
 		return res;
 	}
@@ -344,6 +341,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		}
 		return respuesta;
 	}
+
 
 	private String crearMensaje(EnvioAEATXMLBean envio, String username, String password, Integer servicio,
 			PropertiesServices ps) throws PlataformaBusinessException {

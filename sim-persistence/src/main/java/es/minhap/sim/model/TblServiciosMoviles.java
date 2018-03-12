@@ -6,7 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +25,8 @@ public class TblServiciosMoviles implements java.io.Serializable {
 	private static final long serialVersionUID = 9104688802466357088L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SERVICIOSMOVILESID_SEC")
+    @SequenceGenerator(name="SERVICIOSMOVILESID_SEC", sequenceName="SERVICIOSMOVILESID_SEC", allocationSize=1)
 	@Column(name = "SERVICIOSMOVILESID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long serviciosmovilesid;
 
@@ -32,7 +37,7 @@ public class TblServiciosMoviles implements java.io.Serializable {
 	private String descripcion;
 
 	@Column(name = "TIPO", nullable = false, precision = 2, scale = 0)
-	private Integer tipo;
+	private Long tipo;
 
 	@Column(name = "URL_SERVICIO", length = 200)
 	private String urlServicio;
@@ -75,7 +80,7 @@ public class TblServiciosMoviles implements java.io.Serializable {
 	
 	@Column(name = "ENDPOINT_PASS")
 	private String endpoint_Pass;
-
+	
 	public TblServiciosMoviles() {
 	}
 
@@ -127,7 +132,7 @@ public class TblServiciosMoviles implements java.io.Serializable {
 	/**
 	 * @return the tipo
 	 */
-	public Integer getTipo() {
+	public Long getTipo() {
 		return tipo;
 	}
 
@@ -135,7 +140,7 @@ public class TblServiciosMoviles implements java.io.Serializable {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(Integer tipo) {
+	public void setTipo(Long tipo) {
 		this.tipo = tipo;
 	}
 
@@ -320,5 +325,5 @@ public class TblServiciosMoviles implements java.io.Serializable {
 	public void setEndpoint_Pass(String endpoint_Pass) {
 		this.endpoint_Pass = endpoint_Pass;
 	}
-	
+
 }

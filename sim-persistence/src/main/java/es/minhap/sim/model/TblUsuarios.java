@@ -6,7 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +25,8 @@ public class TblUsuarios implements java.io.Serializable {
 	private static final long serialVersionUID = -7796618369492566751L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USUARIOID_SEC")
+    @SequenceGenerator(name="USUARIOID_SEC", sequenceName="USUARIOID_SEC", allocationSize=1)
 	@Column(name = "USUARIOID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long usuarioid;
 

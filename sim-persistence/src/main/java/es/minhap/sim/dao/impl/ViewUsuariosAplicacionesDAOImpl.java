@@ -1,3 +1,4 @@
+
 /*
  *
  * archivo: ViewUsuariosAplicacionesDAOImpl.java
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.minhap.common.persistence.hibernate.dao.AbstractHibernateDAO;
 import es.minhap.sim.dao.ViewUsuariosAplicacionesDAO;
 import es.minhap.sim.model.ViewUsuariosAplicaciones;
-import es.minhap.sim.model.ViewUsuariosAplicacionesId;
 import es.minhap.sim.query.ViewUsuariosAplicacionesQuery;
 
 /**
@@ -31,21 +31,19 @@ import es.minhap.sim.query.ViewUsuariosAplicacionesQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class ViewUsuariosAplicacionesDAOImpl extends
-		AbstractHibernateDAO<ViewUsuariosAplicaciones, ViewUsuariosAplicacionesId, ViewUsuariosAplicacionesQuery>
-		implements ViewUsuariosAplicacionesDAO {
+public class ViewUsuariosAplicacionesDAOImpl extends AbstractHibernateDAO<ViewUsuariosAplicaciones,Long,ViewUsuariosAplicacionesQuery> implements ViewUsuariosAplicacionesDAO {
 
-	@Override
-	protected Class<ViewUsuariosAplicaciones> getEntityClass() {
-		return ViewUsuariosAplicaciones.class;
-	}
+    @Override
+    protected Class<ViewUsuariosAplicaciones> getEntityClass() {
+        return ViewUsuariosAplicaciones.class;
+    }
 
-	@Override
-	protected Class<ViewUsuariosAplicacionesId> getIdentifierClass() {
-		return ViewUsuariosAplicacionesId.class;
-	}
-
-	@Override
+    @Override
+    protected Class<Long> getIdentifierClass() {
+        return Long.class;
+    }
+    
+    @Override
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
 	public void setSessionFactoryApp(SessionFactory sessionFactory) {

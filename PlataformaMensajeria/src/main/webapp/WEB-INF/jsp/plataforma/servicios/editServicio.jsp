@@ -3,9 +3,12 @@
 	redirectTo="permisoDenegado" allowedTo="ROL_ADMINISTRADOR">
 	<script>
 		document.location.href="permisoDenegado.action";
+	
 	</script>
 </plataforma:securityRedirect>
+
 <div class="mainContent">
+
 	<s:form id="frmEditServicio" method="POST" action="updateServicio"
 		validate="false" theme="simple" cssClass="">
 		<h3 class="pageNameButtons">
@@ -25,6 +28,7 @@
 		<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp"%>
 		<%@include
 			file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp"%>
+		<sj:dialog  id="dialogPassbook" title="Detalle Passbook" cssStyle="display:none" autoOpen="false"></sj:dialog>
 		<sj:dialog id="dialogPlanifications" title="Planificación"
 			cssStyle="min-height:150px;display:none" autoOpen="false">
 			<div class="editContainer">
@@ -68,8 +72,9 @@
 				</div>
 			</div>
 			<div class="footerPopup">
-				<span class="leftSide"></span> <span class="rightSide"> <input
-					type="button" value="Guardar" class="button" />
+				<span class="leftSide"></span> <span class="rightSide"> 
+					<s:submit id="Guardar" name="Guardar" value="Guardar" onclick="return validaPlanJS('frmEditPlanificacion','planificacion')" cssClass="button"/>
+					        
 				</span>
 			</div>
 		</sj:dialog>
@@ -133,8 +138,9 @@
 						name="servicio.servicioId" value="%{servicio.servicioId}" />
 					<s:hidden theme="simple" id="idServicio" name="idServicio"
 						value="%{servicio.servicioId}" />
-
-
+					<s:hidden theme="simple" id="vapidPublicKey" name="vapidPublicKey" value="%{vapidPublicKey}" />
+					<s:hidden theme="simple" id="vapidPrivateKey" name="vapidPrivateKey" value="%{vapidPublicKey}" />
+					
 					<label style="width: 120px;" class="fieldText">Nombre (*):</label>
 					<s:textfield name="servicio.nombre" value="%{servicio.nombre}"
 						id="servicio.nombre" theme="simple" labelposition="left" size="70"
@@ -356,6 +362,46 @@
 				</p>
 
 				<!--  FIN parte de push -->
+				
+				<!-- Inicio parte WEB push -->
+				<p class="criteria">
+					 <span>
+					<label id="caducidadWebPush" style="width: 120px; visibility: hidden; display: none;" class="fieldText">Caducidad Notificación</label>
+					<s:textfield name="servicio.caducidadWebPush"
+						value="%{servicio.caducidadWebPush}" id="servicio.caducidadWebPush"
+						theme="simple" cssStyle="visibility:hidden;display:none;"
+						onKeyPress="return numbersonly(this, event)"
+						labelposition="left" size="6" maxlength="6" cssClass="" />
+					</span>
+					 <span>
+						 <input id="botonclaves" type="button" value="Generar Claves" class="button"  style="visibility:hidden;display:none;disabled;"
+						 onclick="return generarClaves()"/>
+					</span>
+				</p>
+				
+				<p class="criteria">
+					<label id="vapidPublicKeyLabel"
+						style="width: 120px; visibility: hidden; display: none;" class="fieldText">
+						Clave Pública (*):</label>
+					<s:textfield name="servicio.vapidPublicKey"
+						value="%{servicio.vapidPublicKey}"
+						id="servicio.vapidPublicKey" theme="simple" disabled="true"
+						cssStyle="visibility:hidden;display:none;disabled;" labelposition="left" size="95"
+						maxlength="255" cssClass="" />
+				</p>
+
+				<p class="criteria">
+					<label id="vapidPrivateKeyLabel"
+						style="width: 120px; visibility: hidden; display: none;" class="fieldText">
+						Clave Privada (*):</label>
+					<s:textfield name="servicio.vapidPrivateKey"
+						value="%{servicio.vapidPrivateKey}"
+						id="servicio.vapidPrivateKey" theme="simple" disabled="true"
+						cssStyle="visibility:hidden;display:none;disabled=true;" labelposition="left" size="50"
+						maxlength="55" cssClass="" showPassword="true" />
+				</p>
+				
+				<!-- Fin parte WEB PUSH -->
 
 				<p class="criteria">
 					<label style="width: 150px;" class="fieldText"><i>(*)
@@ -483,31 +529,31 @@
 				action="addServicioOrganismos">
 
 				<p class="criteria">
-				<p class="criteria">
 					<label class="fieldText" style="width: 120px;">Multiorganismo</label>
 					<s:checkbox theme="simple" id="servicio.multiorganismo"
 						onchange="activarMultiorganismo()" name="servicio.multiorganismo"
 						value="%{servicio.multiorganismo}" />
+						 <a class="addLink" id="addItem" onclick="insertarNuevoOrganismo()"
+						name="addItem">Añadir Item</a>
 				</p>
 				<s:hidden name="servicio.multiorganismo"
 					id="servicio.multiorganismo" value="%{servicio.multiorganismo}" />
 
 				</p>
-				<p class="criteria">
-
-					<span style="width: 350px;"> <label style="width: 120px;"
-						class="fieldText">Organismo</label> <s:select
-							id="servicioOrganismos.organismoId"
-							name="servicioOrganismos.organismoId" emptyOption="true"
-							theme="simple" labelposition="left" title="Organismos"
-							list="comboServicioOrganismos" listKey="codigo"
-							listValue="descripcion" cssClass="" cssStyle="width:138px"
-							value="%{servicioOrganismos.organismoId}" disabled="false" /> <s:hidden
-							name="idServicio" id="idServicio" value="%{idServicio}" /> <s:hidden
-							name="idOrganismo" id="idOrganismo"
-							value="%{servicioOrganismos.organismoId}" />
-					</span> <a class="addLink" id="addItem" onclick="insertarNuevoOrganismo()"
-						name="addItem">Añadir Item</a>
+				<s:hidden theme="simple" id="idServicio" name="idServicio"
+						value="%{servicio.servicioId}" />
+						
+				<div class="ui-widget" class ="ui-autocomplete-loading">
+					<p class="criteria">
+					<label style="width: 120px;"
+							class="fieldText">Organismo</label>
+					<s:textfield name="search"
+							value=""
+							id="search" theme="simple"
+							labelposition="left" size="55" maxlength="255"
+					/>
+            			
+				</div>
 				</p>
 
 			</s:form>
@@ -567,7 +613,10 @@
 								theme="simple" onclick="selectAllSO(this)" /></th>
 							<th class="TH100">Código Organismo</th>
 							<th class="TH150">Nombre</th>
-							<th class="TH280">Descripción</th>
+							<th class="TH240">Descripción</th>
+							<s:if test='%{servicio.canalid == 1}'>
+								<th class="TH20 separator"></th>
+							</s:if>
 							<th class="TH45 separator"></th>
 						</tr>
 					</thead>
@@ -587,10 +636,24 @@
 								<td><s:label value="%{DIR3Organismo}" /></td>
 								<td><s:label value="%{nombreOrganismo}" /></td>
 								<td><s:label value="%{descripcionOrganismo}" /></td>
-								<td class="buttons"><span class="edit"> <a
+								<s:if test='%{servicio.canalid == 1}'>
+									<td class="buttons"><span class="edit">
+											<div
+												id="ajaxloader_ajax_${organismo.servicioOrganismoId}">
+												<span id="ajax_${organismo.servicioOrganismoId}"
+													name="ajax" title="Ver Passbook"
+													onclick="return loadPassbook(this,${organismo.servicioOrganismoId},${servicio.servicioId},${organismo.organismoId})"
+													class="btnPassbook passbook_link">
+													</span>
+											</div>
+									</td>
+								</s:if>
+								
+								<td class="buttons"><span class="edit"><a 
 										class="btnEdit" title="Editar"
 										href="editOrganismo.action?idOrganismo=${organismo.organismoId}&from=editServicio.action&idFrom=${servicio.servicioId}&var=idServicio"></a>
-								</span> <span class="delete"> <a class="btnDelete"
+								</span> 
+								<span class="delete"> <a class="btnDelete"
 										title="Eliminar" onclick="return confirmDelete();"
 										href="deleteServicioOrganismo.action?idServicioOrganismo=${organismo.servicioOrganismoId}&idServicio=${servicio.servicioId}&idOrganismo=${organismo.organismoId}"></a>
 								</span></td>
@@ -600,22 +663,35 @@
 						<s:if test="%{listaServicioOrganismos == null}">
 							<tr>
 
-								<td colspan="5">No se ha configurado servidor para el
+								<td colspan="6">No se ha configurado servidor para el
 									servicio</td>
 							</tr>
 							<script>document.getElementById('checkAllSO').style.visibility="hidden";</script>
 						</s:if>
+						<s:elseif test='%{servicio.canalid == 1}'>
+							<tr>
+								<tfoot>
+									<td colspan="5"><s:submit
+											id="eliminaSeleccionadosOrganismos"
+											name="eliminaSeleccionadosOrganismos" theme="simple"
+											disabled="true"
+											value="%{getText('button.plataforma.eliminarseleccionados')}"
+											cssClass="button" />
+									<td>
+								</tfoot>
+							</tr>
+						</s:elseif>
 						<s:else>
 							<tr>
-							<tfoot>
-								<td colspan="4"><s:submit
-										id="eliminaSeleccionadosOrganismos"
-										name="eliminaSeleccionadosOrganismos" theme="simple"
-										disabled="true"
-										value="%{getText('button.plataforma.eliminarseleccionados')}"
-										cssClass="button" />
-								<td>
-							</tfoot>
+								<tfoot>
+									<td colspan="4"><s:submit
+											id="eliminaSeleccionadosOrganismos"
+											name="eliminaSeleccionadosOrganismos" theme="simple"
+											disabled="true"
+											value="%{getText('button.plataforma.eliminarseleccionados')}"
+											cssClass="button" />
+									<td>
+								</tfoot>
 							</tr>
 						</s:else>
 
@@ -1066,6 +1142,8 @@
         document.formaddServicioOrganismo.action="activarMultiorganismoSelectEditEvent.action";
 	    document.formaddServicioOrganismo.submit();
 	}
+
+	
 
 </script>
 

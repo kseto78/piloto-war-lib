@@ -60,10 +60,7 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 	@Override
 	public RespuestaEstadoSMSXMLBean recibirEstadoSMS(RecepcionEstadoSMSXMLBean recepcionEstadoSMS) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String statusCodeKO = ps.getMessage("plataformaErrores.recepcionEstado.STATUSCODE_KO", null);
-		String errorUimNoExiste = ps.getMessage("plataformaErrores.recepcionEstado.ERROR_UIM_NOEXISTE", null);
 		String errorEstadoMensaje = ps.getMessage("plataformaErrores.recepcionEstado.ERROR_ESTADO_MENSAJE", null);
-		String statusTextKO = ps.getMessage("plataformaErrores.recepcionEstado.STATUSTEXT_KO", null);
 		String statusDetailsKO = ps.getMessage("plataformaErrores.recepcionEstado.STATUSDETAILS_KO", null);
 		String statusCodeOK = ps.getMessage("plataformaErrores.recepcionEstado.STATUSCODE_OK", null);
 		String statusTextOK = ps.getMessage("plataformaErrores.recepcionEstado.STATUSTEXT_OK", null);
@@ -122,8 +119,6 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 			Integer ultimoEstadoHistorico = hitoricosManager.getUltimoEstadoHistorico(mensaje.getMensajeid(), destinatarioMensajeId).intValue();
 			
 			if(null == ultimoEstadoHistorico || ultimoEstadoHistorico != estadoFinalId.intValue()){
-//				idHistorico = hitoricosManager.creaHistorico(mensaje.getMensajeid(),destinatarioMensajeId, estadoFinalId, null, 
-//					descripcion, cod.toString(), recepcionEstadoSMS.getUser());
 				mensajesManager.setEstadoMensaje(mensaje.getMensajeid(),tblEstadosManager.getEstadoById(estadoFinalId).getNombre(), descripcion, false, destinatarioMensajeId, cod.toString(), recepcionEstadoSMS.getUser(), null);
 			
 				if(estadoFinalId.intValue() == 2){
@@ -134,7 +129,6 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 
 			ResponseStatusType status;
 			if (null == ultimoEstadoHistorico || ultimoEstadoHistorico <= 0)
-			  //status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
 				status = getStatus(statusCodeOK, statusTextOK, statusDetailsKO, urlPremium);
 			else
 				status = getStatus(statusCodeOK, statusTextOK, statusDetailsOK, urlPremium);
@@ -143,7 +137,6 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		} catch (Exception e) {
 			LOG.error("[Registrar Historico] Se ha producido un error escribiendo en el Historico el mensaje: "
 					+ mensaje.getMensajeid(),e);
-		  //ResponseStatusType status = getStatus(statusCodeKO, statusTextKO, statusDetailsKO, urlPremium);
 			ResponseStatusType status = getStatus(statusCodeOK, statusTextOK, statusDetailsKO, urlPremium);
 			res.setStatus(status);
 		}

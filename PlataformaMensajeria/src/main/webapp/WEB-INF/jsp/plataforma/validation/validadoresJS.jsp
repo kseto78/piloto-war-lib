@@ -74,6 +74,22 @@
 		}else{return false;
 		}
 	}
+
+	function confirmDeleteImagenPassbook(imagen, enlace, idServicioOrganismo, idServicio, idOrganismo){
+		var r = confirm("¿Desea eliminar el elemento?");
+		if(r){
+			if(imagen == "imagenLogo"){
+				return deleteImagenLogo(enlace, idServicioOrganismo, idServicio, idOrganismo);
+				}
+			else if(imagen == "imagenBackground"){
+				return deleteImagenBackground(enlace, idServicioOrganismo, idServicio, idOrganismo);
+			}
+			else{
+				return deleteImagenIcon(enlace, idServicioOrganismo, idServicio, idOrganismo);
+				}
+		}else{return false;
+		}
+	}
     
 	function confirmDeleteSelected(){
 		var r = confirm('¿Desea eliminar los elementos seleccionados?');
@@ -114,6 +130,1631 @@
 	var comboBck="";
 	var nmaxreBck = "";
 
+	function checkPassbook(){
+		var passbook = document.getElementById("passbook");
+		var passbookCheck =  document.getElementById("envioMensajesAplicacionBean.passbook");
+		
+		var passbookLabel =  document.getElementById("passbookLabel");
+		
+		var url = document.getElementById("envioMensajesAplicacionBean.url");
+		var urlLabel = document.getElementById("urlLabel");
+		var logoPassbook = document.getElementById("envioMensajesAplicacionBean.logoPassbook");
+		var logoPassbookLabel = document.getElementById("logoPassbookLabel");
+		var descripcionPassbook = document.getElementById("envioMensajesAplicacionBean.descripcionPassbook");
+		var descripcionPassbookLabel = document.getElementById("descripcionPassbookLabel");
+		
+		var camposPrincLabel =  document.getElementById("camposPrincLabel");
+			
+		var keyPrinc = document.getElementById("envioMensajesAplicacionBean.keyPrinc");
+		var keyPrincLabel = document.getElementById("keyPrincLabel");
+		var labelPrinc = document.getElementById("envioMensajesAplicacionBean.labelPrinc");
+		var labelPrincLabel = document.getElementById("labelPrincLabel");
+		var valuePrinc = document.getElementById("envioMensajesAplicacionBean.valuePrinc");
+		var valuePrincLabel = document.getElementById("valuePrincLabel");
+
+		var camposSecLabel =  document.getElementById("campoSecLabel");
+			
+		var keySec = document.getElementById("envioMensajesAplicacionBean.keySec");
+		var keySecLabel = document.getElementById("keySecLabel");
+		var labelSec = document.getElementById("envioMensajesAplicacionBean.labelSec");
+		var labelSecLabel = document.getElementById("labelSecLabel");
+		var valueSec = document.getElementById("envioMensajesAplicacionBean.valueSec");
+		var valueSecLabel = document.getElementById("valueSecLabel");
+
+		var camposAuxLabel =  document.getElementById("campoAuxLabel");
+
+		var keyAux = document.getElementById("envioMensajesAplicacionBean.keyAux");
+		var keyAuxLabel = document.getElementById("keyAuxLabel");
+		var labelAux = document.getElementById("envioMensajesAplicacionBean.labelAux");
+		var labelAuxLabel = document.getElementById("labelAuxLabel");
+		var valueAux = document.getElementById("envioMensajesAplicacionBean.valueAux");
+		var valueAuxLabel = document.getElementById("valueAuxLabel");
+
+		var camposTrasLabel =  document.getElementById("campoTrasLabel");
+		
+		var keyTras = document.getElementById("envioMensajesAplicacionBean.keyTras");
+		var keyTrasLabel = document.getElementById("keyTrasLabel");
+		var labelTras = document.getElementById("envioMensajesAplicacionBean.labelTras");
+		var labelTrasLabel = document.getElementById("labelTrasLabel");
+		var valueTras = document.getElementById("envioMensajesAplicacionBean.valueTras");
+		var valueTrasLabel = document.getElementById("valueTrasLabel");
+
+
+		 passbook.disabled="";
+		 passbook.style.display="block";
+		 passbook.style.visibility="visible";
+
+	if(passbookCheck.checked == true){
+		 passbookLabel.disabled="";
+		 passbookLabel.style.display="block";
+		 passbookLabel.style.visibility="visible";
+		 url.value="";
+		 url.disabled="";
+		 url.style.display="block";
+		 url.style.visibility="visible";
+		 urlLabel.disabled="";
+		 urlLabel.style.display="block";
+		 urlLabel.style.visibility="visible";
+		 logoPassbook.value="";
+		 logoPassbook.disabled="";
+		 logoPassbook.style.display="block";
+		 logoPassbook.style.visibility="visible";
+		 logoPassbookLabel.disabled="";
+		 logoPassbookLabel.style.display="block";
+		 logoPassbookLabel.style.visibility="visible";
+		 descripcionPassbook.value="";
+		 descripcionPassbook.disabled="";
+		 descripcionPassbook.style.display="block";
+		 descripcionPassbook.style.visibility="visible";
+		 descripcionPassbookLabel.disabled="";
+		 descripcionPassbookLabel.style.display="block";
+		 descripcionPassbookLabel.style.visibility="visible";
+
+		 camposPrincLabel.disabled="";
+		 camposPrincLabel.style.display="block";
+		 camposPrincLabel.style.visibility="visible";
+		 keyPrinc.value="";
+		 keyPrinc.disabled="";
+		 keyPrinc.style.display="block";
+		 keyPrinc.style.visibility="visible";
+		 keyPrincLabel.disabled="";
+		 keyPrincLabel.style.display="block";
+		 keyPrincLabel.style.visibility="visible";
+		 labelPrinc.value="";
+		 labelPrinc.disabled="";
+		 labelPrinc.style.display="block";
+		 labelPrinc.style.visibility="visible";
+		 labelPrincLabel.disabled="";
+		 labelPrincLabel.style.display="block";
+		 labelPrincLabel.style.visibility="visible";		 
+		 valuePrinc.value="";
+		 valuePrinc.disabled="";
+		 valuePrinc.style.display="block";
+		 valuePrinc.style.visibility="visible";
+		 valuePrincLabel.disabled="";
+		 valuePrincLabel.style.display="block";
+		 valuePrincLabel.style.visibility="visible";
+
+		 camposSecLabel.disabled="";
+		 camposSecLabel.style.display="block";
+		 camposSecLabel.style.visibility="visible";
+		 keySec.value="";
+		 keySec.disabled="";
+		 keySec.style.display="block";
+		 keySec.style.visibility="visible";
+		 keySecLabel.disabled="";
+		 keySecLabel.style.display="block";
+		 keySecLabel.style.visibility="visible";
+		 labelSec.value="";
+		 labelSec.disabled="";
+		 labelSec.style.display="block";
+		 labelSec.style.visibility="visible";
+		 labelSecLabel.disabled="";
+		 labelSecLabel.style.display="block";
+		 labelSecLabel.style.visibility="visible";		 
+		 valueSec.value="";
+		 valueSec.disabled="";
+		 valueSec.style.display="block";
+		 valueSec.style.visibility="visible";
+		 valueSecLabel.disabled="";
+		 valueSecLabel.style.display="block";
+		 valueSecLabel.style.visibility="visible";
+
+		 camposAuxLabel.disabled="";
+		 camposAuxLabel.style.display="block";
+		 camposAuxLabel.style.visibility="visible";
+		 keyAux.value="";
+		 keyAux.disabled="";
+		 keyAux.style.display="block";
+		 keyAux.style.visibility="visible";
+		 keyAuxLabel.disabled="";
+		 keyAuxLabel.style.display="block";
+		 keyAuxLabel.style.visibility="visible";
+		 labelAux.value="";
+		 labelAux.disabled="";
+		 labelAux.style.display="block";
+		 labelAux.style.visibility="visible";
+		 labelAuxLabel.disabled="";
+		 labelAuxLabel.style.display="block";
+		 labelAuxLabel.style.visibility="visible";		 
+		 valueAux.value="";
+		 valueAux.disabled="";
+		 valueAux.style.display="block";
+		 valueAux.style.visibility="visible";
+		 valueAuxLabel.disabled="";
+		 valueAuxLabel.style.display="block";
+		 valueAuxLabel.style.visibility="visible";
+
+		 camposTrasLabel.disabled="";
+		 camposTrasLabel.style.display="block";
+		 camposTrasLabel.style.visibility="visible";
+		 keyTras.value="";
+		 keyTras.disabled="";
+		 keyTras.style.display="block";
+		 keyTras.style.visibility="visible";
+		 keyTrasLabel.disabled="";
+		 keyTrasLabel.style.display="block";
+		 keyTrasLabel.style.visibility="visible";
+		 labelTras.value="";
+		 labelTras.disabled="";
+		 labelTras.style.display="block";
+		 labelTras.style.visibility="visible";
+		 labelTrasLabel.disabled="";
+		 labelTrasLabel.style.display="block";
+		 labelTrasLabel.style.visibility="visible";		 
+		 valueTras.value="";
+		 valueTras.disabled="";
+		 valueTras.style.display="block";
+		 valueTras.style.visibility="visible";
+		 valueTrasLabel.disabled="";
+		 valueTrasLabel.style.display="block";
+		 valueTrasLabel.style.visibility="visible";
+	}else{
+		passbookLabel.disabled="disabled";
+		 passbookLabel.style.display="none";
+		 passbookLabel.style.visibility="hidden";
+		 url.value="";
+		 url.disabled="disabled";
+		 url.style.display="none";
+		 url.style.visibility="hidden";
+		 urlLabel.disabled="disabled";
+		 urlLabel.style.display="none";
+		 urlLabel.style.visibility="hidden";
+		 logoPassbook.value="";
+		 logoPassbook.disabled="disabled";
+		 logoPassbook.style.display="none";
+		 logoPassbook.style.visibility="hidden";
+		 logoPassbookLabel.disabled="disabled";
+		 logoPassbookLabel.style.display="none";
+		 logoPassbookLabel.style.visibility="hidden";
+		 descripcionPassbook.value="";
+		 descripcionPassbook.disabled="disabled";
+		 descripcionPassbook.style.display="none";
+		 descripcionPassbook.style.visibility="hidden";
+		 descripcionPassbookLabel.disabled="disabled";
+		 descripcionPassbookLabel.style.display="none";
+		 descripcionPassbookLabel.style.visibility="hidden";
+
+		 camposPrincLabel.disabled="disabled";
+		 camposPrincLabel.style.display="none";
+		 camposPrincLabel.style.visibility="hidden";
+		 keyPrinc.value="";
+		 keyPrinc.disabled="disabled";
+		 keyPrinc.style.display="none";
+		 keyPrinc.style.visibility="hidden";
+		 keyPrincLabel.disabled="disabled";
+		 keyPrincLabel.style.display="none";
+		 keyPrincLabel.style.visibility="hidden";
+		 labelPrinc.value="";
+		 labelPrinc.disabled="disabled";
+		 labelPrinc.style.display="none";
+		 labelPrinc.style.visibility="hidden";
+		 labelPrincLabel.disabled="disabled";
+		 labelPrincLabel.style.display="none";
+		 labelPrincLabel.style.visibility="hidden";		 
+		 valuePrinc.value="";
+		 valuePrinc.disabled="disabled";
+		 valuePrinc.style.display="block";
+		 valuePrinc.style.visibility="hidden";
+		 valuePrincLabel.disabled="disabled";
+		 valuePrincLabel.style.display="none";
+		 valuePrincLabel.style.visibility="hidden";
+
+		 camposSecLabel.disabled="disabled";
+		 camposSecLabel.style.display="none";
+		 camposSecLabel.style.visibility="hidden";
+		 keySec.value="";
+		 keySec.disabled="disabled";
+		 keySec.style.display="none";
+		 keySec.style.visibility="hidden";
+		 keySecLabel.disabled="disabled";
+		 keySecLabel.style.display="none";
+		 keySecLabel.style.visibility="hidden";
+		 labelSec.value="";
+		 labelSec.disabled="disabled";
+		 labelSec.style.display="none";
+		 labelSec.style.visibility="hidden";
+		 labelSecLabel.disabled="disabled";
+		 labelSecLabel.style.display="none";
+		 labelSecLabel.style.visibility="hidden";		 
+		 valueSec.value="";
+		 valueSec.disabled="disabled";
+		 valueSec.style.display="none";
+		 valueSec.style.visibility="hidden";
+		 valueSecLabel.disabled="disabled";
+		 valueSecLabel.style.display="none";
+		 valueSecLabel.style.visibility="hidden";
+
+		 camposAuxLabel.disabled="disabled";
+		 camposAuxLabel.style.display="none";
+		 camposAuxLabel.style.visibility="hidden";
+		 keyAux.value="";
+		 keyAux.disabled="disabled";
+		 keyAux.style.display="none";
+		 keyAux.style.visibility="hidden";
+		 keyAuxLabel.disabled="disabled";
+		 keyAuxLabel.style.display="none";
+		 keyAuxLabel.style.visibility="hidden";
+		 labelAux.value="";
+		 labelAux.disabled="disabled";
+		 labelAux.style.display="none";
+		 labelAux.style.visibility="hidden";
+		 labelAuxLabel.disabled="disabled";
+		 labelAuxLabel.style.display="none";
+		 labelAuxLabel.style.visibility="hidden";		 
+		 valueAux.value="";
+		 valueAux.disabled="disabled";
+		 valueAux.style.display="none";
+		 valueAux.style.visibility="hidden";
+		 valueAuxLabel.disabled="disabled";
+		 valueAuxLabel.style.display="none";
+		 valueAuxLabel.style.visibility="hidden";
+
+		 camposTrasLabel.disabled="disabled";
+		 camposTrasLabel.style.display="none";
+		 camposTrasLabel.style.visibility="hidden";
+		 keyTras.value="";
+		 keyTras.disabled="disabled";
+		 keyTras.style.display="none";
+		 keyTras.style.visibility="hidden";
+		 keyTrasLabel.disabled="disabled";
+		 keyTrasLabel.style.display="none";
+		 keyTrasLabel.style.visibility="hidden";
+		 labelTras.value="";
+		 labelTras.disabled="disabled";
+		 labelTras.style.display="none";
+		 labelTras.style.visibility="hidden";
+		 labelTrasLabel.disabled="disabled";
+		 labelTrasLabel.style.display="none";
+		 labelTrasLabel.style.visibility="hidden";		 
+		 valueTras.value="";
+		 valueTras.disabled="disabled";
+		 valueTras.style.display="none";
+		 valueTras.style.visibility="hidden";
+		 valueTrasLabel.disabled="disabled";
+		 valueTrasLabel.style.display="none";
+		 valueTrasLabel.style.visibility="hidden";
+		}
+		
+	}
+
+	function checkCanalEnvio(combo){
+
+
+		var mensajeD= document.getElementById("divMensaje");
+		var generalesD= document.getElementById("divGeneral");		
+		var destinatariosD= document.getElementById("divDestinatarios");
+		var button= document.getElementById("button");
+// 		nat -- Envio Mensajes Aplicación
+
+		var externoLabelSMS= document.getElementById("idExternoLabelSMS");
+		var externoLabel= document.getElementById("idExternoLabel");
+		var organismo= document.getElementById("search");
+		var organismoLabel= document.getElementById("organismoLabel");		
+// 		var organismoPagador= document.getElementById("envioMensajesAplicacionBean.organismoPagador");
+// 		var organismoPagadorLabel= document.getElementById("organismoPagadorLabel");			
+		var asunto= document.getElementById("envioMensajesAplicacionBean.asunto");
+		var asuntoLabel= document.getElementById("asuntoLabel");		
+		var titulo= document.getElementById("envioMensajesAplicacionBean.titulo");
+		var tituloLabel= document.getElementById("tituloLabel");		
+		var mensaje= document.getElementById("envioMensajesAplicacionBean.mensaje");
+		var mensajeLabel= document.getElementById("mensajeLabel");
+		var cuerpo= document.getElementById("envioMensajesAplicacionBean.cuerpo");
+		var cuerpoLabel= document.getElementById("cuerpoLabel");
+// 		var origen = document.getElementById("envioMensajesAplicacionBean.origen");
+// 		var origenLabel = document.getElementById("origenLabel");		
+// 		var modo = document.getElementById("envioMensajesAplicacionBean.modo");
+// 		var modoLabel = document.getElementById("modoLabel");
+		var adjunto= document.getElementById("envioMensajesAplicacionBean.adjunto");
+		var adjuntoLabel= document.getElementById("adjuntoLabel");				
+// 		var icono= document.getElementById("envioMensajesAplicacionBean.icono");
+// 		var iconoLabel= document.getElementById("iconoLabel");					
+// 		var sonido= document.getElementById("envioMensajesAplicacionBean.sonido");
+// 		var sonidoLabel= document.getElementById("sonidoLabel");				
+		var idUsuario= document.getElementById("envioMensajesAplicacionBean.idUsuario");
+		var idUsuarioLabel= document.getElementById("idUsuarioLabel");				
+		var movil = document.getElementById("envioMensajesAplicacionBean.movil");
+		var movilLabel = document.getElementById("movilLabel");				
+		var emailTo = document.getElementById("envioMensajesAplicacionBean.to");
+		var emailToLabel = document.getElementById("toLabel");
+		var emailCc= document.getElementById("envioMensajesAplicacionBean.cc");		
+		var emailCcLabel= document.getElementById("ccLabel");						
+		var emailCco= document.getElementById("envioMensajesAplicacionBean.cco");
+		var emailCcoLabel= document.getElementById("ccoLabel");	
+
+		var passbook = document.getElementById("passbook");
+		
+		var passbookLabel =  document.getElementById("passbookLabel");
+		
+		var url = document.getElementById("envioMensajesAplicacionBean.url");
+		var urlLabel = document.getElementById("urlLabel");
+		var logoPassbook = document.getElementById("envioMensajesAplicacionBean.logoPassbook");
+		var logoPassbookLabel = document.getElementById("logoPassbookLabel");
+		var descripcionPassbook = document.getElementById("envioMensajesAplicacionBean.descripcionPassbook");
+		var descripcionPassbookLabel = document.getElementById("descripcionPassbookLabel");
+		
+		var camposPrincLabel =  document.getElementById("camposPrincLabel");
+			
+		var keyPrinc = document.getElementById("envioMensajesAplicacionBean.keyPrinc");
+		var keyPrincLabel = document.getElementById("keyPrincLabel");
+		var labelPrinc = document.getElementById("envioMensajesAplicacionBean.labelPrinc");
+		var labelPrincLabel = document.getElementById("labelPrincLabel");
+		var valuePrinc = document.getElementById("envioMensajesAplicacionBean.valuePrinc");
+		var valuePrincLabel = document.getElementById("valuePrincLabel");
+
+		var camposSecLabel =  document.getElementById("campoSecLabel");
+			
+		var keySec = document.getElementById("envioMensajesAplicacionBean.keySec");
+		var keySecLabel = document.getElementById("keySecLabel");
+		var labelSec = document.getElementById("envioMensajesAplicacionBean.labelSec");
+		var labelSecLabel = document.getElementById("labelSecLabel");
+		var valueSec = document.getElementById("envioMensajesAplicacionBean.valueSec");
+		var valueSecLabel = document.getElementById("valueSecLabel");
+
+		var camposAuxLabel =  document.getElementById("campoAuxLabel");
+
+		var keyAux = document.getElementById("envioMensajesAplicacionBean.keyAux");
+		var keyAuxLabel = document.getElementById("keyAuxLabel");
+		var labelAux = document.getElementById("envioMensajesAplicacionBean.labelAux");
+		var labelAuxLabel = document.getElementById("labelAuxLabel");
+		var valueAux = document.getElementById("envioMensajesAplicacionBean.valueAux");
+		var valueAuxLabel = document.getElementById("valueAuxLabel");
+
+		var camposTrasLabel =  document.getElementById("campoTrasLabel");
+		
+		var keyTras = document.getElementById("envioMensajesAplicacionBean.keyTras");
+		var keyTrasLabel = document.getElementById("keyTrasLabel");
+		var labelTras = document.getElementById("envioMensajesAplicacionBean.labelTras");
+		var labelTrasLabel = document.getElementById("labelTrasLabel");
+		var valueTras = document.getElementById("envioMensajesAplicacionBean.valueTras");
+		var valueTrasLabel = document.getElementById("valueTrasLabel");
+		
+// 		nat
+
+		if(combo.value=="1"){//email
+
+			 externoLabelSMS.disabled="disabled";
+			 externoLabelSMS.style.display="none";
+			 externoLabelSMS.style.visibility="hidden";
+
+			 externoLabel.disabled="";
+			 externoLabel.style.display="block";
+			 externoLabel.style.visibility="visible";
+
+			 generalesD.disabled="";
+			 generalesD.style.display="block";
+			 generalesD.style.visibility="visible";
+
+			 mensajeD.disabled="";
+			 mensajeD.style.display="block";
+			 mensajeD.style.visibility="visible";
+
+			 destinatariosD.disabled="";
+			 destinatariosD.style.display="block";
+			 destinatariosD.style.visibility="visible";
+
+			 button.disabled="";
+			 button.style.display="block";
+			 button.style.visibility="visible";
+
+// 			nat
+			 organismo.value="";
+			 organismo.disabled="";
+			 organismo.style.display="block";
+			 organismo.style.visibility="visible";		 
+			 organismoLabel.disabled="";
+			 organismoLabel.style.display="block";
+			 organismoLabel.style.visibility="visible";		 
+// 			 organismoPagador.value="";
+// 			 organismoPagador.disabled="disabled";
+// 			 organismoPagador.style.display="none";
+// 			 organismoPagador.style.visibility="hidden";
+// 			 organismoPagadorLabel.disabled="disabled";
+// 			 organismoPagadorLabel.style.display="none";
+// 			 organismoPagadorLabel.style.visibility="hidden";
+			 asunto.value="";
+			 asunto.disabled="";
+			 asunto.style.display="block";
+			 asunto.style.visibility="visible";		 
+			 asuntoLabel.disabled="";
+			 asuntoLabel.style.display="block";
+			 asuntoLabel.style.visibility="visible";		 
+			 titulo.value="";
+			 titulo.disabled="disabled";
+			 titulo.style.display="none";
+			 titulo.style.visibility="hidden";
+			 tituloLabel.disabled="disabled";
+			 tituloLabel.style.display="none";
+			 tituloLabel.style.visibility="hidden";
+			 mensaje.value="";
+			 mensaje.disabled="";
+			 mensaje.style.display="block";
+			 mensaje.style.visibility="visible";		 
+			 mensajeLabel.disabled="";
+			 mensajeLabel.style.display="block";
+			 mensajeLabel.style.visibility="visible";	
+			 cuerpo.value="";
+			 cuerpo.disabled="disabled";
+			 cuerpo.style.display="none";
+			 cuerpo.style.visibility="hidden";
+			 cuerpoLabel.disabled="disabled";
+			 cuerpoLabel.style.display="none";
+			 cuerpoLabel.style.visibility="hidden";
+// 			 origen.value="";
+// 			 origen.disabled="";
+// 			 origen.style.display="block";
+// 			 origen.style.visibility="visible";
+// 			 origenLabel.disabled="";
+// 			 origenLabel.style.display="block";
+// 			 origenLabel.style.visibility="visible";
+// 			 modo.value="";
+// 			 modo.disabled="";
+// 			 modo.style.display="block";
+// 			 modo.style.visibility="visible";
+// 			 modoLabel.disabled="";
+// 			 modoLabel.style.display="block";
+// 			 modoLabel.style.visibility="visible";
+			 adjunto.value="";
+			 adjunto.disabled="";
+			 adjunto.style.display="block";
+			 adjunto.style.visibility="visible";
+			 adjuntoLabel.disabled="";
+			 adjuntoLabel.style.display="block";
+			 adjuntoLabel.style.visibility="visible";
+// 			 icono.value="";
+// 			 icono.disabled="disabled";
+// 			 icono.style.display="none";
+// 			 icono.style.visibility="hidden";
+// 			 iconoLabel.disabled="disabled";
+// 			 iconoLabel.style.display="none";
+// 			 iconoLabel.style.visibility="hidden";
+// 			 sonido.value="";
+// 			 sonido.disabled="disabled";
+// 			 sonido.style.display="none";
+// 			 sonido.style.visibility="hidden";
+// 			 sonidoLabel.disabled="disabled";
+// 			 sonidoLabel.style.display="none";
+// 			 sonidoLabel.style.visibility="hidden";
+			 idUsuario.value="";
+			 idUsuario.disabled="disabled";
+			 idUsuario.style.display="none";
+			 idUsuario.style.visibility="hidden";
+			 idUsuarioLabel.disabled="disabled";
+			 idUsuarioLabel.style.display="none";
+			 idUsuarioLabel.style.visibility="hidden";
+			 movil.value="";
+			 movil.disabled="disabled";
+			 movil.style.display="none";
+			 movil.style.visibility="hidden";
+			 movilLabel.disabled="disabled";
+			 movilLabel.style.display="none";
+			 movilLabel.style.visibility="hidden";
+			 emailTo.value="";
+			 emailTo.disabled="";
+			 emailTo.style.display="block";
+			 emailTo.style.visibility="visible";
+			 emailToLabel.disabled="";
+			 emailToLabel.style.display="block";
+			 emailToLabel.style.visibility="visible";
+			 emailCc.value="";
+			 emailCc.disabled="";
+			 emailCc.style.display="block";
+			 emailCc.style.visibility="visible";
+			 emailCcLabel.disabled="";
+			 emailCcLabel.style.display="block";
+			 emailCcLabel.style.visibility="visible";
+			 emailCco.value="";
+			 emailCco.disabled="";
+			 emailCco.style.display="block";
+			 emailCco.style.visibility="visible";
+			 emailCcoLabel.disabled="";
+			 emailCcoLabel.style.display="block";
+			 emailCcoLabel.style.visibility="visible";
+
+			 passbook.disabled="";
+			 passbook.style.display="block";
+			 passbook.style.visibility="visible";
+
+		if(passbook.checked == true){
+			 passbookLabel.disabled="";
+			 passbookLabel.style.display="block";
+			 passbookLabel.style.visibility="visible";
+			 url.value="";
+			 url.disabled="";
+			 url.style.display="block";
+			 url.style.visibility="visible";
+			 urlLabel.disabled="";
+			 urlLabel.style.display="block";
+			 urlLabel.style.visibility="visible";
+			 logoPassbook.value="";
+			 logoPassbook.disabled="";
+			 logoPassbook.style.display="block";
+			 logoPassbook.style.visibility="visible";
+			 logoPassbookLabel.disabled="";
+			 logoPassbookLabel.style.display="block";
+			 logoPassbookLabel.style.visibility="visible";
+			 descripcionPassbook.value="";
+			 descripcionPassbook.disabled="";
+			 descripcionPassbook.style.display="block";
+			 descripcionPassbook.style.visibility="visible";
+			 descripcionPassbookLabel.disabled="";
+			 descripcionPassbookLabel.style.display="block";
+			 descripcionPassbookLabel.style.visibility="visible";
+
+			 camposPrincLabel.disabled="";
+			 camposPrincLabel.style.display="block";
+			 camposPrincLabel.style.visibility="visible";
+			 keyPrinc.value="";
+			 keyPrinc.disabled="";
+			 keyPrinc.style.display="block";
+			 keyPrinc.style.visibility="visible";
+			 keyPrincLabel.disabled="";
+			 keyPrincLabel.style.display="block";
+			 keyPrincLabel.style.visibility="visible";
+			 labelPrinc.value="";
+			 labelPrinc.disabled="";
+			 labelPrinc.style.display="block";
+			 labelPrinc.style.visibility="visible";
+			 labelPrincLabel.disabled="";
+			 labelPrincLabel.style.display="block";
+			 labelPrincLabel.style.visibility="visible";		 
+			 valuePrinc.value="";
+			 valuePrinc.disabled="";
+			 valuePrinc.style.display="block";
+			 valuePrinc.style.visibility="visible";
+			 valuePrincLabel.disabled="";
+			 valuePrincLabel.style.display="block";
+			 valuePrincLabel.style.visibility="visible";
+
+			 camposSecLabel.disabled="";
+			 camposSecLabel.style.display="block";
+			 camposSecLabel.style.visibility="visible";
+			 keySec.value="";
+			 keySec.disabled="";
+			 keySec.style.display="block";
+			 keySec.style.visibility="visible";
+			 keySecLabel.disabled="";
+			 keySecLabel.style.display="block";
+			 keySecLabel.style.visibility="visible";
+			 labelSec.value="";
+			 labelSec.disabled="";
+			 labelSec.style.display="block";
+			 labelSec.style.visibility="visible";
+			 labelSecLabel.disabled="";
+			 labelSecLabel.style.display="block";
+			 labelSecLabel.style.visibility="visible";		 
+			 valueSec.value="";
+			 valueSec.disabled="";
+			 valueSec.style.display="block";
+			 valueSec.style.visibility="visible";
+			 valueSecLabel.disabled="";
+			 valueSecLabel.style.display="block";
+			 valueSecLabel.style.visibility="visible";
+
+			 camposAuxLabel.disabled="";
+			 camposAuxLabel.style.display="block";
+			 camposAuxLabel.style.visibility="visible";
+			 keyAux.value="";
+			 keyAux.disabled="";
+			 keyAux.style.display="block";
+			 keyAux.style.visibility="visible";
+			 keyAuxLabel.disabled="";
+			 keyAuxLabel.style.display="block";
+			 keyAuxLabel.style.visibility="visible";
+			 labelAux.value="";
+			 labelAux.disabled="";
+			 labelAux.style.display="block";
+			 labelAux.style.visibility="visible";
+			 labelAuxLabel.disabled="";
+			 labelAuxLabel.style.display="block";
+			 labelAuxLabel.style.visibility="visible";		 
+			 valueAux.value="";
+			 valueAux.disabled="";
+			 valueAux.style.display="block";
+			 valueAux.style.visibility="visible";
+			 valueAuxLabel.disabled="";
+			 valueAuxLabel.style.display="block";
+			 valueAuxLabel.style.visibility="visible";
+
+			 camposTrasLabel.disabled="";
+			 camposTrasLabel.style.display="block";
+			 camposTrasLabel.style.visibility="visible";
+			 keyTras.value="";
+			 keyTras.disabled="";
+			 keyTras.style.display="block";
+			 keyTras.style.visibility="visible";
+			 keyTrasLabel.disabled="";
+			 keyTrasLabel.style.display="block";
+			 keyTrasLabel.style.visibility="visible";
+			 labelTras.value="";
+			 labelTras.disabled="";
+			 labelTras.style.display="block";
+			 labelTras.style.visibility="visible";
+			 labelTrasLabel.disabled="";
+			 labelTrasLabel.style.display="block";
+			 labelTrasLabel.style.visibility="visible";		 
+			 valueTras.value="";
+			 valueTras.disabled="";
+			 valueTras.style.display="block";
+			 valueTras.style.visibility="visible";
+			 valueTrasLabel.disabled="";
+			 valueTrasLabel.style.display="block";
+			 valueTrasLabel.style.visibility="visible";
+		}else{
+			passbookLabel.disabled="disabled";
+			 passbookLabel.style.display="none";
+			 passbookLabel.style.visibility="hidden";
+			 url.value="";
+			 url.disabled="disabled";
+			 url.style.display="none";
+			 url.style.visibility="hidden";
+			 urlLabel.disabled="disabled";
+			 urlLabel.style.display="none";
+			 urlLabel.style.visibility="hidden";
+			 logoPassbook.value="";
+			 logoPassbook.disabled="disabled";
+			 logoPassbook.style.display="none";
+			 logoPassbook.style.visibility="hidden";
+			 logoPassbookLabel.disabled="disabled";
+			 logoPassbookLabel.style.display="none";
+			 logoPassbookLabel.style.visibility="hidden";
+			 descripcionPassbook.value="";
+			 descripcionPassbook.disabled="disabled";
+			 descripcionPassbook.style.display="none";
+			 descripcionPassbook.style.visibility="hidden";
+			 descripcionPassbookLabel.disabled="disabled";
+			 descripcionPassbookLabel.style.display="none";
+			 descripcionPassbookLabel.style.visibility="hidden";
+
+			 camposPrincLabel.disabled="disabled";
+			 camposPrincLabel.style.display="none";
+			 camposPrincLabel.style.visibility="hidden";
+			 keyPrinc.value="";
+			 keyPrinc.disabled="disabled";
+			 keyPrinc.style.display="none";
+			 keyPrinc.style.visibility="hidden";
+			 keyPrincLabel.disabled="disabled";
+			 keyPrincLabel.style.display="none";
+			 keyPrincLabel.style.visibility="hidden";
+			 labelPrinc.value="";
+			 labelPrinc.disabled="disabled";
+			 labelPrinc.style.display="none";
+			 labelPrinc.style.visibility="hidden";
+			 labelPrincLabel.disabled="disabled";
+			 labelPrincLabel.style.display="none";
+			 labelPrincLabel.style.visibility="hidden";		 
+			 valuePrinc.value="";
+			 valuePrinc.disabled="disabled";
+			 valuePrinc.style.display="block";
+			 valuePrinc.style.visibility="hidden";
+			 valuePrincLabel.disabled="disabled";
+			 valuePrincLabel.style.display="none";
+			 valuePrincLabel.style.visibility="hidden";
+
+			 camposSecLabel.disabled="disabled";
+			 camposSecLabel.style.display="none";
+			 camposSecLabel.style.visibility="hidden";
+			 keySec.value="";
+			 keySec.disabled="disabled";
+			 keySec.style.display="none";
+			 keySec.style.visibility="hidden";
+			 keySecLabel.disabled="disabled";
+			 keySecLabel.style.display="none";
+			 keySecLabel.style.visibility="hidden";
+			 labelSec.value="";
+			 labelSec.disabled="disabled";
+			 labelSec.style.display="none";
+			 labelSec.style.visibility="hidden";
+			 labelSecLabel.disabled="disabled";
+			 labelSecLabel.style.display="none";
+			 labelSecLabel.style.visibility="hidden";		 
+			 valueSec.value="";
+			 valueSec.disabled="disabled";
+			 valueSec.style.display="none";
+			 valueSec.style.visibility="hidden";
+			 valueSecLabel.disabled="disabled";
+			 valueSecLabel.style.display="none";
+			 valueSecLabel.style.visibility="hidden";
+
+			 camposAuxLabel.disabled="disabled";
+			 camposAuxLabel.style.display="none";
+			 camposAuxLabel.style.visibility="hidden";
+			 keyAux.value="";
+			 keyAux.disabled="disabled";
+			 keyAux.style.display="none";
+			 keyAux.style.visibility="hidden";
+			 keyAuxLabel.disabled="disabled";
+			 keyAuxLabel.style.display="none";
+			 keyAuxLabel.style.visibility="hidden";
+			 labelAux.value="";
+			 labelAux.disabled="disabled";
+			 labelAux.style.display="none";
+			 labelAux.style.visibility="hidden";
+			 labelAuxLabel.disabled="disabled";
+			 labelAuxLabel.style.display="none";
+			 labelAuxLabel.style.visibility="hidden";		 
+			 valueAux.value="";
+			 valueAux.disabled="disabled";
+			 valueAux.style.display="none";
+			 valueAux.style.visibility="hidden";
+			 valueAuxLabel.disabled="disabled";
+			 valueAuxLabel.style.display="none";
+			 valueAuxLabel.style.visibility="hidden";
+
+			 camposTrasLabel.disabled="disabled";
+			 camposTrasLabel.style.display="none";
+			 camposTrasLabel.style.visibility="hidden";
+			 keyTras.value="";
+			 keyTras.disabled="disabled";
+			 keyTras.style.display="none";
+			 keyTras.style.visibility="hidden";
+			 keyTrasLabel.disabled="disabled";
+			 keyTrasLabel.style.display="none";
+			 keyTrasLabel.style.visibility="hidden";
+			 labelTras.value="";
+			 labelTras.disabled="disabled";
+			 labelTras.style.display="none";
+			 labelTras.style.visibility="hidden";
+			 labelTrasLabel.disabled="disabled";
+			 labelTrasLabel.style.display="none";
+			 labelTrasLabel.style.visibility="hidden";		 
+			 valueTras.value="";
+			 valueTras.disabled="disabled";
+			 valueTras.style.display="none";
+			 valueTras.style.visibility="hidden";
+			 valueTrasLabel.disabled="disabled";
+			 valueTrasLabel.style.display="none";
+			 valueTrasLabel.style.visibility="hidden";
+			}
+//			nat
+
+		}
+		if(combo.value=="2"){//SMS
+
+			 externoLabelSMS.disabled="";
+			 externoLabelSMS.style.display="block";
+			 externoLabelSMS.style.visibility="visible";
+
+			 externoLabel.disabled="disabled";
+			 externoLabel.style.display="none";
+			 externoLabel.style.visibility="hidden";
+
+			 generalesD.disabled="";
+			 generalesD.style.display="block";
+			 generalesD.style.visibility="visible";
+
+			 mensajeD.disabled="";
+			 mensajeD.style.display="block";
+			 mensajeD.style.visibility="visible";
+
+			 destinatariosD.disabled="";
+			 destinatariosD.style.display="block";
+			 destinatariosD.style.visibility="visible";
+
+			 button.disabled="";
+			 button.style.display="block";
+			 button.style.visibility="visible";
+			
+// 			nat
+			 organismo.value="";
+			 organismo.disabled="";
+			 organismo.style.display="block";
+			 organismo.style.visibility="visible";		 
+			 organismoLabel.disabled="";
+			 organismoLabel.style.display="block";
+			 organismoLabel.style.visibility="visible";		 
+// 			 organismoPagador.value="";
+// 			 organismoPagador.disabled="";
+// 			 organismoPagador.style.display="block";
+// 			 organismoPagador.style.visibility="visible";
+// 			 organismoPagadorLabel.disabled="";
+// 			 organismoPagadorLabel.style.display="block";
+// 			 organismoPagadorLabel.style.visibility="visible";
+			 asunto.value="";
+			 asunto.disabled="disabled";
+			 asunto.style.display="none";
+			 asunto.style.visibility="hidden";		 
+			 asuntoLabel.disabled="disabled";
+			 asuntoLabel.style.display="none";
+			 asuntoLabel.style.visibility="hidden";		 
+			 titulo.value="";
+			 titulo.disabled="disabled";
+			 titulo.style.display="none";
+			 titulo.style.visibility="hidden";
+			 tituloLabel.disabled="disabled";
+			 tituloLabel.style.display="none";
+			 tituloLabel.style.visibility="hidden";
+			 mensaje.value="";
+			 mensaje.disabled="";
+			 mensaje.style.display="block";
+			 mensaje.style.visibility="visible";		 
+			 mensajeLabel.disabled="";
+			 mensajeLabel.style.display="block";
+			 mensajeLabel.style.visibility="visible";	
+			 cuerpo.value="";
+			 cuerpo.disabled="disabled";
+			 cuerpo.style.display="none";
+			 cuerpo.style.visibility="hidden";
+			 cuerpoLabel.disabled="disabled";
+			 cuerpoLabel.style.display="none";
+			 cuerpoLabel.style.visibility="hidden";
+// 			 origen.value="";
+// 			 origen.disabled="disabled";
+// 			 origen.style.display="none";
+// 			 origen.style.visibility="hidden";
+// 			 origenLabel.disabled="disabled";
+// 			 origenLabel.style.display="none";
+// 			 origenLabel.style.visibility="hidden";
+// 			 modo.value="";
+// 			 modo.disabled="disabled";
+// 			 modo.style.display="none";
+// 			 modo.style.visibility="hidden";
+// 			 modoLabel.disabled="disabled";
+// 			 modoLabel.style.display="none";
+// 			 modoLabel.style.visibility="hidden";
+			 adjunto.value="";
+			 adjunto.disabled="disabled";
+			 adjunto.style.display="none";
+			 adjunto.style.visibility="hidden";
+			 adjuntoLabel.disabled="disabled";
+			 adjuntoLabel.style.display="none";
+			 adjuntoLabel.style.visibility="hidden";
+// 			 icono.value="";
+// 			 icono.disabled="disabled";
+// 			 icono.style.display="none";
+// 			 icono.style.visibility="hidden";
+// 			 iconoLabel.disabled="disabled";
+// 			 iconoLabel.style.display="none";
+// 			 iconoLabel.style.visibility="hidden";
+// 			 sonido.value="";
+// 			 sonido.disabled="disabled";
+// 			 sonido.style.display="none";
+// 			 sonido.style.visibility="hidden";
+// 			 sonidoLabel.disabled="disabled";
+// 			 sonidoLabel.style.display="none";
+// 			 sonidoLabel.style.visibility="hidden";
+			 idUsuario.value="";
+			 idUsuario.disabled="disabled";
+			 idUsuario.style.display="none";
+			 idUsuario.style.visibility="hidden";
+			 idUsuarioLabel.disabled="disabled";
+			 idUsuarioLabel.style.display="none";
+			 idUsuarioLabel.style.visibility="hidden";
+			 movil.value="";
+			 movil.disabled="";
+			 movil.style.display="block";
+			 movil.style.visibility="visible";
+			 movilLabel.disabled="";
+			 movilLabel.style.display="block";
+			 movilLabel.style.visibility="visible";
+			 emailTo.value="";
+			 emailTo.disabled="disabled";
+			 emailTo.style.display="none";
+			 emailTo.style.visibility="hidden";
+			 emailToLabel.disabled="disabled";
+			 emailToLabel.style.display="none";
+			 emailToLabel.style.visibility="hidden";
+			 emailCc.value="";
+			 emailCc.disabled="disabled";
+			 emailCc.style.display="none";
+			 emailCc.style.visibility="hidden";
+			 emailCcLabel.disabled="disabled";
+			 emailCcLabel.style.display="none";
+			 emailCcLabel.style.visibility="hidden";
+			 emailCco.value="";
+			 emailCco.disabled="disabled";
+			 emailCco.style.display="none";
+			 emailCco.style.visibility="hidden";
+			 emailCcoLabel.disabled="disabled";
+			 emailCcoLabel.style.display="none";
+			 emailCcoLabel.style.visibility="hidden";
+
+			 passbook.disabled="disabled";
+			 passbook.style.display="none";
+			 passbook.style.visibility="hidden";
+			 
+			 passbookLabel.disabled="disabled";
+			 passbookLabel.style.display="none";
+			 passbookLabel.style.visibility="hidden";
+			 url.value="";
+			 url.disabled="disabled";
+			 url.style.display="none";
+			 url.style.visibility="hidden";
+			 urlLabel.disabled="disabled";
+			 urlLabel.style.display="none";
+			 urlLabel.style.visibility="hidden";
+			 logoPassbook.value="";
+			 logoPassbook.disabled="disabled";
+			 logoPassbook.style.display="none";
+			 logoPassbook.style.visibility="hidden";
+			 logoPassbookLabel.disabled="disabled";
+			 logoPassbookLabel.style.display="none";
+			 logoPassbookLabel.style.visibility="hidden";
+			 descripcionPassbook.value="";
+			 descripcionPassbook.disabled="disabled";
+			 descripcionPassbook.style.display="none";
+			 descripcionPassbook.style.visibility="hidden";
+			 descripcionPassbookLabel.disabled="disabled";
+			 descripcionPassbookLabel.style.display="none";
+			 descripcionPassbookLabel.style.visibility="hidden";
+
+			 camposPrincLabel.disabled="disabled";
+			 camposPrincLabel.style.display="none";
+			 camposPrincLabel.style.visibility="hidden";
+			 keyPrinc.value="";
+			 keyPrinc.disabled="disabled";
+			 keyPrinc.style.display="none";
+			 keyPrinc.style.visibility="hidden";
+			 keyPrincLabel.disabled="disabled";
+			 keyPrincLabel.style.display="none";
+			 keyPrincLabel.style.visibility="hidden";
+			 labelPrinc.value="";
+			 labelPrinc.disabled="disabled";
+			 labelPrinc.style.display="none";
+			 labelPrinc.style.visibility="hidden";
+			 labelPrincLabel.disabled="disabled";
+			 labelPrincLabel.style.display="none";
+			 labelPrincLabel.style.visibility="hidden";		 
+			 valuePrinc.value="";
+			 valuePrinc.disabled="disabled";
+			 valuePrinc.style.display="block";
+			 valuePrinc.style.visibility="hidden";
+			 valuePrincLabel.disabled="disabled";
+			 valuePrincLabel.style.display="none";
+			 valuePrincLabel.style.visibility="hidden";
+
+			 camposSecLabel.disabled="disabled";
+			 camposSecLabel.style.display="none";
+			 camposSecLabel.style.visibility="hidden";
+			 keySec.value="";
+			 keySec.disabled="disabled";
+			 keySec.style.display="none";
+			 keySec.style.visibility="hidden";
+			 keySecLabel.disabled="disabled";
+			 keySecLabel.style.display="none";
+			 keySecLabel.style.visibility="hidden";
+			 labelSec.value="";
+			 labelSec.disabled="disabled";
+			 labelSec.style.display="none";
+			 labelSec.style.visibility="hidden";
+			 labelSecLabel.disabled="disabled";
+			 labelSecLabel.style.display="none";
+			 labelSecLabel.style.visibility="hidden";		 
+			 valueSec.value="";
+			 valueSec.disabled="disabled";
+			 valueSec.style.display="none";
+			 valueSec.style.visibility="hidden";
+			 valueSecLabel.disabled="disabled";
+			 valueSecLabel.style.display="none";
+			 valueSecLabel.style.visibility="hidden";
+
+			 camposAuxLabel.disabled="disabled";
+			 camposAuxLabel.style.display="none";
+			 camposAuxLabel.style.visibility="hidden";
+			 keyAux.value="";
+			 keyAux.disabled="disabled";
+			 keyAux.style.display="none";
+			 keyAux.style.visibility="hidden";
+			 keyAuxLabel.disabled="disabled";
+			 keyAuxLabel.style.display="none";
+			 keyAuxLabel.style.visibility="hidden";
+			 labelAux.value="";
+			 labelAux.disabled="disabled";
+			 labelAux.style.display="none";
+			 labelAux.style.visibility="hidden";
+			 labelAuxLabel.disabled="disabled";
+			 labelAuxLabel.style.display="none";
+			 labelAuxLabel.style.visibility="hidden";		 
+			 valueAux.value="";
+			 valueAux.disabled="disabled";
+			 valueAux.style.display="none";
+			 valueAux.style.visibility="hidden";
+			 valueAuxLabel.disabled="disabled";
+			 valueAuxLabel.style.display="none";
+			 valueAuxLabel.style.visibility="hidden";
+
+			 camposTrasLabel.disabled="disabled";
+			 camposTrasLabel.style.display="none";
+			 camposTrasLabel.style.visibility="hidden";
+			 keyTras.value="";
+			 keyTras.disabled="disabled";
+			 keyTras.style.display="none";
+			 keyTras.style.visibility="hidden";
+			 keyTrasLabel.disabled="disabled";
+			 keyTrasLabel.style.display="none";
+			 keyTrasLabel.style.visibility="hidden";
+			 labelTras.value="";
+			 labelTras.disabled="disabled";
+			 labelTras.style.display="none";
+			 labelTras.style.visibility="hidden";
+			 labelTrasLabel.disabled="disabled";
+			 labelTrasLabel.style.display="none";
+			 labelTrasLabel.style.visibility="hidden";		 
+			 valueTras.value="";
+			 valueTras.disabled="disabled";
+			 valueTras.style.display="none";
+			 valueTras.style.visibility="hidden";
+			 valueTrasLabel.disabled="disabled";
+			 valueTrasLabel.style.display="none";
+			 valueTrasLabel.style.visibility="hidden";
+
+		}
+		if(combo.value=="3"){//Recepcion SMS
+
+			 generalesD.disabled="disabled";
+			 generalesD.style.display="none";
+			 generalesD.style.visibility="hidden";
+
+			 mensajeD.disabled="disabled";
+			 mensajeD.style.display="none";
+			 mensajeD.style.visibility="hidden";
+
+			 destinatariosD.disabled="disabled";
+			 destinatariosD.style.display="none";
+			 destinatariosD.style.visibility="hidden";
+
+			 button.disabled="disabled";
+			 button.style.display="none";
+			 button.style.visibility="hidden";
+		}
+		if(combo.value=="4"){//Notificaciones Push
+
+			 externoLabel.disabled="";
+			 externoLabel.style.display="block";
+			 externoLabel.style.visibility="visible";
+
+			 externoLabelSMS.disabled="disabled";
+			 externoLabelSMS.style.display="none";
+			 externoLabelSMS.style.visibility="hidden";
+
+			 generalesD.disabled="";
+			 generalesD.style.display="block";
+			 generalesD.style.visibility="visible";
+
+			 mensajeD.disabled="";
+			 mensajeD.style.display="block";
+			 mensajeD.style.visibility="visible";
+
+			 destinatariosD.disabled="";
+			 destinatariosD.style.display="block";
+			 destinatariosD.style.visibility="visible";
+
+			 button.disabled="";
+			 button.style.display="block";
+			 button.style.visibility="visible";
+			 
+			 organismo.value="";
+			 organismo.disabled="disabled";
+			 organismo.style.display="none";
+			 organismo.style.visibility="hidden";		 
+			 organismoLabel.disabled="disabled";
+			 organismoLabel.style.display="none";
+			 organismoLabel.style.visibility="hidden";		 
+// 			 organismoPagador.value="";
+// 			 organismoPagador.disabled="disabled";
+// 			 organismoPagador.style.display="none";
+// 			 organismoPagador.style.visibility="hidden";
+// 			 organismoPagadorLabel.disabled="disabled";
+// 			 organismoPagadorLabel.style.display="none";
+// 			 organismoPagadorLabel.style.visibility="hidden";
+			 asunto.value="";
+			 asunto.disabled="disabled";
+			 asunto.style.display="none";
+			 asunto.style.visibility="hidden";		 
+			 asuntoLabel.disabled="disabled";
+			 asuntoLabel.style.display="none";
+			 asuntoLabel.style.visibility="hidden";		 
+			 titulo.value="";
+			 titulo.disabled="";
+			 titulo.style.display="block";
+			 titulo.style.visibility="visible";
+			 tituloLabel.disabled="";
+			 tituloLabel.style.display="block";
+			 tituloLabel.style.visibility="visible";
+			 mensaje.value="";
+			 mensaje.disabled="";
+			 mensaje.style.display="block";
+			 mensaje.style.visibility="visible";		 
+			 mensajeLabel.disabled="";
+			 mensajeLabel.style.display="block";
+			 mensajeLabel.style.visibility="visible";	
+			 cuerpo.value="";
+			 cuerpo.disabled="disabled";
+			 cuerpo.style.display="none";
+			 cuerpo.style.visibility="hidden";
+			 cuerpoLabel.disabled="disabled";
+			 cuerpoLabel.style.display="none";
+			 cuerpoLabel.style.visibility="hidden";
+// 			 origen.value="";
+// 			 origen.disabled="disabled";
+// 			 origen.style.display="none";
+// 			 origen.style.visibility="hidden";
+// 			 origenLabel.disabled="disabled";
+// 			 origenLabel.style.display="none";
+// 			 origenLabel.style.visibility="hidden";
+// 			 modo.value="";
+// 			 modo.disabled="disabled";
+// 			 modo.style.display="none";
+// 			 modo.style.visibility="hidden";
+// 			 modoLabel.disabled="disabled";
+// 			 modoLabel.style.display="none";
+// 			 modoLabel.style.visibility="hidden";
+			 adjunto.value="";
+			 adjunto.disabled="disabled";
+			 adjunto.style.display="none";
+			 adjunto.style.visibility="hidden";
+			 adjuntoLabel.disabled="disabled";
+			 adjuntoLabel.style.display="none";
+			 adjuntoLabel.style.visibility="hidden";
+// 			 icono.value="";
+// 			 icono.disabled="";
+// 			 icono.style.display="block";
+// 			 icono.style.visibility="visible";
+// 			 iconoLabel.disabled="";
+// 			 iconoLabel.style.display="block";
+// 			 iconoLabel.style.visibility="visible";
+// 			 sonido.value="";
+// 			 sonido.disabled="";
+// 			 sonido.style.display="block";
+// 			 sonido.style.visibility="visible";
+// 			 sonidoLabel.disabled="";
+// 			 sonidoLabel.style.display="block";
+// 			 sonidoLabel.style.visibility="visible";
+			 idUsuario.value="";
+			 idUsuario.disabled="";
+			 idUsuario.style.display="block";
+			 idUsuario.style.visibility="visible";
+			 idUsuarioLabel.disabled="";
+			 idUsuarioLabel.style.display="block";
+			 idUsuarioLabel.style.visibility="visible";
+			 movil.value="";
+			 movil.disabled="disabled";
+			 movil.style.display="none";
+			 movil.style.visibility="hidden";
+			 movilLabel.disabled="disabled";
+			 movilLabel.style.display="none";
+			 movilLabel.style.visibility="hidden";
+			 emailTo.value="";
+			 emailTo.disabled="disabled";
+			 emailTo.style.display="none";
+			 emailTo.style.visibility="hidden";
+			 emailToLabel.disabled="disabled";
+			 emailToLabel.style.display="none";
+			 emailToLabel.style.visibility="hidden";
+			 emailCc.value="";
+			 emailCc.disabled="disabled";
+			 emailCc.style.display="none";
+			 emailCc.style.visibility="hidden";
+			 emailCcLabel.disabled="disabled";
+			 emailCcLabel.style.display="none";
+			 emailCcLabel.style.visibility="hidden";
+			 emailCco.value="";
+			 emailCco.disabled="disabled";
+			 emailCco.style.display="none";
+			 emailCco.style.visibility="hidden";
+			 emailCcoLabel.disabled="disabled";
+			 emailCcoLabel.style.display="none";
+			 emailCcoLabel.style.visibility="hidden";
+
+			 passbook.disabled="disabled";
+			 passbook.style.display="none";
+			 passbook.style.visibility="hidden";
+			 
+			 passbookLabel.disabled="disabled";
+			 passbookLabel.style.display="none";
+			 passbookLabel.style.visibility="hidden";
+			 url.value="";
+			 url.disabled="disabled";
+			 url.style.display="none";
+			 url.style.visibility="hidden";
+			 urlLabel.disabled="disabled";
+			 urlLabel.style.display="none";
+			 urlLabel.style.visibility="hidden";
+			 logoPassbook.value="";
+			 logoPassbook.disabled="disabled";
+			 logoPassbook.style.display="none";
+			 logoPassbook.style.visibility="hidden";
+			 logoPassbookLabel.disabled="disabled";
+			 logoPassbookLabel.style.display="none";
+			 logoPassbookLabel.style.visibility="hidden";
+			 descripcionPassbook.value="";
+			 descripcionPassbook.disabled="disabled";
+			 descripcionPassbook.style.display="none";
+			 descripcionPassbook.style.visibility="hidden";
+			 descripcionPassbookLabel.disabled="disabled";
+			 descripcionPassbookLabel.style.display="none";
+			 descripcionPassbookLabel.style.visibility="hidden";
+
+			 camposPrincLabel.disabled="disabled";
+			 camposPrincLabel.style.display="none";
+			 camposPrincLabel.style.visibility="hidden";
+			 keyPrinc.value="";
+			 keyPrinc.disabled="disabled";
+			 keyPrinc.style.display="none";
+			 keyPrinc.style.visibility="hidden";
+			 keyPrincLabel.disabled="disabled";
+			 keyPrincLabel.style.display="none";
+			 keyPrincLabel.style.visibility="hidden";
+			 labelPrinc.value="";
+			 labelPrinc.disabled="disabled";
+			 labelPrinc.style.display="none";
+			 labelPrinc.style.visibility="hidden";
+			 labelPrincLabel.disabled="disabled";
+			 labelPrincLabel.style.display="none";
+			 labelPrincLabel.style.visibility="hidden";		 
+			 valuePrinc.value="";
+			 valuePrinc.disabled="disabled";
+			 valuePrinc.style.display="block";
+			 valuePrinc.style.visibility="hidden";
+			 valuePrincLabel.disabled="disabled";
+			 valuePrincLabel.style.display="none";
+			 valuePrincLabel.style.visibility="hidden";
+
+			 camposSecLabel.disabled="disabled";
+			 camposSecLabel.style.display="none";
+			 camposSecLabel.style.visibility="hidden";
+			 keySec.value="";
+			 keySec.disabled="disabled";
+			 keySec.style.display="none";
+			 keySec.style.visibility="hidden";
+			 keySecLabel.disabled="disabled";
+			 keySecLabel.style.display="none";
+			 keySecLabel.style.visibility="hidden";
+			 labelSec.value="";
+			 labelSec.disabled="disabled";
+			 labelSec.style.display="none";
+			 labelSec.style.visibility="hidden";
+			 labelSecLabel.disabled="disabled";
+			 labelSecLabel.style.display="none";
+			 labelSecLabel.style.visibility="hidden";		 
+			 valueSec.value="";
+			 valueSec.disabled="disabled";
+			 valueSec.style.display="none";
+			 valueSec.style.visibility="hidden";
+			 valueSecLabel.disabled="disabled";
+			 valueSecLabel.style.display="none";
+			 valueSecLabel.style.visibility="hidden";
+
+			 camposAuxLabel.disabled="disabled";
+			 camposAuxLabel.style.display="none";
+			 camposAuxLabel.style.visibility="hidden";
+			 keyAux.value="";
+			 keyAux.disabled="disabled";
+			 keyAux.style.display="none";
+			 keyAux.style.visibility="hidden";
+			 keyAuxLabel.disabled="disabled";
+			 keyAuxLabel.style.display="none";
+			 keyAuxLabel.style.visibility="hidden";
+			 labelAux.value="";
+			 labelAux.disabled="disabled";
+			 labelAux.style.display="none";
+			 labelAux.style.visibility="hidden";
+			 labelAuxLabel.disabled="disabled";
+			 labelAuxLabel.style.display="none";
+			 labelAuxLabel.style.visibility="hidden";		 
+			 valueAux.value="";
+			 valueAux.disabled="disabled";
+			 valueAux.style.display="none";
+			 valueAux.style.visibility="hidden";
+			 valueAuxLabel.disabled="disabled";
+			 valueAuxLabel.style.display="none";
+			 valueAuxLabel.style.visibility="hidden";
+
+			 camposTrasLabel.disabled="disabled";
+			 camposTrasLabel.style.display="none";
+			 camposTrasLabel.style.visibility="hidden";
+			 keyTras.value="";
+			 keyTras.disabled="disabled";
+			 keyTras.style.display="none";
+			 keyTras.style.visibility="hidden";
+			 keyTrasLabel.disabled="disabled";
+			 keyTrasLabel.style.display="none";
+			 keyTrasLabel.style.visibility="hidden";
+			 labelTras.value="";
+			 labelTras.disabled="disabled";
+			 labelTras.style.display="none";
+			 labelTras.style.visibility="hidden";
+			 labelTrasLabel.disabled="disabled";
+			 labelTrasLabel.style.display="none";
+			 labelTrasLabel.style.visibility="hidden";		 
+			 valueTras.value="";
+			 valueTras.disabled="disabled";
+			 valueTras.style.display="none";
+			 valueTras.style.visibility="hidden";
+			 valueTrasLabel.disabled="disabled";
+			 valueTrasLabel.style.display="none";
+			 valueTrasLabel.style.visibility="hidden";
+//			nat			
+		}if(combo.value=="5"){//Web Push
+
+			 externoLabel.disabled="";
+			 externoLabel.style.display="block";
+			 externoLabel.style.visibility="visible";
+
+			 externoLabelSMS.disabled="disabled";
+			 externoLabelSMS.style.display="none";
+			 externoLabelSMS.style.visibility="hidden";
+
+			 generalesD.disabled="";
+			 generalesD.style.display="block";
+			 generalesD.style.visibility="visible";
+
+			 mensajeD.disabled="";
+			 mensajeD.style.display="block";
+			 mensajeD.style.visibility="visible";
+
+			 destinatariosD.disabled="";
+			 destinatariosD.style.display="block";
+			 destinatariosD.style.visibility="visible";
+
+			 button.disabled="";
+			 button.style.display="block";
+			 button.style.visibility="visible";
+			
+			 organismo.value="";
+			 organismo.disabled="disabled";
+			 organismo.style.display="none";
+			 organismo.style.visibility="hidden";		 
+			 organismoLabel.disabled="disabled";
+			 organismoLabel.style.display="none";
+			 organismoLabel.style.visibility="hidden";		 
+// 			 organismoPagador.value="";
+// 			 organismoPagador.disabled="disabled";
+// 			 organismoPagador.style.display="none";
+// 			 organismoPagador.style.visibility="hidden";
+// 			 organismoPagadorLabel.disabled="disabled";
+// 			 organismoPagadorLabel.style.display="none";
+// 			 organismoPagadorLabel.style.visibility="hidden";
+			 asunto.value="";
+			 asunto.disabled="disabled";
+			 asunto.style.display="none";
+			 asunto.style.visibility="hidden";		 
+			 asuntoLabel.disabled="disabled";
+			 asuntoLabel.style.display="none";
+			 asuntoLabel.style.visibility="hidden";		 
+			 titulo.value="";
+			 titulo.disabled="";
+			 titulo.style.display="block";
+			 titulo.style.visibility="visible";
+			 tituloLabel.disabled="";
+			 tituloLabel.style.display="block";
+			 tituloLabel.style.visibility="visible";
+			 mensaje.value="";
+			 mensaje.disabled="disabled";
+			 mensaje.style.display="none";
+			 mensaje.style.visibility="hidden";		 
+			 mensajeLabel.disabled="disabled";
+			 mensajeLabel.style.display="none";
+			 mensajeLabel.style.visibility="hidden";	
+			 cuerpo.value="";
+			 cuerpo.disabled="";
+			 cuerpo.style.display="block";
+			 cuerpo.style.visibility="visible";
+			 cuerpoLabel.disabled="";
+			 cuerpoLabel.style.display="block";
+			 cuerpoLabel.style.visibility="visible";
+// 			 origen.value="";
+// 			 origen.disabled="disabled";
+// 			 origen.style.display="none";
+// 			 origen.style.visibility="hidden";
+// 			 origenLabel.disabled="disabled";
+// 			 origenLabel.style.display="none";
+// 			 origenLabel.style.visibility="hidden";
+// 			 modo.value="";
+// 			 modo.disabled="disabled";
+// 			 modo.style.display="none";
+// 			 modo.style.visibility="hidden";
+// 			 modoLabel.disabled="disabled";
+// 			 modoLabel.style.display="none";
+// 			 modoLabel.style.visibility="hidden";
+			 adjunto.value="";
+			 adjunto.disabled="disabled";
+			 adjunto.style.display="none";
+			 adjunto.style.visibility="hidden";
+			 adjuntoLabel.disabled="disabled";
+			 adjuntoLabel.style.display="none";
+			 adjuntoLabel.style.visibility="hidden";
+// 			 icono.value="";
+// 			 icono.disabled="";
+// 			 icono.style.display="block";
+// 			 icono.style.visibility="visible";
+// 			 iconoLabel.disabled="";
+// 			 iconoLabel.style.display="block";
+// 			 iconoLabel.style.visibility="visible";
+// 			 sonido.value="";
+// 			 sonido.disabled="";
+// 			 sonido.style.display="block";
+// 			 sonido.style.visibility="visible";
+// 			 sonidoLabel.disabled="";
+// 			 sonidoLabel.style.display="block";
+// 			 sonidoLabel.style.visibility="visible";
+			 idUsuario.value="";
+			 idUsuario.disabled="";
+			 idUsuario.style.display="block";
+			 idUsuario.style.visibility="visible";
+			 idUsuarioLabel.disabled="";
+			 idUsuarioLabel.style.display="block";
+			 idUsuarioLabel.style.visibility="visible";
+			 movil.value="";
+			 movil.disabled="disabled";
+			 movil.style.display="none";
+			 movil.style.visibility="hidden";
+			 movilLabel.disabled="disabled";
+			 movilLabel.style.display="none";
+			 movilLabel.style.visibility="hidden";
+			 emailTo.value="";
+			 emailTo.disabled="disabled";
+			 emailTo.style.display="none";
+			 emailTo.style.visibility="hidden";
+			 emailToLabel.disabled="disabled";
+			 emailToLabel.style.display="none";
+			 emailToLabel.style.visibility="hidden";
+			 emailCc.value="";
+			 emailCc.disabled="disabled";
+			 emailCc.style.display="none";
+			 emailCc.style.visibility="hidden";
+			 emailCcLabel.disabled="disabled";
+			 emailCcLabel.style.display="none";
+			 emailCcLabel.style.visibility="hidden";
+			 emailCco.value="";
+			 emailCco.disabled="disabled";
+			 emailCco.style.display="none";
+			 emailCco.style.visibility="hidden";
+			 emailCcoLabel.disabled="disabled";
+			 emailCcoLabel.style.display="none";
+			 emailCcoLabel.style.visibility="hidden";
+
+			 passbook.disabled="disabled";
+			 passbook.style.display="none";
+			 passbook.style.visibility="hidden";
+			 
+			 passbookLabel.disabled="disabled";
+			 passbookLabel.style.display="none";
+			 passbookLabel.style.visibility="hidden";
+			 url.value="";
+			 url.disabled="disabled";
+			 url.style.display="none";
+			 url.style.visibility="hidden";
+			 urlLabel.disabled="disabled";
+			 urlLabel.style.display="none";
+			 urlLabel.style.visibility="hidden";
+			 logoPassbook.value="";
+			 logoPassbook.disabled="disabled";
+			 logoPassbook.style.display="none";
+			 logoPassbook.style.visibility="hidden";
+			 logoPassbookLabel.disabled="disabled";
+			 logoPassbookLabel.style.display="none";
+			 logoPassbookLabel.style.visibility="hidden";
+			 descripcionPassbook.value="";
+			 descripcionPassbook.disabled="disabled";
+			 descripcionPassbook.style.display="none";
+			 descripcionPassbook.style.visibility="hidden";
+			 descripcionPassbookLabel.disabled="disabled";
+			 descripcionPassbookLabel.style.display="none";
+			 descripcionPassbookLabel.style.visibility="hidden";
+
+			 camposPrincLabel.disabled="disabled";
+			 camposPrincLabel.style.display="none";
+			 camposPrincLabel.style.visibility="hidden";
+			 keyPrinc.value="";
+			 keyPrinc.disabled="disabled";
+			 keyPrinc.style.display="none";
+			 keyPrinc.style.visibility="hidden";
+			 keyPrincLabel.disabled="disabled";
+			 keyPrincLabel.style.display="none";
+			 keyPrincLabel.style.visibility="hidden";
+			 labelPrinc.value="";
+			 labelPrinc.disabled="disabled";
+			 labelPrinc.style.display="none";
+			 labelPrinc.style.visibility="hidden";
+			 labelPrincLabel.disabled="disabled";
+			 labelPrincLabel.style.display="none";
+			 labelPrincLabel.style.visibility="hidden";		 
+			 valuePrinc.value="";
+			 valuePrinc.disabled="disabled";
+			 valuePrinc.style.display="block";
+			 valuePrinc.style.visibility="hidden";
+			 valuePrincLabel.disabled="disabled";
+			 valuePrincLabel.style.display="none";
+			 valuePrincLabel.style.visibility="hidden";
+
+			 camposSecLabel.disabled="disabled";
+			 camposSecLabel.style.display="none";
+			 camposSecLabel.style.visibility="hidden";
+			 keySec.value="";
+			 keySec.disabled="disabled";
+			 keySec.style.display="none";
+			 keySec.style.visibility="hidden";
+			 keySecLabel.disabled="disabled";
+			 keySecLabel.style.display="none";
+			 keySecLabel.style.visibility="hidden";
+			 labelSec.value="";
+			 labelSec.disabled="disabled";
+			 labelSec.style.display="none";
+			 labelSec.style.visibility="hidden";
+			 labelSecLabel.disabled="disabled";
+			 labelSecLabel.style.display="none";
+			 labelSecLabel.style.visibility="hidden";		 
+			 valueSec.value="";
+			 valueSec.disabled="disabled";
+			 valueSec.style.display="none";
+			 valueSec.style.visibility="hidden";
+			 valueSecLabel.disabled="disabled";
+			 valueSecLabel.style.display="none";
+			 valueSecLabel.style.visibility="hidden";
+
+			 camposAuxLabel.disabled="disabled";
+			 camposAuxLabel.style.display="none";
+			 camposAuxLabel.style.visibility="hidden";
+			 keyAux.value="";
+			 keyAux.disabled="disabled";
+			 keyAux.style.display="none";
+			 keyAux.style.visibility="hidden";
+			 keyAuxLabel.disabled="disabled";
+			 keyAuxLabel.style.display="none";
+			 keyAuxLabel.style.visibility="hidden";
+			 labelAux.value="";
+			 labelAux.disabled="disabled";
+			 labelAux.style.display="none";
+			 labelAux.style.visibility="hidden";
+			 labelAuxLabel.disabled="disabled";
+			 labelAuxLabel.style.display="none";
+			 labelAuxLabel.style.visibility="hidden";		 
+			 valueAux.value="";
+			 valueAux.disabled="disabled";
+			 valueAux.style.display="none";
+			 valueAux.style.visibility="hidden";
+			 valueAuxLabel.disabled="disabled";
+			 valueAuxLabel.style.display="none";
+			 valueAuxLabel.style.visibility="hidden";
+
+			 camposTrasLabel.disabled="disabled";
+			 camposTrasLabel.style.display="none";
+			 camposTrasLabel.style.visibility="hidden";
+			 keyTras.value="";
+			 keyTras.disabled="disabled";
+			 keyTras.style.display="none";
+			 keyTras.style.visibility="hidden";
+			 keyTrasLabel.disabled="disabled";
+			 keyTrasLabel.style.display="none";
+			 keyTrasLabel.style.visibility="hidden";
+			 labelTras.value="";
+			 labelTras.disabled="disabled";
+			 labelTras.style.display="none";
+			 labelTras.style.visibility="hidden";
+			 labelTrasLabel.disabled="disabled";
+			 labelTrasLabel.style.display="none";
+			 labelTrasLabel.style.visibility="hidden";		 
+			 valueTras.value="";
+			 valueTras.disabled="disabled";
+			 valueTras.style.display="none";
+			 valueTras.style.visibility="hidden";
+			 valueTrasLabel.disabled="disabled";
+			 valueTrasLabel.style.display="none";
+			 valueTrasLabel.style.visibility="hidden";
+//			nat			
+		}
+	}
 	function checkCanalHeader(combo){
 		var headerSMS= document.getElementById("servidorServicio.headerSMS");
 		var headerSMSLabel= document.getElementById("headerSMSLabel");
@@ -166,10 +1807,15 @@
 		//var colspan1 =document.getElementById("colspan1");
 
 		var containerMultiorganismo = document.getElementById("containerMultiorganismo");
-		
+		var vapidPublicKey = document.getElementById("servicio.vapidPublicKey");
+		var vapidPublicKeyLabel = document.getElementById("vapidPublicKeyLabel");
+		var vapidPrivateKey = document.getElementById("servicio.vapidPrivateKey");
+		var vapidPrivateKeyLabel = document.getElementById("vapidPrivateKeyLabel");
+		var caducidadWebPushLabel = document.getElementById("caducidadWebPush");
+		var caducidadWebPush = document.getElementById("servicio.caducidadWebPush");
+		var botonClaves = document.getElementById("botonclaves"); 
 
-
-		if(combo.value=="1"){
+		if(combo.value=="1"){//email
 
 			if (auna!=null)
 				auna.innerHTML="";
@@ -188,7 +1834,7 @@
 				aunipValue.style.visibility="hidden";
 			
 			if(containerMultiorganismo != null)
-				containerMultiorganismo.style.display="none";
+				containerMultiorganismo.style.display="block";
 			
 			comboBck = combo.value;
 			if (headerSMS != null){
@@ -221,6 +1867,8 @@
 				proveedorPassSMSLabel.style.display ="none";
 				proveedorPassSMSLabel.value = "";		
 			}
+
+
 			plataforma.style.visibility="hidden";
 			plataforma.style.display="none";
 			if(newPlataformaAndroid.checked==true){
@@ -316,10 +1964,33 @@
 			agrupacionCodOrgLabel.style.visibility="";
 			agrupacionCodSiaLabel.style.visibility="";
 			agrupacionCodOrgPagadorLabel.style.visibility="hidden";
+
+			vapidPublicKey.disabled= "";
+			vapidPublicKey.style.visibility="hidden";
+			vapidPublicKey.style.display="none";
+			vapidPublicKeyLabel.disabled= "";
+			vapidPublicKeyLabel.style.visibility="hidden";
+			vapidPublicKeyLabel.style.display="none";
+
+			vapidPrivateKey.disabled= "";
+			vapidPrivateKey.style.visibility="hidden";
+			vapidPrivateKey.style.display="none";
+			vapidPrivateKeyLabel.disabled= "";
+			vapidPrivateKeyLabel.style.visibility="hidden";
+			vapidPrivateKeyLabel.style.display="none";
+
+			caducidadWebPushLabel.disabled= "";
+			caducidadWebPushLabel.style.visibility="hidden";
+			caducidadWebPushLabel.style.display="none";
+			caducidadWebPush.disabled="";
+			caducidadWebPush.style.visibility="hidden";
+			caducidadWebPush.style.display="none";
 			
-			
+			botonClaves.disabled= "";
+			botonClaves.style.visibility="hidden";
+			botonClaves.style.display="none";
 		}
-		if(combo.value=="2"){
+		if(combo.value=="2"){//SMS
 			if (auna!=null)
 				auna.innerHTML="Header";
 			if (aune!=null)
@@ -380,6 +2051,7 @@
 				prefijoSMSLabel.style.display="none";	
 				
 			}
+			
 			fmBck=fromMail.value;
 			fromMail.value="";
 			fromMail.disabled="disabled";
@@ -474,9 +2146,33 @@
 			agrupacionCodOrgLabel.style.visibility="";
 			agrupacionCodSiaLabel.style.visibility="";
 			agrupacionCodOrgPagadorLabel.style.visibility="";
+
+			vapidPublicKey.disabled= "";
+			vapidPublicKey.style.visibility="hidden";
+			vapidPublicKey.style.display="none";
+			vapidPublicKeyLabel.disabled= "";
+			vapidPublicKeyLabel.style.visibility="hidden";
+			vapidPublicKeyLabel.style.display="none";
+
+			vapidPrivateKey.disabled= "";
+			vapidPrivateKey.style.visibility="hidden";
+			vapidPrivateKey.style.display="none";
+			vapidPrivateKeyLabel.disabled= "";
+			vapidPrivateKeyLabel.style.visibility="hidden";
+			vapidPrivateKeyLabel.style.display="none";
+
+			caducidadWebPushLabel.disabled= "";
+			caducidadWebPushLabel.style.visibility="hidden";
+			caducidadWebPushLabel.style.display="none";
+			caducidadWebPush.disabled="";
+			caducidadWebPush.style.visibility="hidden";
+			caducidadWebPush.style.display="none";
 			
+			botonClaves.disabled= "";
+			botonClaves.style.visibility="hidden";
+			botonClaves.style.display="none";
 		}
-		if(combo.value=="3"){
+		if(combo.value=="3"){//Recepcion SMS
 			if (auna!=null)
 				auna.innerHTML="Header";
 			if (aune!=null)
@@ -538,7 +2234,7 @@
 				prefijoSMSLabel.style.visibility="visible";
 				prefijoSMSLabel.style.display ="block";
 			}	
-			
+
 			if(nleBck!=""){
 				nombreLoteEnvio.value=nleBck;
 			}
@@ -634,8 +2330,33 @@
 			agrupacionCodOrgLabel.style.visibility="";
 			agrupacionCodSiaLabel.style.visibility="";
 			agrupacionCodOrgPagadorLabel.style.visibility="hidden";
+
+			vapidPublicKey.disabled= "";
+			vapidPublicKey.style.visibility="hidden";
+			vapidPublicKey.style.display="none";
+			vapidPublicKeyLabel.disabled= "";
+			vapidPublicKeyLabel.style.visibility="hidden";
+			vapidPublicKeyLabel.style.display="none";
+
+			vapidPrivateKey.disabled= "";
+			vapidPrivateKey.style.visibility="hidden";
+			vapidPrivateKey.style.display="none";
+			vapidPrivateKeyLabel.disabled= "";
+			vapidPrivateKeyLabel.style.visibility="hidden";
+			vapidPrivateKeyLabel.style.display="none";
+
+			caducidadWebPushLabel.disabled= "";
+			caducidadWebPushLabel.style.visibility="hidden";
+			caducidadWebPushLabel.style.display="none";
+			caducidadWebPush.disabled="";
+			caducidadWebPush.style.visibility="hidden";
+			caducidadWebPush.style.display="none";
+			
+			botonClaves.disabled= "";
+			botonClaves.style.visibility="hidden";
+			botonClaves.style.display="none";
 		}
-		if(combo.value=="4"){
+		if(combo.value=="4"){//Notificaciones Push
 
 			if (auna!=null)
 				auna.innerHTML="";
@@ -647,15 +2368,13 @@
 				auno.innerHTML="";
 			if (aunip!=null)
 				aunip.innerHTML="";
-			
-			
-			
+
 			if (aunipValue!=null)
 				aunipValue.style.visibility="hidden";
 			
 			if(containerMultiorganismo != null)
 				containerMultiorganismo.style.display="none";
-			
+
 			comboBck = combo.value;
 			plataforma.style.visibility="visible";
 			plataforma.style.display="block";
@@ -734,6 +2453,9 @@
 				prefijoSMSLabel.style.visibility="hidden";
 				prefijoSMSLabel.style.display="none";	
 			}	
+
+
+
 			nombreEndPoint.value="";
 			nombreEndPoint.disabled="disabled";
 			nombreEndPoint.style.visibility="hidden";
@@ -777,8 +2499,209 @@
 			agrupacionCodOrgLabel.style.visibility="";
 			agrupacionCodSiaLabel.style.visibility="";
 			agrupacionCodOrgPagadorLabel.style.visibility="hidden";
+
+			vapidPublicKey.disabled= "";
+			vapidPublicKey.style.visibility="hidden";
+			vapidPublicKey.style.display="none";
+			vapidPublicKeyLabel.disabled= "";
+			vapidPublicKeyLabel.style.visibility="hidden";
+			vapidPublicKeyLabel.style.display="none";
+
+			vapidPrivateKey.disabled= "";
+			vapidPrivateKey.style.visibility="hidden";
+			vapidPrivateKey.style.display="none";
+			vapidPrivateKeyLabel.disabled= "";
+			vapidPrivateKeyLabel.style.visibility="hidden";
+			vapidPrivateKeyLabel.style.display="none";
+
+			caducidadWebPushLabel.disabled= "";
+			caducidadWebPushLabel.style.visibility="hidden";
+			caducidadWebPushLabel.style.display="none";
+			caducidadWebPush.disabled="";
+			caducidadWebPush.style.visibility="hidden";
+			caducidadWebPush.style.display="none";
+			
+			botonClaves.disabled= "";
+			botonClaves.style.visibility="hidden";
+			botonClaves.style.display="none";
+
+		}
+		if(combo.value=="5"){//web push
+
+			if (auna!=null)
+				auna.innerHTML="";
+			if (aune!=null)
+				aune.innerHTML="";
+			if (auni!=null)
+				auni.innerHTML="";
+			if (auno!=null)
+				auno.innerHTML="";
+			if (aunip!=null)
+				aunip.innerHTML="";
+			
+			
+			
+			if (aunipValue!=null)
+				aunipValue.style.visibility="hidden";
+			
+			if(containerMultiorganismo != null)
+				containerMultiorganismo.style.display="block";
+			
+			comboBck = combo.value;
+			if (headerSMS != null){
+				hBck=headerSMS.value;
+				headerSMS.value="";
+				headerSMS.disabled="disabled";
+				headerSMS.style.visibility="hidden";
+				headerSMS.style.display="none";
+				headerSMSLabel.value="";
+				headerSMSLabel.disabled="disabled";
+				headerSMSLabel.style.visibility="hidden";
+				headerSMSLabel.style.display="none";
+				
+				proUsuarioBck = proveedorUsuarioSMS.value;
+				proveedorUsuarioSMS.disabled = "disabled";
+				proveedorUsuarioSMS.style.visibility = "hidden";
+				proveedorUsuarioSMS.style.display ="none";
+				proveedorUsuarioSMS.value="";
+				proPassBck = proveedorPassSMS.value;
+				proveedorPassSMS.disabled = "disabled";
+				proveedorPassSMS.style.visibility = "hidden";
+				proveedorPassSMS.style.display ="none";
+				proveedorPassSMS.value = "";
+				proveedorUsuarioSMSLabel.disabled = "disabled";
+				proveedorUsuarioSMSLabel.style.visibility = "hidden";
+				proveedorUsuarioSMSLabel.style.display ="none";
+				proveedorUsuarioSMSLabel.value = "";
+				proveedorPassSMSLabel.disabled = "disabled";
+				proveedorPassSMSLabel.style.visibility = "hidden";
+				proveedorPassSMSLabel.style.display ="none";
+				proveedorPassSMSLabel.value = "";		
+			}
+
+
+			
+			plataforma.style.visibility="hidden";
+			plataforma.style.display="none";
+			if(newPlataformaAndroid.checked==true){
+				newPlataformaAndroid.click();
+			}
+			if(newPlataformaiOS.checked==true){
+				newPlataformaiOS.click();
+			}
+
+			nombreEndPoint.value="";
+			nombreEndPoint.disabled="disabled";
+			nombreEndPoint.style.visibility="hidden";
+			nombreEndPoint.style.display="none";
+
+			nombreEndPointLabel.value="";
+			nombreEndPointLabel.disabled="disabled";
+			nombreEndPointLabel.style.visibility="hidden";
+			nombreEndPointLabel.style.display="none";
+
+			badge.value="";
+			badge.disabled="disabled";
+			badge.style.visibility="hidden";
+			badge.style.display="none";
+
+			badgeLabel.value="";
+			badgeLabel.disabled="disabled";
+			badgeLabel.style.visibility="hidden";
+			badgeLabel.style.display="none";
+
+			gcmProjectKey.value="";
+			gcmProjectKey.disabled="disabled";
+			gcmProjectKey.style.visibility="hidden";
+			gcmProjectKey.style.display="none";
+
+			gcmProjectKeyLabel.value="";
+			gcmProjectKeyLabel.disabled="disabled";
+			gcmProjectKeyLabel.style.visibility="hidden";
+			gcmProjectKeyLabel.style.display="none";
+
+			apnsRutaCertificado.value="";
+			apnsRutaCertificado.disabled="disabled";
+			apnsRutaCertificado.style.visibility="hidden";
+			apnsRutaCertificado.style.display="none";
+
+			apnsRutaCertificadoLabel.value="";
+			apnsRutaCertificadoLabel.disabled="disabled";
+			apnsRutaCertificadoLabel.style.visibility="hidden";
+			apnsRutaCertificadoLabel.style.display="none";
+
+			apnsPasswordCertificado.value="";
+			apnsPasswordCertificado.disabled="disabled";
+			apnsPasswordCertificado.style.visibility="hidden";
+			apnsPasswordCertificado.style.display="none";
 			
 
+			apnsPasswordCertificadoLabel.value="";
+			apnsPasswordCertificadoLabel.disabled="disabled";
+			apnsPasswordCertificadoLabel.style.visibility="hidden";
+			apnsPasswordCertificadoLabel.style.display="none";
+			
+			nleBck=nombreLoteEnvio.value;
+			nombreLoteEnvio.value="";
+			nombreLoteEnvio.disabled="disabled";
+			nombreLoteEnvio.style.visibility="hidden";
+			nombreLoteEnvio.style.display="none";
+			nombreLoteEnvioLabel.value="";
+			nombreLoteEnvioLabel.disabled="disabled";
+			nombreLoteEnvioLabel.style.visibility="hidden";
+			nombreLoteEnvioLabel.style.display="none";
+			
+			if(fmBck!=""){
+				fromMail.value=fmBck;
+			}
+			fromMail.disabled="";
+			fromMail.style.display="none";
+			fromMail.style.visibility="hidden";
+			fromMailLabel.disabled="";
+			fromMailLabel.style.display="hidden";
+			fromMailLabel.style.visibility="none";
+			
+			
+			if(fmnBck!=""){
+				fromMailName.value=fmnBck;
+			}
+			fromMailName.disabled="";
+			fromMailName.style.visibility="hidden";
+			fromMailName.style.display="none";
+			fromMailNameLabel.disabled="";
+			fromMailNameLabel.style.visibility="hidden";
+			fromMailNameLabel.style.display="none";
+
+			
+			agrupacionCodOrgLabel.style.visibility="";
+			agrupacionCodSiaLabel.style.visibility="";
+			agrupacionCodOrgPagadorLabel.style.visibility="hidden";
+
+			vapidPublicKey.disabled= "true";
+			vapidPublicKey.style.visibility="visible";
+			vapidPublicKey.style.display="block";
+			vapidPublicKeyLabel.disabled= "";
+			vapidPublicKeyLabel.style.visibility="visible";
+			vapidPublicKeyLabel.style.display="block";
+
+			vapidPrivateKey.disabled= "true";
+			vapidPrivateKey.style.visibility="visible";
+			vapidPrivateKey.style.display="block";
+			vapidPrivateKeyLabel.disabled= "";
+			vapidPrivateKeyLabel.style.visibility="visible";
+			vapidPrivateKeyLabel.style.display="block";
+
+			caducidadWebPushLabel.disabled= "";
+			caducidadWebPushLabel.style.visibility="visible";
+			caducidadWebPushLabel.style.display="block";
+			caducidadWebPush.disabled="";
+			caducidadWebPush.style.visibility="visible";
+			caducidadWebPush.style.display="block";
+			
+			botonClaves.disabled= "";
+			botonClaves.style.visibility="visible";
+			botonClaves.style.display="block";
+			
 		}
 	}
 	function chkViewValue(boton){
@@ -940,6 +2863,20 @@
 			urlFeedback.style.visibility="visible";
 		}
 	}
-	
+
+
+	function fncDesplegarMenu(intIndiceMenu) {
+		
+		var deplegable= document.getElementById("desplegable"+intIndiceMenu+"");
+		
+		if(deplegable.style.display == ""){
+			deplegable.style.display='none';
+		}else if(deplegable.style.display == "block"){
+			deplegable.style.display='none';
+		}else{
+			deplegable.style.display='block';
+		}
+
+	}
 
 </script>

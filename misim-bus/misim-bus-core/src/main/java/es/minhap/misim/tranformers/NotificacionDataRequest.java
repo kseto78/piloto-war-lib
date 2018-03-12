@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import es.minhap.plataformamensaferia.iop.beans.envioPremium.PeticionEnvioXML;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 @XmlAccessorType(XmlAccessType.FIELD)

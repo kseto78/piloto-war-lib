@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -11,7 +12,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * @author Altran
  * 
  */
-public class ServicioBean implements Audit {
+public class ServicioBean implements Audit, Serializable {
+
+	private static final long serialVersionUID = -7986269951829415111L;
 
 	public ServicioBean() {
 		super();
@@ -65,6 +68,9 @@ public class ServicioBean implements Audit {
 		this.premium = null;
 		this.numeroMaxReenvios = null;
 		this.eliminado = null;
+		this.caducidadWebPush = null;
+		this.vapidPublicKey = null;
+		this.vapidPrivateKey = null;
 	}
 
 	protected Integer servicioId;
@@ -124,7 +130,10 @@ public class ServicioBean implements Audit {
 	protected String isPremium = null;
 	protected Integer numeroMaxReenvios = null;
 	protected String eliminado = null;
-
+	protected Integer caducidadWebPush = null;
+	protected String vapidPublicKey = null;
+	protected String vapidPrivateKey = null;
+	
 	public void setActivado(String activado) {
 		if (activado != null && activado.equals("true")) {
 			this.activo = true;
@@ -1096,6 +1105,48 @@ public class ServicioBean implements Audit {
 	 */
 	public void setEliminado(String eliminado) {
 		this.eliminado = eliminado;
+	}
+
+	/**
+	 * @return the caducidadWebPush
+	 */
+	public Integer getCaducidadWebPush() {
+		return caducidadWebPush;
+	}
+
+	/**
+	 * @param caducidadWebPush the caducidadWebPush to set
+	 */
+	public void setCaducidadWebPush(Integer caducidadWebPush) {
+		this.caducidadWebPush = caducidadWebPush;
+	}
+
+	/**
+	 * @return the vapidPublicKey
+	 */
+	public String getVapidPublicKey() {
+		return vapidPublicKey;
+	}
+
+	/**
+	 * @param vapidPublicKey the vapidPublicKey to set
+	 */
+	public void setVapidPublicKey(String vapidPublicKey) {
+		this.vapidPublicKey = vapidPublicKey;
+	}
+
+	/**
+	 * @return the vapidPrivateKey
+	 */
+	public String getVapidPrivateKey() {
+		return vapidPrivateKey;
+	}
+
+	/**
+	 * @param vapidPrivateKey the vapidPrivateKey to set
+	 */
+	public void setVapidPrivateKey(String vapidPrivateKey) {
+		this.vapidPrivateKey = vapidPrivateKey;
 	}
 
 }

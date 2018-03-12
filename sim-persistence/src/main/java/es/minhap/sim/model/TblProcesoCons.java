@@ -6,7 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +25,8 @@ public class TblProcesoCons implements java.io.Serializable {
 	private static final long serialVersionUID = 2534391061068004810L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROCESOCONSID_SEC")
+    @SequenceGenerator(name="PROCESOCONSID_SEC", sequenceName="PROCESOCONSID_SEC", allocationSize=1)
 	@Column(name = "PROCESOCONSID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long procesoconsid;
 

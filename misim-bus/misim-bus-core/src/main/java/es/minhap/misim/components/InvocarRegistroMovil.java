@@ -100,7 +100,6 @@ public class InvocarRegistroMovil implements Callable {
 					// ps.getMessage("constantes.SOAP_ACTION", null)
 					respuesta = enviarSMS(eventContext.getMuleContext(), pet, resp);
 				}
-
 				Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 				String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
 

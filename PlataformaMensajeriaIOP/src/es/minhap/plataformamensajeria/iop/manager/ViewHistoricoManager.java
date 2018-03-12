@@ -19,10 +19,12 @@ public interface ViewHistoricoManager {
 
 	
 	/**
-	 * Se obtiene historico del mensaje multidestinatario
+	 * Se obtiene historico by query
 	 * 
 	 * @param ViewHistoricoQuery
 	 * @return List
 	 */
 	public List<ViewHistoricoMultidest> getHistoricoMultidest(ViewHistoricoMultidestQuery query);
+	
+
 }

@@ -1,5 +1,7 @@
 package es.minhap.plataformamensajeria.iop.managerimpl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -42,12 +44,39 @@ public class TblGestionEnviosManagerImpl implements TblGestionEnviosManager {
 		}
 
 	@Override
+	@Transactional
 	public TblGestionEnvios getGestionEnvios(TblGestionEnviosQuery query) {
 		
 		return  getGestionDAO().searchUnique(query);
 
 	}
 
+		
+	@Override
+	@Transactional
+	public void delete(Long mensajeid) {
+		gestionDAO.delete(mensajeid);
+		
+	}
+
+
+	@Override
+	@Transactional
+	public List<TblGestionEnvios> getEnviosLote(String idLote) {
+		TblGestionEnviosQuery query = new TblGestionEnviosQuery();
+		query.setLoteenvioid(Long.parseLong(idLote));
+
+		List<TblGestionEnvios> lista = gestionDAO.search(query).getResults();
+		
+		return lista;
+	}
+
+	@Override
+	@Transactional
+	public TblGestionEnvios getById(Long mensajeid) {
+		return gestionDAO.get(mensajeid);
+	}
+	
 	/**
 	 * @return the gestionDAO
 	 */
@@ -61,5 +90,8 @@ public class TblGestionEnviosManagerImpl implements TblGestionEnviosManager {
 	public void setGestionDAO(TblGestionEnviosDAO gestionDAO) {
 		this.gestionDAO = gestionDAO;
 	}
+
+	
+	
 
 }

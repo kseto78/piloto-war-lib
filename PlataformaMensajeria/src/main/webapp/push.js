@@ -1,112 +1,191 @@
 window.addEventListener('load', registerServiceWorker, false);
+'use strict';
+const pushButton = document.querySelector('.js-push-btn');
+// const publicKey =
+// base64UrlToUint8Array('BG04vVnnE31ukif3ag30-mMwyR7I0FFoOKxmCKFUCTaVpVCyFf54PnNHvrWV9xgFtH7wSvjg1vlS-zOFRtQw3J4=');
+const publicKey = base64UrlToUint8Array('BNV1IoMKoNFKwxfhJojULPYtYhDAZpJCaguaLcKQnfEfOhNrRhH458bJwACKTMVIVCFbfN4SZ0jZtz5LMocx8GQ=');
+const servicio = 2502; // ////////////Se indica el servicio/////////////////
+const idUsuario = 999999999; // ////////////Se indica usuario logueado en la
+							// aplicacion como ella lo identifique (dni, telf,
+							// email,...)/////////////////
+const user = 'pruebasSIMdes';
+const pass = 'pruebasSIMdes';
+
+
+let isSubscribed = true;
+let swRegistration = null;
 
 function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(initialiseState);
-    
-    // Accepts messages from the service worker. Verifies whether a notification was received.
-    navigator.serviceWorker.addEventListener('message', function (event) {
-      document.getElementById('message').value = event.data;
-    });
-  } else {
-    document.write('Service workers are not supported in this browser.');
-  }
+    if ('serviceWorker' in navigator ) {
+    	initialiseState();
+    	
+    } else {
+        console.log('Service workers are not supported in this browser.');
+    }
 }
 
 function initialiseState() {
-  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-    document.write('Notifications aren\'t supported.');
-    return;
-  }
+	if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+        console.warn('Notifications aren\'t supported.');
+        return;
+    }
 
-  if (Notification.permission === 'denied') {
-    document.write('The user has blocked notifications.');
-    return;
-  }
+    if (Notification.permission === 'denied') {
+        console.warn('The user has blocked notifications.');
+        return;
+    }
 
-  if (!('PushManager' in window)) {
-    document.write('Push messaging isn\'t supported.');
-    return;
-  }
-
-  navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
-    serviceWorkerRegistration.pushManager.getSubscription().then(function (subscription) {
-        if (!subscription) {
-          subscribe();
-
-          return;
+    if (!('PushManager' in window)) {
+        console.warn('Push messaging isn\'t supported.');
+        return;
+    }
+    
+    // anadimos el evento al boton para registrar o desregistrar
+    pushButton.addEventListener('click', function() {
+        pushButton.disabled = true;
+        if (isSubscribed) {
+        	unsubscribe();
+        } else {
+        	subscribe();
         }
-
-        // Keep your server in sync with the latest subscriptionId
-        sendSubscriptionToServer(subscription);
-      }).catch(function (err) {
-        document.write('Error during getSubscription()', err);
       });
-  });
+      if (null == swRegistration) {
+       		isSubscribed = false;
+      }
+        	updateBtn();
+            // Keep your server in sync with the latest subscriptionId
+            // sendSubscriptionToServer(subscription);
+        
+    
+}
+
+function unsubscribe(){
+	navigator.serviceWorker.ready.then(function(reg) {
+		  reg.pushManager.getSubscription().then(function(subscription) {
+		    subscription.unsubscribe().then(function(successful) {
+		    	isSubscribed = false;
+		    	updateBtn();
+		    	document.getElementById('subscription').value = "";
+		    	sendSubscriptionToServer(subscription, 'B');
+		    	console.log('Service worker desregistrado correctamente');
+		    	document.getElementById('subscription').value = 'Service worker desregistrado correctamente';
+		    }).catch(function(e) {
+		    	console.warn('Error desregistrando Service worker ', e);
+		    })
+		  })        
+		});
 }
 
 function subscribe() {
-  navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
-    serviceWorkerRegistration.pushManager.subscribe(getOptions())
-      .then(function (subscription) {
-        return sendSubscriptionToServer(subscription);
-      }).catch(function (e) {
-        if (Notification.permission === 'denied') {
-          document.write('Permission for Notifications was denied');
-        } else {
-          document.write('Unable to subscribe to push.', e);
-        }
-      });
-  });
+	console.log('Service Worker and Push is supported');
+	navigator.serviceWorker.register('sw.js')
+	  .then(function(swReg) {
+	    console.log('Service Worker is registered', swReg);
+
+	    swRegistration = swReg;
+	    initialiseState();
+	  })
+	  .catch(function(error) {
+	    console.error('Service Worker Error', error);
+	  });
+
+    navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
+        serviceWorkerRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: publicKey
+        })
+        .then(function (subscription) {
+            return sendSubscriptionToServer(subscription, 'A');
+        })
+        .catch(function (e) {
+            if (Notification.permission === 'denied') {
+                console.warn('Permission for Notifications was denied');
+                updateBtn();
+            } else {
+                console.error('Unable to subscribe to push.', e);
+                updateBtn();
+            }
+        });
+    });
+    isSubscribed = true;
+    updateBtn();
 }
 
-/**
- * Return an options object for a call to PushManager.subscribe.
- *
- * @returns {*}
- */
-function getOptions() {
-  if (window.location.search.indexOf('vapid') != -1) {
-    // This array corresponds to the public key in vapid.pem
-    var publicKey = new Uint8Array([0x04,0xd1,0x43,0x3b,0x53,0x14,0x9c,0xda,0x71,0xd1,0x2b,0x90,0xc9,0x07,0x00,0x01,0x66,0x04,0x4d,0xad,0xbe,0x5b,0xcc,0xff,0xb9,0xce,0x6c,0xc4,0x1c,0x9f,0xfd,0x46,0x4b,0x1f,0x00,0x21,0x14,0xbc,0x04,0x0f,0x14,0xb9,0x88,0x1e,0xb9,0xe0,0xa1,0xe2,0xaf,0x2a,0xb4,0x03,0x10,0xe1,0x15,0x74,0xbb,0x0d,0x5a,0x97,0x0c,0xa8,0xe3,0x37,0xef]);
+function sendSubscriptionToServer(subscription, action) {
+    var key = subscription.getKey ? subscription.getKey('p256dh') : '';
+    var auth = subscription.getKey ? subscription.getKey('auth') : '';
+    var acc = action;
+    
+    if (acc == 'A'){
+    	document.getElementById('subscription').value = JSON.stringify(subscription);
+    }
 
-    return {
-      userVisibleOnly: true,
-      applicationServerKey: publicKey
-    };
-  } else {
-    return {
-      userVisibleOnly: true
-    };
-  }
+    console.log({
+        endpoint: subscription.endpoint,
+        key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : '',
+        auth: auth ? btoa(String.fromCharCode.apply(null, new Uint8Array(auth))) : ''
+    });
+
+// return Promise.resolve();
+              
+    return fetch('https://des-misim.redsara.es/misim-bus-webapp/rest/gestionServiciosPush/registroUsuarioWebPush', {
+        credentials: 'include',
+        headers: {
+        	 'Accept': 'application/json',
+        	 'Content-Type': 'application/x-www-form-urlencoded'
+        	 
+        },
+         mode: 'no-cors',
+        method: 'POST',
+        body: JSON.stringify({
+            Endpoint: subscription.endpoint,
+            Key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : '',
+            Auth: auth ? btoa(String.fromCharCode.apply(null, new Uint8Array(auth))) : '',
+            IdServicio: servicio,
+            IdUsuario: idUsuario,
+            Accion: acc,
+            Usuario: user,
+            Password: pass
+        })
+    }).then(function(response) { 
+    	// Convert to JSON
+    	return response.json();
+    }).then(function(j) {
+    	// Yay, `j` is a JavaScript object
+    	console.log(j); 
+    });
+       
 }
 
-function sendSubscriptionToServer(subscription) {
-  var key = subscription.getKey ? subscription.getKey('p256dh') : '';
-  var auth = subscription.getKey ? subscription.getKey('auth') : '';
+function base64UrlToUint8Array(base64UrlData) {
+    const padding = '='.repeat((4 - base64UrlData.length % 4) % 4);
+    const base64 = (base64UrlData + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
 
-  document.getElementById('subscription').value = JSON.stringify(subscription);
-
-  console.log({
-    endpoint: subscription.endpoint,
-    key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : '',
-    auth: auth ? btoa(String.fromCharCode.apply(null, new Uint8Array(auth))) : ''
-  });
-
-  return Promise.resolve();
-
-  // Normally, you would send the subscription to your backend and persist it:
-  //
-  // return fetch('/profile/subscription', {
-  //     credentials: 'include',
-  //     headers: {
-  //         'Content-Type': 'application/json'
-  //     },
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //         endpoint: subscription.endpoint,
-  //         key: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : '',
-  //         auth: auth ? btoa(String.fromCharCode.apply(null, new Uint8Array(auth))) : ''
-  //     })
-  // });
+    const rawData = atob(base64);
+    const buffer = new Uint8Array(rawData.length);
+    
+    for (let i = 0; i < rawData.length; ++i) {
+        buffer[i] = rawData.charCodeAt(i);
+    }
+    
+    return buffer;
 }
+
+function updateBtn() {
+	  if (Notification.permission === 'denied') {
+	    pushButton.textContent = 'Push Messaging Blocked.';
+	    pushButton.disabled = true;
+	    updateSubscriptionOnServer(null);
+	    return;
+	  }
+
+	  if (isSubscribed) {
+	    pushButton.textContent = 'Desactivar Mensajeria Web Push';
+	  } else {
+	    pushButton.textContent = 'Activar Mensajeria Web Push';
+	  }
+
+	  pushButton.disabled = false;
+	}

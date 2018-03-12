@@ -1,3 +1,4 @@
+
 /*
  *
  * archivo: ViewLotesEnviosDetHistDAOImpl.java
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.minhap.common.persistence.hibernate.dao.AbstractHibernateDAO;
 import es.minhap.sim.dao.ViewLotesEnviosDetHistDAO;
 import es.minhap.sim.model.ViewLotesEnviosDetHist;
-import es.minhap.sim.model.ViewLotesEnviosDetHistId;
 import es.minhap.sim.query.ViewLotesEnviosDetHistQuery;
 
 /**
@@ -31,21 +31,19 @@ import es.minhap.sim.query.ViewLotesEnviosDetHistQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class ViewLotesEnviosDetHistDAOImpl extends
-		AbstractHibernateDAO<ViewLotesEnviosDetHist, ViewLotesEnviosDetHistId, ViewLotesEnviosDetHistQuery> implements
-		ViewLotesEnviosDetHistDAO {
+public class ViewLotesEnviosDetHistDAOImpl extends AbstractHibernateDAO<ViewLotesEnviosDetHist,Long,ViewLotesEnviosDetHistQuery> implements ViewLotesEnviosDetHistDAO {
 
-	@Override
-	protected Class<ViewLotesEnviosDetHist> getEntityClass() {
-		return ViewLotesEnviosDetHist.class;
-	}
+    @Override
+    protected Class<ViewLotesEnviosDetHist> getEntityClass() {
+        return ViewLotesEnviosDetHist.class;
+    }
 
-	@Override
-	protected Class<ViewLotesEnviosDetHistId> getIdentifierClass() {
-		return ViewLotesEnviosDetHistId.class;
-	}
-
-	@Override
+    @Override
+    protected Class<Long> getIdentifierClass() {
+        return Long.class;
+    }
+    
+    @Override
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")
 	public void setSessionFactoryApp(SessionFactory sessionFactory) {

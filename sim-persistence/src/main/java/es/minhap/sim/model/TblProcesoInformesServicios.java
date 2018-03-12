@@ -6,7 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +25,8 @@ public class TblProcesoInformesServicios implements java.io.Serializable {
 	private static final long serialVersionUID = 772478631717594578L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROCESOINFORMESSERVICIOSID_SEC")
+    @SequenceGenerator(name="PROCESOINFORMESSERVICIOSID_SEC", sequenceName="PROCESOINFORMESSERVICIOSID_SEC", allocationSize=1)
 	@Column(name = "PROCESOINFORMESSERVICIOSID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long procesoinformesserviciosid;
 
@@ -41,6 +46,90 @@ public class TblProcesoInformesServicios implements java.io.Serializable {
 	private Date fechafin;
 
 	public TblProcesoInformesServicios() {
+	}
+
+	/**
+	 * @return the procesoinformesserviciosid
+	 */
+	public Long getProcesoinformesserviciosid() {
+		return procesoinformesserviciosid;
+	}
+
+	/**
+	 * @param procesoinformesserviciosid the procesoinformesserviciosid to set
+	 */
+	public void setProcesoinformesserviciosid(Long procesoinformesserviciosid) {
+		this.procesoinformesserviciosid = procesoinformesserviciosid;
+	}
+
+	/**
+	 * @return the codigoestado
+	 */
+	public String getCodigoestado() {
+		return codigoestado;
+	}
+
+	/**
+	 * @param codigoestado the codigoestado to set
+	 */
+	public void setCodigoestado(String codigoestado) {
+		this.codigoestado = codigoestado;
+	}
+
+	/**
+	 * @return the descripcionestado
+	 */
+	public String getDescripcionestado() {
+		return descripcionestado;
+	}
+
+	/**
+	 * @param descripcionestado the descripcionestado to set
+	 */
+	public void setDescripcionestado(String descripcionestado) {
+		this.descripcionestado = descripcionestado;
+	}
+
+	/**
+	 * @return the fechacreacion
+	 */
+	public Date getFechacreacion() {
+		return fechacreacion;
+	}
+
+	/**
+	 * @param fechacreacion the fechacreacion to set
+	 */
+	public void setFechacreacion(Date fechacreacion) {
+		this.fechacreacion = fechacreacion;
+	}
+
+	/**
+	 * @return the fechainicio
+	 */
+	public Date getFechainicio() {
+		return fechainicio;
+	}
+
+	/**
+	 * @param fechainicio the fechainicio to set
+	 */
+	public void setFechainicio(Date fechainicio) {
+		this.fechainicio = fechainicio;
+	}
+
+	/**
+	 * @return the fechafin
+	 */
+	public Date getFechafin() {
+		return fechafin;
+	}
+
+	/**
+	 * @param fechafin the fechafin to set
+	 */
+	public void setFechafin(Date fechafin) {
+		this.fechafin = fechafin;
 	}
 
 }

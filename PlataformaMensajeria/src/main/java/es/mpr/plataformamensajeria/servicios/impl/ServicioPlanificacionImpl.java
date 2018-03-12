@@ -95,8 +95,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 				pb = createPlanificacionBean(pb, criterio);
 			}
 			
-			List<ViewPlanificaciones> lista = viewPlanificacionesManager.getPlanificacionesPaginadas(start, size, order, column, nombre,
-					pb, false);
+			List<ViewPlanificaciones> lista = viewPlanificacionesManager.getPlanificacionesPaginadas(start, size, order, column, nombre, pb, false);
 			List<PlanificacionBean> pageList = getListViewPlanificacionBean(lista);
 			
 			// Total de organismos

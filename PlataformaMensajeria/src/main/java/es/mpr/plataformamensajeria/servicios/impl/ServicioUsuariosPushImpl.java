@@ -102,6 +102,7 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 	private es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean createUsuariosPushBean(
 			es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean upb, UsuariosPushBean criterio) {
 
+		upb.setUsuarioId(criterio.getUsuarioId());
 		upb.setAplicacionId(criterio.getAplicacionId());
 		upb.setServicioId(criterio.getServicioId());
 		upb.setPlataformaId(criterio.getPlataformaId());

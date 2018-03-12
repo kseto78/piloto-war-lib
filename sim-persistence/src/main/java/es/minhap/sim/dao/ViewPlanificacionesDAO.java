@@ -12,16 +12,15 @@
 
 package es.minhap.sim.dao;
 
+
 import es.minhap.common.dao.EntityDAO;
 import es.minhap.sim.model.ViewPlanificaciones;
-import es.minhap.sim.model.ViewPlanificacionesId;
 import es.minhap.sim.query.ViewPlanificacionesQuery;
+
 
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface ViewPlanificacionesDAO
-		extends
-		EntityDAO<ViewPlanificaciones, ViewPlanificacionesId, ViewPlanificacionesQuery> {
+public interface ViewPlanificacionesDAO extends EntityDAO<ViewPlanificaciones,Long,ViewPlanificacionesQuery> {
 
 }

@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="MensajeSMS" type="{http://misim.redsara.es/misim-bus-webapp/peticion}mensajeSMS" maxOccurs="unbounded" minOccurs="0"/&gt;
  *         &lt;element name="MensajeEmail" type="{http://misim.redsara.es/misim-bus-webapp/peticion}mensajeEmail" maxOccurs="unbounded" minOccurs="0"/&gt;
  *         &lt;element name="MensajePush" type="{http://misim.redsara.es/misim-bus-webapp/peticion}mensajePush" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="MensajeWebPush" type="{http://misim.redsara.es/misim-bus-webapp/peticion}mensajeWebPush" maxOccurs="unbounded" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -43,7 +44,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "Mensajes", propOrder = {
     "mensajeSMS",
     "mensajeEmail",
-    "mensajePush"
+    "mensajePush",
+    "mensajeWebPush"
 })
 @XmlRootElement(name = "Mensajes", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
 public class MensajesPeticionLotesXMLBean {
@@ -54,6 +56,8 @@ public class MensajesPeticionLotesXMLBean {
     protected List<MensajePeticionLotesEmailXMLBean> mensajeEmail;
     @XmlElement(name = "MensajePush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected List<MensajePeticionLotesPushXMLBean> mensajePush;
+    @XmlElement(name = "MensajeWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected List<MensajePeticionLotesWebPushXMLBean> mensajeWebPush;
 
     /**
      * Gets the value of the mensajeSMS property.
@@ -140,6 +144,36 @@ public class MensajesPeticionLotesXMLBean {
             mensajePush = new ArrayList<MensajePeticionLotesPushXMLBean>();
         }
         return this.mensajePush;
+    }
+    
+    
+    /**
+     * Gets the value of the mensajeWebPush property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the mensajePush property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getMensajePush().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link MensajePeticionLotesWebPushXMLBean }
+     * 
+     * 
+     */
+    public List<MensajePeticionLotesWebPushXMLBean> getMensajeWebPush() {
+        if (mensajeWebPush == null) {
+        	mensajeWebPush = new ArrayList<MensajePeticionLotesWebPushXMLBean>();
+        }
+        return this.mensajeWebPush;
     }
 
 }

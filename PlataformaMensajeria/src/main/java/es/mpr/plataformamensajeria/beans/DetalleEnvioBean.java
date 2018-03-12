@@ -1,6 +1,7 @@
 
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  
  *  @author i-nercya
  */
-public class DetalleEnvioBean implements Audit{
+public class DetalleEnvioBean implements Audit, Serializable{
+
+	private static final long serialVersionUID = -3761280846672129939L;
 
 	public DetalleEnvioBean() {
 		this.envioId=null;
@@ -27,9 +30,9 @@ public class DetalleEnvioBean implements Audit{
 		this.cc = null;
 		this.asunto = null;
 		this.cuerpo = null;
-		this.listadoAdjuntos = new ArrayList<AdjuntoEmailBean>();
-		this.listadoImagenes = new ArrayList<AdjuntoEmailBean>();
-		this.listadoHistorico = new ArrayList<HistoricoBean>();
+		this.listadoAdjuntos = new ArrayList<>();
+		this.listadoImagenes = new ArrayList<>();
+		this.listadoHistorico = new ArrayList<>();
 		this.descripcion = null;
 		this.docUsuario = null;
 		this.codSIA = null;
@@ -53,10 +56,10 @@ public class DetalleEnvioBean implements Audit{
 	private String asunto;
 	private String cuerpo;
 	private Long idLote;
-	private String idExterno;
-	private List<AdjuntoEmailBean> listadoAdjuntos = new ArrayList<AdjuntoEmailBean>();
-	private List<AdjuntoEmailBean> listadoImagenes = new ArrayList<AdjuntoEmailBean>();
-	private List<HistoricoBean> listadoHistorico = new ArrayList<HistoricoBean>();
+	private String idExterno; 
+	private List<AdjuntoEmailBean> listadoAdjuntos = new ArrayList<>();
+	private List<AdjuntoEmailBean> listadoImagenes = new ArrayList<>();
+	private List<HistoricoBean> listadoHistorico = new ArrayList<>();
 	private String descripcion;
 	private String telefono;
 	private String tipoMensaje;
@@ -238,16 +241,16 @@ public class DetalleEnvioBean implements Audit{
 		this.cuerpo = cuerpo;
 	}
 	public List<AdjuntoEmailBean> getListadoAdjuntos() {
-		return new ArrayList<AdjuntoEmailBean>(listadoAdjuntos);
+		return new ArrayList<>(listadoAdjuntos);
 	}
 	public void setListadoAdjuntos(List<AdjuntoEmailBean> listadoAdjuntos) {
-		this.listadoAdjuntos = new ArrayList<AdjuntoEmailBean>(listadoAdjuntos);
+		this.listadoAdjuntos = new ArrayList<>(listadoAdjuntos);
 	}
 	public List<HistoricoBean> getListadoHistorico() {
-		return new ArrayList<HistoricoBean>(listadoHistorico);
+		return new ArrayList<>(listadoHistorico);
 	}
 	public void setListadoHistorico(List<HistoricoBean> listadoHistorico) {
-		this.listadoHistorico = new ArrayList<HistoricoBean>(listadoHistorico);
+		this.listadoHistorico = new ArrayList<>(listadoHistorico);
 	}
 	public Object getId() {
 		return this.envioId;

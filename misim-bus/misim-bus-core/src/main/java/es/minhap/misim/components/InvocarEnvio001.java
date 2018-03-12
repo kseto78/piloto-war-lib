@@ -96,6 +96,8 @@ public class InvocarEnvio001 implements Callable {
 			String respuesta = envioPremiumAEATService.enviarSMSPremium(envioAEATXML, usuarioAEAT, passwordAEAT,
 					idServicioAEAT, usuarioMISIM, passwordMISIM, reintentos);
 
+//			eventContext.getMessage().setOutboundProperty("xmlPeticion", xmlPeticion);
+
 			es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp = new es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta();
 			resp.loadObjectFromXML(respuesta);
 			

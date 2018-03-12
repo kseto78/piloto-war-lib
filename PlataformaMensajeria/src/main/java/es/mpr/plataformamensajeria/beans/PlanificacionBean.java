@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -11,7 +12,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * @author Altran
  * 
  */
-public class PlanificacionBean implements Audit {
+public class PlanificacionBean implements Audit, Serializable {
+
+	private static final long serialVersionUID = -1274813465180160041L;
 
 	public PlanificacionBean() {
 		this.planificacionId = null;

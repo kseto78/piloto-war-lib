@@ -24,5 +24,5 @@ public interface IEnvioLotesMensajesService {
     
     String enviarLotesNotificacion(PeticionXMLBean peticionXML);
 
-
+    String enviarLotesWebPush(PeticionXMLBean peticionXML);
 }

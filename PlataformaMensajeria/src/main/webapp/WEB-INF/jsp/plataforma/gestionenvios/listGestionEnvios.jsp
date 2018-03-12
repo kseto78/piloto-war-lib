@@ -70,6 +70,7 @@ function makeRequest(){
 <sj:dialog  id="dialogEnviosSMS" title="DETALLE MENSAJE SMS" cssStyle="display:none" autoOpen="false"></sj:dialog>
 <sj:dialog  id="dialogEnviosNotificacionPush" title="DETALLE MENSAJE NOTIFICACION PUSH" cssStyle="display:none" autoOpen="false"></sj:dialog>
 <sj:dialog  id="dialogHistoricoEnvio" title="DETALLE DESTINATARIO" cssStyle="display:none" autoOpen="false"></sj:dialog>
+<sj:dialog  id="dialogMisim" title="DETALLE MISIM" cssStyle="display:none" autoOpen="false"></sj:dialog>
 				
         <div class="criteria">
 		<s:form id="frmBuscarGestionEnvios" method="POST" action="listGestionEnvios"
@@ -210,22 +211,19 @@ function makeRequest(){
 						value="%{gestionEnvioBean.codSIA}"/> 
                     </span>
            	      </p>
-           	      <p class="criteria">
-           	      	<span>
-                		<label style="width: 100px;" class="fieldText">Organismo:</label>
-						<s:textfield  name="gestionEnvioBean.codOrganismo" 
-						id="gestionEnvioBean.codOrganismo" 
-						theme="simple" cssClass="W120" 
-						value="%{gestionEnvioBean.codOrganismo}"/>     
-                    </span>
-                    <span>
-                    	<label style="width: 125px;" class="fieldText">Organismo pagador:</label>
-						<s:textfield  name="gestionEnvioBean.codOrganismoPagador" 
-						id="gestionEnvioBean.codOrganismoPagador" 
-						theme="simple" cssClass="W120" 
-						value="%{gestionEnvioBean.codOrganismoPagador}"/> 
-                    </span>
-           	      </p> 	
+           	      <div class="ui-widget" class ="ui-autocomplete-loading">
+           	      	<p class="criteria">
+           	      		<span>
+	                		<label style="width: 100px;" class="fieldText">Organismo:</label>
+							<s:textfield name="search"
+								value="%{gestionEnvioBean.codOrganismo}"
+								id="search" theme="simple"
+								labelposition="left" size="55" maxlength="255"/>
+						</span>
+					</p> 
+				</div>
+				
+           	      	
    <!-- ***************************** --><div class="hr"></div><!-- ********************************************** -->
                    <p class="criteria">
            	      	<span>
@@ -368,8 +366,8 @@ function makeRequest(){
 				<display:column property="aplicacion" titleKey="plataforma.gestionenvios.aplicacion" sortable="true"
 					headerClass="TH130 separator center" class="" />
 				<%-- entidad --%>
-				<display:column property="servicio" titleKey="plataforma.gestionenvios.servicio" sortable="true"
-					headerClass="TH110 separator center" class="" />
+				<display:column property="nombreServicioAction" titleKey="plataforma.gestionenvios.servicio" sortable="true"
+					headerClass="TH110 separator center" class="gestionEnviosColumn" media="html"  />
 				<%-- Id --%>
 				<display:column property="nombreLoteAction"  titleKey="plataforma.gestionenvios.loteenvio" 
 					sortable="true"	headerClass="TH130 separator center" class="gestionEnviosColumn"
@@ -385,7 +383,7 @@ function makeRequest(){
 					<display:column property="ultimoEnvioStr" titleKey="plataforma.gestionenvios.fecha" sortable="true"
 					headerClass="TH100 separator center" class="TH100 center" />
 					<display:column property="estado" titleKey="plataforma.gestionenvios.estado" sortable="true"
-					headerClass="TH120 separator center" class="" />
+					headerClass="TH120 separator center" class="center" />
 				<%
 						}else if (vistaEnv.equals("2")){
 				%>  
@@ -394,7 +392,7 @@ function makeRequest(){
 					<display:column property="ultimoEnvioStr" titleKey="plataforma.gestionenvios.fecha" sortable="true"
 					headerClass="TH100 separator center" class="TH100 center" />
 					<display:column property="estado" titleKey="plataforma.gestionenvios.estado" sortable="true"
-					headerClass="TH120 separator center" class="" />
+					headerClass="TH120 separator center" class="center" />
 				<%
 				} else { 
 				%> 
@@ -405,7 +403,7 @@ function makeRequest(){
 					<display:column property="ultimoEnvioStr" titleKey="plataforma.gestionenvios.fecha" sortable="true"
 					headerClass="TH100 separator center" class="TH100 center" />
 					<display:column property="estado" titleKey="plataforma.gestionenvios.estado" sortable="true"
-					headerClass="TH120 separator center" class="" />
+					headerClass="TH120 separator center" class="center" />
 					<display:column property="destinatarioAction"  titleKey="plataforma.gestionenvios.destinatario" 
 					sortable="true"	headerClass="TH160 separator center" class="gestionEnviosColumn"
 					media="html" />	
@@ -415,7 +413,11 @@ function makeRequest(){
 				%> 
 
 				<display:column property="gestionEnviosAction"  
-					headerClass="TH20 separator " class="" media="html" />					
+					headerClass="TH20 separator center" class="" media="html" />
+			<plataforma:securityadmin usuarioLogueado="true" showIfGranted="true">
+				<display:column property="verMisimAction"  
+					headerClass="TH35 separator center" class="" media="html" />
+			</plataforma:securityadmin>
 			</display:table>
 			<table>
 			<tfoot>
@@ -464,7 +466,10 @@ function makeRequest(){
                         	</script>
                             	<!-- <input type="button" class="button" value="Eliminar Seleccionados">-->
                             	<input type="submit"  id="anularSeleccionados" onclick="return setOp('A');" disabled="true" value="Anular Seleccionados" class="button"/>
-                            	&nbsp;<input type="submit"  id="reenviar" name="revisar" onclick="return setOp('R');" disabled="true" value="Reenviar" class="button"/>
+                            	&nbsp;
+                            	
+                            	<input type="submit"  id="reenviar" name="revisar" onclick="return setOp('R');" disabled="true" value="Reenviar" class="button"/>
+                            	
                             	<s:hidden name="operacionMsg" id="operacionMsg" value=""/>
                             </span>
 		                    <span class="rightSide">

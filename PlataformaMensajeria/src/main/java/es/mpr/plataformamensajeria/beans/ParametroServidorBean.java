@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -12,7 +13,10 @@ import com.map.j2ee.util.StringUtil;
  * @author Altran
  * 
  */
-public class ParametroServidorBean implements Audit {
+public class ParametroServidorBean implements Audit, Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	public static final int IP = 1;
 	public static final int USUARIO = 2;
 	public static final int PASSWORD = 3;
@@ -83,7 +87,6 @@ public class ParametroServidorBean implements Audit {
 
 	@Override
 	public String obtenerXML() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

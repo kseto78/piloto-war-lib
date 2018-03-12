@@ -7,9 +7,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -25,6 +28,8 @@ public class TblOrganismosServicio implements java.io.Serializable {
 	private static final long serialVersionUID = -7983198033790905650L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ORGANISMOSSERVICIOID_SEC")
+    @SequenceGenerator(name="ORGANISMOSSERVICIOID_SEC", sequenceName="ORGANISMOSSERVICIOID_SEC", allocationSize=1)
 	@Column(name = "SERVICIOORGANISMOID", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long servicioorganismoid;
 

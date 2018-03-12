@@ -2,7 +2,10 @@ package es.minhap.misim.bus.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 // Generated 09-sep-2015 11:41:17 by Hibernate Tools 3.4.0.CR1
@@ -18,6 +21,8 @@ public class ParametrosProveedor implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="generator")
+	@SequenceGenerator(name="generator",sequenceName="SEQ_PARAMETROSPROVEEDOR")
 	@Column(name = "ID_PARAMETROSPROVEEDOR", unique = true, nullable = false, precision = 20, scale = 0)
 	private Long idParametrosProveedor;
 	
@@ -27,10 +32,10 @@ public class ParametrosProveedor implements java.io.Serializable {
 	@Column(name = "PARAMETRO", nullable = false, length = 40)
 	private String parametro;
 	
-	@Column(name = "VALOR", nullable = false, length = 40)
+	@Column(name = "VALOR", length = 40)
 	private String valor;
 	
-	@Column(name = "VARIABLE", nullable = false, length = 40)
+	@Column(name = "VARIABLE", length = 40)
 	private String variable;
 	
 	

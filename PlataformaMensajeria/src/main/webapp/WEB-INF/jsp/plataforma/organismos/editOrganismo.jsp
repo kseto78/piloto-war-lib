@@ -74,28 +74,50 @@
 				<label>Datos Generales</label>
 			</div>
 			<div class="editContent">
-				<p class="criteria">
-					<s:hidden theme="simple" id="organismo.organismoId"
+				<s:hidden theme="simple" id="organismo.organismoId"
 						name="organismo.organismoId" value="%{organismo.organismoId}" />
-					<s:hidden theme="simple" id="idOrganismo" name="idOrganismo"
+				<s:hidden theme="simple" id="idOrganismo" name="idOrganismo"
 						value="%{organismo.organismoId}" />
-					<label style="width: 120px;" class="fieldText">Código Organismo (*):</label>
-					<s:textfield name="organismo.dir3" value="%{organismo.dir3}"
-						id="organismo.dir3" theme="simple" labelposition="left" size="70"
-						maxlength="255" cssClass="input_tablas_registro" />
-				</p>
+				<s:if test="%{organismo.manual}">
+					<p class="criteria">
+						<label style="width: 120px;" class="fieldText">Código Organismo (*):</label>
+						<s:textfield name="organismo.dir3" value="%{organismo.dir3}" 
+							id="organismo.dir3" theme="simple" labelposition="left" size="70"
+							maxlength="255" cssClass="input_tablas_registro" />
+					</p>
+					<p class="criteria">
+						<label style="width: 120px;" class="fieldText">Nombre (*):</label>
+						<s:textfield name="organismo.nombre" value="%{organismo.nombre}" 
+							id="organismo.nombre" theme="simple" labelposition="left"
+							size="70" maxlength="255" cssClass="input_tablas_registro" />
+					</p>
+					<p class="criteria">
+						<label style="width: 120px;" class="fieldText">Descripción:</label>
+						<s:textarea name="organismo.descripcion" id="organismo.descripcion" 
+							theme="simple" rows="6" cols="70" value="%{organismo.descripcion}">
+						</s:textarea>
+					</p>
+				</s:if>	
+				<s:else>
 				<p class="criteria">
-					<label style="width: 120px;" class="fieldText">Nombre (*):</label>
-					<s:textfield name="organismo.nombre" value="%{organismo.nombre}"
-						id="organismo.nombre" theme="simple" labelposition="left"
-						size="70" maxlength="255" cssClass="input_tablas_registro" />
-				</p>
-				<p class="criteria">
-					<label style="width: 120px;" class="fieldText">Descripción:</label>
-					<s:textarea name="organismo.descripcion" id="organismo.descripcion"
-						theme="simple" rows="6" cols="70" value="%{organismo.descripcion}">
-					</s:textarea>
-				</p>
+						<label style="width: 120px;" class="fieldText">Código Organismo (*):</label>
+						<s:textfield name="organismo.dir3" value="%{organismo.dir3}" disabled="true"
+							id="organismo.dir3" theme="simple" labelposition="left" size="70"
+							maxlength="255" cssClass="input_tablas_registro" />
+					</p>
+					<p class="criteria">
+						<label style="width: 120px;" class="fieldText">Nombre (*):</label>
+						<s:textfield name="organismo.nombre" value="%{organismo.nombre}" disabled="true"
+							id="organismo.nombre" theme="simple" labelposition="left"
+							size="70" maxlength="255" cssClass="input_tablas_registro" />
+					</p>
+					<p class="criteria">
+						<label style="width: 120px;" class="fieldText">Descripción:</label>
+						<s:textarea name="organismo.descripcion" id="organismo.descripcion" disabled="true"
+							theme="simple" rows="6" cols="70" value="%{organismo.descripcion}">
+						</s:textarea>
+					</p>
+				</s:else>
 				<p class="criteria">
 					<label style="width: 120px;" class="fieldText">Activo:</label>
 					<s:checkbox theme="simple" id="organismo.isActivo"
@@ -661,6 +683,10 @@
 						Creación:</label> <strong><s:label theme="simple"
 							id="organismo.fechacreacion" name="organismo.fechacreacion"
 							value="%{organismo.fechacreacion}" /></strong>
+				</span> <span> <label style="width: 150px;" class="fieldText">Fecha
+						Activo:</label> <strong><s:label theme="simple"
+							id="organismo.fechaActivo" name="organismo.fechaActivo"
+							value="%{organismo.fechaActivo}" /></strong>
 				</span>
 			</p>
 			<p class="criteria">

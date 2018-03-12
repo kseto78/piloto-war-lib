@@ -1,7 +1,6 @@
 package es.minhap.plataformamensajeria.iop.beans.getAvisosUsuario;
 
 import java.io.StringWriter;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,8 +12,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import es.minhap.plataformamensajeria.iop.beans.RespuestaSAMLResponse;
-import es.minhap.plataformamensajeria.iop.beans.respuestaSeguimiento.SeguimientoMensajes;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 /**

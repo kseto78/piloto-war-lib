@@ -19,8 +19,6 @@ import es.minhap.sim.query.TblDestinatariosMensHistQuery;
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface TblDestinatariosMensHistDAO
-		extends
-		EntityDAO<TblDestinatariosMensHist, Long, TblDestinatariosMensHistQuery> {
+public interface TblDestinatariosMensHistDAO extends EntityDAO<TblDestinatariosMensHist,Long,TblDestinatariosMensHistQuery> {
 
 }

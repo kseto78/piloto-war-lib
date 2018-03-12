@@ -7,9 +7,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -37,6 +40,8 @@ public class Endpoint implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="generator")
+	@SequenceGenerator(name="generator",sequenceName="SEQ_ENDPOINT")
 	@Column(name = "ID_ENDPOINT", unique = true, nullable = false, precision = 20, scale = 0)
 	public Long getIdEndpoint() {
 		return this.idEndpoint;
@@ -46,7 +51,7 @@ public class Endpoint implements java.io.Serializable {
 		this.idEndpoint = idEndpoint;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_COMUNICACION", nullable = false)
 	public Comunicacion getComunicacion() {
 		return this.comunicacion;

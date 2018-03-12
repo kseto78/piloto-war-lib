@@ -179,6 +179,16 @@ public class TblUsuariosAplicacionesQuery extends AbstractHibernateQueryEntity<T
     private boolean leftJoinTblUsuarios = false;
 
     /**
+   	 * Establece el máximo de resultados
+   	 */
+   	private Integer maxResultados;
+   	
+   	/**
+   	 * Establece el primer resultados
+   	 */
+   	private Integer primerResultado;
+    
+    /**
      * Constructor default
      */
     public TblUsuariosAplicacionesQuery() {
@@ -720,6 +730,14 @@ public class TblUsuariosAplicacionesQuery extends AbstractHibernateQueryEntity<T
         if (isCreadoporIsNotNull()) {
             criteria.add(Restrictions.isNotNull(CREADOPOR));
         }
+        
+        if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -762,5 +780,33 @@ public class TblUsuariosAplicacionesQuery extends AbstractHibernateQueryEntity<T
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+    
+    /**
+   	 * @return the maxResultados
+   	 */
+   	public Integer getMaxResultados() {
+   		return maxResultados;
+   	}
+
+   	/**
+   	 * @param maxResultados the maxResultados to set
+   	 */
+   	public void setMaxResultados(Integer maxResultados) {
+   		this.maxResultados = maxResultados;
+   	}
+
+   	/**
+   	 * @return the primerResultado
+   	 */
+   	public Integer getPrimerResultado() {
+   		return primerResultado;
+   	}
+
+   	/**
+   	 * @param primerResultado the primerResultado to set
+   	 */
+   	public void setPrimerResultado(Integer primerResultado) {
+   		this.primerResultado = primerResultado;
+   	}
 }
  

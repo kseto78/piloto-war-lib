@@ -14,14 +14,11 @@ package es.minhap.sim.dao;
 
 import es.minhap.common.dao.EntityDAO;
 import es.minhap.sim.model.TblServidoresOrganismos;
-import es.minhap.sim.model.TblServidoresOrganismosId;
 import es.minhap.sim.query.TblServidoresOrganismosQuery;
 
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface TblServidoresOrganismosDAO
-		extends
-		EntityDAO<TblServidoresOrganismos, TblServidoresOrganismosId, TblServidoresOrganismosQuery> {
+public interface TblServidoresOrganismosDAO extends EntityDAO<TblServidoresOrganismos,Long,TblServidoresOrganismosQuery> {
 
 }

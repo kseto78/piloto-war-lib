@@ -63,6 +63,11 @@ public class TblUsuariosQuery extends AbstractHibernateQueryEntity<TblUsuarios> 
      * Lista de valores del campo usuarioid para busquedas tipo IN
      */
     private List<Long> usuarioidIn = new ArrayList<Long>(0);
+    
+    /**
+     * Lista de valores del campo usuarioid para busquedas tipo NOT IN
+     */
+    private List<Long> usuarioidNotIn = new ArrayList<Long>(0);
 
     /**
      * Valor de busqueda de campo nombre
@@ -306,6 +311,20 @@ public class TblUsuariosQuery extends AbstractHibernateQueryEntity<TblUsuarios> 
      */
     public void addUsuarioidIn(Long usuarioid) {
         this.usuarioidIn.add(usuarioid);
+    }
+    
+    /**
+     * @return List<Long>.
+     */
+    public List<Long> getUsuarioidNotIn() {
+        return this.usuarioidNotIn;
+    }
+
+    /**
+     * @param usuarioid Valor a agregar.
+     */
+    public void addUsuarioidNotIn(Long usuarioid) {
+        this.usuarioidNotIn.add(usuarioid);
     }
 
     /**
@@ -1029,6 +1048,10 @@ public class TblUsuariosQuery extends AbstractHibernateQueryEntity<TblUsuarios> 
 
         if (getUsuarioidIn().size() > 0) {
             criteria.add(Restrictions.in(USUARIOID, getUsuarioidIn()));
+        }
+        
+        if (getUsuarioidNotIn().size() > 0) {
+            criteria.add(Restrictions.not(Restrictions.in(USUARIOID, getUsuarioidNotIn())));
         }
 
         if (getNombre() != null) {

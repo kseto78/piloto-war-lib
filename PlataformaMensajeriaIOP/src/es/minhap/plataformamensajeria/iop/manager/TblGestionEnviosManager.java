@@ -1,5 +1,7 @@
 package es.minhap.plataformamensajeria.iop.manager;
 
+import java.util.List;
+
 import es.minhap.sim.model.TblGestionEnvios;
 import es.minhap.sim.query.TblGestionEnviosQuery;
 
@@ -28,5 +30,22 @@ public interface TblGestionEnviosManager {
 	 */
 	TblGestionEnvios getGestionEnvios(TblGestionEnviosQuery query);
 
+	List<TblGestionEnvios> getEnviosLote(String idLote);
+	
+		
+	/**
+	 * Elimina Gestion envios
+	 * 
+	 * @param mensajeid
+	 */
+	void delete(Long mensajeid);
+
+	/**
+	 * obtiene Gestion envio por id
+	 * 
+	 * @param mensajeid
+	 * @return
+	 */
+	TblGestionEnvios getById(Long mensajeid);
 
 }

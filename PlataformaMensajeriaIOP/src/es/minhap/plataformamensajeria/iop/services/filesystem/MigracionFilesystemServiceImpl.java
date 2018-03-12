@@ -1,6 +1,5 @@
 package es.minhap.plataformamensajeria.iop.services.filesystem;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -79,8 +78,6 @@ public class MigracionFilesystemServiceImpl implements IMigracionFilesystemServi
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String tipoMensajeEmail = ps.getMessage("constantes.TIPO_MENSAJE_EMAIL", null);
 		Integer maxLimitCaracterer = Integer.parseInt(ps.getMessage("filesystem.maxTamMensajeBBDD", null));
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-
 		try {
 			Integer count = filesystemManager.countMensajesMigracion(idMensaje, fechaInicio, fechaFin, historicos);
 			int indice = 0;

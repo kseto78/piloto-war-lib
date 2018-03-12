@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import es.minhap.common.entity.TextComparator;
@@ -71,6 +72,11 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
      * Lista de valores del campo servidorid para busquedas tipo IN
      */
     private List<Long> servidoridIn = new ArrayList<Long>(0);
+    
+    /**
+     * Lista de valores del campo servidorid para busquedas tipo NOT IN
+     */
+    private List<Long> servidoridNotIn = new ArrayList<Long>(0);
 
     /**
      * Valor de busqueda de campo nombre
@@ -447,6 +453,17 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
      */
     private boolean metodoconsultaIsNotNull = false;
 
+    
+    /**
+	 * Establece el máximo de resultados
+	 */
+	private Integer maxResultados;
+	
+	/**
+	 * Establece el primer resultados
+	 */
+	private Integer primerResultado;
+	
     /**
      * Constructor default
      */
@@ -489,6 +506,20 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
      */
     public void addServidoridIn(Long servidorid) {
         this.servidoridIn.add(servidorid);
+    }
+    
+    /**
+     * @return List<Long>.
+     */
+    public List<Long> getServidoridNotIn() {
+        return this.servidoridNotIn;
+    }
+
+    /**
+     * @param servidorid Valor a agregar.
+     */
+    public void addServidoridNotIn(Long servidorid) {
+        this.servidoridNotIn.add(servidorid);
     }
 
     /**
@@ -1831,6 +1862,10 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
         if (getServidoridIn().size() > 0) {
             criteria.add(Restrictions.in(SERVIDORID, getServidoridIn()));
         }
+        
+        if (getServidoridNotIn().size() > 0) {
+            criteria.add(Restrictions.not(Restrictions.in(SERVIDORID, getServidoridNotIn())));
+        }
 
         if (getNombre() != null) {
             if (getNombreComparator() == TextComparator.EQUALS) {
@@ -2086,7 +2121,10 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
         }
 
         if (isEliminadoIsNull()) {
-            criteria.add(Restrictions.isNull(ELIMINADO));
+//        	criteria.add(Restrictions.isNull(ELIMINADO));
+        	Criterion c1 = Restrictions.isNull(ELIMINADO);
+        	Criterion c2 = Restrictions.eq("eliminado", "N");
+            criteria.add(Restrictions.or(c1,c2));
         }
 
         if (isEliminadoIsNotNull()) {
@@ -2201,6 +2239,14 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
         if (isMetodoconsultaIsNotNull()) {
             criteria.add(Restrictions.isNotNull(METODOCONSULTA));
         }
+        if(null != maxResultados && maxResultados > 0){
+			criteria.setMaxResults(maxResultados);
+		}
+		
+		if (null != primerResultado && primerResultado > 0){
+			criteria.setFirstResult(primerResultado);
+		}
+        
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
@@ -2243,5 +2289,32 @@ public class TblServidoresQuery extends AbstractHibernateQueryEntity<TblServidor
     private String normalizeParam(String param){
     	return Normalizer.normalize(param, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+    /**
+	 * @return the maxResultados
+	 */
+	public Integer getMaxResultados() {
+		return maxResultados;
+	}
+
+	/**
+	 * @param maxResultados the maxResultados to set
+	 */
+	public void setMaxResultados(Integer maxResultados) {
+		this.maxResultados = maxResultados;
+	}
+
+	/**
+	 * @return the primerResultado
+	 */
+	public Integer getPrimerResultado() {
+		return primerResultado;
+	}
+
+	/**
+	 * @param primerResultado the primerResultado to set
+	 */
+	public void setPrimerResultado(Integer primerResultado) {
+		this.primerResultado = primerResultado;
+	}
 }
  
