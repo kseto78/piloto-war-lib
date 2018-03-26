@@ -204,18 +204,25 @@ public class InvocarRecepcion implements Callable {
 								
 								String respuestaAEAT = "";
 								if (null != soapMessage){
-								 respuestaAEAT = pharseMessageToString(soapMessage);
-								 if (!respuestaAEAT.contains(ok)){//error si son al invocar, auditar, .... Si es en InvocarEnvioRecepcionAEAT se lanza desde esa clase
+									respuestaAEAT = pharseMessageToString(soapMessage);
+									
+									if (!respuestaAEAT.contains("https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd")){//error si son al invocar, auditar, .... Si es en InvocarEnvioRecepcionAEAT se lanza desde esa clase
 										Document document = soapMessage.getSOAPBody().extractContentAsDocument();
-										NodeList nodoRespuesta = document.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "StatusText");//("ns2:Respuesta");
-										NodeList nodoRespuesta2 = document.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Details");
+										NodeList nodoRespuesta = document.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Faultcode");//("ns2:Respuesta");
+										NodeList nodoRespuesta2 = document.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Faultstring");
+										String xmlRespuesta = nodoRespuesta.item(0).getFirstChild().getNodeValue();
+										String xmlRespuesta2 = (null != nodoRespuesta2.item(0) )? nodoRespuesta2.item(0).getFirstChild().getNodeValue() : "";
+										LOG.error(errorClave + xmlRespuesta + " " +xmlRespuesta2);
+									}else{
+										Document document = soapMessage.getSOAPBody().extractContentAsDocument();
+										NodeList nodoRespuesta = document.getElementsByTagNameNS("https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd", "StatusText");//("ns2:Respuesta");
+										NodeList nodoRespuesta2 = document.getElementsByTagNameNS("https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd", "Details");
 										String xmlRespuesta = nodoRespuesta.item(0).getFirstChild().getNodeValue();
 										String xmlRespuesta2 = (null != nodoRespuesta2.item(0) )? nodoRespuesta2.item(0).getFirstChild().getNodeValue() : "";
 										
-										LOG.error(errorClave + xmlRespuesta + " " +xmlRespuesta2);
+										LOG.info(xmlRespuesta + " " +xmlRespuesta2);
 									}
-								}else{
-									LOG.error(errorClave + "Error notificar estado AEAT " );
+									
 								}
 								
 							
@@ -376,7 +383,7 @@ public class InvocarRecepcion implements Callable {
 		try{
 			ResponseStatusType response = new ResponseStatusType();
 			
-			response.setStatusCode("0403");
+			response.setStatusCode("0999");
 			response.setStatusText("KO");
 			response.setDetails(descripcion);
 	

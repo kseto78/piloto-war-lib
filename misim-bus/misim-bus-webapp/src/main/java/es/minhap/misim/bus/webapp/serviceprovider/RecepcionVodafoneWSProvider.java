@@ -122,7 +122,7 @@ public class RecepcionVodafoneWSProvider extends WSProvider {
 		ResultadoOp response = new ResultadoOp();
 		
 		response.setEstado("NOK");
-		response.setCodigo("0403");
+		response.setCodigo("0999");
 		response.setDetalle("Error al obtener el contenido XML del mensaje SOAP");
 		
 		return XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(response, Charset.forName("UTF-8"), ResultadoOp.class));

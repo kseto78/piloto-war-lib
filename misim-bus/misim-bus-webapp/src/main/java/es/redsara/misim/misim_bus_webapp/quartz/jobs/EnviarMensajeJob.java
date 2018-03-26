@@ -74,8 +74,8 @@ public class EnviarMensajeJob {
 							}
 							if(received){
 								leido=true;
+								mensajesLeidos++;
 							}
-							mensajesLeidos++;
 						}
 					}
 				}

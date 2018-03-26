@@ -71,25 +71,66 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Operacion invocada #[payload]" />
 		
 		
-		
-		<!-- ADAPTAR PROTOCOLO -->		
-		<choice doc:name="Adaptar la respuesta"> 
-			<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
-				<processor-chain>	
-					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
-								
-					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Adaptacion de la respuesta ACUSE RECIBO AEAT" />
-					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
-					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia AEAT" />
-					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+		<!-- COMPROBAR SOAP_FAULT -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comprobar SOAP Fault" />
+		<choice doc:name="Respuesta o SOAP Fault">
+			<when expression="#[message.outboundProperties['${SOAP_FAULT}']]">
+				<processor-chain>
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - SOAP Fault recibido" />
+					<choice doc:name="Comprobar la transformacion de la respuesta"> 
+						<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
+							<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_SOAP_FAULT}']]" doc:name="Hoja XSL para transformar el error SOAP" />
+						</when>
+						<otherwise>
+							<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - No se requiere de adaptacion de la peticion" />
+						</otherwise>
+					</choice>
 				</processor-chain>
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - No se requiere de adaptacion de la respuesta" />
+				<processor-chain>
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Respuesta recibida" />
+					<choice doc:name="Comprobar la transformacion de la respuesta"> 
+						<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
+							<processor-chain>	
+								<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
+								<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Adaptacion de la respuesta ACUSE RECIBO AEAT" />
+								<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+								<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia AEAT" />
+								<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+							</processor-chain>
+						</when>
+						<otherwise>
+							<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - No se requiere de adaptacion de la respuesta" />
+						</otherwise>
+					</choice>
+
+				</processor-chain>
 			</otherwise>
 		</choice>
-				
+		
 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
+		
+		
+		
+		<!-- ADAPTAR PROTOCOLO -->		
+<!-- 		<choice doc:name="Adaptar la respuesta">  -->
+<!-- 			<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']"> -->
+<!-- 				<processor-chain>	 -->
+<!-- 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	 -->
+								
+<!-- 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Adaptacion de la respuesta ACUSE RECIBO AEAT" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
+<!-- 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia AEAT" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
+<!-- 				</processor-chain> -->
+<!-- 			</when> -->
+<!-- 			<otherwise> -->
+<!-- 				<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - No se requiere de adaptacion de la respuesta" /> -->
+<!-- 			</otherwise> -->
+<!-- 		</choice> -->
+				
+<!-- 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" /> -->
 		
 		<!-- ENCRIPTACION -->
 		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Comprobar si se requiere encriptacion para la auditoria" />

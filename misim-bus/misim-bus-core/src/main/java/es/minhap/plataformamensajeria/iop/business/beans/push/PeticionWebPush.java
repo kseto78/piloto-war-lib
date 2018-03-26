@@ -1,10 +1,14 @@
 
 package es.minhap.plataformamensajeria.iop.business.beans.push;
 
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,6 +17,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
 
 /**
@@ -47,30 +53,27 @@ import org.slf4j.LoggerFactory;
     "proveedor",
     "mensajeId",
     "idLote",
-    "notificacionSilenciosa",
     "datosEspecificos"
 })
-@XmlRootElement(name = "Peticion")
-public class PeticionPush {
+@XmlRootElement(name = "Peticion", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+public class PeticionWebPush {
 
-    @XmlElement(name = "Usuario", required = true)
+    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String usuario;
-    @XmlElement(name = "Password", required = true)
+    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String password;
-    @XmlElement(name = "Producto", required = true)
+    @XmlElement(name = "Producto", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String producto;
-    @XmlElement(name = "Proveedor", required = true)
+    @XmlElement(name = "Proveedor", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String proveedor;
-    @XmlElement(name = "MensajeId", required = true)
+    @XmlElement(name = "MensajeId", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String mensajeId;
-    @XmlElement(name = "idLote", required = false)
+    @XmlElement(name = "idLote", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String idLote;
-    @XmlElement(name = "DatosEspecificos")
-    protected DatosEspecificosPush datosEspecificos;
-	@XmlElement(name = "NotificacionSilenciosa", required = false)
-	public Boolean notificacionSilenciosa;
+    @XmlElement(name = "DatosEspecificos", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected DatosEspecificosWebPush datosEspecificos;
     
-    private static Logger LOG = LoggerFactory.getLogger(PeticionPush.class);
+    private static Logger LOG = LoggerFactory.getLogger(PeticionWebPush.class);
 
     /**
      * Obtiene el valor de la propiedad usuario.
@@ -200,7 +203,7 @@ public class PeticionPush {
      *     {@link DatosEspecifico }
      *     
      */
-    public DatosEspecificosPush getDatosEspecificos() {
+    public DatosEspecificosWebPush getDatosEspecificos() {
         return datosEspecificos;
     }
 
@@ -212,7 +215,7 @@ public class PeticionPush {
      *     {@link DatosEspecificosPush }
      *     
      */
-    public void setDatosEspecificos(DatosEspecificosPush value) {
+    public void setDatosEspecificos(DatosEspecificosWebPush value) {
         this.datosEspecificos = value;
     }
     
@@ -224,20 +227,6 @@ public class PeticionPush {
 		this.idLote = idLote;
 	}
 
-	/**
-	 * @return the notificacionSilenciosa
-	 */
-	public Boolean getNotificacionSilenciosa() {
-		return notificacionSilenciosa;
-	}
-
-	/**
-	 * @param notificacionSilenciosa the notificacionSilenciosa to set
-	 */
-	public void setNotificacionSilenciosa(Boolean notificacionSilenciosa) {
-		this.notificacionSilenciosa = notificacionSilenciosa;
-	}
-
 	@Override
 	public String toString() {
 		return "Peticion [usuario=" + usuario + ", password=" + password + ", producto=" + producto + ", proveedor=" + proveedor + ", mensajeId=" + mensajeId + ", datosEspecificos=" + datosEspecificos + "]";
@@ -245,10 +234,10 @@ public class PeticionPush {
 	
 	public String toXML() {
 
-		PeticionPush pet = this;
+		PeticionWebPush pet = this;
 
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(PeticionPush.class);
+			JAXBContext jaxbContext = JAXBContext.newInstance(PeticionWebPush.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -263,6 +252,41 @@ public class PeticionPush {
 			return "";
 		}
 
+	}
+	
+	public void loadObjectFromXML(String xmlPeticion)
+			throws PlataformaBusinessException {
+
+		JAXBContext jaxbContext;
+		try {
+			jaxbContext = JAXBContext.newInstance(PeticionWebPush.class);
+
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+			StringReader reader = new StringReader(xmlPeticion);
+			PeticionWebPush peticion = (PeticionWebPush) unmarshaller
+					.unmarshal(reader);
+
+			org.apache.commons.beanutils.BeanUtils.copyProperties(this,
+					peticion);
+
+			
+		} catch (JAXBException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xmlPeticion);
+		} catch (IllegalAccessException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xmlPeticion);
+		} catch (InvocationTargetException e) {
+			throw new PlataformaBusinessException(
+					"Error procesando el XML.\nCausa: " + e.getCause()
+							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ xmlPeticion);
+		}
 	}
 
 }

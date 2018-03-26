@@ -43,6 +43,7 @@ import org.xml.sax.SAXException;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensaferia.iop.beans.envioPremium.RespuestaNotificacionEstadoSMS;
+import es.minhap.plataformamensajeria.iop.beans.enviosGISS.Fault;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 //import es.minhap.misim.components.envio.EnvioEmailXMLBean;
@@ -132,7 +133,6 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 				SoapPayload<?> soapPayload = null;
 		    	// La respuesta no es un SOAP Fault
 	        	soapPayload = new SoapPayload<Respuesta>();
-				eventContext.getMessage().setOutboundProperty("SOAPFault", false);
 				soapPayload.setSoapAction(initPayload.getSoapAction());
 				soapPayload.setSoapMessage(soapDOM);
 				eventContext.getMessage().setPayload(soapPayload);
@@ -205,9 +205,9 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 	    
 	    try{
 	    	
-	        xmlText = sendMessageAEAT(data,endpointUrl);
+	        xmlText = sendMessageAEAT(data,endpointUrl, eventContext);
 	        
-	    }catch( SOAPFaultException e ){
+	    }catch(SOAPFaultException e){
 	    	establecerPropertyError(eventContext, true);
 	    	LOG.error("SOAPFaultException", e);
 	        // Processing for acquiring the SOAP fault
@@ -220,7 +220,7 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 			} catch (Exception e1) {
 				LOG.error("Error procesando SOAPFaultException", e1);
 			}
-	    }catch( SOAPException e ){
+	    }catch(SOAPException e){
 	    	establecerPropertyError(eventContext, true);
 	    	LOG.error("SOAPException", e);
 	    	throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
@@ -256,15 +256,29 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 		xml = new String(out.toByteArray());
 		return xml;
 	}
+		
+	private SOAPMessage generateFaultAcuse(String url, MuleEventContext eventContext) throws Exception {
+		SOAPMessage response = null;
+		Fault respuestaFault = new Fault();
+		respuestaFault.setFaultcode("0999");
+		respuestaFault.setFaultstring("Se ha producido un error al invocar el endpoint: "+url);
+		response = XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(respuestaFault, Charset.forName("UTF-8"), Fault.class));
+		return response;
+	}
 	
-	private String sendMessageAEAT(String message, String url) throws Throwable {
+	private String sendMessageAEAT(String message, String url, MuleEventContext eventContext) throws Throwable {
         MuleClient client = new DefaultLocalMuleClient(muleContext);
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("url", url.substring(8));
         MuleMessage retVal = client.send(innerUrl, message, props);
-        if (retVal.getExceptionPayload() != null) {
-        	throw retVal.getExceptionPayload().getException();
+        if (retVal.getExceptionPayload() != null &&  retVal.getExceptionPayload().getException()!=null) {
+        	SOAPMessage soapMessage = generateFaultAcuse(url, eventContext);
+        	String xmlFault = pharseMessageToString(soapMessage);
+        	eventContext.getMessage().setOutboundProperty("SOAPFault", true);
+        	return xmlFault;
         }
+        
+        eventContext.getMessage().setOutboundProperty("SOAPFault", false);
         return retVal.getPayloadAsString();
 	}
 

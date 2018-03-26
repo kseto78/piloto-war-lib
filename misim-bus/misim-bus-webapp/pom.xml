@@ -58,6 +58,12 @@
 <!-- 				</exclusion> -->
 			</exclusions>
 		</dependency>
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>es.clave</groupId> -->
+<!-- 			<artifactId>SamlEngine</artifactId> -->
+<!-- 			<version>1.4.3</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Mule Dependencies -->
 		<dependency>

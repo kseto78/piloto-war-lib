@@ -29,7 +29,8 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 	    "cabecera",
 	    "cuerpo",
 	    "icon",
-	    "sound"
+	    "sound",
+	    "notificacionSilenciosa"
 	    })	
 
 @XmlRootElement(name="NotificacionDataRequest", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
@@ -74,6 +75,9 @@ public class NotificacionDataRequest {
 	
 	@XmlElement(name = "Sound", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
 	public String sound;
+	
+    @XmlElement(name = "NotificacionSilenciosa", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected Boolean notificacionSilenciosa;    
 
 	public String getgCMApiKey() {
 		return gCMApiKey;
@@ -157,7 +161,7 @@ public class NotificacionDataRequest {
 
 	@Override
 	public String toString() {
-		return "NotificacionDataRequest [gCMApiKey=" + gCMApiKey + ", rutaCertificadoAPNS=" + rutaCertificadoAPNS + ", passwordCertificadoAPNS=" + passwordCertificadoAPNS + ", token=" + token + ", url=" + url + ", puertoUrl=" + puertoUrl + ", urlFeedback=" + urlFeedback + ", badge=" + badge + ", cabecera=" + cabecera + ", cuerpo=" + cuerpo + "]";
+		return "NotificacionDataRequest [gCMApiKey=" + gCMApiKey + ", rutaCertificadoAPNS=" + rutaCertificadoAPNS + ", passwordCertificadoAPNS=" + passwordCertificadoAPNS + ", token=" + token + ", url=" + url + ", puertoUrl=" + puertoUrl + ", urlFeedback=" + urlFeedback + ", badge=" + badge + ", cabecera=" + cabecera + ", cuerpo=" + cuerpo + ", notificacionSilenciosa=" + notificacionSilenciosa + "]";
 	}
 	
 	public String getPuertoUrlFeedback() {
@@ -183,8 +187,21 @@ public class NotificacionDataRequest {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
-	
+
+	/**
+	 * @return the notificacionSilenciosa
+	 */
+	public Boolean getNotificacionSilenciosa() {
+		return notificacionSilenciosa;
+	}
+
+	/**
+	 * @param notificacionSilenciosa the notificacionSilenciosa to set
+	 */
+	public void setNotificacionSilenciosa(Boolean notificacionSilenciosa) {
+		this.notificacionSilenciosa = notificacionSilenciosa;
+	}
+
 	public String toXML() throws PlataformaBusinessException {
 		
 		NotificacionDataRequest peticion = this;

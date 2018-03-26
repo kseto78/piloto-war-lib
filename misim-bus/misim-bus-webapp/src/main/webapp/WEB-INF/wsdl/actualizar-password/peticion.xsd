@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/peticion"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/peticion"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<element name="ActualizarPasswordPeticion">
+		<complexType>
+			<sequence>
+				<element name="Usuario" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="Password" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="Password_New" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				
+			</sequence>
+		</complexType>
+	</element>
+	
+</schema>

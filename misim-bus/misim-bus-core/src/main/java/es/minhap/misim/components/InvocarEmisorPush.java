@@ -16,6 +16,7 @@ import javax.xml.bind.Unmarshaller;
 import misim.bus.common.bean.SoapPayload;
 import misim.bus.common.util.XMLUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
@@ -167,10 +168,20 @@ public class InvocarEmisorPush implements Callable {
 	private NotificacionDataRequest leerParametros(Document docOriginal) throws Exception {
 
 		NodeList nodeList = docOriginal.getElementsByTagName("NotificacionDataRequest");
-
+		NodeList nodeListNotificacion = docOriginal.getElementsByTagName("NotificacionSilenciosa");
+		
 		JAXBContext jc = JAXBContext.newInstance(NotificacionDataRequest.class);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		return (NotificacionDataRequest) unmarshaller.unmarshal((Node) nodeList.item(0));
+		
+		NotificacionDataRequest notificacionRequest = (NotificacionDataRequest) unmarshaller.unmarshal((Node) nodeList.item(0));
+		
+		if (nodeListNotificacion != null && nodeListNotificacion.item(0) != null 
+				&& nodeListNotificacion.item(0).getFirstChild() != null 
+				&& !StringUtils.isEmpty(nodeListNotificacion.item(0).getFirstChild().getTextContent())) {
+			notificacionRequest.setNotificacionSilenciosa(Boolean.valueOf(nodeListNotificacion.item(0).getFirstChild().getTextContent()));
+		}
+		
+		return notificacionRequest;
 
 	}
 
@@ -189,7 +200,8 @@ public class InvocarEmisorPush implements Callable {
 				GMCSendMessage sendToGoogle = new GMCSendMessage();
 				respuesta = sendToGoogle.enviarGoogle(notificacion.getgCMApiKey(), notificacion.getToken(),
 						notificacion.getUrl(), notificacion.getBadge(), notificacion.getCabecera(),
-						notificacion.getCuerpo(), notificacion.getSound(), notificacion.getIcon(), idMensaje);
+					notificacion.getCuerpo(), notificacion.getSound(), notificacion.getIcon(), idMensaje);
+//				respuesta = "{\"multicast_id\":6133432243628604373,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}";
 				LOG.info("respuesta de google ->" + respuesta);
 				Integer mensajesfallidos = Integer.parseInt(respuesta.substring(respuesta.indexOf("\"failure\":") + 10,
 						respuesta.indexOf("\"canonical_ids\":") - 1));
@@ -198,7 +210,7 @@ public class InvocarEmisorPush implements Callable {
 						: null;
 				String results = (!jsonObject.isNull("results")) ? jsonObject.getString("results") : null;
 				if (mensajesfallidos > 0) {
-					respuesta = "ERROR,Token no valido";
+					respuesta = "Error: Token no válido";
 					statusCode = KO_RESPONSE;
 				} else {
 					statusCode = OK_RESPONSE;
@@ -206,7 +218,7 @@ public class InvocarEmisorPush implements Callable {
 
 				if ((null != canonicalIds && "1".equals(canonicalIds))
 						|| (null != results && results.contains("error"))) {
-					respuesta = "ERROR,Token no valido";
+					respuesta = "Error: Token no válido";
 					statusCode = KO_RESPONSE;
 
 					registroUsuarioPushImpl.eliminarUsuario(notificacion.getToken().get(0));
@@ -254,25 +266,23 @@ public class InvocarEmisorPush implements Callable {
 							.getCabecera();
 					String body = (!jsonObject.isNull("bodyMessage")) ? jsonObject.getString("bodyMessage") : "";
 
-					String alert = "{\"aps\": {\"alert\":{\"title\":\"" + title + "\",\"body\":\"" + body
-							+ "\",\"action-loc-key\":\"PLAY\"}" + ", \"badge\": \"" + badge + "\", \"sound\": \""
-							+ sound + "\"},\"content\":" + data + "}";
-
-					payload = new javapns.notification.PushNotificationPayload(alert);
+					payload = new javapns.notification.PushNotificationPayload(getAlerta(notificacion, data, badge, sound, title, body));
+					
 				} else {
-					String alert = "{\"aps\":{\"alert\":{\"title\":\"" + notificacion.getCabecera() + "\", \"body\":\""
-							+ notificacion.getCuerpo() + "\", \"action-loc-key\":\"PLAY\"}}}";
 
-					payload = new javapns.notification.PushNotificationPayload(alert);
+					payload = new javapns.notification.PushNotificationPayload(getAlerta(notificacion));
 
 					if (notificacion.getIcon() != null) {
 						payload.addCustomDictionary("launch-image", notificacion.getIcon());
 					}
-					if (notificacion.getBadge() != null) {
-						payload.addBadge(Integer.valueOf(notificacion.getBadge()));
-					}
-					if (notificacion.getSound() != null) {
-						payload.addSound(notificacion.getSound());
+					
+					if (!notificacion.getNotificacionSilenciosa()) {
+						if (notificacion.getBadge() != null) {
+							payload.addBadge(Integer.valueOf(notificacion.getBadge()));
+						}
+						if (notificacion.getSound() != null) {
+							payload.addSound(notificacion.getSound());
+						}
 					}
 				}
 
@@ -334,6 +344,47 @@ public class InvocarEmisorPush implements Callable {
 		}
 
 		return response;
+	}
+
+	/**
+	 * Devuelve la alerta en formato json sin tag content
+	 * 
+	 * @param notificacion
+	 * @return
+	 */
+	private String getAlerta(NotificacionDataRequest notificacion) {
+		String alert = "{\"aps\":{\"alert\":{\"title\":\"" + notificacion.getCabecera() + "\", \"body\":\""
+				+ notificacion.getCuerpo() + "\", \"action-loc-key\":\"PLAY\"}}}";
+		
+		//Notificacion Silenciosa
+		if (notificacion.getNotificacionSilenciosa()) {
+			alert = "{\"aps\": {\"content-available\": 1} }";
+		}
+		return alert;
+	}
+
+	/**
+	 * Devuelve la alerta en formato json con tag content
+	 * 
+	 * @param notificacion
+	 * @param data
+	 * @param badge
+	 * @param sound
+	 * @param title
+	 * @param body
+	 * @return
+	 */
+	private String getAlerta(NotificacionDataRequest notificacion, String data, Integer badge, String sound,
+			String title, String body) {
+		String alert = "{\"aps\": {\"alert\":{\"title\":\"" + title + "\",\"body\":\"" + body
+				+ "\",\"action-loc-key\":\"PLAY\"}" + ", \"badge\": \"" + badge + "\", \"sound\": \""
+				+ sound + "\"},\"content\":" + data + "}";		
+		
+		//Notificacion Silenciosa
+		if (notificacion.getNotificacionSilenciosa()) {
+			alert = "{\"aps\": {\"content-available\": 1} ,\"content\":" + data + "}";
+		}
+		return alert;
 	}
 
 	public QueryExecutorServicios getServicios() {

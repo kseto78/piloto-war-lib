@@ -48,6 +48,7 @@
  		<spring:import resource="${classpath}get-auth.xml" />
  		<spring:import resource="${classpath}suscripcion-servicio-movil.xml" />
  		<spring:import resource="${classpath}registro-usuario-webpush.xml" />
+ 		<spring:import resource="${classpath}actualizar-password-correo.xml" />
 		<spring:bean
 			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 			<spring:property name="locations">

@@ -195,7 +195,7 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 
 		NodeList nodoRespuesta = respuestaSOAP.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/respuesta", "Respuesta");
 		String xmlRespuesta = XMLUtils.nodeToString(nodoRespuesta.item(0));
-				
+
 		JAXBContext jaxbContext = JAXBContext.newInstance(Respuesta.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
@@ -204,6 +204,7 @@ public class CommonUtilitiesServiceImpl implements ICommonUtilitiesService, Mule
 		if(null != respuesta && respuesta.getStatus().getStatusText().contains(CONSTANTEUIM)){
 			respuesta.getStatus().setStatusText(respuesta.getStatus().getStatusText().replace(CONSTANTEUIM, String.valueOf(mensajeId)));
 		}
+		
 		return isConsulta? xmlRespuesta : respuesta.getStatus().getStatusText();
 	}
 	

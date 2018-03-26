@@ -39,6 +39,9 @@ public class PushNotificationSender {
 	   * @param production true to use Apple's production servers, false to use the sandbox servers.
 	   */
 	  public PushNotificationSender(File keystore, String password, boolean production) {
+		  
+		  log.info("Estamos en PushNotificationSender de PushNotificationSender pasando los parametros: keystore ="+keystore+"password"+password+"production"+production);
+		  
 	    this.keystore = keystore;
 	    this.password = password;
 	    this.production = production;
@@ -57,6 +60,9 @@ public class PushNotificationSender {
 	  private void initializeConnection() throws KeystoreException, CommunicationException {
 	    AppleNotificationServer server = new AppleNotificationServerBasicImpl(keystore, password, production);
 	    pushManager.initializeConnection(server);
+	    
+	    log.info("Inicializamos conexion");
+	    
 	    isConnected = true;
 	  }
 
@@ -109,6 +115,8 @@ public class PushNotificationSender {
 	  public PushedNotifications sendPayload(PushNotificationPayload payload, String[] deviceTokens)
 	      throws CommunicationException, KeystoreException {
 	    PushedNotifications notifications = new PushedNotifications();
+	    
+	    log.info("Estamos en sendPayload de PushNotificationSender");
 
 	    if (payload == null) {
 	      return notifications;
@@ -123,14 +131,37 @@ public class PushNotificationSender {
 	      notifications.setMaxRetained(deviceList.size());
 	      for (Device device : deviceList) {
 	        try {
+	        	
+	        log.info("Validamos token: "+device.getToken());
+	        		        	
 	          BasicDevice.validateTokenFormat(device.getToken());
 	          PushedNotification notification = pushManager.sendNotification(device, payload, false);
+	          
+	          if(notification.isSuccessful()){
+	        	  log.log(Level.INFO, "La notificación devuelve éxito: "+notification.isSuccessful());
+	          }else{
+	        	  log.log(Level.INFO, "La notificación no devuelve éxito: "+notification.isSuccessful());
+	          }
+	          
+	          if(notification!= null && notification.getResponse()!=null){
+	        	  log.log(Level.INFO, "Mensaje de la respuesta de la notificación enviada a apple: "+notification.getResponse().getMessage());
+		          log.log(Level.INFO, "Indentificador de la respuesta de la notificación enviada a apple: "+notification.getResponse().getIdentifier());
+		          log.log(Level.INFO, "Status de la respuesta de la notificación enviada a apple: "+notification.getResponse().getStatus());
+	          }else{
+	        	  log.log(Level.INFO, "El atributo response viene vacío"); 
+	          }
+	          
+	          log.info("Información de la notificación enviada apple: "+notification.toString());
+	          
 	          notifications.add(notification);
+	          log.info("Notificacion :"+notification);
 	        } catch (InvalidDeviceTokenFormatException e) {
 	          notifications.add(new PushedNotification(device, payload, e));
 	        }
 	      }
 	    } catch (CommunicationException e) {
+	    	 log.info("Cerramos conexion ");
+
 	      stopConnection();
 	      throw e;
 	    }

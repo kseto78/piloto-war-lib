@@ -151,7 +151,7 @@ public class RecepcionTelefonicaWSProvider extends WSProvider {
 		DeliverRes respuesta = new DeliverRes();
 		
 		ResponseStatusType response = new ResponseStatusType();
-		response.setStatusCode("0403");
+		response.setStatusCode("0999");
 		response.setStatusText("Error al obtener el contenido XML del mensaje SOAP");
 		response.setDetails("Error al obtener el contenido XML del mensaje SOAP");
 
@@ -174,7 +174,7 @@ public class RecepcionTelefonicaWSProvider extends WSProvider {
 		DeliveryReportRes respuesta = new DeliveryReportRes();
 		
 		ResponseStatusType response = new ResponseStatusType();
-		response.setStatusCode("0403");
+		response.setStatusCode("0999");
 		response.setStatusText("Error al obtener el contenido XML del mensaje SOAP");
 		response.setDetails("Error al obtener el contenido XML del mensaje SOAP");
 

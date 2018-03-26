@@ -309,11 +309,18 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 				estadoFinal = tblEstadosManager.getEstadoById(estadoMensaje.getEstadoId()).getNombre();
 				descripcion = estadoMensaje.getDescripcion();
 				if (ultimoEstadoHistorialId != estadoMensaje.getEstadoId()){
-					tblMensajesManager.setEstadoMensaje(mensajeId, estadoFinal, descripcion, false, smsData.destinatarioMensajeId, cod, null, null);
-					
-					//Si es AEAT invocar a AEAT
-					if (aplicacionPremium.contains(aplicacionAEAT)){
-						invocarAEAT(resp, pa);
+					if(cod!=null && "70".equals(cod.trim())){
+						PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+						tblMensajesManager.setEstadoMensaje(mensajeId, estadoFinal, null, false, smsData.destinatarioMensajeId, null, null, null);
+						String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+						tblMensajesManager.setEstadoMensaje(mensajeId, estadoAnulado, descripcion, false, smsData.destinatarioMensajeId, null, null, null);
+					}else{
+						tblMensajesManager.setEstadoMensaje(mensajeId, estadoFinal, descripcion, false, smsData.destinatarioMensajeId, cod, null, null);
+						
+						//Si es AEAT invocar a AEAT
+						if (aplicacionPremium.contains(aplicacionAEAT)){
+							invocarAEAT(resp, pa);
+						}
 					}
 				}
 				res = true;
@@ -477,7 +484,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 		try{
 			ResponseStatusType response = new ResponseStatusType();
 			
-			response.setStatusCode("0403");
+			response.setStatusCode("0999");
 			response.setStatusText("KO");
 			response.setDetails(descripcion);
 	

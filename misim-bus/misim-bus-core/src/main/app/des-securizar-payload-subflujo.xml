@@ -12,6 +12,7 @@
 			
 		<!-- VALIDAR FIRMA -->
 		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - DESECURIZAR] Comprobar validacion de la firma de la respuesta" />
+		<logger level="INFO" doc:name="Logger" message="${INDICADOR_FIRMADO_PROVEEDOR}" />
 		<choice doc:name="Validacion Firma Productor">
 			<when expression="#[message.outboundProperties['${FIRMA}'] == '${INDICADOR_FIRMADO_PROVEEDOR}']">
 				<logger level="INFO" message="[SUBFLOW - DESECURIZAR] Validacion de la firma requerida" doc:name="Logger" />

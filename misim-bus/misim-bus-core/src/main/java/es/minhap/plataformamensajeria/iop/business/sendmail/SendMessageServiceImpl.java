@@ -260,7 +260,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				}
 				mensajesManager.setEstadoMensaje(idMensaje, okEnvio, resultadoSMS, false,
 						smsData.destinatarioMensajeId, null, null, proveedorID.longValue());
-
+				
 				// encolamos en cola RefreshStatus si método consulta = 1
 				// (Consulta de estado)(Tempos)
 				TblMensajes mensaje = mensajesManager.getMensaje(idMensaje);
@@ -591,6 +591,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		ParametrosServidor ps = (ParametrosServidor) mailData.Servers.get(indice);
 
 		props.put("mail.smtp.host", ps.getIP().toString());
+//		props.put("mail.smtp.host", "localhost");
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Con el Servidor: " + ps.getIP().toString() + " (SendMail)");
 		}
@@ -599,6 +600,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		} else {
 			props.put("mail.smtp.port", Integer.valueOf(25));
 		}
+		
+//		props.put("mail.smtp.port", 385);
 
 		Session session = null;
 		Authenticator auth = null;
@@ -927,6 +930,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	public void postNotificacionPush(Long mensajeId, Long loteId, Long destinatarioMensaje) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String okEnvio = ps.getMessage("constantes.ESTADO_ENVIADO", null);
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
 		String koEnvio = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
 		String ejecutarTodosServidores = ps.getMessage("push.ejecutarTodosServidores", null);
 		String usuarioMISIM = ps.getMessage("usuarioMISIM", null);
@@ -948,15 +952,26 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		boolean sendOK = false;
 		String resultNotificacionPush = "";
 		if (null == notificacionPushData.servers || notificacionPushData.servers.isEmpty()) {
-			mensajesManager.setEstadoMensaje(mensajeId, koEnvio, "Error: No existe ningun Servidor Push Disponible",
-					false, notificacionPushData.getDestinatarioMensajeId(), null, null, null);
-			TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
-			tblErrorMensajeLog.setCodigoerror(new Long("0"));
-			tblErrorMensajeLog.setDescripcionerror("Error: No existe ningun Servidor Push Disponible");
-			tblErrorMensajeLog.setFecha(new Date());
-			tblErrorMensajeLog.setOperacion("postNotificacionPush");
-			errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
-			throw new Exception("[SendMessageServiceImpl.postNotificacionPush] -ERROR ENVIANDO PUSH- No existe ningun Servidor Disponible: " + mensajeId);
+			
+			if (null == notificacionPushData.getUsuarioId()){
+				mensajesManager.setEstadoMensaje(mensajeId, estadoAnulado, "Error: El usuario ha sido eliminado",
+						false, destinatarioMensaje, null, null, null);
+				LOG.info("Mensaje Anulado, el usuario ha sido eliminado");
+			}else{
+				
+				mensajesManager.setEstadoMensaje(mensajeId, koEnvio, null,
+						false, notificacionPushData.getDestinatarioMensajeId(), null, null, null);
+				
+				mensajesManager.setEstadoMensaje(mensajeId, estadoAnulado, "Error: No existe ningun Servidor Push Disponible",
+						false, notificacionPushData.getDestinatarioMensajeId(), null, null, null);
+				TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
+				tblErrorMensajeLog.setCodigoerror(new Long("0"));
+				tblErrorMensajeLog.setDescripcionerror("Error: No existe ningun Servidor Push Disponible");
+				tblErrorMensajeLog.setFecha(new Date());
+				tblErrorMensajeLog.setOperacion("postNotificacionPush");
+				errorMensajeLogManager.insertarLogError(tblErrorMensajeLog);
+				throw new Exception("[SendMessageServiceImpl.postNotificacionPush] -ERROR ENVIANDO PUSH- No existe ningun Servidor Disponible: " + mensajeId);
+			}
 		} else {
 			registerServidorPushDetailsDebug(notificacionPushData);
 			mensajesManager.setEstadoMensaje(Long.valueOf(mensajeId),
@@ -1086,7 +1101,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		peticionPush.setUsuario(usuarioMISIM);
 		peticionPush.setPassword(passMISIM);
 		peticionPush.setIdLote(loteId.toString());
-
+		peticionPush.setNotificacionSilenciosa((messageData.getNotificacionSilenciosa() != null && messageData.getNotificacionSilenciosa())?messageData.getNotificacionSilenciosa():false);
+		
 		NotificacionDataRequest ndr = new NotificacionDataRequest();
 
 		ParametrosServidorPush psp = (ParametrosServidorPush) messageData.servers.get(indice);

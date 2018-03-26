@@ -17,40 +17,43 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 
 import es.minhap.misim.bus.core.pojo.PeticionPayload;
-import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.ResponseStatusType;
-import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.Respuesta;
+import es.redsara.misim.misim_bus_webapp.respuesta.ResponseStatusType;
+import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 
-
-@WebServiceProvider(portName = "OperacionMensajesServicePort", serviceName = "OperacionMensajesService", 
-targetNamespace = "http://misim.redsara.es/misim-bus-webapp/", wsdlLocation = "WEB-INF/wsdl/recepcion-sim/operacionesSIM.wsdl")
+@WebServiceProvider(portName = "ActualizarPasswordCorreoWSPort", serviceName = "ActualizarPasswordCorreoService", targetNamespace = "http://misim.redsara.es/misim-bus-webapp/", wsdlLocation = "WEB-INF/wsdl/actualizar-password/actualizarPassword.wsdl")
 @ServiceMode(Mode.MESSAGE)
 @Scope(value="request")
-public class RecepcionOperacionesSIMWSProvider extends WSProvider {
+public class ActualizarPasswordCorreoWSProvider extends WSProvider {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ActualizarPasswordCorreoWSProvider.class);
 	/**
 	 * Cola de recepción VM de peticiones sincronas
 	 */
-	public static final String RECEPT_QUEUE = "vm://recepcion-sim";
-	
+	public static final String RECEPT_QUEUE = "vm://actualizar-password-correo";
+
 
 	@Override
 	public SOAPMessage invoke(final SOAPMessage request) {
 
 		SOAPMessage responseSOAP = null;
+		String errorClave = "";
 		try {
 			
 			final ServletContext servletContext = (ServletContext) getContext().getMessageContext().get(MessageContext.SERVLET_CONTEXT);
 
 			setMuleContext(MuleContext.class.cast(servletContext.getAttribute("mule.context")));
-
+						
 			if (getMuleClient() == null) {
 				try {
 					setMuleClient(new MuleClient(getMuleContext()));
 
 				} catch (final MuleException e) {
+					LOG.error(errorClave + "Error in mule client");
 					throw new RuntimeException("Error in mule client", e);
 				}
 			}
@@ -59,21 +62,24 @@ public class RecepcionOperacionesSIMWSProvider extends WSProvider {
 				SoapPayload<?> payload = new PeticionPayload();
 				payload.setSoapAction(String.class.cast(getContext().getMessageContext().get(SOAP_ACTION)));
 				payload.setSoapMessage(XMLUtils.soap2dom(request));
-			
-//				LOG.info("Recepción de la petición: "+XMLUtils.dom2xml(XMLUtils.soap2dom(request)));
+				payload.setSoapAplication("ActualizarPassword");
+
 
 				final MuleMessage muleResponse = getMuleClient().send(RECEPT_QUEUE,payload, null, 10000);
 				
 				responseSOAP = XMLUtils.dom2soap(muleResponse.getPayload(SoapPayload.class).getSoapMessage());
-
+			
+				
 			} catch (final Exception e) {
 				throw new RuntimeException("Error in provider endpoint", e);
 			}
 			
 		} catch (Exception e) {
 			try {
-				responseSOAP = generateSOAPFault(request);
+				responseSOAP = generateSOAPFaultEnvio(request);
+				LOG.error(errorClave + "Error al obtener el contenido XML del mensaje SOAP");
 			} catch (Exception e1) {
+				LOG.error(errorClave + e1.getMessage());
 				throw new ApplicationException(e1.getMessage());
 			}
 		}
@@ -88,11 +94,11 @@ public class RecepcionOperacionesSIMWSProvider extends WSProvider {
 	 * @return
 	 * @throws Exception
 	 */
-	protected static final SOAPMessage generateSOAPFault(SOAPMessage request)throws Exception {
+	protected static final SOAPMessage generateSOAPFaultEnvio(SOAPMessage request)throws Exception {
 		
 		ResponseStatusType response = new ResponseStatusType();
 		
-		response.setStatusCode("0999");
+		response.setStatusCode("0403");
 		response.setStatusText("Error al obtener el contenido XML del mensaje SOAP");
 		response.setDetails("Error al obtener el contenido XML del mensaje SOAP");
 

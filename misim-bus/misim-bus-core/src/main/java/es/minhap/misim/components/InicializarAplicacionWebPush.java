@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import misim.bus.common.bean.SoapPayload;
-
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.slf4j.Logger;
@@ -23,13 +21,13 @@ import es.minhap.misim.bus.query.AplicacionQuery;
 import es.minhap.misim.bus.query.ProductoQuery;
 import es.minhap.misim.bus.query.ProveedorQuery;
 
-public class InicializarAplicacionCliente implements Callable {
+public class InicializarAplicacionWebPush implements Callable {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(InicializarAplicacionCliente.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InicializarAplicacionWebPush.class);
 	
-	private static final String PRODUCTO = "ENVIO_CLIENTE";
-	private static final String PROVEEDOR = "APP_CLIENTE";
-	private static final String APLICACION = "CLIENTE";
+	private static final String PRODUCTO = "WEB_PUSH";
+	private static final String PROVEEDOR = "WEBPUSH";
+	private static final String APLICACION = "WEBPUSH";
 	
 	@Resource
 	private ProductoManager productoManager;
@@ -49,9 +47,6 @@ public class InicializarAplicacionCliente implements Callable {
 		eventContext.getMessage().setOutboundProperty("xmlRespuesta", "");
 		
 		try {
-			
-			String soapAplication = SoapPayload.class.cast(eventContext.getMessage().getPayload(SoapPayload.class))
-					.getSoapAplication();
 		
 			
 			AplicacionQuery arg0 = new AplicacionQuery();
@@ -73,7 +68,6 @@ public class InicializarAplicacionCliente implements Callable {
 						
 			ProductoQuery arg1 = new ProductoQuery();
 			arg1.setCodigo(PRODUCTO);
-			
 			arg1.setCodigoComparator(TextComparator.EQUALS);
 			
 			List<Producto> listaProductos = productoManager.getProducto(arg1);
@@ -137,12 +131,7 @@ public class InicializarAplicacionCliente implements Callable {
 				if(listaProveedores.get(0).getFirma()!=null){
 					eventContext.getMessage().setOutboundProperty("firma", listaProveedores.get(0).getFirma());
 				}else{
-					if ("ActualizarPassword".equals(soapAplication)){
-						eventContext.getMessage().setOutboundProperty("firma", "S");
-						eventContext.getMessage().setOutboundProperty("tipoFirma", "WS-Security");
-					}else{
-						eventContext.getMessage().setOutboundProperty("firma", "N");
-					}
+					eventContext.getMessage().setOutboundProperty("firma", "N");
 				}
 				if(listaProveedores.get(0).getTipoFirma()!=null){
 					eventContext.getMessage().setOutboundProperty("tipoFirma", listaProveedores.get(0).getTipoFirma());
@@ -215,8 +204,8 @@ public class InicializarAplicacionCliente implements Callable {
 			
 		}catch (Exception e){
 			
-			LOG.error("Identificación: Error de sistema al inicializar Aplicación Cliente", e);
-			throw new ModelException("Error de sistema al inicializar Aplicación Cliente", 502);
+			LOG.error("Identificación: Error de sistema al inicializar Aplicación Móvil", e);
+			throw new ModelException("Error de sistema al inicializar Aplicación Móvil", 502);
 		}
 
 		LOG.debug("Fin de la inicialización de variables");
@@ -224,5 +213,4 @@ public class InicializarAplicacionCliente implements Callable {
 		return eventContext.getMessage();
 	}
 
-	
 }

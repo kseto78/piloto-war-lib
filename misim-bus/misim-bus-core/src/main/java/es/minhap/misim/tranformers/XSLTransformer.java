@@ -29,8 +29,8 @@ public class XSLTransformer {
 			
 			String xml=XMLUtils.dom2xml(dom);
 			Document domTrans=XMLUtils.xml2doc(xml.replace("&lt;", "<").replace("&gt;", ">"), Charset.forName("UTF-8"));
-			if(LOG.isDebugEnabled()){
-				LOG.debug("ANTES: "+XMLUtils.dom2xml(domTrans));
+			if(LOG.isInfoEnabled()){
+				LOG.info("ANTES: "+XMLUtils.dom2xml(domTrans));
 			}
 			final TransformerFactory factory = TransformerFactory.newInstance();
 			final Source xslt = new DOMSource(XMLUtils.xml2doc(xslSheet,Charset.forName("UTF-8")));
@@ -41,8 +41,10 @@ public class XSLTransformer {
 			transformer.transform(text, transformedXML);
 			
  			document = (Document)transformedXML.getNode();
- 			if(LOG.isDebugEnabled()){
- 				LOG.debug("DESPUES: "+XMLUtils.dom2xml(document));
+ 			String xml2=XMLUtils.dom2xml(document);
+ 			document=XMLUtils.xml2doc(xml2.replace("&lt;", "<").replace("&gt;", ">"), Charset.forName("UTF-8"));
+ 			if(LOG.isInfoEnabled()){
+ 				LOG.info("DESPUES: "+XMLUtils.dom2xml(document));
  			}
 			
 		}catch(Exception e){

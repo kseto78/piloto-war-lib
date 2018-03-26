@@ -90,7 +90,7 @@ public class RecepcionMensajesPBKSIMWSProvider extends WSProvider {
 		
 		ResponseStatusType response = new ResponseStatusType();
 		
-		response.setStatusCode("0403");
+		response.setStatusCode("0999");
 		response.setStatusText("Error al obtener el contenido XML del mensaje SOAP");
 		response.setDetails("Error al obtener el contenido XML del mensaje SOAP");
 

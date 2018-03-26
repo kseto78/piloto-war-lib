@@ -1,16 +1,19 @@
 package es.minhap.misim.bus.model.seguridad;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.security.Provider;
-import java.security.PublicKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Properties;
 
-import javax.xml.crypto.dsig.XMLSignature;
+import javax.annotation.Resource;
 import javax.xml.crypto.dsig.XMLSignatureFactory;
-import javax.xml.crypto.dsig.dom.DOMValidateContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import misim.bus.common.exceptions.ApplicationException;
+import misim.bus.common.util.XMLUtils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -25,12 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import es.minhap.misim.bus.model.exception.ModelException;
-import es.minhap.misim.bus.model.util.X509KeySelectorPublicKey;
 
 /**
  * Implementación para la API {@link FirmaService}
@@ -46,6 +47,9 @@ public class FirmaServiceImpl implements FirmaService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(FirmaService.class);
 
+	
+	@Resource(name = "cifradoPrivadoProperties")
+	Properties props;
 	/**
 	 * {@inheritDoc}
 	 */
@@ -118,18 +122,30 @@ public class FirmaServiceImpl implements FirmaService {
 
 		try {
 			
+			
+				LOG.info("REQUEST ORIGINAL FIRMADA: " + XMLUtils.dom2xml(documento));
+			
+			
 			final XMLSignatureFactory signatureFactory = XMLSignatureFactory
 					.getInstance("DOM", (Provider) Class.forName("org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI").newInstance());
-
+			
+			
+			
+			
+			// Se recupera el certificado de la firma WS-Security
+			NodeList nodeSecurityWSSecurity = documento.getElementsByTagNameNS(
+								"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
+								"BinarySecurityToken");
+	
 			// Se recuperan todos los nodos Signature del XML
 			final NodeList signatureL = documento.getElementsByTagNameNS(
 					"http://www.w3.org/2000/09/xmldsig#", "Signature");
 
 			// Si no hay o si no hay uno único, la firma no es válida
-			if ((signatureL == null) || (signatureL.getLength() != 1)) {
-				LOG.error("Validar Firma: No se ha encontrado el nodo firma");
-				throw new ModelException("No se ha encontrado el nodo firma", 307);
-			}
+//			if ((signatureL == null) || (signatureL.getLength() != 1)) {
+//				LOG.error("Validar Firma: No se ha encontrado el nodo firma");
+//				throw new ModelException("No se ha encontrado el nodo firma", 307);
+//			}
 
 			// Se recupera el único elemento Signature
 			final Node sigNode = signatureL.item(0);
@@ -139,7 +155,7 @@ public class FirmaServiceImpl implements FirmaService {
 			// Se recuperan todos los nodos wsse:Security que no tienen "actor"
 			final NodeList listaNodosSeguridad = WSSecurityUtil.getSecurityHeader(documento, StringUtils.EMPTY).getChildNodes();
 
-			// Si hay al menos un nodo XML Security
+//			// Si hay al menos un nodo XML Security
 			if (listaNodosSeguridad != null) {
 				// Se busca el BinarySecurityToken
 				for (int i = 0; i < listaNodosSeguridad.getLength(); i++) {
@@ -149,42 +165,53 @@ public class FirmaServiceImpl implements FirmaService {
 					}
 				}
 			}
-
-			// Si no existe ningún BinarySecurityToken, no se valida la firma
-			byte[] bytesCertificado = null;
-			if (binarySecurityToken != null) {
-				bytesCertificado=binarySecurityToken.getTextContent().getBytes();
-			}
 			
+			byte[] bytesCertificado = null;
+			bytesCertificado= nodeSecurityWSSecurity.item(0).getTextContent().getBytes();
+
 			if(bytesCertificado==null){
 				LOG.error("Validar Firma: No se ha encontrado el certificado firmante en el documento XML");
 				throw new ModelException("No se ha encontrado el certificado firmante en el documento XML", 311);	
 			}
-
-			// Se reconstituye el Certificado (público) contenido en la firma
-			final X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(
-							new ByteArrayInputStream(Base64.decodeBase64(bytesCertificado)));
-
-			// Se recupera la clave pública desde el certificado
-			final PublicKey pk = certificate.getPublicKey();
-
-			// Se recupera el Body
-			final Element body = WSSecurityUtil.findBodyElement(documento);
-
-			// Se inicializa el contexto de validación DOM
-			final DOMValidateContext valContext = new DOMValidateContext(new X509KeySelectorPublicKey(pk), sigNode);
 			
-			if (StringUtils.isNotBlank(body.getAttributeNS(WSSECURITY_XSD,ELEMENT_ID))) {
-				valContext.setIdAttributeNS(body, WSSECURITY_XSD, ELEMENT_ID);
-			} else {
-				valContext.setIdAttributeNS(body, null, ELEMENT_ID);
+			File file = new File(props.getProperty(ModelTestUtil.MODEL_PETICION));
+			
+	
+			// Recuperamos el documento SOAP sin firmar
+			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			final DocumentBuilder db = dbf.newDocumentBuilder();
+			final Document docOrginal2 = db.parse(file);
+			
+
+
+			// Invocamos al servicio de firma
+			final Document docFirmado = firmarWSSecurity(
+					docOrginal2,
+					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtil.KEY_STORE_FILE));
+			
+			
+			NodeList nodeSecurityWSSecurity2 = docFirmado.getElementsByTagNameNS(
+					"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
+					"BinarySecurityToken");
+
+
+			byte[] bytesCertificado2 = null;
+			
+			bytesCertificado2= nodeSecurityWSSecurity2.item(0).getTextContent().getBytes();
+						
+			boolean firmaValida = false;
+			
+			if (compararCertificados(bytesCertificado, bytesCertificado2)){
+				firmaValida = true;
+			}else{
+				firmaValida = false;
 			}
-
-			// Se recupera la firma
-			final XMLSignature signature = signatureFactory.unmarshalXMLSignature(valContext);
-
-			// Se verifica la validación
-			final boolean firmaValida = signature.validate(valContext);
+			
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Fin validarFirmaWSSecurity");
