@@ -1,0 +1,130 @@
+<root>
+	<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+		<soap:Header>
+			<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+				<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" wsu:Id="X509-B1A420ACBD5659E254142359052772245">MIIDeDCCAmCgAwIBAAIEVMdUEjANBgkqhkiG9w0BAQQFADB+MSEwHwYJKoZIhvcNAQkBFhJjYXJwZXRhQGV2ZXJpcy5jb20xCzAJBgNVBAYTAkVTMQ4wDAYDVQQIEwVTUEFJTjEKMAgGA1UEBxMBTTEPMA0GA1UEChMGTUlOSEFQMQ0wCwYDVQQLEwRTRUFQMRAwDgYDVQQDEwdDQVJQRVRBMB4XDTE1MDEyNzA5MDI1MVoXDTIwMDEyNzA5MDI1MVowfjEhMB8GCSqGSIb3DQEJARYSY2FycGV0YUBldmVyaXMuY29tMQswCQYDVQQGEwJFUzEOMAwGA1UECBMFU1BBSU4xCjAIBgNVBAcTAU0xDzANBgNVBAoTBk1JTkhBUDENMAsGA1UECxMEU0VBUDEQMA4GA1UEAxMHQ0FSUEVUQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKr+oeISTReJ+8FT6kvFw3YYQlsVLaHL4e7Hbk2EAVQ7dWqIgU2bwdpqQTATigZYcB5VNzkVAhx1XPkMetyWoI4CH9Vffsp3PyDv3Xv6djN5nczmI2uFq+Om5inzBoR2Z2NtrSjGwPEHuKQ4i1uMMYSrZuF4Byt1r2ofyZMf4A8S3Zv3vXA91VPYi8aLKzgCh5uCU5EBSDFPbwSggIGWpPEenVP9iHve6wAkBx/dxUDlxosTreY7yXuS6MoCBGoai0kY00ufNpZmcJKu7xC3qhs8Iy793GwczfhNSMb0r5fIAGb7O1RYU3dY63iNwp/mEiotzGY+/V10cg0Ev0t0440CAwEAATANBgkqhkiG9w0BAQQFAAOCAQEAYrXaFKPVHMhpy93WntArJYbFX0RAQM10ojbU1PPd1ZXIA2r9+3fjUxpDVHShCCVnPHPgwQcq6rT+2fPcW3efHxGqq7JkiyElf81ZE2m/8ijY77N1USB1wfCnes43PqBdGs89BRQY6i3lneTTS79/39L/b8Xf4y+X1OeozJaKu7+AcTolD65FNl4rD91dM4agIBlUQZ8Gw5880l6uO1owlguf+w9cm6S6SrCl/2Dan67AvwdgrMhJT3FeRubaOowUxJf25CK+SKMODM7JcDAWjgLiaAvXRqfWE+BHX6wVwy4vevhbuZRedG8DXE2cTuvvErTuZzRj9LXyp+JSOlZHzQ==</wsse:BinarySecurityToken>
+				<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-B1A420ACBD5659E254142359052772349">
+					<ds:SignedInfo>
+						<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+							<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="soap"/>
+						</ds:CanonicalizationMethod>
+						<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+						<ds:Reference URI="#id-B1A420ACBD5659E254142359052772348">
+							<ds:Transforms>
+								<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+									<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList=""/>
+								</ds:Transform>
+							</ds:Transforms>
+							<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+							<ds:DigestValue>XaLWUj1ymqdx3//eoXmjdPC4N/c=</ds:DigestValue>
+						</ds:Reference>
+					</ds:SignedInfo>
+					<ds:SignatureValue>kAYsL+bIACRINCytCumbzJt09uQMH7mNVTxM1aJK/MbxQBxznETDC6nIMXdH3t1zOjIbMqHLQIUwSqyp1/HE39a9Hulea1LoMKoYxTCw/6dHEiLaFlrZm7b0tRuzjXEIxz16iY5zOBdwS2xeMmUkVqAdU9aXTGjuNZWcScuxbv0DwOs7m0DIOFi/DE+VTGgDn7SQN6ZCNtYXJpWGSe0XpZmRsOCiNLG+N88JT68cqfb0wViA3kNqsA5mKTcg7VnOf2Tr/i5QlpTTJJOPfKiML9+qBVLeUzpmOW+/yXzQu/SdURWzl3kgPivmuh9nURs2Js6P4LvDN2jQJ2k/Jf/ydw==</ds:SignatureValue>
+					<ds:KeyInfo Id="KI-B1A420ACBD5659E254142359052772346">
+						<wsse:SecurityTokenReference wsu:Id="STR-B1A420ACBD5659E254142359052772347">
+							<wsse:Reference URI="#X509-B1A420ACBD5659E254142359052772245" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+						</wsse:SecurityTokenReference>
+					</ds:KeyInfo>
+				</ds:Signature>
+				<xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" Id="EK-B1A420ACBD5659E254142359052771143">
+					<xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/>
+					<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+						<wsse:SecurityTokenReference>
+							<ds:X509Data>
+								<ds:X509IssuerSerial>
+									<ds:X509IssuerName>CN=micc,OU=SEAP,O=MINHAP,L=M,ST=SPAIN,C=ES,1.2.840.113549.1.9.1=#160f6d696363406576657269732e636f6d</ds:X509IssuerName>
+									<ds:X509SerialNumber>1422348414</ds:X509SerialNumber>
+								</ds:X509IssuerSerial>
+							</ds:X509Data>
+						</wsse:SecurityTokenReference>
+					</ds:KeyInfo>
+					<xenc:CipherData>
+						<xenc:CipherValue>HqKS4TJvvGBLMqwQLG6HRw==</xenc:CipherValue>
+					</xenc:CipherData>
+					<xenc:ReferenceList>
+						<xenc:DataReference URI="#ED-B1A420ACBD5659E254142359052771444"/>
+					</xenc:ReferenceList>
+				</xenc:EncryptedKey>
+			</wsse:Security>
+		</soap:Header>
+		<soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-B1A420ACBD5659E254142359052772348">
+			<Peticion xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion" xmlns:ns2="http://intermediacion.redsara.es/scsp/esquemas/datosespecificos" xmlns:ns3="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta">
+				<Atributos>
+					<IdPeticion>0.94878134273277</IdPeticion>
+					<NumElementos>1</NumElementos>
+					<TimeStamp>2015-02-10 18:48:47.000684</TimeStamp>
+					<Estado>
+						<CodigoEstado/>
+						<CodigoEstadoSecundario/>
+						<LiteralError/>
+						<TiempoEstimadoRespuesta>0</TiempoEstimadoRespuesta>
+					</Estado>
+					<CodigoCertificado>SIR_001</CodigoCertificado>
+				</Atributos>
+				<Solicitudes>
+					<SolicitudTransmision>
+						<DatosGenericos>
+							<Emisor>
+								<NifEmisor>S2833002E</NifEmisor>
+								<NombreEmisor>NOMBREPLATAFORMA</NombreEmisor>
+							</Emisor>
+							<Solicitante>
+								<IdentificadorSolicitante>A1234567B</IdentificadorSolicitante>
+								<NombreSolicitante>CARPETA</NombreSolicitante>
+								<UnidadTramitadora>MINHAP</UnidadTramitadora>
+								<Finalidad>CONSULTA</Finalidad>
+								<Consentimiento>SI</Consentimiento>
+								<IdExpediente>0000</IdExpediente>
+							</Solicitante>
+							<Titular>
+								<Documentacion>09346781H</Documentacion>
+							</Titular>
+							<Transmision>
+								<CodigoCertificado>SIR_001</CodigoCertificado>
+								<IdSolicitud>0.94878134273277</IdSolicitud>
+								<IdTransmision/>
+								<FechaGeneracion/>
+							</Transmision>
+						</DatosGenericos>
+						<ns2:DatosEspecificos>
+							<recuperarTraza:recuperarTraza xmlns:recuperarTraza="http://impl.manager.cct.map.es" xmlns="http://impl.manager.cct.map.es">
+								<autentication>
+									<usuario>CARPDES</usuario>
+									<password>CARPDES</password>
+								</autentication>
+								<criterios>
+									<cdIntercambio/>
+									<numRegistro/>
+									<num_doc_ident>09346781H</num_doc_ident>
+									<oficinaRegistroByCdOrOrigen/>
+									<tipoEstado/>
+									<tipoTraza>1</tipoTraza>
+									<fechaInicial xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+									<fechaFinal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+									<historico/>
+								</criterios>
+								<paginacion>
+									<posicion_inicial>1</posicion_inicial>
+									<num_resultados>10</num_resultados>
+								</paginacion>
+							</recuperarTraza:recuperarTraza>
+						</ns2:DatosEspecificos>
+					</SolicitudTransmision>
+				</Solicitudes>
+			</Peticion>
+		</soap:Body>
+	</soap:Envelope>
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<soapenv:Body>
+			<recuperarTrazaResponse xmlns="http://impl.manager.cct.map.es">
+				<resultTraza>
+					<ns1:error xmlns:ns1="http://bean.cct.map.es">
+						<ns1:codigo>0201</ns1:codigo>
+						<ns1:descripcion>ERROR EN LA CONSULTA DE TRAZABILIDAD, NO HAY CODIGOS DE INTERCAMBIO CON LOS PARAMETROS DE BUSQUEDA INTRODUCIDOS</ns1:descripcion>
+					</ns1:error>
+					<ns2:resultados xmlns:ns2="http://bean.cct.map.es" xsi:nil="true"/>
+				</resultTraza>
+			</recuperarTrazaResponse>
+		</soapenv:Body>
+	</soapenv:Envelope>
+</root>

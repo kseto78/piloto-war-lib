@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<spring:beans>
+		<spring:bean id="inicializarAEAT" name="inicializarAEAT" class="es.minhap.misim.components.InicializarAEAT"/>
+		<spring:bean id="inicializarRecepcion" name="inicializarRecepcion" class="es.minhap.misim.components.InvocarEnvioRecepcionAEAT">
+			<spring:property name="innerUrl" value="vm://https-invoker"/>
+		</spring:bean>
+		<spring:bean id="gestionErroresAEAT" name="gestionErroresAEAT" class="es.minhap.misim.components.GestionErrores"/>
+	</spring:beans>
+
+	<flow name="FLW-RCP-AEAT" doc:name="FLW-RCP-AEAT" doc:description="Procesa una nueva Peticion">
+			
+		<!-- RECEPCION PETICION -->
+		<vm:inbound-endpoint exchange-pattern="request-response" path="recepcion-AEAT" responseTimeout="120000" doc:name="VM"/>
+		
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - INICIO ENVIO Acuse Recibo AEAT" />	
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Inicio peticion" />
+
+		
+		<!-- INICIALIZAR VARIABLES -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Inicializar variables Acuse Recibo AEAT" />
+		<component	doc:name="Inicializa variables" >
+			<spring-object bean="inicializarAEAT" />
+		</component>
+		
+		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_PETICION" />
+			
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Encriptacion para la auditoria Acuse Recibo AEAT" />
+		<processor-chain doc:name="Processor Chain">
+			<component	doc:name="Encripta" >
+				<spring-object bean="encriptar" />
+			</component>
+		</processor-chain>
+		
+		<!-- AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Auditoria de la peticion recibida" />
+		<component	doc:name="Audita" >
+			<spring-object bean="audit" />
+		</component>
+		
+		<!-- ADAPTAR PETICION -->
+		<processor-chain>
+			<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_PETICION}']]" doc:name="Hoja XSL para transformar el payload" />
+			
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Transformacion del mensaje de la peticion" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+			
+			<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia Emisor" />
+			
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Flujo de ida adaptado" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+		</processor-chain>
+		
+				
+		<!-- INVOCACION AL EMISOR -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Operation #[payload.soapAction]" />
+		<component	doc:name="Recepcion AEAT" >
+			<spring-object bean="inicializarRecepcion" />
+		</component>
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Operacion invocada #[payload]" />
+		
+		
+		<!-- COMPROBAR SOAP_FAULT -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Comprobar SOAP Fault" />
+		<choice doc:name="Respuesta o SOAP Fault">
+			<when expression="#[message.outboundProperties['${SOAP_FAULT}']]">
+				<processor-chain>
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - SOAP Fault recibido" />
+					<choice doc:name="Comprobar la transformacion de la respuesta"> 
+						<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
+							<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_SOAP_FAULT}']]" doc:name="Hoja XSL para transformar el error SOAP" />
+						</when>
+						<otherwise>
+							<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - No se requiere de adaptacion de la peticion" />
+						</otherwise>
+					</choice>
+				</processor-chain>
+			</when>
+			<otherwise>
+				<processor-chain>
+					<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Respuesta recibida" />
+					<choice doc:name="Comprobar la transformacion de la respuesta"> 
+						<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']">
+							<processor-chain>	
+								<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	
+								<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Adaptacion de la respuesta ACUSE RECIBO AEAT" />
+								<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+								<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia AEAT" />
+								<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" />
+							</processor-chain>
+						</when>
+						<otherwise>
+							<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - No se requiere de adaptacion de la respuesta" />
+						</otherwise>
+					</choice>
+
+				</processor-chain>
+			</otherwise>
+		</choice>
+		
+		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" />
+		
+		
+		
+		<!-- ADAPTAR PROTOCOLO -->		
+<!-- 		<choice doc:name="Adaptar la respuesta">  -->
+<!-- 			<when expression="#[message.outboundProperties['${TRANSFORMACION_RESPUESTA}'] == 'S']"> -->
+<!-- 				<processor-chain>	 -->
+<!-- 					<set-variable variableName="${XSL_SHEET}" value="#[message.outboundProperties['${XSL_RESPUESTA}']]" doc:name="Hoja XSL para transformar la respuesta" />	 -->
+								
+<!-- 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Adaptacion de la respuesta ACUSE RECIBO AEAT" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Antes del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
+<!-- 					<flow-ref name="FLW-MSG-ADP" doc:name="Adaptar protocolo hacia AEAT" /> -->
+<!-- 					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Despues del subfujo FLW-MSG-ADP de adaptacion del protocolo el payload es : #[payload]" /> -->
+<!-- 				</processor-chain> -->
+<!-- 			</when> -->
+<!-- 			<otherwise> -->
+<!-- 				<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - No se requiere de adaptacion de la respuesta" /> -->
+<!-- 			</otherwise> -->
+<!-- 		</choice> -->
+				
+<!-- 		<set-property propertyName="${XML_RESPUESTA}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_RESPUESTA" /> -->
+		
+		<!-- ENCRIPTACION -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Comprobar si se requiere encriptacion para la auditoria" />
+		<processor-chain doc:name="Processor Chain">
+			<logger level="INFO" message="[FLOW - RecepcionAEAT] - Encriptacion requerida" doc:name="Logger" />
+			<component	doc:name="Encripta" >
+				<spring-object bean="encriptar" />
+			</component>
+		</processor-chain>
+		
+		
+		
+		<!-- ACTUALIZACION DE AUDITORIA -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Actualizacion de la auditoria" />
+		<component doc:name="Actualizacon de Auditoria">
+			<spring-object bean="updateAudit" />
+		</component>
+
+		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Peticion procesada" />
+        
+        <!-- GESTION DE ERRORES -->
+        
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+        	
+        	<!-- GENERAR EL SOAP FAULT -->
+        	<component	doc:name="Gestion de errores" >
+				<spring-object bean="gestionErroresAEAT" />
+			</component>
+			
+			<set-property propertyName="${XML_FAULT}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"  doc:name="Property XML_FAULT" />
+					
+			
+				
+			<!-- ACTUALIZACION DE AUDITORIA -->
+        	<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Comprobar actualizacion de la auditoria" />
+        	<choice doc:name="Encriptacion del error al Consumidor">
+				<when expression="#[message.outboundProperties['${ID_AUDITORIA}'] != '']">
+					<!-- ENCRIPTACION -->
+					<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Comprobar si se requiere encriptacion para la auditoria" />
+					<processor-chain doc:name="Processor Chain">
+						<logger level="INFO" message="[FLOW - RecepcionAEAT] - Encriptacion requerida" doc:name="Logger" />
+						<component	doc:name="Encripta" >
+							<spring-object bean="encriptar" />
+						</component>
+					</processor-chain>
+					<processor-chain doc:name="Processor Chain">
+						<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - Actualizacion de la auditoria fault" />
+						<component doc:name="Actualizacion de auditoria Fault">
+							<spring-object bean="updateAuditFault" />
+						</component>
+					</processor-chain>
+				</when>
+				<otherwise>
+					<logger level="INFO" message="[FLOW - RecepcionAEAT] - Actualizacion de auditoria no requerida" doc:name="Logger" />
+				</otherwise>
+			</choice>	
+	
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - SOAP Fault procesado" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionAEAT] - FIN ENVIO Acuse Recibo AEAT" />
+        </catch-exception-strategy>
+	</flow>
+</mule>

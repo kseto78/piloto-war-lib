@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/jms 
+						http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd 
+						http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-current.xsd
+						http://www.springframework.org/schema/jee
+						http://www.springframework.org/schema/jee/spring-jee.xsd
+						http://www.mulesoft.org/schema/mule/core 
+						http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<spring:beans>
+		<spring:import resource="classpath:constantes.xml" />
+		<spring:import resource="classpath:https-invoker.xml" />
+		<spring:import resource="classpath:adaptar-protocolo-subflujo.xml" />
+		<spring:import resource="classpath:securizar-payload-subflujo.xml" />
+		<spring:import resource="classpath:des-securizar-payload-subflujo.xml" />
+		<spring:import resource="classpath:recepcion-peticion.xml" />
+		<spring:import resource="classpath:envio-peticion.xml" />
+		<spring:import resource="classpath:recepcion-telefonica.xml" />
+		<spring:import resource="classpath:recepcion-vodafone.xml" />
+		<spring:import resource="classpath:recepcion-bt.xml" />
+		<spring:import resource="classpath:recepcion-sim.xml" />
+		<spring:import resource="classpath:recepcion-passbook-sim.xml" />
+		<spring:import resource="classpath:registro-usuario.xml" />
+		<spring:import resource="classpath:registro-usuario-en-servicio.xml" />
+		<spring:import resource="classpath:consulta-servicios-disponibles.xml" />
+		<spring:import resource="classpath:registro-movil.xml" />
+ 		<spring:import resource="classpath:gestion-notificaciones-push.xml" />
+		<spring:import resource="classpath:get-avisos-usuario-push.xml" />
+ 		<spring:import resource="classpath:gestion-ayuda.xml" />
+ 		<spring:import resource="classpath:envio-sim-001.xml" />
+ 		<spring:import resource="classpath:envio-sim-giss.xml" />
+ 		<spring:import resource="classpath:generar-SAML.xml" />
+ 		<spring:import resource="classpath:procesar-SAML.xml" />
+ 		<spring:import resource="classpath:recepcion-AEAT.xml" />
+ 		<spring:import resource="classpath:get-auth.xml" />
+ 		<spring:import resource="classpath:suscripcion-servicio-movil.xml" />
+ 		<spring:import resource="classpath:registro-usuario-webpush.xml" />
+ 		<spring:import resource="classpath:actualizar-password-correo.xml" />
+		<spring:bean
+			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<spring:property name="locations">
+				<spring:list>
+					<spring:value>classpath:/properties/spring-config.properties</spring:value>
+					<!-- <spring:value>classpath:/properties/dataconnection.properties</spring:value> -->
+					<spring:value>classpath:/properties/sp.properties</spring:value>
+					<spring:value>classpath:/properties/passbook.properties</spring:value>
+					<spring:value>classpath:/properties/confMISIM.properties</spring:value>					
+				</spring:list>
+			</spring:property>
+			<spring:property name="ignoreUnresolvablePlaceholders"
+				value="true" />
+		</spring:bean>
+
+		<spring:import resource="classpath:/properties/certificados-context.xml" />
+	 	<spring:import resource="classpath:/jms-context-sim.xml" />
+	 	<spring:import resource="classpath:/batch-context-sim.xml" />
+		<spring:import resource="classpath:/applicationContext-db.xml" />
+		<spring:import resource="classpath:/applicationContext-dbSIM.xml" />
+		<spring:import resource="classpath:/applicationContext-tx.xml" />
+		<spring:import resource="classpath:/applicationContextSIM-tx.xml" />
+		<spring:import resource="classpath:/applicationContext-aop.xml" />
+		<spring:import resource="classpath:/applicationContext-logic.xml" />
+
+		<spring:bean id="reloadableResourceBundleMessageSource"
+			class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+			<spring:property name="basenames">
+				<spring:list>
+					<spring:value>classpath:/properties/spring-config</spring:value>
+					<spring:value>classpath:/properties/sp</spring:value>
+					<spring:value>classpath:/properties/passbook</spring:value>
+					<spring:value>classpath:/properties/confMISIM</spring:value>
+				</spring:list>
+			</spring:property>
+			<spring:property name="cacheSeconds" value="600" />
+		</spring:bean>
+	</spring:beans>
+</mule>

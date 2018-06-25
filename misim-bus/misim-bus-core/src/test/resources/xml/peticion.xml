@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:pet="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion">
+	<soapenv:Header />
+	<soapenv:Body>
+		<pet:Peticion>
+			<!--You may enter the following 2 items in any order -->
+			<pet:Atributos>
+				<!--You may enter the following 5 items in any order -->
+				<pet:IdPeticion>1</pet:IdPeticion>
+				<pet:NumElementos>1</pet:NumElementos>
+				<pet:TimeStamp>1</pet:TimeStamp>
+				<!--Optional: -->
+				<pet:Estado>
+					<!--You may enter the following 4 items in any order -->
+					<!--Optional: -->
+					<pet:CodigoEstado>1</pet:CodigoEstado>
+					<!--Optional: -->
+					<pet:CodigoEstadoSecundario>1</pet:CodigoEstadoSecundario>
+					<!--Optional: -->
+					<pet:LiteralError>1</pet:LiteralError>
+					<!--Optional: -->
+					<pet:TiempoEstimadoRespuesta>15</pet:TiempoEstimadoRespuesta>
+				</pet:Estado>
+				<pet:CodigoCertificado>CDISFWS01</pet:CodigoCertificado>
+			</pet:Atributos>
+			<pet:Solicitudes Id="solicitudes">
+				<pet:SolicitudTransmision>
+					<pet:DatosGenericos>
+						<!--You may enter the following 4 items in any order -->
+						<pet:Emisor>
+							<!--You may enter the following 2 items in any order -->
+							<pet:NifEmisor>S2833002E</pet:NifEmisor>
+							<pet:NombreEmisor>Nombre</pet:NombreEmisor>
+						</pet:Emisor>
+						<pet:Solicitante>
+							<!--You may enter the following 8 items in any order -->
+							<pet:IdentificadorSolicitante>A1234567B</pet:IdentificadorSolicitante>
+							<pet:NombreSolicitante>OtroNombre</pet:NombreSolicitante>
+							<!--Optional: -->
+							<pet:UnidadTramitadora>Unidad</pet:UnidadTramitadora>
+							<!--Optional: -->
+							<pet:Procedimiento>
+								<!--Optional: -->
+								<pet:CodProcedimiento>12345</pet:CodProcedimiento>
+								<!--Optional: -->
+								<pet:NombreProcedimiento>NombreProcedimiento
+								</pet:NombreProcedimiento>
+							</pet:Procedimiento>
+							<pet:Finalidad>Finalidad</pet:Finalidad>
+							<pet:Consentimiento>Ley</pet:Consentimiento>
+							<!--Optional: -->
+							<pet:Funcionario>
+								<!--Optional: -->
+								<pet:NombreCompletoFuncionario>Nombre Apellido1 Apellido2
+								</pet:NombreCompletoFuncionario>
+								<!--Optional: -->
+								<pet:NifFuncionario>87654321Z</pet:NifFuncionario>
+							</pet:Funcionario>
+							<!--Optional: -->
+							<pet:IdExpediente>0000</pet:IdExpediente>
+						</pet:Solicitante>
+						<pet:Titular>
+							<pet:TipoDocumentacion>DNI</pet:TipoDocumentacion>
+							<pet:Documentacion>12345678A</pet:Documentacion>
+							<!--Optional: -->
+							<pet:NombreCompleto>Nombre Completo</pet:NombreCompleto>
+							<!--Optional: -->
+							<pet:Nombre>Nombre</pet:Nombre>
+							<!--Optional: -->
+							<pet:Apellido1>Apellido1</pet:Apellido1>
+							<!--Optional: -->
+							<pet:Apellido2>Apellido2</pet:Apellido2>
+						</pet:Titular>
+						<pet:Transmision>
+							<!--You may enter the following 4 items in any order -->
+							<pet:CodigoCertificado>CDISFWS01</pet:CodigoCertificado>
+							<pet:IdSolicitud>1</pet:IdSolicitud>
+							<!--Optional: -->
+							<pet:IdTransmision>1</pet:IdTransmision>
+							<!--Optional: -->
+							<pet:FechaGeneracion>31102014</pet:FechaGeneracion>
+						</pet:Transmision>
+					</pet:DatosGenericos>
+				</pet:SolicitudTransmision>
+			</pet:Solicitudes>
+		</pet:Peticion>
+	</soapenv:Body>
+</soapenv:Envelope>

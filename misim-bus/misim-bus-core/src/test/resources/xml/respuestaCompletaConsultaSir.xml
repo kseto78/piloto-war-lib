@@ -1,0 +1,475 @@
+<root>
+	<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+		<soap:Header>
+			<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+				<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" wsu:Id="X509-B1A420ACBD5659E254142359052772245">MIIDeDCCAmCgAwIBAAIEVMdUEjANBgkqhkiG9w0BAQQFADB+MSEwHwYJKoZIhvcNAQkBFhJjYXJwZXRhQGV2ZXJpcy5jb20xCzAJBgNVBAYTAkVTMQ4wDAYDVQQIEwVTUEFJTjEKMAgGA1UEBxMBTTEPMA0GA1UEChMGTUlOSEFQMQ0wCwYDVQQLEwRTRUFQMRAwDgYDVQQDEwdDQVJQRVRBMB4XDTE1MDEyNzA5MDI1MVoXDTIwMDEyNzA5MDI1MVowfjEhMB8GCSqGSIb3DQEJARYSY2FycGV0YUBldmVyaXMuY29tMQswCQYDVQQGEwJFUzEOMAwGA1UECBMFU1BBSU4xCjAIBgNVBAcTAU0xDzANBgNVBAoTBk1JTkhBUDENMAsGA1UECxMEU0VBUDEQMA4GA1UEAxMHQ0FSUEVUQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKr+oeISTReJ+8FT6kvFw3YYQlsVLaHL4e7Hbk2EAVQ7dWqIgU2bwdpqQTATigZYcB5VNzkVAhx1XPkMetyWoI4CH9Vffsp3PyDv3Xv6djN5nczmI2uFq+Om5inzBoR2Z2NtrSjGwPEHuKQ4i1uMMYSrZuF4Byt1r2ofyZMf4A8S3Zv3vXA91VPYi8aLKzgCh5uCU5EBSDFPbwSggIGWpPEenVP9iHve6wAkBx/dxUDlxosTreY7yXuS6MoCBGoai0kY00ufNpZmcJKu7xC3qhs8Iy793GwczfhNSMb0r5fIAGb7O1RYU3dY63iNwp/mEiotzGY+/V10cg0Ev0t0440CAwEAATANBgkqhkiG9w0BAQQFAAOCAQEAYrXaFKPVHMhpy93WntArJYbFX0RAQM10ojbU1PPd1ZXIA2r9+3fjUxpDVHShCCVnPHPgwQcq6rT+2fPcW3efHxGqq7JkiyElf81ZE2m/8ijY77N1USB1wfCnes43PqBdGs89BRQY6i3lneTTS79/39L/b8Xf4y+X1OeozJaKu7+AcTolD65FNl4rD91dM4agIBlUQZ8Gw5880l6uO1owlguf+w9cm6S6SrCl/2Dan67AvwdgrMhJT3FeRubaOowUxJf25CK+SKMODM7JcDAWjgLiaAvXRqfWE+BHX6wVwy4vevhbuZRedG8DXE2cTuvvErTuZzRj9LXyp+JSOlZHzQ==</wsse:BinarySecurityToken>
+				<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-B1A420ACBD5659E254142359052772349">
+					<ds:SignedInfo>
+						<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+							<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="soap"/>
+						</ds:CanonicalizationMethod>
+						<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+						<ds:Reference URI="#id-B1A420ACBD5659E254142359052772348">
+							<ds:Transforms>
+								<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+									<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList=""/>
+								</ds:Transform>
+							</ds:Transforms>
+							<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+							<ds:DigestValue>XaLWUj1ymqdx3//eoXmjdPC4N/c=</ds:DigestValue>
+						</ds:Reference>
+					</ds:SignedInfo>
+					<ds:SignatureValue>kAYsL+bIACRINCytCumbzJt09uQMH7mNVTxM1aJK/MbxQBxznETDC6nIMXdH3t1zOjIbMqHLQIUwSqyp1/HE39a9Hulea1LoMKoYxTCw/6dHEiLaFlrZm7b0tRuzjXEIxz16iY5zOBdwS2xeMmUkVqAdU9aXTGjuNZWcScuxbv0DwOs7m0DIOFi/DE+VTGgDn7SQN6ZCNtYXJpWGSe0XpZmRsOCiNLG+N88JT68cqfb0wViA3kNqsA5mKTcg7VnOf2Tr/i5QlpTTJJOPfKiML9+qBVLeUzpmOW+/yXzQu/SdURWzl3kgPivmuh9nURs2Js6P4LvDN2jQJ2k/Jf/ydw==</ds:SignatureValue>
+					<ds:KeyInfo Id="KI-B1A420ACBD5659E254142359052772346">
+						<wsse:SecurityTokenReference wsu:Id="STR-B1A420ACBD5659E254142359052772347">
+							<wsse:Reference URI="#X509-B1A420ACBD5659E254142359052772245" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+						</wsse:SecurityTokenReference>
+					</ds:KeyInfo>
+				</ds:Signature>
+				<xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" Id="EK-B1A420ACBD5659E254142359052771143">
+					<xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/>
+					<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+						<wsse:SecurityTokenReference>
+							<ds:X509Data>
+								<ds:X509IssuerSerial>
+									<ds:X509IssuerName>CN=micc,OU=SEAP,O=MINHAP,L=M,ST=SPAIN,C=ES,1.2.840.113549.1.9.1=#160f6d696363406576657269732e636f6d</ds:X509IssuerName>
+									<ds:X509SerialNumber>1422348414</ds:X509SerialNumber>
+								</ds:X509IssuerSerial>
+							</ds:X509Data>
+						</wsse:SecurityTokenReference>
+					</ds:KeyInfo>
+					<xenc:CipherData>
+						<xenc:CipherValue>HqKS4TJvvGBLMqwQLG6HRw==</xenc:CipherValue>
+					</xenc:CipherData>
+					<xenc:ReferenceList>
+						<xenc:DataReference URI="#ED-B1A420ACBD5659E254142359052771444"/>
+					</xenc:ReferenceList>
+				</xenc:EncryptedKey>
+			</wsse:Security>
+		</soap:Header>
+		<soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-B1A420ACBD5659E254142359052772348">
+			<Peticion xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion" xmlns:ns2="http://intermediacion.redsara.es/scsp/esquemas/datosespecificos" xmlns:ns3="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta">
+				<Atributos>
+					<IdPeticion>0.94878134273277</IdPeticion>
+					<NumElementos>1</NumElementos>
+					<TimeStamp>2015-02-10 18:48:47.000684</TimeStamp>
+					<Estado>
+						<CodigoEstado/>
+						<CodigoEstadoSecundario/>
+						<LiteralError/>
+						<TiempoEstimadoRespuesta>0</TiempoEstimadoRespuesta>
+					</Estado>
+					<CodigoCertificado>SIR_001</CodigoCertificado>
+				</Atributos>
+				<Solicitudes>
+					<SolicitudTransmision>
+						<DatosGenericos>
+							<Emisor>
+								<NifEmisor>S2833002E</NifEmisor>
+								<NombreEmisor>NOMBREPLATAFORMA</NombreEmisor>
+							</Emisor>
+							<Solicitante>
+								<IdentificadorSolicitante>A1234567B</IdentificadorSolicitante>
+								<NombreSolicitante>CARPETA</NombreSolicitante>
+								<UnidadTramitadora>MINHAP</UnidadTramitadora>
+								<Finalidad>CONSULTA</Finalidad>
+								<Consentimiento>SI</Consentimiento>
+								<IdExpediente>0000</IdExpediente>
+							</Solicitante>
+							<Titular>
+								<Documentacion>09346781H</Documentacion>
+							</Titular>
+							<Transmision>
+								<CodigoCertificado>SIR_001</CodigoCertificado>
+								<IdSolicitud>0.94878134273277</IdSolicitud>
+								<IdTransmision/>
+								<FechaGeneracion/>
+							</Transmision>
+						</DatosGenericos>
+						<ns2:DatosEspecificos>
+							<recuperarTraza:recuperarTraza xmlns:recuperarTraza="http://impl.manager.cct.map.es" xmlns="http://impl.manager.cct.map.es">
+								<autentication>
+									<usuario>CARPDES</usuario>
+									<password>CARPDES</password>
+								</autentication>
+								<criterios>
+									<cdIntercambio/>
+									<numRegistro/>
+									<num_doc_ident>09346781H</num_doc_ident>
+									<oficinaRegistroByCdOrOrigen/>
+									<tipoEstado/>
+									<tipoTraza>1</tipoTraza>
+									<fechaInicial xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+									<fechaFinal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+									<historico/>
+								</criterios>
+								<paginacion>
+									<posicion_inicial>1</posicion_inicial>
+									<num_resultados>10</num_resultados>
+								</paginacion>
+							</recuperarTraza:recuperarTraza>
+						</ns2:DatosEspecificos>
+					</SolicitudTransmision>
+				</Solicitudes>
+			</Peticion>
+		</soap:Body>
+	</soap:Envelope>
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<soapenv:Body>
+			<recuperarTrazaResponse xmlns="http://impl.manager.cct.map.es">
+				<resultTraza>
+					<ns1:error xmlns:ns1="http://bean.cct.map.es" xsi:nil="true"/>
+<!-- 					<ns1:error xmlns:ns1="http://bean.cct.map.es"> -->
+<!-- 			               <ns1:codigo>0209</ns1:codigo> -->
+<!-- 			               <ns1:descripcion>ERROR EN LOS PARAMETROS DE CONSULTA DE LA TRAZABILIDAD</ns1:descripcion> -->
+<!-- 			        </ns1:error> -->
+					<ns2:asientos xmlns:ns2="http://bean.cct.map.es">
+						<ns2:numRegistro>1400000006</ns2:numRegistro>
+						<ns2:fechaRegistro>2014-05-26T22:12:22.000Z</ns2:fechaRegistro>
+						<ns2:cdOficinaRegistroInicio>O00000253</ns2:cdOficinaRegistroInicio>
+						<ns2:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns2:dsOficinaRegistroInicio>
+						<ns2:cdIntercambio>O00000253_13_00000006</ns2:cdIntercambio>
+						<ns2:interesados>
+							<ns2:num_doc_ident_interesado>09346781H</ns2:num_doc_ident_interesado>
+							<ns2:tipo_doc_ident_interesado>N</ns2:tipo_doc_ident_interesado>
+							<ns2:nombre_interesado>AN111111F</ns2:nombre_interesado>
+							<ns2:apellido1_interesado>Usuario</ns2:apellido1_interesado>
+							<ns2:apellido2_interesado>Activo</ns2:apellido2_interesado>
+							<ns2:razon_social_interesado xsi:nil="true"/>
+							<ns2:num_doc_ident_representante xsi:nil="true"/>
+							<ns2:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns2:nombre_representante xsi:nil="true"/>
+							<ns2:apellido1_representante xsi:nil="true"/>
+							<ns2:apellido2_representante xsi:nil="true"/>
+							<ns2:razon_social_representante xsi:nil="true"/>
+						</ns2:interesados>
+						<ns2:anotaciones>
+							<ns2:fechaAnotacion>2015-01-28T18:47:23.000Z</ns2:fechaAnotacion>
+							<ns2:cdEstado>08</ns2:cdEstado>
+							<ns2:dsEstado>REGISTRO RECHAZADO</ns2:dsEstado>
+							<ns2:cdOrOrigen>O00000253</ns2:cdOrOrigen>
+							<ns2:dsOrOrigen>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns2:dsOrOrigen>
+							<ns2:cdOrDestino>O00000210</ns2:cdOrDestino>
+							<ns2:dsOrDestino>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns2:dsOrDestino>
+							<ns2:cdUgDestino>E00004101</ns2:cdUgDestino>
+							<ns2:dsUgDestino>MINISTERIO DE LA PRESIDENCIA</ns2:dsUgDestino>
+							<ns2:observaciones>1234</ns2:observaciones>
+						</ns2:anotaciones>
+						<ns2:fechaModUltReg xsi:nil="true"/>
+					</ns2:asientos>
+					<ns3:asientos xmlns:ns3="http://bean.cct.map.es">
+						<ns3:numRegistro>14_00000008</ns3:numRegistro>
+						<ns3:fechaRegistro>2014-05-26T22:12:22.000Z</ns3:fechaRegistro>
+						<ns3:cdOficinaRegistroInicio>O00000253</ns3:cdOficinaRegistroInicio>
+						<ns3:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns3:dsOficinaRegistroInicio>
+						<ns3:cdIntercambio>O00000253_14_00000008</ns3:cdIntercambio>
+						<ns3:interesados>
+							<ns3:num_doc_ident_interesado>09346781H</ns3:num_doc_ident_interesado>
+							<ns3:tipo_doc_ident_interesado>N</ns3:tipo_doc_ident_interesado>
+							<ns3:nombre_interesado>AN111111F</ns3:nombre_interesado>
+							<ns3:apellido1_interesado>Usuario</ns3:apellido1_interesado>
+							<ns3:apellido2_interesado>Activo</ns3:apellido2_interesado>
+							<ns3:razon_social_interesado xsi:nil="true"/>
+							<ns3:num_doc_ident_representante xsi:nil="true"/>
+							<ns3:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns3:nombre_representante xsi:nil="true"/>
+							<ns3:apellido1_representante xsi:nil="true"/>
+							<ns3:apellido2_representante xsi:nil="true"/>
+							<ns3:razon_social_representante xsi:nil="true"/>
+						</ns3:interesados>
+						<ns3:anotaciones>
+							<ns3:fechaAnotacion>2015-01-28T17:19:02.000Z</ns3:fechaAnotacion>
+							<ns3:cdEstado>08</ns3:cdEstado>
+							<ns3:dsEstado>REGISTRO RECHAZADO</ns3:dsEstado>
+							<ns3:cdOrOrigen>O00000253</ns3:cdOrOrigen>
+							<ns3:dsOrOrigen>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns3:dsOrOrigen>
+							<ns3:cdOrDestino>O00000210</ns3:cdOrDestino>
+							<ns3:dsOrDestino>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns3:dsOrDestino>
+							<ns3:cdUgDestino>E00142204</ns3:cdUgDestino>
+							<ns3:dsUgDestino>INSTITUTO DE LA JUVENTUD</ns3:dsUgDestino>
+							<ns3:observaciones>pruebaaaaa</ns3:observaciones>
+						</ns3:anotaciones>
+						<ns3:fechaModUltReg xsi:nil="true"/>
+					</ns3:asientos>
+					<ns4:asientos xmlns:ns4="http://bean.cct.map.es">
+						<ns4:numRegistro>14_00000009</ns4:numRegistro>
+						<ns4:fechaRegistro>2014-05-26T22:12:22.000Z</ns4:fechaRegistro>
+						<ns4:cdOficinaRegistroInicio>O00000253</ns4:cdOficinaRegistroInicio>
+						<ns4:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns4:dsOficinaRegistroInicio>
+						<ns4:cdIntercambio>O00000253_14_00000009</ns4:cdIntercambio>
+						<ns4:interesados>
+							<ns4:num_doc_ident_interesado>09346781H</ns4:num_doc_ident_interesado>
+							<ns4:tipo_doc_ident_interesado>N</ns4:tipo_doc_ident_interesado>
+							<ns4:nombre_interesado>AN111111F</ns4:nombre_interesado>
+							<ns4:apellido1_interesado>Usuario</ns4:apellido1_interesado>
+							<ns4:apellido2_interesado>Activo</ns4:apellido2_interesado>
+							<ns4:razon_social_interesado xsi:nil="true"/>
+							<ns4:num_doc_ident_representante xsi:nil="true"/>
+							<ns4:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns4:nombre_representante xsi:nil="true"/>
+							<ns4:apellido1_representante xsi:nil="true"/>
+							<ns4:apellido2_representante xsi:nil="true"/>
+							<ns4:razon_social_representante xsi:nil="true"/>
+						</ns4:interesados>
+						<ns4:anotaciones>
+							<ns4:fechaAnotacion>2015-01-27T15:14:52.000Z</ns4:fechaAnotacion>
+							<ns4:cdEstado>08</ns4:cdEstado>
+							<ns4:dsEstado>REGISTRO RECHAZADO</ns4:dsEstado>
+							<ns4:cdOrOrigen>O00000253</ns4:cdOrOrigen>
+							<ns4:dsOrOrigen>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns4:dsOrOrigen>
+							<ns4:cdOrDestino>O00000210</ns4:cdOrDestino>
+							<ns4:dsOrDestino>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns4:dsOrDestino>
+							<ns4:cdUgDestino>E00142204</ns4:cdUgDestino>
+							<ns4:dsUgDestino>INSTITUTO DE LA JUVENTUD</ns4:dsUgDestino>
+							<ns4:observaciones>pruebasssss</ns4:observaciones>
+						</ns4:anotaciones>
+						<ns4:fechaModUltReg xsi:nil="true"/>
+					</ns4:asientos>
+					<ns5:asientos xmlns:ns5="http://bean.cct.map.es">
+						<ns5:numRegistro>14_00000010</ns5:numRegistro>
+						<ns5:fechaRegistro>2014-05-26T22:12:22.000Z</ns5:fechaRegistro>
+						<ns5:cdOficinaRegistroInicio>O00000253</ns5:cdOficinaRegistroInicio>
+						<ns5:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns5:dsOficinaRegistroInicio>
+						<ns5:cdIntercambio>O00000253_14_00000010</ns5:cdIntercambio>
+						<ns5:interesados>
+							<ns5:num_doc_ident_interesado>09346781H</ns5:num_doc_ident_interesado>
+							<ns5:tipo_doc_ident_interesado>N</ns5:tipo_doc_ident_interesado>
+							<ns5:nombre_interesado>AN111111F</ns5:nombre_interesado>
+							<ns5:apellido1_interesado>Usuario</ns5:apellido1_interesado>
+							<ns5:apellido2_interesado>Activo</ns5:apellido2_interesado>
+							<ns5:razon_social_interesado xsi:nil="true"/>
+							<ns5:num_doc_ident_representante xsi:nil="true"/>
+							<ns5:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns5:nombre_representante xsi:nil="true"/>
+							<ns5:apellido1_representante xsi:nil="true"/>
+							<ns5:apellido2_representante xsi:nil="true"/>
+							<ns5:razon_social_representante xsi:nil="true"/>
+						</ns5:interesados>
+						<ns5:anotaciones>
+							<ns5:fechaAnotacion>2015-01-27T11:35:24.000Z</ns5:fechaAnotacion>
+							<ns5:cdEstado>08</ns5:cdEstado>
+							<ns5:dsEstado>REGISTRO RECHAZADO</ns5:dsEstado>
+							<ns5:cdOrOrigen>O00000253</ns5:cdOrOrigen>
+							<ns5:dsOrOrigen>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns5:dsOrOrigen>
+							<ns5:cdOrDestino>O00000210</ns5:cdOrDestino>
+							<ns5:dsOrDestino>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns5:dsOrDestino>
+							<ns5:cdUgDestino>E00142204</ns5:cdUgDestino>
+							<ns5:dsUgDestino>INSTITUTO DE LA JUVENTUD</ns5:dsUgDestino>
+							<ns5:observaciones>rnvio</ns5:observaciones>
+						</ns5:anotaciones>
+						<ns5:fechaModUltReg xsi:nil="true"/>
+					</ns5:asientos>
+					<ns6:asientos xmlns:ns6="http://bean.cct.map.es">
+						<ns6:numRegistro>14/00000006</ns6:numRegistro>
+						<ns6:fechaRegistro>2014-05-26T22:12:22.000Z</ns6:fechaRegistro>
+						<ns6:cdOficinaRegistroInicio>O00000253</ns6:cdOficinaRegistroInicio>
+						<ns6:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns6:dsOficinaRegistroInicio>
+						<ns6:cdIntercambio>O00000253_14_00000006</ns6:cdIntercambio>
+						<ns6:interesados>
+							<ns6:num_doc_ident_interesado>09346781H</ns6:num_doc_ident_interesado>
+							<ns6:tipo_doc_ident_interesado>N</ns6:tipo_doc_ident_interesado>
+							<ns6:nombre_interesado>AN111111F</ns6:nombre_interesado>
+							<ns6:apellido1_interesado>Usuario</ns6:apellido1_interesado>
+							<ns6:apellido2_interesado>Activo</ns6:apellido2_interesado>
+							<ns6:razon_social_interesado xsi:nil="true"/>
+							<ns6:num_doc_ident_representante xsi:nil="true"/>
+							<ns6:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns6:nombre_representante xsi:nil="true"/>
+							<ns6:apellido1_representante xsi:nil="true"/>
+							<ns6:apellido2_representante xsi:nil="true"/>
+							<ns6:razon_social_representante xsi:nil="true"/>
+						</ns6:interesados>
+						<ns6:anotaciones>
+							<ns6:fechaAnotacion>2014-10-13T12:05:10.000Z</ns6:fechaAnotacion>
+							<ns6:cdEstado>09</ns6:cdEstado>
+							<ns6:dsEstado>REGISTRO CONFIRMADO</ns6:dsEstado>
+							<ns6:cdOrOrigen>O00000210</ns6:cdOrOrigen>
+							<ns6:dsOrOrigen>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns6:dsOrOrigen>
+							<ns6:cdOrDestino>O00000253</ns6:cdOrDestino>
+							<ns6:dsOrDestino>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns6:dsOrDestino>
+							<ns6:cdUgDestino xsi:nil="true"/>
+							<ns6:dsUgDestino xsi:nil="true"/>
+							<ns6:observaciones>CONFIRMADO EN AGRE</ns6:observaciones>
+						</ns6:anotaciones>
+						<ns6:fechaModUltReg xsi:nil="true"/>
+					</ns6:asientos>
+					<ns7:asientos xmlns:ns7="http://bean.cct.map.es">
+						<ns7:numRegistro>14/00000007</ns7:numRegistro>
+						<ns7:fechaRegistro>2014-05-26T22:12:22.000Z</ns7:fechaRegistro>
+						<ns7:cdOficinaRegistroInicio>O00000253</ns7:cdOficinaRegistroInicio>
+						<ns7:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns7:dsOficinaRegistroInicio>
+						<ns7:cdIntercambio>O00000253_14_00000007</ns7:cdIntercambio>
+						<ns7:interesados>
+							<ns7:num_doc_ident_interesado>09346781H</ns7:num_doc_ident_interesado>
+							<ns7:tipo_doc_ident_interesado>N</ns7:tipo_doc_ident_interesado>
+							<ns7:nombre_interesado>AN111111F</ns7:nombre_interesado>
+							<ns7:apellido1_interesado>Usuario</ns7:apellido1_interesado>
+							<ns7:apellido2_interesado>Activo</ns7:apellido2_interesado>
+							<ns7:razon_social_interesado xsi:nil="true"/>
+							<ns7:num_doc_ident_representante xsi:nil="true"/>
+							<ns7:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns7:nombre_representante xsi:nil="true"/>
+							<ns7:apellido1_representante xsi:nil="true"/>
+							<ns7:apellido2_representante xsi:nil="true"/>
+							<ns7:razon_social_representante xsi:nil="true"/>
+						</ns7:interesados>
+						<ns7:anotaciones>
+							<ns7:fechaAnotacion>2014-10-03T12:05:12.000Z</ns7:fechaAnotacion>
+							<ns7:cdEstado>09</ns7:cdEstado>
+							<ns7:dsEstado>REGISTRO CONFIRMADO</ns7:dsEstado>
+							<ns7:cdOrOrigen>O00000210</ns7:cdOrOrigen>
+							<ns7:dsOrOrigen>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns7:dsOrOrigen>
+							<ns7:cdOrDestino>O00000253</ns7:cdOrDestino>
+							<ns7:dsOrDestino>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns7:dsOrDestino>
+							<ns7:cdUgDestino xsi:nil="true"/>
+							<ns7:dsUgDestino xsi:nil="true"/>
+							<ns7:observaciones xsi:nil="true"/>
+						</ns7:anotaciones>
+						<ns7:fechaModUltReg xsi:nil="true"/>
+					</ns7:asientos>
+					<ns8:asientos xmlns:ns8="http://bean.cct.map.es">
+						<ns8:numRegistro>14/00000001</ns8:numRegistro>
+						<ns8:fechaRegistro>2014-05-26T22:12:22.000Z</ns8:fechaRegistro>
+						<ns8:cdOficinaRegistroInicio>O00000253</ns8:cdOficinaRegistroInicio>
+						<ns8:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns8:dsOficinaRegistroInicio>
+						<ns8:cdIntercambio>O00000253_14_00000001</ns8:cdIntercambio>
+						<ns8:interesados>
+							<ns8:num_doc_ident_interesado>09346781H</ns8:num_doc_ident_interesado>
+							<ns8:tipo_doc_ident_interesado>N</ns8:tipo_doc_ident_interesado>
+							<ns8:nombre_interesado>ANF</ns8:nombre_interesado>
+							<ns8:apellido1_interesado>Usuario</ns8:apellido1_interesado>
+							<ns8:apellido2_interesado>Activo</ns8:apellido2_interesado>
+							<ns8:razon_social_interesado xsi:nil="true"/>
+							<ns8:num_doc_ident_representante xsi:nil="true"/>
+							<ns8:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns8:nombre_representante xsi:nil="true"/>
+							<ns8:apellido1_representante xsi:nil="true"/>
+							<ns8:apellido2_representante xsi:nil="true"/>
+							<ns8:razon_social_representante xsi:nil="true"/>
+						</ns8:interesados>
+						<ns8:anotaciones>
+							<ns8:fechaAnotacion>2014-09-30T16:13:52.000Z</ns8:fechaAnotacion>
+							<ns8:cdEstado>09</ns8:cdEstado>
+							<ns8:dsEstado>REGISTRO CONFIRMADO</ns8:dsEstado>
+							<ns8:cdOrOrigen>O00000210</ns8:cdOrOrigen>
+							<ns8:dsOrOrigen>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns8:dsOrOrigen>
+							<ns8:cdOrDestino>O00000253</ns8:cdOrDestino>
+							<ns8:dsOrDestino>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns8:dsOrDestino>
+							<ns8:cdUgDestino xsi:nil="true"/>
+							<ns8:dsUgDestino xsi:nil="true"/>
+							<ns8:observaciones>CONFIRMADO EN AG</ns8:observaciones>
+						</ns8:anotaciones>
+						<ns8:fechaModUltReg xsi:nil="true"/>
+					</ns8:asientos>
+					<ns9:asientos xmlns:ns9="http://bean.cct.map.es">
+						<ns9:numRegistro>14/00000002</ns9:numRegistro>
+						<ns9:fechaRegistro>2014-05-26T22:12:22.000Z</ns9:fechaRegistro>
+						<ns9:cdOficinaRegistroInicio>O00000253</ns9:cdOficinaRegistroInicio>
+						<ns9:dsOficinaRegistroInicio>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns9:dsOficinaRegistroInicio>
+						<ns9:cdIntercambio>O00000253_14_00000002</ns9:cdIntercambio>
+						<ns9:interesados>
+							<ns9:num_doc_ident_interesado>09346781H</ns9:num_doc_ident_interesado>
+							<ns9:tipo_doc_ident_interesado>N</ns9:tipo_doc_ident_interesado>
+							<ns9:nombre_interesado>ANF</ns9:nombre_interesado>
+							<ns9:apellido1_interesado>Usuario</ns9:apellido1_interesado>
+							<ns9:apellido2_interesado>Activo</ns9:apellido2_interesado>
+							<ns9:razon_social_interesado xsi:nil="true"/>
+							<ns9:num_doc_ident_representante xsi:nil="true"/>
+							<ns9:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns9:nombre_representante xsi:nil="true"/>
+							<ns9:apellido1_representante xsi:nil="true"/>
+							<ns9:apellido2_representante xsi:nil="true"/>
+							<ns9:razon_social_representante xsi:nil="true"/>
+						</ns9:interesados>
+						<ns9:anotaciones>
+							<ns9:fechaAnotacion>2014-09-30T16:13:37.000Z</ns9:fechaAnotacion>
+							<ns9:cdEstado>09</ns9:cdEstado>
+							<ns9:dsEstado>REGISTRO CONFIRMADO</ns9:dsEstado>
+							<ns9:cdOrOrigen>O00000210</ns9:cdOrOrigen>
+							<ns9:dsOrOrigen>REGISTRO GENERAL DEL MINISTERIO DE LA PRESIDENCIA</ns9:dsOrOrigen>
+							<ns9:cdOrDestino>O00000253</ns9:cdOrDestino>
+							<ns9:dsOrDestino>REGISTRO GENERAL DEL INSTITUTO DE LA JUVENTUD</ns9:dsOrDestino>
+							<ns9:cdUgDestino xsi:nil="true"/>
+							<ns9:dsUgDestino xsi:nil="true"/>
+							<ns9:observaciones>CONFIRMADO EN AG</ns9:observaciones>
+						</ns9:anotaciones>
+						<ns9:fechaModUltReg xsi:nil="true"/>
+					</ns9:asientos>
+					<ns10:asientos xmlns:ns10="http://bean.cct.map.es">
+						<ns10:numRegistro>1401000009</ns10:numRegistro>
+						<ns10:fechaRegistro>2014-02-18T15:26:38.000Z</ns10:fechaRegistro>
+						<ns10:cdOficinaRegistroInicio>O00000318</ns10:cdOficinaRegistroInicio>
+						<ns10:dsOficinaRegistroInicio>REGISTRO ELECTRÓNICO COMÚN DE LA AGE</ns10:dsOficinaRegistroInicio>
+						<ns10:cdIntercambio>O00000318_14_64007150</ns10:cdIntercambio>
+						<ns10:interesados>
+							<ns10:num_doc_ident_interesado>09346781H</ns10:num_doc_ident_interesado>
+							<ns10:tipo_doc_ident_interesado>N</ns10:tipo_doc_ident_interesado>
+							<ns10:nombre_interesado>VICTOR MANUEL</ns10:nombre_interesado>
+							<ns10:apellido1_interesado>CALVO</ns10:apellido1_interesado>
+							<ns10:apellido2_interesado>MARTINEZ</ns10:apellido2_interesado>
+							<ns10:razon_social_interesado xsi:nil="true"/>
+							<ns10:num_doc_ident_representante xsi:nil="true"/>
+							<ns10:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns10:nombre_representante xsi:nil="true"/>
+							<ns10:apellido1_representante xsi:nil="true"/>
+							<ns10:apellido2_representante xsi:nil="true"/>
+							<ns10:razon_social_representante xsi:nil="true"/>
+						</ns10:interesados>
+						<ns10:anotaciones>
+							<ns10:fechaAnotacion>2014-02-18T15:27:16.000Z</ns10:fechaAnotacion>
+							<ns10:cdEstado>06</ns10:cdEstado>
+							<ns10:dsEstado>REGISTRO ENVIADO</ns10:dsEstado>
+							<ns10:cdOrOrigen>O00000318</ns10:cdOrOrigen>
+							<ns10:dsOrOrigen>REGISTRO ELECTRÓNICO COMÚN DE LA AGE</ns10:dsOrOrigen>
+							<ns10:cdOrDestino>O00000322</ns10:cdOrDestino>
+							<ns10:dsOrDestino>REG. ADMINISTRACIÓN GENERAL DEL ESTADO</ns10:dsOrDestino>
+							<ns10:cdUgDestino>EA0000000</ns10:cdUgDestino>
+							<ns10:dsUgDestino>REG. ADMINISTRACIÓN GENERAL DEL ESTADO</ns10:dsUgDestino>
+							<ns10:observaciones xsi:nil="true"/>
+						</ns10:anotaciones>
+						<ns10:fechaModUltReg xsi:nil="true"/>
+					</ns10:asientos>
+					<ns11:asientos xmlns:ns11="http://bean.cct.map.es">
+						<ns11:numRegistro>1201000023</ns11:numRegistro>
+						<ns11:fechaRegistro>2012-07-02T13:33:20.000Z</ns11:fechaRegistro>
+						<ns11:cdOficinaRegistroInicio>O00000318</ns11:cdOficinaRegistroInicio>
+						<ns11:dsOficinaRegistroInicio>REGISTRO ELECTRÓNICO COMÚN DE LA AGE</ns11:dsOficinaRegistroInicio>
+						<ns11:cdIntercambio>O00000318_12_16337760</ns11:cdIntercambio>
+						<ns11:interesados>
+							<ns11:num_doc_ident_interesado>09346781H</ns11:num_doc_ident_interesado>
+							<ns11:tipo_doc_ident_interesado>N</ns11:tipo_doc_ident_interesado>
+							<ns11:nombre_interesado>VICTOR MANUEL</ns11:nombre_interesado>
+							<ns11:apellido1_interesado>CALVO</ns11:apellido1_interesado>
+							<ns11:apellido2_interesado>MARTINEZ</ns11:apellido2_interesado>
+							<ns11:razon_social_interesado xsi:nil="true"/>
+							<ns11:num_doc_ident_representante xsi:nil="true"/>
+							<ns11:tipo_doc_ident_representante xsi:nil="true"/>
+							<ns11:nombre_representante xsi:nil="true"/>
+							<ns11:apellido1_representante xsi:nil="true"/>
+							<ns11:apellido2_representante xsi:nil="true"/>
+							<ns11:razon_social_representante xsi:nil="true"/>
+						</ns11:interesados>
+						<ns11:anotaciones>
+							<ns11:fechaAnotacion>2013-08-15T01:00:16.000Z</ns11:fechaAnotacion>
+							<ns11:cdEstado>06</ns11:cdEstado>
+							<ns11:dsEstado>REGISTRO ENVIADO</ns11:dsEstado>
+							<ns11:cdOrOrigen>O00000318</ns11:cdOrOrigen>
+							<ns11:dsOrOrigen>REGISTRO ELECTRÓNICO COMÚN DE LA AGE</ns11:dsOrOrigen>
+							<ns11:cdOrDestino>O00000239</ns11:cdOrDestino>
+							<ns11:dsOrDestino>AGENCIA ESTATAL ANTIDOPAJE</ns11:dsOrDestino>
+							<ns11:cdUgDestino>E04789201</ns11:cdUgDestino>
+							<ns11:dsUgDestino>AGENCIA ESTATAL ANTIDOPAJE</ns11:dsUgDestino>
+							<ns11:observaciones xsi:nil="true"/>
+						</ns11:anotaciones>
+						<ns11:fechaModUltReg xsi:nil="true"/>
+					</ns11:asientos>
+					<ns12:resultados xmlns:ns12="http://bean.cct.map.es">
+						<ns12:num_total_resultados>22</ns12:num_total_resultados>
+						<ns12:posicion_inicial>1</ns12:posicion_inicial>
+						<ns12:num_resultados>10</ns12:num_resultados>
+					</ns12:resultados>
+				</resultTraza>
+			</recuperarTrazaResponse>
+		</soapenv:Body>
+	</soapenv:Envelope>
+</root>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+						http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+						
+	<sub-flow name="FLW-SEG-PET" doc:name="Securizar Payload">
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - SECURIZAR] Inicio del flujo FLW-SEG-PET - Payload: #[payload]" />
+			
+			<!-- CIFRAR -->
+			<logger level="INFO" doc:name="Logger" message="[SUBFLOW - SECURIZAR] Comprobar encriptacion de la peticion" />
+			<choice doc:name="Encriptacion Productor">
+				<when expression="#[message.outboundProperties['${CIFRADO}'] == '${INDICADOR_CIFRADO_PROVEEDOR}']">
+					<logger level="INFO" message="[SUBFLOW - SECURIZAR] Encriptacion de la peticion requerida" doc:name="Logger" />
+					<processor-chain doc:name="Processor Chain">
+						<component	doc:name="Encriptar la peticion" >
+							<spring-object bean="encriptarProveedor" />
+						</component>
+					</processor-chain>
+				</when>
+				<otherwise>
+					<logger level="INFO" message="[SUBFLOW - SECURIZAR] Encriptacion de la peticion no requerida" doc:name="Logger" />
+				</otherwise>
+			</choice>
+			
+			<!-- FIRMA -->
+			<logger level="INFO" doc:name="Logger" message="[SUBFLOW - SECURIZAR] Comprobar firma de la peticion" />
+			<choice doc:name="Firma Productor">
+				<when expression="#[message.outboundProperties['${FIRMA}'] == '${INDICADOR_FIRMADO_PROVEEDOR}']">
+					<logger level="INFO" message="[SUBFLOW - SECURIZAR] Firma de la peticion requerida" doc:name="Logger" />
+					<processor-chain doc:name="Processor Chain">
+						<component	doc:name="Firmar la peticion" >
+							<spring-object bean="firmar" />
+						</component>
+					</processor-chain>
+				</when>
+				<otherwise>
+					<logger level="INFO" message="[SUBFLOW - SECURIZAR] Firma de la peticion no requerida" doc:name="Logger" />
+				</otherwise>
+			</choice>
+			
+		<logger level="INFO" doc:name="Logger" message="[SUBFLOW - SECURIZAR] Fin del flujo FLW-SEG-PET - Payload: #[payload]" />
+	</sub-flow>
+</mule>
