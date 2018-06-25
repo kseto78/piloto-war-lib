@@ -1,0 +1,39 @@
+
+<Peticion>
+  <Usuario>portalNOTIFICA@</Usuario>
+  <Password>portalNOTIFICA@</Password>
+  <NombreLote>LOTE_PUSHL_TEST_20160129</NombreLote>
+  <Servicio>1042</Servicio>
+  <CodSia>SIA123</CodSia>
+  <CodOrganismo>ORG123</CodOrganismo>
+  <CodOrganismoPagadorSMS>ORG123</CodOrganismoPagadorSMS>
+  <Mensajes>
+    <MensajeSMS>
+      <Cuerpo>prueba de envio sms</Cuerpo>
+      <DestinatariosSMS>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>pruebasSIMdesarrolloSMS</IdExterno>
+        <Destinatario>609691700</Destinatario>
+      </DestinatariosSMS>
+      <DestinatariosSMS>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>pruebasSIMdesarrolloSMS</IdExterno>
+        <Destinatario>609691700</Destinatario>
+      </DestinatariosSMS>
+      <DestinatariosSMS>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>pruebasSIMdesarrolloSMS</IdExterno>
+        <Destinatario>609691700</Destinatario>
+      </DestinatariosSMS>
+    </MensajeSMS>
+    <MensajeSMS>
+      <Cuerpo>prueba de envio sms gregorio</Cuerpo>
+      <DestinatariosSMS>
+        <DocUsuario>53148510H</DocUsuario>
+        <IdExterno>pruebasSIMdesarrolloSMS</IdExterno>
+        <Destinatario>609691700</Destinatario>
+      </DestinatariosSMS>
+    </MensajeSMS>
+    
+  </Mensajes>
+</Peticion>

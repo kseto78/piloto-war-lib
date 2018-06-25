@@ -1,0 +1,14 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://www.telefonica.es/MI/InterfazSimplificado/schemas">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <sch:deliveryReportReq>
+        <Version>1.0</Version>
+        <Sender>638444086</Sender>
+        <Recipient>+34653812255</Recipient>
+        <MessageId>87</MessageId>
+        <MessageStatus>40</MessageStatus>
+        <!--Optional:-->
+        <StatusText>Recibido Correctamente</StatusText>
+     </sch:deliveryReportReq>
+  </soapenv:Body>
+</soapenv:Envelope>

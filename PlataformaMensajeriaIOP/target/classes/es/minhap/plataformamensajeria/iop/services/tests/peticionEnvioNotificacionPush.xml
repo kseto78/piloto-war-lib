@@ -1,0 +1,30 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pet="http://misim.redsara.es/misim-bus-webapp/peticion">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pet:Peticion>
+         <pet:Usuario>portalNOTIFICA@</pet:Usuario>
+         <pet:Password>portalNOTIFICA@</pet:Password>
+         <pet:NombreLote>LOTE_PUSHL_TEST_20160129XML</pet:NombreLote>
+         <pet:Servicio>1042</pet:Servicio>
+         <!--Optional:-->
+         <pet:Mensajes>
+            <pet:MensajePush>
+               <!--Optional:-->
+               <pet:DocUsuario>53148510H</pet:DocUsuario>
+               <!--Optional:-->
+               <pet:CodSia>SIA123</pet:CodSia>
+               <!--Optional:-->
+               <pet:CodOrganismo>ORG123</pet:CodOrganismo>
+               <pet:IdExterno>idexterno_xML</pet:IdExterno>
+               <pet:IdentificadorUsuario>?</pet:IdentificadorUsuario>
+               <pet:Titulo>titulo_xML</pet:Titulo>
+               <pet:Cuerpo>Cuerpo mensajex</pet:Cuerpo>
+               <!--Optional:-->
+               <pet:Icono>?</pet:Icono>
+               <!--Optional:-->
+               <pet:Sonido>?</pet:Sonido>
+            </pet:MensajePush>
+         </pet:Mensajes>
+      </pet:Peticion>
+   </soapenv:Body>
+</soapenv:Envelope>

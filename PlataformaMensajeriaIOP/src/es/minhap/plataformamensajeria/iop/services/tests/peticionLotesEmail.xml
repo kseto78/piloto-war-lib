@@ -1,0 +1,35 @@
+
+
+		<pet:Peticion xmlns:pet="http://misim.redsara.es/misim-bus-webapp/peticion">
+			<pet:Usuario>pruebasSIMdes</pet:Usuario>
+			<pet:Password>pruebasSIMdes</pet:Password>
+			<pet:NombreLote>LOTE_EMAIL_29_02_2016_1015</pet:NombreLote>
+			<pet:Servicio>542</pet:Servicio>
+			<pet:CodSia>COD_SIA_PRUEBA</pet:CodSia>
+			<pet:CodOrganismo>COD_ORGANISMO_PRUEBA</pet:CodOrganismo>
+			<pet:Mensajes>
+				<pet:MensajeEmail>
+					<pet:Asunto>Prueba EMAIL 29_02_2016_1015</pet:Asunto>
+					<pet:Cuerpo>Texto email 29_02_2016_1015</pet:Cuerpo>
+					<pet:Origen>EQUIPO_DES_MINHAP</pet:Origen>
+					<pet:Modo>0</pet:Modo>
+					<pet:Adjuntos>
+						<pet:Adjunto>
+							<pet:Nombre>?</pet:Nombre>
+							<pet:Contenido>?</pet:Contenido>
+						</pet:Adjunto>
+					</pet:Adjuntos>
+					<pet:DestinatariosMail>
+						<!--Optional: -->
+						<pet:DocUsuario>29015</pet:DocUsuario>
+						<pet:IdExterno>DES_MINHAP</pet:IdExterno>
+						<pet:Destinatarios>
+							<pet:To>info@skypower.es</pet:To>
+						</pet:Destinatarios>
+						<pet:Destinatarios>
+							<pet:To>info@skypower.es</pet:To>
+						</pet:Destinatarios>
+					</pet:DestinatariosMail>
+				</pet:MensajeEmail>
+			</pet:Mensajes>
+		</pet:Peticion>

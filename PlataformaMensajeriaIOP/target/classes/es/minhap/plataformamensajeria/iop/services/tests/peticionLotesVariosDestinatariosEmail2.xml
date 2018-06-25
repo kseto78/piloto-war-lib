@@ -1,0 +1,52 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pet="http://misim.redsara.es/misim-bus-webapp/peticion">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <pet:Peticion>
+        <pet:Usuario>pruebasSIMdes</pet:Usuario>
+        <pet:Password>pruebasSIMdes</pet:Password>
+        <pet:NombreLote>Prueba MAIL</pet:NombreLote>
+        <pet:Servicio>542</pet:Servicio>
+        <!--Optional:-->
+        <pet:CodSia></pet:CodSia>
+        <!--Optional:-->
+        <pet:CodOrganismo></pet:CodOrganismo>
+        <!--Optional:-->
+        <pet:CodOrganismoPagadorSMS></pet:CodOrganismoPagadorSMS>
+        <pet:Mensajes>
+           <!--Zero or more repetitions:-->
+           <pet:MensajeEmail>
+              <pet:Asunto>Asunto</pet:Asunto>
+              <pet:Cuerpo>Cuerpo 1</pet:Cuerpo>
+              <!--Optional:-->
+              <pet:Origen></pet:Origen>
+              <!--Optional:-->
+              <pet:Modo>1</pet:Modo>
+              <!--Optional:-->
+              <pet:Adjuntos>
+                 <!--1 or more repetitions:-->
+                 <pet:Adjunto>
+                    <pet:Nombre></pet:Nombre>
+                    <pet:Contenido></pet:Contenido>
+                 </pet:Adjunto>
+              </pet:Adjuntos>
+              <pet:DestinatariosMail>
+                 <!--1 or more repetitions:-->
+                 <pet:DestinatarioMail>
+                    <!--Optional:-->
+                    <pet:DocUsuario></pet:DocUsuario>
+                    <pet:IdExterno></pet:IdExterno>
+                    <pet:Destinatarios>
+                       <pet:To>borja.gutierrez.goiria.sa@everis.com</pet:To>
+                       <!--Optional:-->
+                       <pet:CC></pet:CC>
+                       <!--Optional:-->
+                       <pet:Bcc></pet:Bcc>
+                    </pet:Destinatarios>
+                 </pet:DestinatarioMail>
+                 <!--1 or more repetitions:-->
+              </pet:DestinatariosMail>
+           </pet:MensajeEmail>
+        </pet:Mensajes>
+     </pet:Peticion>
+  </soapenv:Body>
+</soapenv:Envelope>

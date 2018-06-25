@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+ 
+ 
+	<context:annotation-config />
+	
+	<bean id="TblLotesEnviosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblLotesEnviosManagerImpl" />
+	<bean id="TblMensajesManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblMensajesManagerImpl" />
+	<bean id="TblAplicacionesManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblAplicacionesManagerImpl" />
+	<bean id="TblAuditoriaManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblAuditoriaManagerImpl" />
+	<bean id="TblEstadosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblEstadosManagerImpl" />
+	<bean id="TblServiciosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblServiciosManagerImpl" />
+	<bean id="TblServidoresServiciosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblServidoresServiciosManagerImpl" />
+	<bean id="TblServidoresManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblServidoresManagerImpl" />
+	<bean id="ViewLotesEnviosDetalladaManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.ViewLotesEnviosDetalladaManagerImpl" />
+	<bean id="TblDestinatariosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblDestinatariosManagerImpl" />
+	<bean id="TblHistoricosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblHistoricosManagerImpl" />
+	<bean id="TblGestionEnviosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblGestionEnviosManagerImpl" />
+	<bean id="TblOrganismosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblOrganismosManagerImpl" />	
+	<bean id="TblSubEstadosManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblSubEstadosManagerImpl" />
+	<bean id="TblUsuariosPushManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblUsuariosPushManagerImpl" />
+	<bean id="TblErrorMensajeLogManagerImpl" class="es.minhap.plataformamensajeria.iop.managerimpl.TblErrorMensajeLogManagerImpl" />
+</beans>

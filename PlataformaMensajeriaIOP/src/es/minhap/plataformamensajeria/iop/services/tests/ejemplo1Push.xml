@@ -1,0 +1,52 @@
+<Peticion xmlns="http://misim.redsara.es/misim-bus-webapp/peticion">
+        <Usuario>pruebasSIMdes</Usuario>
+        <Password>pruebasSIMdes</Password>
+        <NombreLote>Prueba PUSH 2</NombreLote>
+        <Servicio>822</Servicio>
+        <!--Optional:-->
+        <CodSia>sia</CodSia>
+        <!--Optional:-->
+        <CodOrganismo>organismo</CodOrganismo>
+        <Mensajes>
+           <MensajePush>
+              <Titulo>Titulo 2</Titulo>
+              <Cuerpo>{"contentTitle":"titulo", "tickerText":"Titulo 13042016 0959", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "message":"Prueba de avisos PUSH por favor avisad si os llega", "url": "http://google.com"}</Cuerpo>
+              <!--Optional:-->
+              <Icono></Icono>
+              <!--Optional:-->
+              <Sonido></Sonido>
+              <DestinatariosPush>
+                 <!--1 or more repetitions:-->
+                 <DestinatarioPush>
+                    <!--Optional:-->
+                    <DocUsuario>11111111H</DocUsuario>
+                    <IdExterno>IDEXTERNO</IdExterno>
+                    <IdentificadorUsuario>Usuario P1</IdentificadorUsuario>
+                 </DestinatarioPush>
+                 <DestinatarioPush>
+                    <!--Optional:-->
+                    <DocUsuario>11111111H</DocUsuario>
+                    <IdExterno>IDEXTERNO2</IdExterno>
+                    <IdentificadorUsuario>tres_usu</IdentificadorUsuario>
+                 </DestinatarioPush>
+              </DestinatariosPush>
+           </MensajePush>
+           <MensajePush>
+              <Titulo>Titulo 2</Titulo>
+              <Cuerpo>Cuerpo mensaje push2</Cuerpo>
+              <!--Optional:-->
+              <Icono></Icono>
+              <!--Optional:-->
+              <Sonido></Sonido>
+              <DestinatariosPush>
+                 <!--1 or more repetitions:-->
+                 <DestinatarioPush>
+                    <!--Optional:-->
+                    <DocUsuario>11111111H</DocUsuario>
+                    <IdExterno>IDEXTERNO2</IdExterno>
+                    <IdentificadorUsuario>70894428X</IdentificadorUsuario>
+                 </DestinatarioPush>
+              </DestinatariosPush>
+           </MensajePush>
+        </Mensajes>
+     </Peticion>

@@ -1,0 +1,262 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.minhap</groupId>
+	<name>PlataformaMensajeriaIOP</name>
+	<artifactId>PlataformaMensajeriaIOP</artifactId>
+
+	<version>3.0.2</version>
+
+	<packaging>jar</packaging>
+
+	<properties>
+		<cxf.version>2.6.3</cxf.version>
+		<jdk.version>1.7</jdk.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.3</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.0.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.minhap</groupId>
+			<artifactId>PlataformaMensajeriaCommon</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.minhap</groupId>
+			<artifactId>misim-bus-persistence</artifactId>
+			<version>2.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-orm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>es.minhap</groupId>
+			<artifactId>sim-persistence</artifactId>
+			<version>2.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-orm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>nl.martijndwars</groupId>
+			<artifactId>web-push</artifactId>
+			<version>3.0.0</version>
+			
+						<exclusions>
+				<exclusion>
+					<groupId>javax.inject</groupId>
+					<artifactId>javax.inject</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-collections</groupId>
+					<artifactId>commons-collections</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<!-- <exclusion> -->
+				<!-- <groupId>org.bouncycastle</groupId> -->
+				<!-- <artifactId>bcpkix-jdk15on</artifactId> -->
+				<!-- </exclusion> -->
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on-1.52</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+				
+		<dependency>
+			<groupId>es.minhap</groupId>
+			<artifactId>minhap-jpasskit</artifactId>
+			<version>1.0.6</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.inject</groupId>
+					<artifactId>javax.inject</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-collections</groupId>
+					<artifactId>commons-collections</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<!-- <exclusion> -->
+				<!-- <groupId>org.bouncycastle</groupId> -->
+				<!-- <artifactId>bcpkix-jdk15on</artifactId> -->
+				<!-- </exclusion> -->
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on-1.52</artifactId>
+				</exclusion>
+<!-- 				<exclusion> -->
+<!-- 					<groupId>es.minhap</groupId> -->
+<!-- 					<artifactId>minhap-bouncycastle</artifactId> -->
+<!-- 				</exclusion>				 -->
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.minhap</groupId>
+			<artifactId>minhap-common</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<!-- SERVLET -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+		<!-- Componente JMS -->
+
+		<dependency>
+			<groupId>es.minhap.sim</groupId>
+			<artifactId>JMSComponent</artifactId>
+			<version>1.0.8</version>
+			<type>ejb</type>
+		</dependency>
+		
+<!-- Librerias de pruebas para las notificaciones Push en iOS -->
+		<!-- push -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.notnoop.apns</groupId> -->
+<!-- 			<artifactId>apns</artifactId> -->
+<!-- 			<version>1.0.0.Beta7-SNAPSHOT</version> -->
+<!--  		</dependency> -->
+
+		
+<!-- Librerias de pruebas para las notificaciones Push en iOS -->
+		<!-- push -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.notnoop.apns</groupId> -->
+<!-- 			<artifactId>apns</artifactId> -->
+<!-- 			<version>1.0.0.Beta7-SNAPSHOT</version> -->
+<!--  		</dependency> -->
+
+<!-- https://mvnrepository.com/artifact/es.arcadiaconsulting.javapns/javapns -->
+<!-- 			<dependency> -->
+<!-- 			    <groupId>es.arcadiaconsulting.javapns</groupId> -->
+<!-- 			    <artifactId>javapns</artifactId> -->
+<!-- 			    <version>2.2-json</version> -->
+<!-- 			</dependency> -->
+
+<!-- https://mvnrepository.com/artifact/es.arcadiaconsulting.javapns/javapns -->
+<!-- 			<dependency> -->
+<!-- 			    <groupId>es.arcadiaconsulting.javapns</groupId> -->
+<!-- 			    <artifactId>javapns</artifactId> -->
+<!-- 			    <version>2.2-json</version> -->
+<!-- 			</dependency> -->
+
+
+<!-- Deprecated -->
+
+<!-- Deprecated -->
+
+		<dependency>
+			<groupId>com.github.fernandospr</groupId>
+			<artifactId>javapns-jdk16</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,9 @@
+     <PeticionConsultaServiciosDisponibles xmlns="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles">
+        <Usuario>pruebasSIMdes</Usuario>
+        <Password>pruebasSIMdes</Password>
+        <!-- OPCIONAL? -->
+        <!-- <IdUsuario>822_561</IdUsuario>-->
+               
+     </PeticionConsultaServiciosDisponibles>
+
+

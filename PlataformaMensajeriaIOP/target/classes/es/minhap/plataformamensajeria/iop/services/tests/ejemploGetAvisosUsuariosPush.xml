@@ -1,0 +1,16 @@
+     <PeticionGetAvisosUsuario xmlns="http://misim.redsara.es/misim-bus-webapp/PeticionGetAvisosUsuario">
+        <Usuario>pruebasSIMdes</Usuario>
+        <Password>pruebasSIMdes</Password>
+        <IdDispositivo>822_561</IdDispositivo>
+        <IdServicio>822</IdServicio>
+        <IdPlataforma>1</IdPlataforma>
+         <!-- OPCIONAL -->
+<!--         <IdUsuario>Y1560140H</IdUsuario> -->
+        <!-- OPCIONAL -->
+        <NumPagina>5</NumPagina>
+        <!-- OPCIONAL -->
+        <TamPagina>3</TamPagina> 
+        
+     </PeticionGetAvisosUsuario>
+
+
