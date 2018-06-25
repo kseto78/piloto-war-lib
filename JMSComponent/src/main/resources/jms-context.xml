@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:core="http://activemq.apache.org/schema/core" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://activemq.apache.org/schema/core http://activemq.org/config/1.0/1.0.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+	<context:component-scan base-package="es.map.sim" />
+
+
+	<!-- CONFIGURACIÓN CONEXION ACTIVEMQ -->
+
+	<!-- Activemq connection factory -->
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<!-- brokerURL -->
+		<property name="brokerURL" value="tcp://127.0.0.1:61616" />
+		<property name="userName" value="admin" />
+		<property name="password" value="admin" />
+<!-- 		<property name="transactedIndividualAck" value="true" /> -->
+	</bean>
+
+	<!-- JmsTemplate Definition -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="amqConnectionFactory" />
+		<property name="receiveTimeout" value="200" />
+	    <property name="sessionTransacted" value="false" />
+	    <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+<!-- 		<property name="sessionAcknowledgeMode" value="0" /> -->
+		<!-- <property name="sessionTransacted" value="true" /> -->
+
+	</bean>
+
+	<!-- FIN CONFIGURACION CONEXION ACTIVEMQ -->
+
+
+	<!-- GESTION DE TRANSACCIONES -->
+	<bean id="txManager"
+		class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="amqConnectionFactory" />
+	</bean>
+
+	<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
+	<tx:advice id="txAdvise" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED"
+				rollback-for="java.lang.RuntimeException" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut
+			expression="execution(* es.map.sim.jms.receiver.*SIMMessageReceiver.*(..))  or execution(* org.springframework.jms.listener.*DefaultMessageListenerContainer.*(..)) or execution(* org.springframework.jms.core.*JmsTemplate.*(..)) or execution(* *.onMessage(..)) or execution(* *.*MessageListener.*(..)) or execution(* es.map.sim.jms.listener.adapter.*ExceptionStrategyMessageListenerAdapter.*(..))"
+			id="txPointcut" />
+		<aop:advisor advice-ref="txAdvise" pointcut-ref="txPointcut" />
+	</aop:config>
+	<!-- FIN GESTION DE TRANSACCIONES -->
+	
+	<bean name="queueResolver" class="es.map.sim.jms.QueueResolver">
+		<property name="premiumQueueName" value="queue.sim.premium" />
+		<property name="refreshQueueName" value="queue.sim.refreshStatus" />
+		<property name="queueNamePrefix" value="queue.sim." />
+		<property name="fallidosQueueName"  value="queue.sim.dlq"/>
+	</bean>
+
+	<!-- LIMITAR REINTENTOS -->
+
+	<bean name="simMaxRetriesProperty" class="java.lang.String">
+		<constructor-arg value="SIM_MAX_RETRIES" />
+	</bean>
+
+	<!-- Configuración del Bean encargado de limitar los reintentos -->
+	<bean name="limitRetriesStrategy" class="es.map.sim.jms.aspect.RetryLimitExceptionStrategy">
+		<property name="limitQueue" value="#{queueResolver.fallidosQueueName}" />
+		<property name="retriesProperty" ref="simMaxRetriesProperty" />
+	</bean>
+
+	<!-- FIN LIMITAR REINTENTOS -->
+
+	
+	<!-- INICIO CONFIGURACION GENERAL COMPONENTE JMS SIM -->
+	<bean name="simMsgConverter"
+		class="org.springframework.jms.support.converter.MappingJackson2MessageConverter">
+		<property name="typeIdPropertyName" value="type" />
+		<!-- <property name="typeIdMappings"> <map> <entry key="mensajeJMS" value="es.map.sim.negocio.modelo.MensajeJMS"/> 
+			</map> </property> -->
+	</bean>
+
+	<bean name="messageSender" class="es.map.sim.jms.sender.SIMMessageSender">
+		<property name="maxRetriesProperty" ref="simMaxRetriesProperty" />
+		<property name="converter" ref="simMsgConverter" />
+	</bean>
+
+	<bean name="baseSIMMensajeListener" abstract="true"
+		class="es.map.sim.jms.listener.adapter.ExceptionStrategyMessageListenerAdapter">
+		<property name="messageConverter" ref="simMsgConverter" />
+		<property name="excStrategy" ref="limitRetriesStrategy"></property>
+	</bean>
+	
+	
+	<!-- FIN CONFIGURACION GENERAL COMPONENTE JMS SIM -->
+	
+	<!-- INICIO CONFIGURACION GENERAL ENVIAR MENSAJE -->
+	<bean name="enviarMensajeNegocio" class="org.apache.activemq.command.ActiveMQQueue" />
+
+	<bean name="enviarMensajeListener" parent="baseSIMMensajeListener">
+		<property name="delegate" ref="enviarMensajeNegocio" />
+		<property name="defaultListenerMethod" value="doSomething" />
+	</bean>
+	
+	<!-- FIN CONFIGURACION GENERAL ENVIAR MENSAJE -->
+	
+	<!-- CONFIGURACION LISTENER ENVIAR MENSAJE -->
+	<jms:listener-container acknowledge="transacted"
+		transaction-manager="txManager" connection-factory="amqConnectionFactory"
+		concurrency="10" destination-type="queue" receive-timeout="100">
+		<jms:listener ref="enviarMensajeListener" destination="#{queueResolver.premiumQueueName}" />
+	</jms:listener-container>
+	
+	<!-- CONFIGURACION RECEPCION SINCRONA ENVIAR MENSAJE --> 
+	<bean name="enviarMensajeMessageReceiver" class="es.map.sim.jms.receiver.SIMMessageReceiver">
+		<property name="listener" ref="enviarMensajeListener" />
+	</bean>
+	<!-- INICIO CONFIGURACION REFRESHSTATUS -->
+	
+	<bean name="refreshStatusNegocio" class="org.apache.activemq.command.ActiveMQQueue" />
+
+	<bean name="refreshStatusListener" parent="baseSIMMensajeListener">
+		<property name="delegate" ref="refreshStatusNegocio" />
+		<property name="defaultListenerMethod" value="doSomething" />
+	</bean>
+	
+	<jms:listener-container acknowledge="transacted"
+		transaction-manager="txManager" connection-factory="amqConnectionFactory"
+		concurrency="10" destination-type="queue" receive-timeout="100">
+		<jms:listener ref="refreshStatusListener" destination="#{queueResolver.refreshQueueName}" />
+	</jms:listener-container>
+	
+<!-- FIN CONFIGURACION REFRESHSTATUS -->
+
+
+<!-- INICIO CONFIGURACION MENSAJES FALLIDOS -->
+	
+		<bean name="mensajesFallidosNegocio" class="org.apache.activemq.command.ActiveMQQueue" />
+
+	<bean name="mensajesFallidosListener" parent="baseSIMMensajeListener">
+		<property name="delegate" ref="mensajesFallidosNegocio" />
+		<property name="defaultListenerMethod" value="doSomething" />
+	</bean>
+	<bean name="mensajesFallidosMessageReceiver" class="es.map.sim.jms.receiver.SIMMessageReceiver">
+		<property name="listener" ref="mensajesFallidosListener" />
+		<property name="defaultQueueName" value="#{queueResolver.fallidosQueueName}"></property>
+	</bean>
+</beans>
