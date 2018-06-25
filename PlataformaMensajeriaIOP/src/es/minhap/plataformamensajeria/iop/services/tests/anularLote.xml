@@ -1,6 +1,0 @@
- <pet:Peticion xmlns:pet="http://misim.redsara.es/misim-bus-webapp/peticion">
-        <pet:Usuario>pruebasSIMdes</pet:Usuario>
-        <pet:Password>pruebasSIMdes</pet:Password>
-        <pet:Lote></pet:Lote>
-
-     </pet:Peticion>
