@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://princast.es/redboxentrada"
+	xmlns:impl="http://princast.es/redboxentrada"
+	xmlns:intf="http://princast.es/redboxentrada"
+	xmlns:apachesoap="http://xml.apache.org/xml-soap"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns1="http://princast.es/redboxentrada/2.0/redboxentrada.xsd">
+	
+	
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns1="http://princast.es/redboxentrada/2.0/redboxentrada.xsd">
+			<import
+				namespace="http://princast.es/redboxentrada/2.0/redboxentrada.xsd"
+				schemaLocation="redboxentrada.xsd" />
+		</schema>
+	</wsdl:types>
+
+	<!-- Mensajes -->
+	<wsdl:message name="NotificacionMessage">
+		<wsdl:part name="payload" element="tns1:Notificacion" />
+	</wsdl:message>
+
+	<wsdl:message name="SMSEntradaMessage">
+		<wsdl:part name="payload" element="tns1:SMSEntrada" />
+	</wsdl:message>
+	
+	<wsdl:message name="Acknowledgement">
+		<wsdl:part name="payload"	element="tns1:Acknowledgement" />
+	</wsdl:message>
+
+	<!-- Port -->
+
+	<wsdl:portType name="RecepcionVodafonePortType">
+
+		<wsdl:operation name="receiveNotificacion">
+			<wsdl:input name="receiveNotificacionRequest"
+				message="impl:NotificacionMessage" />
+			<wsdl:output name="receiveNotificacionResponse"
+				message="impl:Acknowledgement" />
+		</wsdl:operation>
+
+		<wsdl:operation name="receiveSMSEntrada">
+			<wsdl:input name="receiveSMSEntradaRequest"
+				message="impl:SMSEntradaMessage" />
+			<wsdl:output name="receiveSMSEntradaResponse"
+				message="impl:Acknowledgement" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+	<!-- Binding -->
+	<wsdl:binding name="RecepcionVodafoneBinding"	                  
+		type="impl:RecepcionVodafonePortType">
+
+		<wsdlsoap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<wsdl:operation name="receiveNotificacion">
+			<wsdlsoap:operation soapAction="urn:receiveNotificacion" />
+			<wsdl:input name="receiveNotificacionRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>				
+			<wsdl:output name="receiveNotificacionResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="receiveSMSEntrada">
+			<wsdlsoap:operation soapAction="urn:receiveSMSEntrada" />
+			<wsdl:input name="receiveSMSEntradaRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>		
+			<wsdl:output name="receiveSMSEntradaResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>	
+		</wsdl:operation>
+
+	</wsdl:binding>
+
+	<wsdl:service name="Recepcion002Service">
+		<wsdl:port name="RecepcionVodafonePort" binding="impl:RecepcionVodafoneBinding">
+			<soap:address location="/misim-bus-webapp/Recepcion002Service"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
+

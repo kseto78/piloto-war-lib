@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"  
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/"  
+	xmlns:ns1="http://misim.redsara.es/misim-bus-webapp/peticion" 
+	xmlns:ns2="http://misim.redsara.es/misim-bus-webapp/respuesta"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.map.es/xml-schemas">
+			<import namespace="http://misim.redsara.es/misim-bus-webapp/peticion" schemaLocation="peticion.xsd"/>
+			<import namespace="http://misim.redsara.es/misim-bus-webapp/respuesta" schemaLocation="respuesta.xsd"/>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="envio-aplicacion-Peticion">
+		<wsdl:part name="peticion" element="ns1:envioAplicacionRequest"/>
+	</wsdl:message>
+	<wsdl:message name="envio-aplicacion-Respuesta">
+		<wsdl:part name="respuesta" element="ns2:envioAplicacioResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="EnvioAplicacionWSPortType">
+		<wsdl:operation name="envio-aplicacion">
+			<wsdl:input name="Peticion" message="impl:envio-aplicacion-Peticion"/>
+			<wsdl:output name="Respuesta" message="impl:envio-aplicacion-Respuesta"/>
+		</wsdl:operation>
+		
+	</wsdl:portType>
+	<wsdl:binding name="envio-aplicacionBinding" type="impl:EnvioAplicacionWSPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="envio-aplicacion">
+			<soap:operation soapAction="envio-aplicacion" style="document"/>
+			<wsdl:input>
+				<soap:body parts="peticion" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="respuesta" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="EnvioAplicacionService">
+		<wsdl:port name="EnvioAplicacionImplPort" binding="impl:envio-aplicacionBinding">
+			<soap:address location="/misim-bus-webapp/EnvioAplicacionService"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://princast.es/redboxentrada/2.0/redboxentrada.xsd"
+	targetNamespace="http://princast.es/redboxentrada/2.0/redboxentrada.xsd">
+
+	<element name="Notificacion" type="tns:TNotificacion" />
+	<element name="SMSEntrada" type="tns:TSMSEntrada" />
+	<element name="Acknowledgement" type="tns:TAcknowledgement" />
+
+
+	<complexType name="TNotificacion">
+		<sequence>
+			<element name="tipo" type="string" minOccurs="1" />
+			<element name="origen" type="string" minOccurs="1" />
+			<element name="destino" type="string" minOccurs="1" />
+			<element name="fecha" type="string" minOccurs="1" />
+			<element name="detalle" type="string" minOccurs="1" />
+			<element name="idOperador" type="string" minOccurs="1" />
+			<element name="idContexto" type="string" minOccurs="1" />			
+			<element name="operador" type="string" minOccurs="1" />
+			<element name="aplicacion" type="string" minOccurs="1" />
+		</sequence>
+	</complexType>
+
+	<complexType name="TAcknowledgement">
+		<sequence>
+			<element name="Acknowledged" type="boolean" />
+		</sequence>
+	</complexType>
+
+	
+	<complexType name="TSMSEntrada">
+		<sequence>
+			<element name="tipo" type="string" minOccurs="1" />
+			<element name="origen" type="string" minOccurs="1" />
+			<element name="destino" type="string" minOccurs="1" />
+			<element name="idContexto" type="string" minOccurs="1" />
+			<element name="idOperador" type="string" minOccurs="1" />
+			<element name="fecha" type="string" minOccurs="1" />
+			<element name="asunto" type="string" minOccurs="1" />
+			<element name="operador" type="string" minOccurs="1" />
+			<element name="aplicacion" type="string" minOccurs="1" />
+
+		</sequence>
+	</complexType>
+
+</schema>

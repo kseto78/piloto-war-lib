@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/peticion"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/peticion"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<element name="Peticion">
+		<complexType>
+			<sequence>
+				<element name="IdPeticion" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="UsuSistemaEnvio" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="PassSistemaEnvio" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="Aplicacion" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="NumeroTelefonoDestino" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				<element name="ContenidoMsj" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			</sequence>
+		</complexType>
+	</element>
+	
+</schema>

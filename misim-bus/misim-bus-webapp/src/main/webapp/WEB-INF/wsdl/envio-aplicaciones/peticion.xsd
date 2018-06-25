@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:impl="http://misim.redsara.es/misim-bus-webapp/peticion"
+	targetNamespace="http://misim.redsara.es/misim-bus-webapp/peticion"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	
+	<xsd:element name="envioAplicacionRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element minOccurs="1" maxOccurs="1" name="User" type="xsd:string"/>
+				<xsd:element minOccurs="1" maxOccurs="1" name="Password" type="xsd:string"/>
+				<xsd:element minOccurs="1" maxOccurs="1" name="Sender" type="xsd:string"/>
+				<xsd:element minOccurs="1" maxOccurs="1" name="Recipient" type="xsd:string"/>
+				<xsd:element minOccurs="1" maxOccurs="1" name="SMSText" type="xsd:string"/>
+				<xsd:element minOccurs="1" maxOccurs="1" name="LoteId" type="xsd:string"/>
+				<xsd:element minOccurs="1" maxOccurs="1" name="MessageId" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>	
+	
+</schema>
