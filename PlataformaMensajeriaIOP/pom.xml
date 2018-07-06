@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>sim-persistence</artifactId>
-			<version>2.0.1-SNAPSHOT</version>
+			<version>2.0.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -78,7 +78,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>nl.martijndwars</groupId>
+			<groupId>es.minhap</groupId>
 			<artifactId>web-push</artifactId>
 			<version>3.0.0</version>
 			
@@ -226,7 +226,7 @@
 <!-- Deprecated -->
 
 		<dependency>
-			<groupId>com.github.fernandospr</groupId>
+			<groupId>es.minhap</groupId>
 			<artifactId>javapns-jdk16</artifactId>
 			<version>2.3.2</version>
 		</dependency>
