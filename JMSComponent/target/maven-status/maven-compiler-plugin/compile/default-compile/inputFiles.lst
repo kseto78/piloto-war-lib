@@ -1,9 +1,0 @@
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\ejb\SIMMessageListenerMDB.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\strategy\ExceptionStrategy.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\negocio\MockBusiness.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\negocio\modelo\MensajeJMS.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\aspect\RetryLimitExceptionStrategy.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\receiver\SIMMessageReceiver.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\sender\SIMMessageSender.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\listener\adapter\ExceptionStrategyMessageListenerAdapter.java
-D:\MISIM\workspaceIncidenciaConsultaEstado\JMSComponent\src\main\java\es\map\sim\jms\QueueResolver.java
