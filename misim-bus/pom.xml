@@ -182,4 +182,19 @@
 		<module>misim-bus-core</module>
 		<module>misim-bus-webapp</module>
 	</modules>
+	
+<!-- OFICINA TECNICA Repositorio de distribución para el despliegue de los artefactos  -->	
+	<distributionManagement>
+		<repository>
+			<id>SIM-release</id>
+			<name>SIM-release</name>
+			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>SIM-snapshots</id>
+            <name>SIM-snapshots</name>
+			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 </project>
