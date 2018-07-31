@@ -567,9 +567,16 @@
 <!-- 			</dependency> -->
 
 
-<!-- Deprecated -->
+<!-- Deprecated la renombramos para que estuviera en el grupo es.minhap
 		<dependency>
 			<groupId>com.github.fernandospr</groupId>
+			<artifactId>javapns-jdk16</artifactId>
+			<version>2.3.2</version>
+		</dependency>  -->
+ 
+
+		<dependency>
+			<groupId>es.minhap</groupId>
 			<artifactId>javapns-jdk16</artifactId>
 			<version>2.3.2</version>
 		</dependency>
