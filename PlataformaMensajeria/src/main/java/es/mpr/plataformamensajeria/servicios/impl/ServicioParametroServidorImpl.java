@@ -30,18 +30,25 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioParametroServidorImpl")
 public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
 	
+	/**  tbl parametros servidor manager. */
 	@Resource(name="tblParametrosServidorManagerImpl")
 	private TblParametrosServidorManager tblParametrosServidorManager;
 	
+	/**  tbl servidores manager. */
 	@Resource 
 	private TblServidoresManager tblServidoresManager;
 
+	/**  tbl tipos parametros. */
 	@Resource 
 	private TblTiposParametrosManager tblTiposParametros;
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#newParametroServidor(es.mpr.plataformamensajeria.beans.ParametroServidorBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	//////MIGRADO
 	@Override
 	@Transactional
@@ -67,6 +74,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#deleteParametroServidor(es.mpr.plataformamensajeria.beans.ParametroServidorBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -80,6 +90,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#getParametroServidorByServidorId(java.lang.Integer)
+	 */
 	//////MIGRADO
 	@Override
 	public List<ParametroServidorBean> getParametroServidorByServidorId(Integer servidorId) throws BusinessException {
@@ -94,6 +107,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#getParametroServidorByProveedorSMSId(java.lang.Integer)
+ */
 //////MIGRADO
 	@Override
 	public List<ParametroServidorBean> getParametroServidorByProveedorSMSId(Integer proveedorSMSId) throws BusinessException {
@@ -107,6 +123,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 		}
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#getParametroServidorByReceptorSMSId(java.lang.Integer)
+ */
 //////MIGRADO
 	@Override
 	public List<ParametroServidorBean> getParametroServidorByReceptorSMSId(Integer receptorSMSId) throws BusinessException {
@@ -120,6 +139,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 		}
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#getParametroServidorByServidorPushId(java.lang.Integer)
+ */
 //////MIGRADO
 	@Override
 	public List<ParametroServidorBean> getParametroServidorByServidorPushId(Integer servidorPushId) throws BusinessException {
@@ -133,6 +155,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor#existeParametroServidor(es.mpr.plataformamensajeria.beans.ParametroServidorBean)
+	 */
 	/////MIGRADO
 	@Override
 	public boolean existeParametroServidor(
@@ -150,11 +175,11 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 	}	
 	
 	/**
-	 * <p>Convertirmos una lista de ViewParametroServidorJPA a una lista de ParametroServidorBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de ViewParametroServidorJPA a una lista de ParametroServidorBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos ParametroServidorBean
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	protected List<ParametroServidorBean> getListViewParametroServidorBean(List<TblParametrosServidor> lista)

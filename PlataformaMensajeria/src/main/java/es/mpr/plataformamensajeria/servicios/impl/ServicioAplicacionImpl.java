@@ -37,6 +37,7 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>
  * Maneja la persistencia y b&uacute;squeda de aplicaciones a traves de JPA.
@@ -47,24 +48,33 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioAplicacionImpl")
 public class ServicioAplicacionImpl implements ServicioAplicacion {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioAplicacionImpl.class);
 
+	/**  tbl aplicaciones manager. */
 	@Resource(name = "TblAplicacionesManagerImpl")
 	TblAplicacionesManager tblAplicacionesManager;
 
+	/**  tbl planificaciones manager. */
 	@Resource(name = "TblPlanificacionesManagerImpl")
 	TblPlanificacionesManager tblPlanificacionesManager;
 
+	/**  tbl servicios manager. */
 	@Resource(name = "TblServiciosManagerImpl")
 	private TblServiciosManager tblServiciosManager;
 
+	/**  servicio servicio. */
 	@Resource(name = "servicioServicioImpl")
 	private ServicioServicio servicioServicio;
 	
+	/**  tbl usuarios aplicaciones manager. */
 	@Resource(name = "TblUsuariosAplicacionesManagerImpl")
 	private TblUsuariosAplicacionesManager tblUsuariosAplicacionesManager;
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#getAplicaciones()
+	 */
 	// //MIGRADO
 	@Override
 	public List<AplicacionBean> getAplicaciones() throws BusinessException {
@@ -78,6 +88,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#getAplicacionesNoAsignadas(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public List<AplicacionBean> getAplicacionesNoAsignadas(String idUsuario) throws BusinessException {
@@ -115,6 +128,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		return listBean;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#existeUsuario(java.lang.String)
+	 */
 	// ///MIGRADO
 	@Override
 	public boolean existeUsuario(String usuario) {
@@ -128,6 +144,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#getAplicacionesMenu(java.lang.String, java.lang.Integer)
+	 */
 	////MIGRADO
 	@Override
 	public List<AplicacionBean> getAplicacionesMenu(String rolUsuario, Integer userName) {
@@ -179,6 +198,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#getAplicaciones(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.AplicacionBean)
+	 */
 	// //MIGRADO
 	@Override
 	public PaginatedList<AplicacionBean> getAplicaciones(int start, int size, String order, String columnSort,
@@ -228,6 +250,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#newAplicacion(es.mpr.plataformamensajeria.beans.AplicacionBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	// ///MIGRADO
 	@Override
 	@Transactional
@@ -254,6 +279,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#updateAplicacion(es.mpr.plataformamensajeria.beans.AplicacionBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	/////MIGRADO
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -272,6 +300,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#loadAplicacion(es.mpr.plataformamensajeria.beans.AplicacionBean)
+	 */
 	// ///MIGRADO
 	@Override
 	@Transactional
@@ -286,6 +317,9 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion#deleteAplicacion(es.mpr.plataformamensajeria.beans.AplicacionBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	// ////MIGRADO
 	@Override
 	@Transactional
@@ -329,11 +363,11 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	/**
 	 * <p>
 	 * Obtenemos un objeto AplicacionBean a partir de un objeto AplicacionJPA
-	 * </p>
-	 * 
-	 * @param aplicacionJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param apli the apli
 	 * @return objeto AplicacionBean
+	 * @throws BusinessException the business exception
 	 */
 	// //MIGRADO
 	protected AplicacionBean getAplicacionBean(TblAplicaciones apli) throws BusinessException {
@@ -357,11 +391,11 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	/**
 	 * <p>
 	 * Convertirmos una lista de ViewAplicacionJPA a una lista de AplicacionBean
-	 * </p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos AplicacionBean
+	 * @throws BusinessException the business exception
 	 */
 	// //MIGRADO
 	protected List<AplicacionBean> getListViewAplicacionBean(List<TblAplicaciones> lista) throws BusinessException {
@@ -393,11 +427,11 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	/**
 	 * <p>
 	 * Obtenemos un objeto proveedorTO a partir de un objeto ProveedorSMSBean
-	 * </p>
-	 * 
-	 * @param organismoBean
-	 * 
+	 * </p>.
+	 *
+	 * @param aplicacion the aplicacion
 	 * @return objeto OrganismoJPA
+	 * @throws BusinessException the business exception
 	 */
 	// ///MIGRADO
 	protected TblAplicaciones getAplicacionTO(AplicacionBean aplicacion) throws BusinessException {

@@ -43,38 +43,52 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoHistoricos;
 @Service("servicioProcesoHistoricosImpl")
 public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProcesoHistoricosImpl.class);
 
+	/**  servicio lotes envios hist. */
 	@Resource(name = "servicioLotesEnviosHistoricosImpl")
 	private ServicioLotesEnviosHistoricos servicioLotesEnviosHist;
 
+	/**  servicio mensajes hist. */
 	@Resource(name = "servicioMensajesHistoricosImpl")
 	private ServicioMensajesHistoricos servicioMensajesHist;
 
+	/**  servicio mensajes adjuntos hist. */
 	@Resource(name = "servicioMensajesAdjuntosHistoricosImpl")
 	private ServicioMensajesAdjuntosHistoricos servicioMensajesAdjuntosHist;
 
+	/**  servicio adjunto email hist. */
 	@Resource(name = "servicioAdjuntoEmailHistoricosImpl")
 	private ServicioAdjuntoEmailHistoricos servicioAdjuntoEmailHist;
 
+	/**  servicio destinatario hist. */
 	@Resource(name = "servicioDestinatarioHistoricosImpl")
 	private ServicioDestinatarioHistoricos servicioDestinatarioHist;
 
+	/**  servicio historico hist. */
 	@Resource(name = "servicioHistoricoHistImpl")
 	private ServicioHistoricoHist servicioHistoricoHist;
 
+	/**  servicio gestion envios hist. */
 	@Resource(name = "servicioGestionEnviosHistoricosImpl")
 	private ServicioGestionEnviosHistoricos servicioGestionEnviosHist;
 
+	/**  tbl proceso hist manager. */
 	@Resource(name = "TblProcesoHistManagerImpl")
 	private TblProcesoHistManager tblProcesoHistManager;
 	
+	/**  session factory SIM app. */
 	@Autowired
     private SessionFactory sessionFactorySIMApp;
 		
+	/** Constante MAX. */
 	private static final Integer MAX = 1000;
 
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoHistoricos#newServicioProcesoHistoricos(es.mpr.plataformamensajeria.beans.ProcesoHistBean)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -95,6 +109,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoHistoricos#procesoHistoricoLotesEnvio(java.lang.Long, java.util.List)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -177,8 +194,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param fecha
-	 * @param procesoHistorificacionBean
+	 * Historifica mensajes hist.
+	 *
+	 * @param fecha the fecha
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void historificaMensajesHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -190,7 +209,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param procesoHistorificacionBean
+	 * Elimina mensajes.
+	 *
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void eliminaMensajes(ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -201,7 +222,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param procesoHistorificacionBean
+	 * Elimina destinatarios mensajes.
+	 *
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void eliminaDestinatariosMensajes(ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -214,7 +237,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param procesoHistorificacionBean
+	 * Elimina gestion envios.
+	 *
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void eliminaGestionEnvios(ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -225,7 +250,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param procesoHistorificacionBean
+	 * Elimina historicos.
+	 *
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void eliminaHistoricos(ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -238,7 +265,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param procesoHistorificacionBean
+	 * Elimina destinatarios.
+	 *
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void eliminaDestinatarios(ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -251,7 +280,9 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param procesoHistorificacionBean
+	 * Elimina mensajes adjuntos.
+	 *
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void eliminaMensajesAdjuntos(ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -266,8 +297,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param fecha
-	 * @param procesoHistorificacionBean
+	 * Historifica destinatarios mens hist.
+	 *
+	 * @param fecha the fecha
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void historificaDestinatariosMensHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -281,9 +314,11 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param fecha
-	 * @param procesoHistorificacionBean
-	 * @throws BusinessException
+	 * Historifica gestion envios hist.
+	 *
+	 * @param fecha the fecha
+	 * @param procesoHistorificacionBean the proceso historificacion bean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	private void historificaGestionEnviosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean)
@@ -296,8 +331,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param fecha
-	 * @param procesoHistorificacionBean
+	 * Historifica historico hist.
+	 *
+	 * @param fecha the fecha
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void historificaHistoricoHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -311,8 +348,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param fecha
-	 * @param procesoHistorificacionBean
+	 * Historifica destinatarios hist.
+	 *
+	 * @param fecha the fecha
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void historificaDestinatariosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
@@ -326,8 +365,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 
 
 	/**
-	 * @param fecha
-	 * @param procesoHistorificacionBean
+	 * Historifica mensajes adjuntos hist.
+	 *
+	 * @param fecha the fecha
+	 * @param procesoHistorificacionBean the proceso historificacion bean
 	 */
 	///MIGRADO
 	private void historificaMensajesAdjuntosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {

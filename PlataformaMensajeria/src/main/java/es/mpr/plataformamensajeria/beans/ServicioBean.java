@@ -7,15 +7,18 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 
 /**
  * <p>
- * Clase que representa un servicio para la capa de presentaci&oacute;n
- * 
+ * Clase que representa un servicio para la capa de presentaci&oacute;n.
+ *
  * @author Altran
- * 
  */
 public class ServicioBean implements Audit, Serializable {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -7986269951829415111L;
 
+	/**
+	 * Constructor de servicio bean.
+	 */
 	public ServicioBean() {
 		super();
 		this.servicioId = null;
@@ -73,67 +76,188 @@ public class ServicioBean implements Audit, Serializable {
 		this.vapidPrivateKey = null;
 	}
 
+	/**  servicio id. */
 	protected Integer servicioId;
+	
+	/**  nombre. */
 	protected String nombre = null;
+	
+	/**  descripcion. */
 	protected String descripcion = null;
+	
+	/**  activo. */
 	protected Boolean activo = null;
+	
+	/**  canalid. */
 	protected Integer canalid = null;
+	
+	/**  aplicacionid. */
 	protected Integer aplicacionid = null;
+	
+	/**  fechacreacion. */
 	protected Date fechacreacion = null;
+	
+	/**  creadopor. */
 	protected String creadopor = null;
+	
+	/**  fechamodificacion. */
 	protected Date fechamodificacion = null;
+	
+	/**  modificadopor. */
 	protected String modificadopor = null;
+	
+	/**  externalid. */
 	protected String externalid = null;
+	
+	/**  nmaxenvios. */
 	protected Integer nmaxenvios = null;
+	
+	/**  is activo. */
 	protected String isActivo = null;
+	
+	/**  canalnombre. */
 	protected String canalnombre = null;
+	
+	/**  aplicacionnombre. */
 	protected String aplicacionnombre = null;
+	
+	/**  frommail. */
 	protected String frommail = null;
+	
+	/**  frommailname. */
 	protected String frommailname = null;
+	
+	/**  historificacion. */
 	protected Integer historificacion = null;
+	
+	/**  historificacion input. */
 	protected Integer historificacionInput = null;
+	
+	/**  motivohistorificacion. */
 	protected String motivohistorificacion = null;
+	
+	/**  conservacion. */
 	protected Integer conservacion = null;
+	
+	/**  conservacion input. */
 	protected Integer conservacionInput = null;
+	
+	/**  motivoconservacion. */
 	protected String motivoconservacion = null;
+	
+	/**  pendienteaprobacion. */
 	protected Boolean pendienteaprobacion = null;
+	
+	/**  is pendiente aprobacion. */
 	protected String isPendienteAprobacion = null;
+	
+	/**  nombreloteenvio. */
 	protected String nombreloteenvio = null;
+	
+	/**  badge. */
 	protected Integer badge = null;
+	
+	/**  gcmprojectkey. */
 	protected String gcmprojectkey = null;
+	
+	/**  apnsrutacertificado. */
 	protected String apnsrutacertificado = null;
+	
+	/**  apnspasswordcertificado. */
 	protected String apnspasswordcertificado = null;
+	
+	/**  androidplataforma. */
 	protected Boolean androidplataforma = null;
+	
+	/**  iosplataforma. */
 	protected Boolean iosplataforma = null;
+	
+	/**  is android plataforma. */
 	protected String isAndroidPlataforma = null;
+	
+	/**  is ios plataforma. */
 	protected String isIosPlataforma = null;
+	
+	/**  endpoint. */
 	protected String endpoint = null;
+	
+	/**  informesactivo. */
 	protected Boolean informesactivo = null;
+	
+	/**  is informes activo. */
 	protected String isInformesActivo = null;
+	
+	/**  agrupacionestado. */
 	protected Boolean agrupacionestado = null;
+	
+	/**  is agrupacion estado. */
 	protected String isAgrupacionEstado = null;
+	
+	/**  agrupacioncodorg. */
 	protected Boolean agrupacioncodorg = null;
+	
+	/**  is agrupacion cod org. */
 	protected String isAgrupacionCodOrg = null;
+	
+	/**  agrupacioncodsia. */
 	protected Boolean agrupacioncodsia = null;
+	
+	/**  is agrupacion cod sia. */
 	protected String isAgrupacionCodSia = null;
+	
+	/**  agrupacioncodorgpagador. */
 	protected Boolean agrupacioncodorgpagador = null;
+	
+	/**  is agrupacion cod org pagador. */
 	protected String isAgrupacionCodOrgPagador = null;
+	
+	/**  informesdestinatarios. */
 	protected String informesdestinatarios = null;
 
+	/**  responsablefuncionalnombre. */
 	protected String responsablefuncionalnombre = null;
+	
+	/**  responsablefuncionalemail. */
 	protected String responsablefuncionalemail = null;
+	
+	/**  responsabletecniconombre. */
 	protected String responsabletecniconombre = null;
+	
+	/**  responsabletecnicoemail. */
 	protected String responsabletecnicoemail = null;
+	
+	/**  multiorganismo. */
 	protected Boolean multiorganismo = null;
+	
+	/**  is multiorganismo. */
 	protected String isMultiorganismo = null;
+	
+	/**  premium. */
 	protected Boolean premium = null;
+	
+	/**  is premium. */
 	protected String isPremium = null;
+	
+	/**  numero max reenvios. */
 	protected Integer numeroMaxReenvios = null;
+	
+	/**  eliminado. */
 	protected String eliminado = null;
+	
+	/**  caducidad web push. */
 	protected Integer caducidadWebPush = null;
+	
+	/**  vapid public key. */
 	protected String vapidPublicKey = null;
+	
+	/**  vapid private key. */
 	protected String vapidPrivateKey = null;
 	
+	/**
+	 * Modificar activado.
+	 *
+	 * @param activado new activado
+	 */
 	public void setActivado(String activado) {
 		if (activado != null && activado.equals("true")) {
 			this.activo = true;
@@ -142,6 +266,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Obtener activado.
+	 *
+	 * @return activado
+	 */
 	public String getActivado() {
 		if (activo != null && activo) {
 			return "true";
@@ -151,6 +280,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is activo.
+	 *
+	 * @return checks if is activo
+	 */
 	public String getIsActivo() {
 		if (activo != null && activo) {
 			return "<span class='activo'></span>";
@@ -160,6 +294,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Modificar checks if is activo.
+	 *
+	 * @param isActivo new checks if is activo
+	 */
 	public void setIsActivo(String isActivo) {
 		if (isActivo != null && isActivo.equals("true")) {
 			this.activo = true;
@@ -169,20 +308,38 @@ public class ServicioBean implements Audit, Serializable {
 		this.isActivo = isActivo;
 	}
 
+	/**
+	 * Obtener id.
+	 *
+	 * @return id
+	 */
 	public Object getId() {
 		return servicioId;
 	}
 
+	/**
+	 * Modificar id.
+	 *
+	 * @param servicioId new id
+	 */
 	public void setId(Object servicioId) {
 		this.servicioId = (Integer) servicioId;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
+	 */
 	@Override
 	public String obtenerXML() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Obtener checks if is pendiente aprobacion.
+	 *
+	 * @return checks if is pendiente aprobacion
+	 */
 	public String getIsPendienteAprobacion() {
 		if (pendienteaprobacion != null && pendienteaprobacion) {
 			return "<span class='activo'></span>";
@@ -191,6 +348,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is pendiente aprobacion.
+	 *
+	 * @param isPendienteAprobacion new checks if is pendiente aprobacion
+	 */
 	public void setIsPendienteAprobacion(String isPendienteAprobacion) {
 		if (isPendienteAprobacion != null && isPendienteAprobacion.equals("true")) {
 			this.pendienteaprobacion = true;
@@ -200,6 +362,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isPendienteAprobacion = isPendienteAprobacion; // TODO
 	}
 
+	/**
+	 * Obtener checks if is android plataforma.
+	 *
+	 * @return checks if is android plataforma
+	 */
 	public String getIsAndroidPlataforma() {
 		if (this.androidplataforma != null && this.androidplataforma) {
 			return "true";
@@ -208,6 +375,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is android plataforma.
+	 *
+	 * @param androidPlataforma new checks if is android plataforma
+	 */
 	public void setIsAndroidPlataforma(String androidPlataforma) {
 		this.isAndroidPlataforma = androidPlataforma;
 		if (androidPlataforma != null && androidPlataforma.equals("true")) {
@@ -218,6 +390,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is ios plataforma.
+	 *
+	 * @return checks if is ios plataforma
+	 */
 	public String getIsIosPlataforma() {
 		if (this.iosplataforma != null && this.iosplataforma) {
 			return "true";
@@ -226,6 +403,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is ios plataforma.
+	 *
+	 * @param iosPlataforma new checks if is ios plataforma
+	 */
 	public void setIsIosPlataforma(String iosPlataforma) {
 		this.isIosPlataforma = iosPlataforma;
 		if (iosPlataforma != null && iosPlataforma.equals("true")) {
@@ -235,6 +417,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar informes activado.
+	 *
+	 * @param informesActivado new informes activado
+	 */
 	public void setInformesActivado(String informesActivado) {
 		if (informesActivado != null && informesActivado.equals("true")) {
 			this.informesactivo = true;
@@ -243,6 +430,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Obtener informes activado.
+	 *
+	 * @return informes activado
+	 */
 	public String getInformesActivado() {
 		if (informesactivo != null && informesactivo) {
 			return "true";
@@ -252,6 +444,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is informes activo.
+	 *
+	 * @return checks if is informes activo
+	 */
 	public String getIsInformesActivo() {
 		if (informesactivo != null && informesactivo) {
 			return "true";
@@ -260,6 +457,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is informes activo.
+	 *
+	 * @param isInformesActivo new checks if is informes activo
+	 */
 	public void setIsInformesActivo(String isInformesActivo) {
 		if (isInformesActivo != null && isInformesActivo.equals("true")) {
 			this.informesactivo = true;
@@ -269,6 +471,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isInformesActivo = isInformesActivo;
 	}
 
+	/**
+	 * Modificar agrupacion estado activado.
+	 *
+	 * @param agrupacionEstadoActivado new agrupacion estado activado
+	 */
 	public void setAgrupacionEstadoActivado(String agrupacionEstadoActivado) {
 		if (agrupacionEstadoActivado != null && agrupacionEstadoActivado.equals("true")) {
 			this.agrupacionestado = true;
@@ -278,6 +485,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isAgrupacionEstado = isInformesActivo;
 	}
 
+	/**
+	 * Obtener agrupacion estado activado.
+	 *
+	 * @return agrupacion estado activado
+	 */
 	public String getAgrupacionEstadoActivado() {
 		if (agrupacionestado != null && agrupacionestado) {
 			return "true";
@@ -287,6 +499,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is agrupacion estado.
+	 *
+	 * @return checks if is agrupacion estado
+	 */
 	public String getIsAgrupacionEstado() {
 		if (agrupacionestado != null && agrupacionestado) {
 			return "true";
@@ -295,6 +512,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is agrupacion estado.
+	 *
+	 * @param isAgrupacionEstado new checks if is agrupacion estado
+	 */
 	public void setIsAgrupacionEstado(String isAgrupacionEstado) {
 		if (isAgrupacionEstado != null && isAgrupacionEstado.equals("true")) {
 			this.agrupacionestado = true;
@@ -304,6 +526,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isAgrupacionEstado = isAgrupacionEstado;
 	}
 
+	/**
+	 * Modificar agrupacion cod org activado.
+	 *
+	 * @param agrupacionCodOrgActivado new agrupacion cod org activado
+	 */
 	public void setAgrupacionCodOrgActivado(String agrupacionCodOrgActivado) {
 		if (agrupacionCodOrgActivado != null && agrupacionCodOrgActivado.equals("true")) {
 			this.agrupacioncodorg = true;
@@ -312,6 +539,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Obtener grupacion cod org activado.
+	 *
+	 * @return grupacion cod org activado
+	 */
 	public String getgrupacionCodOrgActivado() {
 		if (agrupacioncodorg != null && agrupacioncodorg) {
 			return "true";
@@ -321,6 +553,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is agrupacion cod org.
+	 *
+	 * @return checks if is agrupacion cod org
+	 */
 	public String getIsAgrupacionCodOrg() {
 		if (agrupacioncodorg != null && agrupacioncodorg) {
 			return "true";
@@ -329,6 +566,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is agrupacion cod org.
+	 *
+	 * @param isAgrupacionCodOrg new checks if is agrupacion cod org
+	 */
 	public void setIsAgrupacionCodOrg(String isAgrupacionCodOrg) {
 		if (isAgrupacionCodOrg != null && isAgrupacionCodOrg.equals("true")) {
 			this.agrupacioncodorg = true;
@@ -338,6 +580,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isAgrupacionCodOrg = isAgrupacionCodOrg;
 	}
 
+	/**
+	 * Modificar agrupacion cod sia activado.
+	 *
+	 * @param agrupacionCodSiaActivado new agrupacion cod sia activado
+	 */
 	public void setAgrupacionCodSiaActivado(String agrupacionCodSiaActivado) {
 		if (agrupacionCodSiaActivado != null && agrupacionCodSiaActivado.equals("true")) {
 			this.agrupacioncodsia = true;
@@ -346,6 +593,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Obtener agrupacion cod org activado.
+	 *
+	 * @return agrupacion cod org activado
+	 */
 	public String getAgrupacionCodOrgActivado() {
 		if (agrupacioncodsia != null && agrupacioncodsia) {
 			return "true";
@@ -355,6 +607,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is agrupacion cod sia.
+	 *
+	 * @return checks if is agrupacion cod sia
+	 */
 	public String getIsAgrupacionCodSia() {
 		if (agrupacioncodsia != null && agrupacioncodsia) {
 			return "true";
@@ -363,6 +620,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is agrupacion cod sia.
+	 *
+	 * @param isAgrupacionCodSia new checks if is agrupacion cod sia
+	 */
 	public void setIsAgrupacionCodSia(String isAgrupacionCodSia) {
 		if (isAgrupacionCodSia != null && isAgrupacionCodSia.equals("true")) {
 			this.agrupacioncodsia = true;
@@ -372,6 +634,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isAgrupacionCodSia = isAgrupacionCodSia;
 	}
 
+	/**
+	 * Modificar agrupacion cod org pagador activado.
+	 *
+	 * @param agrupacionCodOrgPagadorActivado new agrupacion cod org pagador activado
+	 */
 	public void setAgrupacionCodOrgPagadorActivado(String agrupacionCodOrgPagadorActivado) {
 		if (agrupacionCodOrgPagadorActivado != null && agrupacionCodOrgPagadorActivado.equals("true")) {
 			this.agrupacioncodorgpagador = true;
@@ -380,6 +647,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Obtener agrupacion cod org pagador activado.
+	 *
+	 * @return agrupacion cod org pagador activado
+	 */
 	public String getAgrupacionCodOrgPagadorActivado() {
 		if (agrupacioncodorgpagador != null && agrupacioncodorgpagador) {
 			return "true";
@@ -389,6 +661,11 @@ public class ServicioBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Obtener checks if is agrupacion cod org pagador.
+	 *
+	 * @return checks if is agrupacion cod org pagador
+	 */
 	public String getIsAgrupacionCodOrgPagador() {
 		if (agrupacioncodorgpagador != null && agrupacioncodorgpagador) {
 			return "true";
@@ -397,6 +674,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is agrupacion cod org pagador.
+	 *
+	 * @param isAgrupacionCodOrgPagador new checks if is agrupacion cod org pagador
+	 */
 	public void setIsAgrupacionCodOrgPagador(String isAgrupacionCodOrgPagador) {
 		if (isAgrupacionCodOrgPagador != null && isAgrupacionCodOrgPagador.equals("true")) {
 			this.agrupacioncodorgpagador = true;
@@ -406,6 +688,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isAgrupacionCodOrgPagador = isAgrupacionCodOrgPagador;
 	}
 
+	/**
+	 * Obtener checks if is multiorganismo.
+	 *
+	 * @return checks if is multiorganismo
+	 */
 	public String getIsMultiorganismo() {
 		if (multiorganismo != null && multiorganismo) {
 			return "true";
@@ -414,6 +701,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is multiorganismo.
+	 *
+	 * @param isMultiorganismo new checks if is multiorganismo
+	 */
 	public void setIsMultiorganismo(String isMultiorganismo) {
 		if (isMultiorganismo != null && isMultiorganismo.equals("true")) {
 			this.multiorganismo = true;
@@ -423,6 +715,11 @@ public class ServicioBean implements Audit, Serializable {
 		this.isMultiorganismo = isMultiorganismo;
 	}
 
+	/**
+	 * Obtener checks if is premium.
+	 *
+	 * @return checks if is premium
+	 */
 	public String getIsPremium() {
 		if (premium != null && premium) {
 			return "true";
@@ -431,6 +728,11 @@ public class ServicioBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar checks if is premium.
+	 *
+	 * @param isPremium new checks if is premium
+	 */
 	public void setIsPremium(String isPremium) {
 		if (isPremium != null && isPremium.equals("true")) {
 			this.premium = true;
@@ -441,6 +743,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener servicio id.
+	 *
 	 * @return the servicioId
 	 */
 	public Integer getServicioId() {
@@ -448,14 +752,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param servicioId
-	 *            the servicioId to set
+	 * Modificar servicio id.
+	 *
+	 * @param servicioId            the servicioId to set
 	 */
 	public void setServicioId(Integer servicioId) {
 		this.servicioId = servicioId;
 	}
 
 	/**
+	 * Obtener nombre.
+	 *
 	 * @return the nombre
 	 */
 	public String getNombre() {
@@ -463,14 +770,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * Modificar nombre.
+	 *
+	 * @param nombre            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
+	 * Obtener descripcion.
+	 *
 	 * @return the descripcion
 	 */
 	public String getDescripcion() {
@@ -478,14 +788,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * Modificar descripcion.
+	 *
+	 * @param descripcion            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
+	 * Obtener activo.
+	 *
 	 * @return the activo
 	 */
 	public Boolean getActivo() {
@@ -493,14 +806,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param activo
-	 *            the activo to set
+	 * Modificar activo.
+	 *
+	 * @param activo            the activo to set
 	 */
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
 
 	/**
+	 * Obtener canalid.
+	 *
 	 * @return the canalid
 	 */
 	public Integer getCanalid() {
@@ -508,14 +824,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param canalid
-	 *            the canalid to set
+	 * Modificar canalid.
+	 *
+	 * @param canalid            the canalid to set
 	 */
 	public void setCanalid(Integer canalid) {
 		this.canalid = canalid;
 	}
 
 	/**
+	 * Obtener aplicacionid.
+	 *
 	 * @return the aplicacionid
 	 */
 	public Integer getAplicacionid() {
@@ -523,14 +842,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param aplicacionid
-	 *            the aplicacionid to set
+	 * Modificar aplicacionid.
+	 *
+	 * @param aplicacionid            the aplicacionid to set
 	 */
 	public void setAplicacionid(Integer aplicacionid) {
 		this.aplicacionid = aplicacionid;
 	}
 
 	/**
+	 * Obtener fechacreacion.
+	 *
 	 * @return the fechacreacion
 	 */
 	public Date getFechacreacion() {
@@ -538,14 +860,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param fechacreacion
-	 *            the fechacreacion to set
+	 * Modificar fechacreacion.
+	 *
+	 * @param fechacreacion            the fechacreacion to set
 	 */
 	public void setFechacreacion(Date fechacreacion) {
 		this.fechacreacion = fechacreacion;
 	}
 
 	/**
+	 * Obtener creadopor.
+	 *
 	 * @return the creadopor
 	 */
 	public String getCreadopor() {
@@ -553,14 +878,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param creadopor
-	 *            the creadopor to set
+	 * Modificar creadopor.
+	 *
+	 * @param creadopor            the creadopor to set
 	 */
 	public void setCreadopor(String creadopor) {
 		this.creadopor = creadopor;
 	}
 
 	/**
+	 * Obtener fechamodificacion.
+	 *
 	 * @return the fechamodificacion
 	 */
 	public Date getFechamodificacion() {
@@ -568,14 +896,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param fechamodificacion
-	 *            the fechamodificacion to set
+	 * Modificar fechamodificacion.
+	 *
+	 * @param fechamodificacion            the fechamodificacion to set
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
 	}
 
 	/**
+	 * Obtener modificadopor.
+	 *
 	 * @return the modificadopor
 	 */
 	public String getModificadopor() {
@@ -583,14 +914,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param modificadopor
-	 *            the modificadopor to set
+	 * Modificar modificadopor.
+	 *
+	 * @param modificadopor            the modificadopor to set
 	 */
 	public void setModificadopor(String modificadopor) {
 		this.modificadopor = modificadopor;
 	}
 
 	/**
+	 * Obtener externalid.
+	 *
 	 * @return the externalid
 	 */
 	public String getExternalid() {
@@ -598,14 +932,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param externalid
-	 *            the externalid to set
+	 * Modificar externalid.
+	 *
+	 * @param externalid            the externalid to set
 	 */
 	public void setExternalid(String externalid) {
 		this.externalid = externalid;
 	}
 
 	/**
+	 * Obtener nmaxenvios.
+	 *
 	 * @return the nmaxenvios
 	 */
 	public Integer getNmaxenvios() {
@@ -613,14 +950,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param nmaxenvios
-	 *            the nmaxenvios to set
+	 * Modificar nmaxenvios.
+	 *
+	 * @param nmaxenvios            the nmaxenvios to set
 	 */
 	public void setNmaxenvios(Integer nmaxenvios) {
 		this.nmaxenvios = nmaxenvios;
 	}
 
 	/**
+	 * Obtener canalnombre.
+	 *
 	 * @return the canalnombre
 	 */
 	public String getCanalnombre() {
@@ -628,14 +968,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param canalnombre
-	 *            the canalnombre to set
+	 * Modificar canalnombre.
+	 *
+	 * @param canalnombre            the canalnombre to set
 	 */
 	public void setCanalnombre(String canalnombre) {
 		this.canalnombre = canalnombre;
 	}
 
 	/**
+	 * Obtener aplicacionnombre.
+	 *
 	 * @return the aplicacionnombre
 	 */
 	public String getAplicacionnombre() {
@@ -643,14 +986,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param aplicacionnombre
-	 *            the aplicacionnombre to set
+	 * Modificar aplicacionnombre.
+	 *
+	 * @param aplicacionnombre            the aplicacionnombre to set
 	 */
 	public void setAplicacionnombre(String aplicacionnombre) {
 		this.aplicacionnombre = aplicacionnombre;
 	}
 
 	/**
+	 * Obtener frommail.
+	 *
 	 * @return the frommail
 	 */
 	public String getFrommail() {
@@ -658,14 +1004,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param frommail
-	 *            the frommail to set
+	 * Modificar frommail.
+	 *
+	 * @param frommail            the frommail to set
 	 */
 	public void setFrommail(String frommail) {
 		this.frommail = frommail;
 	}
 
 	/**
+	 * Obtener frommailname.
+	 *
 	 * @return the frommailname
 	 */
 	public String getFrommailname() {
@@ -673,14 +1022,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param frommailname
-	 *            the frommailname to set
+	 * Modificar frommailname.
+	 *
+	 * @param frommailname            the frommailname to set
 	 */
 	public void setFrommailname(String frommailname) {
 		this.frommailname = frommailname;
 	}
 
 	/**
+	 * Obtener historificacion.
+	 *
 	 * @return the historificacion
 	 */
 	public Integer getHistorificacion() {
@@ -688,14 +1040,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param historificacion
-	 *            the historificacion to set
+	 * Modificar historificacion.
+	 *
+	 * @param historificacion            the historificacion to set
 	 */
 	public void setHistorificacion(Integer historificacion) {
 		this.historificacion = historificacion;
 	}
 
 	/**
+	 * Obtener historificacion input.
+	 *
 	 * @return the historificacionInput
 	 */
 	public Integer getHistorificacionInput() {
@@ -703,14 +1058,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param historificacionInput
-	 *            the historificacionInput to set
+	 * Modificar historificacion input.
+	 *
+	 * @param historificacionInput            the historificacionInput to set
 	 */
 	public void setHistorificacionInput(Integer historificacionInput) {
 		this.historificacionInput = historificacionInput;
 	}
 
 	/**
+	 * Obtener motivohistorificacion.
+	 *
 	 * @return the motivohistorificacion
 	 */
 	public String getMotivohistorificacion() {
@@ -718,14 +1076,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param motivohistorificacion
-	 *            the motivohistorificacion to set
+	 * Modificar motivohistorificacion.
+	 *
+	 * @param motivohistorificacion            the motivohistorificacion to set
 	 */
 	public void setMotivohistorificacion(String motivohistorificacion) {
 		this.motivohistorificacion = motivohistorificacion;
 	}
 
 	/**
+	 * Obtener conservacion.
+	 *
 	 * @return the conservacion
 	 */
 	public Integer getConservacion() {
@@ -733,14 +1094,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param conservacion
-	 *            the conservacion to set
+	 * Modificar conservacion.
+	 *
+	 * @param conservacion            the conservacion to set
 	 */
 	public void setConservacion(Integer conservacion) {
 		this.conservacion = conservacion;
 	}
 
 	/**
+	 * Obtener conservacion input.
+	 *
 	 * @return the conservacionInput
 	 */
 	public Integer getConservacionInput() {
@@ -748,14 +1112,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param conservacionInput
-	 *            the conservacionInput to set
+	 * Modificar conservacion input.
+	 *
+	 * @param conservacionInput            the conservacionInput to set
 	 */
 	public void setConservacionInput(Integer conservacionInput) {
 		this.conservacionInput = conservacionInput;
 	}
 
 	/**
+	 * Obtener motivoconservacion.
+	 *
 	 * @return the motivoconservacion
 	 */
 	public String getMotivoconservacion() {
@@ -763,14 +1130,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param motivoconservacion
-	 *            the motivoconservacion to set
+	 * Modificar motivoconservacion.
+	 *
+	 * @param motivoconservacion            the motivoconservacion to set
 	 */
 	public void setMotivoconservacion(String motivoconservacion) {
 		this.motivoconservacion = motivoconservacion;
 	}
 
 	/**
+	 * Obtener pendienteaprobacion.
+	 *
 	 * @return the pendienteaprobacion
 	 */
 	public Boolean getPendienteaprobacion() {
@@ -778,14 +1148,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param pendienteaprobacion
-	 *            the pendienteaprobacion to set
+	 * Modificar pendienteaprobacion.
+	 *
+	 * @param pendienteaprobacion            the pendienteaprobacion to set
 	 */
 	public void setPendienteaprobacion(Boolean pendienteaprobacion) {
 		this.pendienteaprobacion = pendienteaprobacion;
 	}
 
 	/**
+	 * Obtener nombreloteenvio.
+	 *
 	 * @return the nombreloteenvio
 	 */
 	public String getNombreloteenvio() {
@@ -793,14 +1166,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param nombreloteenvio
-	 *            the nombreloteenvio to set
+	 * Modificar nombreloteenvio.
+	 *
+	 * @param nombreloteenvio            the nombreloteenvio to set
 	 */
 	public void setNombreloteenvio(String nombreloteenvio) {
 		this.nombreloteenvio = nombreloteenvio;
 	}
 
 	/**
+	 * Obtener badge.
+	 *
 	 * @return the badge
 	 */
 	public Integer getBadge() {
@@ -808,14 +1184,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param badge
-	 *            the badge to set
+	 * Modificar badge.
+	 *
+	 * @param badge            the badge to set
 	 */
 	public void setBadge(Integer badge) {
 		this.badge = badge;
 	}
 
 	/**
+	 * Obtener gcmprojectkey.
+	 *
 	 * @return the gcmprojectkey
 	 */
 	public String getGcmprojectkey() {
@@ -823,14 +1202,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param gcmprojectkey
-	 *            the gcmprojectkey to set
+	 * Modificar gcmprojectkey.
+	 *
+	 * @param gcmprojectkey            the gcmprojectkey to set
 	 */
 	public void setGcmprojectkey(String gcmprojectkey) {
 		this.gcmprojectkey = gcmprojectkey;
 	}
 
 	/**
+	 * Obtener apnsrutacertificado.
+	 *
 	 * @return the apnsrutacertificado
 	 */
 	public String getApnsrutacertificado() {
@@ -838,14 +1220,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param apnsrutacertificado
-	 *            the apnsrutacertificado to set
+	 * Modificar apnsrutacertificado.
+	 *
+	 * @param apnsrutacertificado            the apnsrutacertificado to set
 	 */
 	public void setApnsrutacertificado(String apnsrutacertificado) {
 		this.apnsrutacertificado = apnsrutacertificado;
 	}
 
 	/**
+	 * Obtener apnspasswordcertificado.
+	 *
 	 * @return the apnspasswordcertificado
 	 */
 	public String getApnspasswordcertificado() {
@@ -853,14 +1238,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param apnspasswordcertificado
-	 *            the apnspasswordcertificado to set
+	 * Modificar apnspasswordcertificado.
+	 *
+	 * @param apnspasswordcertificado            the apnspasswordcertificado to set
 	 */
 	public void setApnspasswordcertificado(String apnspasswordcertificado) {
 		this.apnspasswordcertificado = apnspasswordcertificado;
 	}
 
 	/**
+	 * Obtener androidplataforma.
+	 *
 	 * @return the androidplataforma
 	 */
 	public Boolean getAndroidplataforma() {
@@ -868,14 +1256,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param androidplataforma
-	 *            the androidplataforma to set
+	 * Modificar androidplataforma.
+	 *
+	 * @param androidplataforma            the androidplataforma to set
 	 */
 	public void setAndroidplataforma(Boolean androidplataforma) {
 		this.androidplataforma = androidplataforma;
 	}
 
 	/**
+	 * Obtener iosplataforma.
+	 *
 	 * @return the iosplataforma
 	 */
 	public Boolean getIosplataforma() {
@@ -883,14 +1274,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param iosplataforma
-	 *            the iosplataforma to set
+	 * Modificar iosplataforma.
+	 *
+	 * @param iosplataforma            the iosplataforma to set
 	 */
 	public void setIosplataforma(Boolean iosplataforma) {
 		this.iosplataforma = iosplataforma;
 	}
 
 	/**
+	 * Obtener endpoint.
+	 *
 	 * @return the endpoint
 	 */
 	public String getEndpoint() {
@@ -898,14 +1292,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param endpoint
-	 *            the endpoint to set
+	 * Modificar endpoint.
+	 *
+	 * @param endpoint            the endpoint to set
 	 */
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
 
 	/**
+	 * Obtener informesactivo.
+	 *
 	 * @return the informesactivo
 	 */
 	public Boolean getInformesactivo() {
@@ -913,14 +1310,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param informesactivo
-	 *            the informesactivo to set
+	 * Modificar informesactivo.
+	 *
+	 * @param informesactivo            the informesactivo to set
 	 */
 	public void setInformesactivo(Boolean informesactivo) {
 		this.informesactivo = informesactivo;
 	}
 
 	/**
+	 * Obtener agrupacionestado.
+	 *
 	 * @return the agrupacionestado
 	 */
 	public Boolean getAgrupacionestado() {
@@ -928,14 +1328,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param agrupacionestado
-	 *            the agrupacionestado to set
+	 * Modificar agrupacionestado.
+	 *
+	 * @param agrupacionestado            the agrupacionestado to set
 	 */
 	public void setAgrupacionestado(Boolean agrupacionestado) {
 		this.agrupacionestado = agrupacionestado;
 	}
 
 	/**
+	 * Obtener agrupacioncodorg.
+	 *
 	 * @return the agrupacioncodorg
 	 */
 	public Boolean getAgrupacioncodorg() {
@@ -943,14 +1346,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param agrupacioncodorg
-	 *            the agrupacioncodorg to set
+	 * Modificar agrupacioncodorg.
+	 *
+	 * @param agrupacioncodorg            the agrupacioncodorg to set
 	 */
 	public void setAgrupacioncodorg(Boolean agrupacioncodorg) {
 		this.agrupacioncodorg = agrupacioncodorg;
 	}
 
 	/**
+	 * Obtener agrupacioncodsia.
+	 *
 	 * @return the agrupacioncodsia
 	 */
 	public Boolean getAgrupacioncodsia() {
@@ -958,14 +1364,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param agrupacioncodsia
-	 *            the agrupacioncodsia to set
+	 * Modificar agrupacioncodsia.
+	 *
+	 * @param agrupacioncodsia            the agrupacioncodsia to set
 	 */
 	public void setAgrupacioncodsia(Boolean agrupacioncodsia) {
 		this.agrupacioncodsia = agrupacioncodsia;
 	}
 
 	/**
+	 * Obtener agrupacioncodorgpagador.
+	 *
 	 * @return the agrupacioncodorgpagador
 	 */
 	public Boolean getAgrupacioncodorgpagador() {
@@ -973,14 +1382,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param agrupacioncodorgpagador
-	 *            the agrupacioncodorgpagador to set
+	 * Modificar agrupacioncodorgpagador.
+	 *
+	 * @param agrupacioncodorgpagador            the agrupacioncodorgpagador to set
 	 */
 	public void setAgrupacioncodorgpagador(Boolean agrupacioncodorgpagador) {
 		this.agrupacioncodorgpagador = agrupacioncodorgpagador;
 	}
 
 	/**
+	 * Obtener informesdestinatarios.
+	 *
 	 * @return the informesdestinatarios
 	 */
 	public String getInformesdestinatarios() {
@@ -988,14 +1400,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param informesdestinatarios
-	 *            the informesdestinatarios to set
+	 * Modificar informesdestinatarios.
+	 *
+	 * @param informesdestinatarios            the informesdestinatarios to set
 	 */
 	public void setInformesdestinatarios(String informesdestinatarios) {
 		this.informesdestinatarios = informesdestinatarios;
 	}
 
 	/**
+	 * Obtener responsablefuncionalnombre.
+	 *
 	 * @return the responsablefuncionalnombre
 	 */
 	public String getResponsablefuncionalnombre() {
@@ -1003,14 +1418,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param responsablefuncionalnombre
-	 *            the responsablefuncionalnombre to set
+	 * Modificar responsablefuncionalnombre.
+	 *
+	 * @param responsablefuncionalnombre            the responsablefuncionalnombre to set
 	 */
 	public void setResponsablefuncionalnombre(String responsablefuncionalnombre) {
 		this.responsablefuncionalnombre = responsablefuncionalnombre;
 	}
 
 	/**
+	 * Obtener responsablefuncionalemail.
+	 *
 	 * @return the responsablefuncionalemail
 	 */
 	public String getResponsablefuncionalemail() {
@@ -1018,14 +1436,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param responsablefuncionalemail
-	 *            the responsablefuncionalemail to set
+	 * Modificar responsablefuncionalemail.
+	 *
+	 * @param responsablefuncionalemail            the responsablefuncionalemail to set
 	 */
 	public void setResponsablefuncionalemail(String responsablefuncionalemail) {
 		this.responsablefuncionalemail = responsablefuncionalemail;
 	}
 
 	/**
+	 * Obtener responsabletecniconombre.
+	 *
 	 * @return the responsabletecniconombre
 	 */
 	public String getResponsabletecniconombre() {
@@ -1033,14 +1454,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param responsabletecniconombre
-	 *            the responsabletecniconombre to set
+	 * Modificar responsabletecniconombre.
+	 *
+	 * @param responsabletecniconombre            the responsabletecniconombre to set
 	 */
 	public void setResponsabletecniconombre(String responsabletecniconombre) {
 		this.responsabletecniconombre = responsabletecniconombre;
 	}
 
 	/**
+	 * Obtener responsabletecnicoemail.
+	 *
 	 * @return the responsabletecnicoemail
 	 */
 	public String getResponsabletecnicoemail() {
@@ -1048,14 +1472,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param responsabletecnicoemail
-	 *            the responsabletecnicoemail to set
+	 * Modificar responsabletecnicoemail.
+	 *
+	 * @param responsabletecnicoemail            the responsabletecnicoemail to set
 	 */
 	public void setResponsabletecnicoemail(String responsabletecnicoemail) {
 		this.responsabletecnicoemail = responsabletecnicoemail;
 	}
 
 	/**
+	 * Obtener multiorganismo.
+	 *
 	 * @return the multiorganismo
 	 */
 	public Boolean getMultiorganismo() {
@@ -1063,14 +1490,17 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param multiorganismo
-	 *            the multiorganismo to set
+	 * Modificar multiorganismo.
+	 *
+	 * @param multiorganismo            the multiorganismo to set
 	 */
 	public void setMultiorganismo(Boolean multiorganismo) {
 		this.multiorganismo = multiorganismo;
 	}
 
 	/**
+	 * Obtener premium.
+	 *
 	 * @return the premium
 	 */
 	public Boolean getPremium() {
@@ -1078,22 +1508,35 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param premium
-	 *            the premium to set
+	 * Modificar premium.
+	 *
+	 * @param premium            the premium to set
 	 */
 	public void setPremium(Boolean premium) {
 		this.premium = premium;
 	}
 	
+	/**
+	 * Obtener numero max reenvios.
+	 *
+	 * @return numero max reenvios
+	 */
 	public Integer getNumeroMaxReenvios() {
 		return numeroMaxReenvios;
 	}
 
+	/**
+	 * Modificar numero max reenvios.
+	 *
+	 * @param numeroMaxReenvios new numero max reenvios
+	 */
 	public void setNumeroMaxReenvios(Integer numeroMaxReenvios) {
 		this.numeroMaxReenvios = numeroMaxReenvios;
 	}
 
 	/**
+	 * Obtener eliminado.
+	 *
 	 * @return the eliminado
 	 */
 	public String getEliminado() {
@@ -1101,6 +1544,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar eliminado.
+	 *
 	 * @param eliminado the eliminado to set
 	 */
 	public void setEliminado(String eliminado) {
@@ -1108,6 +1553,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener caducidad web push.
+	 *
 	 * @return the caducidadWebPush
 	 */
 	public Integer getCaducidadWebPush() {
@@ -1115,6 +1562,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar caducidad web push.
+	 *
 	 * @param caducidadWebPush the caducidadWebPush to set
 	 */
 	public void setCaducidadWebPush(Integer caducidadWebPush) {
@@ -1122,6 +1571,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener vapid public key.
+	 *
 	 * @return the vapidPublicKey
 	 */
 	public String getVapidPublicKey() {
@@ -1129,6 +1580,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar vapid public key.
+	 *
 	 * @param vapidPublicKey the vapidPublicKey to set
 	 */
 	public void setVapidPublicKey(String vapidPublicKey) {
@@ -1136,6 +1589,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener vapid private key.
+	 *
 	 * @return the vapidPrivateKey
 	 */
 	public String getVapidPrivateKey() {
@@ -1143,6 +1598,8 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar vapid private key.
+	 *
 	 * @param vapidPrivateKey the vapidPrivateKey to set
 	 */
 	public void setVapidPrivateKey(String vapidPrivateKey) {

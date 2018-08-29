@@ -74,7 +74,7 @@
            	      </p>
            	      <p class="criteria">
                     <span>
-                     <label style="width: 100px;" class="fieldText"> Hasta Fecha:</label>
+                     <label style="width: 100px;" class="fieldText">Fecha Inicio:</label>
                       <s:textfield
 								name="jobBean.fecha" value="%{jobBean.fecha}" id="jobBean.fecha"
 								theme="simple"  style="width:60px;"
@@ -87,7 +87,7 @@
            	      	</span>  
            	      	<s:if test="%{jobBean.nombreJob == 'DIR3' }"> 
 	           	      	<span>
-	                     <label style="width: 100px;" class="fieldText"> Fin Fecha:</label>
+	                     <label style="width: 100px;" class="fieldText">Fecha Fin:</label>
 	                      <s:textfield
 									name="jobBean.fechaFin" value="%{jobBean.fechaFin}" id="jobBean.fechaFin"
 									theme="simple"  style="width:60px;"

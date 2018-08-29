@@ -57,29 +57,40 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioOrganismoImpl")
 public class ServicioOrganismoImpl implements ServicioOrganismo {
 
+	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
 	private static final String ERRORS_ORGANISMO_GET_ORGANISMOS = "errors.organismo.getOrganismos";
 
+	/**  logger. */
 	private static Logger logger = Logger
 			.getLogger(ServicioOrganismoImpl.class);
 
+	/**  tbl organismos manager. */
 	@Resource(name = "TblOrganismosManagerImpl")
 	private TblOrganismosManager tblOrganismosManager;
 
+	/**  tbl usuarios planificaciones manager. */
 	@Resource(name = "TblUsuariosAplicacionesManagerImpl")
 	private TblUsuariosAplicacionesManager tblUsuariosPlanificacionesManager;
 
+	/**  tbl aplicaciones manager. */
 	@Resource(name = "TblAplicacionesManagerImpl")
 	private TblAplicacionesManager tblAplicacionesManager;
 
+	/**  tbl servicios manager. */
 	@Resource(name = "TblServiciosManagerImpl")
 	private TblServiciosManager tblServiciosManager;
 
+	/**  tbl organismos servicio manager. */
 	@Resource(name = "tblOrganismosServicioManagerImpl")
 	private TblOrganismosServicioManager tblOrganismosServicioManager;
 
+	/**  query executor organismos impl. */
 	@Resource(name = "queryExecutorOrganismosImpl")
 	private QueryExecutorOrganismos queryExecutorOrganismosImpl;
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismos()
+	 */
 	// //MIGRADO
 	@Override
 	public List<OrganismoBean> getOrganismos() throws BusinessException {
@@ -98,6 +109,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismos(java.lang.String, java.lang.Integer)
+	 */
 	// /MIGRADO
 	@Override
 	public List<Integer> getOrganismos(String rolUsuario, Integer idUsuario)
@@ -162,6 +176,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		return res;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismos(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.OrganismoBean)
+	 */
 	// //MIGRADO
 	@Override
 	public PaginatedList<OrganismoBean> getOrganismos(int start, int size,
@@ -205,6 +222,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#newOrganismo(es.mpr.plataformamensajeria.beans.OrganismoBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	// //MIGRADO
 	@Override
 	@Transactional
@@ -234,6 +254,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#updateOrganismo(es.mpr.plataformamensajeria.beans.OrganismoBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	// //MIGRADO
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -258,6 +281,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#loadOrganismo(es.mpr.plataformamensajeria.beans.OrganismoBean)
+	 */
 	// //MIGRADO
 	@Override
 	@Transactional
@@ -273,6 +299,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#deleteOrganismo(java.lang.Long, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	// /MIGRADO
 	@Override
 	@Transactional
@@ -294,6 +323,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#listAutocomplete(java.lang.String)
+	 */
 	@Override
 	public List<String> listAutocomplete(String term) {
 
@@ -307,6 +339,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismoIdByDir3(java.lang.String)
+	 */
 	@Override
 	public Integer getOrganismoIdByDir3(String search) {
 		try {
@@ -318,6 +353,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#existeOrganimo(es.mpr.plataformamensajeria.beans.OrganismoBean)
+	 */
 	@Override
 	public Boolean existeOrganimo(OrganismoBean organismo) {
 		try {
@@ -338,10 +376,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	/**
 	 * <p>
 	 * Obtenemos un objeto TblOrganismos a partir de un objeto OrganismoBean
-	 * </p>
-	 * 
-	 * @param aplicacion
-	 * 
+	 * </p>.
+	 *
+	 * @param organismo the organismo
 	 * @return objeto TblOrganismos
 	 */
 	// ///MIGRADO
@@ -376,11 +413,11 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	/**
 	 * <p>
 	 * Convertirmos una lista de AplicacionJPA a una lista de ServidoresBean
-	 * </p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	// //MIGRADO
 	protected List<OrganismoBean> getListOrganismoBean(List<TblOrganismos> lista)
@@ -426,11 +463,11 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	/**
 	 * <p>
 	 * Obtenemos un objeto OrganismoBean a partir de un objeto TblOrganismos
-	 * </p>
-	 * 
-	 * @param organismoTO
-	 * 
+	 * </p>.
+	 *
+	 * @param o the o
 	 * @return objeto OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	// /MIGRADO
 	protected OrganismoBean getOrganismoBean(TblOrganismos o)
@@ -456,6 +493,13 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		return organismo;
 	}
 
+	/**
+	 * Creates the organismo bean.
+	 *
+	 * @param criterio the criterio
+	 * @param ob the ob
+	 * @return the es.minhap.plataformamensajeria.iop.beans. organismo bean
+	 */
 	private es.minhap.plataformamensajeria.iop.beans.OrganismoBean createOrganismoBean(
 			OrganismoBean criterio,
 			es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob) {

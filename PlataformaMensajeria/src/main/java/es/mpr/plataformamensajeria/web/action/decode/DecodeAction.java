@@ -39,23 +39,33 @@ import es.mpr.plataformamensajeria.util.XMLUtils;
 public class DecodeAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
 	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** Constante LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(DecodeAction.class);
 	
+	/**  cifrado service. */
 	@Resource
 	private CifradoService cifradoService;
 	
+	/**  props. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties props;
 	
+	/**  decode bean. */
 	private DecodeBean decodeBean;
 	
+	/**  certificado bean. */
 	private CertificadoBean certificadoBean;
 	
+	/**  combo certificados. */
 	List<KeyValueObject> comboCertificados = new ArrayList<KeyValueObject>();
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	@Override
 	public void prepare() throws Exception {
 		
@@ -63,6 +73,11 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 		
 	}
 
+	/**
+	 * Decode.
+	 *
+	 * @return the string
+	 */
 	public String decode() {
 		
 		if (getRequest().getSession().getAttribute("infoUser") == null) 
@@ -98,13 +113,13 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 
 
 	/**
-	 * Método de descifrado de una peticion
-	 * @param decodeBean
-	 * @param ps
-	 * @param certificado
-	 * @return
-	 * @throws FactoryConfigurationError
-	 * @throws Exception
+	 * Método de descifrado de una peticion.
+	 *
+	 * @param decodeBean the decode bean
+	 * @param certificado the certificado
+	 * @return the decode bean
+	 * @throws FactoryConfigurationError the factory configuration error
+	 * @throws Exception the exception
 	 */
 	public DecodeBean descifradoFichero(DecodeBean decodeBean,
 			String certificado) throws FactoryConfigurationError, Exception {
@@ -149,8 +164,9 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 
 
 	/**
-	 * Metodo para la gestion de la pagina de Consulta de Consumidores
-	 * @return
+	 * Metodo para la gestion de la pagina de Consulta de Consumidores.
+	 *
+	 * @return the string
 	 */
 	public String limpiar() {
 		
@@ -176,35 +192,75 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 		
 	}
 	
+	/**
+	 * Obtener decode bean.
+	 *
+	 * @return decode bean
+	 */
 	public DecodeBean getDecodeBean() {
 		return decodeBean;
 	}
 
+	/**
+	 * Modificar decode bean.
+	 *
+	 * @param decodeBean new decode bean
+	 */
 	public void setDecodeBean(DecodeBean decodeBean) {
 		this.decodeBean = decodeBean;
 	}
 	
+	/**
+	 * Obtener certificado bean.
+	 *
+	 * @return certificado bean
+	 */
 	public CertificadoBean getCertificadoBean() {
 		return certificadoBean;
 	}
 
+	/**
+	 * Modificar certificado bean.
+	 *
+	 * @param certificadoBean new certificado bean
+	 */
 	public void setCertificadoBean(CertificadoBean certificadoBean) {
 		this.certificadoBean = certificadoBean;
 	}
 
+	/**
+	 * Obtener combo certificados.
+	 *
+	 * @return combo certificados
+	 */
 	public List<KeyValueObject> getComboCertificados() {
 		return comboCertificados;
 	}
 
+	/**
+	 * Modificar combo certificados.
+	 *
+	 * @param comboCertificados new combo certificados
+	 */
 	public void setComboCertificados(List<KeyValueObject> comboCertificados) {
 		this.comboCertificados = comboCertificados;
 	}
 	
+	/**
+	 * Obtener cifrado service.
+	 *
+	 * @return cifrado service
+	 */
 	public CifradoService getCifradoService() {
 		return cifradoService;
 	}
 
 
+	/**
+	 * Modificar cifrado service.
+	 *
+	 * @param cifradoService new cifrado service
+	 */
 	public void setCifradoService(CifradoService cifradoService) {
 		this.cifradoService = cifradoService;
 	}

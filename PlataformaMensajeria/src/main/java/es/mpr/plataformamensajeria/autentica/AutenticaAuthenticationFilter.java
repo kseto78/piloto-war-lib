@@ -16,8 +16,16 @@ import org.springframework.web.filter.GenericFilterBean;
 import es.mpr.plataformamensajeria.util.MapUser;
 
 ///MIGRADO
+/**
+ * Clase AutenticaAuthenticationFilter
+ * @author ralberoc
+ *
+ */
 public class AutenticaAuthenticationFilter extends GenericFilterBean {
 	
+	/**
+	 * Metodo de autenticacion del login
+	 */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
     	

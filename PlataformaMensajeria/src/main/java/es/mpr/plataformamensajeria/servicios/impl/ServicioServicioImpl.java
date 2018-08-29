@@ -67,42 +67,57 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioServicioImpl")
 public class ServicioServicioImpl implements ServicioServicio {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServicioImpl.class);
 
+	/**  view servicios manager. */
 	@Resource(name = "ViewServiciosManagerImpl")
 	private ViewServiciosManager viewServiciosManager;
 
+	/**  tbl organismo servicio manager. */
 	@Resource(name = "tblOrganismosServicioManagerImpl")
 	private TblOrganismosServicioManager tblOrganismoServicioManager;
 
+	/**  tbl servidores servicios manager. */
 	@Resource(name = "TblServidoresServiciosManagerImpl")
 	private TblServidoresServiciosManager tblServidoresServiciosManager;
 
+	/**  tbl servicios manager. */
 	@Resource(name = "TblServiciosManagerImpl")
 	private TblServiciosManager tblServiciosManager;
 
+	/**  tbl servidores manager. */
 	@Resource(name = "TblServidoresManagerImpl")
 	private TblServidoresManager tblServidoresManager;
 
+	/**  tbl aplicaciones manager. */
 	@Resource(name = "TblAplicacionesManagerImpl")
 	private TblAplicacionesManager tblAplicacionesManager;
 
+	/**  tbl canales manager. */
 	@Resource(name = "tblCanalesManagerImpl")
 	private TblCanalesManager tblCanalesManager;
 
+	/**  tbl organismos manager. */
 	@Resource(name = "TblOrganismosManagerImpl")
 	private TblOrganismosManager tblOrganismosManager;
 
+	/**  tbl planificaciones manager. */
 	@Resource(name = "TblPlanificacionesManagerImpl")
 	private TblPlanificacionesManager tblPlanificacionesManager;
 	
+	/**  tbl usuarios planificaciones manager. */
 	@Resource(name = "TblUsuariosAplicacionesManagerImpl")
 	private TblUsuariosAplicacionesManager tblUsuariosPlanificacionesManager;
 	
+	/**  tbl usuarios manager. */
 	@Resource(name = "tblUsuariosManagerImpl")
 	private TblUsuariosManager tblUsuariosManager;
 
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServiciosMultiorganismo()
+	 */
 	///MIGRADO
 	@Override
 	public List<ServicioBean> getServiciosMultiorganismo() throws BusinessException {
@@ -120,6 +135,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServicios(java.lang.String, java.lang.Integer)
+	 */
 	///MIGRADO
 	@Override
 	public List<ServicioBean> getServicios(String rolUsuario, Integer idUsuario) throws BusinessException {
@@ -194,6 +212,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		return res;
 	}
 		
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServicios(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.ServicioBean)
+	 */
 	///MIGRADO
 	@Override
 	public PaginatedList<ServicioBean> getServicios(int start, int size, String order, String columnSort,
@@ -257,6 +278,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#newServicio(es.mpr.plataformamensajeria.beans.ServicioBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -283,6 +307,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#updateServicio(es.mpr.plataformamensajeria.beans.ServicioBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -302,6 +329,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#loadServicio(es.mpr.plataformamensajeria.beans.ServicioBean)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -315,6 +345,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#deleteServicio(es.mpr.plataformamensajeria.beans.ServicioBean, java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.Long, java.lang.String, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -362,13 +395,10 @@ public class ServicioServicioImpl implements ServicioServicio {
 	/**
 	 * <p>
 	 * Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean
-	 * </p>
-	 * 
-	 * @param organismoBean
-	 * 
+	 * </p>.
+	 *
+	 * @param servicio the servicio
 	 * @return objeto OrganismoJPA
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
 	///MIGRADO
 	public TblServicios getServicioTO(ServicioBean servicio) {
@@ -431,13 +461,10 @@ public class ServicioServicioImpl implements ServicioServicio {
 	/**
 	 * <p>
 	 * Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean
-	 * </p>
-	 * 
-	 * @param organismoBean
-	 * 
+	 * </p>.
+	 *
+	 * @param servidoresServicios the servidores servicios
 	 * @return objeto OrganismoJPA
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
 	///MIGRADO
 	protected TblServidoresServicios getServidorServicioTO(ServidoresServiciosBean servidoresServicios) {
@@ -459,6 +486,12 @@ public class ServicioServicioImpl implements ServicioServicio {
 		return ss;
 	}
 
+	/**
+	 * Obtener servicio organismos TO.
+	 *
+	 * @param servicioOrganismo the servicio organismo
+	 * @return servicio organismos TO
+	 */
 	///MIGRADO
 	protected TblOrganismosServicio getServicioOrganismosTO(ServicioOrganismosBean servicioOrganismo) {
 
@@ -481,11 +514,11 @@ public class ServicioServicioImpl implements ServicioServicio {
 	/**
 	 * <p>
 	 * Convertirmos una lista de ServicioJPA a una lista de ServidoresBean
-	 * </p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	@Override
@@ -513,11 +546,11 @@ public class ServicioServicioImpl implements ServicioServicio {
 	/**
 	 * <p>
 	 * Obtenemos un objeto ServicioBean a partir de un objeto ServicioJPA
-	 * </p>
-	 * 
-	 * @param servicioJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param serv the serv
 	 * @return objeto ServicioBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected ServicioBean getServicioBean(TblServicios serv) throws BusinessException {
@@ -578,11 +611,11 @@ public class ServicioServicioImpl implements ServicioServicio {
 	/**
 	 * <p>
 	 * Obtenemos un objeto ServicioBean a partir de un objeto ServicioBean
-	 * </p>
-	 * 
-	 * @param ServicioBean
-	 * 
+	 * </p>.
+	 *
+	 * @param serv the serv
 	 * @return objeto ServicioBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	@Override
@@ -601,11 +634,11 @@ public class ServicioServicioImpl implements ServicioServicio {
 	/**
 	 * <p>
 	 * Convertirmos una lista de ViewServicioJPA a una lista de ServidoresBean
-	 * </p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected List<ServicioBean> getListViewServicioBean(List<ViewServicios> lista) throws BusinessException {
@@ -638,11 +671,11 @@ public class ServicioServicioImpl implements ServicioServicio {
 	 * <p>
 	 * Convertirmos una lista de ViewServidoresServiciosJPA a una lista de
 	 * ServidoresServiciosBean
-	 * </p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos ServidoresServiciosBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected List<ServidoresServiciosBean> getListServidoresServiciosBean(List<TblServidoresServiciosBean> lista)
@@ -674,6 +707,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServiciosByAplicacionId(java.lang.Integer)
+	 */
 	///MIGRADO
 	@Override
 	public List<ServicioBean> getServiciosByAplicacionId(Integer aplicacionId) throws BusinessException {
@@ -687,6 +723,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#deleteServidoresServicios(es.mpr.plataformamensajeria.beans.ServidoresServiciosBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -701,6 +740,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#deleteServicioOrganismos(es.mpr.plataformamensajeria.beans.ServicioOrganismosBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -715,6 +757,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#loadOrganismoServicio(es.mpr.plataformamensajeria.beans.ServicioOrganismosBean)
+	 */
 	///MIGRADO
 	@Override
 	public ServicioOrganismosBean loadOrganismoServicio(ServicioOrganismosBean organismoServicio)
@@ -729,6 +774,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#newServidoresServicio(es.mpr.plataformamensajeria.beans.ServidoresServiciosBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -746,6 +794,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#newServicioOrganismo(es.mpr.plataformamensajeria.beans.ServicioOrganismosBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -762,6 +813,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServidoresServicios(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public List<ServidoresServiciosBean> getServidoresServicios(String idServicio) throws BusinessException {
@@ -779,6 +833,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServicioOrganismo(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public List<ServicioOrganismosBean> getServicioOrganismo(String idServicio) throws BusinessException {
@@ -797,6 +854,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getOrganismoServicio(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public List<ServicioOrganismosBean> getOrganismoServicio(String idOrganismo) throws BusinessException {
@@ -814,6 +874,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServiciosHistorico()
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -832,6 +895,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServiciosCons()
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -850,6 +916,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServiciosInformes()
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -868,6 +937,13 @@ public class ServicioServicioImpl implements ServicioServicio {
 	}
 	}
 
+	/**
+	 * Obtener list servicio organismos bean.
+	 *
+	 * @param lista the lista
+	 * @return list servicio organismos bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	protected List<ServicioOrganismosBean> getListServicioOrganismosBean(List<OrganismosServicioBean> lista)
 			throws BusinessException {
@@ -902,6 +978,13 @@ public class ServicioServicioImpl implements ServicioServicio {
 		return result;
 	}
 
+	/**
+	 * Obtener organismo servicio bean.
+	 *
+	 * @param organismoServicio the organismo servicio
+	 * @return organismo servicio bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	protected ServicioOrganismosBean getOrganismoServicioBean(OrganismosServicioBean organismoServicio) throws BusinessException{
 		ServicioOrganismosBean servicioOrganismo = new ServicioOrganismosBean();

@@ -31,28 +31,26 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
 public class ReportGeneratorAction extends RunReportAction {
 
 		
-	/**
-	 * 
-	 */
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Definicion del logger
-	 */
+	/** Definicion del logger. */
 	private static Log logger = LogFactory.getLog(ReportGeneratorAction.class);
 
-	/**
-	 * Variables para manejo de datos
-	 */
+	/** Variables para manejo de datos. */
 	private ServicioOrganismo servicioOrganismos;
+	
+	/**  lista registros organismo. */
 	private List<OrganismoBean> listaRegistrosOrganismo= null;
 
+	/**  form. */
 	protected ReportForm form = new ReportForm();
 	
 	/**
 	 * <p>M&eacute;todo que ejecuta la generaci&oacute;n de un informe.</p>
-	 * 
-	 * @throws ReportException	
+	 *
+	 * @return the string
+	 * @throws ReportException the report exception
 	 */
 	public String generateReport() throws ReportException {
 		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -97,8 +95,9 @@ public class ReportGeneratorAction extends RunReportAction {
 	}
 
 	/**
-	 * Método a ejecutar para cargar datos en la pantalla de selección de informe
-	 * @return
+	 * Método a ejecutar para cargar datos en la pantalla de selección de informe.
+	 *
+	 * @return the string
 	 */
 	public String nuevoInforme(){
 		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -107,49 +106,83 @@ public class ReportGeneratorAction extends RunReportAction {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.interceptor.ServletRequestAware#setServletRequest(javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.setRequest(request);		
 	}
 
 
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.interceptor.ServletResponseAware#setServletResponse(javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
 		this.setResponse(response);
 		
 	}
 
+	/**
+	 * Obtener lista registros organismo.
+	 *
+	 * @return lista registros organismo
+	 */
 	public List<OrganismoBean> getListaRegistrosOrganismo() {
 		return listaRegistrosOrganismo;
 	}
 
 
+	/**
+	 * Modificar lista registros organismo.
+	 *
+	 * @param listaRegistrosOrganismo new lista registros organismo
+	 */
 	public void setListaRegistrosOrganismo(List<OrganismoBean> listaRegistrosOrganismo) {
 		this.listaRegistrosOrganismo = listaRegistrosOrganismo;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.map.j2ee.reports.struts.RunReportAction#getForm()
+	 */
 	public ReportForm getForm() {
 		return this.form;
 	}
 
+	/**
+	 * Modificar form.
+	 *
+	 * @param aForm new form
+	 */
 	public void setForm(ReportForm aForm) {
 		this.form = aForm;
 	}
 
+	/**
+	 * Obtener servicio organismos.
+	 *
+	 * @return servicio organismos
+	 */
 	public ServicioOrganismo getServicioOrganismos() {
 		return servicioOrganismos;
 	}
 
+	/**
+	 * Modificar servicio organismos.
+	 *
+	 * @param servicioOrganismo new servicio organismos
+	 */
 	public void setServicioOrganismos(ServicioOrganismo servicioOrganismo) {
 		this.servicioOrganismos = servicioOrganismo;
 	}
 	
 	/**
-	 * Clase que genera los par&aacute;metros del informe
-	 * 
+	 * Clase que genera los par&aacute;metros del informe.
+	 *
 	 * @param request Petici&oacute;n HTTP en la cual incluir los par&aacute;metros
-	 * @return ReportParameters Conjunto de par&aacute;metros del informe 
-	 * @throws Exception
+	 * @return ReportParameters Conjunto de par&aacute;metros del informe
+	 * @throws Exception the exception
 	 */
 	@SuppressWarnings("unchecked")
 	public ReportParameters getReportParameters(HttpServletRequest request) throws Exception {

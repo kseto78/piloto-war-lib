@@ -48,59 +48,109 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ServidoresPushAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/** Constante GENERALES_REQUEST_ATTRIBUTE_PAGESIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
 
+	/** Constante GENERALES_TIPO_SERVIDOR_PUSH. */
 	private static final String GENERALES_TIPO_SERVIDOR_PUSH = "generales.TIPO_SERVIDOR_PUSH";
 
+	/** Constante GENERALES_PAGESIZE. */
 	private static final String GENERALES_PAGESIZE = "generales.PAGESIZE";
 
+	/** Constante NO_USER. */
 	private static final String NO_USER = "noUser";
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServidoresPushAction.class);
 
+	/**  servicio servidor push. */
 	@Resource(name = "servicioServidorPushImpl")
 	private transient ServicioServidorPush servicioServidorPush;
 
+	/**  servicio tipo parametro. */
 	@Resource(name = "servicioTipoParametroImpl")
 	private transient ServicioTipoParametro servicioTipoParametro;
 
+	/**  servicio parametro servidor. */
 	@Resource(name = "servicioParametroServidorImpl")
 	private transient ServicioParametroServidor servicioParametroServidor;
 
+	/**  servicio planificacion. */
 	@Resource(name = "servicioPlanificacionImpl")
 	private transient ServicioPlanificacion servicioPlanificacion;
 
+	/**  servicio plataforma. */
 	@Resource(name = "servicioPlataformaImpl")
 	private transient ServicioPlataforma servicioPlataforma;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private transient PlataformaMensajeriaProperties properties;
 
+	/**  parametro servidor. */
 	private ParametroServidorBean parametroServidor;
+	
+	/**  servidor push. */
 	private ServidorPushBean servidorPush;
+	
+	/**  planificacion servidor. */
 	private PlanificacionBean planificacionServidor;
 
+	/**  combo tipo parametros. */
 	List<KeyValueObject> comboTipoParametros = new ArrayList<>();
+	
+	/**  combo plataformas. */
 	List<KeyValueObject> comboPlataformas = new ArrayList<>();
 
+	/**  lista servidores push. */
 	public transient List<ServidorPushBean> listaServidoresPush = null;
+	
+	/**  lista parametros servidor. */
 	private List<ParametroServidorBean> listaParametrosServidor = null;
+	
+	/**  lista planificaciones servidor. */
 	private List<PlanificacionBean> listaPlanificacionesServidor = null;
+	
+	/**  tipos parametros. */
 	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<>();
+	
+	/**  check del list. */
 	private String[] checkDelList;
 
+	/**  tipo parametro id. */
 	private String tipoParametroId;
+	
+	/**  id servidor push. */
 	private String idServidorPush;
+	
+	/**  planificacion id. */
 	private String planificacionId;
+	
+	/**  parametro servidor id. */
 	private String parametroServidorId;
+	
+	/**  result count. */
 	private String resultCount;
 
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String newSearch() throws BaseException {
 		return SUCCESS;
 	}
 
+	/**
+	 * Search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	// //MIGRADO
 	public String search() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -147,6 +197,9 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
+	 */
 	// //MIGRADO
 	public String execute() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -192,6 +245,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return SUCCESS;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -221,6 +280,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String update() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -272,6 +337,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	// //MIGRADO
 	public String load() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -295,6 +366,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	}
 
+	/**
+	 * Delete parametro servidor push.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String deleteParametroServidorPush() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -316,6 +393,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete planificacion servidor push.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String deletePlanificacionServidorPush() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -337,6 +420,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String delete() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -361,6 +450,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	}
 
+	/**
+	 * Delete selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String deleteSelected() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -387,6 +482,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	}
 
+	/**
+	 * Agrega parametro servidor push.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String addParametroServidorPush() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -415,6 +516,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return SUCCESS;
 	}
 
+	/**
+	 * Agrega planificacion servidor push.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String addPlanificacionServidorPush() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -454,6 +561,9 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	// ///MIGRADO
 	@Override
 	public void prepare() throws Exception {
@@ -466,6 +576,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		}
 	}
 
+	/**
+	 * Valida parametro.
+	 *
+	 * @param parametroServidor the parametro servidor
+	 * @return true, if successful
+	 */
 	// //MIGRADO
 	private boolean validaParametro(ParametroServidorBean parametroServidor) {
 		boolean sw = true;
@@ -503,6 +619,11 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return sw;
 	}
 
+	/**
+	 * Obtener load planificaciones servidor push.
+	 *
+	 * @return load planificaciones servidor push
+	 */
 	// //MIGRADO
 	private List<PlanificacionBean> getLoadPlanificacionesServidorPush() {
 		List<PlanificacionBean> lista = null;
@@ -524,6 +645,11 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return lista;
 	}
 
+	/**
+	 * Obtener parametros servidor push.
+	 *
+	 * @return parametros servidor push
+	 */
 	// //MIGRADO
 	private List<ParametroServidorBean> getParametrosServidorPush() {
 		List<ParametroServidorBean> lista = null;
@@ -546,6 +672,11 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return lista;
 	}
 
+	/**
+	 * Obtener combo values.
+	 *
+	 * @return combo values
+	 */
 	// //MIGRADO
 	private List<KeyValueObject> getComboValues() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -572,6 +703,11 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return result;
 	}
 
+	/**
+	 * Obtener combo plataforma values.
+	 *
+	 * @return combo plataforma values
+	 */
 	// //MIGRADO
 	private List<KeyValueObject> getComboPlataformaValues() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -597,9 +733,10 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	/**
 	 * Verifica que se ha introducido por lo menos un día de la semana y las
-	 * horas de inicio y fin
-	 * 
-	 * @param planificacionServidor
+	 * horas de inicio y fin.
+	 *
+	 * @param planificacionServidor the planificacion servidor
+	 * @return true, if successful
 	 */
 	////MIGRADO
 	private boolean planificacionValida(PlanificacionBean planificacionServidor) {
@@ -651,6 +788,13 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return sw;
 	}
 
+	/**
+	 * Valido horas.
+	 *
+	 * @param horaDesde the hora desde
+	 * @param horaHasta the hora hasta
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
@@ -673,6 +817,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return sw;
 	}
 
+	/**
+	 * Valido formato hora.
+	 *
+	 * @param hora the hora
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
@@ -685,7 +835,9 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	}
 
 	/**
-	 * Método que resuelve el lugar donde tiene que volver
+	 * Método que resuelve el lugar donde tiene que volver.
+	 *
+	 * @return volver
 	 */
 	///MIGRADO
 	public String getVolver() {
@@ -696,6 +848,12 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return volver;
 	}
 
+	/**
+	 * Valida servidor.
+	 *
+	 * @param servidor the servidor
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validaServidor(ServidorPushBean servidor) {
 		boolean sw = true;
@@ -724,114 +882,254 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		return sw;
 	}
 
+	/**
+	 * Obtener combo tipo parametros.
+	 *
+	 * @return combo tipo parametros
+	 */
 	public List<KeyValueObject> getComboTipoParametros() {
 		return comboTipoParametros;
 	}
 
+	/**
+	 * Modificar combo tipo parametros.
+	 *
+	 * @param comboTipoParametros new combo tipo parametros
+	 */
 	public void setComboTipoParametros(List<KeyValueObject> comboTipoParametros) {
 		this.comboTipoParametros = comboTipoParametros;
 	}
 
+	/**
+	 * Obtener lista servidores push.
+	 *
+	 * @return lista servidores push
+	 */
 	public List<ServidorPushBean> getlistaServidoresPush() {
 		return listaServidoresPush;
 	}
 
+	/**
+	 * Modificar lista servidores push.
+	 *
+	 * @param listaServidoresPush new lista servidores push
+	 */
 	public void setlistaServidoresPush(List<ServidorPushBean> listaServidoresPush) {
 		this.listaServidoresPush = listaServidoresPush;
 	}
 
+	/**
+	 * Obtener servicio servidor push.
+	 *
+	 * @return servicio servidor push
+	 */
 	public ServicioServidorPush getServicioServidorPush() {
 		return servicioServidorPush;
 	}
 
+	/**
+	 * Modificar servicio servidor push.
+	 *
+	 * @param servicioServidorPush new servicio servidor push
+	 */
 	public void setServicioServidorPush(ServicioServidorPush servicioServidorPush) {
 		this.servicioServidorPush = servicioServidorPush;
 	}
 
+	/**
+	 * Obtener servicio tipo parametro.
+	 *
+	 * @return servicio tipo parametro
+	 */
 	public ServicioTipoParametro getServicioTipoParametro() {
 		return servicioTipoParametro;
 	}
 
+	/**
+	 * Modificar servicio tipo parametro.
+	 *
+	 * @param servicioTipoParametro new servicio tipo parametro
+	 */
 	public void setServicioTipoParametro(ServicioTipoParametro servicioTipoParametro) {
 		this.servicioTipoParametro = servicioTipoParametro;
 	}
 
+	/**
+	 * Obtener servicio parametro servidor.
+	 *
+	 * @return servicio parametro servidor
+	 */
 	public ServicioParametroServidor getServicioParametroServidor() {
 		return servicioParametroServidor;
 	}
 
+	/**
+	 * Modificar servicio parametro servidor.
+	 *
+	 * @param servicioParametroServidor new servicio parametro servidor
+	 */
 	public void setServicioParametroServidor(ServicioParametroServidor servicioParametroServidor) {
 		this.servicioParametroServidor = servicioParametroServidor;
 	}
 
+	/**
+	 * Obtener tipo parametro id.
+	 *
+	 * @return tipo parametro id
+	 */
 	public String getTipoParametroId() {
 		return tipoParametroId;
 	}
 
+	/**
+	 * Modificar tipo parametro id.
+	 *
+	 * @param tipoParametroId new tipo parametro id
+	 */
 	public void setTipoParametroId(String tipoParametroId) {
 		this.tipoParametroId = tipoParametroId;
 	}
 
+	/**
+	 * Obtener servidor push.
+	 *
+	 * @return servidor push
+	 */
 	public ServidorPushBean getServidorPush() {
 		return servidorPush;
 	}
 
+	/**
+	 * Modificar servidor push.
+	 *
+	 * @param servidorPush new servidor push
+	 */
 	public void setServidorPush(ServidorPushBean servidorPush) {
 		this.servidorPush = servidorPush;
 	}
 
+	/**
+	 * Obtener id servidor push.
+	 *
+	 * @return id servidor push
+	 */
 	public String getIdServidorPush() {
 		return idServidorPush;
 	}
 
+	/**
+	 * Modificar id servidor push.
+	 *
+	 * @param idServidorPush new id servidor push
+	 */
 	public void setIdServidorPush(String idServidorPush) {
 		this.idServidorPush = idServidorPush;
 	}
 
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
 
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
 
+	/**
+	 * Obtener check del list.
+	 *
+	 * @return check del list
+	 */
 	public String[] getCheckDelList() {
 		return checkDelList;
 	}
 
+	/**
+	 * Modificar check del list.
+	 *
+	 * @param checkDelList new check del list
+	 */
 	public void setCheckDelList(String[] checkDelList) {
 		this.checkDelList = checkDelList;
 	}
 
+	/**
+	 * Obtener parametro servidor.
+	 *
+	 * @return parametro servidor
+	 */
 	public ParametroServidorBean getParametroServidor() {
 		return parametroServidor;
 	}
 
+	/**
+	 * Modificar parametro servidor.
+	 *
+	 * @param parametroServidor new parametro servidor
+	 */
 	public void setParametroServidor(ParametroServidorBean parametroServidor) {
 		this.parametroServidor = parametroServidor;
 	}
 
+	/**
+	 * Obtener lista parametros servidor.
+	 *
+	 * @return lista parametros servidor
+	 */
 	public List<ParametroServidorBean> getListaParametrosServidor() {
 		return listaParametrosServidor;
 	}
 
+	/**
+	 * Modificar lista parametros servidor.
+	 *
+	 * @param listaParametrosServidor new lista parametros servidor
+	 */
 	public void setListaParametrosServidor(List<ParametroServidorBean> listaParametrosServidor) {
 		this.listaParametrosServidor = listaParametrosServidor;
 	}
 
+	/**
+	 * Modificar parametro servidor id.
+	 *
+	 * @param parametroServidorId new parametro servidor id
+	 */
 	public void setParametroServidorId(String parametroServidorId) {
 		this.parametroServidorId = parametroServidorId;
 	}
 
+	/**
+	 * Obtener planificacion servidor.
+	 *
+	 * @return planificacion servidor
+	 */
 	public PlanificacionBean getPlanificacionServidor() {
 		return planificacionServidor;
 	}
 
+	/**
+	 * Modificar planificacion servidor.
+	 *
+	 * @param planificacionServidor new planificacion servidor
+	 */
 	public void setPlanificacionServidor(PlanificacionBean planificacionServidor) {
 		this.planificacionServidor = planificacionServidor;
 	}
 
+	/**
+	 * Obtener parametro servidor id.
+	 *
+	 * @return parametro servidor id
+	 */
 	public String getParametroServidorId() {
 		if (parametroServidor != null && parametroServidor.getParametroservidorid() != null) {
 			return parametroServidor.getParametroservidorid().toString();
@@ -841,50 +1139,110 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 	}
 
+	/**
+	 * Obtener servicio planificacion.
+	 *
+	 * @return servicio planificacion
+	 */
 	public ServicioPlanificacion getServicioPlanificacion() {
 		return servicioPlanificacion;
 	}
 
+	/**
+	 * Modificar servicio planificacion.
+	 *
+	 * @param servicioPlanificacion new servicio planificacion
+	 */
 	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
 		this.servicioPlanificacion = servicioPlanificacion;
 	}
 
+	/**
+	 * Obtener combo plataformas.
+	 *
+	 * @return combo plataformas
+	 */
 	public List<KeyValueObject> getComboPlataformas() {
 		return comboPlataformas;
 	}
 
+	/**
+	 * Modificar combo plataformas.
+	 *
+	 * @param comboPlataformas new combo plataformas
+	 */
 	public void setComboPlataformas(List<KeyValueObject> comboPlataformas) {
 		this.comboPlataformas = comboPlataformas;
 	}
 
+	/**
+	 * Obtener servicio plataforma.
+	 *
+	 * @return servicio plataforma
+	 */
 	public ServicioPlataforma getServicioPlataforma() {
 		return servicioPlataforma;
 	}
 
+	/**
+	 * Modificar servicio plataforma.
+	 *
+	 * @param servicioPlataforma new servicio plataforma
+	 */
 	public void setServicioPlataforma(ServicioPlataforma servicioPlataforma) {
 		this.servicioPlataforma = servicioPlataforma;
 	}
 
+	/**
+	 * Obtener planificacion id.
+	 *
+	 * @return planificacion id
+	 */
 	public String getPlanificacionId() {
 		return planificacionId;
 	}
 
+	/**
+	 * Modificar planificacion id.
+	 *
+	 * @param planificacionId new planificacion id
+	 */
 	public void setPlanificacionId(String planificacionId) {
 		this.planificacionId = planificacionId;
 	}
 
+	/**
+	 * Obtener lista planificaciones servidor.
+	 *
+	 * @return lista planificaciones servidor
+	 */
 	public List<PlanificacionBean> getListaPlanificacionesServidor() {
 		return listaPlanificacionesServidor;
 	}
 
+	/**
+	 * Modificar lista planificaciones servidor.
+	 *
+	 * @param listaPlanificacionesServidor new lista planificaciones servidor
+	 */
 	public void setListaPlanificacionesServidor(List<PlanificacionBean> listaPlanificacionesServidor) {
 		this.listaPlanificacionesServidor = listaPlanificacionesServidor;
 	}
 
+	/**
+	 * Obtener tipos parametros.
+	 *
+	 * @return tipos parametros
+	 */
 	public ArrayList<TipoParametroBean> getTiposParametros() {
 		return tiposParametros;
 	}
 
+	/**
+	 * Modificar tipos parametros.
+	 *
+	 * @param tiposParametros new tipos parametros
+	 */
 	public void setTiposParametros(ArrayList<TipoParametroBean> tiposParametros) {
 		this.tiposParametros = tiposParametros;
 	}

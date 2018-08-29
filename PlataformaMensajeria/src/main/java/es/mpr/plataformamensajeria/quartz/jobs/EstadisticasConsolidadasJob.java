@@ -40,43 +40,72 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 
+/**
+ * Clase EstadisticasConsolidadasJob.
+ */
 @Service("estadisticasConsolidadasJob")
 public class EstadisticasConsolidadasJob implements Job {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(EstadisticasConsolidadasJob.class);
 
+	/**  servicio proceso consolidadas. */
 	private ServicioProcesoConsolidadas servicioProcesoConsolidadas;
 	
+	/**  servicio servicios. */
 	private ServicioServicio servicioServicios;
 	
+	/**  servicio lotes envios historicos. */
 	private ServicioLotesEnviosHistoricos servicioLotesEnviosHistoricos;
 	
+	/**  servicio mensajes historicos. */
 	private ServicioMensajesHistoricos servicioMensajesHistoricos;
 	
+	/**  servicio mensajes adjuntos historicos. */
 	private ServicioMensajesAdjuntosHistoricos servicioMensajesAdjuntosHistoricos;
 	
+	/**  servicio adjunto email historicos. */
 	private ServicioAdjuntoEmailHistoricos servicioAdjuntoEmailHistoricos;
 	
+	/**  servicio destinatario historicos. */
 	private ServicioDestinatarioHistoricos servicioDestinatarioHistoricos;
 	
+	/**  servicio historico hist. */
 	private ServicioHistoricoHist servicioHistoricoHist;
 	
+	/**  servicio gestion envios historicos. */
 	private ServicioGestionEnviosHistoricos servicioGestionEnviosHistoricos;
 	
+	/**  servicio servidor. */
 	private ServicioServidor servicioServidor;
 	
+	/**  properties. */
 	private PlataformaMensajeriaProperties properties;
 	
+	/** Constante MAX. */
 	private static final Integer MAX = 1000;
 	
+	/**  nombre job. */
 	private static String NOMBRE_JOB = "Consolidacion estadisticas";
+	
+	/**  estado proceso ok. */
 	private static String ESTADO_PROCESO_OK = "OK";
+	
+	/**  estado proceso ko. */
 	private static String ESTADO_PROCESO_KO = "KO";
+	
+	/**  caracter separador lineas. */
 	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; // El salto de linea esta preparado para el correo en formato HTML
+	
+	/**  caracter tab. */
 	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; // El tab esta preparado para el correo en formato HTML
 	
+	/**  job bean. */
 	private JobBean jobBean = null;
 
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException{
 		SchedulerContext schedulerContext;
@@ -92,6 +121,12 @@ public class EstadisticasConsolidadasJob implements Job {
 
 	}
 
+	/**
+	 * Lanzar job.
+	 *
+	 * @param servletContext the servlet context
+	 * @param bean the bean
+	 */
 	public void lanzarJob(ServletContext servletContext, JobBean bean) {
 		try {
 		ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
@@ -105,7 +140,7 @@ public class EstadisticasConsolidadasJob implements Job {
 	}
 	
 	/**
-	 * 
+	 * Ejecutar.
 	 */
 	private void ejecutar() {
 		logger.info("execute - INICIO Estadisticas consolidadas");
@@ -356,6 +391,12 @@ public class EstadisticasConsolidadasJob implements Job {
 		}
 	}
 
+	/**
+	 * Inicializar variables.
+	 *
+	 * @param applicationContext the application context
+	 * @throws JobExecutionException the job execution exception
+	 */
 	private void inicializarVariables(ApplicationContext applicationContext) throws JobExecutionException {
 		try {
 			
@@ -377,6 +418,13 @@ public class EstadisticasConsolidadasJob implements Job {
 		}
 	}
 
+	/**
+	 * Obtenter estadisticas consolidadas.
+	 *
+	 * @param listaGestionEnviosHist the lista gestion envios hist
+	 * @return the list
+	 * @throws BusinessException the business exception
+	 */
 	private List<TblEstadistitcasCons> obtenterEstadisticasConsolidadas(List<TblGestionEnviosHist> listaGestionEnviosHist) throws BusinessException {
 
 		// Recuperamos los servidores para despues agregar su nombre a las estadisticas

@@ -14,20 +14,25 @@ import javax.mail.event.TransportListener;
 
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
- * @author i-nercya
+ * Clase SMTPConnectionTest.
  *
+ * @author i-nercya
  */
 public class SMTPConnectionTest implements ConnectionListener, TransportListener {
+	
 	/**
-	 * 
-	 * @param ip
-	 * @param user
-	 * @param password
-	 * @param secure
-	 * @param port
-	 * @return
+	 * Check connection classic.
+	 *
+	 * @param ip the ip
+	 * @param user the user
+	 * @param password the password
+	 * @param secure the secure
+	 * @param port the port
+	 * @param reqAuth the req auth
+	 * @return the string
 	 */
 	public String checkConnectionClassic(String ip, String user, String password, String secure, String port,String reqAuth){
 		String retorno ="";
@@ -67,14 +72,16 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 			}
 		return retorno;
 	}
+	
 	/**
-	 * 
-	 * @param ip
-	 * @param user
-	 * @param password
-	 * @param secure
-	 * @param port
-	 * @return
+	 * Check connection.
+	 *
+	 * @param ip the ip
+	 * @param user the user
+	 * @param password the password
+	 * @param secure the secure
+	 * @param port the port
+	 * @return true, if successful
 	 */
 	public static boolean checkConnection(String ip, String user, String password, String secure, String port){
 		SMTPClient client = new SMTPClient();
@@ -113,38 +120,68 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 		    }
 		return false;
 	}
+	
+	/* (non-Javadoc)
+	 * @see javax.mail.event.TransportListener#messageDelivered(javax.mail.event.TransportEvent)
+	 */
 	@Override
 	public void messageDelivered(TransportEvent arg0) {
+		@SuppressWarnings("unused")
 		String a = "";
 		String b = "";
 		a = b;
 	}
+	
+	/* (non-Javadoc)
+	 * @see javax.mail.event.TransportListener#messageNotDelivered(javax.mail.event.TransportEvent)
+	 */
 	@Override
 	public void messageNotDelivered(TransportEvent arg0) {
+		@SuppressWarnings("unused")
 		String a = "";
 		String b = "";
 		a = b;
 	}
+	
+	/* (non-Javadoc)
+	 * @see javax.mail.event.TransportListener#messagePartiallyDelivered(javax.mail.event.TransportEvent)
+	 */
 	@Override
 	public void messagePartiallyDelivered(TransportEvent arg0) {
+		@SuppressWarnings("unused")
 		String a = "";
 		String b = "";
 		a = b;
 	}
+	
+	/* (non-Javadoc)
+	 * @see javax.mail.event.ConnectionListener#closed(javax.mail.event.ConnectionEvent)
+	 */
 	@Override
 	public void closed(ConnectionEvent arg0) {
+		@SuppressWarnings("unused")
 		String a = "";
 		String b = "";
 		a = b;
 	}
+	
+	/* (non-Javadoc)
+	 * @see javax.mail.event.ConnectionListener#disconnected(javax.mail.event.ConnectionEvent)
+	 */
 	@Override
 	public void disconnected(ConnectionEvent arg0) {
+		@SuppressWarnings("unused")
 		String a = "";
 		String b = "";
 		a = b;
 	}
+	
+	/* (non-Javadoc)
+	 * @see javax.mail.event.ConnectionListener#opened(javax.mail.event.ConnectionEvent)
+	 */
 	@Override
 	public void opened(ConnectionEvent arg0) {
+		@SuppressWarnings("unused")
 		String a = "";
 		String b = "";
 		a = b;

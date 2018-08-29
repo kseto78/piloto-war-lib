@@ -47,50 +47,93 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ReceptoresSMSAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ReceptoresSMSAction.class);
 
+	/**  servicio receptor SMS. */
 	@Resource(name = "servicioReceptorSMSImpl")
 	private ServicioReceptorSMS servicioReceptorSMS;
 
+	/**  servicio tipo parametro. */
 	@Resource(name = "servicioTipoParametroImpl")
 	private ServicioTipoParametro servicioTipoParametro;
 
+	/**  servicio parametro servidor. */
 	@Resource(name = "servicioParametroServidorImpl")
 	private ServicioParametroServidor servicioParametroServidor;
 
+	/**  servicio planificacion. */
 	@Resource(name = "servicioPlanificacionImpl")
 	private ServicioPlanificacion servicioPlanificacion;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
 
+	/**  parametro servidor. */
 	private ParametroServidorBean parametroServidor;
+	
+	/**  receptor SMS. */
 	private ReceptorSMSBean receptorSMS;
+	
+	/**  planificacion servidor. */
 	private PlanificacionBean planificacionServidor;
 
+	/**  combo tipo parametros. */
 	List<KeyValueObject> comboTipoParametros = new ArrayList<KeyValueObject>();
 
+	/**  lista receptores SMS. */
 	public List<ReceptorSMSBean> listaReceptoresSMS = null;
+	
+	/**  lista parametros servidor. */
 	private List<ParametroServidorBean> listaParametrosServidor = null;
+	
+	/**  lista planificaciones servidor. */
 	private List<PlanificacionBean> listaPlanificacionesServidor = null;
+	
+	/**  tipos parametros. */
 	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<TipoParametroBean>();
 
+	/**  check del list. */
 	private String[] checkDelList;
 
+	/**  tipo parametro id. */
 	private String tipoParametroId;
+	
+	/**  id receptor SMS. */
 	private String idReceptorSMS;
+	
+	/**  parametro servidor id. */
 	private String parametroServidorId;
+	
+	/**  planificacion id. */
 	private String planificacionId;
+	
+	/**  result count. */
 	private String resultCount;
 
+	/**  check password. */
 	private String checkPassword;
 
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String newSearch() throws BaseException {
 		return SUCCESS;
 	}
 
+	/**
+	 * Search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String search() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -138,6 +181,9 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
+	 */
 	// //MIGRADO
 	public String execute() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -185,6 +231,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	}
 
 	
+	/**
+	 * Creates the.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -219,6 +271,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String update() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -273,6 +331,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	// /MIGRADO
 	public String load() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -303,6 +367,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Delete parametro receptor SMS.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String deleteParametroReceptorSMS() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -323,6 +393,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete planificacion receptor SMS.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	//////MIGRADO
 	public String deletePlanificacionReceptorSMS() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -343,6 +419,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String delete() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -367,6 +449,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Delete selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String deleteSelected() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -393,6 +481,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	}
 
+/**
+ * Agrega parametro receptor SMS.
+ *
+ * @return the string
+ * @throws BaseException the base exception
+ */
 ////MIGRADO
 	public String addParametroReceptorSMS() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -419,6 +513,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/**
+	 * Agrega planificacion receptor SMS.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String addPlanificacionReceptorSMS() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -455,6 +555,9 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	// ////MIGRADO
 	@Override
 	public void prepare() throws Exception {
@@ -467,6 +570,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		}
 	}
 	
+	/**
+	 * Valida parametro.
+	 *
+	 * @param parametroServidor the parametro servidor
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validaParametro(ParametroServidorBean parametroServidor) {
 		boolean sw = true;
@@ -496,6 +605,11 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Obtener load planificaciones receptor SMS.
+	 *
+	 * @return load planificaciones receptor SMS
+	 */
 	// //MIGRADO
 	private List<PlanificacionBean> getLoadPlanificacionesReceptorSMS() {
 		List<PlanificacionBean> lista = null;
@@ -520,6 +634,11 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return lista;
 	}
 
+	/**
+	 * Obtener parametros receptor SMS.
+	 *
+	 * @return parametros receptor SMS
+	 */
 	// //MIGRADO
 	private List<ParametroServidorBean> getParametrosReceptorSMS() {
 		List<ParametroServidorBean> lista = null;
@@ -544,6 +663,11 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return lista;
 	}
 
+	/**
+	 * Obtener combo values.
+	 *
+	 * @return combo values
+	 */
 	// ///MIGRADO
 	private List<KeyValueObject> getComboValues() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -569,6 +693,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 	
+	/**
+	 * Comprueba empty.
+	 *
+	 * @param value the value
+	 * @return true, si es empty
+	 */
 	///MIGRADO
 	public boolean isEmpty(String value) {
 		if (value == null || value.equals("")) {
@@ -578,6 +708,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Valida servidor.
+	 *
+	 * @param servidor the servidor
+	 * @return true, if successful
+	 */
 	// //MIGRADO
 	private boolean validaServidor(ReceptorSMSBean servidor) {
 		boolean sw = true;
@@ -592,6 +728,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Valid password.
+	 *
+	 * @param servidor the servidor
+	 * @return true, if successful
+	 */
 	// //MIGRADO
 	private boolean validPassword(ReceptorSMSBean servidor) {
 		boolean sw = true;
@@ -623,9 +765,10 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	/**
 	 * Verifica que se ha introducido por lo menos un día de la semana y las
-	 * horas de inicio y fin
-	 * 
-	 * @param planificacionServidor
+	 * horas de inicio y fin.
+	 *
+	 * @param planificacionServidor the planificacion servidor
+	 * @return true, if successful
 	 */
 	// //MIGRADO
 	private boolean planificacionValida(PlanificacionBean planificacionServidor) {
@@ -677,6 +820,13 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Valido horas.
+	 *
+	 * @param horaDesde the hora desde
+	 * @param horaHasta the hora hasta
+	 * @return true, if successful
+	 */
 	// //MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
@@ -699,6 +849,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Valido formato hora.
+	 *
+	 * @param hora the hora
+	 * @return true, if successful
+	 */
 	// //MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
@@ -711,7 +867,9 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
-	 * Método que resuelve el lugar donde tiene que volver
+	 * Método que resuelve el lugar donde tiene que volver.
+	 *
+	 * @return volver
 	 */
 	// //MIGRADO
 	public String getVolver() {
@@ -722,114 +880,254 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 		return volver;
 	}
 
+	/**
+	 * Obtener combo tipo parametros.
+	 *
+	 * @return combo tipo parametros
+	 */
 	public List<KeyValueObject> getComboTipoParametros() {
 		return comboTipoParametros;
 	}
 
+	/**
+	 * Modificar combo tipo parametros.
+	 *
+	 * @param comboTipoParametros new combo tipo parametros
+	 */
 	public void setComboTipoParametros(List<KeyValueObject> comboTipoParametros) {
 		this.comboTipoParametros = comboTipoParametros;
 	}
 
+	/**
+	 * Obtener lista receptores SMS.
+	 *
+	 * @return lista receptores SMS
+	 */
 	public List<ReceptorSMSBean> getlistaReceptoresSMS() {
 		return listaReceptoresSMS;
 	}
 
+	/**
+	 * Modificar lista receptores SMS.
+	 *
+	 * @param listaReceptoresSMS new lista receptores SMS
+	 */
 	public void setlistaReceptoresSMS(List<ReceptorSMSBean> listaReceptoresSMS) {
 		this.listaReceptoresSMS = listaReceptoresSMS;
 	}
 
+	/**
+	 * Obtener servicio receptor SMS.
+	 *
+	 * @return servicio receptor SMS
+	 */
 	public ServicioReceptorSMS getServicioReceptorSMS() {
 		return servicioReceptorSMS;
 	}
 
+	/**
+	 * Modificar servicio receptor SMS.
+	 *
+	 * @param servicioReceptorSMS new servicio receptor SMS
+	 */
 	public void setServicioReceptorSMS(ServicioReceptorSMS servicioReceptorSMS) {
 		this.servicioReceptorSMS = servicioReceptorSMS;
 	}
 
+	/**
+	 * Obtener servicio tipo parametro.
+	 *
+	 * @return servicio tipo parametro
+	 */
 	public ServicioTipoParametro getServicioTipoParametro() {
 		return servicioTipoParametro;
 	}
 
+	/**
+	 * Modificar servicio tipo parametro.
+	 *
+	 * @param servicioTipoParametro new servicio tipo parametro
+	 */
 	public void setServicioTipoParametro(ServicioTipoParametro servicioTipoParametro) {
 		this.servicioTipoParametro = servicioTipoParametro;
 	}
 
+	/**
+	 * Obtener servicio parametro servidor.
+	 *
+	 * @return servicio parametro servidor
+	 */
 	public ServicioParametroServidor getServicioParametroServidor() {
 		return servicioParametroServidor;
 	}
 
+	/**
+	 * Modificar servicio parametro servidor.
+	 *
+	 * @param servicioParametroServidor new servicio parametro servidor
+	 */
 	public void setServicioParametroServidor(ServicioParametroServidor servicioParametroServidor) {
 		this.servicioParametroServidor = servicioParametroServidor;
 	}
 
+	/**
+	 * Obtener tipo parametro id.
+	 *
+	 * @return tipo parametro id
+	 */
 	public String getTipoParametroId() {
 		return tipoParametroId;
 	}
 
+	/**
+	 * Modificar tipo parametro id.
+	 *
+	 * @param tipoParametroId new tipo parametro id
+	 */
 	public void setTipoParametroId(String tipoParametroId) {
 		this.tipoParametroId = tipoParametroId;
 	}
 
+	/**
+	 * Obtener receptor SMS.
+	 *
+	 * @return receptor SMS
+	 */
 	public ReceptorSMSBean getReceptorSMS() {
 		return receptorSMS;
 	}
 
+	/**
+	 * Modificar receptor SMS.
+	 *
+	 * @param receptorSMS new receptor SMS
+	 */
 	public void setReceptorSMS(ReceptorSMSBean receptorSMS) {
 		this.receptorSMS = receptorSMS;
 	}
 
+	/**
+	 * Obtener id receptor SMS.
+	 *
+	 * @return id receptor SMS
+	 */
 	public String getIdReceptorSMS() {
 		return idReceptorSMS;
 	}
 
+	/**
+	 * Modificar id receptor SMS.
+	 *
+	 * @param idReceptorSMS new id receptor SMS
+	 */
 	public void setIdReceptorSMS(String idReceptorSMS) {
 		this.idReceptorSMS = idReceptorSMS;
 	}
 
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
 
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
 
+	/**
+	 * Obtener check del list.
+	 *
+	 * @return check del list
+	 */
 	public String[] getCheckDelList() {
 		return checkDelList;
 	}
 
+	/**
+	 * Modificar check del list.
+	 *
+	 * @param checkDelList new check del list
+	 */
 	public void setCheckDelList(String[] checkDelList) {
 		this.checkDelList = checkDelList;
 	}
 
+	/**
+	 * Obtener parametro servidor.
+	 *
+	 * @return parametro servidor
+	 */
 	public ParametroServidorBean getParametroServidor() {
 		return parametroServidor;
 	}
 
+	/**
+	 * Modificar parametro servidor.
+	 *
+	 * @param parametroServidor new parametro servidor
+	 */
 	public void setParametroServidor(ParametroServidorBean parametroServidor) {
 		this.parametroServidor = parametroServidor;
 	}
 
+	/**
+	 * Obtener lista parametros servidor.
+	 *
+	 * @return lista parametros servidor
+	 */
 	public List<ParametroServidorBean> getListaParametrosServidor() {
 		return listaParametrosServidor;
 	}
 
+	/**
+	 * Modificar lista parametros servidor.
+	 *
+	 * @param listaParametrosServidor new lista parametros servidor
+	 */
 	public void setListaParametrosServidor(List<ParametroServidorBean> listaParametrosServidor) {
 		this.listaParametrosServidor = listaParametrosServidor;
 	}
 
+	/**
+	 * Modificar parametro servidor id.
+	 *
+	 * @param parametroServidorId new parametro servidor id
+	 */
 	public void setParametroServidorId(String parametroServidorId) {
 		this.parametroServidorId = parametroServidorId;
 	}
 
+	/**
+	 * Obtener planificacion servidor.
+	 *
+	 * @return planificacion servidor
+	 */
 	public PlanificacionBean getPlanificacionServidor() {
 		return planificacionServidor;
 	}
 
+	/**
+	 * Modificar planificacion servidor.
+	 *
+	 * @param planificacionServidor new planificacion servidor
+	 */
 	public void setPlanificacionServidor(PlanificacionBean planificacionServidor) {
 		this.planificacionServidor = planificacionServidor;
 	}
 
+	/**
+	 * Obtener parametro servidor id.
+	 *
+	 * @return parametro servidor id
+	 */
 	public String getParametroServidorId() {
 		if (parametroServidor != null && parametroServidor.getParametroservidorid() != null) {
 			return parametroServidor.getParametroservidorid().toString();
@@ -839,42 +1137,92 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Obtener servicio planificacion.
+	 *
+	 * @return servicio planificacion
+	 */
 	public ServicioPlanificacion getServicioPlanificacion() {
 		return servicioPlanificacion;
 	}
 
+	/**
+	 * Modificar servicio planificacion.
+	 *
+	 * @param servicioPlanificacion new servicio planificacion
+	 */
 	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
 		this.servicioPlanificacion = servicioPlanificacion;
 	}
 
+	/**
+	 * Obtener check password.
+	 *
+	 * @return check password
+	 */
 	public String getCheckPassword() {
 		return checkPassword;
 	}
 
+	/**
+	 * Modificar check password.
+	 *
+	 * @param checkPassword new check password
+	 */
 	public void setCheckPassword(String checkPassword) {
 		this.checkPassword = checkPassword;
 	}
 
+	/**
+	 * Obtener planificacion id.
+	 *
+	 * @return planificacion id
+	 */
 	public String getPlanificacionId() {
 		return planificacionId;
 	}
 
+	/**
+	 * Modificar planificacion id.
+	 *
+	 * @param planificacionId new planificacion id
+	 */
 	public void setPlanificacionId(String planificacionId) {
 		this.planificacionId = planificacionId;
 	}
 
+	/**
+	 * Obtener lista planificaciones servidor.
+	 *
+	 * @return lista planificaciones servidor
+	 */
 	public List<PlanificacionBean> getListaPlanificacionesServidor() {
 		return listaPlanificacionesServidor;
 	}
 
+	/**
+	 * Modificar lista planificaciones servidor.
+	 *
+	 * @param listaPlanificacionesServidor new lista planificaciones servidor
+	 */
 	public void setListaPlanificacionesServidor(List<PlanificacionBean> listaPlanificacionesServidor) {
 		this.listaPlanificacionesServidor = listaPlanificacionesServidor;
 	}
 
+	/**
+	 * Obtener tipos parametros.
+	 *
+	 * @return tipos parametros
+	 */
 	public ArrayList<TipoParametroBean> getTiposParametros() {
 		return tiposParametros;
 	}
 
+	/**
+	 * Modificar tipos parametros.
+	 *
+	 * @param tiposParametros new tipos parametros
+	 */
 	public void setTiposParametros(ArrayList<TipoParametroBean> tiposParametros) {
 		this.tiposParametros = tiposParametros;
 	}

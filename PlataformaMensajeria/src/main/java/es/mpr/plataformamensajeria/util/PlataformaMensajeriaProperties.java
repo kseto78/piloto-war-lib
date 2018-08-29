@@ -5,19 +5,34 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
 import es.minhap.common.properties.PropertiesServices;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Clase PlataformaMensajeriaProperties.
+ */
 public class PlataformaMensajeriaProperties {
 
+	/**  instance. */
 	private static PlataformaMensajeriaProperties instance = null;
 
+	/**  message source. */
 	private ReloadableResourceBundleMessageSource messageSource;
 
+	/**  ps. */
 	private PropertiesServices ps;
 
 
+	/**
+	 * Constructor de plataforma mensajeria properties.
+	 */
 	private PlataformaMensajeriaProperties() {
 		
 	}
 
+	/**
+	 * Gets the single instance of PlataformaMensajeriaProperties.
+	 *
+	 * @return single instance of PlataformaMensajeriaProperties
+	 */
 	public static PlataformaMensajeriaProperties getInstance() {
 
 		if (instance == null) {
@@ -26,6 +41,13 @@ public class PlataformaMensajeriaProperties {
 		return instance;
 	}
 
+	/**
+	 * Obtener property.
+	 *
+	 * @param property the property
+	 * @param defProperty the def property
+	 * @return property
+	 */
 	public String getProperty(String property, String defProperty) {
 		String prop = null;
 		try {
@@ -45,6 +67,8 @@ public class PlataformaMensajeriaProperties {
 	}
 
 	/**
+	 * Obtener message source.
+	 *
 	 * @return the messageSource
 	 */
 	public ReloadableResourceBundleMessageSource getMessageSource() {
@@ -52,6 +76,8 @@ public class PlataformaMensajeriaProperties {
 	}
 
 	/**
+	 * Modificar message source.
+	 *
 	 * @param messageSource the messageSource to set
 	 */
 	public void setMessageSource(ReloadableResourceBundleMessageSource messageSource) {
@@ -59,6 +85,8 @@ public class PlataformaMensajeriaProperties {
 	}
 
 	/**
+	 * Obtener ps.
+	 *
 	 * @return the ps
 	 */
 	public PropertiesServices getPs() {
@@ -66,6 +94,8 @@ public class PlataformaMensajeriaProperties {
 	}
 
 	/**
+	 * Modificar ps.
+	 *
 	 * @param ps the ps to set
 	 */
 	public void setPs(PropertiesServices ps) {
@@ -73,6 +103,8 @@ public class PlataformaMensajeriaProperties {
 	}
 
 	/**
+	 * Modificar instance.
+	 *
 	 * @param instance the instance to set
 	 */
 	public static void setInstance(PlataformaMensajeriaProperties instance) {

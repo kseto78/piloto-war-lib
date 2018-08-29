@@ -3,33 +3,84 @@ package es.mpr.plataformamensajeria.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Clase TituloEstadisticasParser.
+ */
 public class TituloEstadisticasParser {
+	
+	/** Constante ENERO_FULL. */
 	private static final String ENERO_FULL = "Enero";
+	
+	/** Constante FEBRERO_FULL. */
 	private static final String FEBRERO_FULL ="Febrero";
+	
+	/** Constante MARZO_FULL. */
 	private static final String MARZO_FULL = "Marzo";
+	
+	/** Constante ABRIL_FULL. */
 	private static final String ABRIL_FULL = "Abril";
+	
+	/** Constante MAYO_FULL. */
 	private static final String MAYO_FULL = "Mayo"; 
+	
+	/** Constante JUNIO_FULL. */
 	private static final String JUNIO_FULL = "Junio";
+	
+	/** Constante JULIO_FULL. */
 	private static final String JULIO_FULL = "Julio";
+	
+	/** Constante AGOSTO_FULL. */
 	private static final String AGOSTO_FULL = "Agosto";
+	
+	/** Constante SEPTIEMBRE_FULL. */
 	private static final String SEPTIEMBRE_FULL = "Septiembre";
+	
+	/** Constante OCTUBRE_FULL. */
 	private static final String OCTUBRE_FULL = "Octubre";
+	
+	/** Constante NOVIEMBRE_FULL. */
 	private static final String NOVIEMBRE_FULL = "Noviembre";
+	
+	/** Constante DICIEMBRE_FULL. */
 	private static final String DICIEMBRE_FULL = "Diciembre";
 	
+	/** Constante ENERO_SHORT. */
 	private static final String ENERO_SHORT = "Ene";
+	
+	/** Constante FEBRERO_SHORT. */
 	private static final String FEBRERO_SHORT ="Feb";
+	
+	/** Constante MARZO_SHORT. */
 	private static final String MARZO_SHORT = "Mar";
+	
+	/** Constante ABRIL_SHORT. */
 	private static final String ABRIL_SHORT = "Abr";
+	
+	/** Constante MAYO_SHORT. */
 	private static final String MAYO_SHORT = "May"; 
+	
+	/** Constante JUNIO_SHORT. */
 	private static final String JUNIO_SHORT = "Jun";
+	
+	/** Constante JULIO_SHORT. */
 	private static final String JULIO_SHORT = "Jul";
+	
+	/** Constante AGOSTO_SHORT. */
 	private static final String AGOSTO_SHORT = "Ago";
+	
+	/** Constante SEPTIEMBRE_SHORT. */
 	private static final String SEPTIEMBRE_SHORT = "Sep";
+	
+	/** Constante OCTUBRE_SHORT. */
 	private static final String OCTUBRE_SHORT = "Oct";
+	
+	/** Constante NOVIEMBRE_SHORT. */
 	private static final String NOVIEMBRE_SHORT = "Nov";
+	
+	/** Constante DICIEMBRE_SHORT. */
 	private static final String DICIEMBRE_SHORT = "Dic";
 	
+	/** Constante MESES_FULL. */
 	private final static HashMap<String,String> MESES_FULL = new HashMap<String,String>();
  	static
  	{
@@ -46,6 +97,8 @@ public class TituloEstadisticasParser {
  		MESES_FULL.put("11", NOVIEMBRE_FULL);
  		MESES_FULL.put("12", DICIEMBRE_FULL);
  	}	
+	
+	/** Constante MESES_SHORT. */
 	private final static HashMap<String,String> MESES_SHORT = new HashMap<String,String>();
  	static
  	{
@@ -64,7 +117,13 @@ public class TituloEstadisticasParser {
  	}	
  	
  	
- 	public static String parseMesAnno(String mesAnno){
+ 	/**
+	  * Parses the mes anno.
+	  *
+	  * @param mesAnno the mes anno
+	  * @return the string
+	  */
+	 public static String parseMesAnno(String mesAnno){
  		StringBuffer sbf = new StringBuffer();
  		if(mesAnno!=null&&mesAnno.length()>0){
  			mesAnno = mesAnno.replaceAll("'", "");
@@ -73,7 +132,14 @@ public class TituloEstadisticasParser {
  		}
  		return sbf.toString();
  	}
- 	public static  String parseDiaMesAnno(String diaMesAnno){
+ 	
+	 /**
+	  * Parses the dia mes anno.
+	  *
+	  * @param diaMesAnno the dia mes anno
+	  * @return the string
+	  */
+	 public static  String parseDiaMesAnno(String diaMesAnno){
  		StringBuffer sbf = new StringBuffer();
  		if(diaMesAnno!=null&&diaMesAnno.length()>0){
  			diaMesAnno=diaMesAnno.replaceAll("'", "");
@@ -83,10 +149,12 @@ public class TituloEstadisticasParser {
  		}
  		return sbf.toString();
  	}
- 	/**
- 	 * 
- 	 * @return
- 	 */
+ 	
+	 /**
+	  * Obtener meses full name.
+	  *
+	  * @return meses full name
+	  */
  	public static ArrayList<String> getMesesFullName(){
  		ArrayList<String> listadoMesesFullName = new ArrayList<String>();
  		for (int i= 1; i<=12; i++) {

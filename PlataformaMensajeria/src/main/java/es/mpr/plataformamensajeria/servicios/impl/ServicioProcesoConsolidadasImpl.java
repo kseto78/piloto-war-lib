@@ -38,36 +38,49 @@ import es.mpr.plataformamensajeria.util.UtilCreateFile;
 @Service("servicioProcesoConsolidadasImpl")
 public class ServicioProcesoConsolidadasImpl implements ServicioProcesoConsolidadas{
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProcesoConsolidadasImpl.class);
 	
+	/**  tbl proceso cons manager. */
 	@Resource(name = "TblProcesoConsManagerImpl")
 	private TblProcesoConsManager tblProcesoConsManager;
 	
+	/**  tbl gestion envios hist manager. */
 	@Resource(name = "TblGestionEnviosHistManagerImpl")
 	private TblGestionEnviosHistManager tblGestionEnviosHistManager;
 	
+	/**  tbl historicos hist manager. */
 	@Resource(name = "TblHistoricosHistManagerImpl")
 	private TblHistoricosHistManager tblHistoricosHistManager;
 	
+	/**  tbl destinatarios hist manager. */
 	@Resource(name = "TblDestinatariosHistManagerImpl")
 	private TblDestinatariosHistManager tblDestinatariosHistManager;
 	
+	/**  tbl destinatarios mensajes hist manager. */
 	@Resource(name = "TblDestinatariosMensHistManagerImpl")
 	private TblDestinatariosMensajesHistManager tblDestinatariosMensajesHistManager;
 	
+	/**  tbl mensajes adjuntos hist manager. */
 	@Resource(name = "TblMensajesAdjuntosHistManagerImpl")
 	private TblMensajesAdjuntosHistManager tblMensajesAdjuntosHistManager;
 	
+	/**  tbl estadisticas cons manager. */
 	@Resource(name = "TblEstadisticasConsManagerImpl")
 	private TblEstadisticasConsManager tblEstadisticasConsManager;
 	
+	/**  tbl adjuntos hist manager. */
 	@Resource(name = "TblAdjuntosHistManagerImpl")
 	private TblAdjuntosHistManager tblAdjuntosHistManager;
 	
+	/**  tbl mensajes hist manager. */
 	@Resource(name ="TblMensajesHistManagerImpl")
 	private TblMensajesHistManager tblMensajesHistManager;
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoConsolidadas#newServicioProcesoConsolidadas(es.mpr.plataformamensajeria.beans.ProcesoConsBean)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -87,6 +100,9 @@ public class ServicioProcesoConsolidadasImpl implements ServicioProcesoConsolida
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoConsolidadas#procesoConsolidacion(java.util.List, java.lang.Long, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List)
+	 */
 	////MIGRADO
 	@Override
 	public boolean procesoConsolidacion(List<TblEstadistitcasCons> listaEstadisticasConsolidadas, Long idLote,

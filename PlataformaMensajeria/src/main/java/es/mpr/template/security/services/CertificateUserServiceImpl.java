@@ -36,14 +36,21 @@ import es.mpr.j2ee.security.services.ICertificateUserService;
  */
 public class CertificateUserServiceImpl implements ICertificateUserService{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(CertificateUserServiceImpl.class);
 	
+	/**  manager. */
 	private UserManager manager = null;
 		
+	/**  cert attribute. */
 	private String certAttribute = null;
 	
+	/**  attribute name. */
 	private String attributeName = null;
 
+	/* (non-Javadoc)
+	 * @see es.mpr.j2ee.security.services.ICertificateUserService#getUser(java.util.Hashtable)
+	 */
 	public UserVO getUser(Hashtable<String,String> attributes) throws UserException  {
 		
 		UserVO usuario = null;
@@ -67,6 +74,9 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.j2ee.security.services.ICertificateUserService#getUser(java.security.cert.X509Certificate)
+	 */
 	public UserVO getUser(X509Certificate cert) throws UserException  {
 		
 		UserVO usuario = null;
@@ -92,6 +102,8 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 	}
 		
 	/**
+	 * Obtener cert attribute.
+	 *
 	 * @return Atributo del certificado de usuario
 	 */
 	public String getCertAttribute() {
@@ -99,13 +111,17 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 	}
 	
 	/**
-	 * @param Atributo del certificado de usuario
+	 * Modificar cert attribute.
+	 *
+	 * @param certAttribute new cert attribute
 	 */
 	public void setCertAttribute(String certAttribute) {
 		this.certAttribute = certAttribute;
 	}
 	
 	/**
+	 * Obtener attribute name.
+	 *
 	 * @return Atributo del repositorio de usuarios
 	 */
 	public String getAttributeName() {
@@ -113,22 +129,28 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 	}
 
 	/**
-	 * @param Atributo del repositorio de usuarios
+	 * Modificar attribute name.
+	 *
+	 * @param attribute new attribute name
 	 */
 	public void setAttributeName(String attribute) {
 		this.attributeName = attribute;
 	}
 
     /**
-	 * @return Servicio que gestiona el acceso al repositorio de usuarios
-	 */
+     * Obtener user manager.
+     *
+     * @return Servicio que gestiona el acceso al repositorio de usuarios
+     */
 	public UserManager getUserManager() {
 		return manager;
 	}
 
     /**
-	 * @param userManager Servicio que gestiona el acceso al repositorio de usuarios         
-	 */
+     * Modificar user manager.
+     *
+     * @param userManager Servicio que gestiona el acceso al repositorio de usuarios
+     */
 	public void setUserManager(UserManager userManager) {
 		this.manager = userManager;
 	}

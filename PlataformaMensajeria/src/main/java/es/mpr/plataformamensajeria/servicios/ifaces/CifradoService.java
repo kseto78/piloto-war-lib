@@ -8,7 +8,6 @@ import org.w3c.dom.Node;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.util.KeyValueObject;
 
-import es.mpr.plataformamensajeria.beans.CertificadoBean;
 
 /**
  * Servicio para cifrar/descifrar un documento XML de comunicación SOAP según el

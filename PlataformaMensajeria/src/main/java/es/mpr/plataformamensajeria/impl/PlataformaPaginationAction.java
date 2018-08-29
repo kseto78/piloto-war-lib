@@ -13,38 +13,57 @@ import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.Preparable;
 
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
-import es.mpr.plataformamensajeria.beans.EstadoBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
+/**
+ * Clase PlataformaPaginationAction.
+ */
 /////MIGRADO
 @Controller("plataformaPaginationAction")
 public class PlataformaPaginationAction extends PaginationAction implements ServletRequestAware, Preparable {
+	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  servicio aplicacion. */
 	@Resource(name = "servicioAplicacionImpl")
 	private ServicioAplicacion servicioAplicacion;
 
+	/**  servicio usuario aplicacion. */
 	@Resource(name = "servicioUsuarioAplicacionImpl")
 	private ServicioUsuarioAplicacion servicioUsuarioAplicacion;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
 
+	/**  lista aplicaciones usuario. */
 	public List<AplicacionBean> listaAplicacionesUsuario = new ArrayList<>();
 
+	/**  from. */
 	protected String from = "";
+	
+	/**  id from. */
 	protected String idFrom = "";
+	
+	/**  var. */
 	protected String var = "";
 
-	private List<KeyValueObject> comboHorasInicio = new ArrayList<KeyValueObject>();
-	private List<KeyValueObject> comboHorasFin = new ArrayList<KeyValueObject>();
-	public List<KeyValueObject> getComboHorasInicio(){
+//	private List<KeyValueObject> comboHorasInicio = new ArrayList<KeyValueObject>();
+//	private List<KeyValueObject> comboHorasFin = new ArrayList<KeyValueObject>();
+	
+	/**
+ * Obtener combo horas inicio.
+ *
+ * @return combo horas inicio
+ */
+public List<KeyValueObject> getComboHorasInicio(){
 		    List<KeyValueObject> result = new ArrayList<KeyValueObject>();
 	        KeyValueObject option = null;
-	        ArrayList<EstadoBean> keys = null;
+//	        ArrayList<EstadoBean> keys = null;
 			option = new KeyValueObject();option.setCodigo("00:00");option.setDescripcion("00:00");result.add(option);
  			option = new KeyValueObject();option.setCodigo("00:30");option.setDescripcion("00:30");result.add(option);
  			option = new KeyValueObject();option.setCodigo("01:00");option.setDescripcion("01:00");result.add(option);
@@ -95,10 +114,16 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
  			option = new KeyValueObject();option.setCodigo("23:30");option.setDescripcion("23:30");result.add(option);
 		    return result;
 	}
+	
+	/**
+	 * Obtener combo horas fin.
+	 *
+	 * @return combo horas fin
+	 */
 	public List<KeyValueObject> getComboHorasFin(){
 	    List<KeyValueObject> result = new ArrayList<KeyValueObject>();
         KeyValueObject option = null;
-        ArrayList<EstadoBean> keys = null;
+//        ArrayList<EstadoBean> keys = null;
 		option = new KeyValueObject();option.setCodigo("00:00");option.setDescripcion("00:00");result.add(option);
 			option = new KeyValueObject();option.setCodigo("00:30");option.setDescripcion("00:30");result.add(option);
 			option = new KeyValueObject();option.setCodigo("01:00");option.setDescripcion("01:00");result.add(option);
@@ -152,34 +177,65 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 }
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Obtener from.
+	 *
+	 * @return from
 	 */
 	public String getFrom() {
 		return from;
 	}
 
+	/**
+	 * Modificar from.
+	 *
+	 * @param from new from
+	 */
 	public void setFrom(String from) {
 		this.from = from;
 	}
 
+	/**
+	 * Obtener id from.
+	 *
+	 * @return id from
+	 */
 	public String getIdFrom() {
 		return idFrom;
 	}
 
+	/**
+	 * Modificar id from.
+	 *
+	 * @param idFrom new id from
+	 */
 	public void setIdFrom(String idFrom) {
 		this.idFrom = idFrom;
 	}
 
+	/**
+	 * Obtener var.
+	 *
+	 * @return var
+	 */
 	public String getVar() {
 		return var;
 	}
 
+	/**
+	 * Modificar var.
+	 *
+	 * @param var new var
+	 */
 	public void setVar(String var) {
 		this.var = var;
 	}
 
+	/**
+	 * Agrega action message session.
+	 *
+	 * @param message the message
+	 */
+	@SuppressWarnings("unchecked")
 	public void addActionMessageSession(String message) {
 		List<String> msgPltList = null;
 		if (getRequest().getSession().getAttribute("MSGPLT") != null) {
@@ -193,6 +249,12 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 		}
 	}
 
+	/**
+	 * Agrega action error session.
+	 *
+	 * @param message the message
+	 */
+	@SuppressWarnings("unchecked")
 	public void addActionErrorSession(String message) {
 		List<String> msgPltList = null;
 		if (getRequest().getSession().getAttribute("MSGPLT_ERROR") != null) {
@@ -207,6 +269,12 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 		}
 	}
 
+	/**
+	 * Agrega field error session.
+	 *
+	 * @param message the message
+	 */
+	@SuppressWarnings("unchecked")
 	public void addFieldErrorSession(String message) {
 		List<String> msgPltList = null;
 		if (getRequest().getSession().getAttribute("MSGPLT_FIELD_ERROR") != null) {
@@ -220,6 +288,9 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#validate()
+	 */
 	///MIGRADO
 	@Override
 	public void validate() {
@@ -238,6 +309,9 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 
 
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.Preparable#prepare()
+	 */
 	@Override
 	public void prepare() throws Exception {
 		// TODO Auto-generated method stub
@@ -245,6 +319,8 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 	}
 
 	/**
+	 * Obtener lista aplicaciones usuario.
+	 *
 	 * @return the listaAplicacionesUsuario
 	 */
 	public List<AplicacionBean> getListaAplicacionesUsuario() {
@@ -252,8 +328,9 @@ public class PlataformaPaginationAction extends PaginationAction implements Serv
 	}
 
 	/**
-	 * @param listaAplicacionesUsuario
-	 *            the listaAplicacionesUsuario to set
+	 * Modificar lista aplicaciones usuario.
+	 *
+	 * @param listaAplicacionesUsuario            the listaAplicacionesUsuario to set
 	 */
 	public void setListaAplicacionesUsuario(List<AplicacionBean> listaAplicacionesUsuario) {
 		this.listaAplicacionesUsuario = listaAplicacionesUsuario;

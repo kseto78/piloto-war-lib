@@ -29,32 +29,54 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 
+/**
+ * The Class HistorificacionJob.
+ */
 @Service("historificacionJob")
 public class HistorificacionJob implements Job {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(HistorificacionJob.class);
 
+	/**  servicio proceso historicos. */
 	private ServicioProcesoHistoricos servicioProcesoHistoricos;
 	
+	/**  servicio servicios. */
 	private ServicioServicio servicioServicios;
 	
+	/**  servicio lotes envios. */
 	private ServicioLotesEnvios servicioLotesEnvios;
 	
+	/**  servicio mensajes. */
 	private ServicioMensajes servicioMensajes;
 	
 	
+	/**  properties. */
 	private PlataformaMensajeriaProperties properties;
 	
+	/**  nombre job. */
 	private static String NOMBRE_JOB = "Historificacion";
+	
+	/**  estado proceso ok. */
 	private static String ESTADO_PROCESO_OK = "OK";
+	
+	/**  estado proceso ko. */
 	private static String ESTADO_PROCESO_KO = "KO";
+	
+	/**  caracter separador lineas. */
 	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; //El salto de linea esta preparado para el correo en formato HTML
+	
+	/**  caracter tab. */
 	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; //El tab esta preparado para el correo en formato HTML
 
+	/**  job bean. */
 	private JobBean jobBean = null;
 
 	
 
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		SchedulerContext schedulerContext;
@@ -69,6 +91,12 @@ public class HistorificacionJob implements Job {
 		}
 	}
 	
+	/**
+	 * Lanzar job.
+	 *
+	 * @param servletContext the servlet context
+	 * @param bean the bean
+	 */
 	public void lanzarJob(ServletContext servletContext, JobBean bean) {
 		try {
 		ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
@@ -82,8 +110,9 @@ public class HistorificacionJob implements Job {
 	}
 
 	/**
-	 * @param context
-	 * @throws JobExecutionException
+	 * Ejecutar.
+	 *
+	 * @throws JobExecutionException the job execution exception
 	 */
 	private void ejecutar() throws JobExecutionException {
 		ArrayList<Integer> lotesCorrectos = new ArrayList<>();
@@ -366,6 +395,12 @@ public class HistorificacionJob implements Job {
 		}
 	}
 
+	/**
+	 * Inicializar variables.
+	 *
+	 * @param applicationContext the application context
+	 * @throws JobExecutionException the job execution exception
+	 */
 	private void inicializarVariables(ApplicationContext applicationContext) throws JobExecutionException {
 		try {
 			servicioProcesoHistoricos = (ServicioProcesoHistoricos) applicationContext.getBean("servicioProcesoHistoricosImpl");

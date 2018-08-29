@@ -7,13 +7,18 @@ import com.map.j2ee.exceptions.BusinessException;
 import es.mpr.plataformamensajeria.beans.PlataformaBean;
 
 /**
- * <p>Interface que define los m&eacute;todos para la gesti&oacute;n de plataformas</p>
- * 
- * @author jgonzvil
+ * <p>Interface que define los m&eacute;todos para la gesti&oacute;n de plataformas</p>.
  *
+ * @author jgonzvil
  */
 public interface ServicioPlataforma {
 	
+	/**
+	 * Obtener plataformas.
+	 *
+	 * @return plataformas
+	 * @throws BusinessException the business exception
+	 */
 	List<PlataformaBean> getPlataformas() throws BusinessException;
 
 }

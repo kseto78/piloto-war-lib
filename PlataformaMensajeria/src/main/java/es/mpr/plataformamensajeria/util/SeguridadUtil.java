@@ -2,21 +2,19 @@ package es.mpr.plataformamensajeria.util;
 
 import java.util.Properties;
 
+/**
+ * Clase SeguridadUtil.
+ */
 public class SeguridadUtil {
 	
 	/**
-	 * Initialize las propiedades del sistema criptográfico
-	 * 
-	 * @param keyStoreType
-	 *            Tipo de keyStore
-	 * @param keyStorePassword
-	 *            Contraseña del keyStore
-	 * @param keyStoreAlias
-	 *            Alias del keyStore
-	 * @param aliasPassword
-	 *            Contraseña del alias del keyStore
-	 * @param keyStoreFile
-	 *            Ruta del fichero de keyStore
+	 * Initialize las propiedades del sistema criptográfico.
+	 *
+	 * @param keyStoreType            Tipo de keyStore
+	 * @param keyStorePassword            Contraseña del keyStore
+	 * @param keyStoreAlias            Alias del keyStore
+	 * @param aliasPassword            Contraseña del alias del keyStore
+	 * @param keyStoreFile            Ruta del fichero de keyStore
 	 * @return un objeto {@link Properties} initializado para WS-Security y
 	 *         Apache WSS4J Merlin
 	 */

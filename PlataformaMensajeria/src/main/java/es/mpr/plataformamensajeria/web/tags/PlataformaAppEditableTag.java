@@ -8,16 +8,25 @@ import javax.servlet.jsp.tagext.Tag;
 
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
+/**
+ * Clase PlataformaAppEditableTag.
+ */
 public class PlataformaAppEditableTag extends BodyTagSupport{
-	 /**
-	 * 
-	 */
+	 
+ 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/**  id aplicacion. */
 	private String idAplicacion="";
+       
+       /* (non-Javadoc)
+        * @see javax.servlet.jsp.tagext.BodyTagSupport#doStartTag()
+        */
        public int doStartTag() throws JspException {
     	 boolean skipBody=true;
     	 
-    	 HashMap<Integer,Integer> mapPermisosAplicaciones =(HashMap<Integer, Integer>)pageContext.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES); 
+    	 @SuppressWarnings("unchecked")
+		HashMap<Integer,Integer> mapPermisosAplicaciones =(HashMap<Integer, Integer>)pageContext.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES); 
     	 String rolUsuario = (String)pageContext.getSession().getAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA);
     	 if(rolUsuario!=null&&rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)){
     	 	if(idAplicacion!=null&&!idAplicacion.equals("")&&mapPermisosAplicaciones!=null){
@@ -35,9 +44,21 @@ public class PlataformaAppEditableTag extends BodyTagSupport{
     	 return Tag.EVAL_BODY_INCLUDE;
 
      }
+	
+	/**
+	 * Obtener id aplicacion.
+	 *
+	 * @return id aplicacion
+	 */
 	public String getIdAplicacion() {
 		return idAplicacion;
 	}
+	
+	/**
+	 * Modificar id aplicacion.
+	 *
+	 * @param idAplicacion new id aplicacion
+	 */
 	public void setIdAplicacion(String idAplicacion) {
 		this.idAplicacion = idAplicacion;
 	}

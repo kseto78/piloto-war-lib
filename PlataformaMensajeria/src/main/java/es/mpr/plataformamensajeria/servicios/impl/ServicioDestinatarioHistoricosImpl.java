@@ -21,6 +21,7 @@ import es.minhap.sim.model.TblDestinatariosHist;
 import es.minhap.sim.model.TblDestinatariosMensHist;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos;
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>Maneja la persistencia de adjuntos de mensajes a traves de JPA.
  * 
@@ -29,28 +30,40 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoric
  */
 @Service("servicioDestinatarioHistoricosImpl")
 public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioHistoricos{
+	
+	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioMensajesAdjuntosHistoricosImpl.class);
 	
+	/**  tbl destinatarios hist manager. */
 	@Resource(name = "TblDestinatariosHistManagerImpl")
 	private TblDestinatariosHistManager tblDestinatariosHistManager;
 	
+	/**  tbl destinatarios manager. */
 	@Resource(name = "TblDestinatariosManagerImpl")
 	private TblDestinatariosManager tblDestinatariosManager;
 	
+	/**  tbl destinatarios mens hist manager. */
 	@Resource(name = "TblDestinatariosMensHistManagerImpl")
 	private TblDestinatariosMensajesHistManager tblDestinatariosMensHistManager;
 	
+	/**  tbl destinatarios mens manager. */
 	@Resource(name = "TblDestinatariosMensajesManagerImpl")
 	private TblDestinatariosMensajesManager tblDestinatariosMensManager;
 	
+	/**  query executor destinatarios hist. */
 	@Resource(name = "QueryExecutorDestinatariosHistImpl")
 	private QueryExecutorDestinatariosHist queryExecutorDestinatariosHist;
 	
+	/**  query executor destinatarios mensajes hist. */
 	@Resource(name = "QueryExecutorDestinatariosMensajesHistImpl")
 	private QueryExecutorDestinatariosMensajesHist queryExecutorDestinatariosMensajesHist;
 	
+	/** Constante MAX. */
 	private static final Integer MAX = 5000;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#getTodosIdDestinatarioCons(java.util.List)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -67,6 +80,9 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#getTodosIdDestinatarioMensajesCons(java.util.List)
+ */
 ////MIGRADO
 	@Override
 	@Transactional
@@ -83,6 +99,9 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#getTblDestinatariosHist(java.util.List)
+	 */
 	///MIGRADO
 	@Override
 	public List<List<TblDestinatariosHist>> getTblDestinatariosHist(List<Long> subList) {
@@ -100,12 +119,18 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 		return res;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#insert(es.minhap.sim.model.TblDestinatariosHist)
+	 */
 	///MIGRADO
 	@Override
 	public Long insert(TblDestinatariosHist destinatarioHistorico) {
 		return tblDestinatariosHistManager.insert(destinatarioHistorico);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#getTblDestinatariosMensajesHist(java.util.List)
+	 */
 	///MIGRADO
 	@Override
 	public List<List<TblDestinatariosMensHist>> getTblDestinatariosMensajesHist(List<Long> subList) {
@@ -123,12 +148,18 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 		return res;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#insert(es.minhap.sim.model.TblDestinatariosMensHist)
+	 */
 	///MIGRADO
 	@Override
 	public Long insert(TblDestinatariosMensHist destinatarioMensajeHistorico) {
 		return tblDestinatariosMensHistManager.insert(destinatarioMensajeHistorico);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#delete(java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	public void delete(Long destinatarioid) {
@@ -136,6 +167,9 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoricos#deleteDestinatarioMensaje(java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	public void deleteDestinatarioMensaje(Long destinatarioMensajeId) {

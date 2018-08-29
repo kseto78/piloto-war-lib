@@ -27,19 +27,27 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesAdjuntosHist
 @Service("servicioMensajesAdjuntosHistoricosImpl")
 public class ServicioMensajesAdjuntosHistoricosImpl implements ServicioMensajesAdjuntosHistoricos{
 	
+	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioMensajesAdjuntosHistoricosImpl.class);
 	
+	/**  tbl mensajes adjuntos hist manager. */
 	@Resource(name = "TblMensajesAdjuntosHistManagerImpl")
 	private TblMensajesAdjuntosHistManager tblMensajesAdjuntosHistManager;
 	
+	/**  tbl mensajes adjuntos manager. */
 	@Resource(name = "TblMensajesAdjuntosManagerImpl")
 	private TblMensajesAdjuntosManager tblMensajesAdjuntosManager;
 	
+	/**  query executor mensajes adjuntos hist. */
 	@Resource(name = "QueryExecutorMensajesAdjuntosHistImpl")
 	private QueryExecutorMensajesAdjuntosHist queryExecutorMensajesAdjuntosHist;
 	
+	/** Constante MAX. */
 	private static final Integer MAX = 5000;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesAdjuntosHistoricos#getIdMensajesAdjuntosCons(java.util.List)
+	 */
 	/////MIGRADO
 	@Override
 	@Transactional
@@ -56,6 +64,9 @@ public class ServicioMensajesAdjuntosHistoricosImpl implements ServicioMensajesA
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesAdjuntosHistoricos#getTblMensajesAdjuntosHist(java.util.List, es.minhap.sim.model.TblLotesEnviosHist)
+	 */
 	// //MIGRADO
 	@Override
 	public List<List<TblMensajesAdjuntosHist>> getTblMensajesAdjuntosHist(List<Long> subList,
@@ -76,12 +87,18 @@ public class ServicioMensajesAdjuntosHistoricosImpl implements ServicioMensajesA
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesAdjuntosHistoricos#insert(es.minhap.sim.model.TblMensajesAdjuntosHist)
+	 */
 	////MIGRADO
 	@Override
 	public Long insert(TblMensajesAdjuntosHist mensajeAdjuntoHistorico) {
 		return tblMensajesAdjuntosHistManager.insert(mensajeAdjuntoHistorico);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesAdjuntosHistoricos#delete(java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public void delete(Long idMensajeAdjunto) {

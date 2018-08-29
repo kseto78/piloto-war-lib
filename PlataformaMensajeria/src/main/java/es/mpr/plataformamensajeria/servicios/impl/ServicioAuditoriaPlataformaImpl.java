@@ -28,16 +28,22 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 @Service("servicioAuditoriaPlataformaImpl")
 public class ServicioAuditoriaPlataformaImpl implements ServicioAuditoriaPlataforma {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioAuditoriaPlataformaImpl.class);
 
+	/**  tbl log manager. */
 	@Resource(name = "tblLogManagerImpl")
 	private TblLogManager tblLogManager;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
 
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAuditoriaPlataforma#getAuditoriasPlataforma(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.AuditoriaPlataformaBean, boolean)
+	 */
 	// ///MIGRADO
 	@Override
 	public PaginatedList<AuditoriaPlataformaBean> getAuditoriasPlataforma(int start, int size, String order,
@@ -91,11 +97,11 @@ public class ServicioAuditoriaPlataformaImpl implements ServicioAuditoriaPlatafo
 	 * <p>
 	 * Convertirmos una lista de TblLog a una lista de
 	 * AuditoriasBean
-	 * </p>
-	 * 
-	 * @param lista
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos AuditoriasBean
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	protected List<AuditoriaPlataformaBean> getListAuditoriaPlataformaBean(List<TblLog> lista)
@@ -119,6 +125,13 @@ public class ServicioAuditoriaPlataformaImpl implements ServicioAuditoriaPlatafo
 			return result;
 	}
 
+	/**
+	 * Creates the auditoria plataforma bean.
+	 *
+	 * @param pb the pb
+	 * @param criterio the criterio
+	 * @return the es.minhap.plataformamensajeria.iop.beans. auditoria plataforma bean
+	 */
 	// //MIGRADO
 	private es.minhap.plataformamensajeria.iop.beans.AuditoriaPlataformaBean createAuditoriaPlataformaBean(
 			es.minhap.plataformamensajeria.iop.beans.AuditoriaPlataformaBean pb, AuditoriaPlataformaBean criterio) {

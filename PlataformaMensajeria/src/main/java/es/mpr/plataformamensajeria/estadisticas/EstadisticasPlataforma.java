@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.map.j2ee.exceptions.BusinessException;
@@ -22,9 +21,9 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorEstadisticas;
 import es.mpr.plataformamensajeria.estadisticas.bean.ColumnaBean;
 import es.mpr.plataformamensajeria.estadisticas.bean.EstadisticasBean;
 import es.mpr.plataformamensajeria.estadisticas.bean.FilaEstadisticaBean;
-import es.mpr.plataformamensajeria.servicios.impl.ServicioParametroServidorImpl;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 import es.mpr.plataformamensajeria.util.TituloEstadisticasParser;
+
 /**
  * Clase encargada de la generación de las estadísticas.
  * @author i-nercya
@@ -33,49 +32,41 @@ import es.mpr.plataformamensajeria.util.TituloEstadisticasParser;
 @Service("estadisticasPlataforma")
 public class EstadisticasPlataforma {
 	
-	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
-	
+	/**  estadistica. */
 	private EstadisticasBean estadistica = null;
 	
+	/**  query executor estadisticas. */
 	@Resource(name="QueryExecutorEstadisticasImpl")
 	private QueryExecutorEstadisticas queryExecutorEstadisticas;
-	/**
-	 * Constante para el tipo de vista en años
-	 */
+	
+	/** Constante para el tipo de vista en años. */
 	public static final String VISTA_ANNOS="1";
-	/**
-	 * Constante para el tipo de vista en años
-	 */
+	
+	/** Constante para el tipo de vista en años. */
 
 	public static final String VISTA_MESES="2";
-	/**
-	 * Constante para el tipo de vista en años
-	 */
+	
+	/** Constante para el tipo de vista en años. */
 
 	public static final String VISTA_DIAS="3";
 	
 	
-	/**
-	 * Constantes para el tipo de agrupaciones
-	 */
+	/** Constantes para el tipo de agrupaciones. */
 	public static final String AGRUPAR_APLICACIONES="1";
-	/**
-	 * Constantes para el tipo de agrupaciones
-	 */
+	
+	/** Constantes para el tipo de agrupaciones. */
 	public static final String AGRUPAR_SERVIDOR="2";
-	/**
-	 * Constantes para el tipo de agrupaciones
-	 */
+	
+	/** Constantes para el tipo de agrupaciones. */
 	public static final String AGRUPAR_SERVICIO="3";
-	/**
-	 * Constantes para el tipo de agrupaciones
-	 */
+	
+	/** Constantes para el tipo de agrupaciones. */
 	public static final String AGRUPAR_CANAL="4";
-	/**
-	 * Constantes para el tipo de agrupaciones
-	 */
+	
+	/** Constantes para el tipo de agrupaciones. */
 	public static final String AGRUPAR_ESTADO="5";
 	
+	/** Constante vista. */
 	private static final  HashMap<String,String> vista = new HashMap<String,String>();
  	static
  	{
@@ -84,6 +75,7 @@ public class EstadisticasPlataforma {
  		vista.put(VISTA_DIAS, "Días");
  	}	
 
+	/** Constante agrupaciones. */
 	private static final HashMap<String,String> agrupaciones = new HashMap<String,String>();
  	static
  	{
@@ -94,10 +86,30 @@ public class EstadisticasPlataforma {
  		agrupaciones.put(AGRUPAR_ESTADO, "Estado");
  	}
  	
+	/**  map permisos usuario. */
 	private HashMap<Integer,Integer> mapPermisosUsuario = null;
+	
+	/**  rol usuario. */
 	private String rolUsuario = null;
+	
+	/**
+	 * Constructor de estadisticas plataforma.
+	 */
 	public EstadisticasPlataforma(){}
 	
+	/**
+	 * Constructor de estadisticas plataforma.
+	 *
+	 * @param aplicacionId the aplicacion id
+	 * @param servidorId the servidor id
+	 * @param canalId the canal id
+	 * @param servicioId the servicio id
+	 * @param estadoId the estado id
+	 * @param vistaId the vista id
+	 * @param fechaDesde the fecha desde
+	 * @param fechaHasta the fecha hasta
+	 * @param agruparId the agrupar id
+	 */
 	public EstadisticasPlataforma(Integer aplicacionId,Integer servidorId,Integer canalId,Integer servicioId,Integer estadoId,
 			Integer vistaId,java.util.Date fechaDesde,java.util.Date fechaHasta,Integer agruparId){
 		if(estadistica!=null){
@@ -117,9 +129,12 @@ public class EstadisticasPlataforma {
 	}
 	
 	/**
-	 * @param estadisticaBean 
+	 * Obtener estadisticas.
+	 *
+	 * @param estadisticaBean the estadistica bean
 	 * @param reverse indica la orientaci�n de la tabla
-	 * @return 
+	 * @return estadisticas
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	public List<FilaEstadisticaBean> getEstadisticas(EstadisticasBean estadisticaBean, boolean reverse) throws BusinessException{
@@ -320,6 +335,11 @@ public class EstadisticasPlataforma {
 		}
 	}
 	
+	/**
+	 * Obtener combo vista.
+	 *
+	 * @return combo vista
+	 */
 	public static List<KeyValueObject> getComboVista(){
 		Set<String>listaClaves= vista.keySet();
         List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -334,10 +354,13 @@ public class EstadisticasPlataforma {
         }
         return result;
 	}
+	
 	/**
-	 * Inverte el orden de las tablas
-	 * @param listaEstadistica
-	 * @return
+	 * Inverte el orden de las tablas.
+	 *
+	 * @param listaEstadistica the lista estadistica
+	 * @param estadisticaBean the estadistica bean
+	 * @return the list
 	 */
 	public List<FilaEstadisticaBean> reverseEstadistica(List<FilaEstadisticaBean> listaEstadistica,
 			EstadisticasBean estadisticaBean){
@@ -365,9 +388,11 @@ public class EstadisticasPlataforma {
 		}
 		return listaRevertida;
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * Obtener combo agrupaciones.
+	 *
+	 * @return combo agrupaciones
 	 */
 	public static List<KeyValueObject> getComboAgrupaciones(){
 		Set<String>listaClaves= agrupaciones.keySet();
@@ -384,6 +409,14 @@ public class EstadisticasPlataforma {
         return result;
 	}
 
+	/**
+	 * Obtener estadisticas bean.
+	 *
+	 * @param estadistica the estadistica
+	 * @param est the est
+	 * @return estadisticas bean
+	 * @throws BusinessException the business exception
+	 */
 	es.minhap.plataformamensajeria.iop.beans.EstadisticasBean getEstadisticasBean(EstadisticasBean estadistica,
 			es.minhap.plataformamensajeria.iop.beans.EstadisticasBean est) throws BusinessException{
 
@@ -404,6 +437,13 @@ public class EstadisticasPlataforma {
 		return est;
 	}
 
+	/**
+	 * Obtener col parsed.
+	 *
+	 * @param columna the columna
+	 * @param estadisticaBean the estadistica bean
+	 * @return col parsed
+	 */
 	public String getColParsed(ColumnaBean columna, EstadisticasBean estadisticaBean){
 		String colParsed = "";
 		
@@ -418,47 +458,75 @@ public class EstadisticasPlataforma {
 		return colParsed;
 	}
 	
+	/**
+	 * Modificar estadistica.
+	 *
+	 * @param estadistica new estadistica
+	 */
 	public void setEstadistica(EstadisticasBean estadistica) {
 		this.estadistica = estadistica;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Obtener rol usuario.
+	 *
+	 * @return rol usuario
 	 */
 	public String getRolUsuario() {
 		return rolUsuario;
 	}
 
+	/**
+	 * Modificar rol usuario.
+	 *
+	 * @param rolUsuario new rol usuario
+	 */
 	public void setRolUsuario(String rolUsuario) {
 		this.rolUsuario = rolUsuario;
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * Obtener map permisos usuario.
+	 *
+	 * @return map permisos usuario
 	 */
 	public HashMap<Integer, Integer> getMapPermisosUsuario() {
 		return mapPermisosUsuario;
 	}
 
+	/**
+	 * Modificar map permisos usuario.
+	 *
+	 * @param mapPermisosUsuario the map permisos usuario
+	 */
 	public void setMapPermisosUsuario(HashMap<Integer, Integer> mapPermisosUsuario) {
 		this.mapPermisosUsuario = mapPermisosUsuario;
 	}
 	
+	/**
+	 * Obtener vista.
+	 *
+	 * @param id the id
+	 * @return vista
+	 */
 	public String getVista(String id){
 		return vista.get(id);
 	}
+	
 	/**
-	 * 
-	 * @param id
-	 * @return
+	 * Obtener agrupacion.
+	 *
+	 * @param id the id
+	 * @return agrupacion
 	 */
 	public String getAgrupacion(String id){
 		return agrupaciones.get(id);
 	}	
+	
 	/**
-	 * 
-	 * @return
+	 * Obtener estadistica.
+	 *
+	 * @return estadistica
 	 */
 	public EstadisticasBean getEstadistica() {
 		return estadistica;

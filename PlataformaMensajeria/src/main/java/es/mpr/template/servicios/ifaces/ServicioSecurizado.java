@@ -16,11 +16,8 @@ public interface ServicioSecurizado {
 	
 /**
  * Mediante esta anotaci&oacute;n de Spring subordinamos la ejecuci&oacute;n de este m&eacute;todo a un ROL.
- * 
+ *
  * @return Resultado de ejecutar el m&eacute;todo
- * 
- * @throws AccessDeniedException.class
- * 
  */
     @Secured("ROLE_ADMINFWK")
 	String ejecutar();

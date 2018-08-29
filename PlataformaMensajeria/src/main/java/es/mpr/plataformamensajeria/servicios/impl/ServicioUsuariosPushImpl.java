@@ -24,6 +24,7 @@ import es.minhap.sim.model.ViewUsuariosPush;
 import es.mpr.plataformamensajeria.beans.UsuariosPushBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuariosPush;
 
+
 /**
  * <p>Maneja la persistencia y b&uacute;squeda de usuarios movil a traves de JPA.
  * 
@@ -33,14 +34,22 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuariosPush;
 @Service("servicioUsuariosPushImpl")
 public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
 	
+	/**  view usuarios push manager. */
 	@Resource(name="ViewUsuariosPushManager")
 	private ViewUsuariosPushManager viewUsuariosPushManager;
 	
+	/**  map permisos usuario aplicacion. */
 	static HashMap<Integer,Integer> mapPermisosUsuarioAplicacion = null;
+	
+	/**  rol usuario. */
 	static String rolUsuario = null;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuariosPush#getUsuariosPush(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.UsuariosPushBean, boolean, javax.servlet.http.HttpServletRequest)
+	 */
 	///MIGRADO
 	@Override
 	public PaginatedList<UsuariosPushBean> getUsuariosPush(int start, int size, String order,
@@ -91,10 +100,10 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 	}
 	
 	/**
-	 * <p>Convertirmos una lista de usuariosPush a una lista de AuditoriasBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de usuariosPush a una lista de AuditoriasBean</p>.
+	 *
+	 * @param upb the upb
+	 * @param criterio the criterio
 	 * @return Lista de objetos UsuariosPushBean
 	 */
 	
@@ -113,6 +122,13 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 		return upb;
 	}
 	
+	/**
+	 * Obtener list view usuarios push bean.
+	 *
+	 * @param lista the lista
+	 * @return list view usuarios push bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private List<UsuariosPushBean> getListViewUsuariosPushBean(List<ViewUsuariosPush> lista) throws BusinessException{
 		List<UsuariosPushBean> result = null;

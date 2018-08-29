@@ -8,10 +8,17 @@ import org.apache.commons.lang.time.DateUtils;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
 
+/**
+ * Clase OrganismoBean.
+ */
 public class OrganismoBean implements Audit, Serializable {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -1268241822059205167L;
 
+	/**
+	 * Constructor de organismo bean.
+	 */
 	public OrganismoBean() {
 		super();
 		this.organismoId = null;
@@ -83,87 +90,238 @@ public class OrganismoBean implements Audit, Serializable {
 		
 	}
 
+	/**  organismo id. */
 	protected Integer organismoId;
+	
+	/**  dir 3. */
 	protected String dir3;
+	
+	/**  nombre. */
 	protected String nombre = null;
+	
+	/**  descripcion. */
 	protected String descripcion = null;
+	
+	/**  activo. */
 	protected Boolean activo = null;
+	
+	/**  fechacreacion. */
 	protected Date fechacreacion = null;
+	
+	/**  fecha creacion desde. */
 	protected Date fechaCreacionDesde = null;
+	
+	/**  fecha creacion hasta. */
 	protected Date fechaCreacionHasta = null;
+	
+	/**  fechamodificacion. */
 	protected Date fechamodificacion = null;
+	
+	/**  creadopor. */
 	protected String creadopor = null;
+	
+	/**  modificadopor. */
 	protected String modificadopor = null;
+	
+	/**  externalid. */
 	protected Long externalid;
+	
+	/**  nombrecuentaenvio. */
 	protected String nombrecuentaenvio;
+	
+	/**  historificacion. */
 	protected Integer historificacion;
+	
+	/**  motivohistorificacion. */
 	protected String motivohistorificacion;
+	
+	/**  conservacion. */
 	protected Integer conservacion;
+	
+	/**  motivoconservacion. */
 	protected String motivoconservacion;
+	
+	/**  is activo. */
 	protected String isActivo = null;
+	
+	/**  estado. */
 	protected String estado;
+	
+	/**  nifcif. */
 	protected String nifcif;
+	
+	/**  siglas. */
 	protected String siglas;
+	
+	/**  nivel administracion. */
 	protected Integer nivelAdministracion;
+	
+	/**  nivel jerarquico. */
 	protected Integer nivelJerarquico;
+	
+	/**  cod unidad superior. */
 	protected String codUnidadSuperior;
+	
+	/**  denom unidad superior. */
 	protected String denomUnidadSuperior;
+	
+	/**  cod unidad raiz. */
 	protected String codUnidadRaiz;
+	
+	/**  denom unidad raiz. */
 	protected String denomUnidadRaiz;
+	
+	/**  es edp. */
 	protected String esEdp;
+	
+	/**  cod edp principal. */
 	protected String codEdpPrincipal;
+	
+	/**  denom edp principal. */
 	protected String denomEdpPrincipal;
+	
+	/**  cod tipo ent public. */
 	protected String codTipoEntPublic;
+	
+	/**  cod tipo unidad. */
 	protected String codTipoUnidad;
+	
+	/**  cod amb territorial. */
 	protected String codAmbTerritorial;
+	
+	/**  cod amb ent geografica. */
 	protected String codAmbEntGeografica;
+	
+	/**  cod amb pais. */
 	protected String codAmbPais;
+	
+	/**  cod amb comunidad. */
 	protected String codAmbComunidad;
+	
+	/**  cod amb provincia. */
 	protected String codAmbProvincia;
+	
+	/**  cod amb municipio. */
 	protected String codAmbMunicipio;
+	
+	/**  cod amb isla. */
 	protected String codAmbIsla;
+	
+	/**  cod amb elm. */
 	protected String codAmbElm;
+	
+	/**  cod amb loc extranjera. */
 	protected String codAmbLocExtranjera;
+	
+	/**  competencias. */
 	protected String competencias;
+	
+	/**  disposicion legal. */
 	protected String disposicionLegal;
+	
+	/**  fecha alta oficial. */
 	protected Date fechaAltaOficial;
+	
+	/**  fecha baja oficial. */
 	protected Date fechaBajaOficial;
+	
+	/**  fecha extincion. */
 	protected Date fechaExtincion;
+	
+	/**  fecha anulacion. */
 	protected Date fechaAnulacion;
+	
+	/**  observ generales. */
 	protected String observGenerales;
+	
+	/**  observ baja. */
 	protected String observBaja;
+	
+	/**  tipo via. */
 	protected String tipoVia;
+	
+	/**  nombre via. */
 	protected String nombreVia;
+	
+	/**  num via. */
 	protected String numVia;
+	
+	/**  complemento. */
 	protected String complemento;
+	
+	/**  cod postal. */
 	protected String codPostal;
+	
+	/**  cod pais. */
 	protected String codPais;
+	
+	/**  cod comunidad. */
 	protected String codComunidad;
+	
+	/**  cod provincia. */
 	protected String codProvincia;
+	
+	/**  cod localidad. */
 	protected String codLocalidad;
+	
+	/**  cod ent geografica. */
 	protected String codEntGeografica;
+	
+	/**  dir extranjera. */
 	protected String dirExtranjera;
+	
+	/**  loc extranjera. */
 	protected String locExtranjera;
+	
+	/**  observaciones. */
 	protected String observaciones;
+	
+	/**  asociados servicio. */
 	protected Boolean asociadosServicio;
+	
+	/**  fecha estado. */
 	protected Date fechaEstado;
+	
+	/**  fecha estado str. */
 	protected String fechaEstadoStr;
+	
+	/**  manual. */
 	protected Boolean manual;
+	
+	/**  fecha activo. */
 	protected Date fechaActivo;
 	
+	/* (non-Javadoc)
+	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
+	 */
 	@Override
 	public String obtenerXML() {
 		return null;
 	}
 
+	/**
+	 * Obtener organismo id.
+	 *
+	 * @return organismo id
+	 */
 	public Integer getOrganismoId() {
 		return organismoId;
 	}
 
+	/**
+	 * Modificar organismo id.
+	 *
+	 * @param organismoId new organismo id
+	 */
 	public void setOrganismoId(Integer organismoId) {
 		this.organismoId = organismoId;
 	}
 
+	/**
+	 * Modificar activado.
+	 *
+	 * @param activado new activado
+	 */
 	public void setActivado(String activado) {
 		if (activado != null && activado.equals("true")) {
 			this.activo = true;
@@ -172,6 +330,11 @@ public class OrganismoBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Obtener checks if is activo.
+	 *
+	 * @return checks if is activo
+	 */
 	public String getIsActivo() {
 		if (activo != null && activo) {
 			return "<span class='activo'></span>";
@@ -181,6 +344,11 @@ public class OrganismoBean implements Audit, Serializable {
 
 	}
 
+	/**
+	 * Modificar checks if is activo.
+	 *
+	 * @param isActivo new checks if is activo
+	 */
 	public void setIsActivo(String isActivo) {
 		if (isActivo != null && isActivo.equals("true")) {
 			this.activo = true;
@@ -190,6 +358,11 @@ public class OrganismoBean implements Audit, Serializable {
 		this.isActivo = isActivo;
 	}
 
+	/**
+	 * Obtener activado.
+	 *
+	 * @return activado
+	 */
 	public String getActivado() {
 		if (activo != null && activo) {
 			return "true";
@@ -199,6 +372,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener dir 3.
+	 *
 	 * @return the dir3
 	 */
 	public String getDir3() {
@@ -206,14 +381,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param dir3
-	 *            the dir3 to set
+	 * Modificar dir 3.
+	 *
+	 * @param dir3            the dir3 to set
 	 */
 	public void setDir3(String dir3) {
 		this.dir3 = dir3;
 	}
 
 	/**
+	 * Obtener nombre.
+	 *
 	 * @return the nombre
 	 */
 	public String getNombre() {
@@ -221,14 +399,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * Modificar nombre.
+	 *
+	 * @param nombre            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
+	 * Obtener descripcion.
+	 *
 	 * @return the descripcion
 	 */
 	public String getDescripcion() {
@@ -236,14 +417,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * Modificar descripcion.
+	 *
+	 * @param descripcion            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
+	 * Obtener activo.
+	 *
 	 * @return the activo
 	 */
 	public Boolean getActivo() {
@@ -251,14 +435,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param activo
-	 *            the activo to set
+	 * Modificar activo.
+	 *
+	 * @param activo            the activo to set
 	 */
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
 
 	/**
+	 * Obtener fechacreacion.
+	 *
 	 * @return the fechacreacion
 	 */
 	public Date getFechacreacion() {
@@ -266,14 +453,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param fechacreacion
-	 *            the fechacreacion to set
+	 * Modificar fechacreacion.
+	 *
+	 * @param fechacreacion            the fechacreacion to set
 	 */
 	public void setFechacreacion(Date fechacreacion) {
 		this.fechacreacion = fechacreacion;
 	}
 
 	/**
+	 * Obtener fechamodificacion.
+	 *
 	 * @return the fechamodificacion
 	 */
 	public Date getFechamodificacion() {
@@ -281,14 +471,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param fechamodificacion
-	 *            the fechamodificacion to set
+	 * Modificar fechamodificacion.
+	 *
+	 * @param fechamodificacion            the fechamodificacion to set
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
 	}
 
 	/**
+	 * Obtener creadopor.
+	 *
 	 * @return the creadopor
 	 */
 	public String getCreadopor() {
@@ -296,14 +489,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param creadopor
-	 *            the creadopor to set
+	 * Modificar creadopor.
+	 *
+	 * @param creadopor            the creadopor to set
 	 */
 	public void setCreadopor(String creadopor) {
 		this.creadopor = creadopor;
 	}
 
 	/**
+	 * Obtener modificadopor.
+	 *
 	 * @return the modificadopor
 	 */
 	public String getModificadopor() {
@@ -311,14 +507,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param modificadopor
-	 *            the modificadopor to set
+	 * Modificar modificadopor.
+	 *
+	 * @param modificadopor            the modificadopor to set
 	 */
 	public void setModificadopor(String modificadopor) {
 		this.modificadopor = modificadopor;
 	}
 
 	/**
+	 * Obtener externalid.
+	 *
 	 * @return the externalid
 	 */
 	public Long getExternalid() {
@@ -326,14 +525,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param externalid
-	 *            the externalid to set
+	 * Modificar externalid.
+	 *
+	 * @param externalid            the externalid to set
 	 */
 	public void setExternalid(Long externalid) {
 		this.externalid = externalid;
 	}
 
 	/**
+	 * Obtener nombrecuentaenvio.
+	 *
 	 * @return the nombrecuentaenvio
 	 */
 	public String getNombrecuentaenvio() {
@@ -341,14 +543,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param nombrecuentaenvio
-	 *            the nombrecuentaenvio to set
+	 * Modificar nombrecuentaenvio.
+	 *
+	 * @param nombrecuentaenvio            the nombrecuentaenvio to set
 	 */
 	public void setNombrecuentaenvio(String nombrecuentaenvio) {
 		this.nombrecuentaenvio = nombrecuentaenvio;
 	}
 
 	/**
+	 * Obtener historificacion.
+	 *
 	 * @return the historificacion
 	 */
 	public Integer getHistorificacion() {
@@ -356,14 +561,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param historificacion
-	 *            the historificacion to set
+	 * Modificar historificacion.
+	 *
+	 * @param historificacion            the historificacion to set
 	 */
 	public void setHistorificacion(Integer historificacion) {
 		this.historificacion = historificacion;
 	}
 
 	/**
+	 * Obtener motivohistorificacion.
+	 *
 	 * @return the motivohistorificacion
 	 */
 	public String getMotivohistorificacion() {
@@ -371,14 +579,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param motivohistorificacion
-	 *            the motivohistorificacion to set
+	 * Modificar motivohistorificacion.
+	 *
+	 * @param motivohistorificacion            the motivohistorificacion to set
 	 */
 	public void setMotivohistorificacion(String motivohistorificacion) {
 		this.motivohistorificacion = motivohistorificacion;
 	}
 
 	/**
+	 * Obtener conservacion.
+	 *
 	 * @return the conservacion
 	 */
 	public Integer getConservacion() {
@@ -386,14 +597,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param conservacion
-	 *            the conservacion to set
+	 * Modificar conservacion.
+	 *
+	 * @param conservacion            the conservacion to set
 	 */
 	public void setConservacion(Integer conservacion) {
 		this.conservacion = conservacion;
 	}
 
 	/**
+	 * Obtener motivoconservacion.
+	 *
 	 * @return the motivoconservacion
 	 */
 	public String getMotivoconservacion() {
@@ -401,14 +615,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param motivoconservacion
-	 *            the motivoconservacion to set
+	 * Modificar motivoconservacion.
+	 *
+	 * @param motivoconservacion            the motivoconservacion to set
 	 */
 	public void setMotivoconservacion(String motivoconservacion) {
 		this.motivoconservacion = motivoconservacion;
 	}
 
 	/**
+	 * Obtener estado.
+	 *
 	 * @return the estado
 	 */
 	public String getEstado() {
@@ -416,6 +633,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar estado.
+	 *
 	 * @param estado the estado to set
 	 */
 	public void setEstado(String estado) {
@@ -423,6 +642,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener nifcif.
+	 *
 	 * @return the nifcif
 	 */
 	public String getNifcif() {
@@ -430,6 +651,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar nifcif.
+	 *
 	 * @param nifcif the nifcif to set
 	 */
 	public void setNifcif(String nifcif) {
@@ -437,6 +660,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener siglas.
+	 *
 	 * @return the siglas
 	 */
 	public String getSiglas() {
@@ -444,6 +669,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar siglas.
+	 *
 	 * @param siglas the siglas to set
 	 */
 	public void setSiglas(String siglas) {
@@ -451,6 +678,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener nivel administracion.
+	 *
 	 * @return the nivelAdministracion
 	 */
 	public Integer getNivelAdministracion() {
@@ -458,6 +687,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar nivel administracion.
+	 *
 	 * @param nivelAdministracion the nivelAdministracion to set
 	 */
 	public void setNivelAdministracion(Integer nivelAdministracion) {
@@ -465,6 +696,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener nivel jerarquico.
+	 *
 	 * @return the nivelJerarquico
 	 */
 	public Integer getNivelJerarquico() {
@@ -472,6 +705,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar nivel jerarquico.
+	 *
 	 * @param nivelJerarquico the nivelJerarquico to set
 	 */
 	public void setNivelJerarquico(Integer nivelJerarquico) {
@@ -479,6 +714,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod unidad superior.
+	 *
 	 * @return the codUnidadSuperior
 	 */
 	public String getCodUnidadSuperior() {
@@ -486,6 +723,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod unidad superior.
+	 *
 	 * @param codUnidadSuperior the codUnidadSuperior to set
 	 */
 	public void setCodUnidadSuperior(String codUnidadSuperior) {
@@ -493,6 +732,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener denom unidad superior.
+	 *
 	 * @return the denomUnidadSuperior
 	 */
 	public String getDenomUnidadSuperior() {
@@ -500,6 +741,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar denom unidad superior.
+	 *
 	 * @param denomUnidadSuperior the denomUnidadSuperior to set
 	 */
 	public void setDenomUnidadSuperior(String denomUnidadSuperior) {
@@ -507,6 +750,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod unidad raiz.
+	 *
 	 * @return the codUnidadRaiz
 	 */
 	public String getCodUnidadRaiz() {
@@ -514,6 +759,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod unidad raiz.
+	 *
 	 * @param codUnidadRaiz the codUnidadRaiz to set
 	 */
 	public void setCodUnidadRaiz(String codUnidadRaiz) {
@@ -521,6 +768,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener denom unidad raiz.
+	 *
 	 * @return the denomUnidadRaiz
 	 */
 	public String getDenomUnidadRaiz() {
@@ -528,6 +777,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar denom unidad raiz.
+	 *
 	 * @param denomUnidadRaiz the denomUnidadRaiz to set
 	 */
 	public void setDenomUnidadRaiz(String denomUnidadRaiz) {
@@ -535,6 +786,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener es edp.
+	 *
 	 * @return the esEdp
 	 */
 	public String getEsEdp() {
@@ -542,6 +795,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar es edp.
+	 *
 	 * @param esEdp the esEdp to set
 	 */
 	public void setEsEdp(String esEdp) {
@@ -549,6 +804,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod edp principal.
+	 *
 	 * @return the codEdpPrincipal
 	 */
 	public String getCodEdpPrincipal() {
@@ -556,6 +813,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod edp principal.
+	 *
 	 * @param codEdpPrincipal the codEdpPrincipal to set
 	 */
 	public void setCodEdpPrincipal(String codEdpPrincipal) {
@@ -563,6 +822,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener denom edp principal.
+	 *
 	 * @return the denomEdpPrincipal
 	 */
 	public String getDenomEdpPrincipal() {
@@ -570,6 +831,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar denom edp principal.
+	 *
 	 * @param denomEdpPrincipal the denomEdpPrincipal to set
 	 */
 	public void setDenomEdpPrincipal(String denomEdpPrincipal) {
@@ -577,6 +840,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod tipo ent public.
+	 *
 	 * @return the codTipoEntPublic
 	 */
 	public String getCodTipoEntPublic() {
@@ -584,6 +849,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod tipo ent public.
+	 *
 	 * @param codTipoEntPublic the codTipoEntPublic to set
 	 */
 	public void setCodTipoEntPublic(String codTipoEntPublic) {
@@ -591,6 +858,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod tipo unidad.
+	 *
 	 * @return the codTipoUnidad
 	 */
 	public String getCodTipoUnidad() {
@@ -598,6 +867,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod tipo unidad.
+	 *
 	 * @param codTipoUnidad the codTipoUnidad to set
 	 */
 	public void setCodTipoUnidad(String codTipoUnidad) {
@@ -605,6 +876,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb territorial.
+	 *
 	 * @return the codAmbTerritorial
 	 */
 	public String getCodAmbTerritorial() {
@@ -612,6 +885,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb territorial.
+	 *
 	 * @param codAmbTerritorial the codAmbTerritorial to set
 	 */
 	public void setCodAmbTerritorial(String codAmbTerritorial) {
@@ -619,6 +894,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb ent geografica.
+	 *
 	 * @return the codAmbEntGeografica
 	 */
 	public String getCodAmbEntGeografica() {
@@ -626,6 +903,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb ent geografica.
+	 *
 	 * @param codAmbEntGeografica the codAmbEntGeografica to set
 	 */
 	public void setCodAmbEntGeografica(String codAmbEntGeografica) {
@@ -633,6 +912,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb pais.
+	 *
 	 * @return the codAmbPais
 	 */
 	public String getCodAmbPais() {
@@ -640,6 +921,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb pais.
+	 *
 	 * @param codAmbPais the codAmbPais to set
 	 */
 	public void setCodAmbPais(String codAmbPais) {
@@ -647,6 +930,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb comunidad.
+	 *
 	 * @return the codAmbComunidad
 	 */
 	public String getCodAmbComunidad() {
@@ -654,6 +939,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb comunidad.
+	 *
 	 * @param codAmbComunidad the codAmbComunidad to set
 	 */
 	public void setCodAmbComunidad(String codAmbComunidad) {
@@ -661,6 +948,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb provincia.
+	 *
 	 * @return the codAmbProvincia
 	 */
 	public String getCodAmbProvincia() {
@@ -668,6 +957,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb provincia.
+	 *
 	 * @param codAmbProvincia the codAmbProvincia to set
 	 */
 	public void setCodAmbProvincia(String codAmbProvincia) {
@@ -675,6 +966,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb municipio.
+	 *
 	 * @return the codAmbMunicipio
 	 */
 	public String getCodAmbMunicipio() {
@@ -682,6 +975,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb municipio.
+	 *
 	 * @param codAmbMunicipio the codAmbMunicipio to set
 	 */
 	public void setCodAmbMunicipio(String codAmbMunicipio) {
@@ -689,6 +984,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb isla.
+	 *
 	 * @return the codAmbIsla
 	 */
 	public String getCodAmbIsla() {
@@ -696,6 +993,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb isla.
+	 *
 	 * @param codAmbIsla the codAmbIsla to set
 	 */
 	public void setCodAmbIsla(String codAmbIsla) {
@@ -703,6 +1002,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb elm.
+	 *
 	 * @return the codAmbElm
 	 */
 	public String getCodAmbElm() {
@@ -710,6 +1011,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb elm.
+	 *
 	 * @param codAmbElm the codAmbElm to set
 	 */
 	public void setCodAmbElm(String codAmbElm) {
@@ -717,6 +1020,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod amb loc extranjera.
+	 *
 	 * @return the codAmbLocExtranjera
 	 */
 	public String getCodAmbLocExtranjera() {
@@ -724,6 +1029,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod amb loc extranjera.
+	 *
 	 * @param codAmbLocExtranjera the codAmbLocExtranjera to set
 	 */
 	public void setCodAmbLocExtranjera(String codAmbLocExtranjera) {
@@ -731,6 +1038,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener competencias.
+	 *
 	 * @return the competencias
 	 */
 	public String getCompetencias() {
@@ -738,6 +1047,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar competencias.
+	 *
 	 * @param competencias the competencias to set
 	 */
 	public void setCompetencias(String competencias) {
@@ -745,6 +1056,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener disposicion legal.
+	 *
 	 * @return the disposicionLegal
 	 */
 	public String getDisposicionLegal() {
@@ -752,6 +1065,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar disposicion legal.
+	 *
 	 * @param disposicionLegal the disposicionLegal to set
 	 */
 	public void setDisposicionLegal(String disposicionLegal) {
@@ -759,6 +1074,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha alta oficial.
+	 *
 	 * @return the fechaAltaOficial
 	 */
 	public Date getFechaAltaOficial() {
@@ -766,6 +1083,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha alta oficial.
+	 *
 	 * @param fechaAltaOficial the fechaAltaOficial to set
 	 */
 	public void setFechaAltaOficial(Date fechaAltaOficial) {
@@ -773,6 +1092,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha baja oficial.
+	 *
 	 * @return the fechaBajaOficial
 	 */
 	public Date getFechaBajaOficial() {
@@ -780,6 +1101,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha baja oficial.
+	 *
 	 * @param fechaBajaOficial the fechaBajaOficial to set
 	 */
 	public void setFechaBajaOficial(Date fechaBajaOficial) {
@@ -787,6 +1110,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha extincion.
+	 *
 	 * @return the fechaExtincion
 	 */
 	public Date getFechaExtincion() {
@@ -794,6 +1119,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha extincion.
+	 *
 	 * @param fechaExtincion the fechaExtincion to set
 	 */
 	public void setFechaExtincion(Date fechaExtincion) {
@@ -801,6 +1128,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha anulacion.
+	 *
 	 * @return the fechaAnulacion
 	 */
 	public Date getFechaAnulacion() {
@@ -808,6 +1137,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha anulacion.
+	 *
 	 * @param fechaAnulacion the fechaAnulacion to set
 	 */
 	public void setFechaAnulacion(Date fechaAnulacion) {
@@ -815,6 +1146,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener observ generales.
+	 *
 	 * @return the observGenerales
 	 */
 	public String getObservGenerales() {
@@ -822,6 +1155,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar observ generales.
+	 *
 	 * @param observGenerales the observGenerales to set
 	 */
 	public void setObservGenerales(String observGenerales) {
@@ -829,6 +1164,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener observ baja.
+	 *
 	 * @return the observBaja
 	 */
 	public String getObservBaja() {
@@ -836,6 +1173,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar observ baja.
+	 *
 	 * @param observBaja the observBaja to set
 	 */
 	public void setObservBaja(String observBaja) {
@@ -843,6 +1182,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener tipo via.
+	 *
 	 * @return the tipoVia
 	 */
 	public String getTipoVia() {
@@ -850,6 +1191,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar tipo via.
+	 *
 	 * @param tipoVia the tipoVia to set
 	 */
 	public void setTipoVia(String tipoVia) {
@@ -857,6 +1200,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener nombre via.
+	 *
 	 * @return the nombreVia
 	 */
 	public String getNombreVia() {
@@ -864,6 +1209,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar nombre via.
+	 *
 	 * @param nombreVia the nombreVia to set
 	 */
 	public void setNombreVia(String nombreVia) {
@@ -871,6 +1218,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener num via.
+	 *
 	 * @return the numVia
 	 */
 	public String getNumVia() {
@@ -878,6 +1227,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar num via.
+	 *
 	 * @param numVia the numVia to set
 	 */
 	public void setNumVia(String numVia) {
@@ -885,6 +1236,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener complemento.
+	 *
 	 * @return the complemento
 	 */
 	public String getComplemento() {
@@ -892,6 +1245,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar complemento.
+	 *
 	 * @param complemento the complemento to set
 	 */
 	public void setComplemento(String complemento) {
@@ -899,6 +1254,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod postal.
+	 *
 	 * @return the codPostal
 	 */
 	public String getCodPostal() {
@@ -906,6 +1263,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod postal.
+	 *
 	 * @param codPostal the codPostal to set
 	 */
 	public void setCodPostal(String codPostal) {
@@ -913,6 +1272,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod pais.
+	 *
 	 * @return the codPais
 	 */
 	public String getCodPais() {
@@ -920,6 +1281,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod pais.
+	 *
 	 * @param codPais the codPais to set
 	 */
 	public void setCodPais(String codPais) {
@@ -927,6 +1290,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod comunidad.
+	 *
 	 * @return the codComunidad
 	 */
 	public String getCodComunidad() {
@@ -934,6 +1299,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod comunidad.
+	 *
 	 * @param codComunidad the codComunidad to set
 	 */
 	public void setCodComunidad(String codComunidad) {
@@ -941,6 +1308,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod provincia.
+	 *
 	 * @return the codProvincia
 	 */
 	public String getCodProvincia() {
@@ -948,6 +1317,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod provincia.
+	 *
 	 * @param codProvincia the codProvincia to set
 	 */
 	public void setCodProvincia(String codProvincia) {
@@ -955,6 +1326,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod localidad.
+	 *
 	 * @return the codLocalidad
 	 */
 	public String getCodLocalidad() {
@@ -962,6 +1335,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod localidad.
+	 *
 	 * @param codLocalidad the codLocalidad to set
 	 */
 	public void setCodLocalidad(String codLocalidad) {
@@ -969,6 +1344,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener cod ent geografica.
+	 *
 	 * @return the codEntGeografica
 	 */
 	public String getCodEntGeografica() {
@@ -976,6 +1353,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar cod ent geografica.
+	 *
 	 * @param codEntGeografica the codEntGeografica to set
 	 */
 	public void setCodEntGeografica(String codEntGeografica) {
@@ -983,6 +1362,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener dir extranjera.
+	 *
 	 * @return the dirExtranjera
 	 */
 	public String getDirExtranjera() {
@@ -990,6 +1371,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar dir extranjera.
+	 *
 	 * @param dirExtranjera the dirExtranjera to set
 	 */
 	public void setDirExtranjera(String dirExtranjera) {
@@ -997,6 +1380,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener loc extranjera.
+	 *
 	 * @return the locExtranjera
 	 */
 	public String getLocExtranjera() {
@@ -1004,6 +1389,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar loc extranjera.
+	 *
 	 * @param locExtranjera the locExtranjera to set
 	 */
 	public void setLocExtranjera(String locExtranjera) {
@@ -1011,6 +1398,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener observaciones.
+	 *
 	 * @return the observaciones
 	 */
 	public String getObservaciones() {
@@ -1018,6 +1407,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar observaciones.
+	 *
 	 * @param observaciones the observaciones to set
 	 */
 	public void setObservaciones(String observaciones) {
@@ -1025,6 +1416,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener asociados servicio.
+	 *
 	 * @return the asociadosServicio
 	 */
 	public Boolean getAsociadosServicio() {
@@ -1032,6 +1425,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar asociados servicio.
+	 *
 	 * @param asociadosServicio the asociadosServicio to set
 	 */
 	public void setAsociadosServicio(Boolean asociadosServicio) {
@@ -1039,6 +1434,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha estado.
+	 *
 	 * @return the fechaEstado
 	 */
 	public Date getFechaEstado() {
@@ -1056,6 +1453,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha estado.
+	 *
 	 * @param fechaEstado the fechaEstado to set
 	 */
 	public void setFechaEstado(Date fechaEstado) {
@@ -1063,6 +1462,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha estado str.
+	 *
 	 * @return the fechaEstadoStr
 	 */
 	public String getFechaEstadoStr() {
@@ -1070,6 +1471,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha estado str.
+	 *
 	 * @param fechaEstadoStr the fechaEstadoStr to set
 	 */
 	public void setFechaEstadoStr(String fechaEstadoStr) {
@@ -1077,6 +1480,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener manual.
+	 *
 	 * @return the manual
 	 */
 	public Boolean getManual() {
@@ -1084,6 +1489,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar manual.
+	 *
 	 * @param manual the manual to set
 	 */
 	public void setManual(Boolean manual) {
@@ -1091,6 +1498,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha creacion desde.
+	 *
 	 * @return the fechaCreacionDesde
 	 */
 	public Date getFechaCreacionDesde() {
@@ -1098,6 +1507,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha creacion desde.
+	 *
 	 * @param fechaCreacionDesde the fechaCreacionDesde to set
 	 */
 	public void setFechaCreacionDesde(Date fechaCreacionDesde) {
@@ -1105,6 +1516,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Obtener fecha creacion hasta.
+	 *
 	 * @return the fechaCreacionHasta
 	 */
 	public Date getFechaCreacionHasta() {
@@ -1112,6 +1525,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha creacion hasta.
+	 *
 	 * @param fechaCreacionHasta the fechaCreacionHasta to set
 	 */
 	public void setFechaCreacionHasta(Date fechaCreacionHasta) {
@@ -1120,6 +1535,8 @@ public class OrganismoBean implements Audit, Serializable {
 
 
 	/**
+	 * Obtener fecha activo.
+	 *
 	 * @return the fechaActivo
 	 */
 	public Date getFechaActivo() {
@@ -1127,6 +1544,8 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
+	 * Modificar fecha activo.
+	 *
 	 * @param fechaActivo the fechaActivo to set
 	 */	
 	public void setFechaActivo(Date fechaActivo) {

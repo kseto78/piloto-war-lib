@@ -39,25 +39,49 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
 import es.mpr.template.web.action.admin.UsuariosForm;
 
+/**
+ * The Class PlataformaMensajeriaUtil.
+ */
 public class PlataformaMensajeriaUtil {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(PlataformaMensajeriaUtil.class);
 	
+	/** Constante ROL_USUARIO_PLATAFORMA. */
 	public static final String ROL_USUARIO_PLATAFORMA = "ROL_USUARIO_PLATAFORMA";
+	
+	/** Constante ID_ROL_USUARIO_PLATAFORMA. */
 	public static final String ID_ROL_USUARIO_PLATAFORMA = "ID_ROL_USUARIO_PLATAFORMA";
+	
+	/** Constante MAP_PERMISOS_APLICACIONES. */
 	public static final String MAP_PERMISOS_APLICACIONES = "MAP_PERMISOS_APLICACIONES";
+	
+	/** Constante ROL_ADMINISTRADOR. */
 	public static final String ROL_ADMINISTRADOR="ROL_ADMINISTRADOR";
+	
+	/** Constante ROL_PROPIETARIO. */
 	public static final String ROL_PROPIETARIO="ROL_PROPIETARIO";
+	
+	/** Constante ID_USUARIO_LOGUEADO. */
 	public static final String ID_USUARIO_LOGUEADO = "ID_USUARIO_LOGUEADO";
+	
+	/** Constante USERNAME. */
 	public static final String USERNAME = "USERNAME";
+	
+	/** Constante ROLES. */
 	public static final HashMap<String,Integer> ROLES = new HashMap<String,Integer>();
+    
+    /** Constante IPADDRESS_PATTERN. */
     private static final String IPADDRESS_PATTERN = 
 		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
+	/**  pattern. */
 	private static Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+	
+	/**  matcher. */
 	private static Matcher matcher;
 
 	 
@@ -70,8 +94,10 @@ public class PlataformaMensajeriaUtil {
 	
 
 	/**
-	 * Obtiene la información del usuario Logueado en la aplicación
-	 * @return
+	 * Obtiene la información del usuario Logueado en la aplicación.
+	 *
+	 * @param user the user
+	 * @return usuario logueado
 	 */
 	
 	////MIGRADO
@@ -96,6 +122,11 @@ public class PlataformaMensajeriaUtil {
 	}
 	
 	
+	/**
+	 * Obtener usuario logueado.
+	 *
+	 * @return usuario logueado
+	 */
 	///MIGRADO
 	public static UsuariosForm getUsuarioLogueado(){
 		MapUser detallesUsuario = (MapUser)	SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
@@ -114,9 +145,10 @@ public class PlataformaMensajeriaUtil {
 	}
 	
 	/**
-	 * Comprueba si una cadena está vacía o es nula
-	 * @param value
-	 * @return
+	 * Comprueba si una cadena está vacía o es nula.
+	 *
+	 * @param value the value
+	 * @return true, si es empty
 	 */
 	////MIGRADO
 	public static boolean isEmpty(String value){
@@ -126,10 +158,12 @@ public class PlataformaMensajeriaUtil {
 			return false;
 		}
 	}
+	
 	/**
-	 * Comprueba si un numero es igual a 0 o es nulo
-	 * @param value
-	 * @return
+	 * Comprueba si un numero es igual a 0 o es nulo.
+	 *
+	 * @param value the value
+	 * @return true, si es empty number
 	 */
 	///MIGRADO
 	public static boolean isEmptyNumber(Integer value){
@@ -140,6 +174,12 @@ public class PlataformaMensajeriaUtil {
 		}
 	}
 		
+	/**
+	 * Comprueba empty number long.
+	 *
+	 * @param value the value
+	 * @return true, si es empty number long
+	 */
 	///MIGRADO
 	public static boolean isEmptyNumberLong(Long value){
 		if(value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1))){
@@ -151,18 +191,21 @@ public class PlataformaMensajeriaUtil {
 	
 	/**
 	 * Valida el formato de las horas introducidas para las planificaciones a través de una expresión regular.
-	 * @param hora
-	 * @return
+	 *
+	 * @param hora the hora
+	 * @return true, if successful
 	 */
 	////MIGRADO
 	public static boolean validaFormatoHora(String hora){
 		ValidaFormatoHora formato24Horas=new ValidaFormatoHora();
 		return formato24Horas.validate(hora);
 	}
+	
 	/**
 	 * Devuelve el rol del usuario (login) que se pasa como parámetro [java.lang.String]
-	 * @param userName
-	 * @param servicioUsuario 
+	 *
+	 * @param userName the user name
+	 * @param servicioUsuario the servicio usuario
 	 * @return Rol Id
 	 */
 	////MIGRADO
@@ -174,10 +217,13 @@ public class PlataformaMensajeriaUtil {
 		return rolId;
 		
 	}
+	
 	/**
-	 * Devuelve un HashMap con los permisos asociados a cada aplicación asignada al usuario
-	 * @param username
-	 * @return
+	 * Devuelve un HashMap con los permisos asociados a cada aplicación asignada al usuario.
+	 *
+	 * @param userName the user name
+	 * @param servicioUsuarioAplicacion the servicio usuario aplicacion
+	 * @return map permisos aplicaciones
 	 */
 	/////MIGRADO
 	public static HashMap<Integer, Integer> getMapPermisosAplicaciones(String userName, ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
@@ -199,9 +245,10 @@ public class PlataformaMensajeriaUtil {
 	
 	
 	/**
-	 * Extrae de la session el rolId (Integer) del usuario logueado
-	 * @param request
-	 * @return
+	 * Extrae de la session el rolId (Integer) del usuario logueado.
+	 *
+	 * @param request the request
+	 * @return rol id from session
 	 */
 	////MIGRADO
 	public static Integer getRolIdFromSession(HttpServletRequest request){
@@ -210,19 +257,22 @@ public class PlataformaMensajeriaUtil {
 	}
 	
 	/**
-	 * Extrae de la session el rol (String) del usuario logueado
-	 * @param request
-	 * @return
+	 * Extrae de la session el rol (String) del usuario logueado.
+	 *
+	 * @param request the request
+	 * @return rol from session
 	 */
 	////MIGRADO
 	public static String getRolFromSession(HttpServletRequest request){
 		String sessionRolUsuario = (String)request.getSession().getAttribute(ROL_USUARIO_PLATAFORMA);
 		return sessionRolUsuario;
 	}
+	
 	/**
-	 * Extrae de la session el identificador del usuario logueado
-	 * @param request
-	 * @return
+	 * Extrae de la session el identificador del usuario logueado.
+	 *
+	 * @param request the request
+	 * @return id usuario from session
 	 */
 	////MIGRADO
 	public static Integer getIdUsuarioFromSession(HttpServletRequest request){
@@ -233,6 +283,12 @@ public class PlataformaMensajeriaUtil {
 	
 	
 	
+	/**
+	 * Change session rol.
+	 *
+	 * @param rolId the rol id
+	 * @param httpSession the http session
+	 */
 	////MIGRADO
 	public static void changeSessionRol(Integer rolId, HttpSession httpSession) {
     	if(rolId!=null&&rolId == 1){
@@ -242,18 +298,26 @@ public class PlataformaMensajeriaUtil {
     	}
 		
 	}
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args){
 		
 	}
 
 	/**
 	 * M�todo para identificar si la petici�n es para exportar una lista o para mostrar simplemente un listado. 
-	 * @param request
-	 * @return
+	 *
+	 * @param request the request
+	 * @return true, si es export
 	 */
 	///MIGRADO
 	public static boolean isExport(HttpServletRequest request) {
 		boolean sw =false;
+		@SuppressWarnings("unchecked")
 		Set<String> listaParametros = request.getParameterMap().keySet();
 		Iterator<String> paramIterator = listaParametros.iterator();
 		while(paramIterator.hasNext()){
@@ -267,9 +331,10 @@ public class PlataformaMensajeriaUtil {
 	}
 	
     /**
-     * 
-     * @param nmaxenvios
-     * @return
+     * Comprueba mobile number.
+     *
+     * @param nmaxenvios the nmaxenvios
+     * @return true, si es mobile number
      */
 	////MIGRADO
 	public static boolean isMobileNumber(String nmaxenvios) {
@@ -286,9 +351,10 @@ public class PlataformaMensajeriaUtil {
 	}
     
     /**
-     * 
-     * @param nmaxenvios
-     * @return
+     * Comprueba number.
+     *
+     * @param nmaxenvios the nmaxenvios
+     * @return true, si es number
      */
 	////MIGRADO
 	public static boolean isNumber(Integer nmaxenvios) {
@@ -303,8 +369,10 @@ public class PlataformaMensajeriaUtil {
 	
 	/**
 	 * Obligatorio pasar un a�o de inicio. Formato YYYY (2009)
-	 * @param startYear
-	 * @return
+	 *
+	 * @param startYear the start year
+	 * @param endYear the end year
+	 * @return years
 	 */
 	////MIGRADO
 	public static ArrayList<String> getYears(String startYear,String endYear){
@@ -329,10 +397,12 @@ public class PlataformaMensajeriaUtil {
 		}
 		return listadoAnyos;
 	}
+	
 	/**
-	 * Comprueba si un email tiene formato correcto
-	 * @param email
-	 * @return
+	 * Comprueba si un email tiene formato correcto.
+	 *
+	 * @param email the email
+	 * @return true, if successful
 	 */
 	
 	////MIGRADO
@@ -346,6 +416,14 @@ public class PlataformaMensajeriaUtil {
 	}
 	
 
+	/**
+	 * Load xml peticion.
+	 *
+	 * @param idPeticion the id peticion
+	 * @param peticionManager the peticion manager
+	 * @return the peticion bean
+	 * @throws BusinessException the business exception
+	 */
 	public static PeticionBean loadXmlPeticion(String idPeticion, PeticionManager peticionManager) throws BusinessException {
 		PeticionBean peticionBean = new PeticionBean();
 	
@@ -366,6 +444,14 @@ public class PlataformaMensajeriaUtil {
 	}
 	
 	
+	/**
+	 * Load xml respuesta.
+	 *
+	 * @param idPeticion the id peticion
+	 * @param peticionManager the peticion manager
+	 * @return the peticion bean
+	 * @throws BusinessException the business exception
+	 */
 	public static PeticionBean loadXmlRespuesta(String idPeticion, PeticionManager peticionManager) throws BusinessException {
 		PeticionBean peticionBean = new PeticionBean();
 	
@@ -385,6 +471,14 @@ public class PlataformaMensajeriaUtil {
 		return peticionBean;
 	}
 	
+	/**
+	 * Descarga fichero xml.
+	 *
+	 * @param response the response
+	 * @param nombreFichero the nombre fichero
+	 * @param contenidoFichero the contenido fichero
+	 * @param tipoFichero the tipo fichero
+	 */
 	public static void descargaFicheroXml(HttpServletResponse response, String nombreFichero, 
 			String contenidoFichero, String tipoFichero) {
 
@@ -413,6 +507,14 @@ public class PlataformaMensajeriaUtil {
 			logger.info("[PlataformaMensajeriaUtil] - descargaFicheroXml - fin");
 	}
 	
+	/**
+	 * Descarga fichero pk pass.
+	 *
+	 * @param response the response
+	 * @param nombreFichero the nombre fichero
+	 * @param contenidoFichero the contenido fichero
+	 * @param tipoFichero the tipo fichero
+	 */
 	public static void descargaFicheroPkPass(HttpServletResponse response, String nombreFichero, 
 			String contenidoFichero, String tipoFichero) {
 

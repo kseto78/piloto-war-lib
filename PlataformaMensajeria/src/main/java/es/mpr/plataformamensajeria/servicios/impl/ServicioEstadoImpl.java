@@ -24,11 +24,16 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioEstado;
 @Service("servicioEstadoImpl")
 public class ServicioEstadoImpl implements ServicioEstado{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServidorImpl.class);
 	
+	/**  tbl estados manager. */
 	@Resource(name="TblEstadosManagerImpl")
 	private TblEstadosManager tblEstadosManager;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioEstado#getEstados()
+	 */
 	///MIGRADO
 	@Override
 	public List<EstadoBean> getEstados() throws BusinessException {
@@ -45,11 +50,11 @@ public class ServicioEstadoImpl implements ServicioEstado{
 	}
 
 	/**
-	 * <p>Convertirmos una lista de  a una lista de EstadoBean</p>
-	 * 
-	 * @param list
-	 * 
+	 * <p>Convertirmos una lista de  a una lista de EstadoBean</p>.
+	 *
+	 * @param list the list
 	 * @return Lista de objetos EstadoBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected List<EstadoBean> getListEstadoBean(List<TblEstados> list) throws BusinessException

@@ -45,30 +45,41 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioPlanificacionImpl")
 public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
 	
+	/**  view planificaciones manager. */
 	@Resource
 	private ViewPlanificacionesManager viewPlanificacionesManager;
 	
+	/**  tbl planificaciones manager. */
 	@Resource
 	private TblPlanificacionesManager tblPlanificacionesManager;
 	
+	/**  query executor view planificaciones. */
 	@Resource
 	private QueryExecutorViewPlanificaciones queryExecutorViewPlanificaciones;
 	
+	/**  tbl servicios manager. */
 	@Resource
 	private TblServiciosManager tblServiciosManager;
 	
+	/**  tbl servidores manager. */
 	@Resource
 	private TblServidoresManager tblServidoresManager;
 	
+	/**  tbl tipo planificaciones manager. */
 	@Resource
 	private TblTipoPlanificacionesManager tblTipoPlanificacionesManager;
 	
+	/**  tbl organismos manager. */
 	@Resource(name="TblOrganismosManagerImpl")
 	private TblOrganismosManager tblOrganismosManager;
 	
 		
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#getPlanificaciones(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.PlanificacionBean)
+ */
 ////MIGRADO
 	@Override
 	public PaginatedList<PlanificacionBean> getPlanificaciones(int start, int size,
@@ -114,6 +125,13 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		}
 	}
 
+	/**
+	 * Creates the planificacion bean.
+	 *
+	 * @param pb the pb
+	 * @param criterio the criterio
+	 * @return the es.minhap.plataformamensajeria.iop.beans. planificacion bean
+	 */
 	////MIGRADO
 	private es.minhap.plataformamensajeria.iop.beans.PlanificacionBean createPlanificacionBean(
 			es.minhap.plataformamensajeria.iop.beans.PlanificacionBean pb, PlanificacionBean criterio) {
@@ -126,6 +144,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#newPlanificacion(es.mpr.plataformamensajeria.beans.PlanificacionBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	//////MIGRADO
 	@Override 
 	@Transactional
@@ -152,6 +173,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#updatePlanificacion(es.mpr.plataformamensajeria.beans.PlanificacionBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	//////MIGRADO
 	@Override
 	@Transactional
@@ -172,7 +196,23 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 
 	/**
-	 * Valida la planifciaci�n para ver si se garantizan los envios
+	 * Valida la planifciaci�n para ver si se garantizan los envios.
+	 *
+	 * @param planificacionId the planificacion id
+	 * @param tipo the tipo
+	 * @param servidorId the servidor id
+	 * @param servicioId the servicio id
+	 * @param lunes the lunes
+	 * @param martes the martes
+	 * @param miercoles the miercoles
+	 * @param jueves the jueves
+	 * @param viernes the viernes
+	 * @param sabado the sabado
+	 * @param domingo the domingo
+	 * @param horaHasta the hora hasta
+	 * @param horaDesde the hora desde
+	 * @return the int
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	public int validaPlanificacionOptima(String planificacionId,Integer tipo,Integer servidorId,Integer servicioId, String lunes, String martes,
@@ -216,6 +256,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#validaPlanificacionServidor(java.lang.String, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	///////MIGRADO
 	public int validaPlanificacionServidor(String planificacionId, Integer servidorId, String lunes, String martes,
 			String miercoles,String jueves, String viernes, String sabado, String domingo, String horaHasta, String horaDesde) throws BusinessException {
@@ -260,6 +303,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#loadPlanificacion(es.mpr.plataformamensajeria.beans.PlanificacionBean)
+	 */
 	/////MIGRADO
 	@Override
 	@Transactional(readOnly = true, propagation=Propagation.SUPPORTS)
@@ -275,6 +321,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 		
 		
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#deletePlanificacion(es.mpr.plataformamensajeria.beans.PlanificacionBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	//////MIGRADO
 	@Override
 	@Transactional
@@ -304,11 +353,11 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 
 	
 	/**
-	 * <p>Obtenemos un objeto OrganismoTO a partir de un objeto OrganismoBean</p>
-	 * 
-	 * @param organismoBean 
-	 * 
+	 * <p>Obtenemos un objeto OrganismoTO a partir de un objeto OrganismoBean</p>.
+	 *
+	 * @param planificacion the planificacion
 	 * @return objeto OrganismoJPA
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	public TblPlanificaciones getPlanificacionTO(PlanificacionBean planificacion) throws BusinessException
@@ -344,11 +393,11 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 	
 	/**
-	 * <p>Obtenemos un objeto PlanificacionBean a partir de un objeto TblPlanificaciones</p>
-	 * 
-	 * @param TblPlanificaciones 
-	 * 
+	 * <p>Obtenemos un objeto PlanificacionBean a partir de un objeto TblPlanificaciones</p>.
+	 *
+	 * @param planificacion the planificacion
 	 * @return objeto PlanificacionBean
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	public PlanificacionBean getPlanificacionBean(TblPlanificaciones planificacion) throws BusinessException
@@ -387,11 +436,11 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	}
 	
 	/**
-	 * <p>Convertirmos una lista de Planificacion a una lista de PlanificacionBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de Planificacion a una lista de PlanificacionBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos PlanificacionBean
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<PlanificacionBean> getListPlanificacionBean(List<TblPlanificaciones> lista) throws BusinessException
@@ -413,11 +462,11 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	
 	////MIGRADO
 	/**
-	 * <p>Obtenemos un objeto PlanificacionBean a partir de un objeto PlanificacionJPA</p>
-	 * 
-	 * @param PlanificacionJPA
-	 * 
+	 * <p>Obtenemos un objeto PlanificacionBean a partir de un objeto PlanificacionJPA</p>.
+	 *
+	 * @param viewPlanificacion the view planificacion
 	 * @return objeto PlanificacionBean
+	 * @throws BusinessException the business exception
 	 */
 	protected PlanificacionBean getPlanificacionBean(ViewPlanificaciones viewPlanificacion) throws BusinessException
 	{
@@ -435,12 +484,13 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		
 		return planificacion;
 	}
+	
 	/**
-	 * <p>Convertirmos una lista de ViewPlanificacionJPA a una lista de PlanificacionBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de ViewPlanificacionJPA a una lista de PlanificacionBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos PlanificacionBean
+	 * @throws BusinessException the business exception
 	 */
 	
 	//////MIGRADO
@@ -476,6 +526,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#getPlanificacionesByServidorId(java.lang.Integer)
+	 */
 	///////MIGRADO
 	@Override
 	public List<PlanificacionBean> getPlanificacionesByServidorId(Integer servidorId) throws BusinessException {
@@ -488,6 +541,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		}		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#getPlanificacionesByServicioID(java.lang.Integer)
+	 */
 	////MIGRADO
 	@Override
 	public List<PlanificacionBean> getPlanificacionesByServicioID(Integer servicioId) throws BusinessException {
@@ -508,6 +564,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#getPlanificacionesByOrganismoID(java.lang.Integer)
+	 */
 	////MIGRADO
 	@Override
 	public List<PlanificacionBean> getPlanificacionesByOrganismoID(
@@ -526,6 +585,9 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion#validaPlanificacionOptimaOrganismo(java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Integer)
+	 */
 	////MIGRADO
 	@Override
 	public int validaPlanificacionOptimaOrganismo(String planificacionId, Integer tipo, Integer servidorId, Integer servicioId, String lunes, String martes, String miercoles, String jueves, String viernes, String sabado, String domingo, String horaHasta, String horaDesde,

@@ -1,11 +1,5 @@
 package es.mpr.template.web.action.seguridad;
 
-import java.util.List;
-
-import com.map.j2ee.auditoria.ifaces.ServicioAuditoria;
-import com.map.j2ee.exceptions.BaseException;
-import com.map.j2ee.model.audit.AuditEntry;
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <p>Action para el servicio de Auditoria</p>

@@ -60,100 +60,192 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class OrganismosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(OrganismosAction.class);
 	
+	/**  servicio organismo. */
 	@Resource(name="servicioOrganismoImpl")
 	private transient ServicioOrganismo servicioOrganismo;
 	
+	/**  servicio servicio. */
 	@Resource(name="servicioServicioImpl")
 	private transient ServicioServicio servicioServicio;
 	
+	/**  servicio planificacion. */
 	@Resource(name="servicioPlanificacionImpl")
 	private transient ServicioPlanificacion servicioPlanificacion;
 	
+	/**  servicio usuario aplicacion. */
 	@Resource(name="servicioUsuarioAplicacionImpl")
 	private transient ServicioUsuarioAplicacion servicioUsuarioAplicacion;
 	
+	/**  servicio servidor. */
 	@Resource(name="servicioServidorImpl")
 	private transient ServicioServidor servicioServidor;
 	
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private transient PlataformaMensajeriaProperties properties;
 	
 	
+	/**  organismo. */
 	private OrganismoBean organismo; 
+	
+	/**  servidor organismo. */
 	private ServidoresOrganismosBean servidorOrganismo;
+	
+	/**  aplicacion. */
 	private AplicacionBean aplicacion;
+	
+	/**  servicio organismos. */
 	private ServicioOrganismosBean servicioOrganismos;
+	
+	/**  servicio. */
 	private ServicioBean servicio;
+	
+	/**  servidor. */
 	private ServidorBean servidor;
+	
+	/**  planificacion organismo. */
 	private PlanificacionBean planificacionOrganismo;
 	
+	/**  lista organismos. */
 	public List<OrganismoBean> listaOrganismos = null;
+	
+	/**  lista servicio organismos. */
 	public List<ServicioOrganismosBean> listaServicioOrganismos = null;
+	
+	/**  lista servidores organismos. */
 	public List<ServidoresOrganismosBean> listaServidoresOrganismos = null;
+	
+	/**  lista planificaciones servicio. */
 	public List<PlanificacionBean> listaPlanificacionesServicio = null;
 	
+	/**  combo servicio organismos. */
 	transient List<KeyValueObject> comboServicioOrganismos = new ArrayList<>();
+	
+	/**  combo servidores organismos. */
 	transient List<KeyValueObject> comboServidoresOrganismos = new ArrayList<>();
+	
+	/**  combo servidores plan. */
 	transient List<KeyValueObject> comboServidoresPlan = new ArrayList<>();
+	
+	/**  combo servicios plan. */
 	transient List<KeyValueObject> comboServiciosPlan = new ArrayList<>();
+	
+	/**  combo servidores. */
 	transient List<KeyValueObject> comboServidores = new ArrayList<>();
+	
+	/**  combo tipos estados. */
 	transient List<KeyValueObject> comboTiposEstados = new ArrayList<>();
 	
+	/**  check del list. */
 	private String[] checkDelList;
+	
+	/**  check del list organismos servicios. */
 	private String[] checkDelListOrganismosServicios;
+	
+	/**  check del list servidor organismos. */
 	private String[] checkDelListServidorOrganismos;
+	
+	/**  check del list planificaciones organismos. */
 	private String[] checkDelListPlanificacionesOrganismos;
 	
+	/**  id organismo. */
 	private String idOrganismo;
+	
+	/**  id servicio organismo. */
 	private String idServicioOrganismo;
+	
+	/**  servidor organismo id. */
 	private String servidorOrganismoId;
+	
+	/**  id planificacion. */
 	private String idPlanificacion;
+	
+	/**  id servicio. */
 	private String idServicio;
+	
+	/**  id servidor. */
 	private String idServidor;
+	
+	/**  id proveedor SMS. */
 	private String idProveedorSMS;
+	
+	/**  id receptor SMS. */
 	private String idReceptorSMS;
+	
+	/**  id servidor push. */
 	private String idServidorPush;
 	
+	/**  result count. */
 	private String resultCount;
+	
+	/**  check password. */
 	private String checkPassword;
+	
+	/**  recovery. */
 	private String recovery = "";
+	
+	/**  session. */
+	@SuppressWarnings("rawtypes")
 	private Map session;
 	
+	/** Constante INFO_USER. */
 	private static final String INFO_USER = "infoUser";
 
+	/** Constante NO_USER. */
 	private static final String NO_USER = "noUser";
 
+	/** Constante TABLE_ID. */
 	private static final String TABLE_ID = "tableId";
 
+	/** Constante GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
 
+	/** Constante GENERALES_REQUEST_ATTRIBUTE_PAGESIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
 
+	/** Constante LOG_ACCIONID_ACTUALIZAR. */
 	private static final String LOG_ACCIONID_ACTUALIZAR = "log.ACCIONID_ACTUALIZAR";
 
+	/** Constante LOG_ACCION_ACTUALIZAR. */
 	private static final String LOG_ACCION_ACTUALIZAR = "log.ACCION_ACTUALIZAR";
 
+	/** Constante GENERALES_PAGESIZE. */
 	private static final String GENERALES_PAGESIZE = "generales.PAGESIZE";
 
+	/** Constante LOG_ACCIONID_ELIMINAR. */
 	private static final String LOG_ACCIONID_ELIMINAR = "log.ACCIONID_ELIMINAR";
 
+	/** Constante LOG_ACCION_ELIMINAR. */
 	private static final String LOG_ACCION_ELIMINAR = "log.ACCION_ELIMINAR";
 
+	/** Constante LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION. */
 	private static final String LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
 
+	/** Constante LOG_SOURCE_ORGANISMOS. */
 	private static final String LOG_SOURCE_ORGANISMOS = "log.SOURCE_ORGANISMOS";
 	
+	/** Constante RECOVERY. */
 	private static final String RECOVERY = "recovery";
 	
+	/** Constante SEPARADOR_OPCIONES_VALUES. */
 	private static final String SEPARADOR_OPCIONES_VALUES = "#";
 
+	/** Constante SEPARADOR_OPCIONES. */
 	private static final String SEPARADOR_OPCIONES = "&&";
 
 
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String newSearch() throws BaseException {
 		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
 			return OrganismosAction.NO_USER;
@@ -168,6 +260,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/**
+	 * Search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String search() throws BaseException {
 
@@ -201,6 +299,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
+	 */
 	///MIGRADO
 	public String execute() throws BaseException {
 
@@ -244,6 +345,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -286,6 +393,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	}
 	
+	/**
+	 * Valida obligatorios.
+	 *
+	 * @param aplicacion2 the aplicacion 2
+	 * @param isUpdate the is update
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validaObligatorios(OrganismoBean aplicacion2, boolean isUpdate) {
 		boolean sw = true;
@@ -301,6 +415,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return sw;
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String update() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
@@ -353,6 +473,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String load() throws BaseException {
 		try {
@@ -377,6 +503,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	}
 	
+	/**
+	 * Delete.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String delete() throws BaseException {
 		String accionPlanificacion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
@@ -422,6 +554,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	}
 
+	/**
+	 * Delete selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteSelected() throws BaseException {
 		String accionPlanificacion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
@@ -469,6 +607,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	}
 
+	/**
+	 * Delete organismo servicio selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String deleteOrganismoServicioSelected() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -508,6 +652,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+    /**
+     * Delete servidor organismos selected.
+     *
+     * @return the string
+     * @throws BaseException the base exception
+     */
     ///MIGRADO
 	public String deleteServidorOrganismosSelected() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -544,6 +694,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete planificaciones organismo selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deletePlanificacionesOrganismoSelected() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -568,6 +724,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	
+	/**
+	 * Load detalle organismo.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws InvocationTargetException the invocation target exception
+	 */
 	///MIGRADO
 	public String loadDetalleOrganismo() throws BusinessException, IllegalAccessException, InvocationTargetException {
 		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
@@ -609,6 +773,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/**
+	 * Load sevicios organismo.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<ServicioOrganismosBean> loadSeviciosOrganismo() {
 		List<ServicioOrganismosBean> lista = null;
@@ -628,6 +797,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return lista;
 	}
 
+	/**
+	 * Load servidores organismos.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<ServidoresOrganismosBean> loadServidoresOrganismos() {
 		List<ServidoresOrganismosBean> lista = null;
@@ -647,6 +821,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return lista;
 	}
 
+	/**
+	 * Agrega planificacion organismo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String addPlanificacionOrganismo() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
@@ -703,6 +883,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/**
+	 * Planificacion valida.
+	 *
+	 * @param planificacionServidor the planificacion servidor
+	 * @return true, if successful
+	 */
 	///MIGRADO
 	private boolean planificacionValida(PlanificacionBean planificacionServidor) {
 		boolean sw = true;
@@ -745,6 +931,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return sw;
 	}
 
+	/**
+	 * Valido horas.
+	 *
+	 * @param horaDesde the hora desde
+	 * @param horaHasta the hora hasta
+	 * @return true, if successful
+	 */
 	///MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
@@ -767,6 +960,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return sw;
 	}
 
+	/**
+	 * Valido formato hora.
+	 *
+	 * @param hora the hora
+	 * @return true, if successful
+	 */
 	///MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
@@ -779,6 +978,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	
+    /* (non-Javadoc)
+     * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+     */
     ///MIGRADO
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -801,6 +1003,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		}
 	}
 
+	/**
+	 * Delete planificacion organismo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deletePlanificacionOrganismo() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -820,6 +1028,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	/**
+	 * Cargar combo servicio organismos.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServicioOrganismos() {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -843,6 +1056,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return result;
 	}
 
+	/**
+	 * Cargar combo servidores organismos.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServidoresOrganismos() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -866,6 +1084,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return result;
 	}
 
+	/**
+	 * Cargar combo servidores plan.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServidoresPlan() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -889,6 +1112,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return result;
 	}
 
+	/**
+	 * Cargar combo servicios plan.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServiciosPlan() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -912,6 +1140,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return result;
 	}
 
+	/**
+	 * Agrega organismo servicios.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	@Transactional
 	public String addOrganismoServicios() throws BaseException {
@@ -968,6 +1202,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	//@Transactional(noRollbackFor = Exception.class)
+	/**
+	 * Agrega servidor organismo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String addServidorOrganismo() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ACTUALIZAR, null);
@@ -1026,6 +1266,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 
+	/**
+	 * Delete organismo servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteOrganismoServicio() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -1062,6 +1308,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 
+	/**
+	 * Delete servicio organismo.
+	 *
+	 * @param servicioOrganismoId the servicio organismo id
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private void deleteServicioOrganismo(Integer servicioOrganismoId) throws BusinessException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -1074,6 +1326,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	
+	/**
+	 * Delete servidor organismo.
+	 *
+	 * @param servidorOrganismoId the servidor organismo id
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private void deleteServidorOrganismo(Long servidorOrganismoId) throws BusinessException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -1086,6 +1344,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 	
 
+	/**
+	 * Update organismo.
+	 *
+	 * @param organismoId the organismo id
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private void updateOrganismo(Integer organismoId) throws BusinessException {
 		OrganismoBean oBean = new OrganismoBean();
@@ -1095,6 +1359,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 
+	/**
+	 * Update servicio.
+	 *
+	 * @param servicioId the servicio id
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private void updateServicio(Integer servicioId) throws BusinessException {
 		ServicioBean sBean = new ServicioBean();
@@ -1104,6 +1374,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	
+	/**
+	 * Update servidor.
+	 *
+	 * @param serv the serv
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private void updateServidor(Long serv) throws BusinessException {
 		ServidorBean sBean = new ServidorBean();
@@ -1113,6 +1389,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 	
 	
+	/**
+	 * Delete servidor organismo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServidorOrganismo() throws BaseException {
 		String accion = properties.getProperty(OrganismosAction.LOG_ACCION_ELIMINAR, null);
@@ -1144,7 +1426,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	/**
-	 * Método que resuelve el lugar donde tiene que volver
+	 * Método que resuelve el lugar donde tiene que volver.
+	 *
+	 * @return volver servicio
 	 */
 	public String getVolverServicio() {
 		String volver = "editServicio.action";
@@ -1156,6 +1440,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return volver;
 	}
 
+	/**
+	 * Obtener volver.
+	 *
+	 * @return volver
+	 */
 	@SuppressWarnings("unchecked")
 	public String getVolver() {
 		String volver = "listarOrganismos.action";
@@ -1169,6 +1458,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return volver;
 	}
 	
+	/**
+	 * Obtener tipo estados.
+	 *
+	 * @return tipo estados
+	 * @throws BusinessException the business exception
+	 */
 	public List<KeyValueObject> getTipoEstados() throws BusinessException {
 		
 		try {
@@ -1194,308 +1489,689 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 	
 	
+	/**
+	 * Modificar servidor.
+	 *
+	 * @param aplicacion new servidor
+	 */
 	public void setServidor(AplicacionBean aplicacion) {
 		this.aplicacion = aplicacion;
 	}
 
+	/**
+	 * Obtener id servidor.
+	 *
+	 * @return id servidor
+	 */
 	public String getIdServidor() {
 		return idServidor;
 	}
 
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
 
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
 
+	/**
+	 * Obtener check del list.
+	 *
+	 * @return check del list
+	 */
 	public String[] getCheckDelList() {
 		return checkDelList;
 	}
 
+	/**
+	 * Modificar check del list.
+	 *
+	 * @param checkDelList new check del list
+	 */
 	public void setCheckDelList(String[] checkDelList) {
 		this.checkDelList = checkDelList;
 	}
 
+	/**
+	 * Obtener servicio usuario aplicacion.
+	 *
+	 * @return servicio usuario aplicacion
+	 */
 	public ServicioUsuarioAplicacion getServicioUsuarioAplicacion() {
 		return servicioUsuarioAplicacion;
 	}
 
+	/**
+	 * Modificar servicio usuario aplicacion.
+	 *
+	 * @param servicioUsuarioAplicacion new servicio usuario aplicacion
+	 */
 	public void setServicioUsuarioAplicacion(ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		this.servicioUsuarioAplicacion = servicioUsuarioAplicacion;
 	}
 
+	/**  detalle aplicacion. */
 	private DetalleAplicacionBean detalleAplicacion;
 
+	/**
+	 * Obtener detalle aplicacion.
+	 *
+	 * @return detalle aplicacion
+	 */
 	public DetalleAplicacionBean getDetalleAplicacion() {
 		return detalleAplicacion;
 	}
 
+	/**
+	 * Modificar detalle aplicacion.
+	 *
+	 * @param detalleAplicacion new detalle aplicacion
+	 */
 	public void setDetalleAplicacion(DetalleAplicacionBean detalleAplicacion) {
 		this.detalleAplicacion = detalleAplicacion;
 	}
 
+	/**
+	 * Obtener servicio planificacion.
+	 *
+	 * @return servicio planificacion
+	 */
 	public ServicioPlanificacion getServicioPlanificacion() {
 		return servicioPlanificacion;
 	}
 
+	/**
+	 * Modificar servicio planificacion.
+	 *
+	 * @param servicioPlanificacion new servicio planificacion
+	 */
 	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
 		this.servicioPlanificacion = servicioPlanificacion;
 	}
 
+	/**
+	 * Obtener servicio servicio.
+	 *
+	 * @return servicio servicio
+	 */
 	public ServicioServicio getServicioServicio() {
 		return servicioServicio;
 	}
 
+	/**
+	 * Modificar servicio servicio.
+	 *
+	 * @param servicioServicio new servicio servicio
+	 */
 	public void setServicioServicio(ServicioServicio servicioServicio) {
 		this.servicioServicio = servicioServicio;
 	}
 
+	/**
+	 * Modificar servicio servidor.
+	 *
+	 * @param servicioServidor new servicio servidor
+	 */
 	public void setServicioServidor(ServicioServidor servicioServidor) {
 		this.servicioServidor = servicioServidor;
 	}
 
+	/**
+	 * Obtener servicio servidor.
+	 *
+	 * @return servicio servidor
+	 */
 	public ServicioServidor getServicioServidor() {
 		return servicioServidor;
 	}
 
 
 
+	/**
+	 * Obtener id servidor push.
+	 *
+	 * @return id servidor push
+	 */
 	public String getIdServidorPush() {
 		return idServidorPush;
 	}
 
+	/**
+	 * Modificar id servidor push.
+	 *
+	 * @param idServidorPush new id servidor push
+	 */
 	public void setIdServidorPush(String idServidorPush) {
 		this.idServidorPush = idServidorPush;
 	}
 
+	/**
+	 * Obtener servicio organismo.
+	 *
+	 * @return servicio organismo
+	 */
 	public ServicioOrganismo getServicioOrganismo() {
 		return servicioOrganismo;
 	}
 
+	/**
+	 * Modificar servicio organismo.
+	 *
+	 * @param servicioOrganismo new servicio organismo
+	 */
 	public void setServicioOrganismo(ServicioOrganismo servicioOrganismo) {
 		this.servicioOrganismo = servicioOrganismo;
 	}
 
+	/**
+	 * Obtener lista servicio organismos.
+	 *
+	 * @return lista servicio organismos
+	 */
 	public List<ServicioOrganismosBean> getListaServicioOrganismos() {
 		return listaServicioOrganismos;
 	}
 
+	/**
+	 * Modificar lista servicio organismos.
+	 *
+	 * @param listaServicioOrganismos new lista servicio organismos
+	 */
 	public void setListaServicioOrganismos(List<ServicioOrganismosBean> listaServicioOrganismos) {
 		this.listaServicioOrganismos = listaServicioOrganismos;
 	}
 
+	/**
+	 * Obtener servicio organismos.
+	 *
+	 * @return servicio organismos
+	 */
 	public ServicioOrganismosBean getServicioOrganismos() {
 		return servicioOrganismos;
 	}
 
+	/**
+	 * Modificar servicio organismos.
+	 *
+	 * @param servicioOrganismos new servicio organismos
+	 */
 	public void setServicioOrganismos(ServicioOrganismosBean servicioOrganismos) {
 		this.servicioOrganismos = servicioOrganismos;
 	}
 
+	/**
+	 * Obtener combo servicio organismos.
+	 *
+	 * @return combo servicio organismos
+	 */
 	public List<KeyValueObject> getComboServicioOrganismos() {
 		return comboServicioOrganismos;
 	}
 
+	/**
+	 * Modificar combo servicio organismos.
+	 *
+	 * @param comboServicioOrganismos new combo servicio organismos
+	 */
 	public void setComboServicioOrganismos(List<KeyValueObject> comboServicioOrganismos) {
 		this.comboServicioOrganismos = comboServicioOrganismos;
 	}
 
+	/**
+	 * Obtener servicio.
+	 *
+	 * @return servicio
+	 */
 	public ServicioBean getServicio() {
 		return servicio;
 	}
 
+	/**
+	 * Modificar servicio.
+	 *
+	 * @param servicio new servicio
+	 */
 	public void setServicio(ServicioBean servicio) {
 		this.servicio = servicio;
 	}
 
+	/**
+	 * Modificar combo servidores.
+	 *
+	 * @param comboServidores new combo servidores
+	 */
 	public void setComboServidores(List<KeyValueObject> comboServidores) {
 		this.comboServidores = comboServidores;
 	}
 
+	/**
+	 * Obtener id organismo.
+	 *
+	 * @return id organismo
+	 */
 	public String getIdOrganismo() {
 		return idOrganismo;
 	}
 
+	/**
+	 * Modificar id organismo.
+	 *
+	 * @param idOrganismo new id organismo
+	 */
 	public void setIdOrganismo(String idOrganismo) {
 		this.idOrganismo = idOrganismo;
 	}
 
+	/**
+	 * Obtener id servicio organismo.
+	 *
+	 * @return id servicio organismo
+	 */
 	public String getIdServicioOrganismo() {
 		return idServicioOrganismo;
 	}
 
+	/**
+	 * Modificar id servicio organismo.
+	 *
+	 * @param idServicioOrganismo new id servicio organismo
+	 */
 	public void setIdServicioOrganismo(String idServicioOrganismo) {
 		this.idServicioOrganismo = idServicioOrganismo;
 	}
 
+	/**
+	 * Obtener servidor organismo id.
+	 *
+	 * @return servidor organismo id
+	 */
 	public String getServidorOrganismoId() {
 		return servidorOrganismoId;
 	}
 
+	/**
+	 * Modificar servidor organismo id.
+	 *
+	 * @param servidorOrganismoId new servidor organismo id
+	 */
 	public void setServidorOrganismoId(String servidorOrganismoId) {
 		this.servidorOrganismoId = servidorOrganismoId;
 	}
 
+	/**
+	 * Obtener servidor organismo.
+	 *
+	 * @return servidor organismo
+	 */
 	public ServidoresOrganismosBean getServidorOrganismo() {
 		return servidorOrganismo;
 	}
 
+	/**
+	 * Modificar servidor organismo.
+	 *
+	 * @param servidorOrganismo new servidor organismo
+	 */
 	public void setServidorOrganismo(ServidoresOrganismosBean servidorOrganismo) {
 		this.servidorOrganismo = servidorOrganismo;
 	}
 
+	/**
+	 * Obtener lista servidores organismos.
+	 *
+	 * @return lista servidores organismos
+	 */
 	public List<ServidoresOrganismosBean> getListaServidoresOrganismos() {
 		return listaServidoresOrganismos;
 	}
 
+	/**
+	 * Modificar lista servidores organismos.
+	 *
+	 * @param listaServidoresOrganismos new lista servidores organismos
+	 */
 	public void setListaServidoresOrganismos(List<ServidoresOrganismosBean> listaServidoresOrganismos) {
 		this.listaServidoresOrganismos = listaServidoresOrganismos;
 	}
 
+	/**
+	 * Obtener combo servidores organismos.
+	 *
+	 * @return combo servidores organismos
+	 */
 	public List<KeyValueObject> getComboServidoresOrganismos() {
 		return comboServidoresOrganismos;
 	}
 
+	/**
+	 * Modificar combo servidores organismos.
+	 *
+	 * @param comboServidoresOrganismos new combo servidores organismos
+	 */
 	public void setComboServidoresOrganismos(List<KeyValueObject> comboServidoresOrganismos) {
 		this.comboServidoresOrganismos = comboServidoresOrganismos;
 	}
 
+	/**
+	 * Obtener lista planificaciones servicio.
+	 *
+	 * @return lista planificaciones servicio
+	 */
 	public List<PlanificacionBean> getListaPlanificacionesServicio() {
 		return listaPlanificacionesServicio;
 	}
 
+	/**
+	 * Modificar lista planificaciones servicio.
+	 *
+	 * @param listaPlanificacionesServicio new lista planificaciones servicio
+	 */
 	public void setListaPlanificacionesServicio(List<PlanificacionBean> listaPlanificacionesServicio) {
 		this.listaPlanificacionesServicio = listaPlanificacionesServicio;
 	}
 
+	/**
+	 * Obtener combo servidores plan.
+	 *
+	 * @return combo servidores plan
+	 */
 	public List<KeyValueObject> getComboServidoresPlan() {
 		return comboServidoresPlan;
 	}
 
+	/**
+	 * Modificar combo servidores plan.
+	 *
+	 * @param comboServidoresPlan new combo servidores plan
+	 */
 	public void setComboServidoresPlan(List<KeyValueObject> comboServidoresPlan) {
 		this.comboServidoresPlan = comboServidoresPlan;
 	}
 
+	/**
+	 * Obtener combo servicios plan.
+	 *
+	 * @return combo servicios plan
+	 */
 	public List<KeyValueObject> getComboServiciosPlan() {
 		return comboServiciosPlan;
 	}
 
+	/**
+	 * Modificar combo servicios plan.
+	 *
+	 * @param comboServiciosPlan new combo servicios plan
+	 */
 	public void setComboServiciosPlan(List<KeyValueObject> comboServiciosPlan) {
 		this.comboServiciosPlan = comboServiciosPlan;
 	}
 
+	/**
+	 * Obtener servidor.
+	 *
+	 * @return servidor
+	 */
 	public ServidorBean getServidor() {
 		return servidor;
 	}
 
+	/**
+	 * Modificar servidor.
+	 *
+	 * @param servidor new servidor
+	 */
 	public void setServidor(ServidorBean servidor) {
 		this.servidor = servidor;
 	}
 
+	/**
+	 * Obtener planificacion organismo.
+	 *
+	 * @return planificacion organismo
+	 */
 	public PlanificacionBean getPlanificacionOrganismo() {
 		return planificacionOrganismo;
 	}
 
+	/**
+	 * Modificar planificacion organismo.
+	 *
+	 * @param planificacionOrganismo new planificacion organismo
+	 */
 	public void setPlanificacionOrganismo(PlanificacionBean planificacionOrganismo) {
 		this.planificacionOrganismo = planificacionOrganismo;
 	}
 
+	/**
+	 * Obtener check del list organismos servicios.
+	 *
+	 * @return check del list organismos servicios
+	 */
 	public String[] getCheckDelListOrganismosServicios() {
 		return checkDelListOrganismosServicios;
 	}
 
+	/**
+	 * Modificar check del list organismos servicios.
+	 *
+	 * @param checkDelListOrganismosServicios new check del list organismos servicios
+	 */
 	public void setCheckDelListOrganismosServicios(String[] checkDelListOrganismosServicios) {
 		this.checkDelListOrganismosServicios = checkDelListOrganismosServicios;
 	}
 
+	/**
+	 * Obtener check del list servidor organismos.
+	 *
+	 * @return check del list servidor organismos
+	 */
 	public String[] getCheckDelListServidorOrganismos() {
 		return checkDelListServidorOrganismos;
 	}
 
+	/**
+	 * Modificar check del list servidor organismos.
+	 *
+	 * @param checkDelListServidorOrganismos new check del list servidor organismos
+	 */
 	public void setCheckDelListServidorOrganismos(String[] checkDelListServidorOrganismos) {
 		this.checkDelListServidorOrganismos = checkDelListServidorOrganismos;
 	}
 
+	/**
+	 * Obtener check del list planificaciones organismos.
+	 *
+	 * @return check del list planificaciones organismos
+	 */
 	public String[] getCheckDelListPlanificacionesOrganismos() {
 		return checkDelListPlanificacionesOrganismos;
 	}
 
+	/**
+	 * Modificar check del list planificaciones organismos.
+	 *
+	 * @param checkDelListPlanificacionesOrganismos new check del list planificaciones organismos
+	 */
 	public void setCheckDelListPlanificacionesOrganismos(String[] checkDelListPlanificacionesOrganismos) {
 		this.checkDelListPlanificacionesOrganismos = checkDelListPlanificacionesOrganismos;
 	}
+	
+	/**
+	 * Obtener check password.
+	 *
+	 * @return check password
+	 */
 	public String getCheckPassword() {
 		return checkPassword;
 	}
 
+	/**
+	 * Modificar check password.
+	 *
+	 * @param checkPassword new check password
+	 */
 	public void setCheckPassword(String checkPassword) {
 		this.checkPassword = checkPassword;
 	}
+	
+	/**
+	 * Obtener id proveedor SMS.
+	 *
+	 * @return id proveedor SMS
+	 */
 	public String getIdProveedorSMS() {
 		return idProveedorSMS;
 	}
 
+	/**
+	 * Modificar id proveedor SMS.
+	 *
+	 * @param idProveedorSMS new id proveedor SMS
+	 */
 	public void setIdProveedorSMS(String idProveedorSMS) {
 		this.idProveedorSMS = idProveedorSMS;
 	}
 
+	/**
+	 * Obtener id receptor SMS.
+	 *
+	 * @return id receptor SMS
+	 */
 	public String getIdReceptorSMS() {
 		return idReceptorSMS;
 	}
 
+	/**
+	 * Modificar id receptor SMS.
+	 *
+	 * @param idReceptorSMS new id receptor SMS
+	 */
 	public void setIdReceptorSMS(String idReceptorSMS) {
 		this.idReceptorSMS = idReceptorSMS;
 	}
 
+	/**
+	 * Modificar id servidor.
+	 *
+	 * @param idServidor new id servidor
+	 */
 	public void setIdServidor(String idServidor) {
 		this.idServidor = idServidor;
 	}
 
+	/**
+	 * Obtener id servicio.
+	 *
+	 * @return id servicio
+	 */
 	public String getIdServicio() {
 		return idServicio;
 	}
 
+	/**
+	 * Modificar id servicio.
+	 *
+	 * @param idServicio new id servicio
+	 */
 	public void setIdServicio(String idServicio) {
 		this.idServicio = idServicio;
 	}
 
+	/**
+	 * Obtener lista organismos.
+	 *
+	 * @return lista organismos
+	 */
 	public List<OrganismoBean> getListaOrganismos() {
 		return listaOrganismos;
 	}
 
+	/**
+	 * Modificar lista organismos.
+	 *
+	 * @param listaOrganismos new lista organismos
+	 */
 	public void setListaOrganismos(List<OrganismoBean> listaOrganismos) {
 		this.listaOrganismos = listaOrganismos;
 	}
 
+	/**
+	 * Obtener organismo.
+	 *
+	 * @return organismo
+	 */
 	public OrganismoBean getOrganismo() {
 		return organismo;
 	}
 
+	/**
+	 * Modificar organismo.
+	 *
+	 * @param organismo new organismo
+	 */
 	public void setOrganismo(OrganismoBean organismo) {
 		this.organismo = organismo;
 	}
 
+	/**
+	 * Obtener aplicacion.
+	 *
+	 * @return aplicacion
+	 */
 	public AplicacionBean getAplicacion() {
 		return aplicacion;
 	}
 
+	/**
+	 * Modificar aplicacion.
+	 *
+	 * @param aplicacion new aplicacion
+	 */
 	public void setAplicacion(AplicacionBean aplicacion) {
 		this.aplicacion = aplicacion;
 	}
+	
+	/**
+	 * Obtener combo servidores.
+	 *
+	 * @return combo servidores
+	 */
 	public List<KeyValueObject> getComboServidores() {
 		return comboServidores;
 	}
 
+	/**
+	 * Obtener id planificacion.
+	 *
+	 * @return id planificacion
+	 */
 	public String getIdPlanificacion() {
 		return idPlanificacion;
 	}
 
+	/**
+	 * Modificar id planificacion.
+	 *
+	 * @param idPlanificacion new id planificacion
+	 */
 	public void setIdPlanificacion(String idPlanificacion) {
 		this.idPlanificacion = idPlanificacion;
 	}
 
 	/**
+	 * Obtener combo tipos estados.
+	 *
 	 * @return the comboTiposEstados
 	 */
 	public List<KeyValueObject> getComboTiposEstados() {
@@ -1503,10 +2179,32 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	/**
+	 * Modificar combo tipos estados.
+	 *
 	 * @param comboTiposEstados the comboTiposEstados to set
 	 */
 	public void setComboTiposEstados(List<KeyValueObject> comboTiposEstados) {
 		this.comboTiposEstados = comboTiposEstados;
+	}
+
+
+	/**
+	 * Obtener recovery.
+	 *
+	 * @return recovery
+	 */
+	public String getRecovery() {
+		return recovery;
+	}
+
+
+	/**
+	 * Modificar recovery.
+	 *
+	 * @param recovery new recovery
+	 */
+	public void setRecovery(String recovery) {
+		this.recovery = recovery;
 	}
 	
 }

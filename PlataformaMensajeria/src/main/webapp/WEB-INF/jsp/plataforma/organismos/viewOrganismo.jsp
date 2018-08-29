@@ -225,7 +225,7 @@
 	                        </p>
                         </s:if>
                         
-                        <s:if test='#detalleServicio.pendienteAprobacion == "1"'>
+                        <s:if test='#detalleServicio.pendienteaprobacion == "1"'>
 	                        <p class="criteria">
 	                            <label class="fieldText" style="width: 120px;">Estado</label>
 	                            <strong>Pendiente de aprobación</strong>

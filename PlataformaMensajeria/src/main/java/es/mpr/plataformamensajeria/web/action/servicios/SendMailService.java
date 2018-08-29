@@ -26,18 +26,34 @@ import com.sun.mail.smtp.SMTPAddressFailedException;
 
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 
+/**
+ * Clase SendMailService.
+ */
 ////MIGRADO
 public class SendMailService extends HttpServlet  {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(SendMailService.class);
 	
+	/**  send mail service. */
 	private static SendMailService sendMailService = new SendMailService();
 	
+	/**  caracter separador lineas. */
 	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; //El salto de linea esta preparado para el correo en formato HTML
 	
 	
+	/**
+	 * Inits the servicio.
+	 *
+	 * @param usuario the usuario
+	 * @param aplicacion the aplicacion
+	 * @param servicioId the servicio id
+	 * @param configProp the config prop
+	 * @throws ServletException the servlet exception
+	 */
 	////MIGRADO
 	public void initServicio(String usuario, String aplicacion, String servicioId, PlataformaMensajeriaProperties configProp) throws ServletException{	
 		try {
@@ -58,6 +74,15 @@ public class SendMailService extends HttpServlet  {
 		}
 	}
 	
+	/**
+	 * Inits the job.
+	 *
+	 * @param nombreJob the nombre job
+	 * @param resultado the resultado
+	 * @param descripcionJob the descripcion job
+	 * @param configProp the config prop
+	 * @throws ServletException the servlet exception
+	 */
 	///MIGRADO
 	public void initJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp) throws ServletException{		
 		try {
@@ -78,6 +103,16 @@ public class SendMailService extends HttpServlet  {
 		}
 	}
 	
+	/**
+	 * Inits the informes servicios.
+	 *
+	 * @param nombreJob the nombre job
+	 * @param resultado the resultado
+	 * @param emails the emails
+	 * @param descripcionJob the descripcion job
+	 * @param configProp the config prop
+	 * @throws ServletException the servlet exception
+	 */
 	////MIGRADO
 	public void initInformesServicios(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp) throws ServletException{
 		try {    
@@ -98,16 +133,25 @@ public class SendMailService extends HttpServlet  {
 		}
 	}
 	
+	/**
+	 * Constructor de send mail service.
+	 */
 	public SendMailService() {
 		super();
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		super.doGet(req, resp);
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		super.doPost(req, resp);
@@ -115,6 +159,12 @@ public class SendMailService extends HttpServlet  {
 	
 	/**
 	 * ENVIA EL CORREO A TRAVES DEL mail.jar (Transport) NOTIFICANDO EL ALTA DE UN SERVICIO POR PARTE DE UN USUARIO PROPIETARIO
+	 *
+	 * @param usuario the usuario
+	 * @param aplicacion the aplicacion
+	 * @param servicioId the servicio id
+	 * @param configProp the config prop
+	 * @throws Exception the exception
 	 */
 	////MIGRADO
 	private void sendMailServicio(String usuario, String aplicacion, String servicioId, PlataformaMensajeriaProperties configProp) throws Exception {
@@ -214,6 +264,12 @@ public class SendMailService extends HttpServlet  {
 	
 	/**
 	 * ENVIA EL CORREO A TRAVES DEL mail.jar (Transport) NOTIFICANDO EL RESULTADO DE EJECUCION DEL LOS JOBS
+	 *
+	 * @param nombreJob the nombre job
+	 * @param resultado the resultado
+	 * @param descripcionJob the descripcion job
+	 * @param configProp the config prop
+	 * @throws Exception the exception
 	 */
 	////MIGRADO
 	private void sendMailJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp) throws Exception {
@@ -314,6 +370,13 @@ public class SendMailService extends HttpServlet  {
 	
 	/**
 	 * ENVIA EL CORREO A TRAVES DEL mail.jar (Transport) NOTIFICANDO EL RESULTADO DE EJECUCION DEL LOS JOBS
+	 *
+	 * @param nombreJob the nombre job
+	 * @param resultado the resultado
+	 * @param emails the emails
+	 * @param descripcionJob the descripcion job
+	 * @param configProp the config prop
+	 * @throws Exception the exception
 	 */
 	////MIGRADO
 	private void sendMailJobWithEmails(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp) throws Exception {
@@ -402,6 +465,13 @@ public class SendMailService extends HttpServlet  {
 		Transport.send(msg);
 	}
 	
+	/**
+	 * Recuperar internet address.
+	 *
+	 * @param address the address
+	 * @return the array list
+	 * @throws AddressException the address exception
+	 */
 	// METODO QUE RECUPERA LOS DESTINATARIOS POR EL TIPO (CC,TO,BCC)
 	private ArrayList<String> recuperarInternetAddress(String address) throws AddressException {
 		
@@ -426,6 +496,13 @@ public class SendMailService extends HttpServlet  {
 	}
 	
 	// METODO QUE ANADE LOS DESTINATARIOS POR EL TIPO (CC,TO,BCC)
+	/**
+	 * Generate internet address.
+	 *
+	 * @param recipients the recipients
+	 * @return the internet address[]
+	 * @throws AddressException the address exception
+	 */
 	////MIGRADO
 	private InternetAddress[] generateInternetAddress(ArrayList<String> recipients) throws AddressException {
 		

@@ -62,6 +62,8 @@
                 <h3 id="desplegable7"><a href="buscarEstadisticas.action">Estadísticas Generales</a></h3>
                 
                <h3 id="desplegable8"><a href="buscarUsuariosPush.action">Usuarios Push</a></h3> 
+               
+                <h3 id="desplegable9"><a href="buscarUsuariosWebPush.action">Usuarios Web Push</a></h3>                
                 <!-- <ul>
                     <li><a href="#" class="CanalEMAIL">Canal EMAIL</a></li>
                     <li><a href="#" class="CanalSMS">Canal SMS</a></li>
@@ -78,9 +80,10 @@
                 <h3 id="desplegable7"><a href="buscarEstadisticas.action">Estadísticas Generales</a></h3>
                 
                 <h3 id="desplegable8"><a href="buscarUsuariosPush.action">Usuarios Push</a></h3> 
-<!--                 nat -->
-                <h3 id="desplegable9"><a href="envioMensajesHome.action">Envío de Mensajes</a></h3> 
-<!--                 nat -->
+                
+                <h3 id="desplegable9"><a href="buscarUsuariosWebPush.action">Usuarios Web Push</a></h3> 
+                
+                <h3 id="desplegable10"><a href="envioMensajesHome.action">Envío de Mensajes</a></h3> 
                 <!-- <ul>
                     <li><a href="#" class="CanalEMAIL">Canal EMAIL</a></li>
                     <li><a href="#" class="CanalSMS">Canal SMS</a></li>
@@ -163,12 +166,12 @@ function cargar(){
 		elem1.style.backgroundColor="#003366";
 		elem1.style.color = "white";
 		menu1=2;
-	}else if(url.endsWith('buscarServicios.action') || url.includes('Servicio.action')){
+	}else if(url.endsWith('buscarServicios.action') || url.includes('Servicio.action') || url.includes('aplicacionSelectEvent.action')){
 		elem1 = document.getElementById('desplegable22');
 		elem1.style.backgroundColor="#003366";
 		elem1.style.color = "white";
 		menu1=2;		
-	}else if(url.endsWith('buscarPlanificaciones.action') || url.includes('Planificacion.action') || url.includes('aplicacionSelectEvent.action')){
+	}else if(url.endsWith('buscarPlanificaciones.action') || url.includes('Planificacion.action')){
 		elem1 = document.getElementById('desplegable23');
 		elem1.style.backgroundColor="#003366";
 		elem1.style.color = "white";
@@ -208,8 +211,13 @@ function cargar(){
 		elem1 = document.getElementById('desplegable8');
 		elem1.style.backgroundColor="#003366";
 		menu1=4;
-	}else if(url.endsWith('envioMensajesHome.action') || url.endsWith('envioMensajesAplicacion.action')){
+	}else if(url.includes('UsuariosWebPush.action')){
 		elem1 = document.getElementById('desplegable9');
+		elem1.style.backgroundColor="#003366";
+		menu1=4;
+	}
+	else if(url.endsWith('envioMensajesHome.action') || url.endsWith('envioMensajesAplicacion.action')){
+		elem1 = document.getElementById('desplegable10');
 		elem1.style.backgroundColor="#003366";
 		menu1=4;
 	}else if(url.includes('viewAplicacion.action')){

@@ -27,6 +27,7 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>
  * Clase Action de Struts2 para la gesti&oacute;n de los organismos.
@@ -42,46 +43,73 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class EjecucionJobAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(EjecucionJobAction.class);
 
+	/**  servicio servicio. */
 	@Resource(name = "servicioServicioImpl")
 	private transient ServicioServicio servicioServicio;
 	
+	/**  estadisticas consolidadas job. */
 	@Resource(name = "estadisticasConsolidadasJob")
 	private transient EstadisticasConsolidadasJob estadisticasConsolidadasJob;
 	
+	/**  historificacion job. */
 	@Resource(name = "historificacionJob")
 	private transient HistorificacionJob historificacionJob;
 	
+	/**  informes servicios job. */
 	@Resource(name = "informesServiciosJob")
 	private transient InformesServiciosJob informesServiciosJob;
 	
+	/**  recuperar infor DIR job. */
 	@Resource(name = "recuperarInforDIRJob")
 	private transient RecuperarInforDIRJob recuperarInforDIRJob;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private transient PlataformaMensajeriaProperties properties;
 	
 //	@Resource(name = "pushServiceImpl")
 //	private IPushService pushServiceImpl;
 
-	private JobBean jobBean;
+	/**  job bean. */
+private JobBean jobBean;
 	
+	/** Constante INFO_USER. */
 	private static final String INFO_USER = "infoUser";
 
+	/** Constante NO_USER. */
 	private static final String NO_USER = "noUser";
 
+	/**  combo servicios. */
 	transient List<KeyValueObject> comboServicios = new ArrayList<>();
+	
+	/**  combo jobs. */
 	transient List<KeyValueObject> comboJobs = new ArrayList<>();
 	
+	/** Constante PROC_HIST. */
 	private static final String PROC_HIST = "HISTORIFICACION";
+	
+	/** Constante PROC_CONS. */
 	private static final String PROC_CONS = "CONSERVACION";
+	
+	/** Constante PROC_INFORMES. */
 	private static final String PROC_INFORMES = "INFORMES_SERVICIOS";
+	
+	/** Constante PROC_DIR3. */
 	private static final String PROC_DIR3 = "DIR3";
 	
 
+	/**
+	 * Ejecucion job action.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String ejecucionJobAction() throws BaseException {
 		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
@@ -92,6 +120,12 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		return SUCCESS;
 	}
 	
+	/**
+	 * Seleccionar job action.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	// ///MIGRADO
 	public String seleccionarJobAction() throws BaseException {
 		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
@@ -122,6 +156,12 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		return SUCCESS;
 	}
 
+/**
+ * Cargar servicios conservacion event.
+ *
+ * @return the string
+ * @throws BaseException the base exception
+ */
 /////MIGRADO
 	public String cargarServiciosConservacionEvent() throws BaseException {
 		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
@@ -140,6 +180,9 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		return SUCCESS;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	///MIGRADO
 		@Override
 		public void prepare() throws Exception {
@@ -147,9 +190,10 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		}
 		
 		/**
-		 * 
-		 * @return
-		 * @throws BusinessException
+		 * Obtener combo servicios.
+		 *
+		 * @return combo servicios
+		 * @throws BusinessException the business exception
 		 */
 		////MIGRADO
 	public List<KeyValueObject> getComboServicios() throws BusinessException {
@@ -175,6 +219,12 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		return result;
 	}
 	
+	/**
+	 * Obtener combo servicios conservacion.
+	 *
+	 * @return combo servicios conservacion
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 public List<KeyValueObject> getComboServiciosConservacion() throws BusinessException {
 	List<KeyValueObject> result = new ArrayList<>();
@@ -200,9 +250,10 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 }
 		
 		/**
-		 * 
-		 * @return
-		 * @throws BusinessException
+		 * Obtener combo jobs.
+		 *
+		 * @return combo jobs
+		 * @throws BusinessException the business exception
 		 */
 		////MIGRADO
 	public List<KeyValueObject> getComboJobs() throws BusinessException {
@@ -230,6 +281,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 	}
 
 		/**
+		 * Obtener servicio servicio.
+		 *
 		 * @return the servicioServicio
 		 */
 		public ServicioServicio getServicioServicio() {
@@ -237,6 +290,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Modificar servicio servicio.
+		 *
 		 * @param servicioServicio the servicioServicio to set
 		 */
 		public void setServicioServicio(ServicioServicio servicioServicio) {
@@ -244,6 +299,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Obtener properties.
+		 *
 		 * @return the properties
 		 */
 		public PlataformaMensajeriaProperties getProperties() {
@@ -251,6 +308,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Modificar properties.
+		 *
 		 * @param properties the properties to set
 		 */
 		public void setProperties(PlataformaMensajeriaProperties properties) {
@@ -258,6 +317,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Obtener job bean.
+		 *
 		 * @return the jobBean
 		 */
 		public JobBean getJobBean() {
@@ -265,6 +326,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Modificar job bean.
+		 *
 		 * @param jobBean the jobBean to set
 		 */
 		public void setJobBean(JobBean jobBean) {
@@ -272,6 +335,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Modificar combo servicios.
+		 *
 		 * @param comboServicios the comboServicios to set
 		 */
 		public void setComboServicios(List<KeyValueObject> comboServicios) {
@@ -279,6 +344,8 @@ public List<KeyValueObject> getComboServiciosConservacion() throws BusinessExcep
 		}
 
 		/**
+		 * Modificar combo jobs.
+		 *
 		 * @param comboJobs the comboJobs to set
 		 */
 		public void setComboJobs(List<KeyValueObject> comboJobs) {

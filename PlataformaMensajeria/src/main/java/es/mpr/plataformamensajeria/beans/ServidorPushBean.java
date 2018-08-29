@@ -6,13 +6,15 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 
 /**
  * <p>
- * Clase que representa un servidor Push para la capa de presentaci&oacute;n
- * 
+ * Clase que representa un servidor Push para la capa de presentaci&oacute;n.
+ *
  * @author jgonzvil
- * 
  */
 public class ServidorPushBean implements Audit {
 
+	/**
+	 * Constructor de servidor push bean.
+	 */
 	public ServidorPushBean() {
 		super();
 		this.servidorPushId = null;
@@ -31,21 +33,53 @@ public class ServidorPushBean implements Audit {
 		this.urlfeedback = null;
 	}
 
+	/**  servidor push id. */
 	protected Long servidorPushId;
+	
+	/**  nombre. */
 	protected String nombre = null;
+	
+	/**  descripcion. */
 	protected String descripcion = null;
+	
+	/**  pordefecto. */
 	protected Boolean pordefecto = null;
+	
+	/**  activo. */
 	protected Boolean activo = null;
+	
+	/**  fechacreacion. */
 	protected Date fechacreacion = null;
+	
+	/**  creadopor. */
 	protected String creadopor = null;
+	
+	/**  fechamodificacion. */
 	protected Date fechamodificacion = null;
+	
+	/**  modificadopor. */
 	protected String modificadopor = null;
+	
+	/**  urldestino. */
 	protected String urldestino = null;
+	
+	/**  tipo. */
 	protected Integer tipo = null;
+	
+	/**  externalid. */
 	protected String externalid = null;
+	
+	/**  plataformaid. */
 	protected Integer plataformaid = null;
+	
+	/**  urlfeedback. */
 	protected String urlfeedback = null;
 
+	/**
+	 * Modificar defecto.
+	 *
+	 * @param defecto new defecto
+	 */
 	public void setDefecto(String defecto) {
 		if (defecto != null && defecto.equals("true")) {
 			this.pordefecto = true;
@@ -54,6 +88,11 @@ public class ServidorPushBean implements Audit {
 		}
 	}
 
+	/**
+	 * Obtener defecto.
+	 *
+	 * @return defecto
+	 */
 	public String getDefecto() {
 		if (pordefecto != null && pordefecto) {
 			return "true";
@@ -65,6 +104,11 @@ public class ServidorPushBean implements Audit {
 
 	}
 
+	/**
+	 * Modificar activado.
+	 *
+	 * @param activado new activado
+	 */
 	public void setActivado(String activado) {
 		if (activado != null && activado.equals("true")) {
 			this.activo = true;
@@ -73,6 +117,11 @@ public class ServidorPushBean implements Audit {
 		}
 	}
 
+	/**
+	 * Obtener activado.
+	 *
+	 * @return activado
+	 */
 	public String getActivado() {
 		if (activo != null && activo) {
 			return "true";
@@ -84,6 +133,11 @@ public class ServidorPushBean implements Audit {
 
 	}
 
+	/**
+	 * Obtener checks if is defecto.
+	 *
+	 * @return checks if is defecto
+	 */
 	public String getIsDefecto() {
 		if (pordefecto != null && pordefecto) {
 			return "<span class='activo'></span>";
@@ -95,6 +149,11 @@ public class ServidorPushBean implements Audit {
 
 	}
 
+	/**
+	 * Modificar checks if is defecto.
+	 *
+	 * @param isDefecto new checks if is defecto
+	 */
 	public void setIsDefecto(String isDefecto) {
 		if (isDefecto != null && isDefecto.equals("true")) {
 			this.pordefecto = true;
@@ -104,6 +163,11 @@ public class ServidorPushBean implements Audit {
 
 	}
 
+	/**
+	 * Obtener checks if is activo.
+	 *
+	 * @return checks if is activo
+	 */
 	public String getIsActivo() {
 		if (activo != null && activo) {
 			return "<span class='activo'></span>";
@@ -115,6 +179,11 @@ public class ServidorPushBean implements Audit {
 
 	}
 
+	/**
+	 * Modificar checks if is activo.
+	 *
+	 * @param isActivo new checks if is activo
+	 */
 	public void setIsActivo(String isActivo) {
 		if (isActivo != null && isActivo.equals("true")) {
 			this.activo = true;
@@ -124,15 +193,27 @@ public class ServidorPushBean implements Audit {
 
 	}
 
+	/**
+	 * Obtener id.
+	 *
+	 * @return id
+	 */
 	public Long getId() {
 		return servidorPushId;
 	}
 
+	/**
+	 * Modificar id.
+	 *
+	 * @param servidorPushId new id
+	 */
 	public void setId(Long servidorPushId) {
 		this.servidorPushId = servidorPushId;
 	}
 
 	/**
+	 * Obtener servidor push id.
+	 *
 	 * @return the servidorPushId
 	 */
 	public Long getServidorPushId() {
@@ -140,14 +221,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param servidorPushId
-	 *            the servidorPushId to set
+	 * Modificar servidor push id.
+	 *
+	 * @param servidorPushId            the servidorPushId to set
 	 */
 	public void setServidorPushId(Long servidorPushId) {
 		this.servidorPushId = servidorPushId;
 	}
 
 	/**
+	 * Obtener nombre.
+	 *
 	 * @return the nombre
 	 */
 	public String getNombre() {
@@ -155,14 +239,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * Modificar nombre.
+	 *
+	 * @param nombre            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
+	 * Obtener descripcion.
+	 *
 	 * @return the descripcion
 	 */
 	public String getDescripcion() {
@@ -170,14 +257,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * Modificar descripcion.
+	 *
+	 * @param descripcion            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
+	 * Obtener pordefecto.
+	 *
 	 * @return the pordefecto
 	 */
 	public Boolean getPordefecto() {
@@ -185,14 +275,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param pordefecto
-	 *            the pordefecto to set
+	 * Modificar pordefecto.
+	 *
+	 * @param pordefecto            the pordefecto to set
 	 */
 	public void setPordefecto(Boolean pordefecto) {
 		this.pordefecto = pordefecto;
 	}
 
 	/**
+	 * Obtener activo.
+	 *
 	 * @return the activo
 	 */
 	public Boolean getActivo() {
@@ -200,14 +293,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param activo
-	 *            the activo to set
+	 * Modificar activo.
+	 *
+	 * @param activo            the activo to set
 	 */
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
 
 	/**
+	 * Obtener fechacreacion.
+	 *
 	 * @return the fechacreacion
 	 */
 	public Date getFechacreacion() {
@@ -215,14 +311,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param fechacreacion
-	 *            the fechacreacion to set
+	 * Modificar fechacreacion.
+	 *
+	 * @param fechacreacion            the fechacreacion to set
 	 */
 	public void setFechacreacion(Date fechacreacion) {
 		this.fechacreacion = fechacreacion;
 	}
 
 	/**
+	 * Obtener creadopor.
+	 *
 	 * @return the creadopor
 	 */
 	public String getCreadopor() {
@@ -230,14 +329,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param creadopor
-	 *            the creadopor to set
+	 * Modificar creadopor.
+	 *
+	 * @param creadopor            the creadopor to set
 	 */
 	public void setCreadopor(String creadopor) {
 		this.creadopor = creadopor;
 	}
 
 	/**
+	 * Obtener fechamodificacion.
+	 *
 	 * @return the fechamodificacion
 	 */
 	public Date getFechamodificacion() {
@@ -245,14 +347,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param fechamodificacion
-	 *            the fechamodificacion to set
+	 * Modificar fechamodificacion.
+	 *
+	 * @param fechamodificacion            the fechamodificacion to set
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
 	}
 
 	/**
+	 * Obtener urldestino.
+	 *
 	 * @return the urldestino
 	 */
 	public String getUrldestino() {
@@ -260,14 +365,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param urldestino
-	 *            the urldestino to set
+	 * Modificar urldestino.
+	 *
+	 * @param urldestino            the urldestino to set
 	 */
 	public void setUrldestino(String urldestino) {
 		this.urldestino = urldestino;
 	}
 
 	/**
+	 * Obtener tipo.
+	 *
 	 * @return the tipo
 	 */
 	public Integer getTipo() {
@@ -275,14 +383,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param tipo
-	 *            the tipo to set
+	 * Modificar tipo.
+	 *
+	 * @param tipo            the tipo to set
 	 */
 	public void setTipo(Integer tipo) {
 		this.tipo = tipo;
 	}
 
 	/**
+	 * Obtener externalid.
+	 *
 	 * @return the externalid
 	 */
 	public String getExternalid() {
@@ -290,14 +401,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param externalid
-	 *            the externalid to set
+	 * Modificar externalid.
+	 *
+	 * @param externalid            the externalid to set
 	 */
 	public void setExternalid(String externalid) {
 		this.externalid = externalid;
 	}
 
 	/**
+	 * Obtener plataformaid.
+	 *
 	 * @return the plataformaid
 	 */
 	public Integer getPlataformaid() {
@@ -305,14 +419,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param plataformaid
-	 *            the plataformaid to set
+	 * Modificar plataformaid.
+	 *
+	 * @param plataformaid            the plataformaid to set
 	 */
 	public void setPlataformaid(Integer plataformaid) {
 		this.plataformaid = plataformaid;
 	}
 
 	/**
+	 * Obtener modificadopor.
+	 *
 	 * @return the modificadopor
 	 */
 	public String getModificadopor() {
@@ -320,14 +437,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param modificadopor
-	 *            the modificadopor to set
+	 * Modificar modificadopor.
+	 *
+	 * @param modificadopor            the modificadopor to set
 	 */
 	public void setModificadopor(String modificadopor) {
 		this.modificadopor = modificadopor;
 	}
 
 	/**
+	 * Obtener urlfeedback.
+	 *
 	 * @return the urlfeedback
 	 */
 	public String getUrlfeedback() {
@@ -335,13 +455,17 @@ public class ServidorPushBean implements Audit {
 	}
 
 	/**
-	 * @param urlfeedback
-	 *            the urlfeedback to set
+	 * Modificar urlfeedback.
+	 *
+	 * @param urlfeedback            the urlfeedback to set
 	 */
 	public void setUrlfeedback(String urlfeedback) {
 		this.urlfeedback = urlfeedback;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
+	 */
 	@Override
 	public String obtenerXML() {
 		return null;

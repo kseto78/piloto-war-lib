@@ -12,18 +12,18 @@ import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 
 /**
- * <p>Clase que gestiona los usuarios (alias) y sus contrase&ntilde;a para permitir el mecanismo callback en WS-Security<p>
- * 
- * @author Altran
+ * <p>Clase que gestiona los usuarios (alias) y sus contrase&ntilde;a para permitir el mecanismo callback en WS-Security<p>.
  *
+ * @author Altran
  */
 public class ServerPasswordCallback implements CallbackHandler {
 
+    /**  passwords. */
     private Map<String, String> passwords =
         new HashMap<String, String>();
 
     /**
-     * <p>Establecemos cada alias/contrase&ntilde;a</p>
+     * <p>Establecemos cada alias/contrase&ntilde;a</p>.
      */
     public ServerPasswordCallback() {
     	passwords.put("framework","changeit");
@@ -32,10 +32,11 @@ public class ServerPasswordCallback implements CallbackHandler {
     }
 
     /**
-     * <p>Validamos la contrase&ntilde;a para cada objeto Callback</p>
-     * 
-     * @param callbacks
-     * 		{@link Callback[]}
+     * <p>Validamos la contrase&ntilde;a para cada objeto Callback</p>.
+     *
+     * @param callbacks 		{@link Callback[]}
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws UnsupportedCallbackException the unsupported callback exception
      */
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         for (int i = 0; i < callbacks.length; i++) {

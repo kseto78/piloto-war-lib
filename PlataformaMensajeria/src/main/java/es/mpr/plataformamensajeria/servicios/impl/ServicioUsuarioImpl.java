@@ -39,20 +39,28 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioUsuarioImpl")
 public class ServicioUsuarioImpl implements ServicioUsuario{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioUsuarioImpl.class);
 	
+	/**  view usuarios manager. */
 	@Resource(name="ViewUsuariosManagerImpl")
 	private ViewUsuariosManager viewUsuariosManager;
 	
+	/**  tbl usuarios. */
 	@Resource(name= "tblUsuariosManagerImpl")
 	private TblUsuariosManager tblUsuarios;
 	
+	/**  tbl usuarios push. */
 	@Resource(name= "TblUsuariosPushManagerImpl")
 	private TblUsuariosPushManager tblUsuariosPush;
 	
+	/**  query executor usuarios push. */
 	@Resource
 	private QueryExecutorUsuariosPush queryExecutorUsuariosPush;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#getUsuarios(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.UsuarioBean)
+	 */
 	///MIGRADO
 	@Override
 	public PaginatedList<UsuarioBean> getUsuarios(int start, int size, String order,
@@ -104,6 +112,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#getUsuariosByServicioMovilId(java.lang.Long)
+	 */
 	@Override
 	public List<UsuariosPushBean> getUsuariosByServicioMovilId(Long servicioMovilId) throws BusinessException {
 	
@@ -127,6 +138,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 }
 	
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#newUsuario(es.mpr.plataformamensajeria.beans.UsuarioBean, java.lang.String, java.lang.String, java.lang.Long)
+ */
 /////MIGRADO
 	@Override
 	@Transactional
@@ -150,6 +164,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#existeUsuario(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -162,6 +179,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#existeUsuarioEdicion(java.lang.Integer, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -179,6 +199,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		return res;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#updateUsuario(es.mpr.plataformamensajeria.beans.UsuarioBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -196,6 +219,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 	
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#loadUsuario(es.mpr.plataformamensajeria.beans.UsuarioBean)
+	 */
 	////MIGRADO
 	@Override
 	public UsuarioBean loadUsuario(UsuarioBean usuario) throws BusinessException {
@@ -209,6 +235,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		}	
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#deleteUsuario(es.mpr.plataformamensajeria.beans.UsuarioBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -222,16 +251,19 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario#getRolIdByUsername(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public Integer getRolIdByUsername(String userName) {
 		return tblUsuarios.getRolByUsername(userName);
 	}
+	
 	/**
-	 * <p>Obtenemos un objeto TblUsuarios a partir de un objeto UsuarioBean</p>
-	 * 
-	 * @param usuario 
-	 * 
+	 * <p>Obtenemos un objeto TblUsuarios a partir de un objeto UsuarioBean</p>.
+	 *
+	 * @param usuario the usuario
 	 * @return objeto TblUsuarios
 	 */
 	////MIGRADO
@@ -252,11 +284,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 
 		return u;
 	}
+	
 	/**
-	 * <p>Obtenemos un objeto UsuarioBean a partir de un objeto UsuarioJPA</p>
-	 * 
-	 * @param usuario
-	 * 
+	 * <p>Obtenemos un objeto UsuarioBean a partir de un objeto UsuarioJPA</p>.
+	 *
+	 * @param usuario the usuario
 	 * @return objeto UsuarioBean
 	 */
 	////MIGRADO
@@ -279,6 +311,12 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 	}	
 	
 	
+	/**
+	 * Obtener list usuario bean.
+	 *
+	 * @param lista the lista
+	 * @return list usuario bean
+	 */
 	private List<UsuarioBean> getListUsuarioBean(List<TblUsuarios> lista) {
 		List<UsuarioBean> result = new ArrayList<>();
 		

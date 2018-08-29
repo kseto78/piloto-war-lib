@@ -122,7 +122,7 @@
                         <s:textarea  name="servicio.descripcion" id="servicio.descripcion" theme="simple" rows="6" cols="70" value="%{servicio.descripcion}"> </s:textarea>
                     </p>
                     
-                    <s:if test='%{servicio.pendienteaprobacion == "true"}'>
+                    <s:if test='%{servicio.pendienteaprobacion == "1"}'>
                         <p class="criteria">
                             <label class="fieldText" style="width: 120px;">Estado</label>
                             <strong>Pendiente de aprobación</strong>

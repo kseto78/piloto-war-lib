@@ -29,11 +29,16 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioCanal;
 @Service("servicioCanalImpl")
 public class ServicioCanalImpl implements ServicioCanal{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioCanalImpl.class);
 	
+	/**  tbl canales manager. */
 	@Resource(name="tblCanalesManagerImpl")
 	private TblCanalesManager tblCanalesManager;
 		
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioCanal#getCanales()
+	 */
 	///MIGRADO
 	@Override
 	public List<CanalBean> getCanales()
@@ -51,11 +56,11 @@ public class ServicioCanalImpl implements ServicioCanal{
 	}
 
 	/**
-	 * <p>Convertirmos una lista de CanalJPA a una lista de ServidoresBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de CanalJPA a una lista de ServidoresBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<CanalBean> getListCanalBean(List<TblCanales> lista) throws BusinessException

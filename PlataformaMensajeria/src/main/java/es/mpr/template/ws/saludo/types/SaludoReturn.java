@@ -35,10 +35,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "saludoReturn")
 public class SaludoReturn {
 
+    /**  response type. */
     @XmlElement(required = true)
     protected String responseType;
 
     /**
+     * Obtener response type.
+     *
      * @return Devuelve el valor de la propiedad responseType
      */
     public String getResponseType() {
@@ -46,10 +49,9 @@ public class SaludoReturn {
     }
 
     /**
-     * Establece el valor de la propiedad responseType
-     * 
-     * @param value 
-     *     
+     * Establece el valor de la propiedad responseType.
+     *
+     * @param value new response type
      */
     public void setResponseType(String value) {
         this.responseType = value;

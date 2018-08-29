@@ -31,39 +31,56 @@ public class ServicioMensajesHistoricosImpl implements ServicioMensajesHistorico
 	
 //	private static Logger logger = Logger.getLogger(ServicioMensajesHistoricosImpl.class);
 	
-	@Resource(name = "TblMensajesHistManagerImpl")
+	/**  tbl mensajes hist manager. */
+@Resource(name = "TblMensajesHistManagerImpl")
 	private TblMensajesHistManager tblMensajesHistManager;
 	
+	/**  tbl mensajes manager. */
 	@Resource(name = "TblMensajesManagerImpl")
 	private TblMensajesManager tblMensajesManager;
 	
+	/**  query executor mensajes. */
 	@Resource(name = "QueryExecutorMensajesImpl")
 	private QueryExecutorMensajes queryExecutorMensajes;
 	
+	/**  query executor mensajes hist. */
 	@Resource(name = "QueryExecutorMensajesHistImpl")
 	private QueryExecutorMensajesHist queryExecutorMensajesHist;
 	
 	
+	/** Constante MAX. */
 	private static final Integer MAX = 1000;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesHistoricos#getTblMensajesHist(java.util.List, es.minhap.sim.model.TblLotesEnviosHist)
+	 */
 	///MIGRADO
 	@Override
 	public List<TblMensajesHist> getTblMensajesHist(List<Long> subList, TblLotesEnviosHist loteHistorico) {
 		return queryExecutorMensajesHist.convertMensajeTOMensajeHist(subList, loteHistorico);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesHistoricos#insert(es.minhap.sim.model.TblMensajesHist)
+	 */
 	///MIGRADO
 	@Override
 	public Long insert(TblMensajesHist mensajeHistorico) {
 		return tblMensajesHistManager.insert(mensajeHistorico);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesHistoricos#delete(java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	public void delete(Long mensajeid) {
 		tblMensajesManager.delete(mensajeid);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesHistoricos#getTodosMensajesLoteHistorificar(java.lang.Long, java.util.Date)
+	 */
 	///MIGRADO
 	@Override
 	public List<List<Long>> getTodosMensajesLoteHistorificar(Long loteEnvioID, Date fecha) throws BusinessException {

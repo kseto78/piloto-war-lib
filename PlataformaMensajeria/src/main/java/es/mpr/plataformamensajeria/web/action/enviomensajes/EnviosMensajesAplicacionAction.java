@@ -146,14 +146,6 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 			}
 		}
 		
-		if(envioMensajesAplicacionBean.getCanalId().equals("2")){ //Enviamos SMS y comprobados que tenemos intentos
-			if(!servicioAplicacion.validarSms(envioMensajesAplicacionBean.getAplicacionId().longValue())){
-				addActionErrorSession("Limite de envio de SMS diario superado");			
-				return SUCCESS;
-			}
-
-		}
-		
 		if (validPeticion) {
 			try{
 				ApplicationContext  applicationContext = WebApplicationContextUtils.getWebApplicationContext(getRequest().getSession().getServletContext());
@@ -182,10 +174,7 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 						}
 						if(resultado != null){
 							addActionMessageSession(resultado);
-							servicioAplicacion.smsEnviado(envioMensajesAplicacionBean.getAplicacionId().longValue());
 						}
-						
-						
 					}
 				} catch (Exception e) {
 					logger.error("EnvioMensajesAplicacionAction - enviarPeticion:" + e);

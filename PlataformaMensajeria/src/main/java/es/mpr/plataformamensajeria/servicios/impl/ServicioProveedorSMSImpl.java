@@ -30,6 +30,7 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>Maneja la persistencia y b&uacute;squeda de servidores a traves de JPA.
  * 
@@ -39,18 +40,25 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioProveedorSMSImpl")
 public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProveedorSMSImpl.class);
 	
+	/**  tbl servidores manager. */
 	@Resource(name="TblServidoresManagerImpl")
 	TblServidoresManager tblServidoresManager;
 	
+	/**  tbl planificaciones manager. */
 	@Resource(name="TblPlanificacionesManagerImpl")
 	TblPlanificacionesManager tblPlanificacionesManager;
 	
+	/**  tbl servidores servicios manager. */
 	@Resource(name="TblServidoresServiciosManagerImpl")
 	TblServidoresServiciosManager tblServidoresServiciosManager;
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#getProveedoresSMS(int)
+	 */
 	////MIGRADO
 	@Override
 	public List<ProveedorSMSBean> getProveedoresSMS(int tipoServidor)
@@ -73,6 +81,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		}
 	}	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#getProveedoresSMS(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.ProveedorSMSBean, int)
+	 */
 	////MIGRADO
 	@Override
 	public PaginatedList<ProveedorSMSBean> getProveedoresSMS(int start, int size,
@@ -114,6 +125,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	}
 
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#newProveedorSMS(es.mpr.plataformamensajeria.beans.ProveedorSMSBean, int, java.lang.String, java.lang.String, java.lang.Long)
+ */
 ///////////MIGRADO
 	@Override
 	@Transactional
@@ -140,6 +154,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	}
 
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#updateProveedorSMS(es.mpr.plataformamensajeria.beans.ProveedorSMSBean, java.lang.String, java.lang.String, java.lang.Long)
+ */
 //////MIGRADO
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -158,6 +175,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#loadProveedorSMS(es.mpr.plataformamensajeria.beans.ProveedorSMSBean)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -172,6 +192,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#deleteProveedorSMS(es.mpr.plataformamensajeria.beans.ProveedorSMSBean, java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	//////MIGRADO
 	@Override
 	@Transactional
@@ -200,11 +223,11 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	}
 	
 	/**
-	 * <p>Obtenemos un objeto proveedorTO a partir de un objeto ProveedorSMSBean</p>
-	 * 
-	 * @param organismoBean 
-	 * 
+	 * <p>Obtenemos un objeto proveedorTO a partir de un objeto ProveedorSMSBean</p>.
+	 *
+	 * @param proveedorSMS the proveedor SMS
 	 * @return objeto OrganismoJPA
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	protected TblServidores getProveedoresSMSTO(ProveedorSMSBean proveedorSMS) throws BusinessException
@@ -228,11 +251,11 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	
 	
 	/**
-	 * <p>Obtenemos un objeto ProveedorSMSBean a partir de un objeto ProveedoresSMSJPA</p>
-	 * 
-	 * @param servidorJPA
-	 * 
+	 * <p>Obtenemos un objeto ProveedorSMSBean a partir de un objeto ProveedoresSMSJPA</p>.
+	 *
+	 * @param serv the serv
 	 * @return objeto ProveedorSMSBean
+	 * @throws BusinessException the business exception
 	 */
 	//////MIGRADO
 	protected ProveedorSMSBean getProveedorSMSBean(TblServidores serv) throws BusinessException
@@ -252,12 +275,13 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		
 		return servidor;
 	}
+	
 	/**
-	 * <p>Convertirmos una lista de ViewProveedoresSMSJPA a una lista de ProveedorSMSBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de ViewProveedoresSMSJPA a una lista de ProveedorSMSBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	//////MIGRADO
 	protected List<ProveedorSMSBean> getListViewProveedorSMSBean(List<TblServidores> lista) throws BusinessException
@@ -288,6 +312,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#getProveedoresSMSNoAsignados(java.lang.Integer, int)
+	 */
 	/////MIGRADOS
 	@Override
 	public List<ProveedorSMSBean> getProveedoresSMSNoAsignados(

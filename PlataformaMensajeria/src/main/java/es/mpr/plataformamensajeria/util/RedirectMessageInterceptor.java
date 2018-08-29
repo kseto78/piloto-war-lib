@@ -44,16 +44,29 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
  */
 public class RedirectMessageInterceptor extends MethodFilterInterceptor
 {
+    
+    /** Constante serialVersionUID. */
     private static final long  serialVersionUID    = -1847557437429753540L;
 
+    /** Constante FIELD_ERRORS_KEY. */
     public static final String FIELD_ERRORS_KEY    = "RedirectMessageInterceptor_FieldErrors";
+    
+    /** Constante ACTION_ERRORS_KEY. */
     public static final String ACTION_ERRORS_KEY   = "RedirectMessageInterceptor_ActionErrors";
+    
+    /** Constante ACTION_MESSAGES_KEY. */
     public static final String ACTION_MESSAGES_KEY = "RedirectMessageInterceptor_ActionMessages";
 
+    /**
+     * Constructor de redirect message interceptor.
+     */
     public RedirectMessageInterceptor()
     {
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
+     */
     public String doIntercept(ActionInvocation invocation) throws Exception
     {
         Object action = invocation.getAction();
@@ -74,15 +87,18 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
     /**
      * Retrieve the errors and messages from the session and add them to the
      * action.
+     *
+     * @param invocation the invocation
+     * @param validationAware the validation aware
+     * @throws Exception the exception
      */
     protected void before(ActionInvocation invocation,
                           ValidationAware validationAware)
         throws Exception
     {
-        @SuppressWarnings("unchecked")
         Map<String, ?> session = invocation.getInvocationContext().getSession();
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         Collection<String> actionErrors =
             (Collection) session.remove(ACTION_ERRORS_KEY);
         if (actionErrors != null && actionErrors.size() > 0)
@@ -93,7 +109,7 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
             }
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         Collection<String> actionMessages =
             (Collection) session.remove(ACTION_MESSAGES_KEY);
         if (actionMessages != null && actionMessages.size() > 0)
@@ -104,7 +120,7 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
             }
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         Map<String, List<String>> fieldErrors =
             (Map) session.remove(FIELD_ERRORS_KEY);
         if (fieldErrors != null && fieldErrors.size() > 0)
@@ -121,6 +137,10 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
 
     /**
      * If the result is a redirect then store error and messages in the session.
+     *
+     * @param invocation the invocation
+     * @param validationAware the validation aware
+     * @throws Exception the exception
      */
     protected void after(ActionInvocation invocation,
                          ValidationAware validationAware)

@@ -17,6 +17,12 @@ import es.mpr.plataformamensajeria.beans.EstadoBean;
 @Service
 public interface ServicioEstado {
 	
+	/**
+	 * Obtener estados.
+	 *
+	 * @return estados
+	 * @throws BusinessException the business exception
+	 */
 	List<EstadoBean> getEstados() throws BusinessException;
 	
 }

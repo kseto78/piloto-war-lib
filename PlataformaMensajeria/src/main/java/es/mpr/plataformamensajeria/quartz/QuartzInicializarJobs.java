@@ -20,26 +20,50 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 
 
+/**
+ * Clase QuartzInicializarJobs.
+ */
 public class QuartzInicializarJobs extends HttpServlet  {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(QuartzInicializarJobs.class);
 	
+	/**  application context. */
 	private static ApplicationContext applicationContext;
 	
+	/**  config prop. */
 	private static PlataformaMensajeriaProperties configProp;
 	
+	/** Constante HIST_JOB_NAME. */
 	private static final String HIST_JOB_NAME = "HISTORIFICACION";
+	
+	/** Constante HIST_TRIGGER_NAME. */
 	private static final String HIST_TRIGGER_NAME = "HISTORIFICACION_TRIGGER";
+	
+	/** Constante CONS_JOB_NAME. */
 	private static final String CONS_JOB_NAME = "CONSERVACION";
+	
+	/** Constante CONS_TRIGGER_NAME. */
 	private static final String CONS_TRIGGER_NAME = "CONSERVACION_TRIGGER";
+	
+	/** Constante INFORMES_SERVICIOS_JOB_NAME. */
 	private static final String INFORMES_SERVICIOS_JOB_NAME = "INFORMES_SERVICIOS";
+	
+	/** Constante INFORMES_SERVICIOS_TRIGGER_NAME. */
 	private static final String INFORMES_SERVICIOS_TRIGGER_NAME = "INFORMES_SERVICIOS_TRIGGER";
 
+	/** Constante DIR3_JOB_NAME. */
 	private static final String DIR3_JOB_NAME = "DIR3";
+	
+	/** Constante DIR3_TRIGGER_NAME. */
 	private static final String DIR3_TRIGGER_NAME = "DIR3_TRIGGER";
 	
+	/* (non-Javadoc)
+	 * @see javax.servlet.GenericServlet#init()
+	 */
 	////MIGRADO
 	@Override
 	public void init() throws ServletException{
@@ -52,11 +76,17 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		}
 	}
 	
+	/**
+	 * Constructor de quartz inicializar jobs.
+	 */
 	public QuartzInicializarJobs() {
 		super();
 		
 	}
 	
+/**
+ * Planificar jobs.
+ */
 ////MIGRADO
 	public void planificarJobs(){
 		try{
@@ -95,6 +125,11 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		}
 	}
 	
+/**
+ * Planificar job hist.
+ *
+ * @param scheduler the scheduler
+ */
 ////MIGRADO
 	private void planificarJobHist(Scheduler scheduler){
 		try{
@@ -105,6 +140,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			
 			job.setName(HIST_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			@SuppressWarnings("unchecked")
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.HistorificacionJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobHist.expression", null);
@@ -129,6 +165,11 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		}
 	}
 	
+/**
+ * Planificar job cons.
+ *
+ * @param scheduler the scheduler
+ */
 ////MIGRADO
 	private void planificarJobCons(Scheduler scheduler){
 		try{
@@ -138,6 +179,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(CONS_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			@SuppressWarnings("unchecked")
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.EstadisticasConsolidadasJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobCons.expression", null);
@@ -162,6 +204,11 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		}
 	}
 	
+/**
+ * Planificar job informes servicios.
+ *
+ * @param scheduler the scheduler
+ */
 ////MIGRADO
 	private void planificarJobInformesServicios(Scheduler scheduler){
 		try{
@@ -171,6 +218,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(INFORMES_SERVICIOS_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			@SuppressWarnings("unchecked")
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.InformesServiciosJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobInformesServicios.expression", null);
@@ -195,6 +243,11 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		}
 	}
 	
+	/**
+	 * Planificar job DIR 3.
+	 *
+	 * @param scheduler the scheduler
+	 */
 	private void planificarJobDIR3(Scheduler scheduler){
 		try{
 			// Creación del job
@@ -203,6 +256,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(DIR3_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			@SuppressWarnings("unchecked")
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.RecuperarInforDIRJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobDIR3.expression", null);

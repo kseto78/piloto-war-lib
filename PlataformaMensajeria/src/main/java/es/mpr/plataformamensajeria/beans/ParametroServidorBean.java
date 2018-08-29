@@ -8,22 +8,36 @@ import com.map.j2ee.util.StringUtil;
 
 /**
  * <p>
- * Clase que representa un servidor para la capa de presentaci&oacute;n
- * 
+ * Clase que representa un servidor para la capa de presentaci&oacute;n.
+ *
  * @author Altran
- * 
  */
 public class ParametroServidorBean implements Audit, Serializable {
 	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** Constante IP. */
 	public static final int IP = 1;
+	
+	/** Constante USUARIO. */
 	public static final int USUARIO = 2;
+	
+	/** Constante PASSWORD. */
 	public static final int PASSWORD = 3;
+	
+	/** Constante CONEXION_SEGURA. */
 	public static final int CONEXION_SEGURA = 4;
+	
+	/** Constante PUERTO. */
 	public static final int PUERTO = 10;
+	
+	/** Constante REQ_AUTH. */
 	public static final int REQ_AUTH = 11;
 
+	/**
+	 * Constructor de parametro servidor bean.
+	 */
 	public ParametroServidorBean() {
 
 		this.parametroservidorid = null;
@@ -41,30 +55,47 @@ public class ParametroServidorBean implements Audit, Serializable {
 
 	}
 
+	/**  parametroservidorid. */
 	protected Long parametroservidorid;
 
+	/**  valor. */
 	protected String valor = null;
 
+	/**  tipoparametroid. */
 	protected Long tipoparametroid = null;
 
+	/**  servidorid. */
 	protected Long servidorid = null;
 
+	/**  activo. */
 	protected Boolean activo = null;
 
+	/**  fechacreacion. */
 	protected Date fechacreacion = null;
 
+	/**  creadopor. */
 	protected String creadopor = null;
 
+	/**  fechamodificacion. */
 	protected Date fechamodificacion = null;
 
+	/**  modificadopor. */
 	protected String modificadopor = null;
 
+	/**  tiponombre. */
 	protected String tiponombre = null;
 
+	/**  tipodescripcion. */
 	protected String tipodescripcion = null;
 
+	/**  tipotag. */
 	protected String tipotag = null;
 
+	/**
+	 * Obtener tipo nombre.
+	 *
+	 * @return tipo nombre
+	 */
 	public String getTipoNombre() {
 		if (tiponombre != null) {
 			return StringUtil.capitalize(tiponombre);
@@ -73,24 +104,44 @@ public class ParametroServidorBean implements Audit, Serializable {
 		}
 	}
 
+	/**
+	 * Modificar tiponombre.
+	 *
+	 * @param tipoNombre new tiponombre
+	 */
 	public void setTiponombre(String tipoNombre) {
 		this.tiponombre = tipoNombre;
 	}
 
+	/**
+	 * Obtener id.
+	 *
+	 * @return id
+	 */
 	public Object getId() {
 		return this.parametroservidorid;
 	}
 
+	/**
+	 * Modificar id.
+	 *
+	 * @param id new id
+	 */
 	public void setId(Object id) {
 		this.parametroservidorid = (Long) id;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
+	 */
 	@Override
 	public String obtenerXML() {
 		return null;
 	}
 
 	/**
+	 * Obtener parametroservidorid.
+	 *
 	 * @return the parametroservidorid
 	 */
 	public Long getParametroservidorid() {
@@ -98,14 +149,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param parametroservidorid
-	 *            the parametroservidorid to set
+	 * Modificar parametroservidorid.
+	 *
+	 * @param parametroservidorid            the parametroservidorid to set
 	 */
 	public void setParametroservidorid(Long parametroservidorid) {
 		this.parametroservidorid = parametroservidorid;
 	}
 
 	/**
+	 * Obtener valor.
+	 *
 	 * @return the valor
 	 */
 	public String getValor() {
@@ -113,14 +167,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param valor
-	 *            the valor to set
+	 * Modificar valor.
+	 *
+	 * @param valor            the valor to set
 	 */
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
 
 	/**
+	 * Obtener tipoparametroid.
+	 *
 	 * @return the tipoparametroid
 	 */
 	public Long getTipoparametroid() {
@@ -128,14 +185,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param tipoparametroid
-	 *            the tipoparametroid to set
+	 * Modificar tipoparametroid.
+	 *
+	 * @param tipoparametroid            the tipoparametroid to set
 	 */
 	public void setTipoparametroid(Long tipoparametroid) {
 		this.tipoparametroid = tipoparametroid;
 	}
 
 	/**
+	 * Obtener servidorid.
+	 *
 	 * @return the servidorid
 	 */
 	public Long getServidorid() {
@@ -143,14 +203,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param servidorid
-	 *            the servidorid to set
+	 * Modificar servidorid.
+	 *
+	 * @param servidorid            the servidorid to set
 	 */
 	public void setServidorid(Long servidorid) {
 		this.servidorid = servidorid;
 	}
 
 	/**
+	 * Obtener activo.
+	 *
 	 * @return the activo
 	 */
 	public Boolean getActivo() {
@@ -158,14 +221,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param activo
-	 *            the activo to set
+	 * Modificar activo.
+	 *
+	 * @param activo            the activo to set
 	 */
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
 
 	/**
+	 * Obtener fechacreacion.
+	 *
 	 * @return the fechacreacion
 	 */
 	public Date getFechacreacion() {
@@ -173,14 +239,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param fechacreacion
-	 *            the fechacreacion to set
+	 * Modificar fechacreacion.
+	 *
+	 * @param fechacreacion            the fechacreacion to set
 	 */
 	public void setFechacreacion(Date fechacreacion) {
 		this.fechacreacion = fechacreacion;
 	}
 
 	/**
+	 * Obtener creadopor.
+	 *
 	 * @return the creadopor
 	 */
 	public String getCreadopor() {
@@ -188,14 +257,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param creadopor
-	 *            the creadopor to set
+	 * Modificar creadopor.
+	 *
+	 * @param creadopor            the creadopor to set
 	 */
 	public void setCreadopor(String creadopor) {
 		this.creadopor = creadopor;
 	}
 
 	/**
+	 * Obtener fechamodificacion.
+	 *
 	 * @return the fechamodificacion
 	 */
 	public Date getFechamodificacion() {
@@ -203,14 +275,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param fechamodificacion
-	 *            the fechamodificacion to set
+	 * Modificar fechamodificacion.
+	 *
+	 * @param fechamodificacion            the fechamodificacion to set
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
 	}
 
 	/**
+	 * Obtener modificadopor.
+	 *
 	 * @return the modificadopor
 	 */
 	public String getModificadopor() {
@@ -218,14 +293,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param modificadopor
-	 *            the modificadopor to set
+	 * Modificar modificadopor.
+	 *
+	 * @param modificadopor            the modificadopor to set
 	 */
 	public void setModificadopor(String modificadopor) {
 		this.modificadopor = modificadopor;
 	}
 
 	/**
+	 * Obtener tipodescripcion.
+	 *
 	 * @return the tipodescripcion
 	 */
 	public String getTipodescripcion() {
@@ -233,14 +311,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param tipodescripcion
-	 *            the tipodescripcion to set
+	 * Modificar tipodescripcion.
+	 *
+	 * @param tipodescripcion            the tipodescripcion to set
 	 */
 	public void setTipodescripcion(String tipodescripcion) {
 		this.tipodescripcion = tipodescripcion;
 	}
 
 	/**
+	 * Obtener tipotag.
+	 *
 	 * @return the tipotag
 	 */
 	public String getTipotag() {
@@ -248,14 +329,17 @@ public class ParametroServidorBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @param tipotag
-	 *            the tipotag to set
+	 * Modificar tipotag.
+	 *
+	 * @param tipotag            the tipotag to set
 	 */
 	public void setTipotag(String tipotag) {
 		this.tipotag = tipotag;
 	}
 
 	/**
+	 * Obtener tiponombre.
+	 *
 	 * @return the tiponombre
 	 */
 	public String getTiponombre() {

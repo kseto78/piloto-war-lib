@@ -64,102 +64,193 @@ import es.mpr.plataformamensajeria.util.XMLUtils;
 /**
  * <p>
  * Clase Action de Struts2 para la gesti&oacute;n de los Usuarios.
- * 
- * @version 1.0
+ *
  * @author i-nercya
- * 
+ * @version 1.0
  */
 @Controller("gestionEnvioAction")
 @Scope("prototype")
 public class GestionEnviosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/** Constante GENERALES_PAGESIZEM. */
 	private static final String GENERALES_PAGESIZEM = "generales.PAGESIZEM";
 
+	/** Constante GENERALES_REQUEST_ATTRIBUTE_PAGESIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
 
+	/** Constante TABLE_ID. */
 	private static final String TABLE_ID = "tableId";
 
+	/** Constante INFO_USER. */
 	private static final String INFO_USER = "infoUser";
 
+	/** Constante NO_USER. */
 	private static final String NO_USER = "noUser";
+	
+	/** Constante ES_AEAT. */
+	public static final String ES_AEAT = "ES_AEAT";
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(GestionEnviosAction.class);
 
+	/**  servicio aplicacion. */
 	@Resource(name = "servicioAplicacionImpl")
 	private transient ServicioAplicacion servicioAplicacion;
 
+	/**  servicio servidor. */
 	@Resource(name = "servicioServidorImpl")
 	private transient ServicioServidor servicioServidor;
 
+	/**  servicio servicio. */
 	@Resource(name = "servicioServicioImpl")
 	private transient ServicioServicio servicioServicio;
 
+	/**  servicio estado. */
 	@Resource(name = "servicioEstadoImpl")
 	private transient ServicioEstado servicioEstado;
 
+	/**  servicio canal. */
 	@Resource(name = "servicioCanalImpl")
 	private transient ServicioCanal servicioCanal;
 
+	/**  servicio gestion envios. */
 	@Resource(name = "servicioGestionEnviosImpl")
 	private transient ServicioGestionEnvios servicioGestionEnvios;
 	
+	/**  servicio usuario aplicacion. */
 	@Resource(name = "servicioUsuarioAplicacionImpl")
 	private transient ServicioUsuarioAplicacion servicioUsuarioAplicacion;
 	
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private transient PlataformaMensajeriaProperties properties;
 	
+	/**  view misim manager. */
 	@Resource(name="ViewMisimManagerImpl")
 	private transient ViewMisimManager viewMisimManager;
 	
+	/**  peticion manager. */
 	@Resource(name="PeticionManagerImpl")
 	private transient PeticionManager peticionManager;
 	
+	/**  cifrado service. */
 	@Resource
 	private transient CifradoService cifradoService;
 	
+	/**  gestion envio bean. */
 	private GestionEnvioBean gestionEnvioBean;
+	
+	/**  detalle email. */
 	private DetalleEnvioBean detalleEmail;
+	
+	/**  detalle lote. */
 	private DetalleLoteBean detalleLote;
+	
+	/**  detalle mensaje. */
 	private GestionEnvioBean detalleMensaje;
+	
+	/**  destinatarios mensajes. */
 	private DestinatariosMensajesBean destinatariosMensajes;
 
+	/**  lista gestion envios. */
 	private List<GestionEnvioBean> listaGestionEnvios = null;
+	
+	/**  lista gestion envios mensajes. */
 	private List<MensajeBean> listaGestionEnviosMensajes = null;
+	
+	/**  lista gestion envios destinatarios mensaje. */
 	private List<DestinatariosMensajesBean> listaGestionEnviosDestinatariosMensaje = null;
+	
+	/**  lista historicos mensaje. */
 	private List<HistoricoBean> listaHistoricosMensaje = null;
+	
+	/**  lista intercambios misim. */
 	private List<ViewMisimBean> listaIntercambiosMisim = null;
 
+	/**  combo aplicaciones. */
 	transient List<KeyValueObject> comboAplicaciones = new ArrayList<>();
+	
+	/**  combo servidores. */
 	transient List<KeyValueObject> comboServidores = new ArrayList<>();
+	
+	/**  combo servicios. */
 	transient List<KeyValueObject> comboServicios = new ArrayList<>();
+	
+	/**  combo estados. */
 	transient List<KeyValueObject> comboEstados = new ArrayList<>();
+	
+	/**  combo canales. */
 	transient List<KeyValueObject> comboCanales = new ArrayList<>();
+	
+	/**  combo page size. */
 	transient List<KeyValueObject> comboPageSize = new ArrayList<>();
+	
+	/**  aa data. */
 	private List<ArrayList<String>> aaData;
+	
+	/**  check del list. */
 	private String[] checkDelList;
 
+	/**  result count. */
 	private String resultCount;
+	
+	/**  id envio. */
 	private String idEnvio;
+	
+	/**  id adjunto. */
 	private String idAdjunto;
+	
+	/**  id email. */
 	private String idEmail;
+	
+	/**  id lote. */
 	private String idLote;
+	
+	/**  id peticion. */
 	private String idPeticion;
+	
+	/**  id mensaje. */
 	private String idMensaje;
+	
+	/**  id destinatarios mensajes. */
 	private String idDestinatariosMensajes;
+	
+	/**  operacion msg. */
 	private String operacionMsg;
+	
+	/**  Check all S. */
 	private String CheckAllS;
+	
+	/**  vista envios id selected. */
 	private String vistaEnviosIdSelected;
+	
+	/**  adjunto descargable. */
 	private String adjuntoDescargable;
+	
+	/**  search. */
 	private String search;
+	
+	/**  file input stream. */
 	private InputStream fileInputStream;
+	
+	/**  page size. */
 	private Integer pageSize = 20;
 	
+	/** Constante FORMATO_FECHA_TITULO_AUDITORIA. */
 	public static final String FORMATO_FECHA_TITULO_AUDITORIA = "yyyyMMdd HHmmss";
+	
+	/** Constante TIPO_FICHERO. */
 	public static final String TIPO_FICHERO = "xml";
 
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	public String newSearch() throws BusinessException {
 		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
@@ -178,6 +269,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+/**
+ * Search.
+ *
+ * @return the string
+ * @throws BaseException the base exception
+ */
 ////MIGRADO
 	public String search() throws BaseException {
 		PaginatedList<GestionEnvioBean> result;
@@ -198,13 +295,42 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			} else {
 				vistaEnviosIdSelected = "1";
 			}
-			if (null != gestionEnvioBean && search != null && search.length() > 0) {
-				if (-1 != search.indexOf('|')){
-					gestionEnvioBean.setCodOrganismo(search.substring(0,search.indexOf('|')).trim());
+			if (null != gestionEnvioBean){
+				//Recuperamos de sesion los organismos a los que está asociado en usuario
+				@SuppressWarnings("unchecked")
+				List<String> arrayOrganismos = (ArrayList<String>)request.getSession().getAttribute(properties.getProperty("PlataformaMensajeriaUtil.ARRAY_ORGANISMOS", null));
+			
+				//Comprobamos si el usuario es propietario
+				String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+				
+				//Comprobamos si el usuario es propietario AEAT
+				String esAeat = (String)request.getSession().getAttribute(GestionEnviosAction.ES_AEAT);
+				if(search != null && search.length() > 0) {
+					if (PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && "OK".equals(esAeat)){
+						if(!validOrganismoAeat(search, arrayOrganismos)){
+							gestionEnvioBean = new GestionEnvioBean();
+							vistaEnviosIdSelected = "1";
+							totalSize = 0;
+							getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+							listaGestionEnvios =new ArrayList<>();
+							
+							return SUCCESS;
+						}	
+					}
+			
+					if (-1 != search.indexOf('|')){
+						gestionEnvioBean.setCodOrganismo(search.substring(0, search.indexOf('|')).trim());
+					}else{
+						gestionEnvioBean.setCodOrganismo(search);
+					}
 				}else{
-					gestionEnvioBean.setCodOrganismo(search);
+					if(arrayOrganismos!=null && !arrayOrganismos.isEmpty() 
+							&& PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && "OK".equals(esAeat)){
+						gestionEnvioBean.setArrayOrganismos(arrayOrganismos);
+					}
 				}
 			}
+
 			if ("1".equals(vistaEnviosIdSelected)) {
 				result = servicioGestionEnvios.getGestionDeEnvios(inicio,
 						(export) ? -1 : pageSize, order,
@@ -259,6 +385,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Load contenido mensaje.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	// //MIGRADO
 	public String loadContenidoMensaje() throws BusinessException {
 		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
@@ -278,6 +410,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Load lote.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	public String loadLote() throws BusinessException {
 		Integer totalSize;
@@ -305,6 +443,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Load historico msj.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	public String loadHistoricoMsj() throws BusinessException {
 		destinatariosMensajes = null;
@@ -339,6 +483,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 	
+	/**
+	 * Load misim.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	public String loadMisim() throws BusinessException {
 		
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -377,6 +527,11 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 	
+	/**
+	 * Load xml peticion.
+	 *
+	 * @throws BusinessException the business exception
+	 */
 	public void loadXmlPeticion() throws BusinessException {
 		
 //		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -487,6 +642,11 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 //		return SUCCESS;
 	}
 	
+	/**
+	 * Load xml respuesta.
+	 *
+	 * @throws BusinessException the business exception
+	 */
 	public void loadXmlRespuesta() throws BusinessException {
 		
 //			if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -597,6 +757,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	//	return SUCCESS;
 	}
 
+	/**
+	 * Load mensaje.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	public String loadMensaje() throws BusinessException {
 
@@ -642,6 +808,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Load adjunto.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	/////MIGRADO
 	public String loadAdjunto() throws IOException {
 		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
@@ -663,6 +835,11 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/**
+	 * Accion seleccionados.
+	 *
+	 * @return the string
+	 */
 	////MIGRADO
 	public String accionSeleccionados() {
 		try{
@@ -777,8 +954,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
-	 * Comprueba si hay un usuario logueado y con un rol definido
-	 * 
+	 * Comprueba si hay un usuario logueado y con un rol definido.
+	 *
 	 * @return boolean
 	 */
 	////MIGRADO
@@ -791,10 +968,42 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		}
 		return sw;
 	}
+	
+	/**
+	 * Valid organismo aeat.
+	 *
+	 * @param organismo the organismo
+	 * @param arrayOrganismos the array organismos
+	 * @return true, if successful
+	 */
+	private boolean validOrganismoAeat(String organismo, List<String> arrayOrganismos) {
+		boolean sw = false;
+		if(arrayOrganismos != null && !arrayOrganismos.isEmpty()){
+			if (-1 != search.indexOf('|')){
+				organismo = search.substring(0, search.indexOf('|')).trim();
+			}else{
+				organismo = search;
+			}
+			
+			for(int i=0; i < arrayOrganismos.size(); i++){
+				if(arrayOrganismos.get(i).equals(organismo)){
+					sw = true;
+					break;
+				}
+			}
+		}
+
+		if(!sw){
+			addActionErrorSession("El organismo "+organismo + " no se corresponde con el usuario.Permiso denegado");
+		}
+	
+		return sw;
+	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener combo aplicaciones.
+	 *
+	 * @return combo aplicaciones
 	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboAplicaciones() {
@@ -816,9 +1025,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws BusinessException
+	 * Obtener combo servidores.
+	 *
+	 * @return combo servidores
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboServidores() throws BusinessException {
@@ -841,9 +1051,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws BusinessException
+	 * Obtener combo servicios.
+	 *
+	 * @return combo servicios
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboServicios() throws BusinessException {
@@ -871,9 +1082,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws BusinessException
+	 * Obtener combo estados.
+	 *
+	 * @return combo estados
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboEstados() throws BusinessException {
@@ -894,9 +1106,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws BusinessException
+	 * Obtener combo canales.
+	 *
+	 * @return combo canales
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboCanales() throws BusinessException {
@@ -915,6 +1128,12 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+	/**
+	 * Obtener combo page size.
+	 *
+	 * @return combo page size
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboPageSize() throws BusinessException {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -931,6 +1150,9 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	///MIGRADO
 	@Override
 	public void prepare() throws Exception {
@@ -939,325 +1161,623 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			pageSize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
 		}
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * Obtener servicio aplicacion.
+	 *
+	 * @return servicio aplicacion
 	 */
 	public ServicioAplicacion getServicioAplicacion() {
 		return servicioAplicacion;
 	}
 
+	/**
+	 * Modificar servicio aplicacion.
+	 *
+	 * @param servicioAplicacion new servicio aplicacion
+	 */
 	public void setServicioAplicacion(ServicioAplicacion servicioAplicacion) {
 		this.servicioAplicacion = servicioAplicacion;
 	}
 
+	/**
+	 * Modificar combo aplicaciones.
+	 *
+	 * @param comboAplicaciones new combo aplicaciones
+	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
 		this.comboAplicaciones = new ArrayList<KeyValueObject>(comboAplicaciones);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener result count.
+	 *
+	 * @return result count
 	 */
 	public String getResultCount() {
 		return resultCount;
 	}
 
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener servicio canal.
+	 *
+	 * @return servicio canal
 	 */
 	public ServicioCanal getServicioCanal() {
 		return servicioCanal;
 	}
 
+	/**
+	 * Modificar servicio canal.
+	 *
+	 * @param servicioCanal new servicio canal
+	 */
 	public void setServicioCanal(ServicioCanal servicioCanal) {
 		this.servicioCanal = servicioCanal;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener servicio estado.
+	 *
+	 * @return servicio estado
 	 */
 	public ServicioEstado getServicioEstado() {
 		return servicioEstado;
 	}
 
+	/**
+	 * Modificar servicio estado.
+	 *
+	 * @param servicioEstado new servicio estado
+	 */
 	public void setServicioEstado(ServicioEstado servicioEstado) {
 		this.servicioEstado = servicioEstado;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener lista gestion envios.
+	 *
+	 * @return lista gestion envios
 	 */
 	public List<GestionEnvioBean> getListaGestionEnvios() {
 		return new ArrayList<GestionEnvioBean>(listaGestionEnvios);
 	}
 
+	/**
+	 * Modificar lista gestion envios.
+	 *
+	 * @param listaGestionEnvios new lista gestion envios
+	 */
 	public void setListaGestionEnvios(List<GestionEnvioBean> listaGestionEnvios) {
 		this.listaGestionEnvios = new ArrayList<GestionEnvioBean>(listaGestionEnvios);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener servicio servidor.
+	 *
+	 * @return servicio servidor
 	 */
 	public ServicioServidor getServicioServidor() {
 		return servicioServidor;
 	}
 
+	/**
+	 * Modificar servicio servidor.
+	 *
+	 * @param servicioServidor new servicio servidor
+	 */
 	public void setServicioServidor(ServicioServidor servicioServidor) {
 		this.servicioServidor = servicioServidor;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener servicio servicio.
+	 *
+	 * @return servicio servicio
 	 */
 	public ServicioServicio getServicioServicio() {
 		return servicioServicio;
 	}
 
+	/**
+	 * Modificar servicio servicio.
+	 *
+	 * @param servicioServicio new servicio servicio
+	 */
 	public void setServicioServicio(ServicioServicio servicioServicio) {
 		this.servicioServicio = servicioServicio;
 	}
 
+	/**
+	 * Modificar combo servidores.
+	 *
+	 * @param comboServidores new combo servidores
+	 */
 	public void setComboServidores(List<KeyValueObject> comboServidores) {
 		this.comboServidores = new ArrayList<>(comboServidores);
 	}
 
+	/**
+	 * Modificar combo servicios.
+	 *
+	 * @param comboServicios new combo servicios
+	 */
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
 		this.comboServicios = new ArrayList<>(comboServicios);
 	}
 
+	/**
+	 * Modificar combo estados.
+	 *
+	 * @param comboEstados new combo estados
+	 */
 	public void setComboEstados(List<KeyValueObject> comboEstados) {
 		this.comboEstados = new ArrayList<>(comboEstados);
 	}
 
+	/**
+	 * Modificar combo canales.
+	 *
+	 * @param comboCanales new combo canales
+	 */
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
 		this.comboCanales = new ArrayList<>(comboCanales);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener gestion envio bean.
+	 *
+	 * @return gestion envio bean
 	 */
 	public GestionEnvioBean getGestionEnvioBean() {
 		return gestionEnvioBean;
 	}
 
+	/**
+	 * Modificar gestion envio bean.
+	 *
+	 * @param gestionEnvioBean new gestion envio bean
+	 */
 	public void setGestionEnvioBean(GestionEnvioBean gestionEnvioBean) {
 		this.gestionEnvioBean = gestionEnvioBean;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener id envio.
+	 *
+	 * @return id envio
 	 */
 	public String getIdEnvio() {
 		return idEnvio;
 	}
 
+	/**
+	 * Modificar id envio.
+	 *
+	 * @param idEnvio new id envio
+	 */
 	public void setIdEnvio(String idEnvio) {
 		this.idEnvio = idEnvio;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Obtener detalle email.
+	 *
+	 * @return detalle email
 	 */
 	public DetalleEnvioBean getDetalleEmail() {
 		return detalleEmail;
 	}
 
+	/**
+	 * Modificar detalle email.
+	 *
+	 * @param detalleEmail new detalle email
+	 */
 	public void setDetalleEmail(DetalleEnvioBean detalleEmail) {
 		this.detalleEmail = detalleEmail;
 	}
 
+	/**
+	 * Obtener check del list.
+	 *
+	 * @return check del list
+	 */
 	public String[] getCheckDelList() {
 		return checkDelList;
 	}
 
+	/**
+	 * Modificar check del list.
+	 *
+	 * @param checkDelList new check del list
+	 */
 	public void setCheckDelList(String[] checkDelList) {
 		this.checkDelList = checkDelList;
 	}
 
+	/**
+	 * Obtener check all S.
+	 *
+	 * @return check all S
+	 */
 	public String getCheckAllS() {
 		return CheckAllS;
 	}
 
+	/**
+	 * Modificar check all S.
+	 *
+	 * @param checkAllS new check all S
+	 */
 	public void setCheckAllS(String checkAllS) {
 		CheckAllS = checkAllS;
 	}
 
+	/**
+	 * Obtener vista envios id selected.
+	 *
+	 * @return vista envios id selected
+	 */
 	public String getVistaEnviosIdSelected() {
 		return vistaEnviosIdSelected;
 	}
 
+	/**
+	 * Modificar vista envios id selected.
+	 *
+	 * @param vistaEnviosIdSelected new vista envios id selected
+	 */
 	public void setVistaEnviosIdSelected(String vistaEnviosIdSelected) {
 		this.vistaEnviosIdSelected = vistaEnviosIdSelected;
 	}
 
+	/**
+	 * Obtener detalle lote.
+	 *
+	 * @return detalle lote
+	 */
 	public DetalleLoteBean getDetalleLote() {
 		return detalleLote;
 	}
 
+	/**
+	 * Modificar detalle lote.
+	 *
+	 * @param detalleLote new detalle lote
+	 */
 	public void setDetalleLote(DetalleLoteBean detalleLote) {
 		this.detalleLote = detalleLote;
 	}
 
+	/**
+	 * Obtener id lote.
+	 *
+	 * @return id lote
+	 */
 	public String getIdLote() {
 		return idLote;
 	}
 
+	/**
+	 * Modificar id lote.
+	 *
+	 * @param idLote new id lote
+	 */
 	public void setIdLote(String idLote) {
 		this.idLote = idLote;
 	}
 	
+	/**
+	 * Obtener id peticion.
+	 *
+	 * @return id peticion
+	 */
 	public String getIdPeticion() {
 		return idPeticion;
 	}
 
+	/**
+	 * Modificar id peticion.
+	 *
+	 * @param idPeticion new id peticion
+	 */
 	public void setIdPeticion(String idPeticion) {
 		this.idPeticion = idPeticion;
 	}
 
+	/**
+	 * Obtener lista gestion envios mensajes.
+	 *
+	 * @return lista gestion envios mensajes
+	 */
 	public List<MensajeBean> getListaGestionEnviosMensajes() {
 		return listaGestionEnviosMensajes;
 	}
 
+	/**
+	 * Modificar lista gestion envios mensajes.
+	 *
+	 * @param listaGestionEnviosMensajes new lista gestion envios mensajes
+	 */
 	public void setListaGestionEnviosMensajes(List<MensajeBean> listaGestionEnviosMensajes) {
 		this.listaGestionEnviosMensajes = listaGestionEnviosMensajes;
 	}
 
+	/**
+	 * Obtener id mensaje.
+	 *
+	 * @return id mensaje
+	 */
 	public String getIdMensaje() {
 		return idMensaje;
 	}
 
+	/**
+	 * Modificar id mensaje.
+	 *
+	 * @param idMensaje new id mensaje
+	 */
 	public void setIdMensaje(String idMensaje) {
 		this.idMensaje = idMensaje;
 	}
 
+	/**
+	 * Obtener detalle mensaje.
+	 *
+	 * @return detalle mensaje
+	 */
 	public GestionEnvioBean getDetalleMensaje() {
 		return detalleMensaje;
 	}
 
+	/**
+	 * Modificar detalle mensaje.
+	 *
+	 * @param detalleMensaje new detalle mensaje
+	 */
 	public void setDetalleMensaje(GestionEnvioBean detalleMensaje) {
 		this.detalleMensaje = detalleMensaje;
 	}
 
+	/**
+	 * Obtener lista gestion envios destinatarios mensaje.
+	 *
+	 * @return lista gestion envios destinatarios mensaje
+	 */
 	public List<DestinatariosMensajesBean> getListaGestionEnviosDestinatariosMensaje() {
 		return listaGestionEnviosDestinatariosMensaje;
 	}
 
+	/**
+	 * Modificar lista gestion envios destinatarios mensaje.
+	 *
+	 * @param listaGestionEnviosDestinatariosMensaje new lista gestion envios destinatarios mensaje
+	 */
 	public void setListaGestionEnviosDestinatariosMensaje(
 			List<DestinatariosMensajesBean> listaGestionEnviosDestinatariosMensaje) {
 		this.listaGestionEnviosDestinatariosMensaje = listaGestionEnviosDestinatariosMensaje;
 	}
 
+	/**
+	 * Obtener id destinatarios mensajes.
+	 *
+	 * @return id destinatarios mensajes
+	 */
 	public String getIdDestinatariosMensajes() {
 		return idDestinatariosMensajes;
 	}
 
+	/**
+	 * Modificar id destinatarios mensajes.
+	 *
+	 * @param idDestinatariosMensajes new id destinatarios mensajes
+	 */
 	public void setIdDestinatariosMensajes(String idDestinatariosMensajes) {
 		this.idDestinatariosMensajes = idDestinatariosMensajes;
 	}
 
+	/**
+	 * Obtener destinatarios mensajes.
+	 *
+	 * @return destinatarios mensajes
+	 */
 	public DestinatariosMensajesBean getDestinatariosMensajes() {
 		return destinatariosMensajes;
 	}
 
+	/**
+	 * Modificar destinatarios mensajes.
+	 *
+	 * @param destinatariosMensajes new destinatarios mensajes
+	 */
 	public void setDestinatariosMensajes(DestinatariosMensajesBean destinatariosMensajes) {
 		this.destinatariosMensajes = destinatariosMensajes;
 	}
 
+	/**
+	 * Obtener lista historicos mensaje.
+	 *
+	 * @return lista historicos mensaje
+	 */
 	public List<HistoricoBean> getListaHistoricosMensaje() {
 		return listaHistoricosMensaje;
 	}
 
+	/**
+	 * Modificar lista historicos mensaje.
+	 *
+	 * @param listaHistoricosMensaje new lista historicos mensaje
+	 */
 	public void setListaHistoricosMensaje(List<HistoricoBean> listaHistoricosMensaje) {
 		this.listaHistoricosMensaje = listaHistoricosMensaje;
 	}
 
+	/**
+	 * Obtener lista intercambios misim.
+	 *
+	 * @return lista intercambios misim
+	 */
 	public List<ViewMisimBean> getListaIntercambiosMisim() {
 		return listaIntercambiosMisim;
 	}
 
+	/**
+	 * Modificar lista intercambios misim.
+	 *
+	 * @param listaIntercambiosMisim new lista intercambios misim
+	 */
 	public void setListaIntercambiosMisim(List<ViewMisimBean> listaIntercambiosMisim) {
 		this.listaIntercambiosMisim = listaIntercambiosMisim;
 	}
 
+	/**
+	 * Obtener aa data.
+	 *
+	 * @return aa data
+	 */
 	public List<ArrayList<String>> getAaData() {
 		return aaData;
 	}
 
+	/**
+	 * Modificar aa data.
+	 *
+	 * @param aaData new aa data
+	 */
 	public void setAaData(List<ArrayList<String>> aaData) {
 		this.aaData = aaData;
 	}
 
+	/**
+	 * Obtener operacion msg.
+	 *
+	 * @return operacion msg
+	 */
 	public String getOperacionMsg() {
 		return operacionMsg;
 	}
 
+	/**
+	 * Modificar operacion msg.
+	 *
+	 * @param operacionMsg new operacion msg
+	 */
 	public void setOperacionMsg(String operacionMsg) {
 		this.operacionMsg = operacionMsg;
 	}
 
+	/**
+	 * Obtener id email.
+	 *
+	 * @return id email
+	 */
 	public String getIdEmail() {
 		return idEmail;
 	}
 
+	/**
+	 * Modificar id email.
+	 *
+	 * @param idEmail new id email
+	 */
 	public void setIdEmail(String idEmail) {
 		this.idEmail = idEmail;
 	}
 
+	/**
+	 * Obtener adjunto descargable.
+	 *
+	 * @return adjunto descargable
+	 */
 	public String getAdjuntoDescargable() {
 		return adjuntoDescargable;
 	}
 
+	/**
+	 * Modificar adjunto descargable.
+	 *
+	 * @param adjuntoDescargable new adjunto descargable
+	 */
 	public void setAdjuntoDescargable(String adjuntoDescargable) {
 		this.adjuntoDescargable = adjuntoDescargable;
 	}
 
+	/**
+	 * Obtener id adjunto.
+	 *
+	 * @return id adjunto
+	 */
 	public String getIdAdjunto() {
 		return idAdjunto;
 	}
 
+	/**
+	 * Modificar id adjunto.
+	 *
+	 * @param idAdjunto new id adjunto
+	 */
 	public void setIdAdjunto(String idAdjunto) {
 		this.idAdjunto = idAdjunto;
 	}
 
+	/**
+	 * Obtener file input stream.
+	 *
+	 * @return file input stream
+	 */
 	public InputStream getFileInputStream() {
 		return fileInputStream;
 	}
 
 	/**
-	 * Devuelve el servicio de gestion de envios
-	 * 
-	 * @return
+	 * Devuelve el servicio de gestion de envios.
+	 *
+	 * @return servicio gestion envios
 	 */
 	public ServicioGestionEnvios getServicioGestionEnvios() {
 		return servicioGestionEnvios;
 	}
 
+	/**
+	 * Modificar servicio gestion envios.
+	 *
+	 * @param servicioGestionEnvios new servicio gestion envios
+	 */
 	public void setServicioGestionEnvios(ServicioGestionEnvios servicioGestionEnvios) {
 		this.servicioGestionEnvios = servicioGestionEnvios;
 	}
 	
+	/**
+	 * Obtener page size.
+	 *
+	 * @return page size
+	 */
 	public int getPageSize() {
 		return pageSize;
 	}
 
+	/**
+	 * Modificar page size.
+	 *
+	 * @param pageSize new page size
+	 */
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
 
 	/**
+	 * Obtener search.
+	 *
 	 * @return the search
 	 */
 	public String getSearch() {
@@ -1265,6 +1785,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	}
 
 	/**
+	 * Modificar search.
+	 *
 	 * @param search the search to set
 	 */
 	public void setSearch(String search) {

@@ -68,67 +68,99 @@ import es.mpr.plataformamensajeria.util.UtilCreateFile;
  */
 @Service("servicioGestionEnviosHistoricosImpl")
 public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnviosHistoricos {
+	
+	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioGestionEnviosHistoricosImpl.class);
 	
+	/**  view misim manager. */
 	@Resource(name="ViewMisimManagerImpl")
 	private ViewMisimManager viewMisimManager;
 	
+	/**  tbl gestion envios hist manager. */
 	@Resource(name = "TblGestionEnviosHistManagerImpl")
 	private TblGestionEnviosHistManager tblGestionEnviosHistManager;
 	
+	/**  tbl gestion envios manager. */
 	@Resource(name = "TblGestionEnviosManagerImpl")
 	private TblGestionEnviosManager tblGestionEnviosManager;
 	
+	/**  tbl mensajes hist manager. */
 	@Resource(name = "TblMensajesHistManagerImpl")
 	private TblMensajesHistManager tblMensajesHistManager;
 	
+	/**  tbl lotes envios hist manager. */
 	@Resource(name="TblLotesEnviosHistManagerImpl")
 	private TblLotesEnviosHistManager tblLotesEnviosHistManager;
 	
+	/**  tbl destinatarios mens hist manager. */
 	@Resource(name="TblDestinatariosMensHistManagerImpl")
 	private TblDestinatariosMensajesHistManager tblDestinatariosMensHistManager;
 	
+	/**  tbl usuarios push manager. */
 	@Resource(name="TblUsuariosPushManagerImpl")
 	private TblUsuariosPushManager tblUsuariosPushManager;
 	
+	/**  tbl destinatarios hist manager. */
 	@Resource(name="TblDestinatariosHistManagerImpl")
 	private TblDestinatariosHistManager tblDestinatariosHistManager;
 	
+	/**  tbl adjuntos hist manager. */
 	@Resource(name="TblAdjuntosHistManagerImpl")
 	private TblAdjuntosHistManager tblAdjuntosHistManager;
 	
+	/**  view lotes envios det hist manager. */
 	@Resource(name="ViewLotesEnviosDetHistManagerImpl")
 	private ViewLotesEnviosDetHistManager viewLotesEnviosDetHistManager;
 	
+	/**  view historico hist manager. */
 	@Resource(name="ViewHistoricoHistManagerImpl")
 	private ViewHistoricoHistManager viewHistoricoHistManager;
 	
+	/**  query executor adjuntos hist. */
 	@Resource(name="QueryExecutorAdjuntosHistImpl")
 	private QueryExecutorAdjuntosHist queryExecutorAdjuntosHist;
 	
+	/**  query executor mensajes hist. */
 	@Resource(name="QueryExecutorMensajesHistImpl")
 	private QueryExecutorMensajesHist queryExecutorMensajesHist;
 	
+	/**  query executor gestion envios hist. */
 	@Autowired
 	private QueryExecutorGestionEnviosHist queryExecutorGestionEnviosHist;
 	
+	/**  query executor destinatarios mensajes hist impl. */
 	@Autowired
 	private QueryExecutorDestinatariosMensajesHist  queryExecutorDestinatariosMensajesHistImpl;
 
+	/**  mensajesms. */
 	private static String MENSAJESMS = "SMS";
+	
+	/**  mensajeemail. */
 	private static String MENSAJEEMAIL = "EMAIL";
+	
+	/**  mensajenotificacion. */
 	private static String MENSAJENOTIFICACION = "NOTIFICACION PUSH";
+	
+	/**  mensajerecepcion. */
 	private static String MENSAJERECEPCION = "RECEPCION SMS";
+	
+	/** Constante VISTADESTINATARIO. */
 	private static final Integer VISTADESTINATARIO = 3;
-	private static final Integer VISTALOTES = 2;
-	private static final Integer VISTAMENSAJES= 1;
-	private static final String OK = "OK";
+//	private static final Integer VISTALOTES = 2;
+//	private static final Integer VISTAMENSAJES= 1;
+//	private static final String OK = "OK";
 
 	
-	static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
+	/**  map permisos usuario aplicacion. */
+static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
+	
+	/**  rol usuario. */
 	static String rolUsuario = null;
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getGestionDeEnviosHistoricos(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioHistoricoBean, javax.servlet.http.HttpServletRequest, boolean)
+	 */
 	///MIGRADO
 	@SuppressWarnings("unchecked")
 	@Override
@@ -204,6 +236,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getGestionDeEnviosDestinatariosHistoricos(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioHistoricoBean, javax.servlet.http.HttpServletRequest)
+	 */
 	///MIGRADO
 	@SuppressWarnings("unchecked")
 	@Override
@@ -247,7 +282,15 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	}
 
 	
+	/**
+	 * Obtener total gestion envio.
+	 *
+	 * @param eg the eg
+	 * @param request the request
+	 * @return total gestion envio
+	 */
 	///MIGRADO
+	@SuppressWarnings("unchecked")
 	public Integer getTotalGestionEnvio(es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg, HttpServletRequest request) {
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
 		
@@ -281,7 +324,15 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		}
 	}
 
+	/**
+	 * Obtener total lotes gestion envio.
+	 *
+	 * @param eg the eg
+	 * @param request the request
+	 * @return total lotes gestion envio
+	 */
 	///MIGRADO
+	@SuppressWarnings("unchecked")
 	public Integer getTotalLotesGestionEnvio(es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg, HttpServletRequest request) {
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
 		
@@ -318,6 +369,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#loadMensaje(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public DetalleEnvioHistBean loadMensaje(String idMensaje) throws BusinessException {
@@ -370,11 +424,12 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	}
 
 	/**
-	 * <p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>.
+	 *
+	 * @param lista the lista
+	 * @param mensajeId the mensaje id
 	 * @return Lista de objetos
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<AdjuntoEmailHistoricosBean> getListAdjuntoEmailBean(List<TblAdjuntosHist> lista, Long mensajeId) throws BusinessException {
@@ -390,6 +445,14 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return result;
 	}
 
+	/**
+	 * Obtener adjunto email hist bean.
+	 *
+	 * @param adjuntoTO the adjunto TO
+	 * @param mensajeId the mensaje id
+	 * @return adjunto email hist bean
+	 * @throws BusinessException the business exception
+	 */
 	// /MIGRADO
 	protected AdjuntoEmailHistoricosBean getAdjuntoEmailHistBean(TblAdjuntosHist adjuntoTO, Long mensajeId)
 			throws BusinessException {
@@ -412,11 +475,11 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 
 		
 	/**
-	 * <p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<HistoricoHistBean> getListHistoricoMultidestBean(List<ViewHistoricoHistMultidest> lista) throws BusinessException {
@@ -446,11 +509,11 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	
 
 	/**
-	 * <p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<HistoricoHistBean> getListHistoricoBean(List<ViewHistoricoHist> lista) throws BusinessException {
@@ -478,6 +541,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#loadAdjunto(java.lang.Long, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public AdjuntoEmailHistoricosBean loadAdjunto(Long idAdjunto, Long idEmail) {
@@ -499,6 +565,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	}
 
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#loadLote(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public DetalleLoteBean loadLote(String idLote) throws BusinessException {
@@ -521,6 +590,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return detalleLote;
 	}
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getMensajesLotes(int, int, java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	public PaginatedList<MensajeHistoricosBean> getMensajesLotes(int start, int size, Long loteId) throws BusinessException {
@@ -542,6 +614,14 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		}
 	}
 
+	/**
+	 * Obtener list mensajes lote bean.
+	 *
+	 * @param lista the lista
+	 * @param idLote the id lote
+	 * @return list mensajes lote bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	protected ArrayList<MensajeHistoricosBean> getListMensajesLoteBean(List<TblMensajesHist> lista, Long idLote) throws BusinessException {
 		ArrayList<MensajeHistoricosBean> result = null;
@@ -579,12 +659,18 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#isMultidestinatario(java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public boolean isMultidestinatario(Long mensajeId) throws BusinessException {
 		return tblLotesEnviosHistManager.isMultidestinatario(mensajeId);
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getDestinatariosMensajesMultidestinatario(int, int, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public PaginatedList<DestinatariosMensajesHistoricosBean> getDestinatariosMensajesMultidestinatario(int start, int size, Long idMensaje) throws BusinessException {
@@ -627,6 +713,13 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 
 	}
 
+	/**
+	 * Obtener list destinatarios mensajes historicos bean.
+	 *
+	 * @param lista the lista
+	 * @return list destinatarios mensajes historicos bean
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	protected ArrayList<DestinatariosMensajesHistoricosBean> getListDestinatariosMensajesHistoricosBean(List<TblDestinatariosMensHist> lista) throws BusinessException {
 		ArrayList<DestinatariosMensajesHistoricosBean> result = null;
@@ -656,6 +749,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getDestinatariosMensajes(int, int, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public PaginatedList<DestinatariosMensajesHistoricosBean> getDestinatariosMensajes(int start, int size, Long idMensaje) throws BusinessException {
@@ -696,6 +792,12 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		}
 	}
 
+	/**
+	 * Load destinatario mensaje.
+	 *
+	 * @param ms the ms
+	 * @return the destinatarios mensajes historicos bean
+	 */
 	////MIGRADO
 	private DestinatariosMensajesHistoricosBean loadDestinatarioMensaje(TblMensajesHist ms) {
 		DestinatariosMensajesHistoricosBean dmBean = new DestinatariosMensajesHistoricosBean();
@@ -713,6 +815,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return dmBean;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getDestinatariosMensajesHistoricos(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public DestinatariosMensajesHistoricosBean getDestinatariosMensajesHistoricos(String idDestinatariosMensajes) throws BusinessException {
@@ -740,6 +845,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return res;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getMensajeHistorico(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public GestionEnvioHistoricoBean getMensajeHistorico(String idMensaje) throws BusinessException {
@@ -768,6 +876,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return geBean;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getHistoricosHistMensaje(java.lang.String, java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public List<HistoricoHistBean> getHistoricosHistMensaje(String idMensaje, String idDestinatariosMensajes) throws BusinessException {
@@ -797,6 +908,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		}
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getTodosGestionEnviosCons(java.util.List)
+ */
 ////MIGRADO
 	@Override
 	public List<TblGestionEnviosHist> getTodosGestionEnviosCons(List<Long> listaMensajes)
@@ -812,18 +926,27 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return result;
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getTblGestionEnviosHist(java.util.List)
+ */
 ////MIGRADO
 	@Override
 	public List<TblGestionEnviosHist> getTblGestionEnviosHist(List<Long> subList) {
 		return queryExecutorGestionEnviosHist.convertGestionEnviosTOGestionEnviosHist(subList);
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#insert(es.minhap.sim.model.TblGestionEnviosHist)
+ */
 ////MIGRADO
 	@Override
 	public Integer insert(TblGestionEnviosHist gestionEnvioHistorico) {
 		return tblGestionEnviosHistManager.insertarGestionEnvios(gestionEnvioHistorico);
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#delete(java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public void delete(Long mensajeid) {
@@ -831,6 +954,9 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getEnvio(java.lang.String)
+	 */
 	///MIGRADO
 		@Override
 		public TblGestionEnviosHist getEnvio(String idEnvio) throws BusinessException {
@@ -844,6 +970,13 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 			}
 		}
 	
+	/**
+	 * Obtener list gestion envio historico bean.
+	 *
+	 * @param lista the lista
+	 * @param porLote the por lote
+	 * @return list gestion envio historico bean
+	 */
 	///MIGRADO
 	private List<GestionEnvioHistoricoBean> getListGestionEnvioHistoricoBean(List<TblGestionEnviosHist> lista,
 			boolean porLote) {
@@ -877,6 +1010,14 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		return result;
 	}
 
+	/**
+	 * Creates the gestion envio historico bean.
+	 *
+	 * @param gestionEnvio the gestion envio
+	 * @param ge the ge
+	 * @return the es.minhap.plataformamensajeria.iop.beans. gestion envio historico bean
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	private es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean createGestionEnvioHistoricoBean(GestionEnvioHistoricoBean gestionEnvio,
 			es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean ge) throws BusinessException{
@@ -927,6 +1068,12 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 		}
 	}
 	
+/**
+ * Obtener list gestion envio hist bean from destinatario.
+ *
+ * @param lista the lista
+ * @return list gestion envio hist bean from destinatario
+ */
 ////MIGRADO
 	private List<GestionEnvioHistoricoBean> getListGestionEnvioHistBeanFromDestinatario(List<ViewGestionEnviosDestHistId> lista) {
 		List<GestionEnvioHistoricoBean> result = new ArrayList<>();

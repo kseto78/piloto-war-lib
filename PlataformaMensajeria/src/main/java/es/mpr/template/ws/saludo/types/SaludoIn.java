@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>Clase java para el tipo complejo saludoIn.
  * 
@@ -35,12 +36,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "saludoIn")
 public class SaludoIn {
 
+    /**  request type. */
     @XmlElement(required = true)
     protected String requestType;
 
     /**
+     * Obtener request type.
+     *
      * @return Devuelve el valor de la propiedad requestType
-     *     
      */
     public String getRequestType() {
         return requestType;
@@ -48,8 +51,8 @@ public class SaludoIn {
 
     /**
      * Establece el valor de la propiedad requestType.
-     * 
-     * @param value
+     *
+     * @param value new request type
      */
     public void setRequestType(String value) {
         this.requestType = value;

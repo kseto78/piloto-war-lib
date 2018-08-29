@@ -13,7 +13,7 @@
 					        </div>
 					        <div class="editContent">
 					        			 <p class="criteria">
-                              <span style="width: 400px;">
+                              <span style="width: 420px;">
                                   <label style="width: 120px;" class="fieldText">Servidor / Proveedor:</label>
                                   <s:select
                                             id="planificacion.servidorId" name="planificacion.servidorId" 
@@ -28,7 +28,7 @@
                                             <s:hidden name="servicio.canalId" id="servicio.canalId" value="%{servicio.canalId}"/>
                               		</span> 
                              		 </p>
-					                	 <p class="criteria">
+					                	 <p class="criteria" class="checksMargin">
 					                     	<span>
 					                            <label class="fieldText" style="width: 120px;">Días de la semana:</label>
 					                            L
@@ -46,6 +46,7 @@
 					                            D
 					                            <s:checkbox id="planificacion.domingo" name="planificacion.domingo" value="%{planificacion.domingo}" theme="simple"/>              
 											</span>
+										</p>	
 					                   <p class="criteria">
 					                 		<label class="fieldText" style="width: 120px;">Hora Inicio:</label>
 					                       		 <s:select 
@@ -62,7 +63,13 @@
 												list="comboHorasFin" listKey="codigo"
 												listValue="descripcion" cssClass="W65" 
 												value="%{planificacion.horaHasta}" disabled="false" />
-					                    </p>         
+					                    </p> 
+            					        <p class="criteria">
+					                     	<span>
+					                            <label class="fieldText" style="width: 120px;">Activo:</label>
+					                            <s:checkbox id="planificacion.activo" name="planificacion.activo" value="%{planificacion.activo}" class="checksMargin"  theme="simple"/>         
+											</span>
+										</p>        
 					                    <input type="hidden" name="planificacion.servicioId" id="planificacion.servicioId" value="${planificacion.servicioId}"/> 
 					                    <input type="hidden" name="planificacion.tipoPlanificacionId" id="planificacion.tipoPlanificacionId" 
 					                    		value="${planificacion.tipoPlanificacionId}"/>

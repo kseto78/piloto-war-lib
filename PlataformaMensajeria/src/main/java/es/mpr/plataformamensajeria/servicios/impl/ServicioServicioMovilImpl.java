@@ -46,20 +46,29 @@ import es.mpr.plataformamensajeria.util.Utiles;
 @Service("servicioServicioMovilImpl")
 public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServicioMovilImpl.class);
 	
+	/**  tbl servicios moviles manager. */
 	@Resource(name = "tblServiciosMovilesManagerImpl")
 	private TblServiciosMovilesManager tblServiciosMovilesManager;
 	
+	/**  props. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties props;
 	
+	/**  map tipos. */
 	Map<String,String> mapTipos = null;
 	
+	/** Constante SEPARADOR_OPCIONES. */
 	private static final String SEPARADOR_OPCIONES = "&&";
 	
+	/** Constante SEPARADOR_OPCIONES_VALUES. */
 	private static final String SEPARADOR_OPCIONES_VALUES = "#";
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#getServiciosMoviles(es.mpr.plataformamensajeria.beans.ServicioMovilBean)
+	 */
 	@Override
 	public List<TblServiciosMoviles> getServiciosMoviles(ServicioMovilBean criterio)
 			throws BusinessException {
@@ -82,6 +91,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		return list;
 	}
 		
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#getServiciosMoviles()
+	 */
 	@Override
 	public List<TblServiciosMoviles> getServiciosMoviles()
 			throws BusinessException {
@@ -103,6 +115,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#getServiciosMoviles(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.ServicioMovilBean)
+	 */
 	///MIGRADO
 	@Override
 	public PaginatedList<ServicioMovilBean> getServiciosMoviles(int start, int size, String order, String columnSort,
@@ -144,6 +159,13 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		}
 	}
 
+	/**
+	 * Obtener list tbl servicio movil bean.
+	 *
+	 * @param lista the lista
+	 * @return list tbl servicio movil bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	protected List<ServicioMovilBean> getListTblServicioMovilBean(List<TblServiciosMoviles> lista) throws BusinessException {
 		List<ServicioMovilBean> result = null;
@@ -176,6 +198,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	}
 	
 	
+	/**
+	 * Cargar tipos servicios.
+	 */
 	private void cargarTiposServicios() {
 		String options = props.getProperty("generales.serviciosMoviles.opciones", null);
 		
@@ -186,6 +211,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#newServicioMovil(es.mpr.plataformamensajeria.beans.ServicioMovilBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -228,6 +256,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#updateServicioMovil(es.mpr.plataformamensajeria.beans.ServicioMovilBean, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -247,6 +278,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#loadServicioMovil(es.mpr.plataformamensajeria.beans.ServicioMovilBean)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -261,6 +295,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#deleteServicioMovil(es.mpr.plataformamensajeria.beans.ServicioMovilBean, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -278,6 +315,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil#deleteImagenServicioMovil(es.mpr.plataformamensajeria.beans.ServicioMovilBean, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	@Override
 	public void deleteImagenServicioMovil(ServicioMovilBean servicioMovil, String accionServicioMovil, Long accionIdServicioMovil, String source)
 			throws BusinessException {
@@ -299,13 +339,10 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	/**
 	 * <p>
 	 * Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean
-	 * </p>
-	 * 
-	 * @param organismoBean
-	 * 
+	 * </p>.
+	 *
+	 * @param servicioMovil the servicio movil
 	 * @return objeto OrganismoJPA
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
 	///MIGRADO
 	public TblServiciosMoviles getServicioMovilTO(ServicioMovilBean servicioMovil) {
@@ -346,11 +383,11 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	/**
 	 * <p>
 	 * Obtenemos un objeto ServicioBean a partir de un objeto ServicioJPA
-	 * </p>
-	 * 
-	 * @param servicioJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param serv the serv
 	 * @return objeto ServicioBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected ServicioBean getServicioBean(TblServicios serv) throws BusinessException {
@@ -378,11 +415,11 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	/**
 	 * <p>
 	 * Obtenemos un objeto ServicioBean a partir de un objeto ServicioBean
-	 * </p>
-	 * 
-	 * @param ServicioBean
-	 * 
+	 * </p>.
+	 *
+	 * @param servMovil the serv movil
 	 * @return objeto ServicioBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	@Override
@@ -401,11 +438,11 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	/**
 	 * <p>
 	 * Convertirmos una lista de ViewServicioJPA a una lista de ServidoresBean
-	 * </p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * </p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected List<ServicioBean> getListViewServicioBean(List<ViewServicios> lista) throws BusinessException {
@@ -435,6 +472,13 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		return result;
 	}
 	
+	/**
+	 * Obtener servicio movil bean.
+	 *
+	 * @param servMovil the serv movil
+	 * @return servicio movil bean
+	 * @throws BusinessException the business exception
+	 */
 	protected ServicioMovilBean getServicioMovilBean(TblServiciosMoviles servMovil) throws BusinessException {
 		ServicioMovilBean servicioMovil = new ServicioMovilBean();
 

@@ -20,15 +20,22 @@ import es.minhap.sim.model.TblTiposParametros;
 import es.mpr.plataformamensajeria.beans.TipoParametroBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioTipoParametro;
 
-
+/**
+ * The Class ServicioTipoParametroImpl.
+ */
 @Service("servicioTipoParametroImpl")
 public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioTipoParametroImpl.class);
 	
+	/**  tbl tipos parametros manager. */
 	@Resource(name="tblTiposParametrosManagerImpl")
 	private TblTiposParametrosManager tblTiposParametrosManager;
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioTipoParametro#getTipoParametrosServidor()
+ */
 /////MIGRADO
 	@Override
 	public List<TipoParametroBean> getTipoParametrosServidor() throws BusinessException {
@@ -45,6 +52,9 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 		} 
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioTipoParametro#getTipoParametrosProveedorSMS()
+ */
 /////MIGRADO
 	@Override
 	public List<TipoParametroBean> getTipoParametrosProveedorSMS() throws BusinessException {
@@ -59,6 +69,9 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 		} 
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioTipoParametro#getTipoParametrosReceptorSMS()
+ */
 /////MIGRADO
 	@Override
 	public List<TipoParametroBean> getTipoParametrosReceptorSMS() throws BusinessException {
@@ -73,6 +86,9 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 		} 
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioTipoParametro#getTipoParametrosServidorPush()
+ */
 /////MIGRADO
 	@Override
 	public List<TipoParametroBean> getTipoParametrosServidorPush() throws BusinessException {
@@ -88,11 +104,11 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	}
 
 	/**
-	 * <p>Convertirmos una lista de TipoParametroJPA a una lista de TipoParametroBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de TipoParametroJPA a una lista de TipoParametroBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
 	protected List<TipoParametroBean> getListTipoParametroBean(List<TblTiposParametros> lista) throws BusinessException

@@ -5,6 +5,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+
 /**
  * <p>Interface del servicio web de ejemplo <i>{http://ws.mpr.es/saludo}SaludarService</i>
  * 
@@ -18,6 +19,12 @@ import javax.jws.soap.SOAPBinding;
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 public interface ISaludoService {
 
+    /**
+     * Saludar.
+     *
+     * @param in the in
+     * @return the es.mpr.template.ws.saludo.types. saludo return
+     */
     @WebResult(name = "saludoReturn", targetNamespace = "http://ws.mpr.es/saludo/types", partName = "out")
     @WebMethod()
     public es.mpr.template.ws.saludo.types.SaludoReturn saludar(

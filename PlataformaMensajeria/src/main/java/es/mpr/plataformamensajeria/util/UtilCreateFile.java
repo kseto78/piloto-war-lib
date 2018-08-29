@@ -10,10 +10,20 @@ import java.sql.Blob;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Clase UtilCreateFile.
+ */
 public class UtilCreateFile {
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(UtilCreateFile.class);
 	
+	/**
+	 * Obtener cuerpo mensaje from file.
+	 *
+	 * @param ruta the ruta
+	 * @return cuerpo mensaje from file
+	 */
 	public static String getCuerpoMensajeFromFile(String ruta) {
 		BufferedReader br = null;
 		StringBuilder sb = null;
@@ -58,8 +68,15 @@ public class UtilCreateFile {
 	}
 	
 	
+	/**
+	 * Obtener adjunto mensaje.
+	 *
+	 * @param ruta the ruta
+	 * @return adjunto mensaje
+	 */
 	public static byte[] getAdjuntoMensaje(String ruta) {
 		byte[] bytesArray = null;
+		@SuppressWarnings("unused")
 		Blob blob = null;
 		FileInputStream fis = null;
 		try {
@@ -85,6 +102,11 @@ public class UtilCreateFile {
 	}
 
 
+	/**
+	 * Eliminar adjunto.
+	 *
+	 * @param ruta the ruta
+	 */
 	public static void eliminarAdjunto(String ruta) {
 		
 		try {
@@ -106,6 +128,11 @@ public class UtilCreateFile {
 	}
 
 
+	/**
+	 * Delete directory.
+	 *
+	 * @param ruta the ruta
+	 */
 	private static void deleteDirectory(String ruta) {
 		File file = new File(ruta);
 		if (file.isDirectory() && file.list().length == 0) {

@@ -21,7 +21,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * @author Altran
  */
 public class CanalBean implements Audit {
-
+	/**
+	 * COnstructor por defecto
+	 */
 	public CanalBean() {
 		super();
 		this.nombre = null;
@@ -43,10 +45,18 @@ public class CanalBean implements Audit {
 	protected Date fechamodificacion = null;
 	protected String modificadopor = null;
 
+	/**
+	 * Obtener id
+	 * @return
+	 */
 	public Object getId() {
 		return this.canalId;
 	}
 
+	/**
+	 * Modificar id
+	 * @param id
+	 */
 	public void setId(Object id) {
 		this.canalId = (Integer) id;
 	}
@@ -171,6 +181,9 @@ public class CanalBean implements Audit {
 		this.modificadopor = modificadopor;
 	}
 
+	/**
+	 * Obtener XML
+	 */
 	@Override
 	public String obtenerXML() {
 		return null;

@@ -15,6 +15,9 @@ import es.mpr.template.ws.saludo.types.SaludoReturn;
  */
 public class SaludoServiceImpl implements ISaludoService {
 
+	/* (non-Javadoc)
+	 * @see es.mpr.template.ws.saludo.ISaludoService#saludar(es.mpr.template.ws.saludo.types.SaludoIn)
+	 */
 	public SaludoReturn saludar(
 	        @WebParam(partName = "in", name = "saludoIn", targetNamespace = "http://ws.mpr.es/saludo/types")
 	        SaludoIn in

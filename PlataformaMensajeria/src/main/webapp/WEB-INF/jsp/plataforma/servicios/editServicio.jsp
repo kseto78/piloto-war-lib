@@ -13,7 +13,7 @@
 		validate="false" theme="simple" cssClass="">
 		<h3 class="pageNameButtons">
 			<span class="floatRight"> <s:if
-					test='%{servicio.pendienteAprobacion == "1"}'>
+					test='%{servicio.pendienteaprobacion == "1"}'>
 					<s:submit theme="simple" value="%{getText('buttons.text.aprobar')}"
 						cssClass="button" />
 				</s:if> <s:else>
@@ -153,11 +153,12 @@
 					</s:textarea>
 				</p>
 
-				<s:if test='%{servicio.pendienteAprobacion == "1"}'>
+				<s:if test='%{servicio.pendienteaprobacion == "1"}'>
 					<p class="criteria">
-						<label class="fieldText" style="width: 120px;">Estado</label> <strong>Pendiente
-							de aprobación</strong> <input type="hidden" name="servicio.isActivo"
-							id="servicio.isActivo" value="${servicio.activado}">
+						<label class="fieldText" style="width: 120px;">Estado</label> 
+						<strong>Pendiente de aprobación</strong> 
+						<input type="hidden" name="servicio.isActivo"
+							id="servicio.isActivo" value="%{servicio.activado}"/>
 					</p>
 				</s:if>
 				<s:else>
@@ -1022,7 +1023,8 @@
 							<th class="TH110">Días</th>
 							<th class="TH70 separator">Hora Inicio</th>
 							<th class="TH70 separator">Hora Fin</th>
-							<th class="TH200">Servidor / Proveedor</th>
+							<th class="TH150">Servidor / Proveedor</th>
+							<th class="TH35">Activo</th>
 							<th class="TH70" id="aunip">Organismo</th>
 							<th class="TH45 separator"></th>
 						</tr>
@@ -1045,6 +1047,16 @@
 								<td><s:label value="%{horaDesde}" /></td>
 								<td><s:label value="%{horaHasta}" /></td>
 								<td><s:label value="%{nombreServidor}" /></td>
+								<td>
+									<c:choose>
+									    <c:when test="${activo == 'true' }">
+									        <span class="activo"></span>
+									    </c:when>    
+									    <c:otherwise>
+									        <span class="inactivo"></span>
+									    </c:otherwise>
+									</c:choose>				
+								</td>
 								<td><s:label value="%{dir3Organismo}" /></td>
 								<td class="buttons"><span class="edit">
 										<div
@@ -1070,7 +1082,7 @@
 						<s:else>
 							<tr>
 							<tfoot>
-								<td colspan="6"><span class="leftSide"> <s:submit
+								<td colspan="7"><span class="leftSide"> <s:submit
 											id="eliminaSeleccionadosP" name="eliminaSeleccionados"
 											theme="simple" disabled="true"
 											value="%{getText('button.plataforma.eliminarseleccionados')}"

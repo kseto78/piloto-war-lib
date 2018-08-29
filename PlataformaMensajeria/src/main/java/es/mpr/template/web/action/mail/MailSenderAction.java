@@ -18,6 +18,7 @@ import com.map.j2ee.mail.MailMessageVO;
 import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.ActionSupport;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * <p>
@@ -30,32 +31,40 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class MailSenderAction extends ActionSupport implements ServletRequestAware, ServletResponseAware{
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Definicion del logger
-	 */
+	/** Definicion del logger. */
 	protected Log logger = LogFactory.getLog(this.getClass());
 
+    /**  mail manager. */
     private MailManager mailManager;
     
+    /**  f. */
     protected MailSenderForm f = new MailSenderForm();
 
+	/**  request. */
 	protected HttpServletRequest request;
 	
+	/**  response. */
 	protected HttpServletResponse response;
 	
+	/**  lista formatos correo. */
 	protected List<KeyValueObject> listaFormatosCorreo = new ArrayList<KeyValueObject>();
 	
+    /**  adjuntos. */
     private List<File> adjuntos;//La lista de adjuntos
+    
+    /**  adjunto content type. */
     private List<String> adjuntoContentType; //El content type de los adjuntos
+    
+    /**  adjunto file name. */
     private List<String> adjuntoFileName; //El nombre de los ficheros adjuntos
 
 	/**
-	 * 
-	 * <p>M&eacute;todo que genera los datos para presentar el formulario de correo</p>
-	 * 
-	 * @return
+	 * <p>M&eacute;todo que genera los datos para presentar el formulario de correo</p>.
+	 *
+	 * @return the string
 	 */
     public String newMail() {
     	if(request.getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -73,11 +82,10 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
     }
 
     /**
-     * 
-     * <p>M&eacute;todo que realiza el envío de un email</p>
-     * 
-     * @return
-     * @throws Exception
+     * <p>M&eacute;todo que realiza el envío de un email</p>.
+     *
+     * @return the string
+     * @throws Exception the exception
      */
     public String send() throws Exception {
     	if(request.getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -97,36 +105,59 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
     }
     
     /**
+     * Obtener mail manager.
+     *
      * @return Returns the mailManager.
      */
     public MailManager getMailManager() {
         return mailManager;
     }
+    
     /**
+     * Modificar mail manager.
+     *
      * @param mailManager The mailManager to set.
      */
     public void setMailManager(MailManager mailManager) {
         this.mailManager = mailManager;
     }
 
+	/**
+	 * Obtener f.
+	 *
+	 * @return f
+	 */
 	public MailSenderForm getF() {
 		return f;
 	}
 
+	/**
+	 * Modificar f.
+	 *
+	 * @param f new f
+	 */
 	public void setF(MailSenderForm f) {
 		this.f = f;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.interceptor.ServletRequestAware#setServletRequest(javax.servlet.http.HttpServletRequest)
+	 */
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.interceptor.ServletResponseAware#setServletResponse(javax.servlet.http.HttpServletResponse)
+	 */
 	public void setServletResponse(HttpServletResponse response) {
 		this.response = response;
 	}
 
 	/**
+	 * Obtener servlet request.
+	 *
 	 * @return the request
 	 */
 	public HttpServletRequest getServletRequest() {
@@ -134,6 +165,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Obtener servlet response.
+	 *
 	 * @return the response
 	 */
 	public HttpServletResponse getServletResponse() {
@@ -141,6 +174,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Obtener lista formatos correo.
+	 *
 	 * @return the listaFormatosCorreo
 	 */
 	public List<KeyValueObject> getListaFormatosCorreo() {
@@ -148,6 +183,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Modificar lista formatos correo.
+	 *
 	 * @param listaFormatosCorreo the listaFormatosCorreo to set
 	 */
 	public void setListaFormatosCorreo(List<KeyValueObject> listaFormatosCorreo) {
@@ -155,13 +192,17 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
     /**
-	 * @return the adjuntos
-	 */
+     * Obtener adjunto.
+     *
+     * @return the adjuntos
+     */
 	public List<File> getAdjunto() {
 		return adjuntos;
 	}
 
 	/**
+	 * Modificar adjunto.
+	 *
 	 * @param adjuntos the adjuntos to set
 	 */
 	public void setAdjunto(List<File> adjuntos) {
@@ -169,6 +210,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Obtener adjunto content type.
+	 *
 	 * @return the adjuntoContentType
 	 */
 	public List<String> getAdjuntoContentType() {
@@ -176,6 +219,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Modificar adjunto content type.
+	 *
 	 * @param adjuntoContentType the adjuntoContentType to set
 	 */
 	public void setAdjuntoContentType(List<String> adjuntoContentType) {
@@ -183,6 +228,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Obtener adjunto file name.
+	 *
 	 * @return the adjuntoFileName
 	 */
 	public List<String> getAdjuntoFileName() {
@@ -190,6 +237,8 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
 	/**
+	 * Modificar adjunto file name.
+	 *
 	 * @param adjuntoFileName the adjuntoFileName to set
 	 */
 	public void setAdjuntoFileName(List<String> adjuntoFileName) {
@@ -197,7 +246,10 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	}
 
     /**
-     * 
+     * Obtener attatchments.
+     *
+     * @return attatchments
+     * @throws Exception the exception
      */
     private ArrayList<File> getAttatchments() throws Exception {
     	ArrayList<File> listaAttachments = new ArrayList<File>();
@@ -215,9 +267,12 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
     		return null;
     	}
     }
+    
     /**
-	 * <p>M&eacute;todo que realiza la preparaci&oacute;n de datos previos a la ejecución de cualquier acci&oacute;n</p>
-	 */
+     * <p>M&eacute;todo que realiza la preparaci&oacute;n de datos previos a la ejecución de cualquier acci&oacute;n</p>.
+     *
+     * @throws Exception the exception
+     */
 
 	public void prepare() throws Exception {
 		newMail();

@@ -1892,7 +1892,25 @@
 			<result name="success" type="tiles">pages.usuariosPush</result>
 		</action>
 		
-<!-- 		nat -->
+		<!-- ************************************* -->
+		<!-- PLATAFORMA MENSAJERIA - USUARIOS WEB PUSH -->
+		<!-- ************************************* -->
+		<action name="buscarUsuariosWebPush" class="usuariosWebPushAction"
+			method="newSearch">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.usuariosWebPush</result>
+		</action>
+		<action name="listUsuariosWebPush" class="usuariosWebPushAction"
+			method="search">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.usuariosWebPush</result>
+		</action>
+		<action name="insertarUsuarioWebPush" class="usuariosWebPushAction"
+			method="insertarUsuarioWebPush">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.usuariosWebPush</result>
+		</action>
+		
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - ENVIO DE MENSAJES -->
 		<!-- ************************************* -->
@@ -1910,8 +1928,7 @@
 <!-- 			<result name="success" type="tiles">pages.envioMensajes</result>		 -->
 <!-- 		</action> -->
 		
-		
-<!-- 		nat -->		
+			
 		
 		<!-- *************************************** -->
 		<!-- PÁGINA DE PERMISO DENEGADO -->

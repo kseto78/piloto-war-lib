@@ -24,20 +24,29 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioHistoricoHist;
  */
 @Service("servicioHistoricoHistImpl")
 public class ServicioHistoricoHistImpl implements ServicioHistoricoHist{
+	
+	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioMensajesAdjuntosHistoricosImpl.class);
 	
+	/**  tbl historicos hist manager. */
 	@Resource(name = "TblHistoricosHistManagerImpl")
 	private TblHistoricosHistManager tblHistoricosHistManager;
 	
+	/**  tbl historicos manager. */
 	@Resource(name = "TblHistoricosManagerImpl")
 	private TblHistoricosManager tblHistoricosManager;
 	
+	/**  query executor historicos hist. */
 	@Resource(name = "QueryExecutorHistoricosHistImpl")
 	private QueryExecutorHistoricosHist queryExecutorHistoricosHist;
 	
+	/** Constante MAX. */
 	private static final Integer MAX = 5000;
 	
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioHistoricoHist#getTodosIdHistoricosCons(java.util.List)
+ */
 ////MIGRADO
 	@Override
 	public List<Long> getTodosIdHistoricosCons(List<Long> listaMensajesHistoricosCons) throws BusinessException{
@@ -54,6 +63,9 @@ public class ServicioHistoricoHistImpl implements ServicioHistoricoHist{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioHistoricoHist#getTblHistoricosHist(java.util.List)
+	 */
 	////MIGRADO
 	@Override
 	public List<List<TblHistoricosHist>> getTblHistoricosHist(List<Long> subList) {
@@ -71,12 +83,18 @@ public class ServicioHistoricoHistImpl implements ServicioHistoricoHist{
 		return res;
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioHistoricoHist#insert(es.minhap.sim.model.TblHistoricosHist)
+ */
 ////MIGRADO
 	@Override
 	public Long insert(TblHistoricosHist historicosHistorico) {
 		return tblHistoricosHistManager.insert(historicosHistorico);
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioHistoricoHist#detele(java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	public void detele(Long historicoid) {

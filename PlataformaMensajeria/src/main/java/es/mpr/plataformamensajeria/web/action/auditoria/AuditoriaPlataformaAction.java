@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,7 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAuditoriaPlataforma;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
  
+// TODO: Auto-generated Javadoc
 /**
  * <p>Clase Action de Struts2 para la gesti&oacute;n de los Auditorias.
  * 
@@ -37,27 +37,42 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class AuditoriaPlataformaAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	private static Logger logger = Logger.getLogger(AuditoriaPlataformaAction.class);
+//	private static Logger logger = Logger.getLogger(AuditoriaPlataformaAction.class);
 	
-	@Resource(name="servicioAuditoriaPlataformaImpl")
+	/**  servicio auditoria plataforma. */
+@Resource(name="servicioAuditoriaPlataformaImpl")
 	private ServicioAuditoriaPlataforma servicioAuditoriaPlataforma;
 	
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
 	
+	/**  auditoria plataforma. */
 	private AuditoriaPlataformaBean auditoriaPlataforma;
 	
+	/**  lista auditorias. */
 	public List<AuditoriaPlataformaBean> listaAuditorias= null;
 	
+	/**  combo entidad. */
 	//Combos
 	List<KeyValueObject> comboEntidad = new ArrayList<KeyValueObject>();
+	
+	/**  combo operacion. */
 	List<KeyValueObject> comboOperacion = new ArrayList<KeyValueObject>();
 
 	
+    /**  result count. */
     private String resultCount;
 	
+    /**
+     * New search.
+     *
+     * @return the string
+     * @throws BaseException the base exception
+     */
     ////MIGRADO
     public String newSearch() throws BaseException {
 		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -102,6 +117,12 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
     }
     
     
+    /**
+     * Search.
+     *
+     * @return the string
+     * @throws BaseException the base exception
+     */
     ////MIGRADO
 	public String search() throws BaseException {
 		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -141,6 +162,11 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 	}
 
 
+/**
+ * Obtener combo entidad.
+ *
+ * @return combo entidad
+ */
 ////MIGRADO
 	public List<KeyValueObject> getComboEntidad() {
         List<KeyValueObject> result = new ArrayList<>();
@@ -195,6 +221,11 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 		return result;
     }
 
+	/**
+	 * Obtener combo operacion.
+	 *
+	 * @return combo operacion
+	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboOperacion() {
         List<KeyValueObject> result = new ArrayList<>();
@@ -219,37 +250,90 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
     }
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	@Override
 	public void prepare() throws Exception {
 	}
 
+	/**
+	 * Obtener lista auditorias.
+	 *
+	 * @return lista auditorias
+	 */
 	public List<AuditoriaPlataformaBean> getListaAuditorias() {
 		return listaAuditorias;
 	}
+	
+	/**
+	 * Modificar lista auditorias.
+	 *
+	 * @param listaAuditorias new lista auditorias
+	 */
 	public void setListaAuditorias(List<AuditoriaPlataformaBean> listaAuditorias) {
 		this.listaAuditorias = listaAuditorias;
 	}
+	
+	/**
+	 * Obtener servicio auditoria plataforma.
+	 *
+	 * @return servicio auditoria plataforma
+	 */
 	public ServicioAuditoriaPlataforma getServicioAuditoriaPlataforma() {
 		return servicioAuditoriaPlataforma;
 	}
+	
+	/**
+	 * Modificar servicio auditoria plataforma.
+	 *
+	 * @param servicioAuditoriaPlataforma new servicio auditoria plataforma
+	 */
 	public void setServicioAuditoriaPlataforma(
 			ServicioAuditoriaPlataforma servicioAuditoriaPlataforma) {
 		this.servicioAuditoriaPlataforma = servicioAuditoriaPlataforma;
 	}
+	
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
+	
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
+	
+	/**
+	 * Obtener auditoria plataforma.
+	 *
+	 * @return auditoria plataforma
+	 */
 	public AuditoriaPlataformaBean getAuditoriaPlataforma() {
 		return auditoriaPlataforma;
 	}
+	
+	/**
+	 * Modificar auditoria plataforma.
+	 *
+	 * @param auditoriaPlataforma new auditoria plataforma
+	 */
 	public void setAuditoriaPlataforma(AuditoriaPlataformaBean auditoriaPlataforma) {
 		this.auditoriaPlataforma = auditoriaPlataforma;
 	}
+	
 	/**
-	 * Método que resuelve el lugar donde tiene que volver
+	 * Método que resuelve el lugar donde tiene que volver.
+	 *
+	 * @return volver
 	 */
 	public String getVolver() {
 		String volver="buscarAuditoria.action";

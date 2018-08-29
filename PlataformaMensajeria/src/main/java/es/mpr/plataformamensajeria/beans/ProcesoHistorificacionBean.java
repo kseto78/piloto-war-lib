@@ -10,15 +10,32 @@ import es.minhap.sim.model.TblHistoricosHist;
 import es.minhap.sim.model.TblMensajesAdjuntosHist;
 import es.minhap.sim.model.TblMensajesHist;
 
+/**
+ * Clase ProcesoHistorificacionBean.
+ */
 public class ProcesoHistorificacionBean {
 
+	/**  lista mensaje historico. */
 	List<TblMensajesHist> listaMensajeHistorico;
+	
+	/**  listas destinatarios hist. */
 	private List<List<TblDestinatariosHist>> listasDestinatariosHist;
+	
+	/**  listas mensajes adjuntos hist. */
 	private List<List<TblMensajesAdjuntosHist>> listasMensajesAdjuntosHist;
+	
+	/**  listas historico hist. */
 	private List<List<TblHistoricosHist>> listasHistoricoHist;
+	
+	/**  lista gestion envios hist. */
 	private List<TblGestionEnviosHist> listaGestionEnviosHist;
+	
+	/**  listas destinatarios mensajes hist. */
 	private List<List<TblDestinatariosMensHist>> listasDestinatariosMensajesHist;
 
+	/**
+	 * Constructor de proceso historificacion bean.
+	 */
 	public ProcesoHistorificacionBean() {
 		listaMensajeHistorico = new ArrayList<>();
 		listasDestinatariosHist = new ArrayList<>();
@@ -31,6 +48,8 @@ public class ProcesoHistorificacionBean {
 	
 	
 	/**
+	 * Obtener listas destinatarios hist.
+	 *
 	 * @return the listasDestinatariosHist
 	 */
 	public List<List<TblDestinatariosHist>> getListasDestinatariosHist() {
@@ -38,6 +57,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Modificar listas destinatarios hist.
+	 *
 	 * @param listasDestinatariosHist the listasDestinatariosHist to set
 	 */
 	public void setListasDestinatariosHist(List<List<TblDestinatariosHist>> listasDestinatariosHist) {
@@ -45,6 +66,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Obtener listas mensajes adjuntos hist.
+	 *
 	 * @return the listasMensajesAdjuntosHist
 	 */
 	public List<List<TblMensajesAdjuntosHist>> getListasMensajesAdjuntosHist() {
@@ -52,6 +75,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Modificar listas mensajes adjuntos hist.
+	 *
 	 * @param listasMensajesAdjuntosHist the listasMensajesAdjuntosHist to set
 	 */
 	public void setListasMensajesAdjuntosHist(List<List<TblMensajesAdjuntosHist>> listasMensajesAdjuntosHist) {
@@ -59,6 +84,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Obtener listas historico hist.
+	 *
 	 * @return the listasHistoricoHist
 	 */
 	public List<List<TblHistoricosHist>> getListasHistoricoHist() {
@@ -66,6 +93,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Modificar listas historico hist.
+	 *
 	 * @param listasHistoricoHist the listasHistoricoHist to set
 	 */
 	public void setListasHistoricoHist(List<List<TblHistoricosHist>> listasHistoricoHist) {
@@ -73,6 +102,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Obtener listas destinatarios mensajes hist.
+	 *
 	 * @return the listasDestinatariosMensajesHist
 	 */
 	public List<List<TblDestinatariosMensHist>> getListasDestinatariosMensajesHist() {
@@ -80,6 +111,8 @@ public class ProcesoHistorificacionBean {
 	}
 
 	/**
+	 * Modificar listas destinatarios mensajes hist.
+	 *
 	 * @param listasDestinatariosMensajesHist the listasDestinatariosMensajesHist to set
 	 */
 	public void setListasDestinatariosMensajesHist(List<List<TblDestinatariosMensHist>> listasDestinatariosMensajesHist) {
@@ -89,6 +122,8 @@ public class ProcesoHistorificacionBean {
 
 
 	/**
+	 * Obtener lista mensaje historico.
+	 *
 	 * @return the listaMensajeHistorico
 	 */
 	public List<TblMensajesHist> getListaMensajeHistorico() {
@@ -98,6 +133,8 @@ public class ProcesoHistorificacionBean {
 
 
 	/**
+	 * Modificar lista mensaje historico.
+	 *
 	 * @param listaMensajeHistorico the listaMensajeHistorico to set
 	 */
 	public void setListaMensajeHistorico(List<TblMensajesHist> listaMensajeHistorico) {
@@ -107,6 +144,8 @@ public class ProcesoHistorificacionBean {
 
 
 	/**
+	 * Obtener lista gestion envios hist.
+	 *
 	 * @return the listaGestionEnviosHist
 	 */
 	public List<TblGestionEnviosHist> getListaGestionEnviosHist() {
@@ -116,6 +155,8 @@ public class ProcesoHistorificacionBean {
 
 
 	/**
+	 * Modificar lista gestion envios hist.
+	 *
 	 * @param listaGestionEnviosHist the listaGestionEnviosHist to set
 	 */
 	public void setListaGestionEnviosHist(List<TblGestionEnviosHist> listaGestionEnviosHist) {

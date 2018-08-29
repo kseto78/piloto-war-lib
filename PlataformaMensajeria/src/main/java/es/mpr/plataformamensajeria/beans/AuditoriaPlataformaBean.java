@@ -18,12 +18,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  @author Altran
  */
 public class AuditoriaPlataformaBean implements Audit{
-
 	/**
-	 * 
+	 * Constructor por defecto
 	 */
-	private static final long serialVersionUID = 1L;
-							  
 	public AuditoriaPlataformaBean() {
 		super();
 		this.logId = null;
@@ -58,10 +55,18 @@ public class AuditoriaPlataformaBean implements Audit{
 	protected Date fechaHasta = null;
 	
 	protected String sourceDescription = null;
+	/**
+	 * Obtener operacionHTML
+	 * @return
+	 */
 	public String getOperacionHTML(){
 		String res = "<span title=\""+getOperacion()+"\"/>";
 		return res;
 	}
+	/**
+	 * Obtener OperacionCSS
+	 * @return
+	 */
 	public String getOperacionCSSClass(){
 		String res="";
 		if(logAccion!=null&&logAccion.intValue()==1){
@@ -73,6 +78,11 @@ public class AuditoriaPlataformaBean implements Audit{
 		}
 		return res;
 	}
+	
+	/**
+	 * Obtener Operacion
+	 * @return
+	 */
 	public String getOperacion(){
 		String res="";
 		if(logAccion!=null&&logAccion.intValue()==1){
@@ -85,120 +95,187 @@ public class AuditoriaPlataformaBean implements Audit{
 		return res;
 	}
 	
+	/**
+	 * Obtener Id
+	 * @return
+	 */
 	public Integer getLogId() {
 		return logId;
 	}
 
 
-
+	/**
+	 * Modificar Id
+	 * @param logId
+	 */
 	public void setLogId(Integer logId) {
 		this.logId = logId;
 	}
 
 
-
+	/**
+	 * Obtener sourceName
+	 * @return
+	 */
 	public String getSourceName() {
 		return sourceName;
 	}
 
 
-
+	/**
+	 * Modificar sourceName
+	 * @param sourceName
+	 */
 	public void setSourceName(String sourceName) {
 		this.sourceName = sourceName;
 	}
 
 
-
+	/**
+	 * Obtener sourceId
+	 * @return
+	 */
 	public Integer getSourceId() {
 		return sourceId;
 	}
 
 
-
+	/**
+	 * Modificar sourceId 
+	 * @param sourceId
+	 */
 	public void setSourceId(Integer sourceId) {
 		this.sourceId = sourceId;
 	}
 
 
-
+	/**
+	 * Obtener LogAccion
+	 * @return
+	 */
 	public Integer getLogAccion() {
 		return logAccion;
 	}
 
 
-
+	/**
+	 * Modificar LogAccion
+	 * @param logAccion
+	 */
 	public void setLogAccion(Integer logAccion) {
 		this.logAccion = logAccion;
 	}
 
 
-
+	/**
+	 * Obtener LogDescripcion
+	 * @return
+	 */
 	public String getLogDescripcion() {
 		return logDescripcion;
 	}
 
 
-
+	/**
+	 * Modificar LogDescripcion
+	 * @param logDescripcion
+	 */
 	public void setLogDescripcion(String logDescripcion) {
 		this.logDescripcion = logDescripcion;
 	}
 
 
-
+	/**
+	 * Obtener AdtUsuario
+	 * @return
+	 */
 	public String getAdtUsuario() {
 		return adtUsuario;
 	}
 
 
-
+	/**
+	 * Modificar AdtUsuario
+	 * @param adtUsuario
+	 */
 	public void setAdtUsuario(String adtUsuario) {
 		this.adtUsuario = adtUsuario;
 	}
 
 
-
+	/**
+	 * Obtener AdtFecha
+	 * @return
+	 */
 	public Date getAdtFecha() {
 		return adtFecha;
 	}
 
 
-
+	/**
+	 * Modificar AdtFecha
+	 * @param adtFecha
+	 */
 	public void setAdtFecha(Date adtFecha) {
 		this.adtFecha = adtFecha;
 	}
 
 
-
+	/**
+	 * Obtener sourceDescription
+	 * @return
+	 */
 	public String getSourceDescription() {
 		return sourceDescription;
 	}
 
 
-
+	/**
+	 * modificar sourceDescription
+	 * @param sourceDescription
+	 */
 	public void setSourceDescription(String sourceDescription) {
 		this.sourceDescription = sourceDescription;
 	}
 
 
-
+	/**
+	 * Obtener XML
+	 */
 	@Override
 	public String obtenerXML() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Obtener fechaDesde
+	 * @return
+	 */
 	public Date getFechaDesde() {
 		return fechaDesde;
 	}
-
+	
+	/**
+	 * Modificar fechaDesde
+	 * @param fechaDesde
+	 */
 	public void setFechaDesde(Date fechaDesde) {
 		this.fechaDesde = fechaDesde;
 	}
-
+	
+	/**
+	 * Obtener fechaHasta
+	 * @return
+	 */
 	public Date getFechaHasta() {
 		return fechaHasta;
 	}
 
+	/**
+	 * Modificar fechaHasta
+	 * @param fechaHasta
+	 */
 	public void setFechaHasta(Date fechaHasta) {
 		this.fechaHasta = fechaHasta;
 	}

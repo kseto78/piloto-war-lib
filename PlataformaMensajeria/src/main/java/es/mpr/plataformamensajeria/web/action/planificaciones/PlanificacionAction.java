@@ -54,71 +54,141 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class PlanificacionAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(PlanificacionAction.class);
 	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  servicio planificacion. */
 	@Resource(name = "servicioPlanificacionImpl")
 	private ServicioPlanificacion servicioPlanificacion;
 	
+	/**  servicio servicio. */
 	@Resource(name = "servicioServicioImpl")
 	private ServicioServicio servicioServicio;
 	
+	/**  servicio canal. */
 	@Resource(name = "servicioCanalImpl")
 	private ServicioCanal servicioCanal;
 	
+	/**  servicio servidor. */
 	@Resource(name = "servicioServidorImpl")
 	private ServicioServidor servicioServidor;
 	
+	/**  servicio aplicacion. */
 	@Resource(name = "servicioAplicacionImpl")
 	private ServicioAplicacion servicioAplicacion;
 	
+	/**  servicio proveedor SMS. */
 	@Resource(name = "servicioProveedorSMSImpl")
 	private ServicioProveedorSMS servicioProveedorSMS;
 	
+	/**  servicio receptor SMS. */
 	@Resource(name = "servicioReceptorSMSImpl")
 	private ServicioReceptorSMS servicioReceptorSMS;
 	
+	/**  servicio servidor push. */
 	@Resource(name = "servicioServidorPushImpl")
 	private ServicioServidorPush servicioServidorPush;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
 
+	/**  planificacion. */
 	private PlanificacionBean planificacion;
 	
+	/**  combo aplicaciones. */
 	private List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	
+	/**  combo canales. */
 	private List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	
+	/**  combo servidores. */
+	@SuppressWarnings("unused")
 	private List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
+	
+	/**  combo busqueda servidores. */
 	private List<KeyValueObject> comboBusquedaServidores = new ArrayList<KeyValueObject>();
+	
+	/**  combo tipo planificaciones. */
 	private List<KeyValueObject> comboTipoPlanificaciones = new ArrayList<KeyValueObject>();
+	
+	/**  combo configuraciones. */
 	private List<KeyValueObject> comboConfiguraciones = new ArrayList<KeyValueObject>();
+	
+	/**  combo servicios. */
 	private List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
 	
+	/**  lista planificaciones. */
 	public List<PlanificacionBean> listaPlanificaciones = null;
+	
+	/**  check del list. */
 	private String[] checkDelList;
 	
+	/**  servicio id. */
 	private String servicioId;
+	
+	/**  tipo planificacion id. */
 	private String tipoPlanificacionId;
+	
+	/**  tipo parametro id. */
 	private String tipoParametroId;
+	
+	/**  id aplicacion. */
 	private String idAplicacion;
+	
+	/**  id planificacion. */
 	private String idPlanificacion;
+	
+	/**  id servicio. */
 	private String idServicio;
+	
+	/**  id servidor. */
 	private String idServidor;
+	
+	/**  id proveedor SMS. */
 	private String idProveedorSMS;
+	
+	/**  id receptor SMS. */
 	private String idReceptorSMS;
+	
+	/**  id servidor push. */
 	private String idServidorPush;
+	
+	/**  id servidor web push. */
 	private String idServidorWebPush;
+	
+	/**  id organismo. */
 	private String idOrganismo;
 		
+	/**  n action. */
 	private String nAction;
+	
+	/**  result count. */
 	private String resultCount;
+	
+	/**  modifica activo. */
 	private boolean modificaActivo;
 
 
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String newSearch() throws BaseException {
 		return SUCCESS;
 	}
+
+/**
+ * Search.
+ *
+ * @return the string
+ * @throws BaseException the base exception
+ */
 ////MIGRADO
 	public String search() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -183,6 +253,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	}
 
 
+/**
+ * Creates the planificacion app.
+ *
+ * @return the string
+ * @throws BaseException the base exception
+ */
 ////MIGRADO
 	public String createPlanificacionApp() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -229,6 +305,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -262,6 +344,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	}
 
 	
+	/**
+	 * Update planificacion view app.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String updatePlanificacionViewApp() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -288,6 +376,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	}
 
 	
+	/**
+	 * Update planificacion servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String updatePlanificacionServicio() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -311,6 +405,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Update planificacion organismo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String updatePlanificacionOrganismo() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -323,7 +423,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				planificacion.getHoraHasta(), planificacion.getHoraDesde(), Integer.valueOf(idOrganismo));
 
 		if (valido == 1) {
-			String retorno = update();
+			/* String retorno = */update();
 			return SUCCESS;
 		} else if (valido == 2) {
 			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
@@ -334,6 +434,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Update planificacion server.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String updatePlanificacionServer() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -352,6 +458,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String update() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -413,6 +525,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String load() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -448,6 +566,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Delete planificacion servicio view app.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	////MIGRADO
 	public String deletePlanificacionServicioViewApp() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -474,6 +598,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String delete() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -499,6 +629,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Delete selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	/////MIGRADO
 	public String deleteSelected() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -529,6 +665,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	}
 
+	/**
+	 * Load servidores by tipo plan.
+	 *
+	 * @return the string
+	 */
 	/////MIGRADO
 	public String loadServidoresByTipoPlan() {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -547,6 +688,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	}
 
 	
+	/**
+	 * Load tipo planificacion by servicio canal.
+	 *
+	 * @return the string
+	 */
 	////MIGRADO
 	public String loadTipoPlanificacionByServicioCanal() {
 		if (servicioId != null) {
@@ -559,6 +705,9 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	////MIGRADO
 	@Override
 	public void prepare() throws Exception {
@@ -597,6 +746,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		}
 	}
 
+	/**
+	 * Obtener combo configuracion.
+	 *
+	 * @param idCanal the id canal
+	 * @return combo configuracion
+	 */
 	////MIGRADO
 	private List<KeyValueObject> getComboConfiguracion(Integer idCanal) {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -674,6 +829,13 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+	/**
+	 * Obtener combo servidores servicio.
+	 *
+	 * @param servicioId the servicio id
+	 * @return combo servidores servicio
+	 * @throws BusinessException the business exception
+	 */
 	// //MIGRADO
 	private List<KeyValueObject> getComboServidoresServicio(Integer servicioId) throws BusinessException {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -698,6 +860,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+/**
+ * Load combo servicios.
+ *
+ * @return the list
+ * @throws BusinessException the business exception
+ */
 ////MIGRADO
 	private List<KeyValueObject> loadComboServicios() throws BusinessException {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -723,6 +891,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+/**
+ * Load combo servidores.
+ *
+ * @param tipoPlanificacionId the tipo planificacion id
+ * @return the list
+ */
 ////MIGRADO
 	private List<KeyValueObject> loadComboServidores(String tipoPlanificacionId) {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -747,6 +921,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+	/**
+	 * Load combo servidores.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<KeyValueObject> loadComboServidores() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -779,6 +958,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+/**
+ * Load combo busqueda servidores.
+ *
+ * @return the list
+ */
 ////MIGRADO
 	private List<KeyValueObject> loadComboBusquedaServidores() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -802,6 +986,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+/**
+ * Load combo canales.
+ *
+ * @return the list
+ */
 ////MIGRADO
 	private List<KeyValueObject> loadComboCanales() {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -824,6 +1013,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+/**
+ * Load tipo planificaciones.
+ *
+ * @return the list
+ * @throws BusinessException the business exception
+ */
 /////MIGRADO
 	private List<KeyValueObject> loadTipoPlanificaciones() throws BusinessException {
 		List<KeyValueObject> result = new ArrayList<>();
@@ -867,6 +1062,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return result;
 	}
 
+/**
+ * Load combo aplicaciones.
+ *
+ * @return the list
+ */
 /////MIGRADO
 	private List<KeyValueObject> loadComboAplicaciones() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -890,9 +1090,10 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 	/**
 	 * Verifica que se ha introducido por lo menos un día de la semana y las
-	 * horas de inicio y fin
-	 * 
-	 * @param planificacionServidor
+	 * horas de inicio y fin.
+	 *
+	 * @param planificacionServidor the planificacion servidor
+	 * @return true, if successful
 	 */
 	//////MIGRADO
 	private boolean planificacionValida(PlanificacionBean planificacionServidor) {
@@ -949,6 +1150,13 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Valido horas.
+	 *
+	 * @param horaDesde the hora desde
+	 * @param horaHasta the hora hasta
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
@@ -971,6 +1179,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Valido formato hora.
+	 *
+	 * @param hora the hora
+	 * @return true, if successful
+	 */
 	////MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
@@ -982,6 +1196,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return sw;
 	}
 
+	/**
+	 * Obtener combo servidores.
+	 *
+	 * @return combo servidores
+	 */
 	////MIGRADO
 	public List<KeyValueObject> getComboServidores() {
 		if (tipoPlanificacionId != null) {
@@ -1006,6 +1225,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return loadComboServidores();
 	}
 
+	/**
+	 * Obtener volver.
+	 *
+	 * @return volver
+	 */
 	public String getVolver() {
 		String volver = "buscarPlanificaciones.action";
 		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
@@ -1014,273 +1238,605 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		return volver;
 	}
 	
+	/**
+	 * Obtener servicio planificacion.
+	 *
+	 * @return servicio planificacion
+	 */
 	public ServicioPlanificacion getServicioPlanificacion() {
 		return servicioPlanificacion;
 	}
 
+	/**
+	 * Modificar servicio planificacion.
+	 *
+	 * @param servicioPlanificacion new servicio planificacion
+	 */
 	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
 		this.servicioPlanificacion = servicioPlanificacion;
 	}
 
+	/**
+	 * Obtener tipo parametro id.
+	 *
+	 * @return tipo parametro id
+	 */
 	public String getTipoParametroId() {
 		return tipoParametroId;
 	}
 
+	/**
+	 * Modificar tipo parametro id.
+	 *
+	 * @param tipoParametroId new tipo parametro id
+	 */
 	public void setTipoParametroId(String tipoParametroId) {
 		this.tipoParametroId = tipoParametroId;
 	}
 
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
 
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
 
+	/**
+	 * Obtener check del list.
+	 *
+	 * @return check del list
+	 */
 	public String[] getCheckDelList() {
 		return checkDelList;
 	}
 
+	/**
+	 * Modificar check del list.
+	 *
+	 * @param checkDelList new check del list
+	 */
 	public void setCheckDelList(String[] checkDelList) {
 		this.checkDelList = checkDelList;
 	}
 
+	/**
+	 * Obtener servicio servicio.
+	 *
+	 * @return servicio servicio
+	 */
 	public ServicioServicio getServicioServicio() {
 		return servicioServicio;
 	}
 
+	/**
+	 * Modificar servicio servicio.
+	 *
+	 * @param servicioServicio new servicio servicio
+	 */
 	public void setServicioServicio(ServicioServicio servicioServicio) {
 		this.servicioServicio = servicioServicio;
 	}
 
+	/**
+	 * Obtener combo aplicaciones.
+	 *
+	 * @return combo aplicaciones
+	 */
 	public List<KeyValueObject> getComboAplicaciones() {
 		return comboAplicaciones;
 	}
 
+	/**
+	 * Modificar combo aplicaciones.
+	 *
+	 * @param comboAplicaciones new combo aplicaciones
+	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
 		this.comboAplicaciones = comboAplicaciones;
 	}
 
+	/**
+	 * Obtener combo canales.
+	 *
+	 * @return combo canales
+	 */
 	public List<KeyValueObject> getComboCanales() {
 		return comboCanales;
 	}
 
+	/**
+	 * Modificar combo canales.
+	 *
+	 * @param comboCanales new combo canales
+	 */
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
 		this.comboCanales = comboCanales;
 	}
 
+	/**
+	 * Obtener combo servicios.
+	 *
+	 * @return combo servicios
+	 */
 	public List<KeyValueObject> getComboServicios() {
 		return comboServicios;
 	}
 
+	/**
+	 * Modificar combo servicios.
+	 *
+	 * @param comboServicios new combo servicios
+	 */
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
 		this.comboServicios = comboServicios;
 	}
 
+	/**
+	 * Obtener planificacion.
+	 *
+	 * @return planificacion
+	 */
 	public PlanificacionBean getPlanificacion() {
 		return planificacion;
 	}
 
+	/**
+	 * Modificar planificacion.
+	 *
+	 * @param planificacion new planificacion
+	 */
 	public void setPlanificacion(PlanificacionBean planificacion) {
 		this.planificacion = planificacion;
 	}
 
+	/**
+	 * Obtener lista planificaciones.
+	 *
+	 * @return lista planificaciones
+	 */
 	public List<PlanificacionBean> getListaPlanificaciones() {
 		return listaPlanificaciones;
 	}
 
+	/**
+	 * Modificar lista planificaciones.
+	 *
+	 * @param listaPlanificaciones new lista planificaciones
+	 */
 	public void setListaPlanificaciones(List<PlanificacionBean> listaPlanificaciones) {
 		this.listaPlanificaciones = listaPlanificaciones;
 	}
 
+	/**
+	 * Obtener servicio canal.
+	 *
+	 * @return servicio canal
+	 */
 	public ServicioCanal getServicioCanal() {
 		return servicioCanal;
 	}
 
+	/**
+	 * Modificar servicio canal.
+	 *
+	 * @param servicioCanal new servicio canal
+	 */
 	public void setServicioCanal(ServicioCanal servicioCanal) {
 		this.servicioCanal = servicioCanal;
 	}
 
 	
 
+	/**
+	 * Obtener id aplicacion.
+	 *
+	 * @return id aplicacion
+	 */
 	public String getIdAplicacion() {
 		return idAplicacion;
 	}
 
+	/**
+	 * Modificar id aplicacion.
+	 *
+	 * @param idAplicacion new id aplicacion
+	 */
 	public void setIdAplicacion(String idAplicacion) {
 		this.idAplicacion = idAplicacion;
 	}
 
+	/**
+	 * Obtener n action.
+	 *
+	 * @return n action
+	 */
 	public String getNAction() {
 		return nAction;
 	}
 
+	/**
+	 * Modificar n action.
+	 *
+	 * @param action new n action
+	 */
 	public void setNAction(String action) {
 		this.nAction = action;
 	}
 
+	/**
+	 * Obtener id servidor push.
+	 *
+	 * @return id servidor push
+	 */
 	public String getIdServidorPush() {
 		return idServidorPush;
 	}
 
+	/**
+	 * Modificar id servidor push.
+	 *
+	 * @param idServidorPush new id servidor push
+	 */
 	public void setIdServidorPush(String idServidorPush) {
 		this.idServidorPush = idServidorPush;
 	}
 
+	/**
+	 * Obtener id organismo.
+	 *
+	 * @return id organismo
+	 */
 	public String getIdOrganismo() {
 		return idOrganismo;
 	}
 
+	/**
+	 * Modificar id organismo.
+	 *
+	 * @param idOrganismo new id organismo
+	 */
 	public void setIdOrganismo(String idOrganismo) {
 		this.idOrganismo = idOrganismo;
 	}
 
+	/**
+	 * Obtener combo busqueda servidores.
+	 *
+	 * @return combo busqueda servidores
+	 */
 	public List<KeyValueObject> getComboBusquedaServidores() {
 		return comboBusquedaServidores;
 	}
 
+	/**
+	 * Modificar combo busqueda servidores.
+	 *
+	 * @param comboBusquedaServidores new combo busqueda servidores
+	 */
 	public void setComboBusquedaServidores(List<KeyValueObject> comboBusquedaServidores) {
 		this.comboBusquedaServidores = comboBusquedaServidores;
 	}
 
+	/**
+	 * Obtener servicio id.
+	 *
+	 * @return servicio id
+	 */
 	public String getServicioId() {
 		return servicioId;
 	}
 
+	/**
+	 * Modificar servicio id.
+	 *
+	 * @param servicioId new servicio id
+	 */
 	public void setServicioId(String servicioId) {
 		this.servicioId = servicioId;
 	}
 
+	/**
+	 * Obtener tipo planificacion id.
+	 *
+	 * @return tipo planificacion id
+	 */
 	public String getTipoPlanificacionId() {
 		return tipoPlanificacionId;
 	}
 
+	/**
+	 * Modificar tipo planificacion id.
+	 *
+	 * @param tipoPlanificacionId new tipo planificacion id
+	 */
 	public void setTipoPlanificacionId(String tipoPlanificacionId) {
 		this.tipoPlanificacionId = tipoPlanificacionId;
 	}
 
+	/**
+	 * Obtener combo tipo planificaciones.
+	 *
+	 * @return combo tipo planificaciones
+	 */
 	public List<KeyValueObject> getComboTipoPlanificaciones() {
 		return comboTipoPlanificaciones;
 	}
 
+	/**
+	 * Modificar combo tipo planificaciones.
+	 *
+	 * @param comboTipoPlanificaciones new combo tipo planificaciones
+	 */
 	public void setComboTipoPlanificaciones(List<KeyValueObject> comboTipoPlanificaciones) {
 		this.comboTipoPlanificaciones = comboTipoPlanificaciones;
 	}
 
+	/**
+	 * Modificar combo servidores.
+	 *
+	 * @param comboServidores new combo servidores
+	 */
 	public void setComboServidores(List<KeyValueObject> comboServidores) {
 		this.comboServidores = comboServidores;
 	}
 
+	/**
+	 * Obtener id planificacion.
+	 *
+	 * @return id planificacion
+	 */
 	public String getIdPlanificacion() {
 		return idPlanificacion;
 	}
 
+	/**
+	 * Modificar id planificacion.
+	 *
+	 * @param idPlanificacion new id planificacion
+	 */
 	public void setIdPlanificacion(String idPlanificacion) {
 		this.idPlanificacion = idPlanificacion;
 	}
 
+	/**
+	 * Obtener servicio proveedor SMS.
+	 *
+	 * @return servicio proveedor SMS
+	 */
 	public ServicioProveedorSMS getServicioProveedorSMS() {
 		return servicioProveedorSMS;
 	}
 
+	/**
+	 * Modificar servicio proveedor SMS.
+	 *
+	 * @param servicioProveedorSMS new servicio proveedor SMS
+	 */
 	public void setServicioProveedorSMS(ServicioProveedorSMS servicioProveedorSMS) {
 		this.servicioProveedorSMS = servicioProveedorSMS;
 	}
 
+	/**
+	 * Obtener servicio receptor SMS.
+	 *
+	 * @return servicio receptor SMS
+	 */
 	public ServicioReceptorSMS getServicioReceptorSMS() {
 		return servicioReceptorSMS;
 	}
 
+	/**
+	 * Modificar servicio receptor SMS.
+	 *
+	 * @param servicioReceptorSMS new servicio receptor SMS
+	 */
 	public void setServicioReceptorSMS(ServicioReceptorSMS servicioReceptorSMS) {
 		this.servicioReceptorSMS = servicioReceptorSMS;
 	}
 
+	/**
+	 * Obtener servicio servidor push.
+	 *
+	 * @return servicio servidor push
+	 */
 	public ServicioServidorPush getServicioServidorPush() {
 		return servicioServidorPush;
 	}
 
+	/**
+	 * Modificar servicio servidor push.
+	 *
+	 * @param servicioServidorPush new servicio servidor push
+	 */
 	public void setServicioServidorPush(ServicioServidorPush servicioServidorPush) {
 		this.servicioServidorPush = servicioServidorPush;
 	}
 
+	/**
+	 * Obtener servicio aplicacion.
+	 *
+	 * @return servicio aplicacion
+	 */
 	public ServicioAplicacion getServicioAplicacion() {
 		return servicioAplicacion;
 	}
 
+	/**
+	 * Modificar servicio aplicacion.
+	 *
+	 * @param servicioAplicacion new servicio aplicacion
+	 */
 	public void setServicioAplicacion(ServicioAplicacion servicioAplicacion) {
 		this.servicioAplicacion = servicioAplicacion;
 	}
 
+	/**
+	 * Obtener servicio servidor.
+	 *
+	 * @return servicio servidor
+	 */
 	public ServicioServidor getServicioServidor() {
 		return servicioServidor;
 	}
 
+	/**
+	 * Modificar servicio servidor.
+	 *
+	 * @param servicioServidor new servicio servidor
+	 */
 	public void setServicioServidor(ServicioServidor servicioServidor) {
 		this.servicioServidor = servicioServidor;
 	}
 
+	/**
+	 * Obtener id proveedor SMS.
+	 *
+	 * @return id proveedor SMS
+	 */
 	public String getIdProveedorSMS() {
 		return idProveedorSMS;
 	}
 
+	/**
+	 * Modificar id proveedor SMS.
+	 *
+	 * @param idProveedorSMS new id proveedor SMS
+	 */
 	public void setIdProveedorSMS(String idProveedorSMS) {
 		this.idProveedorSMS = idProveedorSMS;
 	}
 
+	/**
+	 * Obtener id receptor SMS.
+	 *
+	 * @return id receptor SMS
+	 */
 	public String getIdReceptorSMS() {
 		return idReceptorSMS;
 	}
 
+	/**
+	 * Modificar id receptor SMS.
+	 *
+	 * @param idReceptorSMS new id receptor SMS
+	 */
 	public void setIdReceptorSMS(String idReceptorSMS) {
 		this.idReceptorSMS = idReceptorSMS;
 	}
 
+	/**
+	 * Obtener id servidor.
+	 *
+	 * @return id servidor
+	 */
 	public String getIdServidor() {
 		return idServidor;
 	}
 
+	/**
+	 * Modificar id servidor.
+	 *
+	 * @param idServidor new id servidor
+	 */
 	public void setIdServidor(String idServidor) {
 		this.idServidor = idServidor;
 	}
 
+	/**
+	 * Obtener n action.
+	 *
+	 * @return n action
+	 */
 	public String getnAction() {
 		return nAction;
 	}
 
+	/**
+	 * Modificar n action.
+	 *
+	 * @param nAction new n action
+	 */
 	public void setnAction(String nAction) {
 		this.nAction = nAction;
 	}
 
+	/**
+	 * Obtener id servicio.
+	 *
+	 * @return id servicio
+	 */
 	public String getIdServicio() {
 		return idServicio;
 	}
 
+	/**
+	 * Modificar id servicio.
+	 *
+	 * @param idServicio new id servicio
+	 */
 	public void setIdServicio(String idServicio) {
 		this.idServicio = idServicio;
 	}
 
+	/**
+	 * Comprueba modifica activo.
+	 *
+	 * @return true, si es modifica activo
+	 */
 	public boolean isModificaActivo() {
 		return modificaActivo;
 	}
 
+	/**
+	 * Modificar modifica activo.
+	 *
+	 * @param modificaActivo new modifica activo
+	 */
 	public void setModificaActivo(boolean modificaActivo) {
 		this.modificaActivo = modificaActivo;
 	}
+	
+	/**
+	 * Obtener combo configuraciones.
+	 *
+	 * @return combo configuraciones
+	 */
 	public List<KeyValueObject> getComboConfiguraciones() {
 		return comboConfiguraciones;
 	}
 
+	/**
+	 * Modificar combo configuraciones.
+	 *
+	 * @param comboConfiguraciones new combo configuraciones
+	 */
 	public void setComboConfiguraciones(List<KeyValueObject> comboConfiguraciones) {
 		this.comboConfiguraciones = comboConfiguraciones;
 	}
+	
 	/**
+	 * Obtener id servidor web push.
+	 *
 	 * @return the idServidorWebPush
 	 */
 	public String getIdServidorWebPush() {
 		return idServidorWebPush;
 	}
+	
 	/**
+	 * Modificar id servidor web push.
+	 *
 	 * @param idServidorWebPush the idServidorWebPush to set
 	 */
 	public void setIdServidorWebPush(String idServidorWebPush) {

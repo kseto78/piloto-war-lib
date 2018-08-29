@@ -11,20 +11,33 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
+/**
+ * Clase PlataformaSecurityTag.
+ */
 public class PlataformaSecurityTag extends BodyTagSupport {
-	 /**
-	 * 
-	 */
+	 
+ 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/**  servicio usuario. */
 	private ServicioUsuario servicioUsuario;
 	
 	
+	/**  usuario logueado. */
 	private String usuarioLogueado = "";
+	
+	/**  usuario nombre. */
 	private String usuarioNombre = "";
+	
+	/**  show if granted. */
 	private String showIfGranted="";
+	
+	/**  show if not granted. */
 	private String showIfNotGranted="";
 
+       /* (non-Javadoc)
+        * @see javax.servlet.jsp.tagext.BodyTagSupport#doStartTag()
+        */
        public int doStartTag() throws JspException {
     	 boolean skipBody=false;
 
@@ -70,39 +83,81 @@ public class PlataformaSecurityTag extends BodyTagSupport {
 
      }
 
+	/**
+	 * Obtener usuario logueado.
+	 *
+	 * @return usuario logueado
+	 */
 	public String getUsuarioLogueado() {
 		return usuarioLogueado;
 	}
 
+	/**
+	 * Modificar usuario logueado.
+	 *
+	 * @param usuarioLogueado new usuario logueado
+	 */
 	public void setUsuarioLogueado(String usuarioLogueado) {
 		this.usuarioLogueado = usuarioLogueado;
 	}
 
+	/**
+	 * Obtener usuario nombre.
+	 *
+	 * @return usuario nombre
+	 */
 	public String getUsuarioNombre() {
 		return usuarioNombre;
 	}
 
+	/**
+	 * Modificar usuario nombre.
+	 *
+	 * @param usuarioNombre new usuario nombre
+	 */
 	public void setUsuarioNombre(String usuarioNombre) {
 		this.usuarioNombre = usuarioNombre;
 	}
 
+	/**
+	 * Obtener show if granted.
+	 *
+	 * @return show if granted
+	 */
 	public String getShowIfGranted() {
 		return showIfGranted;
 	}
 
+	/**
+	 * Modificar show if granted.
+	 *
+	 * @param showIfGranted new show if granted
+	 */
 	public void setShowIfGranted(String showIfGranted) {
 		this.showIfGranted = showIfGranted;
 	}
 
+	/**
+	 * Obtener show if not granted.
+	 *
+	 * @return show if not granted
+	 */
 	public String getShowIfNotGranted() {
 		return showIfNotGranted;
 	}
 
+	/**
+	 * Modificar show if not granted.
+	 *
+	 * @param showIfNotGranted new show if not granted
+	 */
 	public void setShowIfNotGranted(String showIfNotGranted) {
 		this.showIfNotGranted = showIfNotGranted;
 	}
 
 	/**
+	 * Obtener servicio usuario.
+	 *
 	 * @return the servicioUsuario
 	 */
 	public ServicioUsuario getServicioUsuario() {
@@ -110,6 +165,8 @@ public class PlataformaSecurityTag extends BodyTagSupport {
 	}
 
 	/**
+	 * Modificar servicio usuario.
+	 *
 	 * @param servicioUsuario the servicioUsuario to set
 	 */
 	public void setServicioUsuario(ServicioUsuario servicioUsuario) {

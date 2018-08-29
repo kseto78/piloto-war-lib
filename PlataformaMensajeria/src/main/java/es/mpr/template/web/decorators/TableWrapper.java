@@ -32,13 +32,17 @@ import es.mpr.plataformamensajeria.beans.ViewMisimBean;
 /**
  * <p>
  * Decorator para el displayTag
- * </p>
- * 
+ * </p>.
+ *
  * @author Altran
- * 
  */
 public class TableWrapper extends TableDecorator {
 
+	/**
+	 * Obtener user action.
+	 *
+	 * @return user action
+	 */
 	public String getUserAction() {
 
 		UserVO lObject = (UserVO) getCurrentRowObject();
@@ -58,6 +62,11 @@ public class TableWrapper extends TableDecorator {
 
 	}
 
+	/**
+	 * Obtener grupo action.
+	 *
+	 * @return grupo action
+	 */
 	public String getGrupoAction() {
 
 		GroupVO lObject = (GroupVO) getCurrentRowObject();
@@ -76,6 +85,11 @@ public class TableWrapper extends TableDecorator {
 				.getString("buttons.text.borrar") + "</a>";
 	}
 
+	/**
+	 * Obtener organismo action.
+	 *
+	 * @return organismo action
+	 */
 	public String getOrganismoAction() {
 
 		OrganismoBean organismo = (OrganismoBean) getCurrentRowObject();
@@ -84,6 +98,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editOrganismo.action?idOrganismo=" + idOrganismo + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismo.getNombre() + "');\" href=\"deleteOrganismo.action?idOrganismo=" + idOrganismo + "\"></a>";
 	}
 	
+	/**
+	 * Obtener servicio movil action.
+	 *
+	 * @return servicio movil action
+	 */
 	public String getServicioMovilAction() {
 
 		ServicioMovilBean servicioMovil = (ServicioMovilBean) getCurrentRowObject();
@@ -108,7 +127,12 @@ public class TableWrapper extends TableDecorator {
 //		return "<a href=\"editUnidadOrg.action?idUnidadOrg=" + idUnidadOrg + "\">" + res.getString("buttons.text.editar") + "</a> | <a href=\"deleteUnidadOrg.action?idUnidadOrg=" + idUnidadOrg + "\">" + res.getString("buttons.text.borrar") + "</a>";
 //	}
 
-	public String getServidorAction() {
+	/**
+ * Obtener servidor action.
+ *
+ * @return servidor action
+ */
+public String getServidorAction() {
 
 		ServidorBean servidor = (ServidorBean) getCurrentRowObject();
 		String idServidor = servidor.getId().toString();
@@ -116,6 +140,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\"  href=\"editServidor.action?idServidor=" + idServidor + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + servidor.getNombre() + "');\" href=\"deleteServidor.action?idServidor=" + idServidor + "\"></a>";
 	}
 
+	/**
+	 * Obtener proveedor SMS action.
+	 *
+	 * @return proveedor SMS action
+	 */
 	public String getProveedorSMSAction() {
 
 		ProveedorSMSBean proveedorSMS = (ProveedorSMSBean) getCurrentRowObject();
@@ -124,6 +153,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + proveedorSMS.getNombre() + "');\" href=\"deleteProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a>";
 	}
 	
+	/**
+	 * Obtener proveedor misim action.
+	 *
+	 * @return proveedor misim action
+	 */
 	public String getProveedorMisimAction() {
 
 		ProveedorMisimBean proveedorMisim = (ProveedorMisimBean) getCurrentRowObject();
@@ -132,6 +166,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editProveedorMisim.action?idProveedor=" + idProveedor + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + proveedorMisim.getNombre() + "');\" href=\"deleteProveedorMisim.action?idProveedor=" + idProveedor + "\"></a>";
 	}
 
+	/**
+	 * Obtener receptor SMS action.
+	 *
+	 * @return receptor SMS action
+	 */
 	public String getReceptorSMSAction() {
 
 		ReceptorSMSBean receptorSMS = (ReceptorSMSBean) getCurrentRowObject();
@@ -140,6 +179,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editReceptorSMS.action?idReceptorSMS=" + idReceptorSMS + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + receptorSMS.getNombre() + "');\" href=\"deleteReceptorSMS.action?idReceptorSMS=" + idReceptorSMS + "\"></a>";
 	}
 
+	/**
+	 * Obtener servidor push action.
+	 *
+	 * @return servidor push action
+	 */
 	public String getServidorPushAction() {
 
 		ServidorPushBean servidorPush = (ServidorPushBean) getCurrentRowObject();
@@ -148,6 +192,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editServidorPush.action?idServidorPush=" + idServidorPush + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + servidorPush.getNombre() + "');\" href=\"deleteServidorPush.action?idServidorPush=" + idServidorPush + "\"></a>";
 	}
 	
+	/**
+	 * Obtener servidor web push action.
+	 *
+	 * @return servidor web push action
+	 */
 	public String getServidorWebPushAction() {
 
 		ServidorWebPushBean servidorWebPush = (ServidorWebPushBean) getCurrentRowObject();
@@ -155,6 +204,12 @@ public class TableWrapper extends TableDecorator {
 
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editServidorWebPush.action?idServidorWebPush=" + idServidorWebPush + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + servidorWebPush.getNombre() + "');\" href=\"deleteServidorWebPush.action?idServidorWebPush=" + idServidorWebPush + "\"></a>";
 	}
+	
+	/**
+	 * Obtener aplicacion action.
+	 *
+	 * @return aplicacion action
+	 */
 	public String getAplicacionAction() {
 
 		AplicacionBean aplicacion = (AplicacionBean) getCurrentRowObject();
@@ -163,6 +218,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editAplicacion.action?idAplicacion=" + idAplicacion + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + aplicacion.getNombre() + "');\" href=\"deleteAplicacion.action?idAplicacion=" + idAplicacion + "\"></a>";
 	}
 
+	/**
+	 * Obtener servicio action.
+	 *
+	 * @return servicio action
+	 */
 	public String getServicioAction() {
 
 		ServicioBean servicio = (ServicioBean) getCurrentRowObject();
@@ -171,6 +231,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editServicio.action?idServicio=" + idServicio + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + servicio.getNombre() + "');\" href=\"deleteServicio.action?idServicio=" + idServicio + "\"></a>";
 	}
 
+	/**
+	 * Obtener planificacion action.
+	 *
+	 * @return planificacion action
+	 */
 	public String getPlanificacionAction() {
 
 		PlanificacionBean planificacion = (PlanificacionBean) getCurrentRowObject();
@@ -179,6 +244,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editPlanificacion.action?idPlanificacion=" + idPlanificacion + "&nAction=updatePlanificacion\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('Planificación[" + planificacion.getDias() + "]');\" href=\"deletePlanificacion.action?idPlanificacion=" + idPlanificacion + "\"></a>";
 	}
 
+	/**
+	 * Obtener usuario action.
+	 *
+	 * @return usuario action
+	 */
 	public String getUsuarioAction() {
 
 		UsuarioBean usuario = (UsuarioBean) getCurrentRowObject();
@@ -187,6 +257,11 @@ public class TableWrapper extends TableDecorator {
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editUsuario.action?idUsuario=" + idUsuario + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + usuario.getNombre() + "');\" href=\"deleteUsuario.action?idUsuario=" + idUsuario + "\"></a>";
 	}
 
+	/**
+	 * Obtener gestion envios action.
+	 *
+	 * @return gestion envios action
+	 */
 	public String getGestionEnviosAction() {
 		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
 
@@ -225,6 +300,11 @@ public class TableWrapper extends TableDecorator {
 		}
 	}
 	
+	/**
+	 * Obtener ver misim action.
+	 *
+	 * @return ver misim action
+	 */
 	public String getVerMisimAction() {
 		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
 		String btnAjax = null;
@@ -253,7 +333,12 @@ public class TableWrapper extends TableDecorator {
 //		return btnAjax;
 //	}
 	
-	public String getXmlPeticionAction() {
+	/**
+ * Obtener xml peticion action.
+ *
+ * @return xml peticion action
+ */
+public String getXmlPeticionAction() {
 		ViewMisimBean viewMisimBean = (ViewMisimBean) getCurrentRowObject();
 		String idPeticion = viewMisimBean.getIdPeticion().toString();
 
@@ -261,6 +346,11 @@ public class TableWrapper extends TableDecorator {
 			
 	}
 	
+	/**
+	 * Obtener xml respuesta action.
+	 *
+	 * @return xml respuesta action
+	 */
 	public String getXmlRespuestaAction() {
 		ViewMisimBean viewMisimBean = (ViewMisimBean) getCurrentRowObject();
 		String idPeticion = viewMisimBean.getIdPeticion().toString();
@@ -268,6 +358,11 @@ public class TableWrapper extends TableDecorator {
 			return "<a  class=\"button\" title=\"Descargar\" href=\"loadXmlRespuesta.action?idPeticion=" + idPeticion + "\">Descargar</a>";
 	}
 
+	/**
+	 * Obtener gestion lotes action.
+	 *
+	 * @return gestion lotes action
+	 */
 	public String getGestionLotesAction() {
 		MensajeBean mensajeBean = (MensajeBean) getCurrentRowObject();
 		String tipoEnvio = "viewMensaje";
@@ -276,6 +371,11 @@ public class TableWrapper extends TableDecorator {
 		return btnAjax;
 	}
 	
+	/**
+	 * Obtener gestion lotes historicos action.
+	 *
+	 * @return gestion lotes historicos action
+	 */
 	public String getGestionLotesHistoricosAction() {
 		MensajeHistoricosBean mensajeBean = (MensajeHistoricosBean) getCurrentRowObject();
 		String tipoEnvio = "viewMensaje";
@@ -284,6 +384,11 @@ public class TableWrapper extends TableDecorator {
 		return btnAjax;
 	}
 
+	/**
+	 * Obtener gestion envios historicos action.
+	 *
+	 * @return gestion envios historicos action
+	 */
 	public String getGestionEnviosHistoricosAction() {
 		GestionEnvioHistoricoBean gestionEnvioHistoricoBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
 
@@ -322,6 +427,11 @@ public class TableWrapper extends TableDecorator {
 
 	}
 	
+	/**
+	 * Obtener ver misim historico action.
+	 *
+	 * @return ver misim historico action
+	 */
 	public String getVerMisimHistoricoAction() {
 		GestionEnvioHistoricoBean gestionEnvioHistoricoBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
 		String btnAjax = null;
@@ -338,6 +448,11 @@ public class TableWrapper extends TableDecorator {
 		return btnAjax;
 	}
 	
+	/**
+	 * Obtener historico destinatario action.
+	 *
+	 * @return historico destinatario action
+	 */
 	public String getHistoricoDestinatarioAction() {
 		DestinatariosMensajesBean dmBean = (DestinatariosMensajesBean) getCurrentRowObject();
 		String tipoEnvio = "viewHistorico";
@@ -347,6 +462,11 @@ public class TableWrapper extends TableDecorator {
 
 	}
 	
+	/**
+	 * Obtener historico hist destinatario action.
+	 *
+	 * @return historico hist destinatario action
+	 */
 	public String getHistoricoHistDestinatarioAction() {
 		DestinatariosMensajesHistoricosBean dmBean = (DestinatariosMensajesHistoricosBean) getCurrentRowObject();
 		String tipoEnvio = "viewHistoricoHist";
@@ -356,36 +476,66 @@ public class TableWrapper extends TableDecorator {
 
 	}
 	
+	/**
+	 * Obtener destinatario action.
+	 *
+	 * @return destinatario action
+	 */
 	public String getDestinatarioAction() {
 		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getDestinatario()+"\">"+gestionEnvioBean.getDestinatario()+"</span>";
 		return spanTitle;
 	}
 	
+	/**
+	 * Obtener nombre lote action.
+	 *
+	 * @return nombre lote action
+	 */
 	public String getNombreLoteAction() {
 		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getLoteEnvio()+"\">"+gestionEnvioBean.getLoteEnvio()+"</span>";
 		return spanTitle;
 	}
 	
+	/**
+	 * Obtener nombre servicio action.
+	 *
+	 * @return nombre servicio action
+	 */
 	public String getNombreServicioAction() {
 		GestionEnvioBean gestionEnvioBean = (GestionEnvioBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getServicio()+"\">"+gestionEnvioBean.getServicio()+"</span>";
 		return spanTitle;
 	}
 	
+	/**
+	 * Obtener destinatario historico action.
+	 *
+	 * @return destinatario historico action
+	 */
 	public String getDestinatarioHistoricoAction() {
 		GestionEnvioHistoricoBean gestionEnvioBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getDestinatario()+"\">"+gestionEnvioBean.getDestinatario()+"</span>";
 		return spanTitle;
 	}
 	
+	/**
+	 * Obtener nombre lote historico action.
+	 *
+	 * @return nombre lote historico action
+	 */
 	public String getNombreLoteHistoricoAction() {
 		GestionEnvioHistoricoBean gestionEnvioBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getLoteEnvio()+"\">"+gestionEnvioBean.getLoteEnvio()+"</span>";
 		return spanTitle;
 	}
 	
+	/**
+	 * Obtener nombre servicio historico action.
+	 *
+	 * @return nombre servicio historico action
+	 */
 	public String getNombreServicioHistoricoAction() {
 		GestionEnvioHistoricoBean gestionEnvioBean = (GestionEnvioHistoricoBean) getCurrentRowObject();
 		String spanTitle = "<span title=\""+gestionEnvioBean.getServicio()+"\">"+gestionEnvioBean.getServicio()+"</span>";

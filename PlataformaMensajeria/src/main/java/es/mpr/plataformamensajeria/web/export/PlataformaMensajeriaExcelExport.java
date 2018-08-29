@@ -29,25 +29,22 @@ import org.displaytag.model.Row;
 import org.displaytag.model.RowIterator;
 import org.displaytag.model.TableModel;
 
+/**
+ * The Class PlataformaMensajeriaExcelExport.
+ */
 public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	    /**
 	     * TableModel to render.
 	     */
 	    private TableModel model;
 
-	    /**
-	     * export full list?
-	     */
+	    /** export full list?. */
 	    private boolean exportFull;
 
-	    /**
-	     * include header in export?
-	     */
+	    /** include header in export?. */
 	    private boolean header;
 
-	    /**
-	     * decorate export?
-	     */
+	    /** decorate export?. */
 	    private boolean decorated;
 
 	    /**
@@ -56,8 +53,14 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	    private HSSFSheet sheet;
 
 	    /**
-	     * @see org.displaytag.export.ExportView#setParameters(TableModel, boolean, boolean, boolean)
-	     */
+    	 * Modificar parameters.
+    	 *
+    	 * @param tableModel the table model
+    	 * @param exportFullList the export full list
+    	 * @param includeHeader the include header
+    	 * @param decorateValues the decorate values
+    	 * @see org.displaytag.export.ExportView#setParameters(TableModel, boolean, boolean, boolean)
+    	 */
 	    public void setParameters(TableModel tableModel, boolean exportFullList, boolean includeHeader,
 	        boolean decorateValues)
 	    {
@@ -68,17 +71,23 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	    }
 
 	    /**
-	     * @return "application/vnd.ms-excel"
-	     * @see org.displaytag.export.BaseExportView#getMimeType()
-	     */
+    	 * Obtener mime type.
+    	 *
+    	 * @return "application/vnd.ms-excel"
+    	 * @see org.displaytag.export.BaseExportView#getMimeType()
+    	 */
 	    public String getMimeType()
 	    {
 	        return "application/vnd.ms-excel"; //$NON-NLS-1$
 	    }
 
 	    /**
-	     * @see org.displaytag.export.BinaryExportView#doExport(OutputStream)
-	     */
+    	 * Do export.
+    	 *
+    	 * @param out the out
+    	 * @throws JspException the jsp exception
+    	 * @see org.displaytag.export.BinaryExportView#doExport(OutputStream)
+    	 */
 	    public void doExport(OutputStream out) throws JspException
 	    {
 	        try
@@ -110,7 +119,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	                bold.setColor(HSSFColor.BLACK.index);
 	                headerStyle.setFont(bold);
 
-	                Iterator iterator = this.model.getHeaderCellList().iterator();
+	                Iterator<?> iterator = this.model.getHeaderCellList().iterator();
 
 	                while (iterator.hasNext())
 	                {
@@ -123,7 +132,8 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	                        columnHeader = StringUtils.capitalize(headerCell.getBeanPropertyName());
 	                    }
 
-	                    HSSFCell cell = xlsRow.createCell((short) colNum++);
+	                    @SuppressWarnings("deprecation")
+						HSSFCell cell = xlsRow.createCell((short) colNum++);
 	                    cell.setCellValue(StringEscapeUtils.unescapeHtml(StringUtils.capitalize(columnHeader)));
 	                    cell.setCellStyle(headerStyle);
 	                    //cell.setsetEncoding(HSSFCell.ENCODING_UTF_16);
@@ -133,7 +143,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	            // get the correct iterator (full or partial list according to the exportFull field)
 	            RowIterator rowIterator = this.model.getRowIterator(this.exportFull);
 	            // iterator on rows
-	            int i=0;
+	            //int i=0;
 	            while (rowIterator.hasNext())
 	            {
 	                Row row = rowIterator.next();
@@ -142,7 +152,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 
 	                // iterator on columns
 	                ColumnIterator columnIterator = row.getColumnIterator(this.model.getHeaderCellList());
-	                HSSFPalette palette = wb.getCustomPalette();
+	                //HSSFPalette palette = wb.getCustomPalette();
 	                while (columnIterator.hasNext())
 	                {
 	                    Column column = columnIterator.nextColumn();
@@ -150,7 +160,8 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	                    // Get the value to be displayed for the column
 	                    Object value = column.getValue(this.decorated);
 
-	                    HSSFCell cell = xlsRow.createCell((short) colNum++);
+	                    @SuppressWarnings("deprecation")
+						HSSFCell cell = xlsRow.createCell((short) colNum++);
 	                    //cell.setEncoding(HSSFCell.ENCODING_UTF_16);
 
 	                    if (value instanceof Number)
@@ -185,7 +196,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	                        cell.setCellValue(escapeColumnValue(returnString));
 	                    }
 	                }
-	                i++;
+	                //i++;
 	            }
 	            wb.write(out);
 	        }
@@ -244,8 +255,11 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	        }
 
 	        /**
-	         * @see org.displaytag.exception.BaseNestableJspTagException#getSeverity()
-	         */
+        	 * Obtener severity.
+        	 *
+        	 * @return severity
+        	 * @see org.displaytag.exception.BaseNestableJspTagException#getSeverity()
+        	 */
 	        public SeverityEnum getSeverity()
 	        {
 	            return SeverityEnum.ERROR;

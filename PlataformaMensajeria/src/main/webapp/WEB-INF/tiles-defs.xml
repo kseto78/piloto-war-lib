@@ -61,7 +61,8 @@
 
 	<definition name="site.index.page" extends="site.mainLayout">
 		<put-attribute name="title" value="site.index.page.title" />
-		<put-attribute name="body" value="/WEB-INF/jsp/layout/template/home.jsp" />
+<!-- 		<put-attribute name="body" value="/WEB-INF/jsp/layout/template/home.jsp" /> -->
+ 		<put-attribute name="body" value="/WEB-INF/jsp/layout/template/blanco.jsp" />
 		<put-list-attribute name="crumbs">
 			<add-attribute value="panels.escritorio|home.action" />
 		</put-list-attribute>		
@@ -794,6 +795,21 @@
 		<put-list-attribute name="crumbs">
 			<add-attribute value="panel.configuracion.general|home.action" />
 			<add-attribute value="panel.configuracion.general.usuariospush|buscarUsuariosPush.action" />
+			
+		</put-list-attribute>
+	</definition>		
+	<!--
+		******************************************************************
+		Usuarios Web push
+
+		******************************************************************
+	-->
+	<definition name="pages.usuariosWebPush" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.usuariosWebPush.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/usuariospush/listUsuariosWebPush.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.general|home.action" />
+			<add-attribute value="panel.configuracion.general.usuarioswebpush|buscarUsuariosWebPush.action" />
 			
 		</put-list-attribute>
 	</definition>		

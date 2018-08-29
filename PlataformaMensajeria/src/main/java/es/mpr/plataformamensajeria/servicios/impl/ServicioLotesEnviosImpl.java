@@ -25,11 +25,17 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnvios;
  */
 @Service("servicioLotesEnviosImpl")
 public class ServicioLotesEnviosImpl implements ServicioLotesEnvios{
+	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
 	
+	/**  tbl lotes envios manager. */
 	@Resource(name = "TblLotesEnviosManagerImpl")
 	private TblLotesEnviosManager tblLotesEnviosManager;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnvios#getLotesEnviosTOHist(java.lang.Integer, java.util.Date)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional

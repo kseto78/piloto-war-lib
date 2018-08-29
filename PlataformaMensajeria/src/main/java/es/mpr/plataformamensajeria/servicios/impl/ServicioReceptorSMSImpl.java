@@ -38,19 +38,26 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioReceptorSMSImpl")
 public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioReceptorSMSImpl.class);
 	
+	/**  tbl servidores manager. */
 	@Resource(name="TblServidoresManagerImpl")
 	TblServidoresManager tblServidoresManager;
 	
+	/**  tbl planificaciones manager. */
 	@Resource(name="TblPlanificacionesManagerImpl")
 	TblPlanificacionesManager tblPlanificacionesManager;
 	
+	/**  tbl servidores servicios manager. */
 	@Resource(name="TblServidoresServiciosManagerImpl")
 	TblServidoresServiciosManager tblServidoresServiciosManager;
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#getReceptoresSMS(int)
+	 */
 	////MIGRADO
 	@Override
 	public List<ReceptorSMSBean> getReceptoresSMS(int tipoServidor)
@@ -72,6 +79,9 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	}	
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#getReceptoresSMS(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.ReceptorSMSBean, int)
+	 */
 	////MIGRADO
 	@Override
 	public PaginatedList<ReceptorSMSBean> getReceptoresSMS(int start, int size,
@@ -113,6 +123,9 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#newReceptorSMS(es.mpr.plataformamensajeria.beans.ReceptorSMSBean, int, java.lang.String, java.lang.String, java.lang.Long)
+	 */
 	//////MIGRADO
 	@Override
 	@Transactional
@@ -142,6 +155,9 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	}
 
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#updateReceptorSMS(es.mpr.plataformamensajeria.beans.ReceptorSMSBean, java.lang.String, java.lang.String, java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -160,6 +176,9 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#loadReceptorSMS(es.mpr.plataformamensajeria.beans.ReceptorSMSBean)
+	 */
 	////////MIGRADO
 	@Override
 	@Transactional
@@ -174,6 +193,9 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#deleteReceptorSMS(es.mpr.plataformamensajeria.beans.ReceptorSMSBean, java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -201,11 +223,11 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	}
 	
 	/**
-	 * <p>Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean</p>
-	 * 
-	 * @param organismoBean 
-	 * 
+	 * <p>Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean</p>.
+	 *
+	 * @param receptorSMS the receptor SMS
 	 * @return objeto OrganismoJPA
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected TblServidores getReceptoresSMSTO(ReceptorSMSBean receptorSMS) throws BusinessException
@@ -230,11 +252,11 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	
 	
 	/**
-	 * <p>Obtenemos un objeto ReceptorSMSBean a partir de un objeto ReceptoresSMSJPA</p>
-	 * 
-	 * @param servidorJPA
-	 * 
+	 * <p>Obtenemos un objeto ReceptorSMSBean a partir de un objeto ReceptoresSMSJPA</p>.
+	 *
+	 * @param serv the serv
 	 * @return objeto ReceptorSMSBean
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected ReceptorSMSBean getReceptorSMSBean(TblServidores serv) throws BusinessException
@@ -252,12 +274,13 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 		
 		return servidor;
 	}
+	
 	/**
-	 * <p>Convertirmos una lista de ViewReceptoresSMSJPA a una lista de ReceptorSMSBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de ViewReceptoresSMSJPA a una lista de ReceptorSMSBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	//////MIGRADO
 	protected List<ReceptorSMSBean> getListReceptorSMSBean(List<TblServidores> lista) throws BusinessException
@@ -289,6 +312,9 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioReceptorSMS#getReceptoresSMSNoAsignados(java.lang.Integer, int)
+	 */
 	///MIGRADO
 	@Override
 	public List<ReceptorSMSBean> getReceptoresSMSNoAsignados(

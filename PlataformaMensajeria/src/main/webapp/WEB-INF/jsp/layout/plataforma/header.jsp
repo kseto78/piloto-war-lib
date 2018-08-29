@@ -15,6 +15,17 @@
 	<div id="header">
     	<div class="leftHeader" >
         	<h1>SIM <br /><span title="Version_1_0_1" >Sistema Integral de Mensajería</span></h1>
+        	<p class="md-entorno">
+        	<%
+        	 String url = (String) request.getRequestURL().toString();
+        	 String entorno = "";
+        		if(url.indexOf("des") != -1) {
+        			entorno = "DES";
+        		} else if (url.indexOf("pre") != -1) {
+        			entorno = "PRE";
+        		}
+        	%>
+        	<%=entorno %></p>
             <div>
             	<p class="headerLinks">            	
             	<plataforma:securityadmin usuarioLogueado="true" showIfNotGranted="true">

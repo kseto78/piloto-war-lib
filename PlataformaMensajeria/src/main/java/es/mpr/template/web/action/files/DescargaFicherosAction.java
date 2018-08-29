@@ -17,30 +17,27 @@ import com.map.j2ee.exceptions.BaseException;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
- * @author carlos.ruiz
+ * The Class DescargaFicherosAction.
  *
+ * @author carlos.ruiz
  */
 public class DescargaFicherosAction extends ActionSupport implements ServletResponseAware{
 
-	/**
-	 * 
-	 */
+	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Variable que almacena la ruta del fichero a descargar
-	 * 
-	 */
+	/** Variable que almacena la ruta del fichero a descargar. */
 	private String fichero = "";
 	
-	/**
-	 * Objeto response
-	 */
+	/** Objeto response. */
 	private HttpServletResponse response;
 	
 	/**
-	 * Método que obtiene el listado de ficheros disponibles para descarga
-	 * 
+	 * Método que obtiene el listado de ficheros disponibles para descarga.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
 	 */
 	public String descargarFichero() throws BaseException{
 		//if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
@@ -78,6 +75,8 @@ public class DescargaFicherosAction extends ActionSupport implements ServletResp
 	}
 
 	/**
+	 * Obtener fichero.
+	 *
 	 * @return the fichero
 	 */
 	public String getFichero() {
@@ -85,17 +84,27 @@ public class DescargaFicherosAction extends ActionSupport implements ServletResp
 	}
 
 	/**
+	 * Modificar fichero.
+	 *
 	 * @param fichero the fichero to set
 	 */
 	public void setFichero(String fichero) {
 		this.fichero = fichero;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.interceptor.ServletResponseAware#setServletResponse(javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	public void setServletResponse(HttpServletResponse aResponse) {
 		this.response = aResponse;
 	}
 
+	/**
+	 * Obtener servlet response.
+	 *
+	 * @return servlet response
+	 */
 	public HttpServletResponse getServletResponse() {
 		return this.response;
 	}

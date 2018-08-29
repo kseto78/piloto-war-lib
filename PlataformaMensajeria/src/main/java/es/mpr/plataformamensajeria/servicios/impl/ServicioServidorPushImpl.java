@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package es.mpr.plataformamensajeria.servicios.impl;
 
 import java.lang.reflect.InvocationTargetException;
@@ -38,18 +41,25 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioServidorPushImpl")
 public class ServicioServidorPushImpl implements ServicioServidorPush{
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServidorPushImpl.class);
 	
+	/**  tbl servidores manager. */
 	@Resource(name="TblServidoresManagerImpl")
 	TblServidoresManager tblServidoresManager;
 	
+	/**  tbl planificaciones manager. */
 	@Resource(name="TblPlanificacionesManagerImpl")
 	TblPlanificacionesManager tblPlanificacionesManager;
 	
+	/**  tbl servidores servicios manager. */
 	@Resource(name="TblServidoresServiciosManagerImpl")
 	TblServidoresServiciosManager tblServidoresServiciosManager;
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#getServidoresPush(int)
+	 */
 	///MIGRADO
 	@Override
 	public List<ServidorPushBean> getServidoresPush(int tipoServidor)
@@ -69,6 +79,9 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		}
 	}	
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#getServidoresPush(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.ServidorPushBean, int)
+ */
 ////MIGRADO
 	@Override
 	public PaginatedList<ServidorPushBean> getServidoresPush(int start, int size,
@@ -111,6 +124,9 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		}
 	}
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#newServidorPush(es.mpr.plataformamensajeria.beans.ServidorPushBean, int, java.lang.String, java.lang.String, java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	@Transactional
@@ -138,6 +154,9 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	}
 
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#updateServidorPush(es.mpr.plataformamensajeria.beans.ServidorPushBean, java.lang.String, java.lang.String, java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -156,6 +175,9 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#loadServidorPush(es.mpr.plataformamensajeria.beans.ServidorPushBean)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -170,6 +192,9 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#deleteServidorPush(es.mpr.plataformamensajeria.beans.ServidorPushBean, java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -197,11 +222,11 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	}
 	
 	/**
-	 * <p>Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean</p>
-	 * 
-	 * @param organismoBean 
-	 * 
+	 * <p>Obtenemos un objeto OrganismoJPA a partir de un objeto OrganismoBean</p>.
+	 *
+	 * @param servidorPush the servidor push
 	 * @return objeto OrganismoJPA
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected TblServidores getServidoresPushJPA(ServidorPushBean servidorPush) throws BusinessException
@@ -226,11 +251,11 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	
 	
 	/**
-	 * <p>Obtenemos un objeto ServidorPushBean a partir de un objeto ServidoresPushJPA</p>
-	 * 
-	 * @param servidorJPA
-	 * 
+	 * <p>Obtenemos un objeto ServidorPushBean a partir de un objeto ServidoresPushJPA</p>.
+	 *
+	 * @param serv the serv
 	 * @return objeto ServidorPushBean
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected ServidorPushBean getServidorPushBean(TblServidores serv) throws BusinessException
@@ -249,12 +274,13 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		
 		return servidor;
 	}
+	
 	/**
-	 * <p>Convertirmos una lista de ViewServidoresPushJPA a una lista de ServidorPushBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de ViewServidoresPushJPA a una lista de ServidorPushBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<ServidorPushBean> getListViewServidorPushBean(List<TblServidores> lista) throws BusinessException
@@ -285,6 +311,9 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidorPush#getServidoresPushNoAsignados(java.lang.Integer, int)
+	 */
 	/////MIGRADO
 	@Override
 	public List<ServidorPushBean> getServidoresPushNoAsignados(

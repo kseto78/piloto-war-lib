@@ -34,8 +34,11 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Mensaje {
 
+    /**  id mensaje. */
     @XmlElement(name = "IdMensaje")
     protected Integer idMensaje;
+    
+    /**  id externo. */
     @XmlElement(name = "IdExterno")
     protected String idExterno;
 

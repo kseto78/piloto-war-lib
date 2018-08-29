@@ -32,51 +32,112 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Clase InformesServiciosJob.
+ */
 ////MIGRADO
 @Service("informesServiciosJob")
 public class InformesServiciosJob implements Job {
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(InformesServiciosJob.class);
 	
+	/**  servicio proceso informes servicios. */
 	private ServicioProcesoInformesServicios servicioProcesoInformesServicios;
 
+	/**  servicio servicios. */
 	private ServicioServicio servicioServicios;
 	
+	/**  servicio aplicacion. */
 	private ServicioAplicacion servicioAplicacion;
 	
+	/**  properties. */
 	private PlataformaMensajeriaProperties properties;
 	
 	
+	/**  nombre job. */
 	private static String NOMBRE_JOB = "Informes Servicios";
+	
+	/**  estado proceso ok. */
 	private static String ESTADO_PROCESO_OK = "OK";
+	
+	/**  estado proceso ko. */
 	private static String ESTADO_PROCESO_KO = "KO";
+	
+	/**  agrupacion estados. */
 	private static String AGRUPACION_ESTADOS = "ESTADOS";
+	
+	/**  agrupacion organismos. */
 	private static String AGRUPACION_ORGANISMOS = "ORGANISMOS";
+	
+	/**  agrupacion procedimientos. */
 	private static String AGRUPACION_PROCEDIMIENTOS = "PROCEDIMIENTOS";
+	
+	/**  agrupacion organismos pagadores. */
 	private static String AGRUPACION_ORGANISMOS_PAGADORES = "ORGANISMOS PAGADORES";
+	
+	/**  columna estado. */
 	private static String COLUMNA_ESTADO = "Estado";
+	
+	/**  columna organismo. */
 	private static String COLUMNA_ORGANISMO = "Organismo";
+	
+	/**  columna procedimiento. */
 	private static String COLUMNA_PROCEDIMIENTO = "Procedimiento";
+	
+	/**  columna organismo pagador. */
 	private static String COLUMNA_ORGANISMO_PAGADOR = "Organismo pagador";
+	
+	/**  columna total. */
 	private static String COLUMNA_TOTAL = "Total";
+	
+	/**  total. */
 	private static String TOTAL = "TOTAL:";
 	
+	/**  label separador lineas. */
 	//Constantes para formato de correo
 	private static String LABEL_SEPARADOR_LINEAS = "<br>";
+	
+	/**  label apertura negrita. */
 	private static String LABEL_APERTURA_NEGRITA = "<strong>";
+	
+	/**  label cierre negrita. */
 	private static String LABEL_CIERRE_NEGRITA = "</strong>";
+	
+	/**  label margin left. */
 	private static String LABEL_MARGIN_LEFT = "<div style=\"margin-left:20px;\">";
+	
+	/**  label apertura tabla. */
 	private static String LABEL_APERTURA_TABLA = "<table>";
+	
+	/**  label cierre tabla. */
 	private static String LABEL_CIERRE_TABLA = "</table>";
+	
+	/**  label cierre div. */
 	private static String LABEL_CIERRE_DIV = "</div>";
+	
+	/**  label apertura fila. */
 	private static String LABEL_APERTURA_FILA = "<tr>";
+	
+	/**  label cierre fila. */
 	private static String LABEL_CIERRE_FILA = "</tr>";
+	
+	/**  label apertura columna. */
 	private static String LABEL_APERTURA_COLUMNA = "<td>";
+	
+	/**  label cierre columna. */
 	private static String LABEL_CIERRE_COLUMNA = "</td>";
+	
+	/**  label apertura columna ancho. */
 	private static String LABEL_APERTURA_COLUMNA_ANCHO = "<td width=\"160\">";
 	
+	/**  job bean. */
 	private JobBean jobBean = null;
 
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
 	///MIGRADO
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -92,6 +153,12 @@ public class InformesServiciosJob implements Job {
 		}
 	}
 	
+	/**
+	 * Lanzar job.
+	 *
+	 * @param servletContext the servlet context
+	 * @param bean the bean
+	 */
 	public void lanzarJob(ServletContext servletContext, JobBean bean) {
 		try {
 		ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
@@ -105,7 +172,7 @@ public class InformesServiciosJob implements Job {
 	}
 
 	/**
-	 * 
+	 * Ejecutar.
 	 */
 	private void ejecutar() {
 		logger.info("execute - INICIO Job Informes Servicios");
@@ -319,6 +386,12 @@ public class InformesServiciosJob implements Job {
 		logger.info("execute - Duracion del Proceso de Informes Servicios: " + tiempo + " milisegundos");
 	}
 	
+	/**
+	 * Inicializar variables.
+	 *
+	 * @param applicationContext the application context
+	 * @throws JobExecutionException the job execution exception
+	 */
 	private void inicializarVariables(ApplicationContext applicationContext) throws JobExecutionException {
 		try {
 			servicioProcesoInformesServicios = (ServicioProcesoInformesServicios) applicationContext.getBean("servicioProcesoInformesServiciosImpl");
@@ -331,6 +404,13 @@ public class InformesServiciosJob implements Job {
 		}
 	}
 	
+	/**
+	 * Cabecera tabla.
+	 *
+	 * @param agrupacion the agrupacion
+	 * @param columna the columna
+	 * @return the string builder
+	 */
 	private StringBuilder cabeceraTabla(String agrupacion, String columna) {
 		
 		StringBuilder cadena = new StringBuilder();
@@ -345,6 +425,13 @@ public class InformesServiciosJob implements Job {
 		return cadena;
 	}
 	
+	/**
+	 * Cuerpo tabla.
+	 *
+	 * @param atributoCelda the atributo celda
+	 * @param numTotal the num total
+	 * @return the string builder
+	 */
 	private StringBuilder cuerpoTabla(String atributoCelda, Integer numTotal) {
 		
 		StringBuilder cadena = new StringBuilder();
@@ -355,6 +442,12 @@ public class InformesServiciosJob implements Job {
 		return cadena;
 	}
 	
+	/**
+	 * Pie tabla.
+	 *
+	 * @param numTotalMensajes the num total mensajes
+	 * @return the string builder
+	 */
 	private StringBuilder pieTabla(Integer numTotalMensajes) {
 		
 		StringBuilder cadena = new StringBuilder();
@@ -368,4 +461,23 @@ public class InformesServiciosJob implements Job {
 		return cadena;
 	}
 
+
+	/**
+	 * Obtener job bean.
+	 *
+	 * @return job bean
+	 */
+	public JobBean getJobBean() {
+		return jobBean;
+	}
+
+
+	/**
+	 * Modificar job bean.
+	 *
+	 * @param jobBean new job bean
+	 */
+	public void setJobBean(JobBean jobBean) {
+		this.jobBean = jobBean;
+	}
 }

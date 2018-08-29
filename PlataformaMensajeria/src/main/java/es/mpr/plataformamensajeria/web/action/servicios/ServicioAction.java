@@ -83,143 +83,324 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ServicioAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioAction.class);
 	
+	/**  reloadable resource bundle message source. */
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
+	/**  servicio organismo. */
 	@Resource(name = "servicioOrganismoImpl")
 	private ServicioOrganismo servicioOrganismo;
 
+	/**  servicio servicio. */
 	@Resource(name = "servicioServicioImpl")
 	private ServicioServicio servicioServicio;
 
+	/**  servicio aplicacion. */
 	@Resource(name = "servicioAplicacionImpl")
 	private ServicioAplicacion servicioAplicacion;
 
+	/**  servicio proveedor SMS. */
 	@Resource(name = "servicioProveedorSMSImpl")
 	private ServicioProveedorSMS servicioProveedorSMS;
 
+	/**  servicio receptor SMS. */
 	@Resource(name = "servicioReceptorSMSImpl")
 	private ServicioReceptorSMS servicioReceptorSMS;
 
+	/**  servicio servidor. */
 	@Resource(name = "servicioServidorImpl")
 	private ServicioServidor servicioServidor;
 
+	/**  servicio servidor push. */
 	@Resource(name = "servicioServidorPushImpl")
 	private ServicioServidorPush servicioServidorPush;
 	
+	/**  servicio servidor web push. */
 	@Resource(name = "servicioServidorWebPushImpl")
 	private ServicioServidorWebPush servicioServidorWebPush;
 
+	/**  servicio canal. */
 	@Resource(name = "servicioCanalImpl")
 	private ServicioCanal servicioCanal;
 
+	/**  servicio planificacion. */
 	@Resource(name = "servicioPlanificacionImpl")
 	private ServicioPlanificacion servicioPlanificacion;
 	
+	/**  servicio usuarios web push. */
 	@Resource(name = "servicioUsuariosWebPushImpl")
 	private ServicioUsuariosWebPush servicioUsuariosWebPush;
 
+	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
 
+	/**  servidor servicio. */
 	private ServidoresServiciosBean servidorServicio;
+	
+	/**  servicio organismos. */
 	private ServicioOrganismosBean servicioOrganismos;
+	
+	/**  servidor organismos. */
 	private ServidoresOrganismosBean servidorOrganismos;
+	
+	/**  planificacion servidor. */
 	private PlanificacionBean planificacionServidor;
+	
+	/**  organismo. */
 	private OrganismoBean organismo;
+	
+	/**  servicio. */
 	private ServicioBean servicio;
 
+	/**  send mail service. */
 	private SendMailService sendMailService = new SendMailService();
 
+	/**  combo aplicaciones. */
 	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	
+	/**  combo canales. */
 	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	
+	/**  combo configuraciones. */
 	List<KeyValueObject> comboConfiguraciones = new ArrayList<KeyValueObject>();
+	
+	/**  combo configuraciones plan. */
 	List<KeyValueObject> comboConfiguracionesPlan = new ArrayList<KeyValueObject>();
+	
+	/**  combo servicio organismos. */
 	List<KeyValueObject> comboServicioOrganismos = new ArrayList<KeyValueObject>();
 
+	/**  lista servicios. */
 	public List<ServicioBean> listaServicios = null;
+	
+	/**  lista planificaciones servicio. */
 	public List<PlanificacionBean> listaPlanificacionesServicio = null;
+	
+	/**  lista servidores servicios. */
 	public List<ServidoresServiciosBean> listaServidoresServicios = null;
+	
+	/**  lista servicio organismos. */
 	public List<ServicioOrganismosBean> listaServicioOrganismos = null;
+	
+	/**  lista servidores detalle. */
 	private List<ServidorBean> listaServidoresDetalle = new ArrayList<ServidorBean>();
+	
+	/**  lista proveedor SMS detalle. */
 	private List<ProveedorSMSBean> listaProveedorSMSDetalle = new ArrayList<ProveedorSMSBean>();
 
+	/**  check del list. */
 	private String[] checkDelList;
+	
+	/**  check del list planificaciones. */
 	private String[] checkDelListPlanificaciones;
+	
+	/**  check del list servidor servicios. */
 	private String[] checkDelListServidorServicios;
+	
+	/**  check del list servicios organismos. */
 	private String[] checkDelListServiciosOrganismos;
 
+	/**  servicio servidor id. */
 	private String servicioServidorId;
+	
+	/**  id aplicacion. */
 	private String idAplicacion;
+	
+	/**  id planificacion. */
 	private String idPlanificacion;
+	
+	/**  id organismo. */
 	private String idOrganismo;
+	
+	/**  id servicio organismo. */
 	private String idServicioOrganismo;
+	
+	/**  servidor servicio id. */
 	private String servidorServicioId;
+	
+	/**  servicio organismo id. */
 	private String servicioOrganismoId;
+	
+	/**  id servicio. */
 	private String idServicio;
+	
+	/**  parametro servidor id. */
 	private String parametroServidorId;
+	
+	/**  planificacion id. */
 	private String planificacionId;
+	
+	/**  search. */
 	private String search;
+	
+	/**  logo. */
 	private String logo;
+	
+	/**  logo 64. */
 	private String logo64;
+	
+	/**  background. */
 	private String background;
+	
+	/**  icon. */
 	private String icon;
+	
+	/**  background 64. */
 	private String background64;
+	
+	/**  icon 64. */
 	private String icon64;
+	
+	/**  vapid public key. */
 	private String vapidPublicKey;
+	
+	/**  vapid private key. */
 	private String vapidPrivateKey;
 
+	/**  new activo. */
 	private String newActivo;
+	
+	/**  new premium. */
 	private String newPremium;
+	
+	/**  new plataforma android. */
 	private String newPlataformaAndroid;
+	
+	/**  new plataformai OS. */
 	private String newPlataformaiOS;
+	
+	/**  canal disabled. */
 	private String canalDisabled = null;
+	
+	/**  readonly. */
 	private String readonly = "false";
+	
+	/**  check password. */
 	private String checkPassword;
+	
+	/**  new informe activo. */
 	private String newInformeActivo;
+	
+	/**  new agrupacion estado. */
 	private String newAgrupacionEstado;
+	
+	/**  new agrupacion cod org. */
 	private String newAgrupacionCodOrg;
+	
+	/**  new agrupacion cod sia. */
 	private String newAgrupacionCodSia;
+	
+	/**  new agrupacion cod org pagador. */
 	private String newAgrupacionCodOrgPagador;
+	
+	/**  new informes destinatarios. */
 	private String newInformesDestinatarios;
+	
+	/**  recovery. */
 	private String recovery = "";
+	
+	/**  activo. */
 	private String activo = "";
+	
+	/**  result count. */
 	private String resultCount;
+	
+	/**  json. */
 	String json;
+	
+	/**  is multiorganismo. */
 	private boolean isMultiorganismo;
+	
+	/**  new historificacion. */
 	private Integer newHistorificacion = 1;
+	
+	/**  new conservacion. */
 	private Integer newConservacion = 1;
+	
+	/**  session. */
+	@SuppressWarnings("rawtypes")
 	private Map session;
 
+	/**  request attribute totalsize. */
 	private String requestAttributeTotalsize;
+	
+	/**  request attribute pagesize. */
 	private String requestAttributePagesize;
+	
+	/**  pagesize. */
 	private Integer pagesize;
+	
+	/**  canal SMTP id. */
 	private Integer canalSMTPId;
+	
+	/**  canal SMS id. */
 	private Integer canalSMSId;
+	
+	/**  canal recepcion SMS id. */
 	private Integer canalRecepcionSMSId;
+	
+	/**  canal servidor push id. */
 	private Integer canalServidorPushId;
+	
+	/**  canal servidor web push id. */
 	private Integer canalServidorWebPushId;
+	
+	/**  valor maximo predefinido historificacion. */
 	private Integer valorMaximoPredefinidoHistorificacion;
+	
+	/**  valor maximo predefinidor conservacion. */
 	private Integer valorMaximoPredefinidorConservacion;
+	
+	/**  valor 1 historificacion. */
 	private Integer valor1Historificacion;
+	
+	/**  valor 2 historificacion. */
 	private Integer valor2Historificacion;
+	
+	/**  valor 3 historificacion. */
 	private Integer valor3Historificacion;
+	
+	/**  valor 1 conservacion. */
 	private Integer valor1Conservacion;
+	
+	/**  valor 2 conservacion. */
 	private Integer valor2Conservacion;
+	
+	/**  valor 3 conservacion. */
 	private Integer valor3Conservacion;
+	
+	/**  txt recovery. */
 	private String txtRecovery;
+	
+	/**  accion update servicio. */
 	private String accionUpdateServicio;
+	
+	/**  accion id update servicio. */
 	private Long accionIdUpdateServicio;
+	
+	/**  source update servicio. */
 	private String sourceUpdateServicio;
+	
+	/**  accion update organismo. */
 	private String accionUpdateOrganismo;
+	
+	/**  accion id update organismo. */
 	private Long accionIdUpdateOrganismo;
+	
+	/**  source update organismo. */
 	private String sourceUpdateOrganismo;
 	
+	/**  binary types. */
 	private static HashMap<String,String> binaryTypes = new HashMap<>();
+	
+	/**  text types. */
 	private static HashMap<String,String> textTypes = new HashMap<>();
 	static {        
         binaryTypes.put("gif", "image/gif");
@@ -235,12 +416,25 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
         textTypes.put("txt", "text/plain");
     }    
 	
+	/** Constante TIPO_FICHERO. */
 	public static final String TIPO_FICHERO = "pkpass";
 
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String newSearch() throws BaseException {
 		return SUCCESS;
 	}
 
+	/**
+	 * Search servicios.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	@SkipValidation
 	public String searchServicios() throws BaseException {
@@ -292,6 +486,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Ajax load servicios.
+	 *
+	 * @return the string
+	 */
 	///MIGRADO
 	public String ajaxLoadServicios() {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -324,6 +523,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Aplicacion select event.
+	 *
+	 * @return the string
+	 */
 	///MIGRADO
 	public String aplicacionSelectEvent() {
 
@@ -345,6 +549,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Activar multiorganismo select event.
+	 *
+	 * @return the string
+	 */
 	///MIGRADO
 	public String activarMultiorganismoSelectEvent() {
 		boolean sw = true;
@@ -423,6 +632,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -587,6 +802,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 				Integer idServicio = servicioServicio.newServicio(servicioBean, source, accion, accionId);
 				this.idServicio = idServicio.toString();
+				try {
+					//Se crea una planificacion por defecto
+					crearPlanificacionPorDefecto(accion, accionId, source, servicioBean);
+				} catch(BusinessException e) {
+					addActionErrorSession(this.getText("plataforma.servicio.field.planificacion.error"));
+					return ERROR;
+				}
+
 
 				addActionMessageSession(this.getText("plataforma.servicio.create.ok"));
 			}
@@ -595,6 +818,58 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Crear planificacion por defecto.
+	 *
+	 * @param accion the accion
+	 * @param accionId the accion id
+	 * @param source the source
+	 * @param servicioBean the servicio bean
+	 * @throws BusinessException the business exception
+	 */
+	private void crearPlanificacionPorDefecto(String accion, Long accionId, String source, ServicioBean servicioBean)
+			throws BusinessException {
+		planificacionServidor = new PlanificacionBean();
+		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
+		planificacionServidor.setLunes("S");
+		planificacionServidor.setMartes("S");
+		planificacionServidor.setMiercoles("S");
+		planificacionServidor.setJueves("S");
+		planificacionServidor.setViernes("S");
+		planificacionServidor.setSabado("N");
+		planificacionServidor.setDomingo("N");
+		if (servicioBean != null && servicioBean.getCanalid() != null && servicioBean.getCanalid().intValue() == 2) {
+			planificacionServidor.setTipoPlanificacionId(Integer.valueOf(2));
+		} else if (servicioBean != null && servicioBean.getCanalid() != null && servicioBean.getCanalid().intValue() == 1) {
+			planificacionServidor.setTipoPlanificacionId(Integer.valueOf(1));
+		} else if (servicioBean != null && servicioBean.getCanalid() != null && servicioBean.getCanalid().intValue() == 3) {
+			planificacionServidor.setTipoPlanificacionId(Integer.valueOf(3));
+		} else if (servicioBean != null && servicioBean.getCanalid() != null && servicioBean.getCanalid().intValue() == 4) {
+			planificacionServidor.setTipoPlanificacionId(Integer.valueOf(4));
+		}else if (servicioBean != null && servicioBean.getCanalid() != null && servicioBean.getCanalid().intValue() == 5) {
+			planificacionServidor.setTipoPlanificacionId(Integer.valueOf(5));
+		}	
+		if (servicioBean.getServicioId() != null && servicioBean.getServicioId() > 0) {
+			planificacionServidor.setServicioId(servicioBean.getServicioId());
+		}
+		
+		planificacionServidor.setServidorId(null);
+//		planificacionServidor.setServidorId(801);
+		planificacionServidor.setActivo(true);
+		planificacionServidor.setFechaCreacion(new Date());
+		planificacionServidor.setFechaModificacion(new Date());
+		planificacionServidor.setCreadoPor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+		planificacionServidor.setHoraDesde("00:00");
+		planificacionServidor.setHoraHasta("00:30");
+		servicioPlanificacion.newPlanificacion(planificacionServidor, source, accion, accionId, descripcion);
+	}
+
+	/**
+	 * Creates the servicio aplicacion.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String createServicioAplicacion() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
@@ -780,6 +1055,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Valid servicio.
+	 *
+	 * @param servicio the servicio
+	 * @return true, if successful
+	 */
 	///MIGRADO
 	private boolean validServicio(ServicioBean servicio) {
 		boolean sw = true;
@@ -909,6 +1190,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return sw;
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String update() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -1125,7 +1412,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					// Si el servicio esta pendiente de aprobacion, se aprueba
 					// dicho servicio
 				} else if (null != servicioBBDD.getPendienteaprobacion()
-						&& servicioBBDD.getPendienteaprobacion().equals(Integer.valueOf(1))) {
+						&& servicioBBDD.getPendienteaprobacion().equals(true)) {
 					servicioBBDD.setPendienteaprobacion(false);
 				}
 
@@ -1139,6 +1426,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Update servicio aplicacion.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String updateServicioAplicacion() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -1340,6 +1633,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Load.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String load() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -1426,6 +1725,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Delete servicio aplicacion.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServicioAplicacion() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -1447,6 +1752,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete servicio aplicacion selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServicioAplicacionSelected() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -1469,6 +1780,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String delete() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -1496,6 +1813,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Delete selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteSelected() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -1524,6 +1847,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 
+	/**
+	 * Delete planificaciones selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deletePlanificacionesSelected() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -1548,6 +1877,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Agrega planificacion servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String addPlanificacionServicio() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -1595,6 +1930,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 	
+	/**
+	 * Generar claves servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String generarClavesServicio() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
 			return "noUser";
@@ -1605,9 +1946,10 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	/**
 	 * Verifica que se ha introducido por lo menos un día de la semana y las
-	 * horas de inicio y fin
-	 * 
-	 * @param planificacionServidor
+	 * horas de inicio y fin.
+	 *
+	 * @param planificacionServidor the planificacion servidor
+	 * @return true, if successful
 	 */
 	///MIGRADO
 	private boolean planificacionValida(PlanificacionBean planificacionServidor) {
@@ -1659,6 +2001,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return sw;
 	}
 
+	/**
+	 * Delete planificacion servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deletePlanificacionServicio() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -1677,6 +2025,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Agrega servidor servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String addServidorServicio() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -1729,6 +2083,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Agrega servicio organismos.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	// /MIGRADO
 	@Transactional
 	public String addServicioOrganismos() throws BaseException {
@@ -1796,6 +2156,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete servidores servicios selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServidoresServiciosSelected() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -1864,6 +2230,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete servicio organismos selected.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServicioOrganismosSelected() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -1907,6 +2279,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete servicio organismo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServicioOrganismo() throws BaseException {
 		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
@@ -1944,6 +2322,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/**
+	 * Delete servidor servicio.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	public String deleteServidorServicio() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
@@ -2009,6 +2393,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	///MIGRADO
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -2039,6 +2426,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		}
 	}
 
+	/**
+	 * Cargar ctes.
+	 */
 	///MIGRADO
 	private void cargarCtes() {
 		requestAttributeTotalsize = properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null);
@@ -2071,6 +2461,13 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		sourceUpdateOrganismo = properties.getProperty("log.SOURCE_SERVICIOS", null);
 	}
 
+	/**
+	 * Valido horas.
+	 *
+	 * @param horaDesde the hora desde
+	 * @param horaHasta the hora hasta
+	 * @return true, if successful
+	 */
 	///MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
@@ -2093,6 +2490,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return sw;
 	}
 
+	/**
+	 * Valido formato hora.
+	 *
+	 * @param hora the hora
+	 * @return true, if successful
+	 */
 	///MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
@@ -2104,6 +2507,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return sw;
 	}
 
+	/**
+	 * Obtener combo configuracion.
+	 *
+	 * @param idCanal the id canal
+	 * @return combo configuracion
+	 */
 	///MIGRADO
 	private List<KeyValueObject> getComboConfiguracion(Integer idCanal) {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -2203,6 +2612,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return result;
 	}
 
+	/**
+	 * Obtener combo configuraciones plan.
+	 *
+	 * @param idCanal the id canal
+	 * @return combo configuraciones plan
+	 */
 	///MIGRADO
 	private List<KeyValueObject> getComboConfiguracionesPlan(Integer idCanal) {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -2301,8 +2716,13 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return result;
 	}
 
+	/**
+	 * Cargar combo servicio organismos.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
-	private List<KeyValueObject> cargarComboServicioOrganismos() {
+	List<KeyValueObject> cargarComboServicioOrganismos() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
 
 		KeyValueObject option = null;
@@ -2324,6 +2744,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return result;
 	}
 
+	/**
+	 * Obtener combo values canales.
+	 *
+	 * @return combo values canales
+	 */
 	///MIGRADO
 	private List<KeyValueObject> getComboValuesCanales() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -2347,6 +2772,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return result;
 	}
 
+	/**
+	 * Obtener combo values.
+	 *
+	 * @return combo values
+	 */
 	///MIGRADO
 	private List<KeyValueObject> getComboValues() {
 		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -2368,6 +2798,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return result;
 	}
 
+	/**
+	 * Load servidores servicio.
+	 *
+	 * @return the list
+	 */
 	///MIGRADO
 	private List<ServidoresServiciosBean> loadServidoresServicio() {
 		List<ServidoresServiciosBean> res = null;
@@ -2405,7 +2840,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	///MIGRADO
 	/**
-	 * Método que resuelve el lugar donde tiene que volver
+	 * Método que resuelve el lugar donde tiene que volver.
+	 *
+	 * @return volver
 	 */
 	@SuppressWarnings("unchecked")
 	public String getVolver() {
@@ -2422,7 +2859,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	///MIGRADO
 	/**
-	 * Método que resuelve el lugar donde tiene que volver
+	 * Método que resuelve el lugar donde tiene que volver.
+	 *
+	 * @return volver aplicacion
 	 */
 	public String getVolverAplicacion() {
 		String volverAplicacion = "viewAplicacion.action?idAplicacion=" + servicio.getAplicacionid();
@@ -2433,10 +2872,16 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 	
 	
+	/**
+	 * Load passbook.
+	 *
+	 * @return the string
+	 * @throws BusinessException the business exception
+	 */
 	public String loadPassbook() throws BusinessException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String pathBase = ps.getMessage("filesystem.pathBase", null);
-		String nombreOrganismo = "";
+		//String nombreOrganismo = "";
 		if (getRequest().getSession().getAttribute("infoUser") == null)
 			return "noUser";
 		
@@ -2491,6 +2936,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 	
+	/**
+	 * Generate data URI.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private String generateDataURI(Path path) {
 		StringBuffer buffer = null;
 		try{
@@ -2515,6 +2966,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	}
 	
+	/**
+	 * Obtener mime type.
+	 *
+	 * @param filename the filename
+	 * @return mime type
+	 */
 	private String getMimeType(String filename) {
 		String res = "";
 		String type = getFileType(filename);
@@ -2527,7 +2984,13 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return res;
 	}
 	
-	 private static String getFileType(String filename){
+	 /**
+ 	 * Obtener file type.
+ 	 *
+ 	 * @param filename the filename
+ 	 * @return file type
+ 	 */
+ 	private static String getFileType(String filename){
 	        String type = "";
 
 	        int idx = filename.lastIndexOf('.');
@@ -2539,6 +3002,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	    }
 
 
+	/**
+	 * Save passbook.
+	 *
+	 * @throws BusinessException the business exception
+	 */
 	public void savePassbook() throws BusinessException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String pathBase = ps.getMessage("filesystem.pathBase", null);
@@ -2603,6 +3071,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 //		return SUCCESS;
 	}
 	
+	/**
+	 * Delete imagen logo.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String deleteImagenLogo() throws BaseException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String pathBase = ps.getMessage("filesystem.pathBase", null);
@@ -2634,6 +3108,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 	
+	/**
+	 * Delete imagen background.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String deleteImagenBackground() throws BaseException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String pathBase = ps.getMessage("filesystem.pathBase", null);
@@ -2665,6 +3145,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 	
+	/**
+	 * Delete imagen icon.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	public String deleteImagenIcon() throws BaseException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String pathBase = ps.getMessage("filesystem.pathBase", null);
@@ -2696,6 +3182,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 	}
 	
+	/**
+	 * Previsualizar.
+	 *
+	 * @throws BusinessException the business exception
+	 */
 	public void previsualizar() throws BusinessException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String pathBase = ps.getMessage("filesystem.pathBase", null);
@@ -2777,6 +3268,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 //		return SUCCESS;
 	}
 	
+	/**
+	 * Obtener pk fields list align.
+	 *
+	 * @param pkFieldsList the pk fields list
+	 * @return pk fields list align
+	 */
 	private List<PKField> getPkFieldsListAlign(List<PkFieldsXMLBean> pkFieldsList) {
         List<PKField> camposPrincipales = new ArrayList<PKField>();
         for (int i=0; i<pkFieldsList.size();i++) {
@@ -2800,6 +3297,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
         return camposPrincipales;
     }
 	
+	/**
+	 * Obtener pk fields list.
+	 *
+	 * @param pkFieldsList the pk fields list
+	 * @return pk fields list
+	 */
 	private List<PKField> getPkFieldsList(List<PkFieldsXMLBean> pkFieldsList) {
 		List<PKField> camposPrincipales = new ArrayList<PKField>();
 		for (PkFieldsXMLBean pkFieldXMLField : pkFieldsList) {
@@ -2813,483 +3316,1080 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 	
 
+	/**
+	 * Obtener combo configuraciones plan.
+	 *
+	 * @return combo configuraciones plan
+	 */
 	public List<KeyValueObject> getComboConfiguracionesPlan() {
 		return comboConfiguracionesPlan;
 	}
 
+	/**
+	 * Modificar combo configuraciones plan.
+	 *
+	 * @param comboConfiguracionesPlan new combo configuraciones plan
+	 */
 	public void setComboConfiguracionesPlan(List<KeyValueObject> comboConfiguracionesPlan) {
 		this.comboConfiguracionesPlan = comboConfiguracionesPlan;
 	}
 
+	/**
+	 * Modificar canal disabled.
+	 *
+	 * @param canalDisabled new canal disabled
+	 */
 	public void setCanalDisabled(String canalDisabled) {
 		this.canalDisabled = canalDisabled;
 	}
 
+	/**
+	 * Obtener combo servicio organismos.
+	 *
+	 * @return combo servicio organismos
+	 */
 	public List<KeyValueObject> getComboServicioOrganismos() {
 		return comboServicioOrganismos;
 	}
 
+	/**
+	 * Modificar combo servicio organismos.
+	 *
+	 * @param comboServicioOrganismos new combo servicio organismos
+	 */
 	public void setComboServicioOrganismos(List<KeyValueObject> comboServicioOrganismos) {
 		this.comboServicioOrganismos = comboServicioOrganismos;
 	}
 
+	/**
+	 * Obtener combo canales.
+	 *
+	 * @return combo canales
+	 */
 	public List<KeyValueObject> getComboCanales() {
 		return comboCanales;
 	}
 
+	/**
+	 * Modificar combo canales.
+	 *
+	 * @param comboCanales new combo canales
+	 */
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
 		this.comboCanales = comboCanales;
 	}
 
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
 
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
 
+	/**
+	 * Obtener check del list.
+	 *
+	 * @return check del list
+	 */
 	public String[] getCheckDelList() {
 		return checkDelList;
 	}
 
+	/**
+	 * Modificar check del list.
+	 *
+	 * @param checkDelList new check del list
+	 */
 	public void setCheckDelList(String[] checkDelList) {
 		this.checkDelList = checkDelList;
 	}
 
+	/**
+	 * Modificar parametro servidor id.
+	 *
+	 * @param parametroServidorId new parametro servidor id
+	 */
 	public void setParametroServidorId(String parametroServidorId) {
 		this.parametroServidorId = parametroServidorId;
 	}
 
+	/**
+	 * Obtener combo aplicaciones.
+	 *
+	 * @return combo aplicaciones
+	 */
 	public List<KeyValueObject> getComboAplicaciones() {
 		return comboAplicaciones;
 	}
 
+	/**
+	 * Modificar combo aplicaciones.
+	 *
+	 * @param comboAplicaciones new combo aplicaciones
+	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
 		this.comboAplicaciones = comboAplicaciones;
 	}
 
+	/**
+	 * Obtener lista servicios.
+	 *
+	 * @return lista servicios
+	 */
 	public List<ServicioBean> getListaServicios() {
 		return listaServicios;
 	}
 
+	/**
+	 * Modificar lista servicios.
+	 *
+	 * @param listaServicios new lista servicios
+	 */
 	public void setListaServicios(List<ServicioBean> listaServicios) {
 		this.listaServicios = listaServicios;
 	}
 
+	/**
+	 * Obtener servicio servicio.
+	 *
+	 * @return servicio servicio
+	 */
 	public ServicioServicio getServicioServicio() {
 		return servicioServicio;
 	}
 
+	/**
+	 * Modificar servicio servicio.
+	 *
+	 * @param servicioServicio new servicio servicio
+	 */
 	public void setServicioServicio(ServicioServicio servicioServicio) {
 		this.servicioServicio = servicioServicio;
 	}
 
+	/**
+	 * Obtener servicio aplicacion.
+	 *
+	 * @return servicio aplicacion
+	 */
 	public ServicioAplicacion getServicioAplicacion() {
 		return servicioAplicacion;
 	}
 
+	/**
+	 * Modificar servicio aplicacion.
+	 *
+	 * @param servicioAplicacion new servicio aplicacion
+	 */
 	public void setServicioAplicacion(ServicioAplicacion servicioAplicacion) {
 		this.servicioAplicacion = servicioAplicacion;
 	}
 
+	/**
+	 * Obtener id servicio.
+	 *
+	 * @return id servicio
+	 */
 	public String getIdServicio() {
 		return idServicio;
 	}
 
+	/**
+	 * Modificar id servicio.
+	 *
+	 * @param idServicio new id servicio
+	 */
 	public void setIdServicio(String idServicio) {
 		this.idServicio = idServicio;
 	}
 
+	/**
+	 * Obtener servicio.
+	 *
+	 * @return servicio
+	 */
 	public ServicioBean getServicio() {
 		return servicio;
 	}
 
+	/**
+	 * Modificar servicio.
+	 *
+	 * @param servicio new servicio
+	 */
 	public void setServicio(ServicioBean servicio) {
 		this.servicio = servicio;
 	}
 
+	/**
+	 * Obtener lista servidores detalle.
+	 *
+	 * @return lista servidores detalle
+	 */
 	public List<ServidorBean> getListaServidoresDetalle() {
 		return listaServidoresDetalle;
 	}
 
+	/**
+	 * Modificar lista servidores detalle.
+	 *
+	 * @param listaServidoresDetalle new lista servidores detalle
+	 */
 	public void setListaServidoresDetalle(List<ServidorBean> listaServidoresDetalle) {
 		this.listaServidoresDetalle = listaServidoresDetalle;
 	}
 
+	/**
+	 * Obtener lista proveedor SMS detalle.
+	 *
+	 * @return lista proveedor SMS detalle
+	 */
 	public List<ProveedorSMSBean> getListaProveedorSMSDetalle() {
 		return listaProveedorSMSDetalle;
 	}
 
+	/**
+	 * Modificar lista proveedor SMS detalle.
+	 *
+	 * @param listaProveedorSMSDetalle new lista proveedor SMS detalle
+	 */
 	public void setListaProveedorSMSDetalle(List<ProveedorSMSBean> listaProveedorSMSDetalle) {
 		this.listaProveedorSMSDetalle = listaProveedorSMSDetalle;
 	}
 
+	/**
+	 * Obtener parametro servidor id.
+	 *
+	 * @return parametro servidor id
+	 */
 	public String getParametroServidorId() {
 		return parametroServidorId;
 	}
 
+	/**
+	 * Obtener combo configuraciones.
+	 *
+	 * @return combo configuraciones
+	 */
 	public List<KeyValueObject> getComboConfiguraciones() {
 		return comboConfiguraciones;
 	}
 
+	/**
+	 * Modificar combo configuraciones.
+	 *
+	 * @param comboConfiguraciones new combo configuraciones
+	 */
 	public void setComboConfiguraciones(List<KeyValueObject> comboConfiguraciones) {
 		this.comboConfiguraciones = comboConfiguraciones;
 	}
 
+	/**
+	 * Obtener servicio proveedor SMS.
+	 *
+	 * @return servicio proveedor SMS
+	 */
 	public ServicioProveedorSMS getServicioProveedorSMS() {
 		return servicioProveedorSMS;
 	}
 
+	/**
+	 * Modificar servicio proveedor SMS.
+	 *
+	 * @param servicioProveedorSMS new servicio proveedor SMS
+	 */
 	public void setServicioProveedorSMS(ServicioProveedorSMS servicioProveedorSMS) {
 		this.servicioProveedorSMS = servicioProveedorSMS;
 	}
 
+	/**
+	 * Obtener servicio receptor SMS.
+	 *
+	 * @return servicio receptor SMS
+	 */
 	public ServicioReceptorSMS getServicioReceptorSMS() {
 		return servicioReceptorSMS;
 	}
 
+	/**
+	 * Modificar servicio receptor SMS.
+	 *
+	 * @param servicioReceptorSMS new servicio receptor SMS
+	 */
 	public void setServicioReceptorSMS(ServicioReceptorSMS servicioReceptorSMS) {
 		this.servicioReceptorSMS = servicioReceptorSMS;
 	}
 
+	/**
+	 * Obtener servicio servidor.
+	 *
+	 * @return servicio servidor
+	 */
 	public ServicioServidor getServicioServidor() {
 		return servicioServidor;
 	}
 
+	/**
+	 * Modificar servicio servidor.
+	 *
+	 * @param servicioServidor new servicio servidor
+	 */
 	public void setServicioServidor(ServicioServidor servicioServidor) {
 		this.servicioServidor = servicioServidor;
 	}
 
+	/**
+	 * Obtener servicio canal.
+	 *
+	 * @return servicio canal
+	 */
 	public ServicioCanal getServicioCanal() {
 		return servicioCanal;
 	}
 
+	/**
+	 * Modificar servicio canal.
+	 *
+	 * @param servicioCanal new servicio canal
+	 */
 	public void setServicioCanal(ServicioCanal servicioCanal) {
 		this.servicioCanal = servicioCanal;
 	}
 
+	/**
+	 * Obtener lista servidores servicios.
+	 *
+	 * @return lista servidores servicios
+	 */
 	public List<ServidoresServiciosBean> getListaServidoresServicios() {
 		return listaServidoresServicios;
 	}
 
+	/**
+	 * Modificar lista servidores servicios.
+	 *
+	 * @param listaServidoresServicios new lista servidores servicios
+	 */
 	public void setListaServidoresServicios(List<ServidoresServiciosBean> listaServidoresServicios) {
 		this.listaServidoresServicios = listaServidoresServicios;
 	}
 
+	/**
+	 * Obtener lista servicio organismos.
+	 *
+	 * @return lista servicio organismos
+	 */
 	public List<ServicioOrganismosBean> getListaServicioOrganismos() {
 		return listaServicioOrganismos;
 	}
 
+	/**
+	 * Modificar lista seervicios organismos.
+	 *
+	 * @param listaServicioOrganismos new lista seervicios organismos
+	 */
 	public void setListaSeerviciosOrganismos(List<ServicioOrganismosBean> listaServicioOrganismos) {
 		this.listaServicioOrganismos = listaServicioOrganismos;
 	}
 
+	/**
+	 * Obtener lista planificaciones servicio.
+	 *
+	 * @return lista planificaciones servicio
+	 */
 	public List<PlanificacionBean> getListaPlanificacionesServicio() {
 		return listaPlanificacionesServicio;
 	}
 
+	/**
+	 * Modificar lista planificaciones servicio.
+	 *
+	 * @param listaPlanificacionesServicio new lista planificaciones servicio
+	 */
 	public void setListaPlanificacionesServicio(List<PlanificacionBean> listaPlanificacionesServicio) {
 		this.listaPlanificacionesServicio = listaPlanificacionesServicio;
 	}
 
+	/**
+	 * Obtener servicio planificacion.
+	 *
+	 * @return servicio planificacion
+	 */
 	public ServicioPlanificacion getServicioPlanificacion() {
 		return servicioPlanificacion;
 	}
 
+	/**
+	 * Modificar servicio planificacion.
+	 *
+	 * @param servicioPlanificacion new servicio planificacion
+	 */
 	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
 		this.servicioPlanificacion = servicioPlanificacion;
 	}
 
+	/**
+	 * Obtener new historificacion.
+	 *
+	 * @return new historificacion
+	 */
 	public Integer getNewHistorificacion() {
 		return newHistorificacion;
 	}
 
+	/**
+	 * Modificar new historificacion.
+	 *
+	 * @param newHistorificacion new new historificacion
+	 */
 	public void setNewHistorificacion(Integer newHistorificacion) {
 		this.newHistorificacion = newHistorificacion;
 	}
 
+	/**
+	 * Obtener new conservacion.
+	 *
+	 * @return new conservacion
+	 */
 	public Integer getNewConservacion() {
 		return newConservacion;
 	}
 
+	/**
+	 * Modificar new conservacion.
+	 *
+	 * @param newConservacion new new conservacion
+	 */
 	public void setNewConservacion(Integer newConservacion) {
 		this.newConservacion = newConservacion;
 	}
 
+	/**
+	 * Obtener check password.
+	 *
+	 * @return check password
+	 */
 	public String getCheckPassword() {
 		return checkPassword;
 	}
 
+	/**
+	 * Modificar check password.
+	 *
+	 * @param checkPassword new check password
+	 */
 	public void setCheckPassword(String checkPassword) {
 		this.checkPassword = checkPassword;
 	}
 
+	/**
+	 * Obtener servicio servidor push.
+	 *
+	 * @return servicio servidor push
+	 */
 	public ServicioServidorPush getServicioServidorPush() {
 		return servicioServidorPush;
 	}
 
+	/**
+	 * Modificar servicio servidor push.
+	 *
+	 * @param servicioServidorPush new servicio servidor push
+	 */
 	public void setServicioServidorPush(ServicioServidorPush servicioServidorPush) {
 		this.servicioServidorPush = servicioServidorPush;
 	}
 
+	/**
+	 * Obtener new plataforma android.
+	 *
+	 * @return new plataforma android
+	 */
 	public String getNewPlataformaAndroid() {
 		return newPlataformaAndroid;
 	}
 
+	/**
+	 * Modificar new plataforma android.
+	 *
+	 * @param newPlataformaAndroid new new plataforma android
+	 */
 	public void setNewPlataformaAndroid(String newPlataformaAndroid) {
 		this.newPlataformaAndroid = newPlataformaAndroid;
 	}
 
+	/**
+	 * Obtener new plataformai OS.
+	 *
+	 * @return new plataformai OS
+	 */
 	public String getNewPlataformaiOS() {
 		return newPlataformaiOS;
 	}
 
+	/**
+	 * Modificar new plataformai OS.
+	 *
+	 * @param newPlataformaiOS new new plataformai OS
+	 */
 	public void setNewPlataformaiOS(String newPlataformaiOS) {
 		this.newPlataformaiOS = newPlataformaiOS;
 	}
 
+	/**
+	 * Obtener new informe activo.
+	 *
+	 * @return new informe activo
+	 */
 	public String getNewInformeActivo() {
 		return newInformeActivo;
 	}
 
+	/**
+	 * Modificar new informe activo.
+	 *
+	 * @param newInformeActivo new new informe activo
+	 */
 	public void setNewInformeActivo(String newInformeActivo) {
 		this.newInformeActivo = newInformeActivo;
 	}
 
+	/**
+	 * Obtener new agrupacion estado.
+	 *
+	 * @return new agrupacion estado
+	 */
 	public String getNewAgrupacionEstado() {
 		return newAgrupacionEstado;
 	}
 
+	/**
+	 * Modificar new agrupacion estado.
+	 *
+	 * @param newAgrupacionEstado new new agrupacion estado
+	 */
 	public void setNewAgrupacionEstado(String newAgrupacionEstado) {
 		this.newAgrupacionEstado = newAgrupacionEstado;
 	}
 
+	/**
+	 * Obtener new agrupacion cod org.
+	 *
+	 * @return new agrupacion cod org
+	 */
 	public String getNewAgrupacionCodOrg() {
 		return newAgrupacionCodOrg;
 	}
 
+	/**
+	 * Modificar new agrupacion cod org.
+	 *
+	 * @param newAgrupacionCodOrg new new agrupacion cod org
+	 */
 	public void setNewAgrupacionCodOrg(String newAgrupacionCodOrg) {
 		this.newAgrupacionCodOrg = newAgrupacionCodOrg;
 	}
 
+	/**
+	 * Obtener new agrupacion cod sia.
+	 *
+	 * @return new agrupacion cod sia
+	 */
 	public String getNewAgrupacionCodSia() {
 		return newAgrupacionCodSia;
 	}
 
+	/**
+	 * Modificar new agrupacion cod sia.
+	 *
+	 * @param newAgrupacionCodSia new new agrupacion cod sia
+	 */
 	public void setNewAgrupacionCodSia(String newAgrupacionCodSia) {
 		this.newAgrupacionCodSia = newAgrupacionCodSia;
 	}
 
+	/**
+	 * Obtener new agrupacion cod org pagador.
+	 *
+	 * @return new agrupacion cod org pagador
+	 */
 	public String getNewAgrupacionCodOrgPagador() {
 		return newAgrupacionCodOrgPagador;
 	}
 
+	/**
+	 * Modificar new agrupacion cod org pagador.
+	 *
+	 * @param newAgrupacionCodOrgPagador new new agrupacion cod org pagador
+	 */
 	public void setNewAgrupacionCodOrgPagador(String newAgrupacionCodOrgPagador) {
 		this.newAgrupacionCodOrgPagador = newAgrupacionCodOrgPagador;
 	}
 
+	/**
+	 * Obtener new informes destinatarios.
+	 *
+	 * @return new informes destinatarios
+	 */
 	public String getNewInformesDestinatarios() {
 		return newInformesDestinatarios;
 	}
 
+	/**
+	 * Modificar new informes destinatarios.
+	 *
+	 * @param newInformesDestinatarios new new informes destinatarios
+	 */
 	public void setNewInformesDestinatarios(String newInformesDestinatarios) {
 		this.newInformesDestinatarios = newInformesDestinatarios;
 	}
 
+	/**
+	 * Obtener servicio organismos.
+	 *
+	 * @return servicio organismos
+	 */
 	public ServicioOrganismosBean getServicioOrganismos() {
 		return servicioOrganismos;
 	}
 
+	/**
+	 * Modificar servicio organismos.
+	 *
+	 * @param servicioOrganismos new servicio organismos
+	 */
 	public void setServicioOrganismos(ServicioOrganismosBean servicioOrganismos) {
 		this.servicioOrganismos = servicioOrganismos;
 	}
 
+	/**
+	 * Modificar lista servicio organismos.
+	 *
+	 * @param listaServicioOrganismos new lista servicio organismos
+	 */
 	public void setListaServicioOrganismos(List<ServicioOrganismosBean> listaServicioOrganismos) {
 		this.listaServicioOrganismos = listaServicioOrganismos;
 	}
 
+	/**
+	 * Obtener servicio organismo.
+	 *
+	 * @return servicio organismo
+	 */
 	public ServicioOrganismo getServicioOrganismo() {
 		return servicioOrganismo;
 	}
 
+	/**
+	 * Modificar servicio organismo.
+	 *
+	 * @param servicioOrganismo new servicio organismo
+	 */
 	public void setServicioOrganismo(ServicioOrganismo servicioOrganismo) {
 		this.servicioOrganismo = servicioOrganismo;
 	}
 
+	/**
+	 * Obtener organismo.
+	 *
+	 * @return organismo
+	 */
 	public OrganismoBean getOrganismo() {
 		return organismo;
 	}
 
+	/**
+	 * Modificar organismo.
+	 *
+	 * @param organismo new organismo
+	 */
 	public void setOrganismo(OrganismoBean organismo) {
 		this.organismo = organismo;
 	}
 
+	/**
+	 * Obtener id organismo.
+	 *
+	 * @return id organismo
+	 */
 	public String getIdOrganismo() {
 		return idOrganismo;
 	}
 
+	/**
+	 * Modificar id organismo.
+	 *
+	 * @param idOrganismo new id organismo
+	 */
 	public void setIdOrganismo(String idOrganismo) {
 		this.idOrganismo = idOrganismo;
 	}
 
+	/**
+	 * Obtener id servicio organismo.
+	 *
+	 * @return id servicio organismo
+	 */
 	public String getIdServicioOrganismo() {
 		return idServicioOrganismo;
 	}
 
+	/**
+	 * Modificar id servicio organismo.
+	 *
+	 * @param idServicioOrganismo new id servicio organismo
+	 */
 	public void setIdServicioOrganismo(String idServicioOrganismo) {
 		this.idServicioOrganismo = idServicioOrganismo;
 	}
 
+	/**
+	 * Comprueba multiorganismo.
+	 *
+	 * @return true, si es multiorganismo
+	 */
 	public boolean isMultiorganismo() {
 		return isMultiorganismo;
 	}
 
+	/**
+	 * Modificar multiorganismo.
+	 *
+	 * @param isMultiorganismo new multiorganismo
+	 */
 	public void setMultiorganismo(boolean isMultiorganismo) {
 		this.isMultiorganismo = isMultiorganismo;
 	}
 
+	/**
+	 * Obtener servidor organismos.
+	 *
+	 * @return servidor organismos
+	 */
 	public ServidoresOrganismosBean getServidorOrganismos() {
 		return servidorOrganismos;
 	}
 
+	/**
+	 * Modificar servidor organismos.
+	 *
+	 * @param servidorOrganismos new servidor organismos
+	 */
 	public void setServidorOrganismos(ServidoresOrganismosBean servidorOrganismos) {
 		this.servidorOrganismos = servidorOrganismos;
 	}
 
+	/**
+	 * Obtener check del list servicios organismos.
+	 *
+	 * @return check del list servicios organismos
+	 */
 	public String[] getCheckDelListServiciosOrganismos() {
 		return checkDelListServiciosOrganismos;
 	}
 
+	/**
+	 * Modificar check del list servicios organismos.
+	 *
+	 * @param checkDelListServiciosOrganismos new check del list servicios organismos
+	 */
 	public void setCheckDelListServiciosOrganismos(String[] checkDelListServiciosOrganismos) {
 		this.checkDelListServiciosOrganismos = checkDelListServiciosOrganismos;
 	}
 
+	/**
+	 * Obtener activo.
+	 *
+	 * @return activo
+	 */
 	public String getActivo() {
 		return activo;
 	}
 
+	/**
+	 * Modificar activo.
+	 *
+	 * @param activo new activo
+	 */
 	public void setActivo(String activo) {
 		this.activo = activo;
 	}
 
+	/**
+	 * Obtener canal disabled.
+	 *
+	 * @return canal disabled
+	 */
 	public String getCanalDisabled() {
 		return canalDisabled;
 	}
 
+	/**
+	 * Obtener readonly.
+	 *
+	 * @return readonly
+	 */
 	public String getReadonly() {
 		return readonly;
 	}
 
+	/**
+	 * Modificar readonly.
+	 *
+	 * @param readonly new readonly
+	 */
 	public void setReadonly(String readonly) {
 		this.readonly = readonly;
 	}
 
+	/**
+	 * Obtener new activo.
+	 *
+	 * @return new activo
+	 */
 	public String getNewActivo() {
 		return newActivo;
 	}
 
+	/**
+	 * Modificar new activo.
+	 *
+	 * @param newActivo new new activo
+	 */
 	public void setNewActivo(String newActivo) {
 		this.newActivo = newActivo;
 	}
 
+	/**
+	 * Obtener new premium.
+	 *
+	 * @return new premium
+	 */
 	public String getNewPremium() {
 		return newPremium;
 	}
 
+	/**
+	 * Modificar new premium.
+	 *
+	 * @param newPremium new new premium
+	 */
 	public void setNewPremium(String newPremium) {
 		this.newPremium = newPremium;
 	}
 
+	/**
+	 * Obtener id planificacion.
+	 *
+	 * @return id planificacion
+	 */
 	public String getIdPlanificacion() {
 		return idPlanificacion;
 	}
 
+	/**
+	 * Modificar id planificacion.
+	 *
+	 * @param idPlanificacion new id planificacion
+	 */
 	public void setIdPlanificacion(String idPlanificacion) {
 		this.idPlanificacion = idPlanificacion;
 	}
 
+	/**
+	 * Obtener servidor servicio id.
+	 *
+	 * @return servidor servicio id
+	 */
 	public String getServidorServicioId() {
 		return servidorServicioId;
 	}
 
+	/**
+	 * Modificar servidor servicio id.
+	 *
+	 * @param servidorServicioId new servidor servicio id
+	 */
 	public void setServidorServicioId(String servidorServicioId) {
 		this.servidorServicioId = servidorServicioId;
 	}
 
+	/**
+	 * Obtener servicio organismo id.
+	 *
+	 * @return servicio organismo id
+	 */
 	public String getServicioOrganismoId() {
 		return servicioOrganismoId;
 	}
 
+	/**
+	 * Modificar servicio organismo id.
+	 *
+	 * @param servicioOrganismoId new servicio organismo id
+	 */
 	public void setServicioOrganismoId(String servicioOrganismoId) {
 		this.servicioOrganismoId = servicioOrganismoId;
 	}
 
+	/**
+	 * Obtener id aplicacion.
+	 *
+	 * @return id aplicacion
+	 */
 	public String getIdAplicacion() {
 		return idAplicacion;
 	}
 
+	/**
+	 * Modificar id aplicacion.
+	 *
+	 * @param idAplicacion new id aplicacion
+	 */
 	public void setIdAplicacion(String idAplicacion) {
 		this.idAplicacion = idAplicacion;
 	}
 
+	/**
+	 * Obtener servicio servidor id.
+	 *
+	 * @return servicio servidor id
+	 */
 	public String getServicioServidorId() {
 		return servicioServidorId;
 	}
 
+	/**
+	 * Modificar servicio servidor id.
+	 *
+	 * @param servicioServidorId new servicio servidor id
+	 */
 	public void setServicioServidorId(String servicioServidorId) {
 		this.servicioServidorId = servicioServidorId;
 	}
 
+	/**
+	 * Obtener servidor servicio.
+	 *
+	 * @return servidor servicio
+	 */
 	public ServidoresServiciosBean getServidorServicio() {
 		return servidorServicio;
 	}
 
+	/**
+	 * Modificar servidor servicio.
+	 *
+	 * @param servidorServicio new servidor servicio
+	 */
 	public void setServidorServicio(ServidoresServiciosBean servidorServicio) {
 		this.servidorServicio = servidorServicio;
 	}
 
+	/**
+	 * Obtener check del list servidor servicios.
+	 *
+	 * @return check del list servidor servicios
+	 */
 	public String[] getCheckDelListServidorServicios() {
 		return checkDelListServidorServicios;
 	}
 
+	/**
+	 * Modificar check del list servidor servicios.
+	 *
+	 * @param checkDelListServidorServicios new check del list servidor servicios
+	 */
 	public void setCheckDelListServidorServicios(String[] checkDelListServidorServicios) {
 		this.checkDelListServidorServicios = checkDelListServidorServicios;
 	}
 
+	/**
+	 * Obtener check del list planificaciones.
+	 *
+	 * @return check del list planificaciones
+	 */
 	public String[] getCheckDelListPlanificaciones() {
 		return checkDelListPlanificaciones;
 	}
 
+	/**
+	 * Modificar check del list planificaciones.
+	 *
+	 * @param checkDelListPlanificaciones new check del list planificaciones
+	 */
 	public void setCheckDelListPlanificaciones(String[] checkDelListPlanificaciones) {
 		this.checkDelListPlanificaciones = checkDelListPlanificaciones;
 	}
 
+	/**
+	 * Obtener planificacion id.
+	 *
+	 * @return planificacion id
+	 */
 	public String getPlanificacionId() {
 		return planificacionId;
 	}
 
+	/**
+	 * Modificar planificacion id.
+	 *
+	 * @param planificacionId new planificacion id
+	 */
 	public void setPlanificacionId(String planificacionId) {
 		this.planificacionId = planificacionId;
 	}
 
+	/**
+	 * Obtener json.
+	 *
+	 * @return json
+	 */
 	public String getJson() {
 		return json;
 	}
 
+	/**
+	 * Modificar json.
+	 *
+	 * @param json new json
+	 */
 	public void setJson(String json) {
 		this.json = json;
 	}
 
+	/**
+	 * Obtener planificacion servidor.
+	 *
+	 * @return planificacion servidor
+	 */
 	public PlanificacionBean getPlanificacionServidor() {
 		return planificacionServidor;
 	}
 
+	/**
+	 * Modificar planificacion servidor.
+	 *
+	 * @param planificacionServidor new planificacion servidor
+	 */
 	public void setPlanificacionServidor(PlanificacionBean planificacionServidor) {
 		this.planificacionServidor = planificacionServidor;
 	}
 
 	/**
+	 * Obtener search.
+	 *
 	 * @return the search
 	 */
 	public String getSearch() {
@@ -3297,37 +4397,71 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Modificar search.
+	 *
 	 * @param search the search to set
 	 */
 	public void setSearch(String search) {
 		this.search = search;
 	}
 	
+	/**
+	 * Obtener logo.
+	 *
+	 * @return logo
+	 */
 	public String getLogo() {
 		return logo;
 	}
 
+	/**
+	 * Modificar logo.
+	 *
+	 * @param logo new logo
+	 */
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
 
+	/**
+	 * Obtener background.
+	 *
+	 * @return background
+	 */
 	public String getBackground() {
 		return background;
 	}
 
+	/**
+	 * Modificar background.
+	 *
+	 * @param background new background
+	 */
 	public void setBackground(String background) {
 		this.background = background;
 	}
 
+	/**
+	 * Obtener icon.
+	 *
+	 * @return icon
+	 */
 	public String getIcon() {
 		return icon;
 	}
 
+	/**
+	 * Modificar icon.
+	 *
+	 * @param icon new icon
+	 */
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 
 	/**
+	 * Obtener vapid public key.
+	 *
 	 * @return the vapidPublicKey
 	 */
 	public String getVapidPublicKey() {
@@ -3335,6 +4469,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Modificar vapid public key.
+	 *
 	 * @param vapidPublicKey the vapidPublicKey to set
 	 */
 	public void setVapidPublicKey(String vapidPublicKey) {
@@ -3342,6 +4478,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Obtener vapid private key.
+	 *
 	 * @return the vapidPrivateKey
 	 */
 	public String getVapidPrivateKey() {
@@ -3349,6 +4487,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Modificar vapid private key.
+	 *
 	 * @param vapidPrivateKey the vapidPrivateKey to set
 	 */
 	public void setVapidPrivateKey(String vapidPrivateKey) {
@@ -3356,6 +4496,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Obtener logo 64.
+	 *
 	 * @return the logo64
 	 */
 	public String getLogo64() {
@@ -3363,6 +4505,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Modificar logo 64.
+	 *
 	 * @param logo64 the logo64 to set
 	 */
 	public void setLogo64(String logo64) {
@@ -3370,6 +4514,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Obtener background 64.
+	 *
 	 * @return the background64
 	 */
 	public String getBackground64() {
@@ -3377,6 +4523,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Modificar background 64.
+	 *
 	 * @param background64 the background64 to set
 	 */
 	public void setBackground64(String background64) {
@@ -3384,6 +4532,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Obtener icon 64.
+	 *
 	 * @return the icon64
 	 */
 	public String getIcon64() {
@@ -3391,12 +4541,30 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
+	 * Modificar icon 64.
+	 *
 	 * @param icon64 the icon64 to set
 	 */
 	public void setIcon64(String icon64) {
 		this.icon64 = icon64;
 	}
 
+	/**
+	 * Obtener recovery.
+	 *
+	 * @return recovery
+	 */
+	public String getRecovery() {
+		return recovery;
+	}
 
 
+	/**
+	 * Modificar recovery.
+	 *
+	 * @param recovery new recovery
+	 */
+	public void setRecovery(String recovery) {
+		this.recovery = recovery;
+	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.map.j2ee.exceptions.BusinessException;
@@ -23,15 +22,20 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes;
  */
 @Service("servicioMensajesImpl")
 public class ServicioMensajesImpl implements ServicioMensajes{
-private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
+//private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
 	
-	@Resource(name = "TblMensajesManagerImpl")
+	/**  tbl mensajes manager. */
+@Resource(name = "TblMensajesManagerImpl")
 	private TblMensajesManager tblMensajesManager;
 	
+	/**  query mensajes. */
 	@Resource(name = "QueryExecutorMensajesImpl")
 	private QueryExecutorMensajes queryMensajes;
 	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes#getTodosMensajesLoteHistorificar(java.lang.Long, java.util.Date)
+	 */
 	@Override
 	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID, Date fecha) throws BusinessException {
 
@@ -44,6 +48,9 @@ private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes#testLoteSinMensajes(java.lang.Long)
+	 */
 	@Override
 	public Boolean testLoteSinMensajes(Long loteEnvioId) throws BusinessException {
 		List<Long> res = queryMensajes.getIdMensajesByLote(loteEnvioId);

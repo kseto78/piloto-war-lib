@@ -39,27 +39,42 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServi
 @Service("servicioProcesoInformesServiciosImpl")
 public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInformesServicios{
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProcesoInformesServiciosImpl.class);
 	
+	/**  tbl proceso informes servicios manager. */
 	@Resource(name = "TblProcesoInformesServiciosManagerImpl")
 	private TblProcesoInformesServiciosManager tblProcesoInformesServiciosManager;
 	
+	/**  tbl servicios manager. */
 	@Resource(name = "TblServiciosManagerImpl")
 	private TblServiciosManager tblServiciosManager;
 	
 
+	/**  query executor gestion envios. */
 	@Autowired
 	private QueryExecutorGestionEnvios queryExecutorGestionEnvios;
 	
+	/**  query executor gestion envios hist. */
 	@Autowired
 	private QueryExecutorGestionEnviosHist queryExecutorGestionEnviosHist;
 	
 	
+	/** Constante CODORGANISMO. */
 	private static final String CODORGANISMO = "codorganismo";
+	
+	/** Constante CODORGANISMOPAGADOR. */
 	private static final String CODORGANISMOPAGADOR = "codorganismopagador";
+	
+	/** Constante CODSIA. */
 	private static final String CODSIA = "codsia";
+	
+	/** Constante ESTADO. */
 	private static final String ESTADO = "estado";
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServicios#newServicioProcesoInformesServicios(es.mpr.plataformamensajeria.beans.ProcesoInformesServiciosBean)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -80,6 +95,9 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServicios#obtenerInformesServiciosEstado(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -108,6 +126,9 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 	
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServicios#obtenerInformesServiciosCodOrg(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -134,6 +155,9 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServicios#obtenerInformesServiciosCodSia(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -159,6 +183,9 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServicios#obtenerInformesServiciosCodOrgPagador(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
 	///MIGRADO
 	@Override
 	@Transactional
@@ -184,6 +211,16 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 		return result;
 	}
 	
+/**
+ * Obtener informes servicios.
+ *
+ * @param servicioId the servicio id
+ * @param anno the anno
+ * @param mes the mes
+ * @param columna the columna
+ * @return the list
+ * @throws BusinessException the business exception
+ */
 ////MIGRADO
 	private List<InformesServiciosBean> obtenerInformesServicios(Integer servicioId, Integer anno, Integer mes, String columna) throws BusinessException{
 		List<InformesServiciosBean> result = new ArrayList<>();
@@ -214,6 +251,12 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 		return result;
 	}
 	
+	/**
+	 * Obtener informes servicios bean.
+	 *
+	 * @param listaGE the lista GE
+	 * @return informes servicios bean
+	 */
 	////MIGRADO
 	private List<InformesServiciosBean> getInformesServiciosBean(List<TblGestionEnvios> listaGE) {
 		List<InformesServiciosBean> res = new ArrayList<>();
@@ -237,6 +280,12 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 		return res;
 	}
 	
+/**
+ * Obtener informes servicios hist bean.
+ *
+ * @param listaGEH the lista GEH
+ * @return informes servicios hist bean
+ */
 ////MIGRADO
 	private List<InformesServiciosBean> getInformesServiciosHistBean(List<TblGestionEnviosHist> listaGEH) {
 		List<InformesServiciosBean> res = new ArrayList<>();

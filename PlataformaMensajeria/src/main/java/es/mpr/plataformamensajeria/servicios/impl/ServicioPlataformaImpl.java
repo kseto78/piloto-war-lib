@@ -20,14 +20,22 @@ import es.minhap.sim.model.TblPlataformas;
 import es.mpr.plataformamensajeria.beans.PlataformaBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlataforma;
 
+/**
+ * Clase ServicioPlataformaImpl.
+ */
 @Service("servicioPlataformaImpl")
 public class ServicioPlataformaImpl implements ServicioPlataforma {
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProveedorSMSImpl.class);
 	
+	/**  tbl plataformas manager. */
 	@Resource(name="TblPlataformasManagerImpl")
 	private TblPlataformasManager tblPlataformasManager;
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlataforma#getPlataformas()
+	 */
 	///MIGRADO
 	@Override
 	public List<PlataformaBean> getPlataformas() throws BusinessException {
@@ -44,11 +52,11 @@ public class ServicioPlataformaImpl implements ServicioPlataforma {
 	}
 	
 	/**
-	 * <p>Convertirmos una lista de PlataformaJPA a una lista de PlataformaBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de PlataformaJPA a una lista de PlataformaBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
 	protected List<PlataformaBean> getListPlataformaBean(List<TblPlataformas> lista) throws BusinessException

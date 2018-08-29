@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 
 import es.minhap.misim.bus.model.Aplicacion;
 import es.minhap.misim.bus.model.Comunicacion;
@@ -21,38 +20,50 @@ import es.mpr.plataformamensajeria.beans.ProductoBean;
 import es.mpr.plataformamensajeria.beans.ProveedorMisimBean;
 import es.mpr.plataformamensajeria.beans.TransformacionBean;
 
+/**
+ * Clase Utiles.
+ */
 public class Utiles{
 	
-	private static final Logger LOGGER = Logger.getLogger(Utiles.class);
-	
-	private static final String ORDEN_LETRAS = "TRWAGMYFPDXBNJZSQVHLCKE";
-	
-	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+//	private static final Logger LOGGER = Logger.getLogger(Utiles.class);
+//	
+//	private static final String ORDEN_LETRAS = "TRWAGMYFPDXBNJZSQVHLCKE";
+//	
+//	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 	/**
-	 * Codificacion Base64
-	 * @param param
-	 * @return
-	 */
+ * Codificacion Base64.
+ *
+ * @param param the param
+ * @return the string
+ */
 	public static String encode(byte[] param){
 		byte[] encoded = Base64.encodeBase64(param);
 		return new String(encoded);
 	}
 	
 	/**
-	 * Decodificacion Base64
-	 * @param param
-	 * @return
+	 * Decodificacion Base64.
+	 *
+	 * @param param the param
+	 * @return the byte[]
 	 */
 	public static byte[] decode(String param){
 		byte[] decoded = Base64.decodeBase64(param.getBytes());
 		return decoded;
 	}
 	
+	/**
+	 * Fileto base 64 string.
+	 *
+	 * @param originalFile the original file
+	 * @return the string
+	 */
 	public static String FiletoBase64String (File originalFile){
         String iconoBase64 = null;
         try {
-            FileInputStream fileInputStreamReader = new FileInputStream(originalFile);
+            @SuppressWarnings("resource")
+			FileInputStream fileInputStreamReader = new FileInputStream(originalFile);
             byte[] bytes = new byte[(int)originalFile.length()];
             fileInputStreamReader.read(bytes);
             iconoBase64 = new String(Base64.encodeBase64(bytes));
@@ -65,6 +76,12 @@ public class Utiles{
         return iconoBase64;
 	}
 	
+	/**
+	 * Transformacion producto.
+	 *
+	 * @param producto the producto
+	 * @return the producto bean
+	 */
 	public static ProductoBean transformacionProducto (Producto producto){
 		
 		ProductoBean productoBean = new ProductoBean();
@@ -75,6 +92,12 @@ public class Utiles{
 		return productoBean;
 	}
 	
+	/**
+	 * Transformacion endpoint.
+	 *
+	 * @param endpoint the endpoint
+	 * @return the endpoint bean
+	 */
 	public static EndpointBean transformacionEndpoint (Endpoint endpoint){
 		
 		EndpointBean endpointBean = new EndpointBean();
@@ -95,6 +118,12 @@ public class Utiles{
 		return endpointBean;
 	}
 	
+	/**
+	 * Transformacion aplicacion misim.
+	 *
+	 * @param aplicacion the aplicacion
+	 * @return the aplicacion misim bean
+	 */
 	public static AplicacionMisimBean transformacionAplicacionMisim (Aplicacion aplicacion){
 		
 		AplicacionMisimBean aplicacionMisimBean = new AplicacionMisimBean();
@@ -106,6 +135,12 @@ public class Utiles{
 		return aplicacionMisimBean;
 	}
 	
+	/**
+	 * Transformacion proveedor misim.
+	 *
+	 * @param proveedor the proveedor
+	 * @return the proveedor misim bean
+	 */
 	public static ProveedorMisimBean transformacionProveedorMisim (Proveedor proveedor){
 		
 		ProveedorMisimBean proveedorMisimBean = new ProveedorMisimBean();
@@ -145,6 +180,12 @@ public class Utiles{
 		return proveedorMisimBean;
 	}
 	
+	/**
+	 * Transformacion transformacion.
+	 *
+	 * @param transformacion the transformacion
+	 * @return the transformacion bean
+	 */
 	public static TransformacionBean transformacionTransformacion (Transformacion transformacion){
 		
 		TransformacionBean transformacionBean = new TransformacionBean();
@@ -159,6 +200,12 @@ public class Utiles{
 		return transformacionBean;
 	}
 	
+	/**
+	 * Transformacion comunicacion.
+	 *
+	 * @param comunicacion the comunicacion
+	 * @return the comunicacion bean
+	 */
 	public static ComunicacionBean transformacionComunicacion (Comunicacion comunicacion){
 		
 		ComunicacionBean comunicacionBean = new ComunicacionBean();

@@ -12,8 +12,8 @@
       <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
       </loader-repository>
   </class-loading>
-  <context-root>/sim</context-root>18246086
-<!--    <virtual-host>des-sim.redsara.es</virtual-host> -->
+  <context-root>/sim</context-root>
+  <virtual-host>des-sim.redsara.es</virtual-host>
 
   
  </jboss-web>

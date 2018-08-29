@@ -21,7 +21,11 @@ import org.springframework.security.web.PortResolverImpl;
 import org.springframework.security.web.util.RedirectUrlBuilder;
 import org.springframework.util.Assert;
 
-////MIGRADO
+/**
+ * Clase AutenticaAuthenticationEntryPoint
+ * @author ralberoc
+ *
+ */
 public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
     
 	 //~ Static fields/initializers =====================================================================================
@@ -42,6 +46,9 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
 
     //~ Methods ========================================================================================================
 
+    /**
+     * Metodo afterPropertiesSet
+     */
     public void afterPropertiesSet() throws Exception {
         Assert.hasLength(loginFormUrl, "loginFormUrl must be specified");
         Assert.notNull(portMapper, "portMapper must be specified");
@@ -103,6 +110,13 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
     	
     }
 
+    /**
+     * Metodo que devuelve la url de la pagina del login
+     * @param request
+     * @param response
+     * @param authException
+     * @return
+     */
     protected String buildRedirectUrlToLoginPage(HttpServletRequest request, HttpServletResponse response,
     		org.springframework.security.core.AuthenticationException authException) {
 
@@ -184,22 +198,42 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
         this.loginFormUrl = loginFormUrl;
     }
 
+    /**
+     * Obtiene la URL del login
+     * @return
+     */
     public String getLoginFormUrl() {
         return loginFormUrl;
     }
 
+    /**
+     * Modifica el objeto PortMapper
+     * @param portMapper
+     */
     public void setPortMapper(PortMapper portMapper) {
         this.portMapper = portMapper;
     }
 
+    /**
+     * Obtiene el objeto PortMapper
+     * @return
+     */
     protected PortMapper getPortMapper() {
         return portMapper;
     }
 
+    /**
+     * Modifica el objeto PortResolver
+     * @param portResolver
+     */
     public void setPortResolver(PortResolver portResolver) {
         this.portResolver = portResolver;
     }
 
+    /**
+     * Obtiene el objeto PortResolver
+     * @return
+     */
     protected PortResolver getPortResolver() {
         return portResolver;
     }
@@ -213,10 +247,17 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
         this.serverSideRedirect = serverSideRedirect;
 	}
 
+    /**
+     * Obtiene el booleano serverSideRedirect
+     * @return
+     */
     protected boolean isServerSideRedirect() {
         return serverSideRedirect;
     }
 
+    /**
+     * Metodo que modificalos objetos request y response
+     */
 	@Override
 	public void commence(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException authException)

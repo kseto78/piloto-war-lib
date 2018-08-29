@@ -34,11 +34,16 @@ import es.mpr.plataformamensajeria.servicios.ifaces.CifradoService;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 import es.mpr.plataformamensajeria.util.SeguridadUtil;
 
+/**
+ * Clase CifradoServiceImpl.
+ */
 @Service(value = "cifradoService")
 public class CifradoServiceImpl implements CifradoService {
 
+	/** Constante SEPARADOR_CERTIFICADOS_VALUES. */
 	private static final String SEPARADOR_CERTIFICADOS_VALUES = "#";
 
+	/** Constante SEPARADOR_CERTIFICADOS. */
 	private static final String SEPARADOR_CERTIFICADOS = "&&";
 
 	/**
@@ -46,6 +51,7 @@ public class CifradoServiceImpl implements CifradoService {
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(CifradoService.class);
 	
+	/**  props. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties props;
 
@@ -229,6 +235,9 @@ public class CifradoServiceImpl implements CifradoService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.CifradoService#getCertificados()
+	 */
 	public List<KeyValueObject> getCertificados() throws BusinessException {
 		
 		try {

@@ -23,9 +23,7 @@ public class FirmaWebAction extends ActionSupport {
 	
 	private static Log logger = LogFactory.getLog(FirmaWebAction.class);
 	
-	 /**
-	 * 
-	 */
+	 /** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 	//Datos del formulario

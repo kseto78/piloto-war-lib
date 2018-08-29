@@ -24,19 +24,26 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistorico
 public class ServicioLotesEnviosHistoricosImpl implements ServicioLotesEnviosHistoricos{
 //	private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
 	
-	@Resource(name = "TblLotesEnviosHistManagerImpl")
+	/**  tbl lotes envios hist manager. */
+@Resource(name = "TblLotesEnviosHistManagerImpl")
 	private TblLotesEnviosHistManager tblLotesEnviosHistManager;
 	
+	/**  tbl lotes envios manager. */
 	@Resource(name = "TblLotesEnviosManagerImpl")
 	private TblLotesEnviosManager tblLotesEnviosManager;
 	
+	/**  query executor lotes envios hist. */
 	@Resource(name = "QueryExecutorLotesEnviosHistImpl")
 	private QueryExecutorLotesEnviosHist queryExecutorLotesEnviosHist;
 	
 	
+	/** Constante MAX. */
 	private static final Integer MAX = 1000;
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistoricos#getLoteEnvioHist(java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public TblLotesEnviosHist getLoteEnvioHist(Long loteEnvio) {
@@ -44,24 +51,36 @@ public class ServicioLotesEnviosHistoricosImpl implements ServicioLotesEnviosHis
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistoricos#insert(es.minhap.sim.model.TblLotesEnviosHist)
+	 */
 	////MIGRADO
 	@Override
 	public Long insert(TblLotesEnviosHist loteHistorico) {
 		return tblLotesEnviosHistManager.insert(loteHistorico);
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistoricos#delete(java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	public void delete(Long loteenvioid) {
 		tblLotesEnviosManager.delete(loteenvioid);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistoricos#deleteHist(java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public void deleteHist(Long loteenvioid) {
 		tblLotesEnviosHistManager.eliminar(loteenvioid);
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistoricos#getListasLotesEnviosHistoricos(java.lang.Integer, java.util.Date)
+	 */
 	////MIGRADO
 	@Override
 	public List<List<Long>> getListasLotesEnviosHistoricos(Integer servicioId, Date time) {

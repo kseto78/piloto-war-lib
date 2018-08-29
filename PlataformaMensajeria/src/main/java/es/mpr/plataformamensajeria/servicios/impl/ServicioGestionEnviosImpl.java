@@ -119,87 +119,133 @@ import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 @Service("servicioGestionEnviosImpl")
 public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
+	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioGestionEnviosImpl.class);
 
+	/**  servicio aplicacion. */
 	@Resource(name = "servicioAplicacionImpl")
 	private ServicioAplicacion servicioAplicacion;
 	
+	/**  tbl gestion envios manager. */
 	@Resource(name="TblGestionEnviosManagerImpl")
 	private TblGestionEnviosManager tblGestionEnviosManager;
 	
+	/**  view misim manager. */
 	@Resource(name="ViewMisimManagerImpl")
 	private ViewMisimManager viewMisimManager;
 	
+	/**  tbl adjuntos manager. */
 	@Resource(name="TblAdjuntosManagerImpl")
 	private TblAdjuntosManager tblAdjuntosManager;
 	
+	/**  tbl mensajes manager. */
 	@Resource(name="TblMensajesManagerImpl")
 	private TblMensajesManager tblMensajesManager;
 	
+	/**  tbl destinatarios mensajes manager. */
 	@Resource(name="TblDestinatariosMensajesManagerImpl")
 	private TblDestinatariosMensajesManager tblDestinatariosMensajesManager;
 	
+	/**  tbl lotes envios manager. */
 	@Resource(name="TblLotesEnviosManagerImpl")
 	private TblLotesEnviosManager tblLotesEnviosManager;
 	
+	/**  tbl usuarios push manager. */
 	@Resource(name="TblUsuariosPushManagerImpl")
 	private TblUsuariosPushManager tblUsuariosPushManager;
 	
+	/**  tbl destinatarios manager. */
 	@Resource(name="TblDestinatariosManagerImpl")
 	private TblDestinatariosManager tblDestinatariosManager;
 	
+	/**  tbl historicos manager. */
 	@Resource(name="TblHistoricosManagerImpl")
 	private TblHistoricosManager tblHistoricosManager;
 	
+	/**  view lotes envios detallada manager. */
 	@Resource(name="ViewLotesEnviosDetalladaManagerImpl")
 	private ViewLotesEnviosDetalladaManager viewLotesEnviosDetalladaManager;
 	
+	/**  view historico manager. */
 	@Resource(name="ViewHistoricoManagerImpl")
 	private ViewHistoricoManager viewHistoricoManager;
 	
+	/**  query executor mensajes. */
 	@Resource(name="QueryExecutorMensajesImpl")
 	private QueryExecutorMensajes queryExecutorMensajes;
 	
+	/**  query executor adjuntos. */
 	@Resource(name="QueryExecutorAdjuntosImpl")
 	private QueryExecutorAdjuntos queryExecutorAdjuntos;
 	
+	/**  operacion mensajes service. */
 	@Resource(name = "operacionMensajesService")
 	OperacionMensajesServicePortType operacionMensajesService;
 	
+	/**  envio mensajes service. */
 	@Resource(name = "envioMensajesService")
 	EnvioMensajesServiceWSBindingPortType envioMensajesService;
 	
+	/**  peticion manager. */
 	@Resource(name="PeticionManagerImpl")
 	private PeticionManager peticionManager;
 
+	/**  reloadable resource bundle message source. */
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	
 //	@Resource(name = "AplicacionManagerImp")
 //	AplicacionManager aplicacionManager;
 	
-	@Autowired
+	/**  query executor gestion envios impl. */
+@Autowired
 	private QueryExecutorGestionEnvios  queryExecutorGestionEnviosImpl;
 	
+	/**  query executor destinatarios mensajes impl. */
 	@Autowired
 	private QueryExecutorDestinatariosMensajes  queryExecutorDestinatariosMensajesImpl;
 	
+	/**  map permisos usuario aplicacion. */
 	static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
+	
+	/**  rol usuario. */
 	static String rolUsuario = null;
 	
 	
+	/**  mensajesms. */
 	private static String MENSAJESMS = "SMS";
+	
+	/**  mensajeemail. */
 	private static String MENSAJEEMAIL = "EMAIL";
+	
+	/**  mensajenotificacion. */
 	private static String MENSAJENOTIFICACION = "NOTIFICACION PUSH";
+	
+	/**  mensajerecepcion. */
 	private static String MENSAJERECEPCION = "RECEPCION SMS";
+	
+	/** Constante VISTADESTINATARIO. */
 	private static final Integer VISTADESTINATARIO = 3;
+	
+	/** Constante VISTALOTES. */
 	private static final Integer VISTALOTES = 2;
+	
+	/** Constante VISTAMENSAJES. */
 	private static final Integer VISTAMENSAJES= 1;
+	
+	/** Constante OK. */
 	private static final String OK = "OK";
+	
+	/**  adjunto. */
 	private String adjunto;
+	
+	/**  adjunto 64. */
 	private String adjunto64;
 	
+	/**  binary types. */
 	private static HashMap<String,String> binaryTypes = new HashMap<>();
+	
+	/**  text types. */
 	private static HashMap<String,String> textTypes = new HashMap<>();
 	static {        
         binaryTypes.put("gif", "image/gif");
@@ -215,6 +261,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
         textTypes.put("txt", "text/plain");
     }    
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getGestionDeEnvios(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioBean, javax.servlet.http.HttpServletRequest, boolean)
+	 */
 	///MIGRADO
 	@SuppressWarnings("unchecked")
 	@Override
@@ -292,6 +341,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getGestionDeEnviosDestinatarios(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioBean, javax.servlet.http.HttpServletRequest)
+	 */
 	////MIGRADO
 	@SuppressWarnings("unchecked")
 	@Override
@@ -334,7 +386,15 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	}
 
 	
-////MIGRADO
+	/**
+	 * Obtener total gestion envio.
+	 *
+	 * @param eg the eg
+	 * @param request the request
+	 * @return total gestion envio
+	 * @throws BusinessException the business exception
+	 */
+	////MIGRADO
 	@SuppressWarnings("unchecked")
 	public Integer getTotalGestionEnvio(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg,
 			HttpServletRequest request) throws BusinessException {
@@ -372,7 +432,16 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	}
 
 	
+	/**
+	 * Obtener total gestion envio destinatarios.
+	 *
+	 * @param eg the eg
+	 * @param request the request
+	 * @return total gestion envio destinatarios
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
+	@SuppressWarnings("unchecked")
 	public Integer getTotalGestionEnvioDestinatarios(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg, HttpServletRequest request)
 			throws BusinessException {
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(
@@ -409,7 +478,15 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 	}
 	
-////MIGRADO
+	/**
+	 * Obtener total lotes gestion envio.
+	 *
+	 * @param eg the eg
+	 * @param request the request
+	 * @return total lotes gestion envio
+	 * @throws BusinessException the business exception
+	 */
+	////MIGRADO
 	@SuppressWarnings("unchecked")
 	public Integer getTotalLotesGestionEnvio(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg, HttpServletRequest request)
 			throws BusinessException {
@@ -449,6 +526,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#loadMensaje(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public DetalleEnvioBean loadMensaje(String idEmail) throws BusinessException {
@@ -496,6 +576,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return detalleEmail;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#loadMisim(java.lang.String)
+	 */
 	@Override
 	public ViewMisimBean loadMisim(String idLote) throws BusinessException {
 		ViewMisimBean detalleMisim = new ViewMisimBean();
@@ -518,6 +601,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return detalleMisim;
 	}	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#loadLote(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public DetalleLoteBean loadLote(String idLote) throws BusinessException {
@@ -540,6 +626,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return detalleLote;
 	}
 
+	/**
+	 * Obtener list mensajes lote bean.
+	 *
+	 * @param lista the lista
+	 * @param idLote the id lote
+	 * @return list mensajes lote bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	protected ArrayList<MensajeBean> getListMensajesLoteBean(List<TblMensajes> lista, Long idLote) throws BusinessException {
 		ArrayList<MensajeBean> result = null;
@@ -576,6 +670,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#reenviarEnvio(java.lang.Integer, es.minhap.common.spring.ApplicationContextProvider)
+	 */
 	@Override
 	@Transactional
 	public Boolean reenviarEnvio(Integer mensajeId,  ApplicationContextProvider applicationContext) {
@@ -611,6 +708,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return resultado;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#anulaEnvio(java.lang.Integer, es.minhap.common.spring.ApplicationContextProvider)
+	 */
 	@Override
 	@Transactional
 	public boolean anulaEnvio(Integer mensajeId,  ApplicationContextProvider applicationContext) {
@@ -639,6 +739,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return false;
 	}
 
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#anulaEnvioLote(java.lang.Integer, es.minhap.common.spring.ApplicationContextProvider)
+ */
 ////MIGRADO
 	@Override
 	public boolean anulaEnvioLote(Integer idLote,  ApplicationContextProvider applicationContext) {
@@ -666,6 +769,10 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 		return false;
 	}
+
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#reenviarEnvioLote(java.lang.Integer, es.minhap.common.spring.ApplicationContextProvider)
+ */
 ////MIGRADO
 	@Override
 	public boolean reenviarEnvioLote(Integer idLote,  ApplicationContextProvider applicationContext) {
@@ -695,6 +802,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
 		
 	
+	/**
+	 * Obtener list adjunto email bean.
+	 *
+	 * @param lista the lista
+	 * @param mensajeId the mensaje id
+	 * @return list adjunto email bean
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	protected List<AdjuntoEmailBean> getListAdjuntoEmailBean(List<TblAdjuntos> lista, Long mensajeId) throws BusinessException {
 		List<AdjuntoEmailBean> result = null;
@@ -709,6 +824,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 	
+	/**
+	 * Obtener adjunto email bean.
+	 *
+	 * @param adjuntoTO the adjunto TO
+	 * @param mensajeId the mensaje id
+	 * @return adjunto email bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	protected AdjuntoEmailBean getAdjuntoEmailBean(TblAdjuntos adjuntoTO, Long mensajeId) throws BusinessException {
 		AdjuntoEmailBean  ad = null;
@@ -729,11 +852,11 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	}
 
 	/**
-	 * <p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos
+	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
 	protected List<HistoricoBean> getListHistoricoMultidestBean(List<ViewHistoricoMultidest> lista) throws BusinessException {
@@ -761,6 +884,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 		return result;
 	}
+
+/**
+ * Obtener list historico bean.
+ *
+ * @param lista the lista
+ * @return list historico bean
+ * @throws BusinessException the business exception
+ */
 ////MIGRADO
 	protected List<HistoricoBean> getListHistoricoBean(List<ViewHistorico> lista) throws BusinessException {
 		List<HistoricoBean> result = null;
@@ -787,6 +918,13 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 	
+	/**
+	 * Obtener list view misim bean.
+	 *
+	 * @param lista the lista
+	 * @return list view misim bean
+	 * @throws BusinessException the business exception
+	 */
 	protected List<ViewMisimBean> getListViewMisimBean(List<ViewMisim> lista) throws BusinessException {
 		List<ViewMisimBean> result = null;
 		
@@ -810,6 +948,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getEnvio(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public TblGestionEnvios getEnvio(String idEnvio) throws BusinessException {
@@ -823,6 +964,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getViewMisim(java.lang.String)
+	 */
 	@Override
 	public ViewMisim getViewMisim(String idLote) throws BusinessException {
 		try {
@@ -835,6 +979,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getEnviosLote(java.lang.String)
+	 */
 	///MIGRADO
 	@Override
 	public List<TblGestionEnvios> getEnviosLote(String idLote) throws BusinessException {
@@ -846,6 +993,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#loadAdjunto(java.lang.Long, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public AdjuntoEmailBean loadAdjunto(Long idAdjunto, Long emailId) {
@@ -868,6 +1018,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getMensajesLotes(int, int, java.lang.Long)
+	 */
 	/////MIGRADO
 	@Override
 	public PaginatedList<MensajeBean> getMensajesLotes(int start, int size, Long loteId) throws BusinessException {
@@ -889,6 +1042,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getMensaje(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public GestionEnvioBean getMensaje(String idMensaje) throws BusinessException {
@@ -916,6 +1072,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return geBean;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#isMultidestinatario(java.lang.Long)
+	 */
 	///MIGRADO
 	@Override
 	public boolean isMultidestinatario(Long idMensaje) throws BusinessException {
@@ -924,6 +1083,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
 	
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getDestinatariosMensajes(int, int, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public PaginatedList<DestinatariosMensajesBean> getDestinatariosMensajes(int start, int size, Long mensajeId) throws BusinessException {
@@ -964,6 +1126,12 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 
+	/**
+	 * Load destinatario mensaje.
+	 *
+	 * @param ms the ms
+	 * @return the destinatarios mensajes bean
+	 */
 	///MIGRADO
 	private DestinatariosMensajesBean loadDestinatarioMensaje(TblMensajes ms) {
 		DestinatariosMensajesBean dmBean = new DestinatariosMensajesBean();
@@ -981,6 +1149,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return dmBean;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getDestinatariosMensajesMultidestinatario(int, int, java.lang.Long)
+	 */
 	////MIGRADO
 	@Override
 	public PaginatedList<DestinatariosMensajesBean> getDestinatariosMensajesMultidestinatario(int start, int size, Long mensajeId) throws BusinessException {
@@ -1026,6 +1197,13 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 
+	/**
+	 * Obtener list destinatarios mensajes bean.
+	 *
+	 * @param lista the lista
+	 * @return list destinatarios mensajes bean
+	 * @throws BusinessException the business exception
+	 */
 	////MIGRADO
 	protected List<DestinatariosMensajesBean> getListDestinatariosMensajesBean(List<TblDestinatariosMensajes> lista) throws BusinessException {
 		List<DestinatariosMensajesBean> result = null;
@@ -1053,6 +1231,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getDestinatariosMensajes(java.lang.String)
+	 */
 	////MIGRADO
 	@Override
 	public DestinatariosMensajesBean getDestinatariosMensajes(String idDestinatariosMensajes) throws BusinessException {
@@ -1081,6 +1262,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return res;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getHistoricosMensaje(java.lang.String, java.lang.String)
+	 */
 	// //MIGRADO
 	@Override
 	public List<HistoricoBean> getHistoricosMensaje(String idMensaje, String idDestinatariosMensajes)
@@ -1110,6 +1294,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getIntercambiosMisim(int, int, java.lang.Long)
+	 */
 	@Override
 	public PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote) throws BusinessException {
 		PaginatedList<ViewMisimBean> result = new PaginatedList<>();
@@ -1135,6 +1322,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 	
+	/**
+	 * Creates the gestion envio bean.
+	 *
+	 * @param gestionEnvio the gestion envio
+	 * @param ge the ge
+	 * @return the es.minhap.plataformamensajeria.iop.beans. gestion envio bean
+	 * @throws BusinessException the business exception
+	 */
 	///MIGRADO
 	private es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean createGestionEnvioBean(GestionEnvioBean gestionEnvio,
 			es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean ge) throws BusinessException{
@@ -1177,6 +1372,7 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 			ge.setUltimoEnvio(gestionEnvio.getUltimoEnvio());
 			ge.setUltimoEnvioStr(gestionEnvio.getUltimoEnvioStr());
 			ge.setVistaEnviosId(gestionEnvio.getVistaEnviosId());
+			ge.setArrayOrganismos(gestionEnvio.getArrayOrganismos());
 			
 			return ge;
 		} catch (Exception e) {
@@ -1185,6 +1381,13 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		}
 	}
 
+	/**
+	 * Obtener list gestion envio bean.
+	 *
+	 * @param lista the lista
+	 * @param porLote the por lote
+	 * @return list gestion envio bean
+	 */
 	////MIGRADO
 	private List<GestionEnvioBean> getListGestionEnvioBean(List<TblGestionEnvios> lista, boolean porLote) {
 		List<GestionEnvioBean> result = new ArrayList<>();
@@ -1219,6 +1422,12 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 	
+/**
+ * Obtener list gestion envio bean from destinatario.
+ *
+ * @param lista the lista
+ * @return list gestion envio bean from destinatario
+ */
 ////MIGRADO
 	private List<GestionEnvioBean> getListGestionEnvioBeanFromDestinatario(List<ViewGestionEnviosDestId> lista) {
 		List<GestionEnvioBean> result = new ArrayList<>();
@@ -1249,6 +1458,9 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return result;
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#enviarPeticion(es.minhap.common.spring.ApplicationContextProvider, es.mpr.plataformamensajeria.beans.EnvioMensajesAplicacionBean)
+ */
 //	nat
 	public Respuesta enviarPeticion(ApplicationContextProvider applicationContext,EnvioMensajesAplicacionBean envioMensajesAplicacionBean) {
 
@@ -1404,7 +1616,7 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 				    m.getMensajeSMS().add(sms);
 				    
 				    peticion.setCodOrganismo(envioMensajesAplicacionBean.getOrganismo());
-					peticion.setCodOrganismoPagadorSMS(envioMensajesAplicacionBean.getOrganismoPagador());			
+					peticion.setCodOrganismoPagadorSMS(envioMensajesAplicacionBean.getOrganismo());			
 					peticion.setMensajes(m);
 								
 				}else if(envioMensajesAplicacionBean.getCanalId().equals("4")){//Notificaciones Push
@@ -1465,6 +1677,12 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		return respuesta;
 }
 	
+	/**
+	 * Generate data URI.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	private String generateDataURI(Path path) {
 		StringBuffer buffer = null;
 		try{
@@ -1479,5 +1697,27 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
        return buffer.toString();        
 
 	}
+
+
+	/**
+	 * Obtener adjunto.
+	 *
+	 * @return adjunto
+	 */
+	public String getAdjunto() {
+		return adjunto;
+	}
+
+
+	/**
+	 * Modificar adjunto.
+	 *
+	 * @param adjunto new adjunto
+	 */
+	public void setAdjunto(String adjunto) {
+		this.adjunto = adjunto;
+	}
+	
+	
 	
 }

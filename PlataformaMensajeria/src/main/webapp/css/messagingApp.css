@@ -948,3 +948,27 @@ td.op-update{
 .selector{
 	backgroundColor: "#003366";
 }
+
+.checksMargin {
+	margin-top: 3px;
+}
+
+.md-entorno {
+	padding-top: 0.6em;
+	float:left;
+	font-size: 2.5em;
+	font-family: Times New Roman;
+	font-family: WorkSans-SemiBold;
+	color: #065bf1;	
+}
+
+@font-face {
+  font-family: WorkSans-SemiBold;
+  src: url('../fonts/WorkSans-SemiBold_eot.eot');
+  src: url('../fonts/WorkSans-SemiBold_eot.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/WorkSans-SemiBold_woff.woff') format('woff'),
+       url('../fonts/WorkSans-SemiBold_ttf.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  
+}

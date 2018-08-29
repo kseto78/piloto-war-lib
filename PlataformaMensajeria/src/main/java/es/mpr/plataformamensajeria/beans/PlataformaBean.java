@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
 
+// TODO: Auto-generated Javadoc
 /*
  * Diferentes implementaciones de la JPA pueden requerir diferencias en las NamedQuerys.
  * Por ejemplo la siguiente Namedquery debe ser expresada diferente si nuestra implementaci�n es openjpa o hibernate:
@@ -22,6 +23,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class PlataformaBean implements Audit {
 
+	/**
+	 * Constructor de plataforma bean.
+	 */
 	public PlataformaBean() {
 		super();
 		this.nombre = null;
@@ -34,31 +38,51 @@ public class PlataformaBean implements Audit {
 
 	}
 
+	/**  plataformaid. */
 	protected Integer plataformaid;
 
+	/**  nombre. */
 	protected String nombre;
 
+	/**  descripcion. */
 	protected String descripcion;
 
+	/**  activo. */
 	protected Integer activo = null;
 
+	/**  fechacreacion. */
 	protected Date fechacreacion = null;
 
+	/**  creadopor. */
 	protected String creadopor = null;
 
+	/**  fechamodificacion. */
 	protected Date fechamodificacion = null;
 
+	/**  modificadopor. */
 	protected String modificadopor = null;
 
+	/**
+	 * Obtener id.
+	 *
+	 * @return id
+	 */
 	public Object getId() {
 		return this.plataformaid;
 	}
 
+	/**
+	 * Modificar id.
+	 *
+	 * @param id new id
+	 */
 	public void setId(Object id) {
 		this.plataformaid = (Integer) id;
 	}
 
 	/**
+	 * Obtener plataformaid.
+	 *
 	 * @return the plataformaid
 	 */
 	public Integer getPlataformaid() {
@@ -66,14 +90,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param plataformaid
-	 *            the plataformaid to set
+	 * Modificar plataformaid.
+	 *
+	 * @param plataformaid            the plataformaid to set
 	 */
 	public void setPlataformaid(Integer plataformaid) {
 		this.plataformaid = plataformaid;
 	}
 
 	/**
+	 * Obtener nombre.
+	 *
 	 * @return the nombre
 	 */
 	public String getNombre() {
@@ -81,14 +108,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param nombre
-	 *            the nombre to set
+	 * Modificar nombre.
+	 *
+	 * @param nombre            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
+	 * Obtener descripcion.
+	 *
 	 * @return the descripcion
 	 */
 	public String getDescripcion() {
@@ -96,14 +126,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param descripcion
-	 *            the descripcion to set
+	 * Modificar descripcion.
+	 *
+	 * @param descripcion            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
 	/**
+	 * Obtener activo.
+	 *
 	 * @return the activo
 	 */
 	public Integer getActivo() {
@@ -111,14 +144,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param activo
-	 *            the activo to set
+	 * Modificar activo.
+	 *
+	 * @param activo            the activo to set
 	 */
 	public void setActivo(Integer activo) {
 		this.activo = activo;
 	}
 
 	/**
+	 * Obtener fechacreacion.
+	 *
 	 * @return the fechacreacion
 	 */
 	public Date getFechacreacion() {
@@ -126,14 +162,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param fechacreacion
-	 *            the fechacreacion to set
+	 * Modificar fechacreacion.
+	 *
+	 * @param fechacreacion            the fechacreacion to set
 	 */
 	public void setFechacreacion(Date fechacreacion) {
 		this.fechacreacion = fechacreacion;
 	}
 
 	/**
+	 * Obtener creadopor.
+	 *
 	 * @return the creadopor
 	 */
 	public String getCreadopor() {
@@ -141,14 +180,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param creadopor
-	 *            the creadopor to set
+	 * Modificar creadopor.
+	 *
+	 * @param creadopor            the creadopor to set
 	 */
 	public void setCreadopor(String creadopor) {
 		this.creadopor = creadopor;
 	}
 
 	/**
+	 * Obtener fechamodificacion.
+	 *
 	 * @return the fechamodificacion
 	 */
 	public Date getFechamodificacion() {
@@ -156,14 +198,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param fechamodificacion
-	 *            the fechamodificacion to set
+	 * Modificar fechamodificacion.
+	 *
+	 * @param fechamodificacion            the fechamodificacion to set
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
 	}
 
 	/**
+	 * Obtener modificadopor.
+	 *
 	 * @return the modificadopor
 	 */
 	public String getModificadopor() {
@@ -171,13 +216,17 @@ public class PlataformaBean implements Audit {
 	}
 
 	/**
-	 * @param modificadopor
-	 *            the modificadopor to set
+	 * Modificar modificadopor.
+	 *
+	 * @param modificadopor            the modificadopor to set
 	 */
 	public void setModificadopor(String modificadopor) {
 		this.modificadopor = modificadopor;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
+	 */
 	@Override
 	public String obtenerXML() {
 		return null;

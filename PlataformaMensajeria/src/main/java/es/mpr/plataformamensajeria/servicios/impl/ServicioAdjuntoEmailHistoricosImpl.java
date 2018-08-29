@@ -26,18 +26,25 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAdjuntoEmailHistoric
 @Service("servicioAdjuntoEmailHistoricosImpl")
 public class ServicioAdjuntoEmailHistoricosImpl implements ServicioAdjuntoEmailHistoricos{
 	
+	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioMensajesAdjuntosHistoricosImpl.class);
 	
+	/**  tbl adjuntos manager. */
 	@Resource(name = "TblAdjuntosManagerImpl")
 	private TblAdjuntosManager tblAdjuntosManager;
 	
+	/**  tbl adjuntos hist manager. */
 	@Resource(name = "TblAdjuntosHistManagerImpl")
 	private TblAdjuntosHistManager tblAdjuntosHistManager;
 	
+	/**  query executor adjuntos hist. */
 	@Resource(name = "QueryExecutorAdjuntosHistImpl")
 	private QueryExecutorAdjuntosHist queryExecutorAdjuntosHist;
 
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAdjuntoEmailHistoricos#getTodosIdAdjuntosCons(java.util.List)
+	 */
 	////MIGRADO
 	@Override
 	@Transactional
@@ -55,6 +62,9 @@ public class ServicioAdjuntoEmailHistoricosImpl implements ServicioAdjuntoEmailH
 		return res;
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAdjuntoEmailHistoricos#insert(es.minhap.sim.model.TblAdjuntosHist)
+ */
 ////MIGRADO
 	@Override
 	public Long insert(TblAdjuntosHist adjuntoHistorico) {
@@ -62,6 +72,9 @@ public class ServicioAdjuntoEmailHistoricosImpl implements ServicioAdjuntoEmailH
 		return (tblAdjuntosHistManager.getById(adjuntoHistorico.getAdjuntoid())== null)? tblAdjuntosHistManager.insertar(adjuntoHistorico):null;
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioAdjuntoEmailHistoricos#delete(java.lang.Long)
+ */
 ////MIGRADO
 	@Override
 	public void delete(Long adjuntoid) {

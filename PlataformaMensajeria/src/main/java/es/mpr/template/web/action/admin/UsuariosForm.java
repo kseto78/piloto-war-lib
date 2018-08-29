@@ -8,55 +8,135 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author carlos.ruiz
+ * The Class UsuariosForm.
  *
+ * @author carlos.ruiz
  */
 public class UsuariosForm implements Serializable {
 
+    /** Constante serialVersionUID. */
     private static final long serialVersionUID = 2132524211;
+    
+    /**  tipo usuario. */
     private String tipoUsuario;
+    
+    /**  uid. */
     private String uid;
+    
+    /**  id. */
     private String id;
+    
+    /**  username. */
     private String username;
+    
+    /**  nombre. */
     private String nombre;
+    
+    /**  apellidos. */
     private String apellidos;
+    
+    /**  description. */
     private String description;
+    
+    /**  password. */
     private String password;
+    
+    /**  check password. */
     private String checkPassword;
+    
+    /**  organismo. */
     private String organismo = null;
+    
+    /**  unidad organizacional. */
     private String unidadOrganizacional = null;
+    
+    /**  eliminado. */
     private Boolean eliminado;
+    
+    /**  telefono. */
     private String telefono;
+    
+    /**  telefono 2. */
     private String telefono2;
+    
+    /**  movil. */
     private String movil;
+    
+    /**  direccion. */
     private String direccion;
+    
+    /**  numero. */
     private String numero;
+    
+    /**  piso. */
     private String piso;
+    
+    /**  puerta. */
     private String puerta;
+    
+    /**  escalera. */
     private String escalera;
+    
+    /**  codigo postal. */
     private String codigoPostal;
+    
+    /**  ciudad. */
     private String ciudad;
+    
+    /**  provincia. */
     private String provincia;
+    
+    /**  pais. */
     private String pais;
+    
+    /**  nif. */
     private String nif;
+    
+    /**  cif. */
     private String cif;
+    
+    /**  email. */
     private String email;
+    
+    /**  email 2. */
     private String email2;
+    
+    /**  mail noticias. */
     private String mailNoticias;
+    
+    /**  mail novedades. */
     private String mailNovedades;
+    
+    /**  mail contenidos. */
     private String mailContenidos;
+    
+    /**  mail servicios. */
     private String mailServicios;
+    
+    /**  mail campanias. */
     private String mailCampanias;
+    
+    /**  fax. */
     private String fax;
+    
+    /**  puntos contacto. */
     private String puntosContacto;
+    
+    /**  despacho. */
     private String despacho;
+    
+    /**  check box grupos. */
     private ArrayList<String> checkBoxGrupos = new ArrayList<String>();
    
+    /**  check box grupos seleccionados. */
     private ArrayList<String> checkBoxGruposSeleccionados = new ArrayList<String>();
     
+    /**  list tipo usuario. */
     private List<String> listTipoUsuario = null;
 
     /**
+     * Obtener tipo usuario.
+     *
      * @return the tipoUsuario
      */
     public String getTipoUsuario() {
@@ -64,6 +144,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar tipo usuario.
+     *
      * @param tipo the tipo to set
      */
     public void setTipoUsuario(String tipo) {
@@ -71,6 +153,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener uid.
+     *
      * @return the uid
      */
     public String getUid() {
@@ -78,6 +162,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar uid.
+     *
      * @param uid the uid to set
      */
     public void setUid(String uid) {
@@ -85,6 +171,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener username.
+     *
      * @return the username
      */
     public String getUsername() {
@@ -92,13 +180,17 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
-     * @param username the username to set
+     * Modificar username.
+     *
+     * @param idUsuario new username
      */
     public void setUsername(String idUsuario) {
         this.username = idUsuario;
     }
 
     /**
+     * Obtener nombre.
+     *
      * @return the nombre
      */
     public String getNombre() {
@@ -106,6 +198,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar nombre.
+     *
      * @param nombre the nombre to set
      */
     public void setNombre(String nombre) {
@@ -113,6 +207,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener apellidos.
+     *
      * @return the apellidos
      */
     public String getApellidos() {
@@ -121,6 +217,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar apellidos.
+     *
      * @param apellidos the apellidos to set
      */
     public void setApellidos(String apellidos) {
@@ -129,6 +227,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener description.
+     *
      * @return the description
      */
     public String getDescription() {
@@ -136,13 +236,17 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
-     * @param description the description to set
+     * Modificar description.
+     *
+     * @param descripcion new description
      */
     public void setDescription(String descripcion) {
         this.description = descripcion;
     }
 
     /**
+     * Obtener organismo.
+     *
      * @return the organismo
      */
     public String getOrganismo() {
@@ -150,6 +254,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar organismo.
+     *
      * @param organismo the organismo to set
      */
     public void setOrganismo(String organismo) {
@@ -157,6 +263,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener unidad organizacional.
+     *
      * @return the unidadOrganizacional
      */
     public String getUnidadOrganizacional() {
@@ -164,6 +272,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar unidad organizacional.
+     *
      * @param unidadOrganizacional the unidadOrganizacional to set
      */
     public void setUnidadOrganizacional(String unidadOrganizacional) {
@@ -171,6 +281,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener eliminado.
+     *
      * @return the eliminado
      */
     public Boolean getEliminado() {
@@ -178,6 +290,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar eliminado.
+     *
      * @param eliminado the eliminado to set
      */
     public void setEliminado(Boolean eliminado) {
@@ -185,6 +299,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener telefono.
+     *
      * @return the telefono
      */
     public String getTelefono() {
@@ -192,13 +308,17 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
-     * @param telefono the telefono to set
+     * Modificar telefono.
+     *
+     * @param telefono1 new telefono
      */
     public void setTelefono(String telefono1) {
         this.telefono = telefono1;
     }
 
     /**
+     * Obtener telefono 2.
+     *
      * @return the telefono2
      */
     public String getTelefono2() {
@@ -206,6 +326,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar telefono 2.
+     *
      * @param telefono2 the telefono2 to set
      */
     public void setTelefono2(String telefono2) {
@@ -213,6 +335,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener movil.
+     *
      * @return the movil
      */
     public String getMovil() {
@@ -220,6 +344,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar movil.
+     *
      * @param movil the movil to set
      */
     public void setMovil(String movil) {
@@ -227,6 +353,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener direccion.
+     *
      * @return the direccion
      */
     public String getDireccion() {
@@ -234,6 +362,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar direccion.
+     *
      * @param direccion the direccion to set
      */
     public void setDireccion(String direccion) {
@@ -241,6 +371,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener numero.
+     *
      * @return the numero
      */
     public String getNumero() {
@@ -248,6 +380,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar numero.
+     *
      * @param numero the numero to set
      */
     public void setNumero(String numero) {
@@ -255,6 +389,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener piso.
+     *
      * @return the piso
      */
     public String getPiso() {
@@ -262,6 +398,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar piso.
+     *
      * @param piso the piso to set
      */
     public void setPiso(String piso) {
@@ -269,6 +407,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener puerta.
+     *
      * @return the puerta
      */
     public String getPuerta() {
@@ -276,6 +416,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar puerta.
+     *
      * @param puerta the puerta to set
      */
     public void setPuerta(String puerta) {
@@ -283,6 +425,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener escalera.
+     *
      * @return the escalera
      */
     public String getEscalera() {
@@ -290,6 +434,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar escalera.
+     *
      * @param escalera the escalera to set
      */
     public void setEscalera(String escalera) {
@@ -297,6 +443,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener codigo postal.
+     *
      * @return the codigoPostal
      */
     public String getCodigoPostal() {
@@ -304,6 +452,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar codigo postal.
+     *
      * @param codigoPostal the codigoPostal to set
      */
     public void setCodigoPostal(String codigoPostal) {
@@ -311,6 +461,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener ciudad.
+     *
      * @return the ciudad
      */
     public String getCiudad() {
@@ -318,6 +470,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar ciudad.
+     *
      * @param ciudad the ciudad to set
      */
     public void setCiudad(String ciudad) {
@@ -325,6 +479,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener provincia.
+     *
      * @return the provincia
      */
     public String getProvincia() {
@@ -332,6 +488,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar provincia.
+     *
      * @param provincia the provincia to set
      */
     public void setProvincia(String provincia) {
@@ -339,6 +497,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener pais.
+     *
      * @return the pais
      */
     public String getPais() {
@@ -346,6 +506,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar pais.
+     *
      * @param pais the pais to set
      */
     public void setPais(String pais) {
@@ -353,6 +515,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener nif.
+     *
      * @return the nif
      */
     public String getNif() {
@@ -360,6 +524,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar nif.
+     *
      * @param nif the nif to set
      */
     public void setNif(String nif) {
@@ -367,6 +533,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener cif.
+     *
      * @return the cif
      */
     public String getCif() {
@@ -374,6 +542,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar cif.
+     *
      * @param cif the cif to set
      */
     public void setCif(String cif) {
@@ -381,6 +551,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener email.
+     *
      * @return the email
      */
     public String getEmail() {
@@ -388,6 +560,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar email.
+     *
      * @param email the email to set
      */
     public void setEmail(String email) {
@@ -395,6 +569,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener email 2.
+     *
      * @return the email2
      */
     public String getEmail2() {
@@ -402,6 +578,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar email 2.
+     *
      * @param email2 the email2 to set
      */
     public void setEmail2(String email2) {
@@ -409,6 +587,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener mail noticias.
+     *
      * @return the mailNoticias
      */
     public String getMailNoticias() {
@@ -416,6 +596,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar mail noticias.
+     *
      * @param mailNoticias the mailNoticias to set
      */
     public void setMailNoticias(String mailNoticias) {
@@ -423,6 +605,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener mail novedades.
+     *
      * @return the mailNovedades
      */
     public String getMailNovedades() {
@@ -430,6 +614,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar mail novedades.
+     *
      * @param mailNovedades the mailNovedades to set
      */
     public void setMailNovedades(String mailNovedades) {
@@ -437,6 +623,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener mail contenidos.
+     *
      * @return the mailContenidos
      */
     public String getMailContenidos() {
@@ -444,6 +632,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar mail contenidos.
+     *
      * @param mailContenidos the mailContenidos to set
      */
     public void setMailContenidos(String mailContenidos) {
@@ -451,6 +641,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener mail campanias.
+     *
      * @return the mailCampanias
      */
     public String getMailCampanias() {
@@ -458,6 +650,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar mail campanias.
+     *
      * @param mailCampanias the mailCampanias to set
      */
     public void setMailCampanias(String mailCampanias) {
@@ -465,6 +659,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener fax.
+     *
      * @return the fax
      */
     public String getFax() {
@@ -472,6 +668,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar fax.
+     *
      * @param fax the fax to set
      */
     public void setFax(String fax) {
@@ -479,6 +677,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener puntos contacto.
+     *
      * @return the puntosContacto
      */
     public String getPuntosContacto() {
@@ -486,6 +686,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar puntos contacto.
+     *
      * @param puntosContacto the puntosContacto to set
      */
     public void setPuntosContacto(String puntosContacto) {
@@ -493,6 +695,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener despacho.
+     *
      * @return the despacho
      */
     public String getDespacho() {
@@ -500,6 +704,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar despacho.
+     *
      * @param despacho the despacho to set
      */
     public void setDespacho(String despacho) {
@@ -507,6 +713,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener password.
+     *
      * @return the password
      */
     public String getPassword() {
@@ -514,6 +722,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar password.
+     *
      * @param password the password to set
      */
     public void setPassword(String password) {
@@ -521,6 +731,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener check password.
+     *
      * @return the checkPassword
      */
     public String getCheckPassword() {
@@ -528,6 +740,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar check password.
+     *
      * @param checkPassword the checkPassword to set
      */
     public void setCheckPassword(String checkPassword) {
@@ -535,6 +749,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener list tipo usuario.
+     *
      * @return the listTipoUsuario
      */
     public List<String> getListTipoUsuario() {
@@ -542,6 +758,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar list tipo usuario.
+     *
      * @param listTipoUsuario the listTipoUsuario to set
      */
     public void setListTipoUsuario(List<String> listTipoUsuario) {
@@ -549,6 +767,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener check box grupos.
+     *
      * @return the checkBoxGrupos
      */
     public ArrayList<String> getCheckBoxGrupos() {
@@ -557,6 +777,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar check box grupos.
+     *
      * @param checkBoxGrupos the checkBoxGrupos to set
      */
     public void setCheckBoxGrupos(ArrayList<String> checkBoxGrupos) {
@@ -566,6 +788,8 @@ public class UsuariosForm implements Serializable {
 
    
     /**
+     * Obtener check box grupos seleccionados.
+     *
      * @return the checkBoxGruposSeleccionados
      */
     public ArrayList<String> getCheckBoxGruposSeleccionados() {
@@ -573,6 +797,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar check box grupos seleccionados.
+     *
      * @param checkBoxGruposSeleccionados the checkBoxGruposSeleccionados to set
      */
     public void setCheckBoxGruposSeleccionados(ArrayList<String> checkBoxGruposSeleccionados) {
@@ -582,6 +808,8 @@ public class UsuariosForm implements Serializable {
   
 
     /**
+     * Obtener mail servicios.
+     *
      * @return the mailServicios
      */
     public String getMailServicios() {
@@ -589,6 +817,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar mail servicios.
+     *
      * @param mailServicios the mailServicios to set
      */
     public void setMailServicios(String mailServicios) {
@@ -596,6 +826,8 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Obtener id.
+     *
      * @return the id
      */
     public String getId() {
@@ -603,14 +835,18 @@ public class UsuariosForm implements Serializable {
     }
 
     /**
+     * Modificar id.
+     *
      * @param id the id to set
      */
     public void setId(String id) {
         this.id = id;
     }
+    
     /**
-     * Devuelve el nombre completo (Nombre y Apellidos)
-     * @return
+     * Devuelve el nombre completo (Nombre y Apellidos).
+     *
+     * @return nombre completo
      */
     public String getNombreCompleto(){
     	StringBuffer sbf = new StringBuffer();

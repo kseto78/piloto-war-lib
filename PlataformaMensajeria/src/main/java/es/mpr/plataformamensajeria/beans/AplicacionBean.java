@@ -6,12 +6,18 @@ import java.util.Date;
 import com.map.j2ee.auditoria.ifaces.Audit;
 
 
-	
+/**
+ * Clase quie contiene atributos de una aplicacion	
+ * @author ralberoc
+ *
+ */
 public class AplicacionBean implements Audit, Serializable{
 
 	private static final long serialVersionUID = 21522231942501054L;
 
-
+	/**
+	 * Constructor por defecto
+	 */
 	public AplicacionBean() {
 		super();
 		this.aplicacionId = null;
@@ -55,6 +61,10 @@ public class AplicacionBean implements Audit, Serializable{
 	protected String respTecnicoEmail = null;
 	
 
+	/**
+	 * Modificar activado
+	 * @param activado
+	 */
 	public void setActivado(String activado){
 		if(activado!=null&&activado.equals("true")){
 			this.activo = true;
@@ -62,6 +72,11 @@ public class AplicacionBean implements Audit, Serializable{
 			this.activo = false;
 		}
 	}
+	
+	/**
+	 * Obtener Activo
+	 * @return
+	 */
 	public String getIsActivo() {
 		if(activo!=null && activo){
 			return "<span class='activo'></span>";
@@ -71,6 +86,10 @@ public class AplicacionBean implements Audit, Serializable{
 		
 	}
 
+	/**
+	 * Modificar activo
+	 * @param isActivo
+	 */
 	public void setIsActivo(String isActivo) {
 		if(isActivo!=null && isActivo.equals("true")){
 			this.activo = true;
@@ -80,6 +99,10 @@ public class AplicacionBean implements Audit, Serializable{
 		this.isActivo = isActivo;
 	}
 	
+	/**
+	 * Obtener activado
+	 * @return
+	 */
 	public String getActivado(){
 		if(activo!=null && activo){
 			return "true";
@@ -87,12 +110,23 @@ public class AplicacionBean implements Audit, Serializable{
 			return "false";
 		}
 	}
+	
+	/**
+	 * Obtener id
+	 * @return
+	 */
 	public Object getId() {
 		return this.aplicacionId;
 	}
+	
+	/**
+	 * Modificar id
+	 * @param id
+	 */
 	public void setId(Object id){
 		this.aplicacionId =(Integer)id;
 	}
+	
 	/**
 	 * @return the aplicacionId
 	 */
@@ -274,6 +308,9 @@ public class AplicacionBean implements Audit, Serializable{
 		this.respTecnicoEmail = respTecnicoEmail;
 	}
 	
+	/**
+	 * Obtener XML
+	 */
 	@Override
 	public String obtenerXML() {
 		// TODO Auto-generated method stub

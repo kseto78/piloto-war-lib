@@ -45,47 +45,84 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class EstadisticasAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/**  logger. */
 	private static Logger logger = Logger.getLogger(EstadisticasAction.class);
 	
+	/**  combo aplicaciones. */
 	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	
+	/**  combo servidores. */
 	List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
+	
+	/**  combo servicios. */
 	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
+	
+	/**  combo estados. */
 	List<KeyValueObject> comboEstados = new ArrayList<KeyValueObject>();
+	
+	/**  combo canales. */
 	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	
+	/**  combo agrupar. */
 	List<KeyValueObject> comboAgrupar = new ArrayList<KeyValueObject>();
 	
+	/**  lista fila estadistica bean. */
 	List<FilaEstadisticaBean> listaFilaEstadisticaBean = null;
 	
+	/**  servicio aplicacion. */
 	@Resource(name="servicioAplicacionImpl")
     private ServicioAplicacion servicioAplicacion;
     
+	/**  servicio servidor. */
 	@Resource(name="servicioServidorImpl")
 	private ServicioServidor servicioServidor;
     
+	/**  servicio servicio. */
 	@Resource(name="servicioServicioImpl")
 	private ServicioServicio servicioServicio;
     
+    /**  servicio estado. */
     @Resource(name="servicioEstadoImpl")
     private ServicioEstado servicioEstado;
     
+    /**  servicio canal. */
     @Resource(name="servicioCanalImpl")
     private ServicioCanal servicioCanal;
     
+    /**  estadisticas plataforma. */
     @Resource(name="estadisticasPlataforma")
     private EstadisticasPlataforma estadisticasPlataforma;
     
+    /**  vista id selected. */
     private String vistaIdSelected;
+	
+	/**  result count. */
 	private String resultCount;
+	
+	/**  reverse. */
 	private String reverse="false";
 	
+	/**  estadistica bean. */
 	private EstadisticasBean estadisticaBean;
 	
+	/**
+	 * New search.
+	 *
+	 * @return the string
+	 */
 	public String newSearch() {
     	return SUCCESS;
     }
 	
+	/**
+	 * Search.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
 	///MIGRADO
 	@SuppressWarnings("unchecked")
 	public String search() throws BaseException {
@@ -132,7 +169,8 @@ public class EstadisticasAction extends PlataformaPaginationAction implements Se
 
     
     /**
-     * Comprueba si hay un usuario logueado y con un rol definido
+     * Comprueba si hay un usuario logueado y con un rol definido.
+     *
      * @return True si es valido
      */
  private boolean validUsuario() {
@@ -144,10 +182,12 @@ public class EstadisticasAction extends PlataformaPaginationAction implements Se
 		}
 		return sw;
 	}
+ 
  /**
-  * 
-  * @param estadisticaBean
-  * @return
+  * Valida busqueda.
+  *
+  * @param estadisticaBean2 the estadistica bean 2
+  * @return true, if successful
   */
 private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 	boolean sw=true;
@@ -176,6 +216,11 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 		return sw;
 	}
 	
+	/**
+	 * Obtener combo aplicaciones.
+	 *
+	 * @return combo aplicaciones
+	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboAplicaciones() {
         List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -201,6 +246,11 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
         return result;
     }
 	
+	/**
+	 * Obtener combo servidores.
+	 *
+	 * @return combo servidores
+	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboServidores() {
         List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -228,6 +278,11 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
         return result;
     }
 	
+	/**
+	 * Obtener combo servicios.
+	 *
+	 * @return combo servicios
+	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboServicios() {
         List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -261,6 +316,11 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
         return result;
     }	
 	
+	/**
+	 * Obtener combo estados.
+	 *
+	 * @return combo estados
+	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboEstados() {
         List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -286,6 +346,11 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
         return result;
     }	
 	
+	/**
+	 * Obtener combo canales.
+	 *
+	 * @return combo canales
+	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboCanales() {
         List<KeyValueObject> result = new ArrayList<KeyValueObject>();
@@ -311,95 +376,256 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
         return result;
     }	
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
+	 */
 	@Override
 	public void prepare() throws Exception {
 			
 	}
 	
+	/**
+	 * Obtener combo agrupar.
+	 *
+	 * @return combo agrupar
+	 */
 	public List<KeyValueObject> getComboAgrupar(){
 		this.comboAgrupar = EstadisticasPlataforma.getComboAgrupaciones();
 		return comboAgrupar;
 	}
+	
+	/**
+	 * Obtener servicio aplicacion.
+	 *
+	 * @return servicio aplicacion
+	 */
 	public ServicioAplicacion getServicioAplicacion() {
 		return servicioAplicacion;
 	}
+	
+	/**
+	 * Modificar servicio aplicacion.
+	 *
+	 * @param servicioAplicacion new servicio aplicacion
+	 */
 	public void setServicioAplicacion(ServicioAplicacion servicioAplicacion) {
 		this.servicioAplicacion = servicioAplicacion;
 	}
 
+	/**
+	 * Modificar combo aplicaciones.
+	 *
+	 * @param comboAplicaciones new combo aplicaciones
+	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
 		this.comboAplicaciones = comboAplicaciones;
 	}
 
+	/**
+	 * Obtener vista id selected.
+	 *
+	 * @return vista id selected
+	 */
 	public String getVistaIdSelected() {
 		return vistaIdSelected;
 	}
+	
+	/**
+	 * Modificar vista id selected.
+	 *
+	 * @param vistaIdSelected new vista id selected
+	 */
 	public void setVistaIdSelected(String vistaIdSelected) {
 		this.vistaIdSelected = vistaIdSelected;
 	}
+	
+	/**
+	 * Obtener result count.
+	 *
+	 * @return result count
+	 */
 	public String getResultCount() {
 		return resultCount;
 	}
+	
+	/**
+	 * Modificar result count.
+	 *
+	 * @param resultCount new result count
+	 */
 	public void setResultCount(String resultCount) {
 		this.resultCount = resultCount;
 	}
+    
+    /**
+     * Obtener servicio canal.
+     *
+     * @return servicio canal
+     */
     public ServicioCanal getServicioCanal() {
 		return servicioCanal;
 	}
+	
+	/**
+	 * Modificar servicio canal.
+	 *
+	 * @param servicioCanal new servicio canal
+	 */
 	public void setServicioCanal(ServicioCanal servicioCanal) {
 		this.servicioCanal = servicioCanal;
 	}
+	
+	/**
+	 * Obtener servicio estado.
+	 *
+	 * @return servicio estado
+	 */
 	public ServicioEstado getServicioEstado() {
 		return servicioEstado;
 	}
+	
+	/**
+	 * Modificar servicio estado.
+	 *
+	 * @param servicioEstado new servicio estado
+	 */
 	public void setServicioEstado(ServicioEstado servicioEstado) {
 		this.servicioEstado = servicioEstado;
 	}
 
 
+	/**
+	 * Obtener lista fila estadistica bean.
+	 *
+	 * @return lista fila estadistica bean
+	 */
 	public List<FilaEstadisticaBean> getListaFilaEstadisticaBean() {
 		return listaFilaEstadisticaBean;
 	}
+	
+	/**
+	 * Modificar lista fila estadistica bean.
+	 *
+	 * @param listaFilaEstadisticaBean new lista fila estadistica bean
+	 */
 	public void setListaFilaEstadisticaBean(
 			List<FilaEstadisticaBean> listaFilaEstadisticaBean) {
 		this.listaFilaEstadisticaBean = listaFilaEstadisticaBean;
 	}
+	
+	/**
+	 * Obtener servicio servidor.
+	 *
+	 * @return servicio servidor
+	 */
 	public ServicioServidor getServicioServidor() {
 		return servicioServidor;
 	}
+	
+	/**
+	 * Modificar servicio servidor.
+	 *
+	 * @param servicioServidor new servicio servidor
+	 */
 	public void setServicioServidor(ServicioServidor servicioServidor) {
 		this.servicioServidor = servicioServidor;
 	}
+	
+	/**
+	 * Obtener servicio servicio.
+	 *
+	 * @return servicio servicio
+	 */
 	public ServicioServicio getServicioServicio() {
 		return servicioServicio;
 	}
+	
+	/**
+	 * Modificar servicio servicio.
+	 *
+	 * @param servicioServicio new servicio servicio
+	 */
 	public void setServicioServicio(ServicioServicio servicioServicio) {
 		this.servicioServicio = servicioServicio;
 	}
+	
+	/**
+	 * Modificar combo servidores.
+	 *
+	 * @param comboServidores new combo servidores
+	 */
 	public void setComboServidores(List<KeyValueObject> comboServidores) {
 		this.comboServidores = comboServidores;
 	}
+	
+	/**
+	 * Modificar combo servicios.
+	 *
+	 * @param comboServicios new combo servicios
+	 */
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
 		this.comboServicios = comboServicios;
 	}
+	
+	/**
+	 * Modificar combo estados.
+	 *
+	 * @param comboEstados new combo estados
+	 */
 	public void setComboEstados(List<KeyValueObject> comboEstados) {
 		this.comboEstados = comboEstados;
 	}
+	
+	/**
+	 * Modificar combo canales.
+	 *
+	 * @param comboCanales new combo canales
+	 */
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
 		this.comboCanales = comboCanales;
 	}
+	
+	/**
+	 * Modificar combo agrupar.
+	 *
+	 * @param comboAgrupar new combo agrupar
+	 */
 	public void setComboAgrupar(List<KeyValueObject> comboAgrupar) {
 		this.comboAgrupar = comboAgrupar;
 	}	
+	
+	/**
+	 * Obtener reverse.
+	 *
+	 * @return reverse
+	 */
 	public String getReverse() {
 		return reverse;
 	}
+	
+	/**
+	 * Modificar reverse.
+	 *
+	 * @param reverse new reverse
+	 */
 	public void setReverse(String reverse) {
 		this.reverse = reverse;
 	}
+	
+	/**
+	 * Obtener estadistica bean.
+	 *
+	 * @return estadistica bean
+	 */
 	public EstadisticasBean getEstadisticaBean() {
 		return estadisticaBean;
 	}
+	
+	/**
+	 * Modificar estadistica bean.
+	 *
+	 * @param estadisticaBean new estadistica bean
+	 */
 	public void setEstadisticaBean(EstadisticasBean estadisticaBean) {
 		this.estadisticaBean = estadisticaBean;
 	}

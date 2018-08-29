@@ -15,15 +15,19 @@ import com.map.j2ee.util.Constants;
  * El servlet, en el arranque de la aplicaci�n, levanta el pool Se crea el pool
  * y se deja en una propiedad estatica de tal forma que sea accesible por las
  * aplicaciones podria haberse utilizado un bean de Spring pero por
- * accesibilidad se ha elegido esta opci�n
+ * accesibilidad se ha elegido esta opci�n.
  */
 public class servletPool extends HttpServlet {
 
 
 	
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 5210693274053558468L;
 	
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
+	 */
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		staticPool.setPool(new StackObjectPool(new factoryPoolParser()));

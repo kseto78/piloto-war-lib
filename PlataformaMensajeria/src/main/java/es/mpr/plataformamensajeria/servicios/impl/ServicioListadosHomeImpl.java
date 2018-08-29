@@ -30,12 +30,15 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioListadosHome;
 @Service("servicioListadosHomeImpl")
 public class ServicioListadosHomeImpl implements ServicioListadosHome{
 		
+	/**  query executor view envios pendientes por canal. */
 	@Autowired
 	private QueryExecutorViewEnviosPendientesPorCanal queryExecutorViewEnviosPendientesPorCanal;
 
+	/**  query executor servidores. */
 	@Autowired
 	private QueryExecutorServidores queryExecutorServidores;
 	
+	/**  query executor gestion envios. */
 	@Autowired
 	private QueryExecutorGestionEnvios queryExecutorGestionEnvios;
 	
@@ -43,6 +46,9 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	
 	
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioListadosHome#getEnviosPendientesCanal()
+ */
 //////Migrado
 	@Override
 	public List<EnviosPendientesCanalBean> getEnviosPendientesCanal() throws BusinessException {
@@ -58,6 +64,9 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 
 	
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioListadosHome#getUsoServidoresBean(java.lang.String, java.lang.String)
+ */
 //////Migrado
 	@Override
 	public List<UsoServidoresBean> getUsoServidoresBean(String anyo, String mes)
@@ -81,6 +90,9 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 		return listaUsoServidores;
 	}
 	
+/* (non-Javadoc)
+ * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioListadosHome#getEstadosLotesEnvios(int, int, java.lang.String, java.lang.String)
+ */
 //////Migrado
 	@Override
 	public PaginatedList<EstadoLotesEnviosBean> getEstadosLotesEnvios(int start, int size,String anyo, String mes) throws BusinessException {
@@ -98,11 +110,11 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	
 	
 	/**
-	 * <p>Convertirmos una lista de ViewServidoresJPA a una lista de ServidoresBean</p>
-	 * 
-	 * @param listJPA
-	 * 
+	 * <p>Convertirmos una lista de ViewServidoresJPA a una lista de ServidoresBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
+	 * @throws BusinessException the business exception
 	 */
 //////Migrado
 	protected List<EstadoLotesEnviosBean> getListViewEstadoEnviosLotesBean(List<ViewEstadoLotesEnvios> lista) throws BusinessException
@@ -134,11 +146,11 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	}
 	
 	/**
-	 * <p>Convertirmos una lista de ViewEnviosPendientesPorCanal a una lista de ServidoresBean</p>
-	 * 
-	 * @param lista
-	 * 
+	 * <p>Convertirmos una lista de ViewEnviosPendientesPorCanal a una lista de ServidoresBean</p>.
+	 *
+	 * @param lista the lista
 	 * @return Lista de objetos EnviosPendientesCanalBean
+	 * @throws BusinessException the business exception
 	 */
 //////Migrado
 	protected List<EnviosPendientesCanalBean> getListEnviosPendientesBeam
@@ -166,12 +178,17 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	}
 	
 	/**
+	 * Obtener query executor view envios pendientes por canal.
+	 *
 	 * @return the queryExecutorViewEnviosPendientesPorCanal
 	 */
 	public QueryExecutorViewEnviosPendientesPorCanal getQueryExecutorViewEnviosPendientesPorCanal() {
 		return queryExecutorViewEnviosPendientesPorCanal;
 	}
+	
 	/**
+	 * Modificar query executor view envios pendientes por canal.
+	 *
 	 * @param queryExecutorViewEnviosPendientesPorCanal the queryExecutorViewEnviosPendientesPorCanal to set
 	 */
 	public void setQueryExecutorViewEnviosPendientesPorCanal(

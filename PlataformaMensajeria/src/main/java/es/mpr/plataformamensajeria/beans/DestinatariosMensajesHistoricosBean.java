@@ -16,7 +16,10 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * @author Altran
  */
 public class DestinatariosMensajesHistoricosBean implements Audit {
-
+	
+	/**
+	 * COnstructor por defecto
+	 */
 	public DestinatariosMensajesHistoricosBean() {
 		this.destinatariosMensajes = null;
 		this.mensajeId = null;
@@ -65,123 +68,243 @@ public class DestinatariosMensajesHistoricosBean implements Audit {
 	
 	private Date fechaHistorificacion;
 
+	/**
+	 * Obtener XML
+	 */
 	@Override
 	public String obtenerXML() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Obtener destinatariosMensajes
+	 * @return
+	 */
 	public Long getDestinatariosMensajes() {
 		return destinatariosMensajes;
 	}
 
+	/**
+	 * Modificar destinatariosMensajes
+	 * @param destinatariosMensajes
+	 */
 	public void setDestinatariosMensajes(Long destinatariosMensajes) {
 		this.destinatariosMensajes = destinatariosMensajes;
 	}
 
+	/**
+	 * Obtener mensajeId
+	 * @return
+	 */
 	public Long getMensajeId() {
 		return mensajeId;
 	}
 
+	/**
+	 * Modificar mensajeId
+	 * @param mensajeId
+	 */
 	public void setMensajeId(Long mensajeId) {
 		this.mensajeId = mensajeId;
 	}
 
+	/**
+	 * Modificar destinatario
+	 * @return
+	 */
 	public String getDestinatario() {
 		return destinatario;
 	}
 
+	/**
+	 * Modificar destinatario
+	 * @param destinatario
+	 */
 	public void setDestinatario(String destinatario) {
 		this.destinatario = destinatario;
 	}
 
+	/**
+	 * Obtener estado
+	 * @return
+	 */
 	public String getEstado() {
 		return estado;
 	}
 
+	/**
+	 * Modificar estado
+	 * @param estado
+	 */
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 
+	/**
+	 * Obtener fechaCreacion
+	 * @return
+	 */
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
+	/**
+	 * Modificar fechaCreacion
+	 * @param fechaCreacion
+	 */
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	/**
+	 * Obtener creadoPor
+	 * @return
+	 */
 	public String getCreadoPor() {
 		return creadoPor;
 	}
 
+	/**
+	 * Modificar creadoPor
+	 * @param creadoPor
+	 */
 	public void setCreadoPor(String creadoPor) {
 		this.creadoPor = creadoPor;
 	}
 
+	/**
+	 * Obtener fechaModificacion
+	 * @return
+	 */
 	public Date getFechaModificacion() {
 		return fechaModificacion;
 	}
 
+	/**
+	 * Modificar fechaModificacion
+	 * @param fechaModificacion
+	 */
 	public void setFechaModificacion(Date fechaModificacion) {
 		this.fechaModificacion = fechaModificacion;
 	}
 
+	/**
+	 * Obtener modificadoPor
+	 * @return
+	 */
 	public String getModificadoPor() {
 		return modificadoPor;
 	}
 
+	/**
+	 * Modificar modificadoPor
+	 * @param modificadoPor
+	 */
 	public void setModificadoPor(String modificadoPor) {
 		this.modificadoPor = modificadoPor;
 	}
 
+	/**
+	 * Obtener codigoExterno
+	 * @return
+	 */
 	public String getCodigoExterno() {
 		return codigoExterno;
 	}
 
+	/**
+	 * Modificar codigoExterno
+	 * @param codigoExterno
+	 */
 	public void setCodigoExterno(String codigoExterno) {
 		this.codigoExterno = codigoExterno;
 	}
 
+	/**
+	 * Obtener uim
+	 * @return
+	 */
 	public String getUim() {
 		return uim;
 	}
 
+	/**
+	 * Modificar uim
+	 * @param uim
+	 */
 	public void setUim(String uim) {
 		this.uim = uim;
 	}
 
+	/**
+	 * Obtener nodo
+	 * @return
+	 */
 	public Integer getNodo() {
 		return nodo;
 	}
 
+	/**
+	 * Modificar nodo
+	 * @param nodo
+	 */
 	public void setNodo(Integer nodo) {
 		this.nodo = nodo;
 	}
 
+	/**
+	 * Obtener listaDestinatarios
+	 * @return
+	 */
 	public ArrayList<DestinatarioBean> getListaDestinatarios() {
 		return listaDestinatarios;
 	}
 
+	/**
+	 * Modificar listaDestinatarios
+	 * @param listaDestinatarios
+	 */
 	public void setListaDestinatarios(ArrayList<DestinatarioBean> listaDestinatarios) {
 		this.listaDestinatarios = listaDestinatarios;
 	}
 
+	/**
+	 * Obtener ultimoEnvio
+	 * @return
+	 */
 	public Date getUltimoEnvio() {
 		return ultimoEnvio;
 	}
 
+	/**
+	 * Modificar ultimoEnvio
+	 * @param ultimoEnvio
+	 */
 	public void setUltimoEnvio(Date ultimoEnvio) {
 		this.ultimoEnvio = ultimoEnvio;
 	}
 
+	/**
+	 * Obtener tipoMensaje
+	 * @return
+	 */
 	public String getTipoMensaje() {
 		return tipoMensaje;
 	}
 
+	/**
+	 * Modificar tipoMensaje
+	 * @param tipoMensaje
+	 */
 	public void setTipoMensaje(String tipoMensaje) {
 		this.tipoMensaje = tipoMensaje;
 	}
+	
+	/**
+	 * Metdodo que devuelve la fecha formateada dd/MM/yyyy HH:mm:ss
+	 * @return
+	 */
 	public String getFechaFormateada() {
 		String fechaFormateada = "";
 		if (ultimoEnvio != null) {

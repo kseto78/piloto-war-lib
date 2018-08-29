@@ -10,6 +10,9 @@ import es.mpr.template.servicios.ifaces.ServicioSecurizado;
  */
 public class ServicioSecurizadoImpl implements ServicioSecurizado {
 
+    /* (non-Javadoc)
+     * @see es.mpr.template.servicios.ifaces.ServicioSecurizado#ejecutar()
+     */
     public String ejecutar(){
 
         return "OK";

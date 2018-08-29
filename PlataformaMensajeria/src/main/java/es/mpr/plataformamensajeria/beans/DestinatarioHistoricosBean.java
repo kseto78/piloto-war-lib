@@ -12,7 +12,10 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  @author Altran
  */
 public class DestinatarioHistoricosBean implements Audit{
-
+	
+	/**
+	 * Constructor por defecto
+	 */
 	public DestinatarioHistoricosBean() {
 		this.destinatarioId=null;
 		this.nombre=null;
@@ -37,109 +40,171 @@ public class DestinatarioHistoricosBean implements Audit{
 	private String tipoDestinatario; //TO, CC, BCC
 	private Date fechaHistorificacion;
 
-	
+	/**
+	 * Obtener destinatarioId
+	 * @return
+	 */
 	public Integer getDestinatarioId() {
 		return destinatarioId;
 	}
 
-
+	/**
+	 * Modificar destinatarioId
+	 * @param destinatarioId
+	 */
 	public void setDestinatarioId(Integer destinatarioId) {
 		this.destinatarioId = destinatarioId;
 	}
 
-
+	/**
+	 * Obtener nombre
+	 * @return
+	 */
 	public String getNombre() {
 		return nombre;
 	}
 
-
+	/**
+	 * Modificar nombre
+	 * @param nombre
+	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-
+	/**
+	 * Obtener email
+	 * @return
+	 */
 	public String getEmail() {
 		return email;
 	}
 
-
+	/**
+	 * Modificar email
+	 * @param email
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-
+	/**
+	 * Obtener mensajeId
+	 * @return
+	 */
 	public String getMensajeId() {
 		return mensajeId;
 	}
 
-
+	/**
+	 * Modificar mensajeId
+	 * @param mensajeId
+	 */
 	public void setMensajeId(String mensajeId) {
 		this.mensajeId = mensajeId;
 	}
 
-
+	/**
+	 * Obtener fechaCreacion
+	 * @return
+	 */
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-
+	/**
+	 * Modificar fechaCreacion
+	 * @param fechaCreacion
+	 */
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-
+	/**
+	 * Obtener creadoPor
+	 * @return
+	 */
 	public String getCreadoPor() {
 		return creadoPor;
 	}
 
-
+	/**
+	 * Modificar creadoPor
+	 * @param creadoPor
+	 */
 	public void setCreadoPor(String creadoPor) {
 		this.creadoPor = creadoPor;
 	}
 
-
+	/**
+	 * Obtener fechaModificacion 
+	 * @return
+	 */
 	public Date getFechaModificacion() {
 		return fechaModificacion;
 	}
 
-
+	/**
+	 * Modificar fechaModificacion
+	 * @param fechaModificacion
+	 */
 	public void setFechaModificacion(Date fechaModificacion) {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-
+	/**
+	 * Obtener modificadoPor
+	 * @return
+	 */
 	public String getModificadoPor() {
 		return modificadoPor;
 	}
 
-
+	/**
+	 * Modificar modificadoPor
+	 * @param modificadoPor
+	 */
 	public void setModificadoPor(String modificadoPor) {
 		this.modificadoPor = modificadoPor;
 	}
 
-
+	/**
+	 * Obtener tipoDestinatario
+	 * @return
+	 */
 	public String getTipoDestinatario() {
 		return tipoDestinatario;
 	}
 
-
+	/**
+	 * Modificar tipoDestinatario
+	 * @param tipoDestinatario
+	 */
 	public void setTipoDestinatario(String tipoDestinatario) {
 		this.tipoDestinatario = tipoDestinatario;
 	}
 
-
+	/**
+	 * Obtener XML
+	 */
 	@Override
 	public String obtenerXML() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
+	/**
+	 * Obtener fechaHistorificacion
+	 * @return
+	 */
 	public Date getFechaHistorificacion() {
 		return fechaHistorificacion;
 	}
 
-
+	/**
+	 * Modificar fechaHistorificacion
+	 * @param fechaHistorificacion
+	 */
 	public void setFechaHistorificacion(Date fechaHistorificacion) {
 		this.fechaHistorificacion = fechaHistorificacion;
 	}
