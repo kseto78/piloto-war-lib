@@ -31,6 +31,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUrlMensajePremiumManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.model.TblDestinatariosMensajes;
@@ -112,6 +113,9 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 
 	@Autowired
 	private QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes;
+	
+	@Autowired
+	private ErroresManager erroresManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
@@ -306,6 +310,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
 		
+		int activeMQ = 2;
+		
 		TblMensajes mensaje = mensajesManager.getMensaje(idMensaje.longValue());
 		String status = mensaje.getEstadoactual();
 		try{
@@ -327,18 +333,29 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 						encolarMensaje(envio, username, servicio, ps, mensajesManager.getIdLoteByIdMensaje(mensaje.getMensajeid()).intValue(), idMensaje, destinatario);
 					}
 				}
-				
+				//Comprobamos que si ya se ha actualizado la tabla de errores a true
+				activeMQ = 1;//true
 				resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
 				respuesta = resp.toXMLSMS(resp);
 			} else {
 				resp = codificarRespuesta(codOK, detailsOK, statusTextOK, envio.getIdExterno(), idMensaje);
 				respuesta = resp.toXMLSMS(resp);
 			}
-		}catch (CannotCreateTransactionException e) {
+		}catch (CannotCreateTransactionException e) {	
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
+			activeMQ = 0;//false
 			LOG.error(errorActiveMq+" EnvioPremiumImpl.crearMensaje --Error ActiveMq--", e);
 			mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, false, null, null, username, null);
 			resp = codificarRespuesta(cod2006, des2006, statusTextKO, envio.getIdExterno(), null);
 				respuesta = resp.toXMLSMS(resp);
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en EnvioPremiumImpl-reenviarMensaje");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
+			}
 		}
 		return respuesta;
 	}

@@ -31,6 +31,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewLotesEnviosDetalladaManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewServiciosManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
 import es.minhap.plataformamensajeria.iop.util.MensajesAuditoria;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.sim.dao.TblLotesEnviosDAO;
@@ -97,6 +98,9 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 
 	@Autowired
 	ViewLotesEnviosDetalladaManager viewLotesManager;
+	
+	@Autowired
+	private ErroresManager erroresManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
@@ -448,6 +452,9 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null)).getNombre();
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		List<TblMensajes> listaMensajes = null;
+		
+		int activeMQ = 2;
+		
 		try {
 			
 			//buscamos los mensajes del lote que no estan enviados
@@ -468,9 +475,15 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 					}				
 				}
 			}
+			//Comprobamos que si ya se ha actualizado la tabla de errores a true
+			activeMQ = 1;//true
+			
 			
 		} catch (CannotCreateTransactionException e) {
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
+			activeMQ = 0;//false
 			LOG.error(errorActiveMq+" TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
+			
 			TblServicios servicio = serviciosManager
 					.getServicio(lotesDAO.get(idLote).getTblServicios().getServicioid());
 
@@ -487,6 +500,14 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		}catch (Exception e) {
 			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
 			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en TblLotesEnviosManagerImpl-setEstadoLote");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
+			}
 		}
 		return res;
 	}

@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
@@ -19,6 +20,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.plataformamensajeria.iop.util.WSPlataformaErrors;
@@ -59,6 +61,9 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	
+	@Autowired
+	private ErroresManager erroresManager;
+	
 	
 		/**
 	 * @param RecibirSMSRequest
@@ -84,6 +89,8 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         String prefijoSMS= null;
         boolean premium = false;
         Integer idMensaje = null;
+        
+        int activeMQ = 2;
         
         try {
         	
@@ -189,6 +196,9 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 							maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
 						}
 						sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
+						//Comprobamos que si ya se ha actualizado la tabla de errores a true
+						activeMQ = 1;//true
+						
         			}
     	        	
             	} else if(ps.getMessage("constantes.errores.devolucion.error1",null).equals(envioSMS.getServicio())) {
@@ -216,7 +226,10 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         	}
         	
 		}catch (CannotCreateTransactionException e) {
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
+			activeMQ = 0;//false
 			LOG.error(errorActiveMq+" IRecepcionMensajesServiceImpl.recibirSMS --Error ActiveMq--", e);
+			
 			if (premium){
 				mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, 
 							false, null, null, envioSMS.getUserAplicacion(), null);
@@ -234,6 +247,14 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 			retorno.getStatus().setStatusCode(errorRecMensaje);
 			retorno.getStatus().setStatusText(statusTextKO);
 			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_GENERAL",null));
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en RecepcionMensajesServiceImpl-recibirSMS");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
+			}
 		}
 		return retorno;
     }

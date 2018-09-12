@@ -37,6 +37,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
 import es.minhap.plataformamensajeria.iop.util.Utils;
@@ -104,6 +105,9 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 
 	@Autowired
 	private QueryExecutorDestinatariosMensajes queryExecutorDestinatariosMensajes;
+	
+	@Autowired
+	private ErroresManager erroresManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
@@ -130,6 +134,9 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 		es.minhap.plataformamensajeria.iop.beans.enviosGISS.Respuesta resp = null;
 		es.minhap.plataformamensajeria.iop.beans.enviosGISS.Fault respFault = null;
 		TblServicios serv = null;
+		
+		int activeMQ = 2;
+		
 		try {
 			resp = comprobacionesIniciales(envio, servicio, ps);
 			
@@ -184,6 +191,8 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 							encolarMensaje(envio, username, ps, idLote, idMensaje, serv, destinatario);
 					}
 				}
+				//Comprobamos que si ya se ha actualizado la tabla de errores a true
+				activeMQ = 1;//true
 				resp = codificarRespuesta(envio.getIdExterno(),
 						ps.getMessage("plataformaErrores.generales.STATUS_OK", null),
 						ps.getMessage("plataformaErrores.generales.DETAILS_OK", null),
@@ -193,7 +202,10 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 			}
 
 		} catch (CannotCreateTransactionException e) {
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
+			activeMQ = 0;//false
 			LOG.error(errorActiveMq+" EnvioPremiumGISSImpl.enviarSMSGISS --Error ActiveMq--", e);
+			
 			mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoAnulado, descripcionErrorActiveMq, false,
 					null, null, username, null);
 			respFault = codificarRespuestaFault(envio.getIdExterno(),
@@ -213,6 +225,14 @@ public class EnvioPremiumGISSImpl implements IEnvioPremiumGISSService {
 				return respFault.toXMLSMS(respFault);
 			} catch (PlataformaBusinessException e1) {
 				LOG.error("Se ha producido un error", e1);
+			}
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en EnvioPremiumGISSImpl-enviarSMSGISS");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
 			}
 		}
 		return "";

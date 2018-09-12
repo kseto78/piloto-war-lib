@@ -50,6 +50,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblServidoresServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosServiciosMovilesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosWebPushManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 import es.minhap.plataformamensajeria.iop.threads.HiloEncolarMensajesActiveMq;
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
@@ -117,6 +118,9 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 	@Resource
 	private TblServidoresServiciosManager servidoresServiciosManager;
+	
+	@Autowired
+	private ErroresManager erroresManager;
 
 	@Override
 	public String enviarEmail(EnvioEmailXMLBean envioEmail, List<String> listaErrores) {
@@ -488,6 +492,9 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		Respuesta respuesta = new Respuesta();
 		Mensaje mensajeCreado = null;
 		boolean premium = false;
+		
+		int activeMQ = 2;
+		
 		try {
 
 			String error = peticionCorrectaSMS(envioSMS.getNombreLote(), envioSMS.getServicio(), envioSMS.getUsuario(),
@@ -643,6 +650,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 					}
 					mensajeCreado = null;
 				}
+				//Comprobamos que si ya se ha actualizado la tabla de errores a true
+				activeMQ = 1;//true				
 				}
 				else {
 					Mensaje msj = new Mensaje();
@@ -672,7 +681,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 			
 			xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales, listaErroresLote);
 		}catch (CannotCreateTransactionException e) {
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
+			activeMQ = 0;//false
 			LOG.error(errorActiveMq+" EnvioMensajesImpl.enviarSMS --Error ActiveMq--", e);
+			
 			if (premium){
 				listaErroresGenerales.add(WSPlataformaErrors.getErrorGeneral());
 				for (es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje m : listaMensajesProcesados) {
@@ -694,6 +706,14 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						listaErroresLote);
 			} catch (PlataformaBusinessException e1) {
 				LOG.error("EnvioMensajesImpl.enviarSMS", e);
+			}
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en EnvioMensajesImpl-enviarSMS");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
 			}
 		}
 
@@ -1870,7 +1890,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 	private void levantarHilo(List<MensajeEncolarBean> listaMensajeEncolar, PropertiesServices ps, 
 			SIMMessageSender sender,TblMensajesManager mensajesManager) {
 		
-				HiloEncolarMensajesActiveMq hilo1 = new HiloEncolarMensajesActiveMq(listaMensajeEncolar, ps, sender, mensajesManager);
+				HiloEncolarMensajesActiveMq hilo1 = new HiloEncolarMensajesActiveMq(listaMensajeEncolar, ps, sender, mensajesManager, erroresManager);
 				hilo1.start();
 	}
 

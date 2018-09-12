@@ -49,6 +49,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewLotesEnviosDetalladaManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewUsuariosPushManager;
+import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
 import es.minhap.plataformamensajeria.iop.util.MensajesAuditoria;
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
 import es.minhap.plataformamensajeria.iop.util.UtilCreateFile;
@@ -114,6 +115,9 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 	@Autowired
 	private QueryExecutorMensajes queryExecutorMensajes;
+	
+	@Autowired
+	private ErroresManager erroresManager;
 
 	@Resource
 	private TblMensajesDAO tblMensajesDAO;
@@ -834,6 +838,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				.getNombre();
 		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
 		TblMensajes tblMensaje = null;
+		
+		int activeMQ = 2;
 
 		try {
 			// Se comprueba que la aplicacion pertenece al usuario
@@ -897,8 +903,10 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 						checkEmailMode(idMensaje, tblMensaje, destinatarios, modo);
 					} else {
 						sendMessages(idMensaje, tblMensaje, destinatarios);
+						
 					}
-
+					//Comprobamos que si ya se ha actualizado la tabla de errores a true
+					activeMQ = 1;//true
 				}
 				return codCorrecto.intValue();
 			} else {
@@ -908,7 +916,11 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				return codErrorBBDD.intValue();
 			}
 		} catch (CannotCreateTransactionException e) {
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
 			LOG.error(errorActiveMq+" TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
+			activeMQ = 0;//false
+			
+
 			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios()
 					.getServicioid());
 			if (servicio.getPremium() != null && servicio.getPremium()) { //Es premium revolvemos KO y anulamos
@@ -922,6 +934,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		} catch (Exception e) {
 			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
 			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en TblMensajesManagerImpl-operacionMensaje");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
+			}
 		}
 	}
 

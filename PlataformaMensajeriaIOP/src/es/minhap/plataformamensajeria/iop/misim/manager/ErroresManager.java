@@ -11,5 +11,5 @@ public interface ErroresManager {
 	 */
 	public boolean getEstadoMq();
 	public void updateErrorMq(boolean estado);
-
+	public boolean comprobarActiveMqActivo(boolean estado);
 }

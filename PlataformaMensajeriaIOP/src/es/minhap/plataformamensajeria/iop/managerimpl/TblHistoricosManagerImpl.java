@@ -3,8 +3,10 @@ package es.minhap.plataformamensajeria.iop.managerimpl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +98,9 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+	
+	private static Logger LOG = LoggerFactory.getLogger(TblHistoricosManagerImpl.class);
+	
 	
 	/**
 	 * @see es.minhap.TblHistoricosManagerImpl.insertarHistorico
@@ -384,12 +389,26 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 	 */
 	private String concatenarDestinatarios(String mensajeId, TblCanales canal) {
 		StringBuilder res = new StringBuilder();
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		
+		String numMaxDestinatariosProp = ps.getMessage("num.max.destinatarios",null);
+		int numMaxDestinatarios = 0;
+		if((numMaxDestinatariosProp != null) && (numMaxDestinatariosProp != "")){
+			 numMaxDestinatarios  = Integer.parseInt(numMaxDestinatariosProp);
+		}
+		LOG.debug("numMaxDestinatarios" + numMaxDestinatarios);
+		
 		switch (canal.getCanalid().intValue()) {
 		case 1:
 			List<String> listaDestinatarios = destinatariosManager.getDestinatarios(Long.parseLong(mensajeId));
-			if (null != listaDestinatarios && listaDestinatarios.size() > 0){
+			if (null != listaDestinatarios && listaDestinatarios.size() > 0 && listaDestinatarios.size() <= numMaxDestinatarios){
 				for (String d : listaDestinatarios) {
 					res.append(d + ";");
+				}
+				break;
+			} else if (null != listaDestinatarios && listaDestinatarios.size() > 0 && listaDestinatarios.size() >= numMaxDestinatarios) {
+				for (int i = 0; i < numMaxDestinatarios; i++) {
+					res.append(listaDestinatarios.get(i) + ";");
 				}
 				break;
 			}
