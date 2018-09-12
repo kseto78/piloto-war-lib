@@ -13,7 +13,8 @@
 
 <properties>
 	<comment>SWModule sign with JKS.</comment>
-	<entry key="keystorePath">C:\eclipse\eclipse\workspace\misim-bus\misim-bus-core\src\main\resources\keys_sppro.jks</entry>
+<!-- 	<entry key="keystorePath">C:\eclipse\eclipse\workspace\misim-bus\misim-bus-core\src\main\resources\keys_sppro.jks</entry> -->
+	<entry key="keystorePath">D:\MISIM\jboss-as-7.1.1\certificados\misim_cacerts.jks</entry>
 	<entry key="keyStorePassword">password</entry>
 	<entry key="keyPassword">changeit</entry>
 	<entry key="issuer">OU=AC Componentes Informáticos,O=FNMT-RCM,C=ES</entry>	

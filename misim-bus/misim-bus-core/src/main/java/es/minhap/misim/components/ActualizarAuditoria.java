@@ -82,6 +82,11 @@ public class ActualizarAuditoria implements Callable {
 			Boolean errorAEAT = Boolean.parseBoolean(String.valueOf(eventContext.getMessage().getOutboundProperty("errorAEAT")));
 			
 			Long idLote = null;
+			Long idMensaje = null;
+			// Se comprueba el idMensaje
+			if (eventContext.getMessage().getOutboundProperty("idMensaje")!=null && !("").equals(eventContext.getMessage().getOutboundProperty("idMensaje"))){
+				idMensaje = Long.valueOf(String.valueOf(eventContext.getMessage().getOutboundProperty("idMensaje")));
+			}
 			
 			// Actualizamos la petición
 			Estado estado = new Estado();
@@ -95,6 +100,10 @@ public class ActualizarAuditoria implements Callable {
 				eventContext.getMessage().setOutboundProperty("errorAEAT", "false");
 			}else{
 				estado.setIdEstado(Long.valueOf(ps.getMessage("estado.exito", null)));
+			}
+			// Comprobamos idMensaje
+			if (peticion.getIdMensaje() == null && idMensaje != null) {
+				peticion.setIdMensaje(idMensaje);
 			}
 			
 			peticion.setEstado(estado);
@@ -121,6 +130,11 @@ public class ActualizarAuditoria implements Callable {
 			
 			if (idLote!=null){
 				auditoria.setIdLote(idLote);
+			}
+			
+			// Comprobamos idMensaje
+			if (auditoria.getIdMensaje() == null && idMensaje != null) {
+				auditoria.setIdMensaje(idMensaje);
 			}
 			
 			// Actualizamos la petición

@@ -107,6 +107,7 @@ public class InvocarEnvio001 implements Callable {
 			if (null != idMensaje){
 				idLote = tblMensajesManager.getIdLoteByIdMensaje(idMensaje);
 				eventContext.getMessage().setOutboundProperty("idLote", idLote);
+				eventContext.getMessage().setOutboundProperty("idMensaje", idMensaje);
 			
 				//utilizamos el hilo según configuracion properties
 				if (!"S".equals(utilizarActiveMq)){

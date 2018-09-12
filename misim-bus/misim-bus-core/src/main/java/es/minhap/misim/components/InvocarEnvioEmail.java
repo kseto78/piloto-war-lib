@@ -111,7 +111,15 @@ public class InvocarEnvioEmail implements Callable {
 			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
 				String idLote=nodoLoteId.item(0).getTextContent();
 				eventContext.getMessage().setOutboundProperty("idLote", idLote);
-			}		
+			}	
+			
+			NodeList nodoMensajeId = doc.getElementsByTagName("idMensaje");
+			// Se agrega el idMensaje para los casos donde es unico
+			if(nodoMensajeId!=null && nodoMensajeId.item(0)!=null && nodoMensajeId.getLength() == 1) {
+				String idMensaje=nodoMensajeId.item(0).getTextContent();
+				eventContext.getMessage().setOutboundProperty("idMensaje", idMensaje);
+			}
+			
 			SOAPMessage responseMessage=getSoapMessageFromString(respuestaCompleta);
 			
 	        try{

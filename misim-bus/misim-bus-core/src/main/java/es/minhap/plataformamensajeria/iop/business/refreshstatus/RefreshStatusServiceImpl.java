@@ -133,7 +133,7 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 	private static String txtPost = "(postSMS)";
 	private String aplicacionAEAT = "";
 	
-
+	@Override
 	public void refreshStatus(Long mensajeId, Long destinatarioMensajeId, Long loteId, String aplicacionPremium, String usuarioAplicacion) throws Exception{
 		LOG.info("[RefreshStatusServiceImpl] Se accede al metodo refreshStatus.");
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -147,6 +147,8 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 		SMSData smsData = commonUtilitiesService.getSMSData(mensajeId, destinatarioMensajeId);
 
 		int numServidores = smsData.Servers.size();
+		
+		int activeMQ = 2;
 
 		registerSMSDetailsDebug(smsData);
 		mapServicios = commonUtilitiesService.getMapServicios(mensajeId);
@@ -195,17 +197,24 @@ public class RefreshStatusServiceImpl implements IRefreshStatusService, MuleCont
 			mns.setIdLote(loteId.toString());
 			mns.setUsuarioAplicacion(usuarioAplicacion);
 			
-			if (numMaxReintentos > 0) {
+			
+			
+			if (numMaxReintentos > 0) {				
 				try {
 					messageSender.sendRefresh(mns, numMaxReintentos);
-					//Comprobamos que si ya se ha actualizado la tabla de errores a true
-					erroresManager.comprobarActiveMqActivo(true);
+					activeMQ = 1;//true
 				} catch (CannotCreateTransactionException e) {
-					//Comprobamos que si ya se ha actualizado la tabla de errores a false
-					if (erroresManager.comprobarActiveMqActivo(false)) {
-						LOG.error(errorActiveMq+" HiloEnviarMensajesPremium.run --Error ActiveMq-- Mensaje: " + mns.getIdMensaje());
+					activeMQ = 0;//false
+					LOG.error(errorActiveMq+" HiloEnviarMensajesPremium.run --Error ActiveMq-- Mensaje: " + mns.getIdMensaje());
+				}finally{
+//					Comprobamos que si ya se ha actualizado la tabla de errores
+					LOG.debug("Estamos en RefreshStatusServiceImpl-refreshStatus");					
+					if (activeMQ == 0){
+						erroresManager.comprobarActiveMqActivo(false);
+					}else if (activeMQ == 1){
+						erroresManager.comprobarActiveMqActivo(true);
 					}
-				}	
+				}
 			}
 			
 		}
