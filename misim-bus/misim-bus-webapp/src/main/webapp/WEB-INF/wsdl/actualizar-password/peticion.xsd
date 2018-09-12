@@ -8,9 +8,7 @@
 		<complexType>
 			<sequence>
 				<element name="Usuario" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-				<element name="Password" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-				<element name="Password_New" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-				
+				<element name="Password_New" type="xsd:string" minOccurs="1" maxOccurs="1"/>		
 			</sequence>
 		</complexType>
 	</element>
