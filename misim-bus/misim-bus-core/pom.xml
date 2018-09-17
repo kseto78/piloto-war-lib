@@ -842,7 +842,7 @@
 						<configuration>
 							<schemaDirectory>${basedir}/src/main/resources/wsdl</schemaDirectory>
 							<schemaFiles>soapfaultatributos.xsd</schemaFiles>
-							<packageName>es.minhap.micc.bus.core.generated</packageName>
+							<packageName>es.minhap.misim.bus.core.generated</packageName>
 							<outputDirectory>${project.build.directory}/generated/jaxb</outputDirectory>
 						</configuration>
 					</plugin>
