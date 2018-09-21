@@ -164,10 +164,10 @@
 							<directory>src/main/app</directory>
 							<filtering>true</filtering>
 						</resource>
-						<resource>
-							<directory>${project.build.directory}/generated/jaxb/</directory>
-							<filtering>true</filtering>
-						</resource>
+<!-- 						<resource> -->
+<!-- 							<directory>${project.build.directory}/generated/jaxb/</directory> -->
+<!-- 							<filtering>true</filtering> -->
+<!-- 						</resource> -->
 					</resources>
 				</configuration>
 			</plugin>
@@ -567,16 +567,9 @@
 <!-- 			</dependency> -->
 
 
-<!-- Deprecated la renombramos para que estuviera en el grupo es.minhap
+<!-- Deprecated -->
 		<dependency>
 			<groupId>com.github.fernandospr</groupId>
-			<artifactId>javapns-jdk16</artifactId>
-			<version>2.3.2</version>
-		</dependency>  -->
- 
-
-		<dependency>
-			<groupId>es.minhap</groupId>
 			<artifactId>javapns-jdk16</artifactId>
 			<version>2.3.2</version>
 		</dependency>
@@ -602,7 +595,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>PlataformaMensajeriaIOP</artifactId>
-			<version>3.0.2</version> 
+			<version>3.0.1</version> 
 			<exclusions>
 			<exclusion> 
  				<groupId>org.bouncycastle</groupId> 
@@ -824,30 +817,30 @@
 					<version>${jaxb.version}</version>
 				</dependency>
 			</dependencies>
-			<build>
-				<plugins>
-					<!-- JAXB xjc plugin that invokes the xjc compiler to compile XML schema 
-						into Java classes. -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>jaxb2-maven-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>xjc</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<schemaDirectory>${basedir}/src/main/resources/wsdl</schemaDirectory>
-							<schemaFiles>soapfaultatributos.xsd</schemaFiles>
-							<packageName>es.minhap.misim.bus.core.generated</packageName>
-							<outputDirectory>${project.build.directory}/generated/jaxb</outputDirectory>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
+<!--  			<build>  -->
+<!--  				<plugins>  -->
+ <!-- 					JAXB xjc plugin that invokes the xjc compiler to compile XML schema  --> 
+ <!-- 						into Java classes. -->  
+<!-- 					<plugin> -->
+<!--  						<groupId>org.codehaus.mojo</groupId> -->
+<!--  						<artifactId>jaxb2-maven-plugin</artifactId> -->
+<!--  						<version>1.6</version> -->
+<!--  						<executions> -->
+<!--  							<execution> -->
+<!--  								<goals> -->
+<!-- 									<goal>xjc</goal> -->
+<!--  								</goals> -->
+<!-- 							</execution> -->
+<!--  						</executions> -->
+<!-- 						<configuration> -->
+<!--  							<schemaDirectory>${basedir}/src/main/resources/wsdl</schemaDirectory> -->
+<!-- 							<schemaFiles>soapfaultatributos.xsd</schemaFiles> -->
+  <!-- 							<packageName>es.minhap.misim.bus.core.generated</packageName> --> 
+<!--  							<outputDirectory>${project.build.directory}/generated/jaxb</outputDirectory> -->
+<!--  						</configuration>  -->
+<!--  					</plugin>  -->
+<!--  				</plugins>  -->
+<!--  			</build>  -->
 		</profile>
 		<profile>
 			<id>mule-standalone</id>
