@@ -569,7 +569,7 @@
 
 <!-- Deprecated -->
 		<dependency>
-			<groupId>com.github.fernandospr</groupId>
+			<groupId>es.minhap</groupId>
 			<artifactId>javapns-jdk16</artifactId>
 			<version>2.3.2</version>
 		</dependency>
