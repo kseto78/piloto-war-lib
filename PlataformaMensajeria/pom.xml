@@ -7,6 +7,7 @@
 	<name>${project.artifactId}</name>
 	<description>${project.artifactId}</description>
 	<version>1.0.0</version>
+	<groupId>es.minhap</groupId>
 	
 	<!--<parent>
 		<groupId>es.minhap</groupId>
