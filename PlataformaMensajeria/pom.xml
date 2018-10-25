@@ -8,11 +8,11 @@
 	<description>${project.artifactId}</description>
 	<version>1.0.0</version>
 	
-	<parent>
+	<!--<parent>
 		<groupId>es.minhap</groupId>
 		<artifactId>minhap-sim-parent</artifactId>
 		<version>1.0.0</version>
-	</parent>
+	</parent>-->
 	
 	<properties>
 		<encoding>UTF-8</encoding>
