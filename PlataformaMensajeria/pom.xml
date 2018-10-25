@@ -279,7 +279,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>PlataformaMensajeriaIOP</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 			<exclusions>
  				<!-- <exclusion> 
 		          <groupId>es.minhap.sim</groupId> 
