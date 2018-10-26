@@ -108,6 +108,9 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
     
     /**  id usuario. */
     private String idUsuario;
+    
+    /** public key, */
+    private String publicKey;
 	
     /**
      * New search.
@@ -127,6 +130,7 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
     	}
     	Integer totalSize = 0;
     	resultCount = "0";
+    	publicKey = properties.getProperty("peticion.webpush.publicKey", null);
     	//Atributos de request
     	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
     	if(!export){
@@ -214,7 +218,7 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 			peticion.setAccion(accion);
 			peticion.setAuth(auth);
 			peticion.setEndpoint(obtenerUrlDecode());
-			peticion.setIdServicio(properties.getProperty("peticion.webpush.idServicio", null));
+			peticion.setIdServicio(properties.getProperty("peticion.webpush.idServicio", null).trim());
 			peticion.setIdUsuario(idUsuario);
 			peticion.setKey(pdh);
 			peticion.setUsuario(properties.getProperty("peticion.webpush.aplicacion.usuario", null));
@@ -282,7 +286,7 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
         KeyValueObject option;
         ArrayList<AplicacionBean> keys;
 		String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);		
 		keys = (ArrayList<AplicacionBean>)servicioAplicacion.getAplicacionesMenu(rolUsuario, idUsuario);
 		if(keys!=null&&!keys.isEmpty()){
 	        for (AplicacionBean key :keys) {
@@ -315,11 +319,10 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 		}
 		if(keys!=null&&!keys.isEmpty()){
 	        for (ServicioBean key :keys) {
-	            
-	            option = new KeyValueObject();
-	            option.setCodigo(key.getServicioId().toString());
-	            option.setDescripcion(key.getNombre());
-	            result.add(option);
+	            	option = new KeyValueObject();
+		            option.setCodigo(key.getServicioId().toString());
+		            option.setDescripcion(key.getNombre());
+		            result.add(option);         	
 	        }
 		}
         return result;
@@ -614,6 +617,14 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 	 */
 	public void setEndpoint2(String endpoint2) {
 		this.endpoint2 = endpoint2;
+	}
+
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
 	}
 	
 	
