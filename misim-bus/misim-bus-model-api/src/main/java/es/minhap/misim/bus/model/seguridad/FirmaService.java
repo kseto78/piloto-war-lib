@@ -2,6 +2,7 @@ package es.minhap.misim.bus.model.seguridad;
 
 import org.w3c.dom.Document;
 
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 
 /**
@@ -44,7 +45,7 @@ public interface FirmaService {
 	 */
 	public Document firmarWSSecurity(Document documento, String keyStoreType,
 			String keyStorePassword, String keyStoreAlias,
-			String aliasPassword, String keyStoreFile) throws ModelException;
+			String aliasPassword, String keyStoreFile, PropertiesServices ps) throws ModelException;
 
 	/**
 	 * Firma un documento XML contra XML Digital Signature. Los esquemas y
@@ -89,7 +90,8 @@ public interface FirmaService {
 	 *         otro caso
 	 * @throws ModelException
 	 */
-	public boolean validarFirmaWSSecurity(Document documento)
+
+	public boolean validarFirmaWSSecurity(Document documento, String idServicio, PropertiesServices ps)
 			throws ModelException;
 
 	/**
@@ -121,4 +123,5 @@ public interface FirmaService {
 	 */
 	public boolean compararCertificados(byte[] certificado1, byte[] certificado2)
 			throws ModelException;
+	
 }
