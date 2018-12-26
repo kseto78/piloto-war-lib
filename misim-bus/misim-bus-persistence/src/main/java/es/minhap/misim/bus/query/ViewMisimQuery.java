@@ -48,6 +48,7 @@ public class ViewMisimQuery extends AbstractHibernateQueryEntity<ViewMisim> {
     public static final String IDLOTE = "idLote";
     public static final String PROVEEDORPRODUCTO = "proveedorProducto";
     public static final String IDPETICION = "idPeticion";
+    public static final String IDMENSAJE = "idMensaje";
 
 
     /**
@@ -144,6 +145,26 @@ public class ViewMisimQuery extends AbstractHibernateQueryEntity<ViewMisim> {
      * Permite buscar cuando campo idPeticion es NOT NULL
      */
     private boolean idPeticionIsNotNull = false;
+    
+    /**
+     * Valor de busqueda de campo idMensaje
+     */
+    private Long idMensaje;
+
+    /**
+     * Lista de valores del campo idMensaje para busquedas tipo IN
+     */
+    private List<Long> idMensajeIn = new ArrayList<Long>(0);
+
+    /**
+     * Permite buscar cuando campo idMensaje es NULL
+     */
+    private boolean idMensajeIsNull = false;
+
+    /**
+     * Permite buscar cuando campo idMensaje es NOT NULL
+     */
+    private boolean idMensajeIsNotNull = false;
     
 	/**
 	 * Establece el máximo de resultados
@@ -485,6 +506,68 @@ public class ViewMisimQuery extends AbstractHibernateQueryEntity<ViewMisim> {
         this.idPeticionIsNotNull = idPeticionIsNotNull;
     }
     
+    /**
+     * Valor de busqueda de campo idMensaje
+     * @return Long.
+     */
+    public Long getIdMensaje() {
+        return idMensaje;
+    }
+
+    /**
+     * Valor de busqueda de campo idMensaje
+     * @param idMensaje Valor de seteo.
+     */
+    public void setIdMensaje(Long idMensaje) {
+        this.idMensaje = idMensaje;
+    }
+
+    /**
+     * @return List<Long>.
+     */
+    public List<Long> getIdMensajeIn() {
+        return this.idMensajeIn;
+    }
+
+    /**
+     * @param idMensaje Valor a agregar.
+     */
+    public void addIdMensajeIn(Long idMensaje) {
+        this.idMensajeIn.add(idMensaje);
+    }
+
+    /**
+     * Permite buscar cuando campo idMensaje es NULL
+     * @return boolean.
+     */
+    public boolean isIdMensajeIsNull() {
+        return idMensajeIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idMensaje es NULL
+     * @param idMensajeIsNull Valor de seteo.
+     */
+    public void setIdMensajeIsNull(boolean idMensajeIsNull) {
+        this.idMensajeIsNull = idMensajeIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idMensaje es NOT NULL
+     * @return boolean.
+     */
+    public boolean isIdMensajeIsNotNull() {
+        return idMensajeIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idMensaje es NOT NULL
+     * @param idMensajeIsNotNull Valor de seteo.
+     */
+    public void setIdMensajeIsNotNull(boolean idMensajeIsNotNull) {
+        this.idMensajeIsNotNull = idMensajeIsNotNull;
+    }
+    
     public Integer getMaxResultados() {
 		return maxResultados;
 	}
@@ -587,6 +670,22 @@ public class ViewMisimQuery extends AbstractHibernateQueryEntity<ViewMisim> {
 
         if (isIdPeticionIsNotNull()) {
             criteria.add(Restrictions.isNotNull(IDPETICION));
+        }
+        
+        if (getIdMensaje() != null) {            
+            criteria.add(Restrictions.or(Restrictions.isNull(IDMENSAJE), Restrictions.eq(IDMENSAJE, getIdMensaje())));
+        }
+
+        if (getIdMensajeIn().size() > 0) {
+            criteria.add(Restrictions.in(IDMENSAJE, getIdMensajeIn()));
+        }
+
+        if (isIdMensajeIsNull()) {
+            criteria.add(Restrictions.isNull(IDMENSAJE));
+        }
+
+        if (isIdMensajeIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(IDMENSAJE));
         }
         
 		if(null != maxResultados && maxResultados > 0){

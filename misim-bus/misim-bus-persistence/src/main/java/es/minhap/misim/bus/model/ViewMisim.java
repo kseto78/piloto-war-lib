@@ -18,6 +18,7 @@ import javax.persistence.Table;
 		private Long idLote;
 		private String proveedorProducto;
 		private Long idPeticion;
+		private Long idMensaje;
 		
 		@Id
 		@Column(name = "ID_AUDITORIA", unique = true, nullable = false, precision = 20, scale = 0)
@@ -63,6 +64,16 @@ import javax.persistence.Table;
 
 		public void setIdPeticion(Long idPeticion) {
 			this.idPeticion = idPeticion;
+		}
+		
+		
+		@Column(name = "ID_MENSAJE", precision = 20, scale = 0)
+		public Long getIdMensaje() {
+			return this.idMensaje;
+		}
+
+		public void setIdMensaje(Long idMensaje) {
+			this.idMensaje = idMensaje;
 		}
 		
 		public ViewMisim() {
