@@ -168,11 +168,20 @@
 							name="servicio.isActivo" value="%{servicio.activado}" />
 					</p>
 				</s:else>
-				<p class="criteria">
-						<label class="fieldText" style="width: 120px;">Premium</label>
-						<s:checkbox theme="simple" id="servicio.isPremium"
-							name="servicio.isPremium" value="%{servicio.premium}" />
-				</p>
+				<label id="exclusivoLabel">
+					<p class="criteria">
+							<label class="fieldText" style="width: 120px;">Premium</label>
+							<s:checkbox theme="simple" id="servicio.isPremium"
+								name="servicio.isPremium" value="%{servicio.premium}" onclick="selectOnlyThis(this.id)"/>
+					</p>				
+<!-- 					<p class="criteria"> -->
+<!-- 						<label class="fieldText" style="width: 120px;">Exclusivo</label> -->
+<%-- 						<s:checkbox theme="simple" id="servicio.isExclusivo" --%>
+<%-- 							name="servicio.isExclusivo" value="%{servicio.exclusivo}" onclick="selectOnlyThis(this.id)"/> --%>
+<!-- 					</p> -->
+				</label>	
+				
+				
 				<p class="criteria">
 					<label style="width: 120px;" class="fieldText">Nº Max.
 						envíos (*):</label>
@@ -1150,11 +1159,26 @@
 
 	}
 
+	function selectOnlyThis(id) {
+		
+		var idCheck = document.getElementById(id).checked;
+		var idCheck2 = null;
+		if(id=="servicio.isPremium"){
+			idCheck2 = document.getElementById("servicio.isExclusivo");
+			}
+		else{
+			idCheck2 = document.getElementById("servicio.isPremium");
+			}
+		
+		if(idCheck) {
+				idCheck2.checked = false;
+			}
+	}
+	
 	function activarMultiorganismo() {              
         document.formaddServicioOrganismo.action="activarMultiorganismoSelectEditEvent.action";
 	    document.formaddServicioOrganismo.submit();
 	}
-
 	
 
 </script>

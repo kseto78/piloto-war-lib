@@ -97,7 +97,8 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			
 			if((activarJobHist!=null && activarJobHist.equals("S")) ||
 					(activarJobCons!=null && activarJobCons.equals("S")) ||
-					(activarJobInformesServicios!=null && activarJobInformesServicios.equals("S"))){
+					(activarJobInformesServicios!=null && activarJobInformesServicios.equals("S")) ||
+					(activarJobDIR3!=null && activarJobDIR3.equals("S"))){
 				
 		        // Obtenemos la referencia del planificador
 				SchedulerFactory sf = new StdSchedulerFactory();

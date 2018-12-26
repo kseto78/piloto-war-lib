@@ -151,7 +151,7 @@ td.buttons a:hover {
 	opacity: 0.5;
 }
 
-.btnEdit,.btnDelete,.btnView,.btnDecline,.btnReply,.btnPassbook{
+.btnEdit,.btnDelete,.btnView,.btnDecline,.btnReply,.btnPassbook,.btnTree{
 	display: inline-block;
 	height: 16px;
 }
@@ -163,6 +163,13 @@ td.buttons a:hover {
 
 .btnEdit {
 	background: url("../img/grids/btnEdit.gif") no-repeat scroll left top
+		transparent;
+	width: 23px;
+	cursor: pointer;
+}
+
+.btnTree {
+	background: url("../img/grids/btnTree.gif") no-repeat scroll left top
 		transparent;
 	width: 23px;
 	cursor: pointer;
@@ -218,6 +225,12 @@ td.buttons a:hover {
 
 .btnReply {
 	background: url("../img/grids/btnReply.gif") no-repeat scroll left top
+		transparent;
+	width: 18px;
+	cursor: pointer;
+}
+.btnReply {
+	background: url("../img/grids/btnTree.gif") no-repeat scroll left top
 		transparent;
 	width: 18px;
 	cursor: pointer;
@@ -285,6 +298,10 @@ span.inactivo {
 
 .TH70 {
 	width: 70px !important;
+}
+
+.TH75 {
+	width: 75px !important;
 }
 
 .TH77 {
@@ -440,4 +457,8 @@ span.inactivo {
 tbody td.colorGray {
 	background-color: #f2f2f2 !important;
 	border-right: solid 1px #d6d5d5;
+}
+
+.tdOculta {
+	display:none;
 }

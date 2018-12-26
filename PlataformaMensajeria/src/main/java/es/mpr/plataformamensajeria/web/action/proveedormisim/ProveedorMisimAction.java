@@ -104,7 +104,10 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	transient List<KeyValueObject> comboTransformacionesProveedorMisim = new ArrayList<>();
 	
 	/**  combo comunicaciones endpoints. */
-	transient List<KeyValueObject> comboComunicacionesEndpoints = new ArrayList<>();	
+	transient List<KeyValueObject> comboComunicacionesEndpoints = new ArrayList<>();
+	
+	/**  combo company proveedor misim. */
+	transient List<KeyValueObject> comboProductosCompany = new ArrayList<>();
 	
 	/**  lista proveedores misim. */
 	public List<ProveedorMisimBean> listaProveedoresMisim = null;
@@ -325,6 +328,11 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 			sw = false;
 		}	
 	}
+	if (proveedorMisim.getProducto().getIdProducto() == 3 && proveedorMisim.getCompany().equals("")){
+		addActionErrorSession(this.getText("plataforma.proveedorMisim.field.company.error"));
+		sw = false;
+	}
+	
 		return sw;
 	}
 	
@@ -514,9 +522,28 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 		comboTransformacionesProveedorMisim = getComboValuesTransformaciones();
 		comboComunicacionesEndpoints = getComboValuesComunicaciones();
 		listaParametrosProveedorMisim = getParametrosProveedorMisim();
+		comboProductosCompany = getComboCompany();
 		
 	}
 	
+	private List<KeyValueObject> getComboCompany() {
+		List<KeyValueObject> result = new ArrayList<>();
+
+		KeyValueObject option = null;
+		
+
+		option = new KeyValueObject();
+		option.setCodigo("Google");
+		option.setDescripcion("Google");
+		result.add(option);
+		option = new KeyValueObject();
+		option.setCodigo("Apple");
+		option.setDescripcion("Apple");
+		result.add(option);
+		
+		return result;
+	}
+
 	/**
 	 * Obtener combo values productos.
 	 *
@@ -1216,6 +1243,20 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 */
 	public void setRecovery(String recovery) {
 		this.recovery = recovery;
+	}
+
+	/**
+	 * @return the comboProductosCompany
+	 */
+	public List<KeyValueObject> getComboProductosCompany() {
+		return comboProductosCompany;
+	}
+
+	/**
+	 * @param comboProductosCompany the comboProductosCompany to set
+	 */
+	public void setComboProductosCompany(List<KeyValueObject> comboProductosCompany) {
+		this.comboProductosCompany = comboProductosCompany;
 	}
 	
 	

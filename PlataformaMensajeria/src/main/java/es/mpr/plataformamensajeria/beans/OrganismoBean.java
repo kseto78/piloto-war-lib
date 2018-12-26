@@ -87,6 +87,7 @@ public class OrganismoBean implements Audit, Serializable {
 		this.fechaEstadoStr = null;
 		this.manual = null;
 		this.fechaActivo = null;
+		this.idOrganismoPdp = null;
 		
 	}
 
@@ -290,6 +291,9 @@ public class OrganismoBean implements Audit, Serializable {
 	
 	/**  fecha activo. */
 	protected Date fechaActivo;
+	
+	/**  id organismo pdp. */
+	protected Long idOrganismoPdp;
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
@@ -1550,6 +1554,20 @@ public class OrganismoBean implements Audit, Serializable {
 	 */	
 	public void setFechaActivo(Date fechaActivo) {
 		this.fechaActivo = fechaActivo;
+	}
+
+	/**
+	 * @return the idOrganismoPdp
+	 */
+	public Long getIdOrganismoPdp() {
+		return idOrganismoPdp;
+	}
+
+	/**
+	 * @param idOrganismoPdp the idOrganismoPdp to set
+	 */
+	public void setIdOrganismoPdp(Long idOrganismoPdp) {
+		this.idOrganismoPdp = idOrganismoPdp;
 	}
 
 }

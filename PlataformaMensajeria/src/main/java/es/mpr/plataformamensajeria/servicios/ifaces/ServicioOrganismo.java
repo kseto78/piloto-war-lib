@@ -5,6 +5,7 @@ import java.util.List;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
+import es.minhap.sim.model.TblOrganismos;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
 
 /**
@@ -112,6 +113,16 @@ public interface ServicioOrganismo {
 	 * @return the boolean
 	 */
 	Boolean existeOrganimo(OrganismoBean organismo);
+
+	List<String> getOrganismosHijos(String search);
+
+	Integer getOrganismoIdByDir3SoloEliminado(String search);
+
+	List<TblOrganismos> getOrganismoById(String dir3);
+	
+	List<TblOrganismos> getOrganismosByPdp(Long idOrganismoPdp);
+
+	Boolean existeOrganismoServicio(Long idOrganismo, Long idServicio);
 	
 }
 

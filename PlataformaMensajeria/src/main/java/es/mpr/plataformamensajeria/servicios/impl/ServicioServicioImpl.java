@@ -51,6 +51,7 @@ import es.minhap.sim.query.TblServiciosQuery;
 import es.minhap.sim.query.TblServidoresServiciosQuery;
 import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 import es.minhap.sim.query.TblUsuariosQuery;
+import es.mpr.plataformamensajeria.beans.CanalBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServicioOrganismosBean;
 import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
@@ -807,6 +808,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 		try {
 			servicioOrganismosTO.setCreadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			servicioOrganismosTO.setFechacreacion(new Date());
+			if("ALTA_MASIVA_APLICACION".equals(source)){
+				servicioOrganismosTO.setCreadopor("ALTA_MASIVA_APLICACION");
+			}
 			tblOrganismoServicioManager.insert(servicioOrganismosTO, source, accion, accionId, descripcion);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - newServicioOrganismo:" + e);
@@ -1005,5 +1009,40 @@ public class ServicioServicioImpl implements ServicioServicio {
 			throw new BusinessException(e);
 		} 
 		return servicioOrganismo;
+	}
+
+	@Override
+	public List<CanalBean> getCanalByServicioId(String idServicio)
+			throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ViewServicios> getCanalesServicios(Integer valueOf) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OrganismosServicioBean> getServicioByOrganismo(Long organismoid) {
+		// TODO Auto-generated method stub
+		try {
+			TblOrganismosServicioQuery query = new TblOrganismosServicioQuery();
+			TblOrganismosQuery organismo = new TblOrganismosQuery();
+			organismo.setOrganismoid(organismoid);
+			query.setTblOrganismos(organismo);
+			return tblOrganismoServicioManager.getOrganismosServicioByQuery(query);
+		} catch (Exception e) {
+			logger.error("ServicioServidorImpl - getServidorOrganismo:" + e);
+		}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<ServicioBean> getServiciosPorCanal(String idAplicacion,
+			String idCanal) throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

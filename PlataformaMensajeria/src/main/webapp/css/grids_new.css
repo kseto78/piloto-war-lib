@@ -54,8 +54,9 @@ span.reply{width: 29px;}
 td.buttons{text-align: center;}
 td.buttons a:hover{opacity: 0.5; filter: alpha(opacity=50);}
 
-.btnEdit, .btnDelete, .btnView, .btnDecline, .btnReply{display: inline-block; height: 16px;}
+.btnEdit, .btnDelete, .btnView, .btnDecline, .btnReply, .btnTree{display: inline-block; height: 16px;}
 .btnEdit{background:url(../img/grids/btnEdit.gif) left top no-repeat; width: 23px;}
+.btnTree{background:url(../img/grids/btnTree.gif) left top no-repeat; width: 23px;}
 .btnDelete{background:url(../img/grids/btnDelete.gif) left top no-repeat; width: 15px;}
 .btnView{background:url(../img/grids/btnView.gif) left top no-repeat; width: 29px;}
 .btnDecline{background:url(../img/grids/btnDecline.gif) left top no-repeat; width: 16px;}

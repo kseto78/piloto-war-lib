@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.beans;
 
+import java.io.File;
 import java.util.Date;
 
 import com.map.j2ee.auditoria.ifaces.Audit;
@@ -32,6 +33,9 @@ public class ServicioOrganismosBean implements Audit {
 		this.icon = null;
 	}
 
+	/**  archivo excel */
+	protected File archivoExcel;
+	
 	/**  servicio organismo id. */
 	protected Integer servicioOrganismoId;
 	
@@ -355,5 +359,7 @@ public class ServicioOrganismosBean implements Audit {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
+
+
 
 }

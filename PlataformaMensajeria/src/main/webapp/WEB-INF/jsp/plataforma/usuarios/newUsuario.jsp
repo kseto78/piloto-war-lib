@@ -63,8 +63,8 @@
                     </p>
                       <p class="criteria">
                  		<label class="fieldText" style="width: 120px;">Activo:</label>
-						<s:checkbox theme="simple" id="usuario.isActivo" name="usuario.isActivo" value="%{usuario.activado}" />
-                      
+						<s:checkbox theme="simple" name="newActivo"
+						id="newActivo" value="%{newActivo}"></s:checkbox>                      
                     </p>      
                     <p class="criteria">
                         <label style="width: 150px;" class="fieldText"><i>(*) Campos obligatorios</i></label>

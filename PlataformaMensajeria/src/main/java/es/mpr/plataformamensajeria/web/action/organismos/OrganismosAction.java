@@ -26,6 +26,7 @@ import com.map.j2ee.util.beanutils.converters.DateConverter;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 
+import es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleAplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleServicioBean;
@@ -39,6 +40,7 @@ import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
 import es.mpr.plataformamensajeria.beans.UsuarioAplicacionBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismoPdp;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
@@ -86,6 +88,10 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	@Resource(name="servicioServidorImpl")
 	private transient ServicioServidor servicioServidor;
 	
+	/**  servicio organismoPdp. */
+	@Resource(name="servicioOrganismoPdpImpl")
+	private transient ServicioOrganismoPdp servicioOrganismoPdp;
+	
 	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private transient PlataformaMensajeriaProperties properties;
@@ -127,6 +133,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	/**  combo servicio organismos. */
 	transient List<KeyValueObject> comboServicioOrganismos = new ArrayList<>();
 	
+	/**  combo organismos hijos */
+	transient List<KeyValueObject> comboOrganismosHijos = new ArrayList<>();
+	
 	/**  combo servidores organismos. */
 	transient List<KeyValueObject> comboServidoresOrganismos = new ArrayList<>();
 	
@@ -141,6 +150,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	/**  combo tipos estados. */
 	transient List<KeyValueObject> comboTiposEstados = new ArrayList<>();
+	
+	/**  combo organismos pdp. */
+	transient List<KeyValueObject> comboOrganismosPdp = new ArrayList<>();
 	
 	/**  check del list. */
 	private String[] checkDelList;
@@ -258,6 +270,35 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		listaOrganismos =new ArrayList<>();
 		
 		return SUCCESS;
+	}
+	
+	/**
+	 * Arbol Organismos.
+	 *
+	 * @return the string
+	 * @throws BaseException the base exception
+	 */
+	public String arbolOrganismos() throws BaseException {
+		try {
+			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			logger.error("OrganismosAction - load:" + e);
+			return OrganismosAction.NO_USER;
+		}
+		if (idOrganismo == null)
+			throw new BusinessException("EL idOrganismo recibido es nulo");
+		try {
+			organismo = new OrganismoBean();
+			organismo.setOrganismoId(new Integer(idOrganismo));
+			organismo = servicioOrganismo.loadOrganismo(organismo);
+			comboOrganismosHijos = cargarComboOrganismosHijos(organismo.getDir3());
+
+			return SUCCESS;
+		} catch (NumberFormatException | BusinessException e) {
+			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { organismo.getOrganismoId().toString() });
+			logger.error("OrganismosAction - load:" + e);
+			throw new BusinessException(mensg);
+		} 
 	}
 
 	/**
@@ -460,6 +501,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					organismoBBDD.setNombre(organismo.getNombre());
 					organismoBBDD.setDescripcion(organismo.getDescripcion());
 				}
+				organismoBBDD.setIdOrganismoPdp(organismo.getIdOrganismoPdp());
 				organismoBBDD.setActivo(organismo.getActivo());
 				organismo = organismoBBDD;
 				if (validaObligatorios(organismoBBDD, true)) {
@@ -999,8 +1041,31 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			comboServidoresOrganismos = cargarComboServidoresOrganismos();
 			comboServidoresPlan = cargarComboServidoresPlan();
 			comboServiciosPlan = cargarComboServiciosPlan();
+			comboOrganismosPdp = cargarComboOrganismosPdp();
 			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
 		}
+	}
+
+	private List<KeyValueObject> cargarComboOrganismosPdp() {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+
+		KeyValueObject option;
+
+		ArrayList<OrganismoPdpBean> keys = null;
+		try {
+			keys = (ArrayList<OrganismoPdpBean>) servicioOrganismoPdp.getOrganismosPdp();
+		} catch (BusinessException e) {
+			logger.error("OrganismosAction - cargarComboOrganismosPdp:" + e);
+		}
+
+		if (keys != null && !keys.isEmpty())
+			for (OrganismoPdpBean key : keys) {
+				option = new KeyValueObject();
+				option.setCodigo(key.getOrganismoPdpId().toString());
+				option.setDescripcion(key.getNombre());
+				result.add(option);
+			}
+		return result;
 	}
 
 	/**
@@ -1084,6 +1149,30 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		return result;
 	}
 
+	/**
+	 * Cargar combo organismos hijos.
+	 * @param dir3 
+	 *
+	 * @return the list
+	 */
+	///MIGRADO
+	private List<KeyValueObject> cargarComboOrganismosHijos(String dir3) {
+		List<KeyValueObject> result = new ArrayList<>();
+
+		KeyValueObject option;
+
+		ArrayList<String> keys = null;
+		keys = (ArrayList<String>) servicioOrganismo.getOrganismosHijos(dir3);
+
+		if (keys != null && !keys.isEmpty())
+			for (String key : keys) {
+				option = new KeyValueObject();
+				option.setCodigo(key);				
+				result.add(option);
+			}
+		return result;
+	}
+	
 	/**
 	 * Cargar combo servidores plan.
 	 *
@@ -2187,6 +2276,19 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		this.comboTiposEstados = comboTiposEstados;
 	}
 
+	/**
+	 * @return the comboOrganismosPdp
+	 */
+	public List<KeyValueObject> getComboOrganismosPdp() {
+		return comboOrganismosPdp;
+	}
+
+	/**
+	 * @param comboOrganismosPdp the comboOrganismosPdp to set
+	 */
+	public void setComboOrganismosPdp(List<KeyValueObject> comboOrganismosPdp) {
+		this.comboOrganismosPdp = comboOrganismosPdp;
+	}
 
 	/**
 	 * Obtener recovery.
@@ -2205,6 +2307,22 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 */
 	public void setRecovery(String recovery) {
 		this.recovery = recovery;
+	}	
+
+	/**
+	 * @return the comboOrganismosHijos
+	 */
+	public List<KeyValueObject> getComboOrganismosHijos() {
+		return comboOrganismosHijos;
 	}
+
+	/**
+	 * @param comboOrganismosHijos the comboOrganismosHijos to set
+	 */
+	public void setComboOrganismosHijos(List<KeyValueObject> comboOrganismosHijos) {
+		this.comboOrganismosHijos = comboOrganismosHijos;
+	}
+
+
 	
 }

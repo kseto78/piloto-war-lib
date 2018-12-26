@@ -25,15 +25,49 @@
 									
 				<ul class="tree">
 					<s:if test="%{organismo.codUnidadSuperior != null && organismo.codUnidadSuperior != ''}">						
-						<s:label theme="simple" 
-								id="organismo" name="organismo" 
-								value="%{organismo.codUnidadSuperior}" style="padding-top: 4px;padding-bottom: 4px;"/>
-					
+						<label theme="simple"
+					 							id="organismo" name="organismo.organismoId" style="padding-top: 4px;padding-bottom: 4px;">
+						 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"A\"}">
+						 		<img src="img/iconosOrganismos/A.png" height="10" width="10">
+						 	</s:if>
+						 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"E\"}">
+						 		<img src="img/iconosOrganismos/E.png" height="10" width="10">
+						 	</s:if>	
+						 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"I\"}">
+						 		<img src="img/iconosOrganismos/I.png" height="10" width="10">
+						 	</s:if>
+						 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"U\"}">
+						 		<img src="img/iconosOrganismos/U.png" height="10" width="10">
+						 	</s:if>
+						 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"L\"}">
+						 		<img src="img/iconosOrganismos/L.png" height="10" width="10">
+						 	</s:if>
+						 		<s:url value="%{organismo.codUnidadSuperior}" />	
+						 </label>					
 					 <ul>
 						<li>
 					</s:if>							
 								<b><s:if test="%{organismo.codUnidadSuperior != null && organismo.codUnidadSuperior != ''}">
-									<s:label theme="simple" id="organismo" name="organismo" value="%{organismo.dir3}" />									
+									<label theme="simple"
+					 							id="organismo" name="organismo" style="padding-top: 4px;padding-bottom: 4px;">
+					 					<s:if test="%{organismo.dir3.substring(0,1) == \"A\"}">
+									 		<img src="img/iconosOrganismos/A.png" height="10" width="10">
+									 	</s:if>
+									 	<s:if test="%{organismo.dir3.substring(0,1) == \"E\"}">
+									 		<img src="img/iconosOrganismos/E.png" height="10" width="10">
+									 	</s:if>	
+									 	<s:if test="%{organismo.dir3.substring(0,1) == \"I\"}">
+									 		<img src="img/iconosOrganismos/I.png" height="10" width="10">
+									 	</s:if>
+									 	<s:if test="%{organismo.dir3.substring(0,1) == \"U\"}">
+									 		<img src="img/iconosOrganismos/U.png" height="10" width="10">
+									 	</s:if>
+									 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"L\"}">
+						 					<img src="img/iconosOrganismos/L.png" height="10" width="10">
+						 				</s:if>
+					 							<s:url value="%{organismo.dir3}" />	
+		 							</label>
+<%-- 									<s:label theme="simple" id="organismo" name="organismo" value="%{organismo.dir3}" />									 --%>
 									<ul class="hijos" style="margin-left:170px"></b>
 								</s:if>	
 								<s:else>
@@ -42,8 +76,25 @@
 								</s:else>
 							     	<s:iterator value="comboOrganismosHijos" status="comboOrganismosHijos">
 							       		<li>
-											<s:label theme="simple"
-					 							id="organismo" name="organismo.organismoId" value="%{codigo}" />					       		
+							       			<label theme="simple"
+					 							id="organismo" name="organismo.organismoId">
+					 							<s:if test="%{codigo.substring(0,1) == \"A\"}">
+											 		<img src="img/iconosOrganismos/A.png" height="10" width="10">
+											 	</s:if>
+											 	<s:if test="%{codigo.substring(0,1) == \"E\"}">
+											 		<img src="img/iconosOrganismos/E.png" height="10" width="10">
+											 	</s:if>	
+											 	<s:if test="%{codigo.substring(0,1) == \"I\"}">
+											 		<img src="img/iconosOrganismos/I.png" height="10" width="10">
+											 	</s:if>
+											 	<s:if test="%{codigo.substring(0,1) == \"U\"}">
+											 		<img src="img/iconosOrganismos/U.png" height="10" width="10">
+											 	</s:if>
+											 	<s:if test="%{organismo.codUnidadSuperior.substring(0,1) == \"L\"}">
+						 							<img src="img/iconosOrganismos/L.png" height="10" width="10">
+						 						</s:if>												
+												<s:url value="%{codigo}" />	
+											</label>															       		
 							       		</li>	 
 									</s:iterator> 					       
 						         </ul>

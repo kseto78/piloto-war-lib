@@ -115,4 +115,8 @@ public interface ServicioAplicacion {
 	 */
 	boolean existeUsuario(String usuario);
 
+//	boolean validarSms(Long idAplicacion);
+
+//	void smsEnviado(Long idAplicacion);
+
 }

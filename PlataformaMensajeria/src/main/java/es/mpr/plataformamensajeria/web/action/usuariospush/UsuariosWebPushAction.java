@@ -286,7 +286,8 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
         KeyValueObject option;
         ArrayList<AplicacionBean> keys;
 		String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);		
+		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+		long canalId = 5;		
 		keys = (ArrayList<AplicacionBean>)servicioAplicacion.getAplicacionesMenu(rolUsuario, idUsuario);
 		if(keys!=null&&!keys.isEmpty()){
 	        for (AplicacionBean key :keys) {

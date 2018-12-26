@@ -147,6 +147,9 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	
 	/**  check del list. */
 	private String[] checkDelList;
+	
+	/**  new activo. */
+	private String newActivo;
 
 	/**  combo servidores. */
 	List<KeyValueObject> comboServidores = new ArrayList<>();
@@ -297,7 +300,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		}
 		if (aplicacion != null) {
 
-			if (aplicacion.getIsActivo() != null && aplicacion.getIsActivo().indexOf("activo") != -1) {
+			if (newActivo != null && newActivo.equals("true")) {
 				aplicacion.setActivo(true);
 			} else {
 				aplicacion.setActivo(false);
@@ -1271,6 +1274,20 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	public void setRecovery(String recovery) {
 		this.recovery = recovery;
+	}
+
+	/**
+	 * @return the newActivo
+	 */
+	public String getNewActivo() {
+		return newActivo;
+	}
+
+	/**
+	 * @param newActivo the newActivo to set
+	 */
+	public void setNewActivo(String newActivo) {
+		this.newActivo = newActivo;
 	}
 	
 	

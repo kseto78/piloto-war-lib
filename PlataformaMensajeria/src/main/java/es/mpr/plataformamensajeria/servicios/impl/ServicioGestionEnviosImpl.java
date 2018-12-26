@@ -1276,13 +1276,13 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 				ViewHistoricoMultidestQuery query = new ViewHistoricoMultidestQuery();
 				query.setMensajeid(Long.parseLong(idMensaje));
 				query.setDestinatariosmensajes(Long.parseLong(idDestinatariosMensajes));
-				query.addOrder("historicoid", OrderType.DESC);
+				query.addOrder("fecha", OrderType.DESC);
 				List<ViewHistoricoMultidest> listaHistoricos = viewHistoricoManager.getHistoricoMultidest(query);
 				result = getListHistoricoMultidestBean(listaHistoricos);
 			} else {
 				ViewHistoricoQuery query = new ViewHistoricoQuery();
 				query.setMensajeid(Long.parseLong(idMensaje));
-				query.addOrder("historicoid", OrderType.DESC);
+				query.addOrder("fecha", OrderType.DESC);
 				List<ViewHistorico> listaHistoricos = viewHistoricoManager.getHistorico(query);
 				result = getListHistoricoBean(listaHistoricos);
 			}
@@ -1298,13 +1298,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getIntercambiosMisim(int, int, java.lang.Long)
 	 */
 	@Override
-	public PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote) throws BusinessException {
+	public PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote, Long idMensaje) throws BusinessException {
 		PaginatedList<ViewMisimBean> result = new PaginatedList<>();
 
 		try {
 			//traemos los intercambios
 			ViewMisimQuery query = new ViewMisimQuery();
 			query.setIdLote(idLote);
+			query.setIdMensaje(idMensaje); //El criteria esta modificado para que incluya los idMensajes que son nulos
 			List<ViewMisim> listaViewMisimTO = viewMisimManager.getIntercambiosMisimByQuery(query, start, size);
 			
 			if(!listaViewMisimTO.isEmpty()){

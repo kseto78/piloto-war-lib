@@ -514,7 +514,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 			
 			result = servicioGestionEnvios.getIntercambiosMisim(inicio, (export) ? -1
-					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), Long.valueOf(idLote));
+					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), Long.valueOf(idLote),Long.valueOf(idMensaje));
 			totalSize = result.getTotalList();
 			resultCount = (totalSize != null) ? totalSize.toString() : "0";
 			listaIntercambiosMisim = result.getPageList();

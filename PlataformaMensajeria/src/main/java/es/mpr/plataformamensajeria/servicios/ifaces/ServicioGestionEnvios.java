@@ -220,7 +220,7 @@ public interface ServicioGestionEnvios {
 	 * @return intercambios misim
 	 * @throws BusinessException the business exception
 	 */
-	PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote) throws BusinessException;
+	PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote, Long idMensaje) throws BusinessException;
 
 	/**
 	 * Load misim.

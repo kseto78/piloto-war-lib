@@ -21,8 +21,8 @@ function makeRequest(){
 		});
 	$.ajax({
         type: "POST",
-        url: "ajaxLoadServicios.action",
-        data: {idAplicacion:document.getElementById('usuariosPush.aplicacionId').value}, // serializes the form's elements.
+        url: "ajaxLoadServiciosCanal.action",
+        data: {idAplicacion:document.getElementById('usuariosPush.aplicacionId').value,idCanal:4}, // serializes the form's elements.
         success: function(data)
         {
      	  var items = data.items;

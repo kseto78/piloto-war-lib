@@ -12,7 +12,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
-import org.jfree.util.Log;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +19,6 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -110,8 +108,12 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     				String userName = doc.getElementsByTagName(etiquetaUsername).item(0).getTextContent();
     				
     				if(userName != null && userName != null){
-    					Integer rolUsuarioId = tblUsuariosManager.getRolByUsername(userName);
-    			    	Integer idUsuario = tblUsuariosManager.getUsuarioByUsername(userName).intValue();
+    					Integer rolUsuarioId = tblUsuariosManager.getRolByUsername(userName); 
+    					Integer idUsuario = null;
+//    					Integer idUsuario = tblUsuariosManager.getUsuarioByUsernameActivo(userName).intValue();    					
+    					if(tblUsuariosManager.getUsuarioByUsernameActivo(userName) != null){
+    						idUsuario = tblUsuariosManager.getUsuarioByUsernameActivo(userName).intValue();
+    					}
     			    	
     			    	TblUsuariosAplicacionesQuery query = new TblUsuariosAplicacionesQuery();
     			    	TblUsuariosQuery usuarioQuery = new TblUsuariosQuery();

@@ -9,6 +9,7 @@ import com.map.j2ee.security.perm.model.GroupVO;
 import com.map.j2ee.security.perm.model.UserVO;
 import com.map.j2ee.util.Constants;
 
+import es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesHistoricosBean;
@@ -94,8 +95,51 @@ public class TableWrapper extends TableDecorator {
 
 		OrganismoBean organismo = (OrganismoBean) getCurrentRowObject();
 		String idOrganismo = organismo.getOrganismoId().toString();
+		
+		return "<div id=\"ajaxloader_ajax_"+organismo.getOrganismoId()+"\" style=\"float:left\"> <span  class=\"btnTree\" title=\"Arbol\" onclick=\"return loadArbol(this,"+ idOrganismo +")\"></span></div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editOrganismo.action?idOrganismo=" + idOrganismo + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismo.getNombre() + "');\" href=\"deleteOrganismo.action?idOrganismo=" + idOrganismo + "\"></a>";		
+	}
+	
+	
+	/**
+	 * Obtener organismo action.
+	 *
+	 * @return organismo action
+	 */
+	public String getOrganismoDir3() {
 
-		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editOrganismo.action?idOrganismo=" + idOrganismo + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismo.getNombre() + "');\" href=\"deleteOrganismo.action?idOrganismo=" + idOrganismo + "\"></a>";
+		OrganismoBean organismo = (OrganismoBean) getCurrentRowObject();
+		String dir3Organismo = organismo.getDir3().toString();
+		String icono = null;
+		
+		if(dir3Organismo.substring(0,1).equalsIgnoreCase("A")){
+			icono = "img src=\"img/iconosOrganismos/A.png";
+		}
+		if(dir3Organismo.substring(0,1).equalsIgnoreCase("E")){
+			icono = "img src=\"img/iconosOrganismos/E.png";
+		}
+		if(dir3Organismo.substring(0,1).equalsIgnoreCase("I")){
+			icono = "img src=\"img/iconosOrganismos/I.png";
+		}
+		if(dir3Organismo.substring(0,1).equalsIgnoreCase("U")){
+			icono = "img src=\"img/iconosOrganismos/U.png";
+		}
+		if(dir3Organismo.substring(0,1).equalsIgnoreCase("L")){
+			icono = "img src=\"img/iconosOrganismos/L.png";
+		}
+		
+		return "<"+icono+"\" height=\"12\" width=\"12\">"+dir3Organismo; 
+	}
+	/**
+	 * Obtener organismoPdp action.
+	 *
+	 * @return organismoPdp action
+	 */
+	public String getOrganismoPdpAction() {
+
+		OrganismoPdpBean organismoPdp = (OrganismoPdpBean) getCurrentRowObject();
+		String idOrganismoPdp = organismoPdp.getOrganismoPdpId().toString();
+		
+		return "<div id=\"ajaxloader_ajax_"+organismoPdp.getOrganismoPdpId()+"\" style=\"float:left\"> <span  class=\"btnTree\" title=\"Arbol\" onclick=\"return loadArbol(this,"+ idOrganismoPdp +")\"></span></div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editOrganismoPdp.action?idOrganismo=" + idOrganismoPdp + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismoPdp.getNombre() + "');\" href=\"deleteOrganismoPdp.action?idOrganismo=" + idOrganismoPdp + "\"></a>";		
 	}
 	
 	/**

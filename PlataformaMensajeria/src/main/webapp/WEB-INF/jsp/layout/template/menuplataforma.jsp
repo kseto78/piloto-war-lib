@@ -31,16 +31,24 @@
 			                <ul>
 			                    <li><a href="buscarAplicaciones.action" id="desplegable21" class="Aplicaciones">Aplicaciones</a></li>
 			                    <li><a href="buscarServicios.action" id="desplegable22" class="Servicios">Servicios</a></li>
-			                    <li><a href="buscarPlanificaciones.action" id="desplegable23" class="Planificaciones">Planificaciones</a></li>
-			                	<li><a href="listarOrganismos.action" id="desplegable24" class="Usuarios">Organismos</a></li>
+			                    <li><a href="buscarPlanificaciones.action" id="desplegable23" class="Planificaciones">Planificaciones</a></li>			                	
 	 		                	<li><a href="buscarServiciosMoviles.action" id="desplegable25" class="Servicios">Servicios Moviles</a>
 			                </ul>          
 		                </div>  
-		                <h3><span onclick="fncDesplegarMenu(3)" class="menuDesplegable">Configuración Seguridad</span></h3>
+		                   <h3><span onclick="fncDesplegarMenu(3)" class="menuDesplegable">Configuración Seguridad</span></h3>
  		                <div id="desplegable3">
 <!-- 						<div id="desplegable3"> -->
 			                <ul>	
 			                    <li><a href="buscarUsuarios.action" id="desplegable31" class="Usuarios">Usuarios</a></li>
+			                    <!--<li><a href="../../Seguridad/Roles/Creacion.html" class="Roles">Roles</a></li>-->
+			                </ul>
+			             </div>
+			             <h3><span onclick="fncDesplegarMenu(20)" class="menuDesplegable">Configuración Organismos</span></h3>
+ 		                <div id="desplegable20">
+			                <ul>	
+			                	<li><a href="listarOrganismos.action" id="desplegable201" class="Usuarios">Organismos</a></li>
+			                    <li><a href="altasMasivasOrganismosView.action" id="desplegable202" class="Usuarios">Altas masivas</a></li>
+			                    <li><a href="listarOrganismosPdp.action" id="desplegable203" class="Usuarios">Organismos Pdp</a></li>
 			                    <!--<li><a href="../../Seguridad/Roles/Creacion.html" class="Roles">Roles</a></li>-->
 			                </ul>
 			             </div>
@@ -63,7 +71,9 @@
                 
                <h3 id="desplegable8"><a href="buscarUsuariosPush.action">Usuarios Push</a></h3> 
                
-                <h3 id="desplegable9"><a href="buscarUsuariosWebPush.action">Usuarios Web Push</a></h3>                
+                <h3 id="desplegable9"><a href="buscarUsuariosWebPush.action">Usuarios Web Push</a></h3>
+                
+                 <h3 id="desplegable10"><a href="envioMensajesHome.action">Envío de Mensajes</a></h3>                 
                 <!-- <ul>
                     <li><a href="#" class="CanalEMAIL">Canal EMAIL</a></li>
                     <li><a href="#" class="CanalSMS">Canal SMS</a></li>
@@ -124,6 +134,7 @@ function cargar(){
 	var deplegable1= document.getElementById("desplegable1");
 	var deplegable2= document.getElementById("desplegable2");
 	var deplegable3= document.getElementById("desplegable3");
+	var deplegable20= document.getElementById("desplegable20");
 	var elem1 = "";
 	var menu1 = "";
 
@@ -176,11 +187,22 @@ function cargar(){
 		elem1.style.backgroundColor="#003366";
 		elem1.style.color = "white";
 		menu1=2;	
-	}else if(url.includes('Organismos.action') || url.includes('Organismo.action')){
-		elem1 = document.getElementById('desplegable24');
-		elem1.style.backgroundColor="#003366";
-		elem1.style.color = "white";
-		menu1=2;	
+	}else if(url.includes('Organismos') || url.includes('Organismo')){
+			if(url.includes('altasMasivas')){
+				elem1 = document.getElementById('desplegable202');
+				elem1.style.backgroundColor="#003366";
+				elem1.style.color = "white";
+			} else if(url.includes('OrganismosPdp') || url.includes('OrganismoPdp')){
+				elem1 = document.getElementById('desplegable203');
+				elem1.style.backgroundColor="#003366";
+				elem1.style.color = "white";
+			} else{
+				elem1 = document.getElementById('desplegable201');
+				elem1.style.backgroundColor="#003366";
+				elem1.style.color = "white";
+				}
+		
+		menu1=20;	
 	}else if(url.endsWith('buscarServiciosMoviles.action') || url.includes('ServicioMovil.action')){
 		elem1 = document.getElementById('desplegable25');
 		elem1.style.backgroundColor="#003366";
@@ -241,16 +263,24 @@ function cargar(){
 	if(menu1 == 1){
 		deplegable2.style.display='none';
 		deplegable3.style.display='none';
+		deplegable20.style.display='none';
 	}else if(menu1 == 2){
 		deplegable1.style.display='none';
 		deplegable3.style.display='none';
+		deplegable20.style.display='none';
 	}else if(menu1 == 3){
 		deplegable1.style.display='none';
 		deplegable2.style.display='none';
+		deplegable20.style.display='none';
 	}else if(menu1 == 4){
 		deplegable1.style.display='none';
 		deplegable2.style.display='none';
 		deplegable3.style.display='none';
+		deplegable20.style.display='none';
+	}else if(menu1 == 20){
+		deplegable1.style.display='none';
+		deplegable2.style.display='none';
+		deplegable3.style.display='none';		
 	}
 
 

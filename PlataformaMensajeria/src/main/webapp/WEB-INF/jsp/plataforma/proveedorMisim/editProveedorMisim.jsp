@@ -291,7 +291,13 @@
 						maxlength="255" cssClass="" />
 					</p>
 					
-				
+					<p class="criteria" id="proveedorCompany" style="display: none">
+						<label style="width: 130px;" class="fieldText">Compañia (*):</label>
+						<s:select id="proveedorMisim.company" name="proveedorMisim.company" 
+								list="comboProductosCompany" listKey="codigo" emptyOption="true"
+								listValue="descripcion"	cssClass="" cssStyle="width:180px" 
+								value="%{proveedorMisim.company}" />				
+					</p>	
 			</div>
 		</div>	
 		

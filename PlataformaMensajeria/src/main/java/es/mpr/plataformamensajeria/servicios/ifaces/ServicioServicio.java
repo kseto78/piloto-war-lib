@@ -5,7 +5,10 @@ import java.util.List;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
+import es.minhap.plataformamensajeria.iop.beans.OrganismosServicioBean;
 import es.minhap.sim.model.TblServicios;
+import es.minhap.sim.model.ViewServicios;
+import es.mpr.plataformamensajeria.beans.CanalBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServicioOrganismosBean;
 import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
@@ -242,5 +245,22 @@ public interface ServicioServicio {
 	 * @throws BusinessException the business exception
 	 */
 	public List<ServicioBean> getListServicioBean(List<TblServicios> lista) throws BusinessException;
+
+	/**
+	 * Obtener list canal bean.
+	 *
+	 * @param lista the lista
+	 * @return list canal bean
+	 * @throws BusinessException the business exception
+	 */
+	List<CanalBean> getCanalByServicioId(String idServicio)  throws BusinessException;
+
+	List<ViewServicios> getCanalesServicios(Integer valueOf);
+
+	List<ServicioBean> getServiciosPorCanal(String idAplicacion, String idCanal) throws BusinessException;
+
+	List<OrganismosServicioBean> getServicioByOrganismo(Long organismoid);
+
 	
+		
 }

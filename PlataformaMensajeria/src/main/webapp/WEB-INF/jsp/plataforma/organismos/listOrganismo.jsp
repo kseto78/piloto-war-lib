@@ -21,6 +21,8 @@
 		<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp" %>
+		
+		<sj:dialog  id="dialogTree" title="ARBOL ORGANISMO" cssStyle="display:none" autoOpen="false"></sj:dialog>
             <div class="criteria">
 		<s:form id="frmBuscarOrganismos" method="POST" action="buscarOrganismos"
 		validate="false" theme="css_xhtml">            	
@@ -168,8 +170,8 @@
 				<%-- nombre --%>
 				<display:column property="organismoId" titleKey="field.organismo.id" sortable="false"
 					headerClass="TH30 separator center" class="center" />	
-				<display:column property="dir3" titleKey="field.organismo.DIR3" sortable="true"
-					headerClass="TH100 separator center" class="center" />			
+				<display:column property="organismoDir3" titleKey="field.organismo.DIR3" sortable="true"
+					headerClass="TH100 separator center" class="" media="html"  />
 				<display:column property="nombre" titleKey="field.organismo.nombre" sortable="true"
 					headerClass="TH170 separator center" class="" />
 				
@@ -184,7 +186,7 @@
 					headerClass="TH50 separator center" class="center" /> 
 				<%-- acciones --%>
 				<display:column property="organismoAction"
-					headerClass="TH45 separator center" class="" media="html" />
+					headerClass="TH75 separator center" class="" media="html" />
 			</display:table>
 			<table>
 			<tfoot>

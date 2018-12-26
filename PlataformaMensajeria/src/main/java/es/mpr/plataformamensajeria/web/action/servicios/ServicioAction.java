@@ -1945,7 +1945,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
-	 * Verifica que se ha introducido por lo menos un día de la semana y las
+	 * Verifica que se ha introducido por lo menos un dÃ­a de la semana y las
 	 * horas de inicio y fin.
 	 *
 	 * @param planificacionServidor the planificacion servidor
@@ -2361,8 +2361,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 				Long id = servicioServidor.loadServidorOrganismoBean(servidorOrganismos).getServidorId();
 				// ////borrar planificaciones del organismo que tienen el mismo servidor y servicio ///////
-				////Esto antes no se hacía y no se tenía en cuenta el servicio////////
-				////Comprobar si está bien/////
+				////Esto antes no se hacÃ­a y no se tenÃ­a en cuenta el servicio////////
+				////Comprobar si estÃ¡ bien/////
 				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion
 						.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
 				if (null != listaPlanificacionesOrganismos) {
@@ -2840,7 +2840,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	///MIGRADO
 	/**
-	 * Método que resuelve el lugar donde tiene que volver.
+	 * MÃ©todo que resuelve el lugar donde tiene que volver.
 	 *
 	 * @return volver
 	 */
@@ -2859,7 +2859,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	///MIGRADO
 	/**
-	 * Método que resuelve el lugar donde tiene que volver.
+	 * MÃ©todo que resuelve el lugar donde tiene que volver.
 	 *
 	 * @return volver aplicacion
 	 */

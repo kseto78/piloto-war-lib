@@ -625,6 +625,9 @@ public class ServicioServidorImpl implements ServicioServidor {
 			soTO.setFechacreacion(new Date());
 			String modificador = PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto();
 			soTO.setCreadopor(modificador);
+			if("ALTA_MASIVA_APLICACION".equals(source)){
+				soTO.setCreadopor("ALTA_MASIVA_APLICACION");
+			}
 			tblServidoresOrganismosManager.insert(soTO, source, accion, accionId, descripcion);
 		} catch (Exception e) {
 			logger.error("ServicioServidorImpl - newServidoresOrganismo:" + e);

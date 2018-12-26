@@ -1176,6 +1176,11 @@
 			method="ajaxLoadServicios">
 			<result name="success">/uploadOK.jsp</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>		
+		<action name="ajaxLoadCanales" class="serviciosAction"
+			method="ajaxLoadCanales">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
 <!-- 		<action name="searchAction" class="es.mpr.plataformamensajeria.web.action.organismos.AutoCompleteAction">
                         <result type="json">
@@ -2120,8 +2125,91 @@
 		</action>
 
 		<!-- ************************************* -->
-		<!-- PLATAFORMA MENSAJERIA - ORGNISMOS -->
+		<!-- PLATAFORMA MENSAJERIA - ORGANISMOS PDP-->
 		<!-- ************************************* -->
+		<action name="listarOrganismosPdp" class="organismosPdpAction"
+			method="newSearch">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.searchOrganismoPdp</result>
+		</action>
+		<action name="buscarOrganismosPdp" class="organismosPdpAction"
+			method="search">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.searchOrganismoPdp</result>
+		</action>
+		<action name="deleteOrganismoPdp" class="organismosPdpAction"
+			method="delete">
+			<result name="success" type="redirectAction">
+				<param name="actionName">buscarOrganismosPdp</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		<action name="deleteOrganismosPdpSeleccionados" class="organismosPdpAction"
+			method="deleteSelected">
+			<result name="success" type="redirectAction">
+				<param name="actionName">buscarOrganismosPdp</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		<action name="nuevoOrganismoPdp" class="organismosPdpAction">
+			<result name="success" type="tiles">pages.organismoPdp.create</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		<action name="salveOrganismoPdp" class="organismosPdpAction" method="create">
+			<result name="error" type="tiles">pages.organismoPdp.create</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editOrganismoPdp</param>
+				<param name="parse">true</param> 
+				<param name="idOrganismo">${idOrganismo}</param>
+			</result>
+		</action>
+		<action name="editOrganismoPdp" class="organismosPdpAction" method="load">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismoPdp.edit</result>
+		</action>
+		<action name="updateOrganismoPdp" class="organismosPdpAction"
+			method="update">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editOrganismoPdp</param>
+				<param name="parse">true</param> 
+				<param name="idOrganismo">${organismo.organismoPdpId}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		<action name="arbolOrganismoPdp" class="organismosPdpAction"
+			method="arbolOrganismos">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismoPdp.tree</result>
+		</action>
+		<action name="arbolOrganismoPdpSeleccion" class="organismosPdpAction"
+			method="arbolOrganismos">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismoPdp.treeSelect</result>
+		</action>
+		<action name="arbolOrganismoPdpSeleccionServidor" class="organismosPdpAction"
+			method="arbolOrganismos">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismoPdp.treeSelectServer</result>
+		</action>		
+		<!-- ************************************* -->
+		<!-- PLATAFORMA MENSAJERIA - ALTAS MASIVAS -->
+		<!-- ************************************* -->		
+		<action name="altasMasivasOrganismosView" class="altaMasivaAction"
+			method="newSearch">			
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismo.altasMasivas</result>
+		</action>
+		<action name="ajaxLoadServiciosOrganismos" class="altaMasivaAction"
+			method="ajaxLoadServicios">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		<action name="altasMasivasOrganismos" class="altaMasivaAction"
+			method="ejecucionAltaMasiva">			
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismo.altasMasivas</result>
+		</action>
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - ORGANISMOS -->
 		<!-- ************************************* -->
@@ -2129,6 +2217,11 @@
 			method="newSearch">
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success" type="tiles">pages.searchOrganismo</result>
+		</action>
+		<action name="arbolOrganismo" class="organismosAction"
+			method="arbolOrganismos">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.organismo.tree</result>
 		</action>
 		<action name="buscarOrganismos" class="organismosAction"
 			method="search">
@@ -2147,7 +2240,6 @@
 				<param name="idOrganismo">${organismo.organismoId}</param>
 			</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
-
 		</action>
 		<action name="deleteOrganismo" class="organismosAction"
 			method="delete">

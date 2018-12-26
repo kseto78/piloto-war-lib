@@ -271,6 +271,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 				organismoTO.setFechaActivo(null);
 			}
 			organismoTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+			if("ALTA_MASIVA_APLICACION".equals(source)){
+				organismoTO.setModificadopor("ALTA_MASIVA_APLICACION");
+			}
 			tblOrganismosManager.update(organismoTO, source, accion, accionId);
 			
 		}
@@ -352,6 +355,57 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return null;
 		}
 	}
+	
+	@Override
+	public Integer getOrganismoIdByDir3SoloEliminado(String search) {
+		try {
+			return queryExecutorOrganismosImpl.getOrganismoIdByDir3SoloEliminado(search);
+
+		} catch (Exception e) {
+			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			return null;
+		}
+	}
+	
+	@Override
+	public List<TblOrganismos> getOrganismoById(String dir3) {
+		try {
+			TblOrganismosQuery query = new TblOrganismosQuery();
+			query.setDir3(dir3);
+			query.setDir3Comparator(TextComparator.UPPERCASE_TRANSLATE);
+			query.setEliminadoIsNull(true);
+			List<TblOrganismos> lista = tblOrganismosManager
+					.getOrganismosByQuery(query);
+
+			return (null != lista && !lista.isEmpty()) ? lista : null;
+
+		} catch (Exception e) {
+			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			return null;
+		}
+	}
+	
+	@Override
+	public List<String> getOrganismosHijos(String search) {
+		try {
+			return queryExecutorOrganismosImpl.getOrganismosHijos(search);
+
+		} catch (Exception e) {
+			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			return null;
+		}
+	}
+	
+	@Override
+	public List<TblOrganismos> getOrganismosByPdp(Long idOrganismosPdp) {
+		try {
+			return queryExecutorOrganismosImpl.getOrganismosByPdp(idOrganismosPdp);
+
+		} catch (Exception e) {
+			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			return null;
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#existeOrganimo(es.mpr.plataformamensajeria.beans.OrganismoBean)
@@ -364,6 +418,28 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			query.setDir3Comparator(TextComparator.UPPERCASE_TRANSLATE);
 			List<TblOrganismos> lista = tblOrganismosManager
 					.getOrganismosByQuery(query);
+
+			return (null != lista && !lista.isEmpty()) ? true : false;
+
+		} catch (Exception e) {
+			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			return false;
+		}
+	}
+	
+	@Override
+	public Boolean existeOrganismoServicio(Long idOrganismo,Long idServicio) {
+		try {
+			TblOrganismosServicioQuery query = new TblOrganismosServicioQuery();
+			TblServiciosQuery servicio = new TblServiciosQuery();
+			servicio.setServicioid(idServicio);
+			TblOrganismosQuery organismo = new TblOrganismosQuery();
+			organismo.setOrganismoid(idOrganismo);
+			query.setTblOrganismos(organismo);
+			query.setTblServicios(servicio);
+			
+			List<OrganismosServicioBean> lista = tblOrganismosServicioManager.getOrganismosServicioByQuery(query);
+					
 
 			return (null != lista && !lista.isEmpty()) ? true : false;
 

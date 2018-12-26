@@ -150,8 +150,15 @@
 				codigoProductoLabel.disabled="disabled";
 				codigoProductoLabel.style.visibility="visible";
 				codigoProductoLabel.style.display="block";
-			}
+			}			
 		}
+		if (combo.value == 3) {
+				document.getElementById("proveedorCompany").style.display = "";
+			}
+		else{
+				document.getElementById("proveedorCompany").style.display = "none";
+				document.getElementById("proveedorMisim.company").selectedIndex = "0";
+			}		
 	}
 
 	function checkEndpoints(combo){

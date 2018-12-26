@@ -40,8 +40,8 @@
 				</p>
 				<p class="criteria">
 					<label theme="simple" style="width: 120px;" class="fieldText">Activo:</label>
-					<s:checkbox theme="simple" name="aplicacion.isActivo"
-						id="aplicacion.isActivo" value="%{aplicacion.activado}"></s:checkbox>
+					<s:checkbox theme="simple" name="newActivo"
+						id="newActivo" value="%{newActivo}"></s:checkbox>
 				</p>
 				<p class="criteria">
 					<label style="width: 150px;" class="fieldText"><i>(*)

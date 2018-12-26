@@ -163,7 +163,8 @@ function makeRequest(){
 								onchange="validateDates('gestionEnvioBean.fechaDesde','gestionEnvioBean.fechaHasta',this)"
 								theme="simple"
 								size="10" 
-								cssClass="datepicker">
+								cssClass="datepicker"
+								autocomplete="off">
 								<s:param name="value">
     							<s:date name="gestionEnvioBean.fechaDesde" format="dd/MM/yyyy HH:mm"/>
   						</s:param>
@@ -175,7 +176,8 @@ function makeRequest(){
 								onchange="validateDates('gestionEnvioBean.fechaDesde','gestionEnvioBean.fechaHasta',this)"
 								theme="simple"
 								size="10" 
-								cssClass="datepicker">
+								cssClass="datepicker"
+								autocomplete="off">
 						<s:param name="value">
     						<s:date name="gestionEnvioBean.fechaHasta" format="dd/MM/yyyy HH:mm"/>
   						</s:param>

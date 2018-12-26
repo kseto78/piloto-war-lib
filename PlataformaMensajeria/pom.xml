@@ -7,13 +7,12 @@
 	<name>${project.artifactId}</name>
 	<description>${project.artifactId}</description>
 	<version>1.0.0</version>
-	<groupId>es.minhap</groupId>
 	
-	<!--<parent>
+	<parent>
 		<groupId>es.minhap</groupId>
 		<artifactId>minhap-sim-parent</artifactId>
 		<version>1.0.0</version>
-	</parent>-->
+	</parent>
 	
 	<properties>
 		<encoding>UTF-8</encoding>
@@ -279,7 +278,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>PlataformaMensajeriaIOP</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.1</version>
 			<exclusions>
  				<!-- <exclusion> 
 		          <groupId>es.minhap.sim</groupId> 
@@ -839,14 +838,6 @@
 					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
-			 <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12.4</version>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
-	</plugin>
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-war-plugin</artifactId>
@@ -868,16 +859,4 @@
 			</plugin>			
 		</plugins>
 	</build>
-	<distributionManagement>
-		<repository>
-			<id>SIM-release</id>
-			<name>SIM-release</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url>
-		</repository>
-		<snapshotRepository>
-			<id>SIM-snapshots</id>
-            <name>SIM-snapshots</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>

@@ -344,7 +344,38 @@ function showRepPass(){
         return false;	    
 	           
 	}
+	
+	function loadArbol(enlace,idOrganismo) {
+		var auxHTML = $('div#ajaxloader_ajax_'+idOrganismo).html();
+		$('div#ajaxloader_ajax_'+idOrganismo).html("<p><img src=\"/sim/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+		var url = "arbolOrganismo.action?idOrganismo=" + idOrganismo + "&arbol=true";
 
+	    var dialogoTree = $('#dialogTree');
+	    dialogoTree.load(
+        		url,
+        		{
+   	    			autoOpen: true,
+   	    			width: 810,
+   	    			modal: true,
+   	    			show: 'blind',
+   	    			hide: 'blind'
+   	    		},
+                function(responseText, textStatus, XMLHttpRequest) {
+   	    			dialogoTree.dialog({
+		           	 			autoOpen: true,
+		           				width: 950,
+		           				modal: true,
+		           				show: 'blind',
+		           				hide: 'blind',
+		           			});
+   	    					$('div#ajaxloader_ajax_'+idOrganismo).html(auxHTML);
+                }
+
+        );
+        return false;	    
+	           
+	}
+	
 	function loadMisim(enlace,idLote,tipoEnvio, idMensaje) {
 		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
 		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
@@ -853,14 +884,14 @@ function showRepPass(){
 		var auxHTML = $('div#ajaxloader_'+enlace.id).html();
 		$('div#ajaxloader_'+enlace.id).html("<p><img src=\"<%=request.getContextPath()%>/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
 		var height="height:125px";
-		var heightN=125;
+		var heightN=190;
 		var url ="";
 	   if(varRetorno=="idAplicacion"){
         	url = "loadPlanificacionesApp.action?idPlanificacion="+idplanificacion+"&idAplicacion="+idRetorno;
-        	height="height:150px";heightN=150;
+        	height="height:190px";heightN=190;
 	   }else if(varRetorno=="idServicio"){
        		url = "loadPlanificacionesServ.action?idPlanificacion="+idplanificacion+"&idServicio="+idRetorno;
-       		height="height:150px";heightN=150;
+       		height="height:190px";heightN=190;
 	   }else if(varRetorno=="idServidor"){
        		url = "loadPlanificacionesServer.action?idPlanificacion="+idplanificacion+"&idServidor="+idRetorno;
 	   }else if(varRetorno=="idProveedorSMS"){
@@ -873,7 +904,7 @@ function showRepPass(){
 		   url = "loadPlanificacionesServidorWebPush.action?idPlanificacion="+idplanificacion+"&idServidorWebPush="+idRetorno;
 	   }else if(varRetorno=="idOrganismo"){
 		   url = "loadPlanificacionesOrganismo.action?idPlanificacion="+idplanificacion+"&idOrganismo="+idRetorno;
-		   height="height:150px";heightN=150;
+		   height="height:150px";heightN=200;
 	   }
 	   
 

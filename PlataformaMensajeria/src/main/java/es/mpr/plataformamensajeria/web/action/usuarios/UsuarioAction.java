@@ -66,6 +66,9 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
 	private PlataformaMensajeriaProperties properties;
+	
+	/**  new activo. */
+	private String newActivo;
 
 	/**  usuario. */
 	private UsuarioBean usuario;
@@ -258,7 +261,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 		if (getRequest().getSession().getAttribute("infoUser") == null)
 			return "noUser";
 		if (usuario != null) {
-			if (usuario.getIsActivo() != null && usuario.getIsActivo().indexOf("activo") != -1) {
+			if (newActivo != null && newActivo.equals("true")) {
 				usuario.setActivo(true);
 			} else {
 				usuario.setActivo(false);
@@ -1041,5 +1044,21 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 	public void setServicioUsuarioAplicacion(ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		this.servicioUsuarioAplicacion = servicioUsuarioAplicacion;
+	}
+
+
+	/**
+	 * @return the newActivo
+	 */
+	public String getNewActivo() {
+		return newActivo;
+	}
+
+
+	/**
+	 * @param newActivo the newActivo to set
+	 */
+	public void setNewActivo(String newActivo) {
+		this.newActivo = newActivo;
 	}
 }

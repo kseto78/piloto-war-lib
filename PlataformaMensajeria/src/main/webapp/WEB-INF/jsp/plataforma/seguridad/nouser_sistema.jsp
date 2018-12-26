@@ -16,7 +16,7 @@
 							<ul class="actionError" id="">
 							
 		                		<li><span><i><div class="validation Error">
-									<p>Ha intentado acceder a Plataforma de Mensajería pero su usuario no está registrado en el sistema. Por favor, contacte con el administrador.</p>
+									<p>Ha intentado acceder a Plataforma de Mensajería pero su usuario no está registrado en el sistema o esta inactivo. Por favor, contacte con el administrador.</p>
 								</br>
 								<p>								
 									<a href="<%=PlataformaMensajeriaProperties.getInstance().getProperty("url.caid", "")%>">Incidencias</a> |  <a href="logout">Salir</a></div></i></span></li>

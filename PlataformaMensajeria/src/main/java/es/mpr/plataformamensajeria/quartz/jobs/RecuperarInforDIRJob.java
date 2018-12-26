@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -31,6 +32,7 @@ import es.minhap.dir3.bean.OrganismosContactosDir3Bean;
 import es.minhap.dir3.services.SD01UN_DescargaUnidades;
 import es.minhap.dir3.services.impl.SD01UN_DescargaUnidadesImpl;
 import es.minhap.dir3.utils.ConstantesDir3;
+import es.minhap.dir3.utils.ExcepcionesDir3;
 import es.minhap.plataformamensajeria.iop.manager.TblMonitorDIR3Manager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
 import es.minhap.plataformamensajeria.iop.managerimpl.TblOrganismosManagerImpl;
@@ -137,7 +139,8 @@ public class RecuperarInforDIRJob implements Job {
 
 			
 			construirFechasEjecucion(properties);
-			
+			logger.info("Fecha de inicio intervalo de busqueda de DIR3: "+strFechaInicioFiltro);
+			logger.info("Fecha fin intervalo de busqueda de DIR3: "+strFechaFinFiltro);
 
 			// Consultamos los organismos de DIR 3
 			UnidadesWs unidadesRequest = new UnidadesWs();
@@ -175,7 +178,13 @@ public class RecuperarInforDIRJob implements Job {
 			TblMonitorDIR3 ultimaMonitorizacion = new TblMonitorDIR3();
 			ultimaMonitorizacion.setCodEstado(properties.getProperty("DIR3.ESTADO_PROCESO_DIR3_KO", null));
 			mensajeEstado = properties.getProperty("recuperar.info.dir.error.ud.organicas", null);
-			ultimaMonitorizacion.setDescEstado(mensajeEstado);
+			
+			if(descripcionEstado.toString().equals("Error con la conexion a DIR3")){
+				ultimaMonitorizacion.setDescEstado(descripcionEstado.toString()); //Descripcion estado en el log de la bbdd
+				mensajeEstado = "";
+			}else{
+				ultimaMonitorizacion.setDescEstado(mensajeEstado);				
+			}			
 			ultimaMonitorizacion.setFechaEjecucion(new Date());
 			tblMonitorDIR3Manager.guardarDir3MonitorWS(ultimaMonitorizacion);
 			logger.error("[RecuperarInforDIRJob] Ha ocurrido un error al ejecutar el job de actualización de DIR3",e);
@@ -203,7 +212,7 @@ public class RecuperarInforDIRJob implements Job {
 	 * @param descripcionEstado the descripcion estado
 	 * @return true, if successful
 	 */
-	private boolean invocacionServicio(String pathTemporal, UnidadesWs unidadesRequest, StringBuilder descripcionEstado) {
+	private boolean invocacionServicio(String pathTemporal, UnidadesWs unidadesRequest, StringBuilder descripcionEstado) throws ExcepcionesDir3 {
 		boolean res = false;
 		try {
 			SD01UN_DescargaUnidades descargarUnidades = new SD01UN_DescargaUnidadesImpl();
@@ -223,9 +232,13 @@ public class RecuperarInforDIRJob implements Job {
 				actualizarOrganismos(listaOrganismos, descripcionEstado);
 			}
 			res = true;
-		} catch (Exception e) {
+		
+		} catch (WebServiceException e){
 			logger.info("execute - FIN - Recuperar informacion DIR - exception - Descargar Unidades Organicas");
 			logger.error("[RecuperarInfoDIRJob] - execute - Error: ", e);
+			descripcionEstado.append("Error con la conexion a DIR3");
+			
+			throw new ExcepcionesDir3();
 		}
 		return res;
 	}

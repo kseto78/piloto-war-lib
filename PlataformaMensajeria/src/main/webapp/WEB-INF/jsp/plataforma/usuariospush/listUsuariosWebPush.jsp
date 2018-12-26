@@ -21,8 +21,8 @@ function makeRequest(){
 		});
 	$.ajax({
         type: "POST",
-        url: "ajaxLoadServicios.action",
-        data: {idAplicacion:document.getElementById('usuariosWebPush.aplicacionId').value}, // serializes the form's elements.
+        url: "ajaxLoadServiciosCanal.action",
+        data: {idAplicacion:document.getElementById('usuariosWebPush.aplicacionId').value,idCanal:5}, // serializes the form's elements.
         success: function(data)
         {
      	  var items = data.items;
@@ -229,6 +229,10 @@ function makeRequest(){
 							id="accion" theme="simple"
 							cssStyle="visibility:hidden;display:none;" labelposition="left"
 							size="70" maxlength="255" cssClass="" />
+						
+					<script>
+					const publicKeyConstant = "${publicKey}";
+					</script>
 					<script type="text/javascript" src="pushMod.js"></script>
 
 				</div>

@@ -124,6 +124,18 @@
 						name="organismo.isActivo" value="%{organismo.activado}" />
 				</p>
 				<p class="criteria">
+
+					<span style="width: 350px;"> <label style="width: 120px;"
+						class="fieldText">Organismo Pdp: </label> <s:select
+							id="organismo.idOrganismoPdp"
+							name="organismo.idOrganismoPdp" emptyOption="true"
+							theme="simple" labelposition="left" title="Organismos Pdp"
+							list="comboOrganismosPdp" listKey="codigo"
+							listValue="descripcion" cssClass="" cssStyle="width:138px"
+							value="%{organismo.idOrganismoPdp}" disabled="false" />
+					</span>
+				</p>
+				<p class="criteria">
 					<label style="width: 150px;" class="fieldText"><i>(*)
 							Campos obligatorios</i></label>
 
