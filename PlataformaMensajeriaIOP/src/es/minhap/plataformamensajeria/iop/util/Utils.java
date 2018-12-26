@@ -61,7 +61,7 @@ public class Utils {
 	 
 	 public static int validarTelefono(String telefono, String telefonoExcepcion){
 		 
-		 if (telefono!=null){
+		 if (telefono!=null && !telefono.equals("")){
 			 telefono= telefono.trim();
 			 if(telefonoExcepcion.contains(telefono)) {
 				 return 0;

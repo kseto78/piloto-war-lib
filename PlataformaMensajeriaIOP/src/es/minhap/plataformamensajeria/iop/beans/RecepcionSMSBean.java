@@ -22,7 +22,22 @@ public class RecepcionSMSBean {
 	private String servicio;
 	private String userAplicacion;
 	private String passwordAplicacion;
+	private String codOrganismo;
 	
+
+	/**
+	 * @return the codOrganismo
+	 */
+	public String getCodOrganismo() {
+		return codOrganismo;
+	}
+
+	/**
+	 * @param codOrganismo the codOrganismo to set
+	 */
+	public void setCodOrganismo(String codOrganismo) {
+		this.codOrganismo = codOrganismo;
+	}
 
 	public String getUserServidor() {
 		return userServidor;

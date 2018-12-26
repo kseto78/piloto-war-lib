@@ -231,7 +231,7 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 				|| (estadoRecibido.equals(statusMessage) && (codeLeido.equals(notificacionesPushXMLBean.getStatus())))) {
 		String estadoInicial = getEstadoInicial(notificacionesPushXMLBean, ps);
 		String estadoFinal = getEstadoFinal(notificacionesPushXMLBean, ps);
-		int resultado = getMensajesManager().updateMessagesUsers(usersId, estadoInicial, estadoFinal, notificacionesPushXMLBean.getUsuario());
+		int resultado = getMensajesManager().updateMessagesUser(usersId, estadoInicial, estadoFinal, notificacionesPushXMLBean.getUsuario(), notificacionesPushXMLBean.getNotificacionId());
 		xmlResultado = respuesta.toXML(resultado,ps);
 		
 		}else {
@@ -277,15 +277,19 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 			RespuestaNotificacionesPush respuesta, List<String> usersId, PropertiesServices ps)
 			throws PlataformaBusinessException {
 		String xmlResultado;
-		int resultado = getMensajesManager().updateMessagesUsers(usersId, estadoEnviado, estadoRecibido,
-				notificacionesPushXMLBean.getUsuario());
 
-		if (resultado > 0) {
-			resultado = getMensajesManager().updateMessagesUsers(usersId, estadoRecibido, estadoLeido,
+		String estadoInicial = getEstadoInicial(notificacionesPushXMLBean, ps);
+		String estadoFinal = getEstadoFinal(notificacionesPushXMLBean, ps);
+		
+//		int resultado = getMensajesManager().updateMessagesUsers(usersId, estadoEnviado, estadoRecibido,
+//				notificacionesPushXMLBean.getUsuario());
+
+//		if (resultado > 0) {
+			int resultado = getMensajesManager().updateMessagesUsers(usersId, estadoInicial, estadoFinal,
 					notificacionesPushXMLBean.getUsuario());
 			xmlResultado = respuesta.actualizarTodosMensajes(resultado,ps);
-		} else
-			xmlResultado = respuesta.actualizarTodosMensajes(resultado,ps);
+//		} else
+//			xmlResultado = respuesta.actualizarTodosMensajes(resultado,ps);
 		return xmlResultado;
 	}
 

@@ -59,6 +59,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 			envioEmail.setServicio(peticionXML.getServicio());
 			envioEmail.setPassword(peticionXML.getPassword());
 			envioEmail.setNombreLote(peticionXML.getNombreLote());
+			envioEmail.setCodOrganismo(peticionXML.getCodOrganismo());
 			List<String> erroresGeneracionPassbook = new ArrayList<>();
 			for (MensajePeticionLotesEmailXMLBean mensajePeticionLotes : peticionXML.getMensajes().getMensajeEmail()){
 				

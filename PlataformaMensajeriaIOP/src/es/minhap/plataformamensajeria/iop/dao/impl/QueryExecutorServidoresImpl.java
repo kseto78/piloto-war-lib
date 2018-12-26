@@ -59,8 +59,8 @@ public class QueryExecutorServidoresImpl extends HibernateDaoSupport implements 
 					+ " (select ORGANISMOID "
 					+ "  from TBL_ORGANISMOS "
 					+ "  where DIR3= "
-					+ " (SELECT ME.CODORGANISMOPAGADOR "
-					+ "  FROM TBL_MENSAJES ME WHERE ME.MENSAJEID="	+ idMensaje + "))");
+					+ " UPPER((SELECT ME.CODORGANISMOPAGADOR "
+					+ "  FROM TBL_MENSAJES ME WHERE ME.MENSAJEID="	+ idMensaje + ")))");
 
 			res = (BigDecimal) query.uniqueResult();
 			

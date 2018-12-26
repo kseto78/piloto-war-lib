@@ -45,7 +45,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		query.addOrder("nombre", OrderType.ASC);
 		return viewServiciosDAO.search(query).getResults();
 	}
-	
+
 	///MIGRADO
 	@Override
 	@Transactional

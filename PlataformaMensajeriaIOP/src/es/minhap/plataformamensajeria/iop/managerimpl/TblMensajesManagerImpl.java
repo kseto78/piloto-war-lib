@@ -437,7 +437,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 	private String comprobarDestinatariosEmail(String to, String cc, String bcc) {
 		String res = null;
-		List<String> lista = new ArrayList<>();
+		List<String> lista;
 		// analizamos destinatarios TO
 		if (null != to) {
 			lista = Arrays.asList(to.split(";"));
@@ -1101,7 +1101,6 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	public int updateMessagesUsers(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion) {
 		int res = 1;
 		Map<Long,List<Long>> mapMensajesMult;
-		List<Long> listaMensajes;
 		
 		LOG.info("Inicio Actualizacion de estados notificaciones de "+estadoInicial+" a "+estadoFinal);
 		try{
@@ -1109,7 +1108,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		            .replace(", ", "','");
 			
 			//recuperamos los mensajes multides
-			mapMensajesMult =queryExecutorMensajes.getMensajesPorUsuariosPushYEstadoMultidest(usuarios, estadoInicial);
+			mapMensajesMult = queryExecutorMensajes.getMensajesPorUsuariosPushYEstadoMultidest(usuarios, estadoInicial);
 			
 			//actualizamos los obtenidos
 			if (!mapMensajesMult.isEmpty()) {
@@ -1136,6 +1135,45 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		return res;
 	}
 
+	@Override
+	@Transactional
+	public int updateMessagesUser(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion, String mensajeId) {
+		int res = 1;
+		Map<Long,List<Long>> mapMensajesMult;
+		
+		LOG.info("Inicio Actualizacion de estados notificaciones de "+estadoInicial+" a "+estadoFinal);
+		try{
+			String usuarios = usersId.toString().replace("[", "'").replace("]", "'")
+		            .replace(", ", "','");
+			
+			//recuperamos los mensajes multides
+			mapMensajesMult = queryExecutorMensajes.getMensajesPorUsuariosPushYEstadoYMensajeMultidest(usuarios, estadoInicial, Long.valueOf(mensajeId));
+			
+			//actualizamos los obtenidos
+			if (!mapMensajesMult.isEmpty()) {
+				
+				//actualizamos los mensajes multidest a Recibido y son multidestinatarios
+				res = setEstadoMensajeUsuarios(mapMensajesMult, estadoInicial, estadoFinal, usuarioPeticion);
+			}
+			
+			//comentado porque la query tarda mucho y no es necesarioa, porque nunca ha existido un mensaje push
+			//que NO sea multidestinatario
+//			//recuperamos mensajes no MULTIDESTINATARIO
+//			listaMensajes = queryExecutorMensajes.getMensajesPorUsuariosPushYEstado(usuarios, estadoInicial);
+//			if (null != listaMensajes && !listaMensajes.isEmpty()){
+//				for (Long mensajeId : listaMensajes) {
+//					res = setEstadoMensaje(mensajeId, estadoFinal, null, false, null, null, usuarioPeticion, null);
+//				}
+//				
+//			}
+		}catch(Exception e){
+			LOG.error("[TblMensajesManagerImpl.updateMessagesUsers]", e);
+			res = -1;
+		}
+		
+		return res;
+	}
+	
 	@Override
 	public Boolean isMessageUser(List<String> usersId, Long mensajeId) {
 		if (tblMensajesDAO.get(mensajeId).getTblLotesEnvios().getMultidestinatario()) {

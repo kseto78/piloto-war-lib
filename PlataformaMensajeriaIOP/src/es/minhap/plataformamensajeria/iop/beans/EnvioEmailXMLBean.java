@@ -57,6 +57,7 @@ public class EnvioEmailXMLBean {
 	private String servicio;
 	private String usuario;
 	private String password;
+	private String codOrganismo;
 	private ArrayList<MensajesXMLBean> listadoMensajes;
 	private ArrayList<AdjuntosXMLBean> listadoAdjuntosGenerales;
 
@@ -108,6 +109,14 @@ public class EnvioEmailXMLBean {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getCodOrganismo() {
+		return codOrganismo;
+	}
+
+	public void setCodOrganismo(String codOrganismo) {
+		this.codOrganismo = codOrganismo;
 	}
 
 	@SuppressWarnings("unchecked")

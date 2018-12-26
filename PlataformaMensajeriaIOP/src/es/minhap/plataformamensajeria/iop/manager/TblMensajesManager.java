@@ -208,6 +208,18 @@ public interface TblMensajesManager {
 	 * @return int
 	 */
 	public int updateMessagesUsers(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion);
+	
+	/**
+	 * Actualiza solo el mensaje especifico de los usuarios push pasados como parametro
+	 * 
+	 * @param usersId
+	 * @param estadoInicial
+	 * @param estadoFinal
+	 * @param usuarioPeticion
+	 * @param mensajeId
+	 * @return int
+	 */
+	public int updateMessagesUser(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion, String mensajeId);
 
 	/**
 	 * Comprueba si un mensaje es de un usuario

@@ -13,6 +13,7 @@ public class WSPlataformaErrors {
 	static final String CREARLOTE_1 = "Error de Autenticacion. No existe aplicacion para el usuario/password.";
 	static final String CREARLOTE_2 = "Servicio Incorrecto. No esta asignado a ninguna aplicacion.";
 	static final String CREARLOTE_3 = "El servicio incorrecto o existe pero esta inactivo.";
+	static final String CREARLOTE_4 = "El organismo es incorrecto o existe pero esta inactivo.";
 	static final String CREARLOTE_10 = "Error BBDD al crear el Lote.";
 
 	static final String CREAREMAIL_1 = "Error de Autenticacion. No existe lote para el usuario/password.";
@@ -133,6 +134,7 @@ public class WSPlataformaErrors {
 			put(new Integer(-1), CREARLOTE_1);
 			put(new Integer(-2), CREARLOTE_2);
 			put(new Integer(-3), CREARLOTE_3);
+			put(new Integer(-4), CREARLOTE_4);
 			put(new Integer(-10), CREARLOTE_10);
 		}
 	};
@@ -407,10 +409,14 @@ public class WSPlataformaErrors {
 
 		return "El campo Servicio no es numerico";
 	}
-
+	
 	public static String getErrorFaltaLote() {
 
 		return "El campo Nombre Lote es obligatorio";
+	}
+	public static String getErrorFaltaCodOrganismo() {
+
+		return "El campo Codigo Organismo es obligatorio";
 	}
 
 	public static String getErrorFaltaDestinatario() {

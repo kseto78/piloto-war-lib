@@ -48,6 +48,15 @@ public class TblUsuariosManagerImpl implements TblUsuariosManager {
 		List<TblUsuarios> lista = tblUsuariosDAO.search(query).getResults();
 		return (null != lista && lista.size()==1)? lista.get(0).getUsuarioid() : null;
 	}
+
+	@Override
+	public Long getUsuarioByUsernameActivo(String login) {
+		TblUsuariosQuery query = new TblUsuariosQuery();
+		query.setLogin(login);
+		query.setActivo(true);
+		List<TblUsuarios> lista = tblUsuariosDAO.search(query).getResults();
+		return (null != lista && lista.size()==1)? lista.get(0).getUsuarioid() : null;
+	}
 	
 	///MIGRADO
 	@Override

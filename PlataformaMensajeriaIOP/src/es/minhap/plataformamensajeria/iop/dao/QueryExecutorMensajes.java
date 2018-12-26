@@ -68,6 +68,15 @@ public interface QueryExecutorMensajes {
 	 * @return Map<Integer,List<Long>>
 	 */
 	public Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoMultidest(String usersId, String estado);
+	
+	/**
+	 * Obtiene los mensajes por mensaje id y estado Multidestinatario
+	 * 
+	 * @param usersId
+	 * @param estado
+	 * @return Map<Integer,List<Long>>
+	 */
+	public Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoYMensajeMultidest(String usersId, String estado, Long mensajeId);
 
 	/**
 	 * Obtiene los mensajes por lote y estado

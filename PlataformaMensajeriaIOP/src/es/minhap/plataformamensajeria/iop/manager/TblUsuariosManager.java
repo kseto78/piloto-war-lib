@@ -26,6 +26,15 @@ public interface TblUsuariosManager {
 	public Long getUsuarioByUsername(String login);
 
 	/**
+	 * obtiene el idUsuario activo según el login
+	 * 
+	 * @param login
+	 * @return 
+	 */
+	public Long getUsuarioByUsernameActivo(String login);
+
+	
+	/**
 	 * obtiene el idUsuario según el id
 	 * 
 	 * @param usuarioid
@@ -75,6 +84,8 @@ public interface TblUsuariosManager {
 	 */
 	public void delete(Long usuarioId, String source, String accion, Long accionId);
 
+
+	
 
 
 	

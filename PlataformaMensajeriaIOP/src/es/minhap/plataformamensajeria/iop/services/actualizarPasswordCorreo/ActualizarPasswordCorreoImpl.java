@@ -85,12 +85,12 @@ public class ActualizarPasswordCorreoImpl implements IActualizarPasswordCorreoSe
 		RespuestaActualizarPasswordCorreo res = null;
 		
 		//Comprobar campos null
-		if(peticion.getUsuario() == null || peticion.getPassword_new() == null ||  peticion.getPassword() == null){
+		if(peticion.getUsuario() == null || peticion.getPassword_new() == null){
 			return generarSalida(statusTextKO, statusCodeCamposNulos, detailsCamposNulos );
 		}
 		
 		//campos vacios
-		if(peticion.getUsuario().isEmpty() || peticion.getPassword_new().isEmpty() ||  peticion.getPassword().isEmpty()){
+		if(peticion.getUsuario().isEmpty() || peticion.getPassword_new().isEmpty()){
 			return generarSalida(statusTextKO, statusCodeCamposCompletos, detailsCamposCompletos );
 		}
 		
@@ -99,12 +99,23 @@ public class ActualizarPasswordCorreoImpl implements IActualizarPasswordCorreoSe
 			return generarSalida(statusTextKO, statusCodeNoEmail, detailsNoEmail );
 		}
 		
-		//cuenta Noreply
-		if (!peticion.getUsuario().toLowerCase().contains("noreply")){
-			return generarSalida(statusTextKO, statusCodeNoNoreply, detailsNoNoreply );
+		//recojemos por property el nombre de la cuenta noreply
+		String nombreCuentaNoreply = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.NombreCuenta", null);
+		LOG.info("nombreCuentaNoreply: "+nombreCuentaNoreply);
+		String[] cuentasCorreo = nombreCuentaNoreply.split(";");
+		LOG.info("cuentasCorreo: "+cuentasCorreo[0] +" - " + cuentasCorreo[1]);
+		int contador = 0;	
+		for (String cuenta : cuentasCorreo) {
+			if (peticion.getUsuario().toLowerCase().contains(cuenta)){
+				contador++;
+			}		
 		}
-		
-		return res;
+		LOG.info("Contador: "+contador);
+		if (contador != 1){
+			return generarSalida(statusTextKO, statusCodeNoNoreply, detailsNoNoreply );	
+		}else{
+			return res;
+		}
 	}
 
 	public static boolean isValidEmailAddress(String email) {

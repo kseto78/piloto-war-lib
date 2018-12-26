@@ -150,7 +150,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		try {
 
 			String error = peticionCorrecta(envioEmail.getNombreLote(), envioEmail.getServicio(),
-					envioEmail.getUsuario(), envioEmail.getPassword());
+					envioEmail.getUsuario(), envioEmail.getPassword(), envioEmail.getCodOrganismo());
 			if (error != null) {
 				listaErroresGenerales.add(error);
 			}
@@ -158,7 +158,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
 						.getEstadoid();
 				idLote = lotesManager.insertarLote(Long.parseLong(envioEmail.getServicio()),
-						envioEmail.getNombreLote(), envioEmail.getUsuario(), envioEmail.getPassword());
+						envioEmail.getNombreLote(), envioEmail.getUsuario(), envioEmail.getPassword(), envioEmail.getCodOrganismo());
 				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -498,7 +498,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		try {
 
 			String error = peticionCorrectaSMS(envioSMS.getNombreLote(), envioSMS.getServicio(), envioSMS.getUsuario(),
-					envioSMS.getPassword(), envioSMS.getOrganismoPagador());
+					envioSMS.getPassword(), envioSMS.getOrganismoPagador(), envioSMS.getCodOrganismo());
 
 			if (error != null) {
 				listaErroresGenerales.add(error);
@@ -507,7 +507,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
 						.getEstadoid();
 				idLote = lotesManager.insertarLote(Long.parseLong(envioSMS.getServicio()), envioSMS.getNombreLote(),
-						envioSMS.getUsuario(), envioSMS.getPassword());
+						envioSMS.getUsuario(), envioSMS.getPassword(), envioSMS.getCodOrganismo());
 				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -735,14 +735,14 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 		try {
 			String error = peticionCorrecta(peticionXML.getNombreLote(), peticionXML.getServicio(),
-					peticionXML.getUsuario(), peticionXML.getPassword());
+					peticionXML.getUsuario(), peticionXML.getPassword(), peticionXML.getCodOrganismo());
 			if (error != null) {
 				listaErroresGenerales.add(error);
 			}
 
 			if (listaErroresGenerales.isEmpty()) {
 				idLote = lotesManager.insertarLote(Long.parseLong(peticionXML.getServicio()),
-						peticionXML.getNombreLote(), peticionXML.getUsuario(), peticionXML.getPassword());
+						peticionXML.getNombreLote(), peticionXML.getUsuario(), peticionXML.getPassword(), peticionXML.getCodOrganismo());
 
 				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
@@ -906,7 +906,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		try {
 
 			String error = peticionCorrecta(notificacionPush.getNombreLote(), notificacionPush.getServicio(),
-					notificacionPush.getUsuario(), notificacionPush.getPassword());
+					notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
 			if (error != null) {
 				listaErroresGenerales.add(error);
 			}
@@ -950,7 +950,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 												ResponseStatusType status = new ResponseStatusType();
 												if (!listaDispositivos.isEmpty()) {
 													idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-															notificacionPush.getUsuario(), notificacionPush.getPassword());
+															notificacionPush.getUsuario(), notificacionPush.getPassword(),notificacionPush.getCodOrganismo());
 													if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 														listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 														xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -1042,7 +1042,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 												ResponseStatusType status = new ResponseStatusType();
 												if (!listaDispositivos.isEmpty()) {
 													idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-															notificacionPush.getUsuario(), notificacionPush.getPassword());
+															notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
 													if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 														listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 														xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -1437,7 +1437,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									ResponseStatusType status = new ResponseStatusType();
 									if (!litaDispositvos.isEmpty()) {
 										idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-												notificacionPush.getUsuario(), notificacionPush.getPassword());
+												notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
 										if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 											listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 											xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -1782,7 +1782,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		return res;
 	}
 
-	private String peticionCorrecta(String nombreLote, String servicio, String usuario, String password) {
+	private String peticionCorrecta(String nombreLote, String servicio, String usuario, String password, String codOrganismo) {
 		String res;
 		res = checkUsuario(usuario);
 
@@ -1794,11 +1794,14 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 		if (null == res)
 			res = checkNombreLote(nombreLote);
+		
+//		if (null == res)
+//			res = checkCodOrganismo(codOrganismo);
 		return res;
 	}
 
 	private String peticionCorrectaSMS(String nombreLote, String servicio, String usuario, String password,
-			String organismoPagador) {
+			String organismoPagador, String codOrganismo) {
 		String res;
 		res = checkUsuario(usuario);
 
@@ -1810,6 +1813,9 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 		if (null == res)
 			res = checkNombreLote(nombreLote);
+		
+//		if (null == res)
+//			res = checkCodOrganismo(codOrganismo);
 
 		if (null == res && (esMultiorganismo(servicio))) {
 			res = checkOrganismoPagador(organismoPagador);
@@ -1843,6 +1849,14 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		if (null == nombreLote || nombreLote.isEmpty()) {
 			return WSPlataformaErrors.getErrorFaltaLote();
 		}
+		return res;
+	}
+	
+	private String checkCodOrganismo(String codOrganismo) {
+		String res = null;
+		if (null == codOrganismo || codOrganismo.isEmpty()) {
+			return WSPlataformaErrors.getErrorFaltaCodOrganismo();
+		}		
 		return res;
 	}
 

@@ -19,7 +19,7 @@ public interface TblLotesEnviosManager {
 	 * 
 	 */
 	public Integer insertarLote(Long servicioId, String nombreLote,
-			String usuario, String password);
+			String usuario, String password, String codOrganismo);
 
 	/**
 	 * Inserta un lote nuevo de mensaje PREMIUM con los datos necesarios del envío

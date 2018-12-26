@@ -150,6 +150,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	public RespuestaActualizarPasswordCorreo checkActualizarPassword(PeticionActualizarPasswordCorreo peticion,
 			PropertiesServices ps) {
 		String statusTextKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
+		String statusTextOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.OK", null);
 		
 		RespuestaActualizarPasswordCorreo respuesta = null;
 		List<TblParametrosServidor> listaParametros = checkExisteEmail(peticion.getUsuario(), 
@@ -172,28 +173,52 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 				auditar(parametro.getTblServidores().getServidorid(), peticion.getUsuario(), ps);
 				
 				//comprobamos la conexion
-				query = new TblParametrosServidorQuery();
-				servidoresQuery = new TblServidoresQuery();
-				servidoresQuery.setServidorid(parametro.getTblServidores().getServidorid());
+//				query = new TblParametrosServidorQuery();
+//				servidoresQuery = new TblServidoresQuery();
+//				servidoresQuery.setServidorid(parametro.getTblServidores().getServidorid());
 				query.setTblServidores(servidoresQuery);
+//				query.setTblTiposParametros(tipoQuery);
 				
 				listaParametros = getByQuery(query);
-				if (checkConnection(listaParametros)){
-					String statusCodeNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_CORRECTO", null);
-					String detailsNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_CORRECTO", null);
+
+				TblParametrosServidorQuery query2 = new TblParametrosServidorQuery();
+				TblServidoresQuery servidoresQuery2 = new TblServidoresQuery();
+				servidoresQuery2.setServidorid(parametro.getTblServidores().getServidorid());
+				TblTiposParametrosQuery tipoQuery2 = new TblTiposParametrosQuery();
+				tipoQuery2.setTipoparametroid(Long.parseLong(ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.TIPO_PARAMETRO_PASSWORD", null)));
+				query2.setTblTiposParametros(tipoQuery2);
+				List<TblParametrosServidor> listaParametros2 = getByQuery(query2);
+				
+				int contador = 0;
+				int num = 0 ;
+				for (TblParametrosServidor tblParametrosServidor : listaParametros) {
+					if(tblParametrosServidor.getValor().equals(listaParametros2.get(0).getValor())){
+						//Tenemos la posicion de la contrasena
+						num = contador;
+						LOG.debug("Numero: "+num);
+						break;
+					}
+					contador++;
+				}
+				
+				//cambiamos el password por el nuevo
+				listaParametros.get(num).setValor(peticion.getPassword_new());
+				if (checkConnection(listaParametros) == true){
+					String statusCodeOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_CORRECTO", null);
+					String detailsOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_CORRECTO", null);
 					
-					//cambiamos el password por el nuevo
+					
 					System.out.println("Contrasena nueva: "+peticion.getPassword_new());
-					parametro = listaParametros.get(0);
-					parametro.setValor(peticion.getPassword_new());
+					parametro = listaParametros.get(num);
+//					parametro.setValor(peticion.getPassword_new());
 					tblParametrosServidorDAO.update(parametro);
 					
-					respuesta = generarSalida( respuesta, statusTextKO, statusCodeNoConnection, detailsNoConnection );
+					respuesta = generarSalida( respuesta, statusTextOK, statusCodeOK, detailsOK );
 				}else{
-					String statusTextOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
-					String statusCodeOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_CONEXION", null);
-					String detailsOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_CONEXION", null);
-					respuesta = generarSalida(respuesta, statusTextOK, statusCodeOK, detailsOK );
+//					String statusTextOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
+					String statusCodeNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_CONEXION", null);
+					String detailsNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_CONEXION", null);
+					respuesta = generarSalida(respuesta, statusTextKO, statusCodeNoConnection, detailsNoConnection );
 				}
 					
 			}	

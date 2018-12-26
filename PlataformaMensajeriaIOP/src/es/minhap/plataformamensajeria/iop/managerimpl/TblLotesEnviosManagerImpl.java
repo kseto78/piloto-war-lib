@@ -26,6 +26,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManage
 import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblOrganismosPdpManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresServiciosManager;
@@ -39,10 +40,12 @@ import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblDestinatariosMensajes;
 import es.minhap.sim.model.TblLotesEnvios;
 import es.minhap.sim.model.TblMensajes;
+import es.minhap.sim.model.TblOrganismos;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblServidores;
 import es.minhap.sim.query.TblAplicacionesQuery;
 import es.minhap.sim.query.TblLotesEnviosQuery;
+import es.minhap.sim.query.TblOrganismosQuery;
 import es.minhap.sim.query.TblServiciosQuery;
 import es.minhap.sim.query.TblServidoresQuery;
 import es.minhap.sim.query.TblServidoresServiciosQuery;
@@ -68,6 +71,9 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 
 	@Autowired
 	TblServiciosManager serviciosManager;
+	
+	@Autowired
+	TblOrganismosPdpManager organismosManager;
 
 	@Autowired
 	TblMensajesManager mensajeManager;
@@ -112,7 +118,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	Long servicioId = null;
 
 	@Override
-	public Integer insertarLote(Long servicioId, String nombreLote, String usuario, String password) {
+	public Integer insertarLote(Long servicioId, String nombreLote, String usuario, String password, String codOrganismo) {
 		Integer res;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String operacionCrearLote = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CREAR", null);
@@ -161,7 +167,25 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			auditoriaManager.insertarAuditoria(auditoria);
 			return MensajesAuditoria.COD_ERROR_SERVICIO_INACTIVO.intValue();
 		}
+		
+		// Se comprueba que existe el organismo y esta activo
+//				TblOrganismosQuery organismo = new TblOrganismosQuery();			
+//				organismo.setDir3(codOrganismo);
+//				organismo.setActivo(true);
+//				
+//				organismo.setDir3Comparator(TextComparator.EQUALS);
+//				List<TblOrganismos> listaOrganismos = organismosManager.getOrganismosByQuery(organismo);
+//				out = (null != listaOrganismos) ? listaOrganismos.size() : null;
 
+		// Auditamos con error -4 No existe el codOrganismo
+		if (null == out || out.intValue() != 1) {
+			AuditoriaBean auditoria = new AuditoriaBean(operacionCrearLote, new Date(), null, null, servicioId, null,
+					usuario, password, MensajesAuditoria.COD_ERROR_ORGANISMO_INCORRECTO_INACTIVO,
+					MensajesAuditoria.ERROR_ORGANISMO_INCORRECTO_INACTIVO);
+			auditoriaManager.insertarAuditoria(auditoria);
+			return MensajesAuditoria.COD_ERROR_ORGANISMO_INCORRECTO_INACTIVO.intValue();
+		}
+		
 		TblLotesEnvios lote = crearLote(listaServiciosActivos.get(0), nombreLote, usuario, GESTION_MULTIDESTINATARIOS);
 		res = lotesDAO.insert(lote).intValue();
 

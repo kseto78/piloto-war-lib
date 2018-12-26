@@ -184,7 +184,13 @@ public class TblPlanificacionesManagerImpl implements TblPlanificacionesManager 
 		serviciosQuery.setServicioid(servicioId);
 		query.setTblServicios(serviciosQuery);
 		query.setEliminadoIsNull(true);
-		return tblPlanificacionesDAO.search(query).getResults();
+		List<TblPlanificaciones> res = tblPlanificacionesDAO.search(query).getResults();
+		
+		for (TblPlanificaciones r : res) {
+			Hibernate.initialize(r.getTblServicios());
+		}
+		
+		return res;
 		
 	}
 	

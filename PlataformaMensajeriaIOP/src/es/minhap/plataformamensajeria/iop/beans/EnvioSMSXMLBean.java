@@ -64,6 +64,7 @@ public class EnvioSMSXMLBean {
 	private String usuario = "";
 	private String password = "";
 	private String organismoPagador ="";
+	private String codOrganismo = "";
 
 	private ArrayList<MensajeSMSXMLBean> listadoMensajes = new ArrayList<MensajeSMSXMLBean>();
 	private ArrayList<String> listaDestinatarios = new ArrayList<String>();
@@ -106,6 +107,14 @@ public class EnvioSMSXMLBean {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+		
+	public String getCodOrganismo() {
+		return codOrganismo;
+	}
+	
+	public void setCodOrganismo(String codOrganismo) {
+		this.codOrganismo = codOrganismo;
 	}
 
 	public ArrayList<MensajeSMSXMLBean> getListadoMensajes() {

@@ -128,8 +128,29 @@ public class QueryExecutorOrganismosImpl extends HibernateDaoSupport implements 
 			String slqWhere = createWhere(ob, order, column);
 			sql = sql + slqWhere;
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setMaxResults(size);
+			if(size!=-1){
+				query.setMaxResults(size);
+			}
 			query.setFirstResult(start);
+			
+			return  query.list();
+			
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TblOrganismos> getOrganismosByPdp(long idOrganismoPdp) {
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			String sql = " from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') AND o.idOrganismoPdp ="+idOrganismoPdp;
+
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
 			return  query.list();
 			
@@ -201,6 +222,58 @@ public class QueryExecutorOrganismosImpl extends HibernateDaoSupport implements 
 				return lista.get(0).intValue();
 			}else{
 				return null;
+			}
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer getOrganismoIdByDir3SoloEliminado(String search) {
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			String sql = "select o.organismoid from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') and "
+					+ "o.dir3 = :dir3";
+			
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			query.setString("dir3", search);
+			List<Long> lista = query.list();
+			
+			if (!lista.isEmpty()){
+				return lista.get(0).intValue();
+			}else{
+				return 0;
+			}
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getOrganismosHijos(String dir3) {
+		try {
+			List<String> res;
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			String sql = "select o.dir3 from TblOrganismos o where codUnidadSuperior = :dir3";
+			
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			query.setString("dir3", dir3);
+			res = query.list();
+			if (null == res){
+				res = new ArrayList<>();
+				return res;
+			}else{
+				return res;
 			}
 		} catch (Exception e) {
 			log.error(HAS_ERROR, e);

@@ -98,10 +98,16 @@ public class PushServiceImpl implements IPushService {
 				break;
 			}
 			return response.toXML(response);
-		}catch(Exception e){
-			response = generarRespuesta(mensajeId, statusKO, ps.getMessage("plataformaErrores.registroWebPush.COD_ERROR_GENERAL", null),
-					ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_GENERAL", null));
-			 LOG.error("PushServiceImp.sendPush " ,e);
+		}catch(Exception e){			
+			if (e.getMessage().contains("SSLEngine problem")){				
+				response = generarRespuesta(mensajeId, statusKO, ps.getMessage("Error certificado", null),
+				ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_CERTIFICADO", null));
+			}
+			else{
+				response = generarRespuesta(mensajeId, statusKO, ps.getMessage("plataformaErrores.registroWebPush.COD_ERROR_GENERAL", null),
+				ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_GENERAL", null));
+			}			
+			 LOG.error("PushServiceImp.sendPush " ,e);			 
 			 try {
 				return response.toXML(response);
 			} catch (PlataformaBusinessException e1) {

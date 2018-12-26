@@ -32,10 +32,12 @@ public class MensajesAuditoria {
 //	public static final String ERROR_USUARIO_APLICACION = "Usuario y Contraseña Incorrectos o la aplicacion esta inactiva";
 	public static final String ERROR_SERVICIO_INCORRECTO = "El servicio no existe o no es de esta aplicacion";
 	public static final String ERROR_SERVICIO_INACTIVO = "El servicio esta inactivo";
+	public static final String ERROR_ORGANISMO_INCORRECTO_INACTIVO = "No se reconoce el organismo o no esta activo";
 	public static final String ERROR_LOTE_APLICACION = "Lote Incorrecto o lote no permitido para la Aplicacion";
 //	public static final Long COD_ERROR_USUARIO_APLICACION = -1L;
 	public static final Long COD_ERROR_SERVICIO_INCORRECTO = -2L;
 	public static final Long COD_ERROR_SERVICIO_INACTIVO = -3L;
+	public static final Long COD_ERROR_ORGANISMO_INCORRECTO_INACTIVO = -4L;
 	public static final Long COD_ERROR_LOTE_APLICACION = -1L;
 	public static final String ERROR_CANAL_MENSAJE =  "Canal Incorrecto";
 	public static final Long COD_ERROR_CANAL_MENSAJE =  -2L;

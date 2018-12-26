@@ -269,6 +269,43 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 		}
 		return res;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoYMensajeMultidest(String usersId, String estado, Long mensajeId) {
+		Map<Long, List<Long>> res = new HashMap<>();
+		SQLQuery query = null;
+		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
+			}
+			query = getSessionFactory().getCurrentSession().createSQLQuery(
+					"SELECT dm.MENSAJEID,dm.DESTINATARIOSMENSAJES from TBL_DESTINATARIOS_MENSAJES dm inner join TBL_MENSAJES m "
+							+ "on dm.MENSAJEID = m.MENSAJEID inner join TBL_LOTESENVIOS l on "
+							+ "l.LOTEENVIOID = m.LOTEENVIOID where dm.DESTINATARIO in (" + usersId + ") and "
+							+ "l.MULTIDESTINATARIO = 1 and m.TIPOMENSAJE = 'NOTIFICACION PUSH' and dm.ESTADO = '" + estado
+							+ "' and m.MENSAJEID = '" + mensajeId + "'");
+
+			List<Object[]> rows = query.list();
+			for (Object[] row : rows) {
+				Long m = ((BigDecimal) row[0]).longValue();
+				Long dm = ((BigDecimal) row[1]).longValue();
+				if (res.containsKey(m)) {
+					res.get(m).add(dm);
+				} else {
+					List<Long> list = new ArrayList<>();
+					list.add(dm);
+					res.put(m, list);
+				}
+			}
+
+		} catch (Exception e) {
+			LOG.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+		return res;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

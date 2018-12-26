@@ -27,7 +27,6 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="usuario" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="password_new" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -40,7 +39,6 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "usuario",
-    "password",
     "password_new"
 })
 @XmlRootElement(name = "ActualizarPasswordPeticion", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
@@ -48,8 +46,6 @@ public class PeticionActualizarPasswordCorreo {
 
     @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String usuario;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
-    protected String password;
     @XmlElement(name = "Password_New", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String password_new;
    
@@ -97,26 +93,8 @@ public class PeticionActualizarPasswordCorreo {
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
-
-
-
-	/**
-	 * @return the password_old
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-
-
-	/**
-	 * @param password_old the password_old to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
+	
+	
 
 	/**
 	 * @return the password_new
