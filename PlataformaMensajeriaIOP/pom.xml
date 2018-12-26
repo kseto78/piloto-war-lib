@@ -121,7 +121,7 @@
 		<dependency>
 			<groupId>es.minhap</groupId>
 			<artifactId>minhap-jpasskit</artifactId>
-			<version>1.0.6</version>
+			<version>1.0.7</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.inject</groupId>
@@ -185,7 +185,7 @@
 		<dependency>
 			<groupId>es.minhap.sim</groupId>
 			<artifactId>JMSComponent</artifactId>
-			<version>1.0.8</version>
+			<version>1.0.9</version>
 			<type>ejb</type>
 		</dependency>
 		
