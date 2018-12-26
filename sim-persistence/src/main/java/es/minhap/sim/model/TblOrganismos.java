@@ -213,6 +213,9 @@ public class TblOrganismos implements java.io.Serializable {
 	@Column(name = "FECHAACTIVO", length = 7)
 	private Date fechaActivo;
 	
+	@Column(name = "IDORGANISMOPDP", precision = 22, scale = 0)
+	private Long idOrganismoPdp;
+	
 	public TblOrganismos() {
 	}
 
@@ -1100,6 +1103,20 @@ public class TblOrganismos implements java.io.Serializable {
 	public void setFechaActivo(Date fechaactivo) {
 		this.fechaActivo = fechaactivo;
 	}
+
+	/**
+	 * @return the organismoPdpId
+	 */
+	public Long getIdOrganismoPdp() {
+		return idOrganismoPdp;
+	}
+
+	/**
+	 * @param organismoPdpId the organismoPdpId to set
+	 */
+	public void setIdOrganismoPdp(Long idOrganismoPdp) {
+		this.idOrganismoPdp = idOrganismoPdp;
+	}	
 
 	
 }

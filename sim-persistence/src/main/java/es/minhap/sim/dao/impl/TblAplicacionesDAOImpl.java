@@ -16,7 +16,7 @@ package es.minhap.sim.dao.impl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,7 @@ import es.minhap.sim.query.TblAplicacionesQuery;
 /**
  * Implementacion de DAO basico con Hibernate
  */
-@Service
+@Repository
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 public class TblAplicacionesDAOImpl extends AbstractHibernateDAO<TblAplicaciones, Long, TblAplicacionesQuery> implements
 		TblAplicacionesDAO {

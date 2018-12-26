@@ -103,6 +103,7 @@ public class TblOrganismosQuery extends AbstractHibernateQueryEntity<TblOrganism
     public static final String DIREXTRANJERA = "dirExtranjera";
     public static final String LOCEXTRANJERA = "locExtranjera";
     public static final String OBSERVACIONES = "observaciones";
+    public static final String IDORGANISMOPDP = "idOrganismoPdp";
 
 
     /**
@@ -1534,6 +1535,26 @@ public class TblOrganismosQuery extends AbstractHibernateQueryEntity<TblOrganism
    	 * Establece el primer resultados
    	 */
    	private Integer primerResultado;
+   	
+    /**
+     * Valor de busqueda de campo idOrganismoPdp
+     */
+    private Long idOrganismoPdp;
+
+    /**
+     * Lista de valores del campo idOrganismoPdp para busquedas tipo IN
+     */
+    private List<Long> idOrganismoPdpIn = new ArrayList<Long>(0);
+
+    /**
+     * Permite buscar cuando campo idOrganismoPdp es NULL
+     */
+    private boolean idOrganismoPdpIsNull = false;
+
+    /**
+     * Permite buscar cuando campo idOrganismoPdp es NOT NULL
+     */
+    private boolean idOrganismoPdpIsNotNull = false;
     
     /**
      * Constructor default
@@ -6680,6 +6701,69 @@ public class TblOrganismosQuery extends AbstractHibernateQueryEntity<TblOrganism
     public void setObservacionesIsNotNull(boolean observacionesIsNotNull) {
         this.observacionesIsNotNull = observacionesIsNotNull;
     }
+    
+    /**
+     * Valor de busqueda de campo idOrganismoPdp
+     * @return Long.
+     */
+    public Long getIdOrganismoPdp() {
+        return idOrganismoPdp;
+    }
+
+    /**
+     * Valor de busqueda de campo idOrganismoPdp
+     * @param idOrganismoPdp Valor de seteo.
+     */
+    public void setIdOrganismoPdp(Long idOrganismoPdp) {
+        this.idOrganismoPdp = idOrganismoPdp;
+    }
+
+    /**
+     * @return List<Long>.
+     */
+    public List<Long> getIdOrganismoPdpIn() {
+        return this.idOrganismoPdpIn;
+    }
+
+    /**
+     * @param idOrganismoPdp Valor a agregar.
+     */
+    public void addIdOrganismoPdpIn(Long idOrganismoPdp) {
+        this.idOrganismoPdpIn.add(idOrganismoPdp);
+    }
+
+    /**
+     * Permite buscar cuando campo idOrganismoPdp es NULL
+     * @return boolean.
+     */
+    public boolean isIdOrganismoPdpIsNull() {
+        return idOrganismoPdpIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idOrganismoPdp es NULL
+     * @param idOrganismoPdpIsNull Valor de seteo.
+     */
+    public void setIdOrganismoPdpIsNull(boolean idOrganismoPdpIsNull) {
+        this.idOrganismoPdpIsNull = idOrganismoPdpIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idOrganismoPdp es NOT NULL
+     * @return boolean.
+     */
+    public boolean isIdOrganismoPdpIsNotNull() {
+        return idOrganismoPdpIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo idOrganismoPdp es NOT NULL
+     * @param idOrganismoPdpIsNotNull Valor de seteo.
+     */
+    public void setIdOrganismoPdpIsNotNull(boolean idOrganismoPdpIsNotNull) {
+        this.idOrganismoPdpIsNotNull = idOrganismoPdpIsNotNull;
+    }
+
 
     /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
