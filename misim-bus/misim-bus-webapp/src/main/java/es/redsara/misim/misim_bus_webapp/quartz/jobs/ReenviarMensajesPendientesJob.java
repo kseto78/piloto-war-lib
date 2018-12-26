@@ -117,6 +117,9 @@ public class ReenviarMensajesPendientesJob {
 					}
 				}
 				for (MensajeJMS mensajeJMSPendiente : listaMensajesPendientes) {
+					
+					int activeMQ = 2;
+					
 					try {
 						boolean encolado = false;
 						for (MensajeJMS mensajeJMSEncolado : listaMensajesEncolados) {
@@ -133,18 +136,26 @@ public class ReenviarMensajesPendientesJob {
 							LOG.info("Mensaje " + mensajeJMSPendiente.getIdMensaje() + " - " + mensajeJMSPendiente.getDestinatarioMensajeId() + " no ha sido encolado previamente.");
 							encolarMensaje(ps, servicioId, servicio, mensajeJMSPendiente);
 							//Comprobamos que si ya se ha actualizado la tabla de errores a true
-							erroresManager.comprobarActiveMqActivo(true);
+							activeMQ = 1;//true
 						} else {
 							LOG.info("Mensaje " + mensajeJMSPendiente.getIdMensaje() + " - " + mensajeJMSPendiente.getDestinatarioMensajeId() + " ya ha sido encolado previamente.");
 						} 				
 					}catch (CannotCreateTransactionException e) {
 						//Comprobamos que si ya se ha actualizado la tabla de errores a false
-						if (erroresManager.comprobarActiveMqActivo(false)) {
-							LOG.error(errorActiveMq+" HiloEnviarMensajesPremium.run --Error ActiveMq-- Mensaje: " + mensajeJMSPendiente.getIdMensaje());
-						}
+						activeMQ = 0;//false
 					} catch (Exception e) {
 						LOG.error("[ReenviarMensajesPendientesJob] Error al encolarMensaje: " , e);
 						completarMensajesConError(mensajesConError, destinatariosConError, mensajeJMSPendiente, ps);
+					}finally{
+//						Comprobamos que si ya se ha actualizado la tabla de errores
+						LOG.debug("Estamos en ReenviarMensajesPendientesJob-execute");					
+						if (activeMQ == 0){
+							if (erroresManager.comprobarActiveMqActivo(false)) {
+								LOG.error(errorActiveMq+" HiloEnviarMensajesPremium.run --Error ActiveMq-- Mensaje: " + mensajeJMSPendiente.getIdMensaje());
+							}
+						}else if (activeMQ == 1){
+							erroresManager.comprobarActiveMqActivo(true);
+						}
 					}
 				}
 	

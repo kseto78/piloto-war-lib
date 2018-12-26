@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.util.CollectionUtils;
 
 import es.map.sim.jms.receiver.SIMMessageReceiver;
@@ -62,11 +63,14 @@ public class EnviarMensajeJob {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String errorActiveMq = ps.getMessage("conexion.ERRORACTIVEMQ", null, "[ERROR-ACTIVEMQ]");
 		
+		int activeMQ = 2;
+		//Se obtiene el estado actual de activeMq
+		boolean estadoMq = erroresManager.getEstadoMq();
+		
 		try {
 			
 			checkDependenciesPresent();
-			//Se obtiene el estado actual de activeMq
-			boolean estadoMq = erroresManager.getEstadoMq();
+					
 			List<Long> idServiciosPlan = planificacionesManager.getServiciosPlanificacion();
 			if(estadoMq) {
 				LOG.info("[EnviarMensajeJob] Servicios planificados: " + idServiciosPlan.size());
@@ -90,21 +94,27 @@ public class EnviarMensajeJob {
 								LOG.info("[EnviarMensajeJob] Desencolando mensajes de servicio: " + nombreServicio);
 							}	
 							boolean received=false;
+							
 							try{ 
 //								LOG.info("[EnviarMensajeJob] BEFORE " + nombreServicio);
 								received=messageReceiver.receiveByServiceName(nombreServicio);
 								if(!estadoMq) {
-									erroresManager.comprobarActiveMqActivo(true);
 									estadoMq = true;
+									activeMQ = 1;
 								}								
 //								LOG.info("[EnviarMensajeJob] AFTER " + nombreServicio);
-							}catch (Throwable t){
+							}catch(CannotCreateTransactionException e){
 								if(estadoMq) {
-									if (erroresManager.comprobarActiveMqActivo(false)) {
-										LOG.error(errorActiveMq+" [EnviarMensajeJob] Error receiving message for service "+ nombreServicio);
-									}		
+									activeMQ = 0;
+									LOG.error(errorActiveMq+" [EnviarMensajeJob] Error receiving message for service "+ nombreServicio);
+									estadoMq = false;
 								}
-								leido=true;
+								mensajesLeidos++;
+								leido=true;							
+							}catch (Throwable t){
+								LOG.error("[EnviarMensajeJob] Error receiving message for service "+ nombreServicio);
+								leido=true;				
+								mensajesLeidos++;
 							}
 							if(received){
 								leido=true;
@@ -115,12 +125,19 @@ public class EnviarMensajeJob {
 				}
 			}
 		} catch (Exception e) {
-			boolean estadoMq = erroresManager.getEstadoMq();
 			if(estadoMq) {
-				if (erroresManager.comprobarActiveMqActivo(false)) {
-					LOG.error(errorActiveMq+" [EnviarMensajeJob] Error inesperado en job de enviar mensajes",e);
-				}	
+				LOG.error(errorActiveMq+" [EnviarMensajeJob] Error inesperado en job de enviar mensajes",e);
+				activeMQ = 0;
+//				}	
 			}			
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en EnviarMensajesJob-execute ");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
+			}
 		}
 
 	}

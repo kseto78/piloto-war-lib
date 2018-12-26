@@ -59,8 +59,8 @@
 			<xsd:element maxOccurs="1" minOccurs="0" name="Origen" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="0" name="Modo" type="xsd:string"/>				
 			<xsd:element maxOccurs="1" minOccurs="0" name="Adjuntos" type="impl:Adjuntos"/>
-
 			<xsd:element maxOccurs="1" minOccurs="1" name="DestinatariosMail" type="impl:DestinatariosMail"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="PassBook" type="impl:passbook"/>
 		</sequence>
 	</complexType>
 
