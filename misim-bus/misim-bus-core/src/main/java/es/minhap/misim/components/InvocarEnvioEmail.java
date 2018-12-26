@@ -38,7 +38,7 @@ import es.minhap.sim.model.TblServicios;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 
 /**
- * Cliente genérico para JAX-WS
+ * Cliente genÃ©rico para JAX-WS
  * 
  * @author ludarcos
  * 
@@ -68,7 +68,7 @@ public class InvocarEnvioEmail implements Callable {
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
-		LOG.debug("Empezando el proceso de invocación del enviador...");
+		LOG.debug("Empezando el proceso de invocaciÃ³n del enviador...");
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		
 		try{
@@ -101,7 +101,7 @@ public class InvocarEnvioEmail implements Callable {
 			
 			String utilizarActiveMqEmail = ps.getMessage("constantes.ENVIO_ACTIVEMQEMAIL", null,"S");
 			
-			//Utilizamos el hilo según si es Premium y según configuracion properties
+			//Utilizamos el hilo segÃºn si es Premium y segÃºn configuracion properties
 			if(esPremium && !"S".equals(utilizarActiveMqEmail)){
 				levantarHilo(respuestaEnvio);
 			}
@@ -147,7 +147,7 @@ public class InvocarEnvioEmail implements Callable {
 				
 			}catch(Exception e){
 				//Lanzar error
-				LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
+				LOG.error("Error en la transmisiÃ³n: Error al obtener la respuesta del servicio Web especificado", e);
 				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
 			}
 
@@ -157,11 +157,11 @@ public class InvocarEnvioEmail implements Callable {
 			
 		}catch(Exception e){
 			//Lanzar error
-			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
+			LOG.error("Error en la transmisiÃ³n: Error de sistema Invocar Emisor", e);
 			throw new ModelException("Error de sistema Invocar Emisor", 502);
 		}
 
-		LOG.debug("Proceso de creación de invocación al emisor terminado.");
+		LOG.debug("Proceso de creaciÃ³n de invocaciÃ³n al emisor terminado.");
 
 		return eventContext.getMessage();
 	}

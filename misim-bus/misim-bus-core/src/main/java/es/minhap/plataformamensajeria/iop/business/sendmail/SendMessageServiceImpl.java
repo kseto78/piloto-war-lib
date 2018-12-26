@@ -164,6 +164,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 	@Autowired
 	private SessionFactory sessionFactorySIMApp;
+	
+	private String urlDestinoOperador = null;
 
 	/**
 	 * @return the sessionFactorySIMApp
@@ -185,7 +187,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	/************************************/
 	@Override
 	@Transactional
-	public void postSMS(Long idMensaje, Long loteId, Long destinatarioMensajeId, String codOrganismo,
+	public String postSMS(Long idMensaje, Long loteId, Long destinatarioMensajeId, String codOrganismo,
 			String usuarioAplicacion, String passAplicacion, String aplicacionPremium) throws Exception {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String okEnvio = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA", null);
@@ -286,6 +288,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 					null, null, null);
 			throw new Exception("[SendMessageServiceImpl.postSMS] -ERROR ENVIANDO SMS- No existe ningun Servidor Disponible: " + idMensaje);
 		}
+		
+		return urlDestinoOperador;
 
 	}
 
@@ -350,6 +354,10 @@ public class SendMessageServiceImpl implements ISendMessageService {
 				LOG.debug("No encontrado proveedor");
 				return null;
 			}
+			
+			//Declaramos una variable global con la url del operador para poder obtenerla en postSMS
+			//y poder especificarla en los errores del graylog
+			urlDestinoOperador = servidor.getUrldestino();
 
 			// generamos la peticion de envio
 			envio.setUsuario(usernameMISIM);
@@ -1112,10 +1120,16 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		NotificacionDataRequest ndr = new NotificacionDataRequest();
 
 		ParametrosServidorPush psp = (ParametrosServidorPush) messageData.servers.get(indice);
+		TblServidoresQuery tblServQuery = new TblServidoresQuery();
+		tblServQuery.setServidorid(Long.valueOf(messageData.servers.get(indice).getServidorPushId()));		
+		List<TblServidores> listServ = servidoresManager.getServidoresByQuery(tblServQuery);
+		if(!listServ.isEmpty()){
+			proveedor = listServ.get(0).getNombre();
+			peticionPush.setProveedor(proveedor);
+		}
+		
 		if ((null != psp) && (psp.getPlataformaId() == 1)) {
 			if ((null != messageData.tokensUsuario) && (!messageData.tokensUsuario.isEmpty())) {
-				proveedor = "Google PUSH";
-				peticionPush.setProveedor(proveedor);
 				ndr.setgCMApiKey(messageData.gCMApiKey);
 
 				ndr.setBadge(messageData.badge);
@@ -1124,8 +1138,6 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			}
 		} else if (psp.getPlataformaId() == 2) {
 			if ((null != messageData.tokensUsuario) && (!messageData.tokensUsuario.isEmpty())) {
-				proveedor = "Apple PUSH";
-				peticionPush.setProveedor(proveedor);
 				//Solo seteamos el nodo notificacionSilenciosa para el caso apple
 				peticionPush.setNotificacionSilenciosa((messageData.getNotificacionSilenciosa() != null && messageData.getNotificacionSilenciosa())?messageData.getNotificacionSilenciosa():false);
 				ndr.setRutaCertificadoAPNS(messageData.rutaCertificadoAPNS);

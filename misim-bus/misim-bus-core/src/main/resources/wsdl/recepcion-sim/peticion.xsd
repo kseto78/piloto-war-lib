@@ -48,6 +48,7 @@
 			<xsd:element maxOccurs="1" minOccurs="0" name="Modo" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="1" name="Destinatarios" type="impl:destinatarios"/>
 			<xsd:element maxOccurs="1" minOccurs="0" name="Adjuntos" type="impl:adjuntos"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="PassBook" type="impl:passbook"/>
 		</sequence>
 	</complexType>
 	
@@ -83,6 +84,44 @@
 		<sequence>
 			<xsd:element maxOccurs="1" minOccurs="1" name="Nombre" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="1" name="Contenido" type="xsd:string"/>
+		</sequence>
+	</complexType>
+	<complexType name="passbook">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="URL" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="LogoText" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Description" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="CamposPrincipales" type="impl:camposPrincipales"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CamposCabecera" type="impl:camposCabecera"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CamposSecundarios" type="impl:camposSecundarios"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="CamposDetalleTrasero" type="impl:camposDetalleTrasero"/>
+		</sequence>
+	</complexType>
+	<complexType name="camposPrincipales">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="PkFields" type="impl:pkFields"/>
+		</sequence>
+	</complexType>
+	<complexType name="camposCabecera">
+		<sequence>
+			<xsd:element maxOccurs="3" minOccurs="0" name="PkFields" type="impl:pkFields"/>
+		</sequence>
+	</complexType>
+	<complexType name="camposSecundarios">
+		<sequence>
+			<xsd:element maxOccurs="3" minOccurs="0" name="PkFields" type="impl:pkFields"/>
+		</sequence>
+	</complexType>
+	<complexType name="camposDetalleTrasero">
+		<sequence>
+			<xsd:element maxOccurs="3" minOccurs="0" name="PkFields" type="impl:pkFields"/>
+		</sequence>
+	</complexType>
+	<complexType name="pkFields">
+		<sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Key" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Label" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="Value" type="xsd:string"/>
 		</sequence>
 	</complexType>
 

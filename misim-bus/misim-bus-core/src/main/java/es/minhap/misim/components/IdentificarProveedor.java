@@ -142,6 +142,9 @@ public class IdentificarProveedor implements Callable {
 				if(listaProveedores.get(0).getEncoding()!=null){
 					eventContext.getMessage().setOutboundProperty("encoding", listaProveedores.get(0).getEncoding());
 				}
+				if(listaProveedores.get(0).getCompany()!=null){
+					eventContext.getMessage().setOutboundProperty("company", listaProveedores.get(0).getCompany());
+				}
 				if(listaProveedores.get(0).getBasicAutentication()!=null){
 					eventContext.getMessage().setOutboundProperty("basicAutentication", listaProveedores.get(0).getBasicAutentication());
 					eventContext.getMessage().setOutboundProperty("usuarioAutentication", listaProveedores.get(0).getUserAutentication());

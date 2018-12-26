@@ -102,13 +102,7 @@ public class InvocarEmisorPush implements Callable {
 				}
 			}
 			
-			if (p.getNombre().startsWith(COMPANY_GOOGLE)){
-				company = COMPANY_GOOGLE;
-			}
-			if (p.getNombre().startsWith(COMPANY_APPLE)){
-				company = COMPANY_APPLE;
-			}
-			
+			company = String.class.cast(eventContext.getMessage().getOutboundProperty("company"));
 
 			response = sendPushNotification(idMensaje, parametros, keystore, company);
 
@@ -257,7 +251,10 @@ public class InvocarEmisorPush implements Callable {
 						sound = notificacion.getSound();
 					}
 
-					data = data.replaceAll("}", ", \"idMensaje\":\"" + idMensaje + "\"}");
+					StringBuilder b = new StringBuilder(data);
+			    	b.replace(data.lastIndexOf("}"), data.lastIndexOf("}") + 1, " ,\"idMensaje\":\""+ idMensaje +"\"}" );
+			    	data = b.toString();
+			    						
 					LOG.info("InvocarEmisorPush: data: " + data);
 
 					JSONObject jsonObject = new JSONObject(data);

@@ -257,11 +257,11 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
 		return xml;
 	}
 		
-	private SOAPMessage generateFaultAcuse(String url, MuleEventContext eventContext) throws Exception {
+	private SOAPMessage generateFaultAcuse(String url, MuleEventContext eventContext, String mensajeId) throws Exception {
 		SOAPMessage response = null;
 		Fault respuestaFault = new Fault();
 		respuestaFault.setFaultcode("0999");
-		respuestaFault.setFaultstring("Se ha producido un error al invocar el endpoint: "+url);
+		respuestaFault.setFaultstring("Se ha producido un error al invocar el endpoint: "+url+" ID del mensaje: "+mensajeId);
 		response = XMLUtils.dom2soap(XMLUtils.setPayloadFromObject(respuestaFault, Charset.forName("UTF-8"), Fault.class));
 		return response;
 	}
@@ -272,7 +272,12 @@ public class InvocarEnvioRecepcionAEAT implements Callable, MuleContextAware {
         props.put("url", url.substring(8));
         MuleMessage retVal = client.send(innerUrl, message, props);
         if (retVal.getExceptionPayload() != null &&  retVal.getExceptionPayload().getException()!=null) {
-        	SOAPMessage soapMessage = generateFaultAcuse(url, eventContext);
+        	DocumentBuilder newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        	Document parse = newDocumentBuilder.parse(new ByteArrayInputStream(message.getBytes()));
+        	String mensajeId = null; 
+			if (parse.getElementsByTagName("messageId").item(0).getTextContent() != null) mensajeId = parse.getElementsByTagName("messageId").item(0).getTextContent();
+        	
+        	SOAPMessage soapMessage = generateFaultAcuse(url, eventContext, mensajeId);
         	String xmlFault = pharseMessageToString(soapMessage);
         	eventContext.getMessage().setOutboundProperty("SOAPFault", true);
         	return xmlFault;

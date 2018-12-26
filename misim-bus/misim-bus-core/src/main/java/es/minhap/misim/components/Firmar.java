@@ -9,15 +9,18 @@ import misim.bus.common.bean.SoapPayload;
 import misim.bus.common.util.KeyStoreUtils;
 import misim.bus.common.util.XMLUtils;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.misim.bus.model.seguridad.FirmaService;
 
@@ -44,6 +47,13 @@ public class Firmar implements Callable {
 		// TODO : Implementar la llamada al servicio de firma : SRV-FRM-01
 		
 		MuleMessage muleMessage = eventContext.getMessage();
+		
+		MuleContext ctx = eventContext.getMuleContext();
+		
+		ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = ctx.getRegistry().lookupObject("reloadableResourceBundleMessageSource");
+		
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+
 
 		// Se recupera el documento de la petición
 		final Document docOriginal = SoapPayload.class.cast(muleMessage.getPayload()).getSoapMessage();
@@ -62,7 +72,7 @@ public class Firmar implements Callable {
 						props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
 						props.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
 						props.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
-						props.getProperty(KeyStoreUtils.KEY_STORE_FILE));
+						props.getProperty(KeyStoreUtils.KEY_STORE_FILE),ps);
 		
 				// Se recuperan todos los nodos Signature del XML
 				final NodeList signatureL = docFirmado.getElementsByTagNameNS(

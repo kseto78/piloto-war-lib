@@ -54,12 +54,18 @@ public class HiloEnviarMensajesPremium extends Thread {
 		String descripcion =  ps.getMessage("constantes.descripcionAnularMensaje", null);
 		String usuario =  ps.getMessage("constantes.usuarioActiveMQ", null);
 		String errorClave = ps.getMessage("clave.ERRORCLAVE.AEAT", null, "[ERROR-CL@VE]:");
+		String urlOperador = null;
 		try{
-			sendMessageService.postSMS(mensajeId, loteId, destinatarioMensajeId, null, null, null, null);
+			urlOperador = sendMessageService.postSMS(mensajeId, loteId, destinatarioMensajeId, null, null, null, null);
 		
 		}catch(Exception e){
-			LOG.error(errorClave + "Excepcion en el Thread enviando Mensaje PREMIUM: " + mensajeId);
-			LOG.error("Excepcion en el Thread enviando Mensaje: " + mensajeId, e);
+			if(urlOperador != null){
+				LOG.error(errorClave + "Excepcion en el Thread enviando Mensaje PREMIUM: " + mensajeId + urlOperador);
+				LOG.error("Excepcion en el Thread enviando Mensaje: " + mensajeId, urlOperador, e);
+			}else{
+				LOG.error(errorClave + "Excepcion en el Thread enviando Mensaje PREMIUM: " + mensajeId);
+				LOG.error("Excepcion en el Thread enviando Mensaje: " + mensajeId, e);
+			}			
 			if (isAEAT){
 				tblMensajesManager.setEstadoMensaje(mensajeId, estado, descripcion, null, destinatarioMensajeId, null, usuario, null);
 			}

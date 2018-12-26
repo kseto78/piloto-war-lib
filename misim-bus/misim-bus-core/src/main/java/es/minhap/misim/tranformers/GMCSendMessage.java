@@ -207,7 +207,12 @@ public class GMCSendMessage {
 //	    	data = data.replace("TituloNoValido", "tickerText");
 //	    	LOG.info("GMCSendMessage :".concat(data));
 	    	data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ");
-	    	string = string.concat(" \"data\": ").concat(data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ")).concat("}");
+	    	
+	    	StringBuilder b = new StringBuilder(data);
+	    	b.replace(data.lastIndexOf("}"), data.lastIndexOf("}") + 1, " ,\"idMensaje\":\""+ idMensaje +"\" } " );
+	    	data = b.toString();
+	    		    	
+	    	string = string.concat(" \"data\": ").concat(data).concat("}");
 //        	{ "registration_ids": [ "APA91bEAI5WzTsswjqftDmN9DW4_cczfc8eRveae9xoCvc-ME0uuoaqLz9Qy0D06Uek9189v4jm3sihpeYbWI2Zyp9mI5Ky1_jROLaaMkLTnEy_L7avvuYqZxwFPE147I8BPq5FAtfGe59GIrbEodbefI1fhTR_Mkg", "APA91bEVZx1Bxm7QGLXyCFNgsufhCFZ1EBt3R6J1kXxyQGp4CQXUp96fO7ZTRMuh0ga9OS0wMnxji4eDkc0W3NwC0SMsPbhNt6kJg1ktT39CNRkRsFH7Kp-6OOeBqZuz05zGApkHXLOPxUeQ5esDSHDk-N-eW4wlSg" ], "data": {"contentTitle":"titulo", "tickerText":"TicketText", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "message":"Prueba de avisos PUSH por favor avisad si os llega", "url": "http://google.com"}}        	
         	
         	

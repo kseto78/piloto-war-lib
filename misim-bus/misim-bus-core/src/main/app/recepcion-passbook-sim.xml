@@ -49,6 +49,27 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			<spring-object bean="inicializarClientePBK" />
 		</component>
 
+
+
+		<!--  WS SECURITY -->
+		<processor-chain>
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Preparacion de la dessecurizacion" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Antes del subfujo FLW-SEG-RES de dessecurizacion el payload es : #[payload]" />
+			<flow-ref name="FLW-SEG-RES" doc:name="Securizar respuesta" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Flujo de ida securizado" />
+			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
+		</processor-chain>
+		
+		<!-- desencriptar -->
+		<logger level="INFO" doc:name="Logger" message="[FLOW - actualizarPasswordCorreo - Desencriptar " />
+		<processor-chain doc:name="Processor Chain">
+			<component	doc:name="Encripta" >
+				<spring-object bean="desencriptar" />
+			</component>
+		</processor-chain>
+
+		
+
 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" />
 
 		<!-- INDENTIFICAR TIPO DE PETICION -->

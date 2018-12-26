@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import es.redsara.misim.misim_bus_webapp.passbook.peticion.Passbook;
+
 
 /**
  * <p>Clase Java para MensajeEmail complex type.
@@ -23,6 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="Modo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="Adjuntos" type="{http://misim.redsara.es/misim-bus-webapp/peticion}Adjuntos" minOccurs="0"/>
  *         &lt;element name="DestinatariosMail" type="{http://misim.redsara.es/misim-bus-webapp/peticion}DestinatariosMail"/>
+ *         &lt;element name="PassBook" type="{http://misim.redsara.es/misim-bus-webapp/peticion}passbook" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,7 +41,8 @@ import javax.xml.bind.annotation.XmlType;
     "origen",
     "modo",
     "adjuntos",
-    "destinatariosMail"
+    "destinatariosMail",
+    "passBook"
 })
 public class MensajeEmail {
 
@@ -54,6 +58,8 @@ public class MensajeEmail {
     protected Adjuntos adjuntos;
     @XmlElement(name = "DestinatariosMail", required = true)
     protected DestinatariosMail destinatariosMail;
+    @XmlElement(name = "PassBook")
+    protected Passbook passBook;
 
     /**
      * Obtiene el valor de la propiedad asunto.
@@ -198,5 +204,27 @@ public class MensajeEmail {
     public void setDestinatariosMail(DestinatariosMail value) {
         this.destinatariosMail = value;
     }
+    /**
+     * Obtiene el valor de la propiedad passBook.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Passbook }
+     *     
+     */
+    public Passbook getPassBook() {
+        return passBook;
+    }
 
+    /**
+     * Define el valor de la propiedad passBook.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Passbook }
+     *     
+     */
+    public void setPassBook(Passbook value) {
+        this.passBook = value;
+    }
 }

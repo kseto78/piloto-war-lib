@@ -67,33 +67,33 @@ public class EncriptarProveedor implements Callable {
 				List<Node> nodosACifrar = new ArrayList<Node>();
 				nodosACifrar.add(nodeList.item(0));
 				
-				Document docCifrado = cifradoService.cifrar(
-					documento, 
-					props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
-					props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
-					String.valueOf(eventContext.getMessage().getOutboundProperty("certificado")),
-					"",
-					props.getProperty(KeyStoreUtils.KEY_STORE_FILE),
-					nodosACifrar);
-				
-				// Verificamos que el documento ha sido cifrado
-		
-				//Comprobamos el nodo de cifrado
-				NodeList cipherValue = docCifrado.getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#", 
-					"CipherValue");
-		
-				if(cipherValue == null || !(cipherValue.getLength() > 0)){
-					LOG.error("Cifrado: No se ha cifrado correctamente");
-					throw new ModelException("No se ha cifrado correctamente", 320);
-				}
-		
-				SoapPayload.class.cast(muleMessage.getPayload()).setSoapMessage(docCifrado);
+//				Document docCifrado = cifradoService.cifrar(
+//					documento, 
+//					props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
+//					props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
+//					String.valueOf(eventContext.getMessage().getOutboundProperty("certificado")),
+//					"",
+//					props.getProperty(KeyStoreUtils.KEY_STORE_FILE),
+//					nodosACifrar);
+//				
+//				// Verificamos que el documento ha sido cifrado
+//		
+//				//Comprobamos el nodo de cifrado
+//				NodeList cipherValue = docCifrado.getElementsByTagNameNS(
+//					"http://www.w3.org/2001/04/xmlenc#", 
+//					"CipherValue");
+//		
+//				if(cipherValue == null || !(cipherValue.getLength() > 0)){
+//					LOG.error("Cifrado: No se ha cifrado correctamente");
+//					throw new ModelException("No se ha cifrado correctamente", 320);
+//				}
+//		
+//				SoapPayload.class.cast(muleMessage.getPayload()).setSoapMessage(docCifrado);
 			}
 			
-		}catch(ModelException e){
-			//Lanzar error
-			throw new ModelException(e.getMensaje(), e.getCodigo());
+//		}catch(ModelException e){
+//			//Lanzar error
+//			throw new ModelException(e.getMensaje(), e.getCodigo());
 		}catch(Exception e){
 			//Lanzar error
 			LOG.error("Cifrado: Error de sistema Cifrado", e);
