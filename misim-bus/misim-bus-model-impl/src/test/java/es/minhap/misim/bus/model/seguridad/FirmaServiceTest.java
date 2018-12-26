@@ -17,6 +17,7 @@ import misim.bus.common.exceptions.ApplicationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,7 +29,7 @@ import org.w3c.dom.NodeList;
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { ModelTestUtil.SPRING_CONTEXT_LOCATION })
+@ContextConfiguration(locations = { ModelTestUtilTest.SPRING_CONTEXT_LOCATION })
 public class FirmaServiceTest {
 
 	@Autowired
@@ -36,6 +37,10 @@ public class FirmaServiceTest {
 
 	@Resource(name = "firmaProperties")
 	Properties props;
+	
+	@Autowired
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
 	/**
 	 * Test method for
@@ -53,18 +58,18 @@ public class FirmaServiceTest {
 			dbf.setNamespaceAware(true);
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			final Document docOrginal = db.parse(new ClassPathResource(props
-					.getProperty(ModelTestUtil.PETICION_CLASS_PATH)).getFile());
+					.getProperty(ModelTestUtilTest.PETICION_CLASS_PATH)).getFile());
 
 			// Invocamos al servicio de firma
 			final Document docFirmado = firmaService.firmarWSSecurity(
 					docOrginal,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
 					new ClassPathResource(props
-							.getProperty(ModelTestUtil.KEY_STORE_FILE))
-							.getFile().getAbsolutePath());
+							.getProperty(ModelTestUtilTest.KEY_STORE_FILE))
+							.getFile().getAbsolutePath(),null);
 
 			// Se recuperan todos los nodos Signature del XML
 			final NodeList signatureL = docFirmado.getElementsByTagNameNS(
@@ -96,16 +101,16 @@ public class FirmaServiceTest {
 			dbf.setNamespaceAware(true);
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			final Document docOrginal = db.parse(new ClassPathResource(props
-					.getProperty(ModelTestUtil.PETICION_INCORRECTA_CLASS_PATH))
+					.getProperty(ModelTestUtilTest.PETICION_INCORRECTA_CLASS_PATH))
 					.getFile());
 
 			// Invocamos al servicio de firma
 			firmaService.firmarWSSecurity(docOrginal,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_FILE));
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_FILE),null);
 
 			fail("Una excepción debería haber sido lanzada");
 		} catch (final ApplicationException ae) {
@@ -132,22 +137,22 @@ public class FirmaServiceTest {
 			dbf.setNamespaceAware(true);
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			final Document docOrginal = db.parse(new ClassPathResource(props
-					.getProperty(ModelTestUtil.PETICION_CLASS_PATH)).getFile());
+					.getProperty(ModelTestUtilTest.PETICION_CLASS_PATH)).getFile());
 
 			// Invocamos al servicio de firma
 			final Document docFirmado = firmaService.firmarWSSecurity(
 					docOrginal,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
 					new ClassPathResource(props
-							.getProperty(ModelTestUtil.KEY_STORE_FILE))
-							.getFile().getAbsolutePath());
+							.getProperty(ModelTestUtilTest.KEY_STORE_FILE))
+							.getFile().getAbsolutePath(),null);
 
 			// Lanzamos la validación de firma
 			assertTrue("La validación ha fracasado",
-					firmaService.validarFirmaWSSecurity(docFirmado));
+			firmaService.validarFirmaWSSecurity(docFirmado, null, null));
 		} catch (final Throwable t) {
 			fail("Error inesperado : " + t.getMessage());
 		}

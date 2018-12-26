@@ -11,7 +11,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
-public class ModelTestUtil {
+public class ModelTestUtilTest {
 
 	/**
 	 * Spring context

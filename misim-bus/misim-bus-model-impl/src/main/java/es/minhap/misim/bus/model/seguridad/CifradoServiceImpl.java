@@ -45,6 +45,8 @@ public class CifradoServiceImpl implements CifradoService {
 			final String aliasPassword, final String keyStoreFile,
 			final List<Node> nodosAFirmar) throws ModelException {
 		
+		LOG.info("Inicio cifrar....");
+		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inicio cifrar....");
 			LOG.debug("KeyStore utilizado: " + keyStoreFile);
@@ -84,8 +86,11 @@ public class CifradoServiceImpl implements CifradoService {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Fin cifrar");
 			}
-			return documento;
 			
+			LOG.info("Fin cifrar....");
+			
+			return documento;
+						
 		} catch (final Throwable e) {
 			LOG.error("Cifrado: Error de sistema Cifrado", e);
 			throw new ModelException("Error de sistema Cifrado", 502);
@@ -100,6 +105,8 @@ public class CifradoServiceImpl implements CifradoService {
 			final String keyStoreType, final String keyStorePassword,
 			final String keyStoreAlias, final String aliasPassword,
 			final String keyStoreFile) throws ModelException{
+		
+		LOG.info("Inicio descifrar....");
 		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inicio descifrar....");
@@ -143,6 +150,8 @@ public class CifradoServiceImpl implements CifradoService {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Fin descifrar");
 			}
+			
+			LOG.info("Fin descifrar....");
 			
 			return documento;
 			

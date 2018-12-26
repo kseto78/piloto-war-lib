@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { ModelTestUtil.SPRING_CONTEXT_LOCATION })
+@ContextConfiguration(locations = { ModelTestUtilTest.SPRING_CONTEXT_LOCATION })
 public class CifradoServiceImplTest {
 
 	@Autowired
@@ -43,7 +43,7 @@ public class CifradoServiceImplTest {
 			dbf.setNamespaceAware(true);
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			final Document docOriginal = db.parse(new ClassPathResource(props
-					.getProperty(ModelTestUtil.PETICION_CLASS_PATH)).getFile());
+					.getProperty(ModelTestUtilTest.PETICION_CLASS_PATH)).getFile());
 
 			// Se recuperan todos los nodos Solicitudes del XML
 			final NodeList solicitudes = docOriginal
@@ -61,12 +61,12 @@ public class CifradoServiceImplTest {
 			// Invocamos al servicio de cifrado
 			final Document docCifrado = cifradoService.cifrar(
 					docOriginal,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
 					new ClassPathResource(props
-							.getProperty(ModelTestUtil.KEY_STORE_FILE))
+							.getProperty(ModelTestUtilTest.KEY_STORE_FILE))
 							.getFile().getAbsolutePath(), nodosACifrar);
 
 			assertTrue("El documento no ha sido cifrado", docCifrado != null);
@@ -119,7 +119,7 @@ public class CifradoServiceImplTest {
 			dbf.setNamespaceAware(true);
 			final DocumentBuilder db = dbf.newDocumentBuilder();
 			final Document docOriginal = db.parse(new ClassPathResource(props
-					.getProperty(ModelTestUtil.PETICION_CLASS_PATH)).getFile());
+					.getProperty(ModelTestUtilTest.PETICION_CLASS_PATH)).getFile());
 
 			// Se recuperan todos los nodos Solicitudes del XML
 			final NodeList solicitudes = docOriginal
@@ -137,44 +137,44 @@ public class CifradoServiceImplTest {
 			// Invocamos al servicio de cifrado
 			final Document docCifrado = cifradoService.cifrar(
 					docOriginal,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
 					new ClassPathResource(props
-							.getProperty(ModelTestUtil.KEY_STORE_FILE))
+							.getProperty(ModelTestUtilTest.KEY_STORE_FILE))
 							.getFile().getAbsolutePath(), nodosACifrar);
 
 			assertTrue("El documento no ha sido cifrado", docCifrado != null);
 
 			System.out
 					.println("***************************************\nDoc Cifrado : "
-							+ ModelTestUtil.getXMLFlow(docCifrado));
+							+ ModelTestUtilTest.getXMLFlow(docCifrado));
 
 			// Desciframos el documento cifrado
 			Document docDescifrado = cifradoService.descifrarKey(
 					docCifrado,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
 					new ClassPathResource(props
-							.getProperty(ModelTestUtil.KEY_STORE_FILE))
+							.getProperty(ModelTestUtilTest.KEY_STORE_FILE))
 							.getFile().getAbsolutePath());
 
 			docDescifrado = cifradoService.descifrar(
 					docDescifrado,
-					props.getProperty(ModelTestUtil.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtil.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtil.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtil.ALIAS_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
+					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
+					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
 					new ClassPathResource(props
-							.getProperty(ModelTestUtil.KEY_STORE_FILE))
+							.getProperty(ModelTestUtilTest.KEY_STORE_FILE))
 							.getFile().getAbsolutePath());
 
 			System.out
 					.println("***************************************\nDoc Descifrado : "
-							+ ModelTestUtil.getXMLFlow(docDescifrado));
+							+ ModelTestUtilTest.getXMLFlow(docDescifrado));
 
 			// Comparamos que los campos del nodo solicitudes del documento
 			// original y descifrado son iguales
