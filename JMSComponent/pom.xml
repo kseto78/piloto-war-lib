@@ -122,17 +122,17 @@
 		</plugin>
 		</plugins>
 	</build>
-	<!-- OFICINA TECNICA Repositorio de distribución para el despliegue de los artefactos -->		
-		<distributionManagement>
-					<repository>
-						<id>REA-release</id>
-						<name>REA-release</name>
-						<url>https://artefactos.scae.redsara.es/artifactory/REA-release/</url>
-					</repository>
-					<snapshotRepository>
-						<id>REA-snapshots</id>
-						<name>REA-snapshots</name>
-						<url>https://artefactos.scae.redsara.es/artifactory/REA-snapshot/</url>
-					</snapshotRepository>
-		</distributionManagement>
+<!-- OFICINA TECNICA Repositorio de distribución para el despliegue de los artefactos  -->	
+	<distributionManagement>
+		<repository>
+			<id>SIM-release</id>
+			<name>SIM-release</name>
+			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>SIM-snapshots</id>
+            <name>SIM-snapshots</name>
+			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>	
 </project>
