@@ -125,12 +125,12 @@
 <!-- OFICINA TECNICA Repositorio de distribución para el despliegue de los artefactos  -->	
 	<distributionManagement>
 		<repository>
-			<id>SIM-release</id>
+			<id>minhap-release</id>
 			<name>SIM-release</name>
 			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url>
 		</repository>
 		<snapshotRepository>
-			<id>SIM-snapshots</id>
+			<id>minhap-snapshots</id>
             <name>SIM-snapshots</name>
 			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url>
 		</snapshotRepository>
