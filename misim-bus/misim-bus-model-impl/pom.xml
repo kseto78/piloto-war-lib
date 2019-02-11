@@ -57,6 +57,18 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>1.46</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>es.minhap</groupId>
+			<artifactId>PlataformaMensajeriaIOP</artifactId>
+			<version>3.0.2</version> 
+			<exclusions>
+			<exclusion> 
+ 				<groupId>org.bouncycastle</groupId> 
+ 				<artifactId>bcprov-jdk15on</artifactId> 
+ 			</exclusion>
+			</exclusions>
+		</dependency>
 
 		<!-- Tests -->
 		<dependency>
