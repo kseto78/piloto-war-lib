@@ -137,12 +137,12 @@ public class InicializarAplicacionCliente implements Callable {
 				if(listaProveedores.get(0).getFirma()!=null){
 					eventContext.getMessage().setOutboundProperty("firma", listaProveedores.get(0).getFirma());
 				}else{
-					if ("ActualizarPassword".equals(soapAplication) || "EnvioMensajesSSL".equals(soapAplication) ){
+					if ("ActualizarPassword".equals(soapAplication) || "EnvioMensajesWSS".equals(soapAplication) ){
 						eventContext.getMessage().setOutboundProperty("firma", "S");						
-						if("EnvioMensajesSSL".equals(soapAplication)){
-							eventContext.getMessage().setOutboundProperty("tipoFirma", "EnvioMensajesSSL");
+						if("EnvioMensajesWSS".equals(soapAplication)){
+							eventContext.getMessage().setOutboundProperty("tipoFirma", "EnvioMensajesWSS");
 						}else{
-							eventContext.getMessage().setOutboundProperty("tipoFirma", "WS-Security");
+							eventContext.getMessage().setOutboundProperty("tipoFirma", "ActualizarPassword");
 						}
 					}else{
 						eventContext.getMessage().setOutboundProperty("firma", "N");
