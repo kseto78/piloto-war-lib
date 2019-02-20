@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import misim.bus.common.exceptions.ApplicationException;
+import misim.bus.common.util.KeyStoreUtils;
 import misim.bus.common.util.XMLUtils;
 
 import org.apache.commons.codec.binary.Base64;
@@ -31,6 +32,7 @@ import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -38,6 +40,7 @@ import org.w3c.dom.NodeList;
 
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
+import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.manager.TblCertificadosManager;
 import es.minhap.sim.model.TblCertificados;
 
@@ -63,6 +66,10 @@ public class FirmaServiceImpl implements FirmaService {
 	
 	@Resource(name = "certificadoPublicoProperties")
 	Properties propsCertificado;
+	
+	@Autowired
+	CifradoService cifradoService;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -88,15 +95,15 @@ public class FirmaServiceImpl implements FirmaService {
 															   keyStoreFile));
 
 			// Inicialización de Builder de firma
-			final WSSecSignature builder = new WSSecSignature();
-			builder.setUserInfo(keyStoreAlias, aliasPassword);
-			builder.setKeyIdentifierType(1);
-			builder.setSigCanonicalization(WSS_CANONICALIZATION);
 			final WSSecurityEngine newEngine = new WSSecurityEngine();
 			final WSSConfig config = WSSConfig.getNewInstance();
 			config.setAllowNamespaceQualifiedPasswordTypes(true);
 			config.setWsiBSPCompliant(false);
 			newEngine.setWssConfig(config);
+			final WSSecSignature builder = new WSSecSignature();
+			builder.setUserInfo(keyStoreAlias, aliasPassword);
+			builder.setKeyIdentifierType(1);
+			builder.setSigCanonicalization(WSS_CANONICALIZATION);
 			builder.setWsConfig(config);
 
 			// Creación de la cabecera
@@ -133,27 +140,59 @@ public class FirmaServiceImpl implements FirmaService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean validarFirmaWSSecurity(final Document documento, String idServicio, PropertiesServices ps)	throws ModelException {
+	public boolean validarFirmaWSSecurity(final Document documento, PropertiesServices ps)	throws ModelException {
 
 
 		LOG.debug("Inicio validarFirmaWSSecurity...");
 		
 		LOG.info("En validarFirmaWSSecurity.");
 
-		try {
+		try {			
 			
+			LOG.info("REQUEST ORIGINAL FIRMADA Y ENCRIPTADA: " + XMLUtils.dom2xml(documento));
+						
+			// Invocamos al servicio de descifrado
+			Document docDescifrado = cifradoService.descifrarKey(
+					documento,
+					props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
+					props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
+					props.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
+					props.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
+					props.getProperty(KeyStoreUtils.KEY_STORE_FILE));
 			
-			LOG.info("REQUEST ORIGINAL FIRMADA: " + XMLUtils.dom2xml(documento));
+			docDescifrado = cifradoService.descifrar(docDescifrado,
+				props.getProperty(KeyStoreUtils.KEY_STORE_TYPE),
+				props.getProperty(KeyStoreUtils.KEY_STORE_PASSWORD),
+				props.getProperty(KeyStoreUtils.KEY_STORE_ALIAS),
+				props.getProperty(KeyStoreUtils.ALIAS_PASSWORD),
+				props.getProperty(KeyStoreUtils.KEY_STORE_FILE));	
 			
+			LOG.info("REQUEST ORIGINAL FIRMADA Y DESENCRIPTADA: " + XMLUtils.dom2xml(docDescifrado));
 			
+			// Obtenemos el id del servicio de la peticion para poder buscar en la BBDD el
+			// certificado correspondiente solo si el tipo de la peticion es de EnvioMensajesServiceWSS,
+			// si no encontramos el idServicio, la peticion es de tipo ActualizarPassword
+			NodeList peticion = docDescifrado.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "Peticion");
+			String idServicio = null;
+			String xmlPeticion = "";
+			if(peticion.item(0)!=null){
+				xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
+				PeticionXMLBean peticionXML = new PeticionXMLBean();
+				peticionXML.loadObjectFromXML(xmlPeticion);
+				idServicio = peticionXML.getServicio();				
+			}
+			else {
+				peticion = docDescifrado.getElementsByTagNameNS("http://misim.redsara.es/misim-bus-webapp/peticion", "ActualizarPasswordPeticion");
+				xmlPeticion = XMLUtils.nodeToString(peticion.item(0));
+				idServicio = "ActualizarPassword";
+			}			
 			
-			// Se recupera el certificado de la firma WS-Security
-			NodeList nodeSecurityWSSecurity = documento.getElementsByTagNameNS(
-								"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-								"BinarySecurityToken");
+			if(idServicio == null){
+				throw new ModelException("Falta el id de servicio para comprobar la firma", Integer.parseInt(ps.getMessage("plataformaErrores.ValidarFirma.COD_ERROR_GENERAL", null)));
+			}
 	
 			// Se recuperan todos los nodos Signature del XML
-			final NodeList signatureL = documento.getElementsByTagNameNS(
+			final NodeList signatureL = docDescifrado.getElementsByTagNameNS(
 					"http://www.w3.org/2000/09/xmldsig#", "Signature");
 
 			// Si no hay o si no hay uno único, la firma no es válida
@@ -165,63 +204,12 @@ public class FirmaServiceImpl implements FirmaService {
 			// Se recupera el único elemento Signature
 			final Node sigNode = signatureL.item(0);
 			
-			byte[] bytesCertificado = null;
-			try {
-				bytesCertificado = nodeSecurityWSSecurity.item(0).getTextContent().getBytes();
-			}catch(NullPointerException e){
-				LOG.error("Validar Firma: No se ha encontrado el certificado firmante en el documento XML");
-				throw new ModelException("Error de cifrado en la peticion", Integer.parseInt(ps.getMessage("plataformaErrores.ValidarFirma.COD_ERROR_CIFRADO", null)));
-			}
-			
-			File file = new File(props.getProperty(ModelTestUtilTest.MODEL_PETICION));
-			
-	
-			// Recuperamos el documento SOAP sin firmar
-			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			dbf.setNamespaceAware(true);
-			final DocumentBuilder db = dbf.newDocumentBuilder();
-			final Document docOrginal2 = db.parse(file);
-			
-
-
-			// Invocamos al servicio de firma
-			final Document docFirmado = firmarWSSecurity(
-					docOrginal2,
-					props.getProperty(ModelTestUtilTest.KEY_STORE_TYPE),
-					props.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD),
-					props.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS),
-					props.getProperty(ModelTestUtilTest.ALIAS_PASSWORD),
-					props.getProperty(ModelTestUtilTest.KEY_STORE_FILE),ps);
-			
-			
-			
-			NodeList nodeSecurityWSSecurity2 = docFirmado.getElementsByTagNameNS(
-					"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-					"BinarySecurityToken");
-
-			
-			byte[] bytesCertificado2 = null;
-			
-			bytesCertificado2= nodeSecurityWSSecurity2.item(0).getTextContent().getBytes();
-					
-						
-			boolean firmaValida = false;
-			boolean validarCertificado = false;
 			boolean validarFirmaServidor = false;
 			
-			if (compararCertificados(bytesCertificado, bytesCertificado2)){
-				validarCertificado = true;
-				LOG.info("comparar certificado: "+validarCertificado);
-			}else{
-				validarCertificado = false;
-				LOG.info("comparar certificado: "+validarCertificado);
-			}
-
-			if(idServicio == null){
-				if (comprobarFirmaServerCertificadoPublico(documento, propsCertificado.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS), 
+			if(idServicio == "ActualizarPassword"){ //Comprobacion de firma para tipo ActualizarPassword
+				if (comprobarFirmaServerCertificadoPublico(docDescifrado, propsCertificado.getProperty(ModelTestUtilTest.KEY_STORE_ALIAS), 
 						propsCertificado.getProperty(ModelTestUtilTest.KEY_STORE_PASSWORD), 
 						propsCertificado.getProperty(ModelTestUtilTest.KEY_STORE_FILE) )){
-
 					validarFirmaServidor = true;
 					LOG.info("comprobarFirmaServer: "+validarFirmaServidor);
 				}else{
@@ -230,8 +218,8 @@ public class FirmaServiceImpl implements FirmaService {
 				}
 
 				LOG.info("comprobarFirmaServer: "+validarFirmaServidor);
-			}else{
-				if (comprobarFirmaServer(sigNode, bytesCertificado2, idServicio, ps)){
+			}else{ //Comprobacion de firma para peticion de tipo EnvioMensajesServiceWSS
+				if (comprobarFirmaServer(sigNode, idServicio, ps)){
 					validarFirmaServidor = true;
 					LOG.info("comprobarFirmaServer: "+validarFirmaServidor);
 				}else{
@@ -240,24 +228,14 @@ public class FirmaServiceImpl implements FirmaService {
 				}
 				LOG.info("comprobarFirmaServer: "+validarFirmaServidor);
 			}
-			
-//			if (comprobarFirmaServer(sigNode, bytesCertificado2, ps)){
-//				validarFirmaServidor = true;
-//				LOG.info("comprobarFirmaServer: "+validarFirmaServidor);
-//			}else{
-//				validarFirmaServidor = false;
-//				LOG.info("comprobarFirmaServer: "+validarFirmaServidor);
-//			}
-			
-			firmaValida = (validarCertificado && validarFirmaServidor)?true:false;
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Fin validarFirmaWSSecurity");
 			}
 			
-			LOG.info("Fin validarFirmaWSSecurity: "+firmaValida);
+			LOG.info("Fin validarFirmaWSSecurity: "+validarFirmaServidor);
 			
-			return firmaValida;
+			return validarFirmaServidor;
 
 		} catch (final ModelException e) {
 			LOG.error(e.getMensaje(), e);
@@ -277,7 +255,7 @@ public class FirmaServiceImpl implements FirmaService {
 	 * @return
 	 * @throws CertificateException
 	 */
-	private boolean comprobarFirmaServer(Node sigNode, byte[] bytesCertificadoServidor, String idServicio, PropertiesServices ps) throws ModelException {
+	private boolean comprobarFirmaServer(Node sigNode, String idServicio, PropertiesServices ps) throws ModelException {
 
 		String valSerial=null, valName=null;
 		
@@ -312,8 +290,7 @@ public class FirmaServiceImpl implements FirmaService {
 				}
 			}
 		}
-		
-		X509Certificate certificate;
+				
 		try {
 			String valSerialServidor = "";
 			String valNameServidor = "";
@@ -321,8 +298,7 @@ public class FirmaServiceImpl implements FirmaService {
 			valSerialServidor = certificado.getSerial();
 			valNameServidor = certificado.getIssuer();
 
-	//Se comprueba  
-			
+			//Se comprueba
 			LOG.info("[FirmaServiceImpl] la firma contiene el serial number " + valSerial + " y el IssuerDN:"+ valName);
 			if(valSerialServidor.equals((valSerial)) && 
 				valNameServidor.replaceAll(" ","").equals(valName.replaceAll(" ",""))){
