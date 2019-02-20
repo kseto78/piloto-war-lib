@@ -91,7 +91,7 @@ public interface FirmaService {
 	 * @throws ModelException
 	 */
 
-	public boolean validarFirmaWSSecurity(Document documento, String idServicio, PropertiesServices ps)
+	public boolean validarFirmaWSSecurity(Document documento, PropertiesServices ps)
 			throws ModelException;
 
 	/**
