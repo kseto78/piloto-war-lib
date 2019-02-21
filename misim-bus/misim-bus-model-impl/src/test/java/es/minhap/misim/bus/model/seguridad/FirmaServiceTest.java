@@ -152,7 +152,7 @@ public class FirmaServiceTest {
 
 			// Lanzamos la validación de firma
 			assertTrue("La validación ha fracasado",
-			firmaService.validarFirmaWSSecurity(docFirmado, null, null));
+			firmaService.validarFirmaWSSecurity(docFirmado, null));
 		} catch (final Throwable t) {
 			fail("Error inesperado : " + t.getMessage());
 		}
