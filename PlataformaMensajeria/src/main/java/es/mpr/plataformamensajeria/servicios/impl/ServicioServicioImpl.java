@@ -26,6 +26,7 @@ import com.map.j2ee.util.beanutils.converters.IntegerConverter;
 import es.minhap.common.entity.OrderType;
 import es.minhap.plataformamensajeria.iop.beans.OrganismosServicioBean;
 import es.minhap.plataformamensajeria.iop.beans.TblServidoresServiciosBean;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorViewServicios;
 import es.minhap.plataformamensajeria.iop.manager.TblAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblCanalesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
@@ -115,7 +116,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 	@Resource(name = "tblUsuariosManagerImpl")
 	private TblUsuariosManager tblUsuariosManager;
 
-
+	@Resource(name="QueryExecutorViewServiciosImpl")
+	private QueryExecutorViewServicios queryExecutorViewServicios;
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServiciosMultiorganismo()
 	 */
@@ -157,6 +159,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 						servicio.setServicioId(s.getServicioid().intValue());
 						servicio.setNombre(s.getNombre());
 						servicio.setHistorificacion(s.getHistorificacion());
+						servicio.setCanalid(s.getTblCanales().getCanalid().intValue());
+						servicio.setAplicacionid(s.getTblAplicaciones().getAplicacionid().intValue());
 						res.add(servicio);
 					}
 				}
@@ -188,6 +192,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 							servicio.setServicioId(s.getServicioid().intValue());
 							servicio.setNombre(s.getNombre());
 							servicio.setHistorificacion(s.getHistorificacion());
+							servicio.setCanalid(s.getTblCanales().getCanalid().intValue());
 							res.add(servicio);
 						}
 					}
@@ -424,7 +429,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			sTO.setEliminado(servicio.getEliminado());
 			sTO.setFechacreacion(servicio.getFechacreacion());
 			sTO.setFechamodificacion(servicio.getFechamodificacion());
-			sTO.setGcmprojectkey(servicio.getGcmprojectkey());
+			sTO.setFcmprojectkey(servicio.getFcmprojectkey());
 			sTO.setHistorificacion(servicio.getHistorificacion());
 			sTO.setInformesactivo(servicio.getInformesactivo());
 			sTO.setInformesdestinatarios(servicio.getInformesdestinatarios());
@@ -440,6 +445,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			sTO.setNumeroMaxReenvios(servicio.getNumeroMaxReenvios());
 			sTO.setPendienteaprobacion(servicio.getPendienteaprobacion());
 			sTO.setPremium(servicio.getPremium());
+			sTO.setExclusivo(servicio.getExclusivo());
 			sTO.setRespFuncionalEmail(servicio.getResponsablefuncionalemail());
 			sTO.setRespFuncionalNombre(servicio.getResponsablefuncionalnombre());
 			sTO.setRespTecnicoEmail(servicio.getResponsabletecnicoemail());
@@ -575,7 +581,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			servicio.setExternalid((null != serv.getExternalid())? serv.getExternalid().toString() : null);
 			servicio.setFechacreacion((null != serv.getFechacreacion() ) ? DateUtils.truncate(serv.getFechacreacion(), Calendar.DATE) : null);
 			servicio.setFechamodificacion((null != serv.getFechamodificacion() ) ? DateUtils.truncate(serv.getFechamodificacion(), Calendar.DATE) : null);
-			servicio.setGcmprojectkey(serv.getGcmprojectkey());
+			servicio.setFcmprojectkey(serv.getFcmprojectkey());
 			servicio.setHistorificacion(serv.getHistorificacion());
 			servicio.setInformesactivo(serv.getInformesactivo());
 			servicio.setInformesdestinatarios(serv.getInformesdestinatarios());
@@ -591,6 +597,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			servicio.setNumeroMaxReenvios(serv.getNumeroMaxReenvios());
 			servicio.setPendienteaprobacion(serv.getPendienteaprobacion());
 			servicio.setPremium(serv.getPremium());
+			servicio.setExclusivo(serv.getExclusivo());
 			servicio.setResponsablefuncionalemail(serv.getRespFuncionalEmail());
 			servicio.setResponsablefuncionalnombre(serv.getRespFuncionalNombre());
 			servicio.setResponsabletecnicoemail(serv.getRespTecnicoEmail());
@@ -724,6 +731,30 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 	}
 
+
+	@Override
+	public List<CanalBean> getCanalByServicioId(String idServicio) throws BusinessException {
+		List<CanalBean> result = new ArrayList<>();
+		try {
+			List<ViewServicios> listaCanal = viewServiciosManager.getCanalesByServicioId(idServicio);
+			if(listaCanal != null ){
+				for (ViewServicios c : listaCanal) {
+					CanalBean canal = new CanalBean();
+					canal.setNombre(c.getCanalnombre());
+					canal.setId(c.getCanalid().intValue());
+					result.add(canal);
+				}
+				
+			}
+			
+			return result;
+		} catch (Exception e) {
+			logger.error("ServicioServicioImpl - getServiciosByAplicacionId:" + e);
+			throw new BusinessException(e, "errors.organismo.getOrganismos");
+		}
+	}
+
+	
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#deleteServidoresServicios(es.mpr.plataformamensajeria.beans.ServidoresServiciosBean, java.lang.String, java.lang.String, java.lang.Long, java.lang.String)
 	 */
@@ -941,6 +972,12 @@ public class ServicioServicioImpl implements ServicioServicio {
 	}
 	}
 
+	
+	@Override
+	public List<ViewServicios> getCanalesServicios(Integer valueOf) {
+		
+		return queryExecutorViewServicios.getCanalesDistintos(valueOf);
+	}
 	/**
 	 * Obtener list servicio organismos bean.
 	 *
@@ -1011,17 +1048,25 @@ public class ServicioServicioImpl implements ServicioServicio {
 		return servicioOrganismo;
 	}
 
-	@Override
-	public List<CanalBean> getCanalByServicioId(String idServicio)
-			throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<ServicioBean> getServiciosPorCanal(String idAplicacion, String idCanal) throws BusinessException {
+		List<ServicioBean> result = new ArrayList<>();
+		try{
+			List<ViewServicios> listaCanal = viewServiciosManager.getServiciosPorCanal(idAplicacion, idCanal);
+			if(listaCanal != null ){
+				for (ViewServicios c : listaCanal) {
+					ServicioBean servicio = new ServicioBean();
+					servicio.setNombre(c.getNombre());
+					servicio.setId(c.getServicioid().intValue());
+					result.add(servicio);
+				}
+				
+			}			
+			return result;
 
-	@Override
-	public List<ViewServicios> getCanalesServicios(Integer valueOf) {
-		// TODO Auto-generated method stub
-		return null;
+		} catch (Exception e) {
+			logger.error("ServicioServicioImpl - getServiciosByAplicacionId:" + e);
+			throw new BusinessException(e, "errors.organismo.getOrganismos");
+		}
 	}
 
 	@Override
@@ -1039,10 +1084,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public List<ServicioBean> getServiciosPorCanal(String idAplicacion,
-			String idCanal) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+
+	
 }

@@ -199,11 +199,11 @@
                     </p>
                     
 	  				<p class="criteria">
-						<label id="gcmprojectkeyLabel"
-							style="width: 180px; visibility:hidden; display:none;" class="fieldText">GCM
+						<label id="fcmprojectkeyLabel"
+							style="width: 180px; visibility:hidden; display:none;" class="fieldText">FCM
 							API Key (*):</label>
-						<s:textfield name="servicio.gcmprojectkey"
-							value="%{servicio.gcmprojectkey}" id="servicio.gcmprojectkey"
+						<s:textfield name="servicio.fcmprojectkey"
+							value="%{servicio.fcmprojectkey}" id="servicio.fcmprojectkey"
 							theme="simple" cssStyle="visibility:hidden;display:none;" labelposition="left"
 							size="30" maxlength="255" cssClass="" />
 					</p>

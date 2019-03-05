@@ -1780,8 +1780,8 @@
 		var newPlataformaiOS = document.getElementById("newPlataformaiOS");
 		var badge= document.getElementById("servicio.badge");
 		var badgeLabel= document.getElementById("badgeLabel");
-		var gcmProjectKey= document.getElementById("servicio.gcmprojectkey");
-		var gcmProjectKeyLabel= document.getElementById("gcmprojectkeyLabel");
+		var fcmProjectKey= document.getElementById("servicio.fcmprojectkey");
+		var fcmProjectKeyLabel= document.getElementById("fcmprojectkeyLabel");
 		var apnsRutaCertificado= document.getElementById("servicio.apnsrutacertificado");
 		var apnsRutaCertificadoLabel= document.getElementById("apnsrutacertificadoLabel");
 		var apnsPasswordCertificado= document.getElementById("servicio.apnspasswordcertificado");
@@ -1898,15 +1898,15 @@
 			badgeLabel.style.visibility="hidden";
 			badgeLabel.style.display="none";
 
-			gcmProjectKey.value="";
-			gcmProjectKey.disabled="disabled";
-			gcmProjectKey.style.visibility="hidden";
-			gcmProjectKey.style.display="none";
+			fcmProjectKey.value="";
+			fcmProjectKey.disabled="disabled";
+			fcmProjectKey.style.visibility="hidden";
+			fcmProjectKey.style.display="none";
 
-			gcmProjectKeyLabel.value="";
-			gcmProjectKeyLabel.disabled="disabled";
-			gcmProjectKeyLabel.style.visibility="hidden";
-			gcmProjectKeyLabel.style.display="none";
+			fcmProjectKeyLabel.value="";
+			fcmProjectKeyLabel.disabled="disabled";
+			fcmProjectKeyLabel.style.visibility="hidden";
+			fcmProjectKeyLabel.style.display="none";
 
 			apnsRutaCertificado.value="";
 			apnsRutaCertificado.disabled="disabled";
@@ -1989,6 +1989,10 @@
 			botonClaves.disabled= "";
 			botonClaves.style.visibility="hidden";
 			botonClaves.style.display="none";
+
+			exclusivoLabel.style.display="";
+			document.getElementById("servicio.isPremium").disabled = false;
+			document.getElementById("servicio.isExclusivo").disabled = false;
 		}
 		if(combo.value=="2"){//SMS
 			if (auna!=null)
@@ -2113,15 +2117,15 @@
 			badgeLabel.style.visibility="hidden";
 			badgeLabel.style.display="none";
 
-			gcmProjectKey.value="";
-			gcmProjectKey.disabled="disabled";
-			gcmProjectKey.style.visibility="hidden";
-			gcmProjectKey.style.display="none";
+			fcmProjectKey.value="";
+			fcmProjectKey.disabled="disabled";
+			fcmProjectKey.style.visibility="hidden";
+			fcmProjectKey.style.display="none";
 
-			gcmProjectKeyLabel.value="";
-			gcmProjectKeyLabel.disabled="disabled";
-			gcmProjectKeyLabel.style.visibility="hidden";
-			gcmProjectKeyLabel.style.display="none";
+			fcmProjectKeyLabel.value="";
+			fcmProjectKeyLabel.disabled="disabled";
+			fcmProjectKeyLabel.style.visibility="hidden";
+			fcmProjectKeyLabel.style.display="none";
 
 			apnsRutaCertificado.value="";
 			apnsRutaCertificado.disabled="disabled";
@@ -2171,6 +2175,10 @@
 			botonClaves.disabled= "";
 			botonClaves.style.visibility="hidden";
 			botonClaves.style.display="none";
+
+			exclusivoLabel.style.display="";
+			document.getElementById("servicio.isPremium").disabled = false;
+			document.getElementById("servicio.isExclusivo").disabled = false;
 		}
 		if(combo.value=="3"){//Recepcion SMS
 			if (auna!=null)
@@ -2297,15 +2305,15 @@
 			badgeLabel.style.visibility="hidden";
 			badgeLabel.style.display="none";
 
-			gcmProjectKey.value="";
-			gcmProjectKey.disabled="disabled";
-			gcmProjectKey.style.visibility="hidden";
-			gcmProjectKey.style.display="none";
+			fcmProjectKey.value="";
+			fcmProjectKey.disabled="disabled";
+			fcmProjectKey.style.visibility="hidden";
+			fcmProjectKey.style.display="none";
 
-			gcmProjectKeyLabel.value="";
-			gcmProjectKeyLabel.disabled="disabled";
-			gcmProjectKeyLabel.style.visibility="hidden";
-			gcmProjectKeyLabel.style.display="none";
+			fcmProjectKeyLabel.value="";
+			fcmProjectKeyLabel.disabled="disabled";
+			fcmProjectKeyLabel.style.visibility="hidden";
+			fcmProjectKeyLabel.style.display="none";
 
 			apnsRutaCertificado.value="";
 			apnsRutaCertificado.disabled="disabled";
@@ -2355,6 +2363,10 @@
 			botonClaves.disabled= "";
 			botonClaves.style.visibility="hidden";
 			botonClaves.style.display="none";
+
+			exclusivoLabel.style.display="none";
+			document.getElementById("servicio.isPremium").disabled = true;
+			document.getElementById("servicio.isExclusivo").disabled = true;
 		}
 		if(combo.value=="4"){//Notificaciones Push
 
@@ -2387,13 +2399,13 @@
 			badgeLabel.style.visibility="visible";
 			badgeLabel.style.display="block";
 
-			gcmProjectKey.disabled="";
-			gcmProjectKey.style.visibility="visible";
-			gcmProjectKey.style.display="block";
+			fcmProjectKey.disabled="";
+			fcmProjectKey.style.visibility="visible";
+			fcmProjectKey.style.display="block";
 
-			gcmProjectKeyLabel.disabled="";
-			gcmProjectKeyLabel.style.visibility="visible";
-			gcmProjectKeyLabel.style.display="block";
+			fcmProjectKeyLabel.disabled="";
+			fcmProjectKeyLabel.style.visibility="visible";
+			fcmProjectKeyLabel.style.display="block";
 
 			apnsRutaCertificado.disabled="";
 			apnsRutaCertificado.style.visibility="visible";
@@ -2525,6 +2537,10 @@
 			botonClaves.style.visibility="hidden";
 			botonClaves.style.display="none";
 
+			exclusivoLabel.style.display="none";
+			document.getElementById("servicio.isPremium").disabled = true;
+			document.getElementById("servicio.isExclusivo").disabled = true;
+
 		}
 		if(combo.value=="5"){//web push
 
@@ -2610,15 +2626,15 @@
 			badgeLabel.style.visibility="hidden";
 			badgeLabel.style.display="none";
 
-			gcmProjectKey.value="";
-			gcmProjectKey.disabled="disabled";
-			gcmProjectKey.style.visibility="hidden";
-			gcmProjectKey.style.display="none";
+			fcmProjectKey.value="";
+			fcmProjectKey.disabled="disabled";
+			fcmProjectKey.style.visibility="hidden";
+			fcmProjectKey.style.display="none";
 
-			gcmProjectKeyLabel.value="";
-			gcmProjectKeyLabel.disabled="disabled";
-			gcmProjectKeyLabel.style.visibility="hidden";
-			gcmProjectKeyLabel.style.display="none";
+			fcmProjectKeyLabel.value="";
+			fcmProjectKeyLabel.disabled="disabled";
+			fcmProjectKeyLabel.style.visibility="hidden";
+			fcmProjectKeyLabel.style.display="none";
 
 			apnsRutaCertificado.value="";
 			apnsRutaCertificado.disabled="disabled";
@@ -2701,7 +2717,10 @@
 			botonClaves.disabled= "";
 			botonClaves.style.visibility="visible";
 			botonClaves.style.display="block";
-			
+
+			exclusivoLabel.style.display="none";
+			document.getElementById("servicio.isPremium").disabled = true;
+			document.getElementById("servicio.isExclusivo").disabled = true;
 		}
 	}
 	function chkViewValue(boton){

@@ -9,7 +9,7 @@ import com.map.j2ee.security.perm.model.GroupVO;
 import com.map.j2ee.security.perm.model.UserVO;
 import com.map.j2ee.util.Constants;
 
-import es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean;
+import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesHistoricosBean;
@@ -136,10 +136,10 @@ public class TableWrapper extends TableDecorator {
 	 */
 	public String getOrganismoPdpAction() {
 
-		OrganismoPdpBean organismoPdp = (OrganismoPdpBean) getCurrentRowObject();
-		String idOrganismoPdp = organismoPdp.getOrganismoPdpId().toString();
+		PdpDiputacionesBean organismoPdp = (PdpDiputacionesBean) getCurrentRowObject();
+		String idOrganismoPdp = organismoPdp.getPdpDiputacionesId().toString();
 		
-		return "<div id=\"ajaxloader_ajax_"+organismoPdp.getOrganismoPdpId()+"\" style=\"float:left\"> <span  class=\"btnTree\" title=\"Arbol\" onclick=\"return loadArbol(this,"+ idOrganismoPdp +")\"></span></div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editOrganismoPdp.action?idOrganismo=" + idOrganismoPdp + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismoPdp.getNombre() + "');\" href=\"deleteOrganismoPdp.action?idOrganismo=" + idOrganismoPdp + "\"></a>";		
+		return "<div id=\"ajaxloader_ajax_"+organismoPdp.getPdpDiputacionesId()+"\" style=\"float:left\"> <span  class=\"btnTree\" title=\"Arbol\" onclick=\"return loadArbol(this,"+ idOrganismoPdp +")\"></span></div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editPdpDiputaciones.action?pdpDiputacionesId=" + idOrganismoPdp + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismoPdp.getNombre() + "');\" href=\"deletePdpDiputaciones.action?pdpDiputacionesId=" + idOrganismoPdp + "\"></a>";		
 	}
 	
 	/**

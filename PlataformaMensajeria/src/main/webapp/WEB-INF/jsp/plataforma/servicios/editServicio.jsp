@@ -174,11 +174,11 @@
 							<s:checkbox theme="simple" id="servicio.isPremium"
 								name="servicio.isPremium" value="%{servicio.premium}" onclick="selectOnlyThis(this.id)"/>
 					</p>				
-<!-- 					<p class="criteria"> -->
-<!-- 						<label class="fieldText" style="width: 120px;">Exclusivo</label> -->
-<%-- 						<s:checkbox theme="simple" id="servicio.isExclusivo" --%>
-<%-- 							name="servicio.isExclusivo" value="%{servicio.exclusivo}" onclick="selectOnlyThis(this.id)"/> --%>
-<!-- 					</p> -->
+					<p class="criteria">
+						<label class="fieldText" style="width: 120px;">Exclusivo</label>
+						<s:checkbox theme="simple" id="servicio.isExclusivo"
+							name="servicio.isExclusivo" value="%{servicio.exclusivo}" onclick="selectOnlyThis(this.id)"/>
+					</p>
 				</label>	
 				
 				
@@ -340,11 +340,11 @@
 				</p>
 
 				<p class="criteria">
-					<label id="gcmprojectkeyLabel"
-						style="width: 180px; visibility: hidden; display: none;" class="fieldText">GCM
+					<label id="fcmprojectkeyLabel"
+						style="width: 180px; visibility: hidden; display: none;" class="fieldText">FCM
 						API Key (*):</label>
-					<s:textfield name="servicio.gcmprojectkey"
-						value="%{servicio.gcmprojectkey}" id="servicio.gcmprojectkey"
+					<s:textfield name="servicio.fcmprojectkey"
+						value="%{servicio.fcmprojectkey}" id="servicio.fcmprojectkey"
 						theme="simple" cssStyle="visibility:hidden;display:none;" labelposition="left"
 						size="30" maxlength="255" cssClass="" />
 				</p>
@@ -1148,6 +1148,16 @@
 </div>
 
 <script>
+	const serviciosAEATGiss = "${serviciosAEATGiss}"; 
+	var res = serviciosAEATGiss.split(",");
+
+	res.forEach(function(idServActual) {
+		  if (idServActual == idServicio.idServicio.value){
+			  document.getElementById("servicio.isPremium").disabled = true;
+			  document.getElementById("servicio.isExclusivo").disabled = true;			  
+			  }
+		});
+
 	function cargarNuevaAplicacion() {              
         document.frmEditServicio.action="aplicacionSelectEditEvent.action";
 	    document.frmEditServicio.submit();
@@ -1179,6 +1189,7 @@
         document.formaddServicioOrganismo.action="activarMultiorganismoSelectEditEvent.action";
 	    document.formaddServicioOrganismo.submit();
 	}
+	
 	
 
 </script>

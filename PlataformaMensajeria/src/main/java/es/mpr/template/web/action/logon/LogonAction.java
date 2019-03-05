@@ -27,6 +27,7 @@ import com.map.j2ee.security.perm.model.User060VO;
 import com.map.j2ee.util.Constants;
 import com.opensymphony.xwork2.ActionSupport;
 
+import es.minhap.common.security.util.UtilsValidateSignature;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosManager;
 import es.minhap.sim.model.TblUsuariosAplicaciones;
@@ -80,6 +81,9 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     	String etiquetaPuestos = properties.getProperty("logonAction.ETIQUETA_PUESTOS",null);
     	
     	String expresionOK = properties.getProperty("logonAction.OK",null);
+    	
+    	String serialNumber = properties.getProperty("autentica.cert.serialnumber",null).trim();
+		String issuer = properties.getProperty("autentica.cert.issuer",null).trim();
 
     	//Si el usuario no esta en sesion, se intenta localizar el fichero XML de regreso de AutenticA
     	if(request.getSession().getAttribute("infoUser")==null){
@@ -93,7 +97,10 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     		if (logger.isDebugEnabled()) {
     			logger.debug("[LogonAction] - xmlAutentica: " + xml_user_autentica);
     		}
-    		
+    		boolean isValid=UtilsValidateSignature.validaSignature(xml_user_autentica, serialNumber, issuer);
+    		if(!isValid){
+    			return ERROR;
+    		}
     		try{
     			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     			InputSource src = new InputSource();
@@ -108,12 +115,8 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     				String userName = doc.getElementsByTagName(etiquetaUsername).item(0).getTextContent();
     				
     				if(userName != null && userName != null){
-    					Integer rolUsuarioId = tblUsuariosManager.getRolByUsername(userName); 
-    					Integer idUsuario = null;
-//    					Integer idUsuario = tblUsuariosManager.getUsuarioByUsernameActivo(userName).intValue();    					
-    					if(tblUsuariosManager.getUsuarioByUsernameActivo(userName) != null){
-    						idUsuario = tblUsuariosManager.getUsuarioByUsernameActivo(userName).intValue();
-    					}
+    					Integer rolUsuarioId = tblUsuariosManager.getRolByUsername(userName);    			    	
+    					Integer idUsuario = tblUsuariosManager.getUsuarioByUsernameActivo(userName).intValue();
     			    	
     			    	TblUsuariosAplicacionesQuery query = new TblUsuariosAplicacionesQuery();
     			    	TblUsuariosQuery usuarioQuery = new TblUsuariosQuery();

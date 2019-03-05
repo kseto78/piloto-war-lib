@@ -26,7 +26,8 @@ import com.map.j2ee.util.beanutils.converters.DateConverter;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 
-import es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean;
+import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
+import es.minhap.sim.model.TblOrganismos;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleAplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleServicioBean;
@@ -40,7 +41,7 @@ import es.mpr.plataformamensajeria.beans.ServidoresServiciosBean;
 import es.mpr.plataformamensajeria.beans.UsuarioAplicacionBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
-import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismoPdp;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPdpDiputaciones;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
@@ -89,8 +90,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	private transient ServicioServidor servicioServidor;
 	
 	/**  servicio organismoPdp. */
-	@Resource(name="servicioOrganismoPdpImpl")
-	private transient ServicioOrganismoPdp servicioOrganismoPdp;
+	@Resource(name="servicioPdpDiputacionesImpl")
+	private transient ServicioPdpDiputaciones servicioOrganismoPdp;
 	
 	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
@@ -99,6 +100,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	/**  organismo. */
 	private OrganismoBean organismo; 
+	
+	/**  organismo padre. */
+	private OrganismoBean organismoPadre; 
 	
 	/**  servidor organismo. */
 	private ServidoresOrganismosBean servidorOrganismo;
@@ -292,6 +296,10 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			organismo.setOrganismoId(new Integer(idOrganismo));
 			organismo = servicioOrganismo.loadOrganismo(organismo);
 			comboOrganismosHijos = cargarComboOrganismosHijos(organismo.getDir3());
+			organismoPadre = new OrganismoBean();			
+			int idPadre = servicioOrganismo.getOrganismoIdByDir3SoloEliminado(organismo.getCodUnidadSuperior());
+			organismoPadre.setOrganismoId(idPadre);
+			organismoPadre = servicioOrganismo.loadOrganismo(organismoPadre);
 
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
@@ -501,7 +509,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					organismoBBDD.setNombre(organismo.getNombre());
 					organismoBBDD.setDescripcion(organismo.getDescripcion());
 				}
-				organismoBBDD.setIdOrganismoPdp(organismo.getIdOrganismoPdp());
+				if( organismoBBDD.getIdPdpDiputaciones() != organismo.getIdPdpDiputaciones()){					
+					if(organismoBBDD.getIdPdpDiputaciones() != null && organismo.getIdPdpDiputaciones() != null){
+						if(!organismoBBDD.getIdPdpDiputaciones().equals(organismo.getIdPdpDiputaciones()) ){
+							addActionWarningMessageSession(this.getText("plataforma.organismo.update.cambiopdp"));
+						}
+					}else{
+						addActionWarningMessageSession(this.getText("plataforma.organismo.update.cambiopdp"));
+					}
+					
+				}
+				organismoBBDD.setIdPdpDiputaciones(organismo.getIdPdpDiputaciones());
 				organismoBBDD.setActivo(organismo.getActivo());
 				organismo = organismoBBDD;
 				if (validaObligatorios(organismoBBDD, true)) {
@@ -1051,17 +1069,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 		KeyValueObject option;
 
-		ArrayList<OrganismoPdpBean> keys = null;
+		ArrayList<PdpDiputacionesBean> keys = null;
 		try {
-			keys = (ArrayList<OrganismoPdpBean>) servicioOrganismoPdp.getOrganismosPdp();
+			keys = (ArrayList<PdpDiputacionesBean>) servicioOrganismoPdp.getPdpDiputaciones();
 		} catch (BusinessException e) {
 			logger.error("OrganismosAction - cargarComboOrganismosPdp:" + e);
 		}
 
 		if (keys != null && !keys.isEmpty())
-			for (OrganismoPdpBean key : keys) {
+			for (PdpDiputacionesBean key : keys) {
 				option = new KeyValueObject();
-				option.setCodigo(key.getOrganismoPdpId().toString());
+				option.setCodigo(key.getPdpDiputacionesId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
@@ -1161,13 +1179,15 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 		KeyValueObject option;
 
-		ArrayList<String> keys = null;
-		keys = (ArrayList<String>) servicioOrganismo.getOrganismosHijos(dir3);
+		ArrayList<TblOrganismos> keys = null;
+		keys = (ArrayList<TblOrganismos>) servicioOrganismo.getOrganismosHijos(dir3);
 
 		if (keys != null && !keys.isEmpty())
-			for (String key : keys) {
+			for (TblOrganismos key : keys) {
 				option = new KeyValueObject();
-				option.setCodigo(key);				
+				option.setCodigo(key.getDir3());
+				option.setDescripcion(key.getNombre());
+				
 				result.add(option);
 			}
 		return result;
@@ -2321,6 +2341,20 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 */
 	public void setComboOrganismosHijos(List<KeyValueObject> comboOrganismosHijos) {
 		this.comboOrganismosHijos = comboOrganismosHijos;
+	}
+
+	/**
+	 * @return the organismoPadre
+	 */
+	public OrganismoBean getOrganismoPadre() {
+		return organismoPadre;
+	}
+
+	/**
+	 * @param organismoPadre the organismoPadre to set
+	 */
+	public void setOrganismoPadre(OrganismoBean organismoPadre) {
+		this.organismoPadre = organismoPadre;
 	}
 
 

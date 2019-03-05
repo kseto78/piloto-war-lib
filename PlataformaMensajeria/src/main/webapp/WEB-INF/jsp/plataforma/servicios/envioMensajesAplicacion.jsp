@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/utils/taglibs.jsp"%>
-<%-- <plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR,ROL_PROPIETARIO"> --%>
-<plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR">
+<plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR,ROL_PROPIETARIO">
+<%-- <plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR"> --%>
 	<script>
  		document.location.href="permisoDenegado.action";
 	</script>
@@ -8,7 +8,7 @@
 <script>
 function submitForm(){
 	//en sms confirmar que tiene costes adicionales
-	if(document.getElementById('envioMensajesAplicacionBean.canalId').value == 2){
+	if(document.getElementById('cid').value == 2){
 		var r = confirm("El envio de SMS puede incurrir costes asociados a la aplicacion seleccionada ¿Quiere continuar?");
 		 if (r == true) {
 				 var form = document.getElementById('frmEnvioMensajesAplicacion');
@@ -23,6 +23,12 @@ function setValue(obj){
 	var value = obj.value;
 	document.getElementById('envioMensajesAplicacionBean.servicioId').value=value;
 }
+
+function setValueCanal(obj){
+	var value = obj.value;
+	document.getElementById('envioMensajesAplicacionBean.canalId').value=value;
+}
+var datos;
 function makeRequest(){
 	document.getElementById('envioMensajesAplicacionBean.servicioId').value='';
 	  $('#sid option').each(function() {
@@ -30,21 +36,24 @@ function makeRequest(){
 		});
 	$.ajax({
         type: "POST",
-        url: "ajaxLoadServicios.action",
+        url: "ajaxLoadServiciosEnvioMensajes.action",
         data: {idAplicacion:document.getElementById('envioMensajesAplicacionBean.aplicacionId').value}, // serializes the form's elements.
         success: function(data)
         {
-     	  var items = data.items;
+     	  datos = data.items;     	  
      	  $('#sid').append($('<option>', { 
      	        value: '',
      	        text : 'Todos' 
      	    }));
-     	 $.each(items, function (i, item) {
-     		$('#sid').append($('<option>', { 
-     	        value: item.value,
-     	        text : item.text 
-     	    }));
-     	});
+     	 
+     	 for (var i=0; i<datos.length; i++) {
+	  		$('#sid').append($('<option>', { 
+		        value: datos[i].value,
+		        text : datos[i].text 
+		    }));   
+     		 i++;
+  			}
+     	 
         },
         error: function(data)
         {
@@ -53,31 +62,101 @@ function makeRequest(){
       });
 }
 
-function setValueCanal(obj){
-	var value = obj.value;
-	document.getElementById('envioMensajesAplicacionBean.canalId').value=value;
-}
 function makeRequestCanal(){
-	document.getElementById('envioMensajesAplicacionBean.canalId').value='';
-	  $('#envioMensajesAplicacionBean.canalId option').each(function() {
+
+	if(datos == null) return;
+			
+	var servicioIndex = document.getElementById("sid").selectedIndex;
+	var canalIndex = document.getElementById("cid").selectedIndex;
+	
+	if(servicioIndex == 0){
+			$('#sid option').each(function() {
+		        $(this).remove();
+		});
+			$('#sid').append($('<option>', { 
+     	        value: '',
+     	        text : 'Todos' 
+     	    }));
+     	 
+     	 for (var i=0; i<datos.length; i++) {
+	  		$('#sid').append($('<option>', { 
+		        value: datos[i].value,
+		        text : datos[i].text 
+		    }));   
+     		 i++;
+  			}
+     	$('#cid option').each(function() {
+            $(this).remove();
+    	});
+
+    	 $('#cid').append($('<option>', { 
+    	        value: '',
+    	        text : 'Todos' 
+    	    }));
+    	 for (var i=0; i<canalesTotales.length; i++) {
+ 	  		$('#cid').append($('<option>', { 
+ 		        value: canalesTotales[i].value,
+ 		        text : canalesTotales[i].text 
+ 		    }));
+      		 
+   			}
+			
+			return;
+		}
+
+	var servicioId = document.getElementById('sid').value;
+	var canalId = document.getElementById('cid').value;	
+	
+		
+		$('#cid option').each(function() {
+	        $(this).remove();
+		});
+	
+		 $('#cid').append($('<option>', { 
+		        value: '',
+		        text : 'Todos' 
+		    }));
+
+		 for (var i=0; i<datos.length; i++) {
+			 if(servicioId == datos[i].value ){
+				 $('#cid').append($('<option>', { 
+				        value: datos[i+1].value,
+				        text : datos[i+1].text 
+				    }));
+				 }    
+	  		 i++;
+				}
+		 if(canalIndex != 0) $("#cid").val(canalId);
+	
+}
+
+var canalesTotales;
+function makeRequestCanalTodos(){
+	
+	var aplicacionId = document.getElementById('envioMensajesAplicacionBean.aplicacionId').value;
+	if (aplicacionId == ""){
+		aplicacionId = '0';
+		}	
+	document.getElementById('cid').value='';
+	  $('#cid option').each(function() {
 		        $(this).remove();
 		});
 	$.ajax({
         type: "POST",
-         url: "ajaxLoadCanal.action",
-        data: {idAplicacion:document.getElementById('envioMensajesAplicacionBean.servicioId').value}, // serializes the form's elements.
+         url: "ajaxLoadCanales.action",
+        data: {idAplicacion:document.getElementById('envioMensajesAplicacionBean.aplicacionId').value},  // serializes the form's elements.
         success: function(data)
         {
-     	  var items = data.items;
-     	  $('#envioMensajesAplicacionBean.canalId').append($('<option>', { 
+     	  canalesTotales = data.items;
+     	  $('#cid').append($('<option>', { 
      	        value: '',
-     	        text : '' 
+     	        text : 'Todos' 
      	    }));
-     	 $.each(items, function (i, item) {
-     		$('#envioMensajesAplicacionBean.canalId').append($('<option>', { 
+     	 $.each(canalesTotales, function (i, item) {
+     		$('#cid').append($('<option>', { 
      	        value: item.value,
      	        text : item.text 
-     	    }));
+     	    }));     	   
      	});
         },
         error: function(data)
@@ -87,6 +166,71 @@ function makeRequestCanal(){
       });
 }
 
+function makeRequestServiciosPorCanal(){
+	if(datos == null) return;
+	
+	var canalIndex = document.getElementById("cid").selectedIndex;
+	var servicioIndex = document.getElementById("sid").selectedIndex;
+
+	if (canalIndex == 0){
+		$('#sid option').each(function() {
+	        $(this).remove();
+	});
+		$('#sid').append($('<option>', { 
+ 	        value: '',
+ 	        text : 'Todos' 
+ 	    }));
+ 	 
+ 	 for (var i=0; i<datos.length; i++) {
+  		$('#sid').append($('<option>', { 
+	        value: datos[i].value,
+	        text : datos[i].text 
+	    }));   
+ 		 i++;
+			}
+ 	$('#cid option').each(function() {
+        $(this).remove();
+	});
+
+	 $('#cid').append($('<option>', { 
+	        value: '',
+	        text : 'Todos' 
+	    }));
+	 for (var i=0; i<canalesTotales.length; i++) {
+	  		$('#cid').append($('<option>', { 
+		        value: canalesTotales[i].value,
+		        text : canalesTotales[i].text 
+		    }));
+  		 
+			}
+		
+		return;
+		}
+	
+	
+	var canalId = document.getElementById('cid').value;
+	var servicioId = document.getElementById('sid').value;
+	
+	$('#sid option').each(function() {
+        $(this).remove();
+	});
+	$('#sid').append($('<option>', { 
+	        value: '',
+	        text : 'Todos' 
+	    }));
+	
+	 for (var i=1; i<datos.length; i++) {
+		 if(canalId == datos[i].value ){
+			 $('#sid').append($('<option>', { 
+			        value: datos[i-1].value,
+			        text : datos[i-1].text 
+			    }));
+			 }    
+  		 i++;
+			}
+	 if(servicioIndex != 0) $("#sid").val(servicioId);
+
+}
 
 </script>
 <div class="mainContent">            
@@ -109,7 +253,7 @@ function makeRequestCanal(){
                        <label style="width: 120px;" class="fieldText">Aplicacion (*):</label>
                        <s:select 
 						id="envioMensajesAplicacionBean.aplicacionId" name="envioMensajesAplicacionBean.aplicacionId" 
-						emptyOption="false" theme="simple" onchange="makeRequest()"
+						emptyOption="false" theme="simple" onchange="makeRequest();makeRequestCanalTodos();"
 						labelposition="left" 
 						list="comboAplicaciones" listKey="codigo" headerValue="" headerKey=""
 						listValue="descripcion" cssClass="" cssStyle="width:150px"				
@@ -120,7 +264,7 @@ function makeRequestCanal(){
                        <label style="width: 120px;" class="fieldText">Servicio (*):</label>
                        <s:select 
 						id="sid" name="sid" 
-						emptyOption="false" theme="simple" onchange="setValue(this)"
+						emptyOption="false" theme="simple" onchange="makeRequestCanal();setValue(this);"
 						labelposition="left"
 						list="comboServicios" listKey="codigo" headerValue="" headerKey=""
 						listValue="descripcion" cssClass="" cssStyle="width:150px"						
@@ -129,8 +273,8 @@ function makeRequestCanal(){
                      <p class="criteria">
                        <label style="width: 120px;" class="fieldText">Canal (*):</label>
                        
-                       <s:select onchange="checkCanalEnvio(this)" id="envioMensajesAplicacionBean.canalId"
-						name="envioMensajesAplicacionBean.canalId" emptyOption="false" theme="simple"
+                       <s:select onchange="makeRequestServiciosPorCanal();setValueCanal(this);checkCanalEnvio(this);" id="cid"
+						name="canalId" emptyOption="false" theme="simple"
 						labelposition="left" list="comboCanales" listKey="codigo"
 						headerValue="" headerKey=""
 						listValue="descripcion" cssStyle="width:150px" cssClass=""
@@ -273,7 +417,7 @@ function makeRequestCanal(){
                         class="fieldText">Adjunto :</label>
                         <s:else>
 							<input type="file" name="envioMensajesAplicacionBean.adjunto" id="envioMensajesAplicacionBean.adjunto" 
-							value="%{envioMensajesAplicacionBean.adjunto}" style="visibility:hidden;display:none;"/>
+							value="%{envioMensajesAplicacionBean.adjunto}" onchange="subidaFichero()" style="visibility:hidden;display:none;"/>
 						</s:else>
 
 					</p>
@@ -458,11 +602,19 @@ function makeRequestCanal(){
 <%-- 						<s:submit theme="simple" value="Enviar" class="button"/> --%>
                    </span>
                                            <s:hidden id="envioMensajesAplicacionBean.servicioId" name="envioMensajesAplicacionBean.servicioId" value="%{envioMensajesAplicacionBean.servicioId}"/>  
+                                           <s:hidden id="envioMensajesAplicacionBean.canalId" name="envioMensajesAplicacionBean.canalId" value="%{envioMensajesAplicacionBean.canalId}"/>
         
            </s:form>
            
            <script type="text/javascript">
-           		checkCanalEnvio(document.getElementById('envioMensajesAplicacionBean.canalId'));
+           function subidaFichero(){
+        	   if(document.getElementById('envioMensajesAplicacionBean.adjunto').value.split('.').pop() == "exe"){
+        		  alert("El tipo de fichero no puede ser de tipo exe.");
+        		  document.getElementById('envioMensajesAplicacionBean.adjunto').value = null; 
+            	}        	   
+           }
+           
+           		checkCanalEnvio(document.getElementById('cid'));
   		   </script>
 			
         </div>

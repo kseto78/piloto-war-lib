@@ -229,9 +229,9 @@ function makeRequest(){
 							id="accion" theme="simple"
 							cssStyle="visibility:hidden;display:none;" labelposition="left"
 							size="70" maxlength="255" cssClass="" />
-						
+	
 					<script>
-					const publicKeyConstant = "${publicKey}";
+					const publicKeyConstant = "${publicKey}"; 
 					</script>
 					<script type="text/javascript" src="pushMod.js"></script>
 

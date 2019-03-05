@@ -265,8 +265,8 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
     	
     	User060VO usuario = new User060VO();
 		usuario.setUsername(userName);
-		usuario.setNombre("Admin");
-		usuario.setApellidos("admin");
+		usuario.setNombre("Juan");
+		usuario.setApellidos("Ejemplo");
 		
 		MapUser springUser = new MapUser(userName, "password", true, getAuthoritiesMock(usuario, rolUsuarioId), usuario);
 //		        

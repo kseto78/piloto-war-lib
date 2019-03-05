@@ -1,5 +1,6 @@
 package es.mpr.plataformamensajeria.servicios.ifaces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.map.j2ee.exceptions.BusinessException;
@@ -115,8 +116,10 @@ public interface ServicioAplicacion {
 	 */
 	boolean existeUsuario(String usuario);
 
-//	boolean validarSms(Long idAplicacion);
+	boolean validarSms(Long idAplicacion);
 
-//	void smsEnviado(Long idAplicacion);
+	void smsEnviado(Long idAplicacion);
+
+	public List<AplicacionBean> getAplicacionesByCanal(String rolUsuario, Integer idUsuario, long canalId);
 
 }

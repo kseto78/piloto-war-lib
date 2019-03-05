@@ -5,15 +5,14 @@ import java.util.List;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
-import es.minhap.sim.model.TblOrganismos;
-import es.mpr.plataformamensajeria.beans.OrganismoBean;
+import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 
 /**
  * <p>Interface que define los m&eacute;todos para la gesti&oacute;n de aplicacion</p>.
  *
  * @author Selered
  */
-public interface ServicioOrganismo {
+public interface ServicioPdpDiputaciones {
 	
 	/**
 	 * Obtener organismos.
@@ -21,7 +20,7 @@ public interface ServicioOrganismo {
 	 * @return organismos
 	 * @throws BusinessException the business exception
 	 */
-	List<OrganismoBean> getOrganismos() throws BusinessException;
+	List<PdpDiputacionesBean> getPdpDiputaciones() throws BusinessException;
 	
 	/**
 	 * Obtener organismos.
@@ -31,7 +30,7 @@ public interface ServicioOrganismo {
 	 * @return organismos
 	 * @throws BusinessException the business exception
 	 */
-	List<Integer> getOrganismos(String rolUsuario, Integer idUsuario) throws BusinessException;
+	List<Integer> getPdpDiputaciones(String rolUsuario, Integer idUsuario) throws BusinessException;
 	
 	/**
 	 * Obtener organismos.
@@ -44,7 +43,7 @@ public interface ServicioOrganismo {
 	 * @return organismos
 	 * @throws BusinessException the business exception
 	 */
-	PaginatedList<OrganismoBean> getOrganismos(int start, int size, String order, String columnSort,OrganismoBean criterio) 
+	PaginatedList<PdpDiputacionesBean> getOrganismosPdpDiputaciones(int start, int size, String order, String columnSort,PdpDiputacionesBean criterio) 
 		throws BusinessException;
 	
 	/**
@@ -57,7 +56,7 @@ public interface ServicioOrganismo {
 	 * @return the integer
 	 * @throws BusinessException the business exception
 	 */
-	Integer newOrganismo(OrganismoBean organismo, String source, String accion, Long accionId)throws BusinessException;
+	Integer newOrganismoPdpDiputacion(PdpDiputacionesBean organismo, String source, String accion, Long accionId)throws BusinessException;
 	
 	/**
 	 * Update organismo.
@@ -68,7 +67,7 @@ public interface ServicioOrganismo {
 	 * @param accionId the accion id
 	 * @throws BusinessException the business exception
 	 */
-	void updateOrganismo(OrganismoBean organismo, String source, String accion, Long accionId)throws BusinessException;
+	void updateOrganismoPdp(PdpDiputacionesBean organismo, String source, String accion, Long accionId)throws BusinessException;
 	
 	/**
 	 * Load organismo.
@@ -77,7 +76,7 @@ public interface ServicioOrganismo {
 	 * @return the organismo bean
 	 * @throws BusinessException the business exception
 	 */
-	OrganismoBean loadOrganismo(OrganismoBean organismo)throws BusinessException;
+	PdpDiputacionesBean loadOrganismoPdp(PdpDiputacionesBean organismoPdp)throws BusinessException;
 	
 	/**
 	 * Delete organismo.
@@ -88,7 +87,7 @@ public interface ServicioOrganismo {
 	 * @param accionId the accion id
 	 * @throws BusinessException the business exception
 	 */
-	void deleteOrganismo(Long organismoId, String source, String accion, Long accionId)throws BusinessException;
+	void deleteOrganismoPdp(Long organismoPdpId, String source, String accion, Long accionId)throws BusinessException;
 
 	/**
 	 * List autocomplete.
@@ -98,13 +97,6 @@ public interface ServicioOrganismo {
 	 */
 	List<String> listAutocomplete(String term);
 
-	/**
-	 * Obtener organismo id by dir 3.
-	 *
-	 * @param search the search
-	 * @return organismo id by dir 3
-	 */
-	Integer getOrganismoIdByDir3(String search);
 
 	/**
 	 * Existe organimo.
@@ -112,19 +104,9 @@ public interface ServicioOrganismo {
 	 * @param organismo the organismo
 	 * @return the boolean
 	 */
-	Boolean existeOrganimo(OrganismoBean organismo);
+	Boolean existeOrganimo(PdpDiputacionesBean organismo);
 
-	List<TblOrganismos> getOrganismosHijos(String search);
+	List<String> getOrganismosHijos(String search);
 
-	Integer getOrganismoIdByDir3SoloEliminado(String search);
-
-	List<TblOrganismos> getOrganismoById(String dir3);
-	
-	List<TblOrganismos> getOrganismosByPdp(Long idOrganismoPdp);
-
-	Boolean existeOrganismoServicio(Long idOrganismo, Long idServicio);
-
-	void deleteOrganismoPdp(TblOrganismos organismos, String source, String accion, Long accionId) throws BusinessException;
-	
 }
 

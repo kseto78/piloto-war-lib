@@ -248,6 +248,25 @@ public List<KeyValueObject> getComboHorasInicio(){
 			getRequest().getSession().setAttribute("MSGPLT", msgPltList);
 		}
 	}
+	
+	/**
+	 * Agrega action warning message session.
+	 *
+	 * @param message the message
+	 */
+	@SuppressWarnings("unchecked")
+	public void addActionWarningMessageSession(String message) {
+		List<String> msgPltList = null;
+		if (getRequest().getSession().getAttribute("MSGPLT_WARNING") != null) {
+			msgPltList = (List<String>) getRequest().getSession().getAttribute("MSGPLT_WARNING");
+		} else {
+			msgPltList = new ArrayList<String>();
+		}
+		if (!msgPltList.contains(message)) {
+			msgPltList.add(message);
+			getRequest().getSession().setAttribute("MSGPLT_WARNING", msgPltList);
+		}
+	}
 
 	/**
 	 * Agrega action error session.

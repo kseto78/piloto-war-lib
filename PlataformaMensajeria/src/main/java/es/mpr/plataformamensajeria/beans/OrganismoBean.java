@@ -87,7 +87,7 @@ public class OrganismoBean implements Audit, Serializable {
 		this.fechaEstadoStr = null;
 		this.manual = null;
 		this.fechaActivo = null;
-		this.idOrganismoPdp = null;
+		this.idPdpDiputaciones = null;
 		
 	}
 
@@ -293,7 +293,7 @@ public class OrganismoBean implements Audit, Serializable {
 	protected Date fechaActivo;
 	
 	/**  id organismo pdp. */
-	protected Long idOrganismoPdp;
+	protected Long idPdpDiputaciones;
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
@@ -1557,17 +1557,17 @@ public class OrganismoBean implements Audit, Serializable {
 	}
 
 	/**
-	 * @return the idOrganismoPdp
+	 * @return the idPdpDiputaciones
 	 */
-	public Long getIdOrganismoPdp() {
-		return idOrganismoPdp;
+	public Long getIdPdpDiputaciones() {
+		return idPdpDiputaciones;
 	}
 
 	/**
-	 * @param idOrganismoPdp the idOrganismoPdp to set
+	 * @param idPdpDiputaciones the idPdpDiputaciones to set
 	 */
-	public void setIdOrganismoPdp(Long idOrganismoPdp) {
-		this.idOrganismoPdp = idOrganismoPdp;
+	public void setIdPdpDiputaciones(Long idPdpDiputaciones) {
+		this.idPdpDiputaciones = idPdpDiputaciones;
 	}
 
 }

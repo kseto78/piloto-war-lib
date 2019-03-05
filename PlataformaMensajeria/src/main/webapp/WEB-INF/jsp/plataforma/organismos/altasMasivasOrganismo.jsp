@@ -10,6 +10,7 @@
 		validate="false" theme="simple" cssClass="">
 		<s:hidden id = "datosServicios" name="datosServicios" />
 		<s:hidden id = "datosServidor" name="datosServidor" />
+		<s:hidden id = "formatoArchivoExcel" name="formatoArchivoExcel" />
 		<h3 class="pageNameButtons">
 			<span class="floatRight"> <s:submit theme="simple"
 					value="Aceptar" cssClass="button"
@@ -22,11 +23,22 @@
 		<%@include
 			file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp"%>	
 		<div class="editContainer">
-			<div class="editContent" style="width:1000px">
-				<p class="criteria">
-					<span> <label class="fieldText" style="width: 200px">Selecciona el fichero a importar:</label>
-					<input type="file" id="archivoExcel" name="archivoExcel" accept="xls" value="C:\tmp\pruebaSIM2.xls"/> </span>					
-				</p>
+			<div class="nameDescription">
+				<label>Carga de fichero</label>			
+			</div>			<div class="editContent">	
+
+				<div style="height:0px;overflow:hidden">
+   							<input type="file" id="archivoExcel2" name="fileInput" />
+						</div>		
+					<p class="criteria">
+						<span> 
+							<label class="fieldText" style="width: 200px">Selecciona el fichero a importar(*): </label>
+							<input type="file" id="archivoExcel" name="archivoExcel" style="display: none" onChange="Handlechange();"/>
+						<img src="/sim/img/clipAltas.png" value="Click to select file" id="fakeBrowse" onclick="HandleBrowseClick();" height="18" width="18"/>
+						<label class="fieldText" id="filename" name="filename" style="background:none;float: none;padding-left: 0px;" onclick="HandleBrowseClick();">Ningún archivo seleccionado</label>					
+						</span>						
+					</p>
+				
 				<p class="criteria">
 					<span style="width: 340px;"> <label class="fieldText">Si desea descargar la plantilla pulse <a href="plantilla.xls">aquí</a></label> <strong><s:label
 								theme="simple" /></strong>
@@ -34,13 +46,13 @@
 				</p>
 				<p class="criteria">				
 					<span style="width: 350px;"> <label style="width: 120px;"
-						class="fieldText">Organismo Pdp: </label> <s:select
-							id="organismo.idOrganismoPdp"
-							name="organismo.idOrganismoPdp" emptyOption="true"
-							theme="simple" labelposition="left" title="Organismos Pdp"
+						class="fieldText">PdP-diputación: </label> <s:select
+							id="organismo.idPdpDiputaciones"
+							name="organismo.idPdpDiputaciones" emptyOption="true"
+							theme="simple" labelposition="left" title="PdP-diputaciones"
 							list="comboOrganismosPdp" listKey="codigo"
 							listValue="descripcion" cssClass="" cssStyle="width:138px"
-							value="%{organismo.idOrganismoPdp}" disabled="false" />
+							value="%{organismo.idPdpDiputaciones}" disabled="false" />
 					</span>
 										
 				</p>
@@ -56,7 +68,7 @@
 		<div class="editContent">
 				<p class="criteria">
 					<span style="width: 350px;"> <label style="width: 120px;"
-						class="fieldText">Servicios: </label> <s:select
+						class="fieldText">Servicios(*): </label> <s:select
 							id="servicioOrganismos.servicioId"
 							name="servicioOrganismos.servicioId" emptyOption="true"
 							theme="simple" labelposition="left" title="Organismos"
@@ -154,7 +166,7 @@
 						</s:iterator>
 						<s:if test="%{listaServicioOrganismos == null}">
 							<tr>
-								<td colspan="5">No se ha configurado ningun servidor</td>
+								<td colspan="5">No se ha configurado ningun servicio</td>
 							</tr>
 							<script>
 								document.getElementById('checkAllSOO').style.visibility = "hidden";
@@ -189,7 +201,7 @@
 				action="javascript:insertarNuevoServidor()">
 				<p class="criteria">
 					<span style="width: 300px;"> <label style="width: 145px;"
-						class="fieldText">Servidor / Proveedor:</label> <s:select
+						class="fieldText">Servidor / Proveedor(*):</label> <s:select
 							id="servidorOrganismo.servidorId"
 							name="servidorOrganismo.servidorId" emptyOption="true" onchange="checkTipoHeader(this)"
 							theme="simple" labelposition="left" title="Servidor / Proveedor"
@@ -316,10 +328,44 @@
 	</div>
 
 	<script>
+	function HandleBrowseClick()
+		{
+		    var fileinput = document.getElementById("archivoExcel");
+		    fileinput.click();
+		}
+
+		function Handlechange()
+		{
+		    var fileinput = document.getElementById("archivoExcel");
+		    var textinput = document.getElementById("filename");
+		    if (fileinput.value != ""){
+		    	textinput.innerHTML = fileinput.value.split(/(\\|\/)/g).pop();
+			    }
+		    else{
+			    textinput.innerHTML = "Ningún archivo seleccionado";
+			    }
+		   	
+		}
+	
+	$('#archivoExcel').bind('change', function() {		
+		  if (this.files[0].size/1024 > 1024 ){
+			  alert(" El fichero no puede ocupar mas de 1 MB");
+			  archivoExcel.value = null;
+			  document.getElementsByName('filename')[0].innerText = "Ningún archivo seleccionado";
+			  }
+		  if(this.files[0].name.split('.').pop() != "xls" && this.files[0].name.split('.').pop() != "xlsx"){
+			  alert("El tipo de fichero no es de tipo excel");
+			  archivoExcel.value = null;
+			  document.getElementsByName('filename')[0].innerText = "Ningún archivo seleccionado";
+			  }
+		});
+	
 	var datosServicios = new Array();	
 	var datosServidor = new Array();
 
 		function formAlta(){
+			var nombreArch = document.getElementById("archivoExcel").value;
+			formatoArchivoExcel.value = nombreArch.split(".").pop(); 
 			var idServicios = new Array();
 			for(var i=0;i<datosServicios.length;i++){
 				  idServicios.push(datosServicios[i][0].value);

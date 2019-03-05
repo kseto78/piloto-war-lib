@@ -352,6 +352,9 @@ LABEL.fieldText {
 .Success {
 	BORDER-BOTTOM: #73b18a 3px solid; BORDER-LEFT: #73b18a 3px solid; BACKGROUND: url(../img/OK.png) #e9f3ed no-repeat 5px 5px; BORDER-TOP: #73b18a 3px solid; BORDER-RIGHT: #73b18a 3px solid
 }
+.Warning {
+	BORDER-BOTTOM: #cdb641 3px solid; BORDER-LEFT: #cdb641 3px solid; BACKGROUND: url(../img/warning.png) #fce987 no-repeat 5px 5px; BORDER-TOP: #cdb641 3px solid; BORDER-RIGHT: #cdb641 3px solid
+}
 .Error {
 	BORDER-BOTTOM: #b13d3d 3px solid; BORDER-LEFT: #b13d3d 3px solid; BACKGROUND: url(../img/Error.png) #f3e9e9 no-repeat 5px 5px; BORDER-TOP: #b13d3d 3px solid; BORDER-RIGHT: #b13d3d 3px solid
 }

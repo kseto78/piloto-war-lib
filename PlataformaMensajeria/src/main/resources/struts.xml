@@ -46,7 +46,6 @@
 				<interceptor-ref name="checkbox"/>
 				<interceptor-ref name="fileUpload">
 					<param name="maximumSize">1024000</param>
-					<param name="allowedTypes">image/jpeg,image/gif,image/png,text/plain,application/pdf,application/msword</param>
 				</interceptor-ref>
 				<interceptor-ref name="params">
 					<!-- Excluimos el parametro que forma el display tag para paginar -->
@@ -1177,11 +1176,22 @@
 			<result name="success">/uploadOK.jsp</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>		
+		<action name="ajaxLoadServiciosCanal" class="serviciosAction"
+			method="ajaxLoadServiciosCanal">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+			
+		</action>
 		<action name="ajaxLoadCanales" class="serviciosAction"
 			method="ajaxLoadCanales">
 			<result name="success">/uploadOK.jsp</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
+		<action name="ajaxLoadServiciosEnvioMensajes" class="serviciosAction"
+			method="ajaxLoadServiciosEnvioMensajes">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>	
 <!-- 		<action name="searchAction" class="es.mpr.plataformamensajeria.web.action.organismos.AutoCompleteAction">
                         <result type="json">
                            <param name="excludeNullProperties">true</param>
@@ -2127,70 +2137,70 @@
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - ORGANISMOS PDP-->
 		<!-- ************************************* -->
-		<action name="listarOrganismosPdp" class="organismosPdpAction"
+		<action name="listarPdpDiputaciones" class="pdpDiputacionesAction"
 			method="newSearch">
 			<result name="noUser" type="tiles">pages.nouser</result>
-			<result name="success" type="tiles">pages.searchOrganismoPdp</result>
+			<result name="success" type="tiles">pages.searchPdpDiputaciones</result>
 		</action>
-		<action name="buscarOrganismosPdp" class="organismosPdpAction"
+		<action name="buscarPdpDiputaciones" class="pdpDiputacionesAction"
 			method="search">
 			<result name="noUser" type="tiles">pages.nouser</result>
-			<result name="success" type="tiles">pages.searchOrganismoPdp</result>
+			<result name="success" type="tiles">pages.searchPdpDiputaciones</result>
 		</action>
-		<action name="deleteOrganismoPdp" class="organismosPdpAction"
+		<action name="deletePdpDiputaciones" class="pdpDiputacionesAction"
 			method="delete">
 			<result name="success" type="redirectAction">
-				<param name="actionName">buscarOrganismosPdp</param>
+				<param name="actionName">buscarPdpDiputaciones</param>
 			</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
-		<action name="deleteOrganismosPdpSeleccionados" class="organismosPdpAction"
+		<action name="deletePdpDiputacionesSeleccionados" class="pdpDiputacionesAction"
 			method="deleteSelected">
 			<result name="success" type="redirectAction">
-				<param name="actionName">buscarOrganismosPdp</param>
+				<param name="actionName">buscarPdpDiputaciones</param>
 			</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
-		<action name="nuevoOrganismoPdp" class="organismosPdpAction">
-			<result name="success" type="tiles">pages.organismoPdp.create</result>
+		<action name="nuevoPdpDiputaciones" class="pdpDiputacionesAction">
+			<result name="success" type="tiles">pages.pdpDiputaciones.create</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
-		<action name="salveOrganismoPdp" class="organismosPdpAction" method="create">
-			<result name="error" type="tiles">pages.organismoPdp.create</result>
+		<action name="salvePdpDiputaciones" class="pdpDiputacionesAction" method="create">
+			<result name="error" type="tiles">pages.pdpDiputaciones.create</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success" type="redirectAction">
-				<param name="actionName">editOrganismoPdp</param>
+				<param name="actionName">editPdpDiputaciones</param>
 				<param name="parse">true</param> 
-				<param name="idOrganismo">${idOrganismo}</param>
+				<param name="pdpDiputacionesId">${pdpDiputacionesId}</param>
 			</result>
 		</action>
-		<action name="editOrganismoPdp" class="organismosPdpAction" method="load">
+		<action name="editPdpDiputaciones" class="pdpDiputacionesAction" method="load">
 			<result name="noUser" type="tiles">pages.nouser</result>
-			<result name="success" type="tiles">pages.organismoPdp.edit</result>
+			<result name="success" type="tiles">pages.pdpDiputaciones.edit</result>
 		</action>
-		<action name="updateOrganismoPdp" class="organismosPdpAction"
+		<action name="updatePdpDiputaciones" class="pdpDiputacionesAction"
 			method="update">
 			<result name="success" type="redirectAction">
-				<param name="actionName">editOrganismoPdp</param>
+				<param name="actionName">editPdpDiputaciones</param>
 				<param name="parse">true</param> 
-				<param name="idOrganismo">${organismo.organismoPdpId}</param>
+				<param name="pdpDiputacionesId">${organismo.pdpDiputacionesId}</param>
 			</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
-		<action name="arbolOrganismoPdp" class="organismosPdpAction"
+		<action name="arbolPdpDiputaciones" class="pdpDiputacionesAction"
 			method="arbolOrganismos">
 			<result name="noUser" type="tiles">pages.nouser</result>
-			<result name="success" type="tiles">pages.organismoPdp.tree</result>
+			<result name="success" type="tiles">pages.pdpDiputaciones.tree</result>
 		</action>
-		<action name="arbolOrganismoPdpSeleccion" class="organismosPdpAction"
+		<action name="arbolPdpDiputacionesSeleccion" class="pdpDiputacionesAction"
 			method="arbolOrganismos">
 			<result name="noUser" type="tiles">pages.nouser</result>
-			<result name="success" type="tiles">pages.organismoPdp.treeSelect</result>
+			<result name="success" type="tiles">pages.pdpDiputaciones.treeSelect</result>
 		</action>
-		<action name="arbolOrganismoPdpSeleccionServidor" class="organismosPdpAction"
+		<action name="arbolPdpDiputacionesSeleccionServidor" class="pdpDiputacionesAction"
 			method="arbolOrganismos">
 			<result name="noUser" type="tiles">pages.nouser</result>
-			<result name="success" type="tiles">pages.organismoPdp.treeSelectServer</result>
+			<result name="success" type="tiles">pages.pdpDiputaciones.treeSelectServer</result>
 		</action>		
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - ALTAS MASIVAS -->
@@ -2222,7 +2232,7 @@
 			method="arbolOrganismos">
 			<result name="noUser" type="tiles">pages.nouser</result>
 			<result name="success" type="tiles">pages.organismo.tree</result>
-		</action>
+		</action>		
 		<action name="buscarOrganismos" class="organismosAction"
 			method="search">
 			<result name="noUser" type="tiles">pages.nouser</result>

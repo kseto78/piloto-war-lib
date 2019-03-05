@@ -1,6 +1,8 @@
 package es.mpr.plataformamensajeria.servicios.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,9 +27,11 @@ import es.minhap.plataformamensajeria.iop.manager.TblPlanificacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.sim.model.TblAplicaciones;
+import es.minhap.sim.model.TblCanales;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUsuariosAplicaciones;
 import es.minhap.sim.query.TblAplicacionesQuery;
+import es.minhap.sim.query.TblCanalesQuery;
 import es.minhap.sim.query.TblServiciosQuery;
 import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 import es.minhap.sim.query.TblUsuariosQuery;
@@ -196,6 +200,155 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		} 
 		return listBean;
 
+	}
+	
+	@Override
+	public List<AplicacionBean> getAplicacionesByCanal(String rolUsuario, Integer userName, long canalId) {
+		List<AplicacionBean> listBean = new ArrayList<>();
+		try {
+			if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+				TblServiciosQuery squery = new TblServiciosQuery();
+				TblCanalesQuery canal= new TblCanalesQuery();
+				TblAplicacionesQuery aquery = new TblAplicacionesQuery();
+				aquery.setActivo(true);
+				aquery.setEliminadoIsNull(true);
+				aquery.addOrder("nombre", OrderType.ASC);				
+				
+				canal.setCanalid(Long.valueOf(canalId));
+				squery.setTblCanales(canal);
+				squery.setTblAplicaciones(aquery);
+				squery.setEliminadoIsNull(true);
+				squery.setActivo(true);
+				
+				List<TblServicios> lista = tblServiciosManager.getServicios(squery);
+				for (TblServicios a : lista) {
+					
+					if (a.getTblCanales().getCanalid().equals(canalId)){
+						Boolean encontrado = false;
+						AplicacionBean app = new AplicacionBean();
+						app.setAplicacionId(a.getTblAplicaciones().getAplicacionid().intValue());						
+						app.setNombre(a.getTblAplicaciones().getNombre());
+						for (AplicacionBean ap : listBean){							
+						
+							if(ap.getAplicacionId().equals(app.getAplicacionId())){
+								encontrado = true;
+							}
+						}
+																	
+						if(!encontrado) listBean.add(app);
+						
+					}					
+				}
+				
+				
+			} else {
+				TblUsuariosAplicacionesQuery queryUsuariosAplicaciones = new TblUsuariosAplicacionesQuery();
+				TblUsuariosQuery queryUsuarios = new TblUsuariosQuery();
+				queryUsuarios.setUsuarioid((null != userName)? userName.longValue() : null);
+				queryUsuariosAplicaciones.setTblUsuarios(queryUsuarios);
+				List<TblUsuariosAplicaciones> listaUsuarioAplicaciones = tblUsuariosAplicacionesManager.getUsuariosAplicacionesByQuery(queryUsuariosAplicaciones);
+							
+				if (null != listaUsuarioAplicaciones && !listaUsuarioAplicaciones.isEmpty()){
+
+					TblServiciosQuery squery = new TblServiciosQuery();
+					TblCanalesQuery canal= new TblCanalesQuery();
+					canal.setCanalid(Long.valueOf(canalId));
+					TblAplicacionesQuery aquery = new TblAplicacionesQuery();
+					aquery.setActivo(true);
+					aquery.setEliminadoIsNull(true);									
+					squery.setTblCanales(canal);
+					squery.setTblAplicaciones(aquery);
+					squery.setEliminadoIsNull(true);
+					squery.setActivo(true);
+										
+					List<TblServicios> lista = tblServiciosManager.getServicios(squery);
+					for (TblServicios a : lista) {						
+						Boolean encontrado = false;
+							
+							AplicacionBean app = new AplicacionBean();
+							app.setAplicacionId(a.getTblAplicaciones().getAplicacionid().intValue());						
+							app.setNombre(a.getTblAplicaciones().getNombre());
+															
+							for(TblUsuariosAplicaciones usuApl : listaUsuarioAplicaciones){
+								
+								if( usuApl.getAplicacionid().equals(a.getTblAplicaciones().getAplicacionid()) ){
+									for (AplicacionBean ap : listBean){							
+										
+										if(ap.getAplicacionId().equals(app.getAplicacionId())){
+											encontrado = true;
+										}
+									}
+									if(!encontrado) listBean.add(app);									
+								}
+							}	
+					}
+					
+					
+				
+				}
+			}
+		} catch (Exception e) {
+			logger.error("ServicioAplicacionImpl - existeUsuario:" + e);
+		} 
+		return listBean;
+
+	}
+	@Override
+	public boolean validarSms(Long idAplicacion){
+		
+		TblAplicaciones aplicacion = tblAplicacionesManager.getAplicacion(idAplicacion);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  
+        
+		Date fechaUltimo = aplicacion.getSmsFechaUltimo();
+		Date today = new Date();
+
+		String todayString = sdf.format(today);
+		String fechaUltimoString = sdf.format(fechaUltimo);
+		
+		try {
+			today = sdf.parse(todayString);
+			fechaUltimo = sdf.parse(fechaUltimoString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		if(today.after(fechaUltimo)){ // Si es true, en el dia actual no se han enviado SMS.
+			aplicacion.setSmsEnviadosDia(0);
+			aplicacion.setSmsFechaUltimo(today);
+			
+			tblAplicacionesManager.updateSMS(aplicacion);
+			//Por hacer actualizacion tblAplicacionesManager.update(aplicacion, source, accion, accionId);
+			
+			return true;
+		} else{
+			if ( (Integer)aplicacion.getSmsEnviadosDia() >= (Integer)aplicacion.getSmsMaximos() ) {
+				return false;				
+			}else{
+				aplicacion.setSmsEnviadosDia((Integer)aplicacion.getSmsEnviadosDia()+1);
+				aplicacion.setSmsFechaUltimo(today);
+				return true;
+				//Por hacer actualizacion tblAplicacionesManager.update(aplicacion, source, accion, accionId);
+			}
+		}
+			
+	}
+	
+		
+	@Override
+	public void smsEnviado(Long idAplicacion){
+		
+		TblAplicaciones aplicacion = tblAplicacionesManager.getAplicacion(idAplicacion);
+
+		Date today = new Date();
+		
+		aplicacion.setSmsFechaUltimo(today);
+		aplicacion.setSmsEnviadosDia(aplicacion.getSmsEnviadosDia()+1);
+		
+		tblAplicacionesManager.updateSMS(aplicacion);
+		
+			
 	}
 
 	/* (non-Javadoc)

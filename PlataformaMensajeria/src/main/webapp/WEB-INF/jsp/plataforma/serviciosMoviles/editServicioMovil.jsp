@@ -85,7 +85,7 @@
 						</span>
 					</s:if>
 					<s:else>
-					<input type="file" name="servicioMovil.icono" id="servicioMovil.icono" value="%{servicioMovil.icono}"/>
+					<input type="file" name="servicioMovil.icono" id="servicioMovil.icono" value="%{servicioMovil.icono}" onchange="subidaFichero()"/>
 					</s:else>
 				</p>
 								
@@ -250,3 +250,11 @@
 	</div>
 </s:form>	
 </div>
+<script>
+function subidaFichero(){
+	   if(document.getElementById('servicioMovil.icono').value.split('.').pop() == "exe"){
+		  alert("El tipo de fichero no puede ser de tipo exe.");
+		  document.getElementById('servicioMovil.icono').value = null; 
+ 	}        	   
+}
+</script>

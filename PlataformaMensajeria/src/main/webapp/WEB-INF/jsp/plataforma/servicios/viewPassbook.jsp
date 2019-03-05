@@ -22,7 +22,7 @@
 						class="btnDelete"></span>
 					</s:if>
 					<s:else>
-						<input type="file" name="logo" id="logo" value="%{servicioOrganismos.logo}"/>
+						<input type="file" name="logo" id="logo" value="%{servicioOrganismos.logo}" onchange="subidaFicheroLogo()"/>
 					</s:else>
 					</p>
 					<p class="criteria">
@@ -35,7 +35,7 @@
 						class="btnDelete"></span>
 					</s:if>
 					<s:else>
-						<input type="file" name="background" id="background" value="%{servicioOrganismos.background}"/>
+						<input type="file" name="background" id="background" value="%{servicioOrganismos.background}" onchange="subidaFicheroBackground()"/>
 					</s:else>
 					</p>
 					<p class="criteria">
@@ -48,7 +48,7 @@
 						class="btnDelete"></span>
 					</s:if>
 					<s:else>
-						<input type="file" name="icon" id="icon" value="%{servicioOrganismos.icon}"/>
+						<input type="file" name="icon" id="icon" value="%{servicioOrganismos.icon}" onchange="subidaFicheroIcon()"/>
 					</s:else>
 					</p>
 					
@@ -81,3 +81,23 @@
 			</div>
 		</sj:dialog>
 	</s:form>
+	<script>
+function subidaFicheroLogo(){
+	   if(document.getElementById('logo').value.split('.').pop() == "exe"){
+		  alert("El tipo de fichero no puede ser de tipo exe.");
+		  document.getElementById('logo').value = null; 
+ 	}        	   
+}
+function subidaFicheroBackground(){
+	   if(document.getElementById('background').value.split('.').pop() == "exe"){
+		  alert("El tipo de fichero no puede ser de tipo exe.");
+		  document.getElementById('background').value = null; 
+	}        	   
+}
+function subidaFicheroIcon(){
+	   if(document.getElementById('icon').value.split('.').pop() == "exe"){
+		  alert("El tipo de fichero no puede ser de tipo exe.");
+		  document.getElementById('icon').value = null; 
+	}        	   
+}
+</script>

@@ -42,7 +42,7 @@ public class ServicioBean implements Audit, Serializable {
 		this.pendienteaprobacion = null;
 		this.nombreloteenvio = null;
 		this.badge = null;
-		this.gcmprojectkey = null;
+		this.fcmprojectkey = null;
 		this.apnsrutacertificado = null;
 		this.apnspasswordcertificado = null;
 		this.androidplataforma = null;
@@ -69,6 +69,7 @@ public class ServicioBean implements Audit, Serializable {
 		this.multiorganismo = null;
 		this.isMultiorganismo = null;
 		this.premium = null;
+		this.exclusivo = null;
 		this.numeroMaxReenvios = null;
 		this.eliminado = null;
 		this.caducidadWebPush = null;
@@ -157,8 +158,8 @@ public class ServicioBean implements Audit, Serializable {
 	/**  badge. */
 	protected Integer badge = null;
 	
-	/**  gcmprojectkey. */
-	protected String gcmprojectkey = null;
+	/**  fcmprojectkey. */
+	protected String fcmprojectkey = null;
 	
 	/**  apnsrutacertificado. */
 	protected String apnsrutacertificado = null;
@@ -237,6 +238,12 @@ public class ServicioBean implements Audit, Serializable {
 	
 	/**  is premium. */
 	protected String isPremium = null;
+	
+	/**  exclusivo. */
+	protected Boolean exclusivo = null;
+	
+	/**  is exclusivo. */
+	protected String isExclusivo = null;
 	
 	/**  numero max reenvios. */
 	protected Integer numeroMaxReenvios = null;
@@ -741,6 +748,33 @@ public class ServicioBean implements Audit, Serializable {
 		}
 		this.isPremium = isPremium;
 	}
+	
+	/**
+	 * Obtener checks if is exclusivo.
+	 *
+	 * @return checks if is exclusivo
+	 */
+	public String getIsExclusivo() {
+		if (exclusivo != null && exclusivo) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+
+	/**
+	 * Modificar checks if is exclusivo.
+	 *
+	 * @param isExclusivo new checks if is exclusivo
+	 */
+	public void setIsExclusivo(String isExclusivo) {
+		if (isExclusivo != null && isExclusivo.equals("true")) {
+			this.exclusivo = true;
+		} else {
+			this.exclusivo = false;
+		}
+		this.isExclusivo = isExclusivo;
+	}
 
 	/**
 	 * Obtener servicio id.
@@ -1193,21 +1227,21 @@ public class ServicioBean implements Audit, Serializable {
 	}
 
 	/**
-	 * Obtener gcmprojectkey.
+	 * Obtener fcmprojectkey.
 	 *
-	 * @return the gcmprojectkey
+	 * @return the fcmprojectkey
 	 */
-	public String getGcmprojectkey() {
-		return gcmprojectkey;
+	public String getFcmprojectkey() {
+		return fcmprojectkey;
 	}
 
 	/**
-	 * Modificar gcmprojectkey.
+	 * Modificar fcmprojectkey.
 	 *
-	 * @param gcmprojectkey            the gcmprojectkey to set
+	 * @param fcmprojectkey            the fcmprojectkey to set
 	 */
-	public void setGcmprojectkey(String gcmprojectkey) {
-		this.gcmprojectkey = gcmprojectkey;
+	public void setFcmprojectkey(String fcmprojectkey) {
+		this.fcmprojectkey = fcmprojectkey;
 	}
 
 	/**
@@ -1515,6 +1549,26 @@ public class ServicioBean implements Audit, Serializable {
 	public void setPremium(Boolean premium) {
 		this.premium = premium;
 	}
+	
+	/**
+	 * Obtener exclusivo.
+	 *
+	 * @return the exclusivo
+	 */
+	public Boolean getExclusivo() {
+		return exclusivo;
+	}
+
+	/**
+	 * Modificar exclusivo.
+	 *
+	 * @param exclusivo        the exclusivo to set
+	 */
+	public void setExclusivo(Boolean exclusivo) {
+		this.exclusivo = exclusivo;
+	}
+	
+	
 	
 	/**
 	 * Obtener numero max reenvios.

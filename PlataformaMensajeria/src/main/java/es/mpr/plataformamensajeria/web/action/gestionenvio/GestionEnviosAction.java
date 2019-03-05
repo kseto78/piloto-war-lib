@@ -864,6 +864,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 				try {
 					if (idArray.length > 1) {
 						TblGestionEnvios env = servicioGestionEnvios.getEnvio(idArray[1]);
+						listaEnvios = new ArrayList<>();
 						listaEnvios.add(env);
 					} else {
 						listaEnvios = servicioGestionEnvios.getEnviosLote(id);

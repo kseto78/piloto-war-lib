@@ -192,11 +192,11 @@
 				</p>
 
 				<p class="criteria">
-					<label id="gcmprojectkeyLabel"
-						style="width: 180px; visibility:hidden; display:none;" class="fieldText">GCM
+					<label id="fcmprojectkeyLabel"
+						style="width: 180px; visibility:hidden; display:none;" class="fieldText">FCM
 						API Key (*):</label>
-					<s:textfield name="servicio.gcmprojectkey"
-						value="%{servicio.gcmprojectkey}" id="servicio.gcmprojectkey"
+					<s:textfield name="servicio.fcmprojectkey"
+						value="%{servicio.fcmprojectkey}" id="servicio.fcmprojectkey"
 						theme="simple" cssStyle="visibility:hidden;display:none;" labelposition="left"
 						size="30" maxlength="255" cssClass="" />
 				</p>
@@ -236,12 +236,19 @@
 					<s:checkbox theme="simple" name="newActivo" id="newActivo"
 						value="%{newActivo}" />
 				</p>
-				<p class="criteria">
-					<label theme="simple" style="width: 120px;" class="fieldText">Premium:</label>
-					<s:checkbox theme="simple" name="newPremium" id="newPremium"
-						value="%{newPremium}" />
-				</p>
 				
+				<label id="exclusivoLabel" style="display:none">
+					<p class="criteria">
+						<label theme="simple" style="width: 120px;" class="fieldText">Premium:</label>
+						<s:checkbox theme="simple" name="newPremium" id="newPremium"
+						value="%{newPremium}" />
+					</p>									
+					<p class="criteria">
+						<label theme="simple" style="width: 120px;" class="fieldText">Exclusivo:</label>
+						<s:checkbox theme="simple" name="newExclusivo" id="newExclusivo"
+						value="%{newExclusivo}" />						
+					</p>
+				</label>	
 								<!-- Inicio parte WEB push -->
 				<p class="criteria">
 					 <span>

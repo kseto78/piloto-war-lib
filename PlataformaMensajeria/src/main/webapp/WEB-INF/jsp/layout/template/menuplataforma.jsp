@@ -47,8 +47,10 @@
  		                <div id="desplegable20">
 			                <ul>	
 			                	<li><a href="listarOrganismos.action" id="desplegable201" class="Usuarios">Organismos</a></li>
+			                	
 			                    <li><a href="altasMasivasOrganismosView.action" id="desplegable202" class="Usuarios">Altas masivas</a></li>
-			                    <li><a href="listarOrganismosPdp.action" id="desplegable203" class="Usuarios">Organismos Pdp</a></li>
+			                   	<li id="desplegable204" style="display:none"><a style="margin-left:26px; width: 110px;" 
+			                    href="listarPdpDiputaciones.action" class="Usuarios" id="desplegable203">PdP-diputaciones</a></li>
 			                    <!--<li><a href="../../Seguridad/Roles/Creacion.html" class="Roles">Roles</a></li>-->
 			                </ul>
 			             </div>
@@ -127,7 +129,38 @@
         
 <script language="Javascript">
 
-function cargar(){
+window.onload = new function cargar(){
+
+	//Agrega la compatibilidad para IE para el metodo string.endsWith
+	if (!String.prototype.endsWith) {
+		  String.prototype.endsWith = function(searchString, position) {
+		      var subjectString = this.toString();
+		      if (typeof position !== 'number' || !isFinite(position) 
+		          || Math.floor(position) !== position || position > subjectString.length) {
+		        position = subjectString.length;
+		      }
+		      position -= searchString.length;
+		      var lastIndex = subjectString.indexOf(searchString, position);
+		      return lastIndex !== -1 && lastIndex === position;
+		  };
+		}
+
+	//Agrega la compatibilidad para IE para el metodo string.includes
+	if (!String.prototype.includes) {
+		  Object.defineProperty(String.prototype, 'includes', {
+		    value: function(search, start) {
+		      if (typeof start !== 'number') {
+		        start = 0
+		      }
+		      
+		      if (start + search.length > this.length) {
+		        return false
+		      } else {
+		        return this.indexOf(search, start) !== -1
+		      }
+		    }
+		  })
+		}
 	
 	var url = window.location.href;
 
@@ -187,22 +220,24 @@ function cargar(){
 		elem1.style.backgroundColor="#003366";
 		elem1.style.color = "white";
 		menu1=2;	
-	}else if(url.includes('Organismos') || url.includes('Organismo')){
+	}else if(url.includes('Organismos') || url.includes('Organismo') || url.includes('PdpDiputaciones')){						
 			if(url.includes('altasMasivas')){
 				elem1 = document.getElementById('desplegable202');
 				elem1.style.backgroundColor="#003366";
 				elem1.style.color = "white";
-			} else if(url.includes('OrganismosPdp') || url.includes('OrganismoPdp')){
+				document.getElementById("desplegable204").style.display = "";
+			} else if(url.includes('PdpDiputaciones')){
 				elem1 = document.getElementById('desplegable203');
 				elem1.style.backgroundColor="#003366";
 				elem1.style.color = "white";
+				document.getElementById("desplegable204").style.display = "";
 			} else{
 				elem1 = document.getElementById('desplegable201');
 				elem1.style.backgroundColor="#003366";
 				elem1.style.color = "white";
 				}
 		
-		menu1=20;	
+		menu1=20;
 	}else if(url.endsWith('buscarServiciosMoviles.action') || url.includes('ServicioMovil.action')){
 		elem1 = document.getElementById('desplegable25');
 		elem1.style.backgroundColor="#003366";
@@ -285,8 +320,7 @@ function cargar(){
 
 
 		
-}
+};
 
- window.onload=cargar;
 
 </script>

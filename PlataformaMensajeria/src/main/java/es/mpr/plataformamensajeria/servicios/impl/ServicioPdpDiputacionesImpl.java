@@ -26,25 +26,25 @@ import com.map.j2ee.util.beanutils.converters.DateConverter;
 
 import es.minhap.common.entity.OrderType;
 import es.minhap.common.entity.TextComparator;
+import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 import es.minhap.plataformamensajeria.iop.beans.OrganismosServicioBean;
-import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismos;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorPdpDiputaciones;
 import es.minhap.plataformamensajeria.iop.manager.TblAplicacionesManager;
-import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblPdpDiputacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosServicioManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.sim.model.TblAplicaciones;
-import es.minhap.sim.model.TblOrganismos;
+import es.minhap.sim.model.TblPdpDiputaciones;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUsuariosAplicaciones;
 import es.minhap.sim.query.TblAplicacionesQuery;
-import es.minhap.sim.query.TblOrganismosQuery;
+import es.minhap.sim.query.TblPdpDiputacionesQuery;
 import es.minhap.sim.query.TblOrganismosServicioQuery;
 import es.minhap.sim.query.TblServiciosQuery;
 import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 import es.minhap.sim.query.TblUsuariosQuery;
-import es.mpr.plataformamensajeria.beans.OrganismoBean;
-import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPdpDiputaciones;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
 /**
@@ -54,19 +54,19 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
  * @author
  * 
  */
-@Service("servicioOrganismoImpl")
-public class ServicioOrganismoImpl implements ServicioOrganismo {
+@Service("servicioPdpDiputacionesImpl")
+public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 
 	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
-	private static final String ERRORS_ORGANISMO_GET_ORGANISMOS = "errors.organismo.getOrganismos";
+	private static final String ERRORS_ORGANISMO_GET_ORGANISMOSPDP = "errors.organismo.getOrganismosPdp";
 
 	/**  logger. */
 	private static Logger logger = Logger
-			.getLogger(ServicioOrganismoImpl.class);
+			.getLogger(ServicioPdpDiputacionesImpl.class);
 
 	/**  tbl organismos manager. */
-	@Resource(name = "TblOrganismosManagerImpl")
-	private TblOrganismosManager tblOrganismosManager;
+	@Resource(name = "TblPdpDiputacionesManagerImpl")
+	private TblPdpDiputacionesManager tblPdpDiputacionesManager;
 
 	/**  tbl usuarios planificaciones manager. */
 	@Resource(name = "TblUsuariosAplicacionesManagerImpl")
@@ -85,27 +85,27 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	private TblOrganismosServicioManager tblOrganismosServicioManager;
 
 	/**  query executor organismos impl. */
-	@Resource(name = "queryExecutorOrganismosImpl")
-	private QueryExecutorOrganismos queryExecutorOrganismosImpl;
+	@Resource(name = "queryExecutorPdpDiputacionesImpl")
+	private QueryExecutorPdpDiputaciones queryExecutorOrganismosPdpImpl;
 
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismos()
 	 */
 	// //MIGRADO
 	@Override
-	public List<OrganismoBean> getOrganismos() throws BusinessException {
+	public List<PdpDiputacionesBean> getPdpDiputaciones() throws BusinessException {
 		try {
-			TblOrganismosQuery query = new TblOrganismosQuery();
+			TblPdpDiputacionesQuery query = new TblPdpDiputacionesQuery();
 			query.setEliminadoIsNull(true);
 			query.addOrder("nombre", OrderType.ASC);
-			List<TblOrganismos> lista = tblOrganismosManager
-					.getOrganismosByQuery(query);
+			List<TblPdpDiputaciones> lista = tblPdpDiputacionesManager
+					.getPdpDiputacionesByQuery(query);
 
-			return getListOrganismoBean(lista);
+			return getListOrganismoPdpBean(lista);
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - getOrganismos:" + e);
 			throw new BusinessException(e,
-					ServicioOrganismoImpl.ERRORS_ORGANISMO_GET_ORGANISMOS);
+					ServicioPdpDiputacionesImpl.ERRORS_ORGANISMO_GET_ORGANISMOSPDP);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 */
 	// /MIGRADO
 	@Override
-	public List<Integer> getOrganismos(String rolUsuario, Integer idUsuario)
+	public List<Integer> getPdpDiputaciones(String rolUsuario, Integer idUsuario)
 			throws BusinessException {
 		List<Integer> res = new ArrayList<>();
 		try {
@@ -171,7 +171,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServicios:" + e);
 			throw new BusinessException(e,
-					ServicioOrganismoImpl.ERRORS_ORGANISMO_GET_ORGANISMOS);
+					ServicioPdpDiputacionesImpl.ERRORS_ORGANISMO_GET_ORGANISMOSPDP);
 		}
 		return res;
 	}
@@ -181,35 +181,33 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 */
 	// //MIGRADO
 	@Override
-	public PaginatedList<OrganismoBean> getOrganismos(int start, int size,
-			String order, String columnSort, OrganismoBean criterio)
+	public PaginatedList<PdpDiputacionesBean> getOrganismosPdpDiputaciones(int start, int size,
+			String order, String columnSort, PdpDiputacionesBean criterio)
 			throws BusinessException {
 
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "dir3");
-			columns.put("3", "nombre");
-			columns.put("4", "estado");
-			columns.put("6", "codUnidadRaiz");
+			columns.put("1", "nombre");
+			columns.put("2", "descripcion");			
 
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "dir3";
+				column = "nombre";
 			}
 
-			es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob = new es.minhap.plataformamensajeria.iop.beans.OrganismoBean();
-			ob = createOrganismoBean(criterio, ob);
-			List<TblOrganismos> lista = queryExecutorOrganismosImpl
-					.getOrganismosPaginado(start, size, order, column, ob);
+			es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob = new es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean();
+			ob = createOrganismoPdpBean(criterio, ob);
+			List<TblPdpDiputaciones> lista = queryExecutorOrganismosPdpImpl
+					.getPdpDiputacionesPaginado(start, size, order, column, ob);
 
-			List<OrganismoBean> pageList = getListOrganismoBean(lista);
+			List<PdpDiputacionesBean> pageList = getListOrganismoPdpBean(lista);
 
 			// Total de organismos
-			Integer rowcount = queryExecutorOrganismosImpl
-					.countOrganismosPaginado(ob);
+			Integer rowcount = queryExecutorOrganismosPdpImpl
+					.countPdpDiputacionesPaginado(ob);
 
-			PaginatedList<OrganismoBean> result = new PaginatedList<>();
+			PaginatedList<PdpDiputacionesBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
@@ -217,7 +215,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - getOrganismos:" + e);
 			throw new BusinessException(e,
-					ServicioOrganismoImpl.ERRORS_ORGANISMO_GET_ORGANISMOS);
+					ServicioPdpDiputacionesImpl.ERRORS_ORGANISMO_GET_ORGANISMOSPDP);
 
 		}
 	}
@@ -228,23 +226,22 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	// //MIGRADO
 	@Override
 	@Transactional
-	public Integer newOrganismo(OrganismoBean organismo, String source,
+	public Integer newOrganismoPdpDiputacion(PdpDiputacionesBean organismoPdp, String source,
 			String accion, Long accionId) throws BusinessException {
 		try {
-			TblOrganismos organismoTO = getOrganismoTO(organismo);
+			TblPdpDiputaciones organismoTO = getOrganismoPdpTO(organismoPdp);
 
 			organismoTO.setFechacreacion(new Date());
 			String modificador = PlataformaMensajeriaUtil.getUsuarioLogueado()
 					.getNombreCompleto();
 			organismoTO.setCreadopor(modificador);
 
-			Long idOrganismo = tblOrganismosManager.insert(organismoTO, source,
-					accion, accionId);
-			organismo.setActivo(organismoTO.getActivo());
-			organismo.setFechacreacion(organismoTO.getFechacreacion());
-			organismo.setCreadopor(organismoTO.getCreadopor());
-			organismo.setOrganismoId(idOrganismo.intValue());
-			return organismo.getOrganismoId();
+			Long idOrganismo = tblPdpDiputacionesManager.insert(organismoTO, source,
+					accion, accionId);		
+			organismoPdp.setFechacreacion(organismoTO.getFechacreacion());
+			organismoPdp.setCreadopor(organismoTO.getCreadopor());
+			organismoPdp.setPdpDiputacionesId(idOrganismo.intValue());
+			return organismoPdp.getPdpDiputacionesId();
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - newOrganismo:" + e);
 			BusinessException exc = new BusinessException(e,
@@ -260,53 +257,14 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	// //MIGRADO
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public void updateOrganismo(OrganismoBean organismo, String source, String accion, Long accionId) throws BusinessException {
+	public void updateOrganismoPdp(PdpDiputacionesBean organismoPdp, String source, String accion, Long accionId) throws BusinessException {
 		
 		try {
-			TblOrganismos organismoTO = getOrganismoTO(organismo);
-			organismoTO.setFechamodificacion(new Date());
-			if(organismo.getActivo() == true){
-				organismoTO.setFechaActivo(new Date());
-			}else{
-				organismoTO.setFechaActivo(null);
-			}
-			organismoTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
-			if("ALTA_MASIVA_APLICACION".equals(source)){
-				organismoTO.setModificadopor("ALTA_MASIVA_APLICACION");
-			}
-			tblOrganismosManager.update(organismoTO, source, accion, accionId);
+			TblPdpDiputaciones organismoPdpTO = getOrganismoPdpTO(organismoPdp);
+			organismoPdpTO.setFechamodificacion(new Date());
 			
-		}
-		catch (Exception e){
-			logger.error("ServicioOrganismoImpl - updateOrganismo:" + e);
-			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
-		} 
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#updateOrganismo(es.mpr.plataformamensajeria.beans.OrganismoBean, java.lang.String, java.lang.String, java.lang.Long)
-	 */
-	// //MIGRADO
-	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public void deleteOrganismoPdp(TblOrganismos org, String source, String accion, Long accionId) throws BusinessException {
-		
-		try {
-			OrganismoBean organismo = getOrganismoBean(org);
-			TblOrganismos organismoTO = getOrganismoTO(organismo);
-			organismoTO.setFechamodificacion(new Date());
-			if(organismo.getActivo() == true){
-				organismoTO.setFechaActivo(new Date());
-			}else{
-				organismoTO.setFechaActivo(null);
-			}
-			organismoTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
-			if("ALTA_MASIVA_APLICACION".equals(source)){
-				organismoTO.setModificadopor("ALTA_MASIVA_APLICACION");
-			}
-			organismoTO.setIdPdpDiputaciones(null);
-			tblOrganismosManager.update(organismoTO, source, accion, accionId);
+			organismoPdpTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
+			tblPdpDiputacionesManager.update(organismoPdpTO, source, accion, accionId);
 			
 		}
 		catch (Exception e){
@@ -322,15 +280,14 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	// //MIGRADO
 	@Override
 	@Transactional
-	public OrganismoBean loadOrganismo(OrganismoBean organismo)
+	public PdpDiputacionesBean loadOrganismoPdp(PdpDiputacionesBean organismoPdp)
 			throws BusinessException {
 		try {
-			TblOrganismos organismoTO = tblOrganismosManager
-					.getOrganismoById(organismo.getOrganismoId().longValue());
-			return getOrganismoBean(organismoTO);
+			TblPdpDiputaciones organismoPdpTO = tblPdpDiputacionesManager.getPdpDiputacionesById(organismoPdp.getPdpDiputacionesId().longValue());
+			return getOrganismoPdpBean(organismoPdpTO);
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - loadOrganismo:" + e);
-			throw new BusinessException(e, "errors.organismo.loadOrganismo");
+			logger.error("ServicioPdpDiputacionesImpl - loadOrganismoPdp:" + e);
+			throw new BusinessException(e, "errors.organismo.loadOrganismoPdp");
 		}
 	}
 
@@ -340,18 +297,17 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	// /MIGRADO
 	@Override
 	@Transactional
-	public void deleteOrganismo(Long organismoId, String source, String accion,
+	public void deleteOrganismoPdp(Long organismoPdpId, String source, String accion,
 			Long accionId) throws BusinessException {
 		try {
-			TblOrganismos o = tblOrganismosManager
-					.getOrganismoById(organismoId);
+			TblPdpDiputaciones o = tblPdpDiputacionesManager
+					.getPdpDiputacionesById(organismoPdpId);
 
 			o.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado()
 					.getNombreCompleto());
 			o.setFechamodificacion(new Date());
-			o.setEliminado("S");
-			o.setActivo(false);
-			tblOrganismosManager.update(o, source, accion, accionId);
+			o.setEliminado("S");			
+			tblPdpDiputacionesManager.update(o, source, accion, accionId);
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - deleteOrganismo:" + e);
 			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
@@ -365,7 +321,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	public List<String> listAutocomplete(String term) {
 
 		try {
-			return queryExecutorOrganismosImpl.getListAutocomplete(term);
+			return queryExecutorOrganismosPdpImpl.getListAutocomplete(term);
 
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
@@ -374,64 +330,11 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismoIdByDir3(java.lang.String)
-	 */
-	@Override
-	public Integer getOrganismoIdByDir3(String search) {
-		try {
-			return queryExecutorOrganismosImpl.getOrganismoIdByDir3(search);
-
-		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
-			return null;
-		}
-	}
 	
 	@Override
-	public Integer getOrganismoIdByDir3SoloEliminado(String search) {
+	public List<String> getOrganismosHijos(String search) {
 		try {
-			return queryExecutorOrganismosImpl.getOrganismoIdByDir3SoloEliminado(search);
-
-		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
-			return null;
-		}
-	}
-	
-	@Override
-	public List<TblOrganismos> getOrganismoById(String dir3) {
-		try {
-			TblOrganismosQuery query = new TblOrganismosQuery();
-			query.setDir3(dir3);
-			query.setDir3Comparator(TextComparator.UPPERCASE_TRANSLATE);
-			query.setEliminadoIsNull(true);
-			List<TblOrganismos> lista = tblOrganismosManager
-					.getOrganismosByQuery(query);
-
-			return (null != lista && !lista.isEmpty()) ? lista : null;
-
-		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
-			return null;
-		}
-	}
-	
-	@Override
-	public List<TblOrganismos> getOrganismosHijos(String search) {
-		try {
-			return queryExecutorOrganismosImpl.getOrganismosHijos(search);
-
-		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
-			return null;
-		}
-	}
-	
-	@Override
-	public List<TblOrganismos> getOrganismosByPdp(Long idOrganismosPdp) {
-		try {
-			return queryExecutorOrganismosImpl.getOrganismosByPdp(idOrganismosPdp);
+			return queryExecutorOrganismosPdpImpl.getOrganismosHijos(search);
 
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
@@ -443,40 +346,18 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#existeOrganimo(es.mpr.plataformamensajeria.beans.OrganismoBean)
 	 */
 	@Override
-	public Boolean existeOrganimo(OrganismoBean organismo) {
+	public Boolean existeOrganimo(PdpDiputacionesBean organismoPdp) {
 		try {
-			TblOrganismosQuery query = new TblOrganismosQuery();
-			query.setDir3(organismo.getDir3());
-			query.setDir3Comparator(TextComparator.UPPERCASE_TRANSLATE);
-			List<TblOrganismos> lista = tblOrganismosManager
-					.getOrganismosByQuery(query);
+			TblPdpDiputacionesQuery query = new TblPdpDiputacionesQuery();
+			query.setNombre(organismoPdp.getNombre());
+			query.setNombreComparator(TextComparator.IEQUALS);			
+			List<TblPdpDiputaciones> lista = tblPdpDiputacionesManager
+					.getPdpDiputacionesByQuery(query);
 
 			return (null != lista && !lista.isEmpty()) ? true : false;
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
-			return false;
-		}
-	}
-	
-	@Override
-	public Boolean existeOrganismoServicio(Long idOrganismo,Long idServicio) {
-		try {
-			TblOrganismosServicioQuery query = new TblOrganismosServicioQuery();
-			TblServiciosQuery servicio = new TblServiciosQuery();
-			servicio.setServicioid(idServicio);
-			TblOrganismosQuery organismo = new TblOrganismosQuery();
-			organismo.setOrganismoid(idOrganismo);
-			query.setTblOrganismos(organismo);
-			query.setTblServicios(servicio);
-			
-			List<OrganismosServicioBean> lista = tblOrganismosServicioManager.getOrganismosServicioByQuery(query);
-					
-
-			return (null != lista && !lista.isEmpty()) ? true : false;
-
-		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error("ServicioOrganismoImpl - autocomplete organismosPdp:" + e);
 			return false;
 		}
 	}
@@ -486,13 +367,13 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 * Obtenemos un objeto TblOrganismos a partir de un objeto OrganismoBean
 	 * </p>.
 	 *
-	 * @param organismo the organismo
+	 * @param organismoPdp the organismo
 	 * @return objeto TblOrganismos
 	 */
 	// ///MIGRADO
-	protected TblOrganismos getOrganismoTO(OrganismoBean organismo) {
+	protected TblPdpDiputaciones getOrganismoPdpTO(PdpDiputacionesBean organismoPdp) {
 
-		TblOrganismos organismoTO = new TblOrganismos();
+		TblPdpDiputaciones organismoPdpTO = new TblPdpDiputaciones();
 
 		try {
 			Date defaultValue = null;
@@ -505,17 +386,17 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			ConvertUtils.register(longConverter, java.lang.Long.class);
 			ConvertUtils.register(integerConverter, java.lang.Integer.class);
 			ConvertUtils.register(converter, java.util.Date.class);
-			BeanUtils.copyProperties(organismoTO, organismo);
-			organismoTO
-					.setOrganismoid((null != organismo.getOrganismoId()) ? organismo
-							.getOrganismoId().longValue() : null);
-			organismoTO.setFechacreacion(organismo.getFechacreacion());
-			organismoTO.setFechamodificacion(organismo.getFechamodificacion());
+			BeanUtils.copyProperties(organismoPdpTO, organismoPdp);
+			organismoPdpTO
+					.setPdpDiputacionesId((null != organismoPdp.getPdpDiputacionesId()) ? organismoPdp
+							.getPdpDiputacionesId().longValue() : null);
+			organismoPdpTO.setFechacreacion(organismoPdp.getFechacreacion());
+			organismoPdpTO.setFechamodificacion(organismoPdp.getFechamodificacion());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("ServicioOrganismoImpl - getOrganismoTO:" + e);
 		}
 
-		return organismoTO;
+		return organismoPdpTO;
 	}
 
 	/**
@@ -528,16 +409,16 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 * @throws BusinessException the business exception
 	 */
 	// //MIGRADO
-	protected List<OrganismoBean> getListOrganismoBean(List<TblOrganismos> lista)
+	protected List<PdpDiputacionesBean> getListOrganismoPdpBean(List<TblPdpDiputaciones> lista)
 			throws BusinessException {
-		List<OrganismoBean> result = null;
+		List<PdpDiputacionesBean> result = null;
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
 		if (lista != null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 
-			for (TblOrganismos o : lista) {
-				OrganismoBean organismo = new OrganismoBean();
+			for (TblPdpDiputaciones o : lista) {
+				PdpDiputacionesBean organismoPdp = new PdpDiputacionesBean();
 
 				try {
 					Date defaultValue = null;
@@ -552,16 +433,13 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 					ConvertUtils.register(integerConverter,
 							java.lang.Integer.class);
 					ConvertUtils.register(converter, java.util.Date.class);
-					BeanUtils.copyProperties(organismo, o);
-					organismo.setOrganismoId(o.getOrganismoid().intValue());
-					organismo.setFechaEstadoStr((null != organismo
-							.getFechaEstado()) ? df.format(organismo
-							.getFechaEstado()) : "");
+					BeanUtils.copyProperties(organismoPdp, o);
+					organismoPdp.setPdpDiputacionesId(o.getPdpDiputacionesId().intValue());		
 				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 
-				result.add(organismo);
+				result.add(organismoPdp);
 			}
 		}
 
@@ -578,9 +456,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 * @throws BusinessException the business exception
 	 */
 	// /MIGRADO
-	protected OrganismoBean getOrganismoBean(TblOrganismos o)
+	protected PdpDiputacionesBean getOrganismoPdpBean(TblPdpDiputaciones o)
 			throws BusinessException {
-		OrganismoBean organismo = new OrganismoBean();
+		PdpDiputacionesBean organismo = new PdpDiputacionesBean();
 
 		try {
 			Date defaultValue = null;
@@ -594,7 +472,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			ConvertUtils.register(integerConverter, java.lang.Integer.class);
 			ConvertUtils.register(converter, java.util.Date.class);
 			BeanUtils.copyProperties(organismo, o);
-			organismo.setOrganismoId(o.getOrganismoid().intValue());
+			organismo.setPdpDiputacionesId(o.getPdpDiputacionesId().intValue());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("ServicioOrganismoImpl - getOrganismoBean:" + e);
 		}
@@ -608,9 +486,9 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	 * @param ob the ob
 	 * @return the es.minhap.plataformamensajeria.iop.beans. organismo bean
 	 */
-	private es.minhap.plataformamensajeria.iop.beans.OrganismoBean createOrganismoBean(
-			OrganismoBean criterio,
-			es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob) {
+	private es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean createOrganismoPdpBean(
+			PdpDiputacionesBean criterio,
+			PdpDiputacionesBean ob) {
 		try {
 			if (null != criterio) {
 				Date defaultValue = null;
@@ -625,9 +503,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 				ConvertUtils
 						.register(integerConverter, java.lang.Integer.class);
 				ConvertUtils.register(converter, java.util.Date.class);
-				BeanUtils.copyProperties(ob, criterio);
-				ob.setFechaCreacionDesde(criterio.getFechaCreacionDesde());
-				ob.setFechaCreacionHasta(criterio.getFechaCreacionHasta());
+				BeanUtils.copyProperties(ob, criterio);				
 			}
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
@@ -635,5 +511,6 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		}
 		return ob;
 	}
+
 
 }

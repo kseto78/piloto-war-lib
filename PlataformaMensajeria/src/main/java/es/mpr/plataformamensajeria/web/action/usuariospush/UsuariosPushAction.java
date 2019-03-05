@@ -183,7 +183,8 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
         ArrayList<AplicacionBean> keys;
 		String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
 		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
-		keys = (ArrayList<AplicacionBean>)servicioAplicacion.getAplicacionesMenu(rolUsuario, idUsuario);
+		long canalId = 4; //Canal push
+		keys = (ArrayList<AplicacionBean>)servicioAplicacion.getAplicacionesByCanal(rolUsuario, idUsuario, canalId);
 		if(keys!=null&&!keys.isEmpty()){
 	        for (AplicacionBean key :keys) {
 	            option = new KeyValueObject();
@@ -215,11 +216,12 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
 		}
 		if(keys!=null&&keys.size()>0){
 	        for (ServicioBean key :keys) {
-	            
-	            option = new KeyValueObject();
-	            option.setCodigo(key.getServicioId().toString());
-	            option.setDescripcion(key.getNombre());
-	            result.add(option);
+	        	if(key.getCanalid() != null && key.getCanalid() == 4){
+		            option = new KeyValueObject();
+		            option.setCodigo(key.getServicioId().toString());
+		            option.setDescripcion(key.getNombre());
+		            result.add(option);
+	        	}
 	        }
 		}
         return result;

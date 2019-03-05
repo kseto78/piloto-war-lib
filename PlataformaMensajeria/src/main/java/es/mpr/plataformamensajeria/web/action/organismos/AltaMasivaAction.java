@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +18,16 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+
 import com.google.gson.Gson;
 import com.map.j2ee.exceptions.BaseException;
 import com.map.j2ee.exceptions.BusinessException;
@@ -28,8 +35,8 @@ import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 
-import es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean;
 import es.minhap.plataformamensajeria.iop.beans.OrganismosServicioBean;
+import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 import es.minhap.sim.model.TblOrganismos;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleAplicacionBean;
@@ -43,7 +50,7 @@ import es.mpr.plataformamensajeria.beans.ServidorBean;
 import es.mpr.plataformamensajeria.beans.ServidoresOrganismosBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
-import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismoPdp;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPdpDiputaciones;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
@@ -78,8 +85,8 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	private transient ServicioOrganismo servicioOrganismo;
 	
 	/**  servicio organismo pdp. */
-	@Resource(name="servicioOrganismoPdpImpl")
-	private transient ServicioOrganismoPdp servicioOrganismoPdp;
+	@Resource(name="servicioPdpDiputacionesImpl")
+	private transient ServicioPdpDiputaciones servicioOrganismoPdp;
 	
 	/**  servicio servicio. */
 	@Resource(name="servicioServicioImpl")
@@ -205,6 +212,9 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	/** archivo excel */
 	private File archivoExcel;
 	
+	/** archivo excel */
+	private String formatoArchivoExcel;
+	
 	/** datos servicios */
 	private String datosServicios;
 	
@@ -233,8 +243,6 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	/** Constante LOG_ACCION_ACTUALIZAR. */
 	private static final String LOG_ACCION_ACTUALIZAR = "log.ACCION_ACTUALIZAR";
 
-	/** Constante GENERALES_PAGESIZE. */
-	private static final String GENERALES_PAGESIZE = "generales.PAGESIZE";
 
 	/** Constante LOG_SOURCE_ALTASMASIVAS. */
 	private static final String LOG_SOURCE_ALTASMASIVAS = "log.SOURCE_ALTASMASIVAS";
@@ -312,17 +320,17 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 
 		KeyValueObject option;
 
-		ArrayList<OrganismoPdpBean> keys = null;
+		ArrayList<PdpDiputacionesBean> keys = null;
 		try {
-			keys = (ArrayList<OrganismoPdpBean>) servicioOrganismoPdp.getOrganismosPdp();
+			keys = (ArrayList<PdpDiputacionesBean>) servicioOrganismoPdp.getPdpDiputaciones();
 		} catch (BusinessException e) {
 			logger.error(ALTA_MASIVA_ACTION_CARGAR_COMBO_SERVICIO_ORGANISMOS + e);
 		}
 
 		if (keys != null && !keys.isEmpty())
-			for (OrganismoPdpBean key : keys) {
+			for (PdpDiputacionesBean key : keys) {
 				option = new KeyValueObject();
-				option.setCodigo(key.getOrganismoPdpId().toString());
+				option.setCodigo(key.getPdpDiputacionesId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
@@ -379,7 +387,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	 * @throws EncryptedDocumentException 
 	 */
 	///MIGRADO
-	public String ejecucionAltaMasiva() throws BaseException, IOException {
+	public String ejecucionAltaMasiva() throws BaseException, IOException, InvalidFormatException {
 	
 	String accion = properties.getProperty(AltaMasivaAction.LOG_ACCION_ACTUALIZAR, null);
 	Long accionId = Long.parseLong(properties.getProperty(AltaMasivaAction.LOG_ACCIONID_ACTUALIZAR, null));
@@ -426,8 +434,13 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	}
 	/////////////////////////////
 
-	ArrayList<String> organismos;
-	organismos = leerArchivoExcel();
+	ArrayList<String> organismos = null;
+	if(formatoArchivoExcel.equals("xls")){
+		organismos = leerArchivoExcel();
+	}else{
+		organismos = leerArchivoExcelXlsx();
+	}
+	
 	if(organismos==null || organismos.isEmpty()){
 		return SUCCESS;
 	}
@@ -494,8 +507,8 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		orgBean.setOrganismoId(orga.getOrganismoid().intValue());
 		orgBean = servicioOrganismo.loadOrganismo(orgBean);
 		orgBean.setActivo(true);
-		if(organismo.getIdOrganismoPdp()!=null){
-			orgBean.setIdOrganismoPdp(organismo.getIdOrganismoPdp());
+		if(organismo.getIdPdpDiputaciones()!=null){
+			orgBean.setIdPdpDiputaciones(organismo.getIdPdpDiputaciones());
 		}		
 		servicioOrganismo.updateOrganismo(orgBean, source, accion, accionId);		
 		//////////////////////////////////////
@@ -533,6 +546,38 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		return SUCCESS;
 	}
 
+	private ArrayList<String> leerArchivoExcelXlsx() throws IOException, InvalidFormatException {
+		ArrayList<String> organismos = new ArrayList<>();
+
+	    FileInputStream fis = new FileInputStream(archivoExcel);	   
+	   
+	    XSSFWorkbook workbook = new XSSFWorkbook(fis);
+	 
+	    XSSFSheet sheet = workbook.getSheetAt(0);
+	
+	    Iterator<Row> rowIt = sheet.iterator();
+
+	    while(rowIt.hasNext()) {
+	      Row row = rowIt.next();
+
+	      Iterator<Cell> cellIterator = row.cellIterator();
+
+	      while (cellIterator.hasNext()) {
+	        Cell cell = cellIterator.next();
+	        if(cell.getRowIndex() != 0 && !cell.toString().equals("")){
+	        	organismos.add(cell.toString());
+	        }
+	      }
+	     
+	    }
+
+	    fis.close();
+	    if(organismos.isEmpty()){
+	    	addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.existencia"));
+	    }
+		return organismos;
+	}
+
 	private ArrayList<TblOrganismos> obtenerOrganismos(ArrayList<String> organismos) {
 		ArrayList<TblOrganismos> organismosValidos = new ArrayList<>();
 		
@@ -563,18 +608,12 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		return organismosNoValidos;
 	}
 
-	private ArrayList<String> leerArchivoExcel() throws IOException {
+	private ArrayList<String> leerArchivoExcel() throws IOException, InvalidFormatException {
 		
 		InputStream excelFileToRead = new FileInputStream(archivoExcel);
 		ArrayList<String> organismos = new ArrayList<>();
-		HSSFWorkbook wb;
-		try{
-			wb = new HSSFWorkbook(excelFileToRead);
-		}catch(Exception officeXmlFileException){
-			addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.excel"));
-			return organismos;
-		}
-
+		HSSFWorkbook wb;		
+		wb = new HSSFWorkbook(excelFileToRead);
 		
 	    HSSFSheet sheet = wb.getSheetAt(0);
 	    HSSFRow row;
@@ -630,7 +669,8 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
-
+		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
+		List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(listaServ.split(",")));
 		ArrayList<ServicioBean> keys = null;
 		try {
 			keys = (ArrayList<ServicioBean>) servicioServicio.getServiciosMultiorganismo();
@@ -640,10 +680,14 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 
 		if (keys != null && !keys.isEmpty())
 			for (ServicioBean key : keys) {
-				option = new KeyValueObject();
-				option.setCodigo(key.getServicioId().toString());
-				option.setDescripcion(key.getNombre());
-				result.add(option);
+				for(String idServ : serviciosAeatGiss){
+					if(idServ.equals(key.getServicioId().toString())){
+						option = new KeyValueObject();
+						option.setCodigo(key.getServicioId().toString());
+						option.setDescripcion(key.getNombre());
+						result.add(option);
+					}
+				}
 			}
 		return result;
 	}
@@ -688,13 +732,13 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 
 		KeyValueObject option;
 
-		ArrayList<String> keys = null;
-		keys = (ArrayList<String>) servicioOrganismo.getOrganismosHijos(dir3);
+		ArrayList<TblOrganismos> keys = null;
+		keys = (ArrayList<TblOrganismos>) servicioOrganismo.getOrganismosHijos(dir3);
 
 		if (keys != null && !keys.isEmpty())
-			for (String key : keys) {
+			for (TblOrganismos key : keys) {
 				option = new KeyValueObject();
-				option.setCodigo(key);				
+				option.setCodigo(key.getDir3());				
 				result.add(option);
 			}
 		return result;
@@ -1459,6 +1503,20 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	 */
 	public void setDatosServiciosTabla(String datosServiciosTabla) {
 		this.datosServiciosTabla = datosServiciosTabla;
+	}
+
+	/**
+	 * @return the formatArchivoExcel
+	 */
+	public String getFormatoArchivoExcel() {
+		return formatoArchivoExcel;
+	}
+
+	/**
+	 * @param formatoArchivoExcel the nombreArchivoExcel to set
+	 */
+	public void setFormatoArchivoExcel(String nombreArchivoExcel) {
+		this.formatoArchivoExcel = nombreArchivoExcel;
 	}
 
 }

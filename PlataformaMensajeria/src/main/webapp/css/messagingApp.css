@@ -769,6 +769,11 @@ a.button:hover {
 	border: solid 3px #73b18a;
 }
 
+.Warning {
+	background: #fce987 url(../img/warning.png) 5px 5px no-repeat;
+	border: solid 3px #cdb641;
+}
+
 .Error {
 	background: #f3e9e9 url(../img/Error.png) 5px 5px no-repeat;
 	border: solid 3px #b13d3d;

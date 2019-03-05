@@ -38,6 +38,7 @@ import de.brendamour.jpasskit.PassbookGenerator;
 import de.brendamour.jpasskit.enums.PKTextAlignment;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PkFieldsXMLBean;
+import es.minhap.sim.model.ViewServicios;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.CanalBean;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
@@ -100,7 +101,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	/**  servicio servicio. */
 	@Resource(name = "servicioServicioImpl")
 	private ServicioServicio servicioServicio;
-
+	
+	
 	/**  servicio aplicacion. */
 	@Resource(name = "servicioAplicacionImpl")
 	private ServicioAplicacion servicioAplicacion;
@@ -213,6 +215,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	/**  id aplicacion. */
 	private String idAplicacion;
 	
+	/**  id canal. */
+	private String idCanal;
+	
+	/**  ids*/
+	private String ids;
+	
 	/**  id planificacion. */
 	private String idPlanificacion;
 	
@@ -269,6 +277,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	
 	/**  new premium. */
 	private String newPremium;
+	
+	/**  new premium. */
+	private String newExclusivo;
 	
 	/**  new plataforma android. */
 	private String newPlataformaAndroid;
@@ -397,6 +408,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	/**  source update organismo. */
 	private String sourceUpdateOrganismo;
 	
+	/** serviciosAEATGiss */
+	private String serviciosAEATGiss;
+	
 	/**  binary types. */
 	private static HashMap<String,String> binaryTypes = new HashMap<>();
 	
@@ -512,7 +526,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 				for (ServicioBean servicio : listado) {
 					rOptions.getItems()
-							.add(new SelectOption(servicio.getServicioId().toString(), servicio.getNombre()));
+							.add(new SelectOption(servicio.getServicioId().toString(), servicio.getNombre()));					
 				}
 			} catch (Exception e) {
 				logger.error("ServicioAction - ajaxLoadServicios:" + e);
@@ -522,7 +536,110 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		return SUCCESS;
 
 	}
+	
+	/**
+	 * Ajax load serviciosCanal5.
+	 *
+	 * @return the string
+	 */
+	///MIGRADO
+	public String ajaxLoadServiciosCanal() {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+				
+		if ( (idAplicacion == null) || (idCanal == null) ){
+			addFieldErrorSession("Datos incorrectos");
+		} else {
+			ResultOptions rOptions = new ResultOptions();
+			try {
+				ArrayList<ServicioBean> listado = new ArrayList<ServicioBean>();
+				if (idAplicacion != null && idAplicacion.length() > 0) {
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServiciosByAplicacionId(Integer
+							.valueOf(idAplicacion));
+				} else {
+					String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+					Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
+				}
 
+				for (ServicioBean servicio : listado) {
+					if(servicio.getCanalid().equals(Integer.valueOf(idCanal))){
+						rOptions.getItems()
+						.add(new SelectOption(servicio.getServicioId().toString(), servicio.getNombre()));
+					}
+										
+				}
+			} catch (Exception e) {
+				logger.error("ServicioAction - ajaxLoadServiciosCanal:" + e);
+			}
+			json = new Gson().toJson(rOptions);
+		}
+		return SUCCESS;
+
+	}
+	
+	public String ajaxLoadServiciosEnvioMensajes() {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idAplicacion == null) {
+			addFieldErrorSession("Datos incorrectos");
+		} else {
+			ResultOptions rOptions = new ResultOptions();
+			try {
+				ArrayList<ServicioBean> listado = new ArrayList<ServicioBean>();
+				if (idAplicacion != null && idAplicacion.length() > 0) {
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServiciosByAplicacionId(Integer
+							.valueOf(idAplicacion));
+				} else {
+					String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+					Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
+				}
+
+				for (ServicioBean servicio : listado) {
+					rOptions.getItems()
+							.add(new SelectOption(servicio.getServicioId().toString(), servicio.getNombre()));
+					rOptions.getItems()
+						.add(new SelectOption(servicio.getCanalid().toString(), servicio.getCanalnombre()));
+				}
+			} catch (Exception e) {
+				logger.error("ServicioAction - ajaxLoadServicios:" + e);
+			}
+			json = new Gson().toJson(rOptions);
+		}
+		return SUCCESS;
+
+	}
+		
+	public String ajaxLoadCanales() {
+
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idAplicacion == null) {
+			addFieldErrorSession("Datos incorrectos");
+		} else {
+			ResultOptions rOptions = new ResultOptions();
+			try {
+				List<ViewServicios> listado = null;
+				if (idAplicacion != null && idAplicacion.length() > 0) {
+					listado = servicioServicio.getCanalesServicios(Integer.valueOf(idAplicacion));
+					
+				}
+				
+				for (ViewServicios canal : listado) {
+					rOptions.getItems()
+							.add(new SelectOption(canal.getCanalid().toString(), canal.getCanalnombre()));
+				}
+			} catch (Exception e) {
+				logger.error("ServicioAction - ajaxLoadCanales:" + e);
+			}
+			json = new Gson().toJson(rOptions);
+		}
+		return SUCCESS;
+
+	}
+	
+	
 	/**
 	 * Aplicacion select event.
 	 *
@@ -655,10 +772,17 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			} else {
 				servicio.setActivo(false);
 			}
-			if (newPremium != null && newPremium.equals("true")) {
-				servicio.setPremium(true);
-			} else {
-				servicio.setPremium(false);
+			if (servicio.getCanalid() != null && (servicio.getCanalid().equals(1) || servicio.getCanalid().equals(2) ) ) {
+				if (newPremium != null && newPremium.equals("true")) {
+					servicio.setPremium(true);
+				} else {
+					servicio.setPremium(false);
+				}
+				if (newExclusivo != null && newExclusivo.equals("true")) {
+					servicio.setExclusivo(true);
+				} else {
+					servicio.setExclusivo(false);
+				}
 			}
 			if (servicio.getCanalid() != null && servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
 				if (newPlataformaAndroid != null && newPlataformaAndroid.equals("true")) {
@@ -1114,7 +1238,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				addActionErrorSession(this.getText("plataforma.servicio.field.plataforma.error"));
 				sw = false;
 			} else {
-				if (servicio.getAndroidplataforma() && PlataformaMensajeriaUtil.isEmpty(servicio.getGcmprojectkey())) {
+				if (servicio.getAndroidplataforma() && PlataformaMensajeriaUtil.isEmpty(servicio.getFcmprojectkey())) {
 					addActionErrorSession(this.getText("plataforma.servicio.field.plataformaAndroid.error"));
 					sw = false;
 				}
@@ -1226,6 +1350,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				servicioBBDD.setDescripcion(servicio.getDescripcion());
 				servicioBBDD.setActivo(servicio.getActivo());
 				servicioBBDD.setPremium(servicio.getPremium());
+				servicioBBDD.setExclusivo(servicio.getExclusivo());
 				servicioBBDD.setMultiorganismo(servicio.getMultiorganismo());
 				servicioBBDD.setAplicacionid(servicio.getAplicacionid());
 				servicioBBDD.setCanalid(servicio.getCanalid());
@@ -1247,10 +1372,10 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					servicioBBDD.setBadge(servicio.getBadge());
 					if ("true".equals(servicio.getIsAndroidPlataforma())) {
 						servicio.setAndroidplataforma(true);
-						servicioBBDD.setGcmprojectkey(servicio.getGcmprojectkey());
+						servicioBBDD.setFcmprojectkey(servicio.getFcmprojectkey());
 					} else {
 						servicio.setAndroidplataforma(false);
-						servicioBBDD.setGcmprojectkey(null);
+						servicioBBDD.setFcmprojectkey(null);
 					}
 					if ("true".equals(servicio.getIsIosPlataforma())) {
 						servicio.setIosplataforma(true);
@@ -1478,10 +1603,10 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					servicioBBDD.setBadge(servicio.getBadge());
 					if (servicio.getIsAndroidPlataforma().equals("true")) {
 						servicio.setAndroidplataforma(true);
-						servicioBBDD.setGcmprojectkey(servicio.getGcmprojectkey());
+						servicioBBDD.setFcmprojectkey(servicio.getFcmprojectkey());
 					} else {
 						servicio.setAndroidplataforma(false);
-						servicioBBDD.setGcmprojectkey(null);
+						servicioBBDD.setFcmprojectkey(null);
 					}
 					if (servicio.getIsIosPlataforma().equals("true")) {
 						servicio.setIosplataforma(true);
@@ -1653,6 +1778,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			comboConfiguraciones = getComboConfiguracion(servicio.getCanalid());
 			comboConfiguracionesPlan = getComboConfiguracionesPlan(servicio.getCanalid());
 //			comboServicioOrganismos = cargarComboServicioOrganismos();
+			serviciosAEATGiss = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
 
 			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByServicioID(Integer
 					.parseInt(idServicio));
@@ -1945,7 +2071,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	}
 
 	/**
-	 * Verifica que se ha introducido por lo menos un dÃ­a de la semana y las
+	 * Verifica que se ha introducido por lo menos un día de la semana y las
 	 * horas de inicio y fin.
 	 *
 	 * @param planificacionServidor the planificacion servidor
@@ -2361,8 +2487,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 				Long id = servicioServidor.loadServidorOrganismoBean(servidorOrganismos).getServidorId();
 				// ////borrar planificaciones del organismo que tienen el mismo servidor y servicio ///////
-				////Esto antes no se hacÃ­a y no se tenÃ­a en cuenta el servicio////////
-				////Comprobar si estÃ¡ bien/////
+				////Esto antes no se hacía y no se tenía en cuenta el servicio////////
+				////Comprobar si está bien/////
 				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion
 						.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
 				if (null != listaPlanificacionesOrganismos) {
@@ -2840,7 +2966,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	///MIGRADO
 	/**
-	 * MÃ©todo que resuelve el lugar donde tiene que volver.
+	 * Método que resuelve el lugar donde tiene que volver.
 	 *
 	 * @return volver
 	 */
@@ -2859,7 +2985,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 
 	///MIGRADO
 	/**
-	 * MÃ©todo que resuelve el lugar donde tiene que volver.
+	 * Método que resuelve el lugar donde tiene que volver.
 	 *
 	 * @return volver aplicacion
 	 */
@@ -4567,4 +4693,47 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	public void setRecovery(String recovery) {
 		this.recovery = recovery;
 	}
+
+	/**
+	 * @return the idCanal
+	 */
+	public String getIdCanal() {
+		return idCanal;
+	}
+
+	/**
+	 * @param idCanal the idCanal to set
+	 */
+	public void setIdCanal(String idCanal) {
+		this.idCanal = idCanal;
+	}
+
+	/**
+	 * @return the newExclusivo
+	 */
+	public String getNewExclusivo() {
+		return newExclusivo;
+	}
+
+	/**
+	 * @param newExclusivo the newExclusivo to set
+	 */
+	public void setNewExclusivo(String newExclusivo) {
+		this.newExclusivo = newExclusivo;
+	}
+
+	/**
+	 * @return the serviciosAEATGiss
+	 */
+	public String getServiciosAEATGiss() {
+		return serviciosAEATGiss;
+	}
+
+	/**
+	 * @param serviciosAEATGiss the serviciosAEATGiss to set
+	 */
+	public void setServiciosAEATGiss(String serviciosAEATGiss) {
+		this.serviciosAEATGiss = serviciosAEATGiss;
+	}
+	
 }

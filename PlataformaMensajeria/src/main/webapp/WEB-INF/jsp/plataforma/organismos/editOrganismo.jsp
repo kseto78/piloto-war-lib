@@ -19,6 +19,7 @@
 		<%@include file="/WEB-INF/jsp/plataforma/validation/validadoresJS.jsp"%>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp"%>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp"%>
+		<%@include file="/WEB-INF/jsp/plataforma/validation/warningForm.jsp"%>
 		<%@include
 			file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp"%>
 		<sj:dialog id="dialogPlanifications" title="Planificación"
@@ -126,13 +127,13 @@
 				<p class="criteria">
 
 					<span style="width: 350px;"> <label style="width: 120px;"
-						class="fieldText">Organismo Pdp: </label> <s:select
-							id="organismo.idOrganismoPdp"
-							name="organismo.idOrganismoPdp" emptyOption="true"
-							theme="simple" labelposition="left" title="Organismos Pdp"
+						class="fieldText">PdP-diputaciones: </label> <s:select
+							id="organismo.idPdpDiputaciones"
+							name="organismo.idPdpDiputaciones" emptyOption="true"
+							theme="simple" labelposition="left" title="Pdp-diputaciones"
 							list="comboOrganismosPdp" listKey="codigo"
 							listValue="descripcion" cssClass="" cssStyle="width:138px"
-							value="%{organismo.idOrganismoPdp}" disabled="false" />
+							value="%{organismo.idPdpDiputaciones}" disabled="false" />
 					</span>
 				</p>
 				<p class="criteria">
