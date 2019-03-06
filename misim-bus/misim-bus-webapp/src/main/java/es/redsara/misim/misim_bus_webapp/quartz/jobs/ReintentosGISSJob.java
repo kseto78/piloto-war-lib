@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.minhap.common.properties.PropertiesServices;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
-import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesPremium;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesExclusivo;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorLotesEnvios;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
@@ -88,7 +88,7 @@ public class ReintentosGISSJob {
 		
 		for (TblDestinatariosMensajes d : listaDestinatarios) {
 			if (estadoActual.equals(estadoIncidencia)) {
-				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService,tblMensajesManager, idMensaje, idLote,
+				HiloEnviarMensajesExclusivo hilo1 = new HiloEnviarMensajesExclusivo(sendMessageService,tblMensajesManager, idMensaje, idLote,
 						d.getDestinatariosmensajes(), false, reloadableResourceBundleMessageSource);
 				hilo1.start();
 			}

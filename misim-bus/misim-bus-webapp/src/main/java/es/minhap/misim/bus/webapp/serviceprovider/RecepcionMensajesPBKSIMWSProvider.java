@@ -27,7 +27,7 @@ import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.Respuesta;
  * @author ralberoc
  *
  */
-@WebServiceProvider(portName = "EnvioMensajesPassbookServicePort", serviceName = "EnvioMensajesService_v2",  
+@WebServiceProvider(portName = "EnvioMensajesPassbookServicePort", serviceName = "EnvioMensajesServiceWSS",  
 targetNamespace = "http://misim.redsara.es/misim-bus-webapp/", 
 wsdlLocation = "WEB-INF/wsdl/recepcion-passbook-sim/envioMensajesPassbookSIM.wsdl")
 @ServiceMode(Mode.MESSAGE)
@@ -47,6 +47,7 @@ public class RecepcionMensajesPBKSIMWSProvider extends WSProvider {
 
 		SOAPMessage responseSOAP = null;
 		try {
+			String l = XMLUtils.dom2xml(XMLUtils.soap2dom(request));
 			
 			final ServletContext servletContext = (ServletContext) getContext().getMessageContext().get(MessageContext.SERVLET_CONTEXT);
 
@@ -65,6 +66,7 @@ public class RecepcionMensajesPBKSIMWSProvider extends WSProvider {
 				SoapPayload<?> payload = new PeticionPayload();
 				payload.setSoapAction(String.class.cast(getContext().getMessageContext().get(SOAP_ACTION)));
 				payload.setSoapMessage(XMLUtils.soap2dom(request));
+				payload.setSoapAplication("EnvioMensajesWSS");
 			
 				final MuleMessage muleResponse = getMuleClient().send(RECEPT_QUEUE,payload, null, 10000);
 				

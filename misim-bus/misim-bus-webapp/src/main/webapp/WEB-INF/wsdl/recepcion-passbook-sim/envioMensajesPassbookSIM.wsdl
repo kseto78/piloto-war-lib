@@ -32,9 +32,9 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="EnvioMensajesServiceSSL">
+  <wsdl:service name="EnvioMensajesServiceWSS">
     <wsdl:port binding="impl:EnvioMensajesPassbookServiceBinding" name="EnvioMensajesPassbookServicePort">
-      <soap:address location="http://des-misim.redsara.es/misim-bus-webapp/EnvioMensajesServiceSSL"/>
+      <soap:address location="http://des-misim.redsara.es/misim-bus-webapp/EnvioMensajesServiceWSS"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
