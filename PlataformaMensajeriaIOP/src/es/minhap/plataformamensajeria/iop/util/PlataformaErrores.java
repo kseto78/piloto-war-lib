@@ -167,6 +167,7 @@ public class PlataformaErrores {
 	// Errores de ENVIOMENSAJES
 	public static final String ERROR_STATUSTEXT_CUERPO = "No existe cuerpo del mensaje o destinatarios";
 	public static final String STATUSDETAILS_KO_DISPOSITIVO = "No existen dispositivos asociados para ese idUsuario";
+	public static final String STATUSDETAILS_KO_TELEFONO = "El numero de telefono es inexistente o incorrecto";
 	public static final String STATUS_KO_DISPOSITIVO = "3013";
 	public static final String STATUSDETAILS_KO_CAMPOS_OBLIGATORIOS = "Faltan campos Obligatorios";
 	public static final String STATUSDETAILS_KO_USUARIONOSUSCRITO = "El usuario no esta suscrito al servicio movil indicado";

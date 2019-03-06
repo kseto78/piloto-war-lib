@@ -26,7 +26,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManage
 import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
-import es.minhap.plataformamensajeria.iop.manager.TblOrganismosPdpManager;
+import es.minhap.plataformamensajeria.iop.manager.TblPdpDiputacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresServiciosManager;
@@ -73,7 +73,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	TblServiciosManager serviciosManager;
 	
 	@Autowired
-	TblOrganismosPdpManager organismosManager;
+	TblPdpDiputacionesManager organismosManager;
 
 	@Autowired
 	TblMensajesManager mensajeManager;

@@ -40,7 +40,7 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 		PropertiesServices ps = new PropertiesServices(getReloadableResourceBundleMessageSource());
 		
 		ArrayList<Long> listaIds = new ArrayList<>();
-		List<String> lista = new ArrayList<>();
+		List<String> lista;
 		if (null != to){
 		// analizamos destinatarios TO
 		lista = Arrays.asList(to.split(";"));

@@ -1,13 +1,9 @@
 package es.minhap.plataformamensajeria.iop.dao.impl;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +15,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.exception.ApplicationException;
-import es.minhap.plataformamensajeria.iop.beans.OrganismoBean;
-import es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean;
-import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismos;
-import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismosPdp;
-import es.minhap.sim.model.TblOrganismos;
-import es.minhap.sim.model.TblOrganismosPdp;
+import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorPdpDiputaciones;
+import es.minhap.sim.model.TblPdpDiputaciones;
 
 /**
  * 
@@ -33,9 +26,9 @@ import es.minhap.sim.model.TblOrganismosPdp;
  */
 @Service
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
-public class QueryExecutorOrganismosPdpImpl extends HibernateDaoSupport implements QueryExecutorOrganismosPdp {
+public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implements QueryExecutorPdpDiputaciones {
 
-	private static final Logger log = LoggerFactory.getLogger(QueryExecutorOrganismosPdpImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorPdpDiputacionesImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -52,12 +45,12 @@ public class QueryExecutorOrganismosPdpImpl extends HibernateDaoSupport implemen
 				
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TblOrganismosPdp> getOrganismosPdpPaginado(int start, int size, String order, String column, OrganismoPdpBean ob) {
+	public List<TblPdpDiputaciones> getPdpDiputacionesPaginado(int start, int size, String order, String column, PdpDiputacionesBean ob) {
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_START);
 			}
-			String sql = " from TblOrganismosPdp o where (o.eliminado is null or o.eliminado != 'S')  ";
+			String sql = " from TblPdpDiputaciones o where (o.eliminado is null or o.eliminado != 'S')  ";
 			String slqWhere = createWhere(ob, order, column);
 			sql = sql + slqWhere;
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
@@ -75,12 +68,12 @@ public class QueryExecutorOrganismosPdpImpl extends HibernateDaoSupport implemen
 	}
 	
 	@Override
-	public Integer countOrganismosPdpPaginado(OrganismoPdpBean ob) {
+	public Integer countPdpDiputacionesPaginado(PdpDiputacionesBean ob) {
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_START);
 			}
-			String sql = "select count(o.organismoPdpId) from TblOrganismosPdp o where (o.eliminado is null or o.eliminado != 'S')  ";
+			String sql = "select count(o.pdpdiputacionesid) from TblPdpDiputaciones o where (o.eliminado is null or o.eliminado != 'S')  ";
 			String slqWhere = createWhere(ob, null, null);
 			sql = sql + slqWhere;
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
@@ -144,7 +137,7 @@ public class QueryExecutorOrganismosPdpImpl extends HibernateDaoSupport implemen
 		}
 	}
 
-	private String createWhere(OrganismoPdpBean ob, String order, String column) {
+	private String createWhere(PdpDiputacionesBean ob, String order, String column) {
 		StringBuilder sb = new StringBuilder();
 	
 		if (null != ob.getNombre() && ob.getNombre().length() > 0) {

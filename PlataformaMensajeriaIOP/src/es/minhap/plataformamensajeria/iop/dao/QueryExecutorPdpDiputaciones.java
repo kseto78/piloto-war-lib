@@ -4,14 +4,17 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import es.minhap.sim.model.TblOrganismos;
-import es.minhap.sim.model.TblOrganismosPdp;
+import es.minhap.sim.model.TblPdpDiputaciones;
+
+
+
+
 /**
  * 
  * @author everis
  *
  */
-public interface QueryExecutorOrganismosPdp {
+public interface QueryExecutorPdpDiputaciones {
 
 	
 	/**
@@ -24,8 +27,8 @@ public interface QueryExecutorOrganismosPdp {
 	 * @param criterio
 	 * @return
 	 */
-	public List<TblOrganismosPdp> getOrganismosPdpPaginado(int start, int size, String order, String column,
-			es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean ob);
+	public List<TblPdpDiputaciones> getPdpDiputacionesPaginado(int start, int size, String order, String column,
+			es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob);
 	
 	/**
 	 * Obtiene el total según ob
@@ -33,7 +36,7 @@ public interface QueryExecutorOrganismosPdp {
 	 * @param ob
 	 * @return
 	 */
-	public Integer countOrganismosPdpPaginado(es.minhap.plataformamensajeria.iop.beans.OrganismoPdpBean ob);
+	public Integer countPdpDiputacionesPaginado(es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob);
 	
 	/**
 	 * Obtiene el listado

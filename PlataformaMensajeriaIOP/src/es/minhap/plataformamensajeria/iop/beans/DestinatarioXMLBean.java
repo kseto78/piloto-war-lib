@@ -2,9 +2,9 @@ package es.minhap.plataformamensajeria.iop.beans;
 
 public class DestinatarioXMLBean {
 	
-	public static int TIPO_TO = 1;
-	public static int TIPO_CC = 2;
-	public static int TIPO_BCC = 3;
+	public static final int TIPO_TO = 1;
+	public static final int TIPO_CC = 2;
+	public static final int TIPO_BCC = 3;
 /**
  * 
  * 

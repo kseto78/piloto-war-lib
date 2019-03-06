@@ -109,7 +109,6 @@ public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport impl
 		if (null != lista){
 			for (TblDestinatarios destinatario : lista) {
 				TblDestinatariosHist d = new TblDestinatariosHist();
-				d = new TblDestinatariosHist();
 				d.setCreadopor(destinatario.getCreadopor());
 				d.setDestinatarioid(destinatario.getDestinatarioid());
 				d.setEmail(destinatario.getEmail());

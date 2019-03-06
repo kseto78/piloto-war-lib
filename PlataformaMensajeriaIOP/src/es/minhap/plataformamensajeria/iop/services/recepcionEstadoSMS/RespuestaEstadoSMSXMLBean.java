@@ -80,8 +80,6 @@ public class RespuestaEstadoSMSXMLBean {
 
 	public String toXML() throws PlataformaBusinessException {
 
-		RespuestaEstadoSMSXMLBean resupestaEstadoSMS = this;
-
 		try {
 
 			Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();

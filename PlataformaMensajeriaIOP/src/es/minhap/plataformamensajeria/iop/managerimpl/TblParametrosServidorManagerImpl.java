@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -180,19 +181,11 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 //				query.setTblTiposParametros(tipoQuery);
 				
 				listaParametros = getByQuery(query);
-
-				TblParametrosServidorQuery query2 = new TblParametrosServidorQuery();
-				TblServidoresQuery servidoresQuery2 = new TblServidoresQuery();
-				servidoresQuery2.setServidorid(parametro.getTblServidores().getServidorid());
-				TblTiposParametrosQuery tipoQuery2 = new TblTiposParametrosQuery();
-				tipoQuery2.setTipoparametroid(Long.parseLong(ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.TIPO_PARAMETRO_PASSWORD", null)));
-				query2.setTblTiposParametros(tipoQuery2);
-				List<TblParametrosServidor> listaParametros2 = getByQuery(query2);
 				
 				int contador = 0;
 				int num = 0 ;
 				for (TblParametrosServidor tblParametrosServidor : listaParametros) {
-					if(tblParametrosServidor.getValor().equals(listaParametros2.get(0).getValor())){
+					if(tblParametrosServidor.getTblTiposParametros().getTipoparametroid() == 3){ //El tipo parametro contraseña es el 3
 						//Tenemos la posicion de la contrasena
 						num = contador;
 						LOG.debug("Numero: "+num);
@@ -202,23 +195,31 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 				}
 				
 				//cambiamos el password por el nuevo
+				String passAntiguo = listaParametros.get(num).getValor();
 				listaParametros.get(num).setValor(peticion.getPassword_new());
-				if (checkConnection(listaParametros) == true){
-					String statusCodeOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_CORRECTO", null);
-					String detailsOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_CORRECTO", null);
-					
-					
-					System.out.println("Contrasena nueva: "+peticion.getPassword_new());
-					parametro = listaParametros.get(num);
-//					parametro.setValor(peticion.getPassword_new());
-					tblParametrosServidorDAO.update(parametro);
-					
-					respuesta = generarSalida( respuesta, statusTextOK, statusCodeOK, detailsOK );
-				}else{
-//					String statusTextOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
-					String statusCodeNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_CONEXION", null);
-					String detailsNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_CONEXION", null);
-					respuesta = generarSalida(respuesta, statusTextKO, statusCodeNoConnection, detailsNoConnection );
+				try{				
+					if (checkConnection(listaParametros)){
+						String statusCodeOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_CORRECTO", null);
+						String detailsOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_CORRECTO", null);
+						
+						
+						System.out.println("Contrasena nueva: "+peticion.getPassword_new());
+						parametro = listaParametros.get(num);
+	//					parametro.setValor(peticion.getPassword_new());
+						tblParametrosServidorDAO.update(parametro);
+						
+						respuesta = generarSalida( respuesta, statusTextOK, statusCodeOK, detailsOK );
+					}else{
+	//					String statusTextOK = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
+						listaParametros.get(num).setValor(passAntiguo);
+						String statusCodeNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_CONEXION", null);
+						String detailsNoConnection = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_CONEXION", null);
+						respuesta = generarSalida(respuesta, statusTextKO, statusCodeNoConnection, detailsNoConnection );
+					}
+				}catch(AuthenticationFailedException ex){
+					String detailsUserPassError = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_USERPASS", null);
+					String statusCodeUserPass = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_USERPASS", null);
+					respuesta = generarSalida(respuesta, statusTextKO, statusCodeUserPass, detailsUserPassError);
 				}
 					
 			}	
@@ -255,7 +256,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	}
 
 
-	private boolean checkConnection(List<TblParametrosServidor> listaParametros){
+	private boolean checkConnection(List<TblParametrosServidor> listaParametros) throws AuthenticationFailedException{
 	String port = null;
 	String host = null;
 	String user = null;
@@ -293,7 +294,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	}
 	
 	
-	public Boolean checkConnectionClassic(String ip, String user, String password, String secure, String port,String reqAuth){
+	public Boolean checkConnectionClassic(String ip, String user, String password, String secure, String port,String reqAuth) throws javax.mail.AuthenticationFailedException{
 		Boolean res = false;
 		Properties props = new Properties();
 	     props.put("mail.smtp.host", ip);
@@ -320,7 +321,8 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	        	  return true;
 	           }
 	         }catch(javax.mail.AuthenticationFailedException exc) {
-	        	   LOG.info("---Usuario o password incorrectos---");
+	        	 throw new javax.mail.AuthenticationFailedException();
+//	        	   LOG.info("---Usuario o password incorrectos---");
 	         }catch (NumberFormatException e) {
 	        	 LOG.info("---Puerto introducido incorrecto---");
 	         } catch (MessagingException e) {

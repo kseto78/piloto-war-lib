@@ -28,7 +28,10 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
 @XmlRootElement(name = "PeticionEstado", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
 public class ConsultaEstadoXMLBean {
 
-    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    private static final String XML = "\nXML:\n";
+	private static final String MENSAJE = "\nMensaje: ";
+	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
+	@XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String usuario;
     @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected String password;
@@ -695,18 +698,18 @@ public class ConsultaEstadoXMLBean {
 			
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
+							+ MENSAJE + e.getMessage() + XML
 							+ xmlConsultaEstado);
 		} catch (IllegalAccessException e) {
 			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
+							+ MENSAJE + e.getMessage() + XML
 							+ xmlConsultaEstado);
 		} catch (InvocationTargetException e) {
 			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
+							+ MENSAJE + e.getMessage() + XML
 							+ xmlConsultaEstado);
 		}
 	}
@@ -730,11 +733,11 @@ public class ConsultaEstadoXMLBean {
 		} catch (PropertyException e) {
 			throw new PlataformaBusinessException(
 					"Error generando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage());
+							+ MENSAJE + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException(
 					"Error generando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage());
+							+ MENSAJE + e.getMessage());
 		}
 
 	}

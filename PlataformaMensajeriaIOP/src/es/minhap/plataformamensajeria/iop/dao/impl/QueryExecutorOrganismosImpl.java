@@ -143,12 +143,12 @@ public class QueryExecutorOrganismosImpl extends HibernateDaoSupport implements 
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TblOrganismos> getOrganismosByPdp(long idOrganismoPdp) {
+	public List<TblOrganismos> getOrganismosByPdp(long idPdpDiputaciones) {
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_START);
 			}
-			String sql = " from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') AND o.idOrganismoPdp ="+idOrganismoPdp;
+			String sql = " from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') AND o.idPdpDiputaciones ="+idPdpDiputaciones;
 
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
@@ -258,23 +258,16 @@ public class QueryExecutorOrganismosImpl extends HibernateDaoSupport implements 
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getOrganismosHijos(String dir3) {
-		try {
-			List<String> res;
+	public List<TblOrganismos> getOrganismosHijos(String dir3) {
+		try {			
 			if (log.isDebugEnabled()) {
 				log.debug(LOG_START);
 			}
-			String sql = "select o.dir3 from TblOrganismos o where codUnidadSuperior = :dir3";
+			String sql = "from TblOrganismos o where o.codUnidadSuperior ='"+dir3+"'";
 			
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setString("dir3", dir3);
-			res = query.list();
-			if (null == res){
-				res = new ArrayList<>();
-				return res;
-			}else{
-				return res;
-			}
+									
+			return  query.list();
 		} catch (Exception e) {
 			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);

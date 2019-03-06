@@ -3,20 +3,20 @@ package es.minhap.plataformamensajeria.iop.manager;
 import java.util.List;
 
 import es.minhap.sim.model.TblOrganismos;
-import es.minhap.sim.model.TblOrganismosPdp;
-import es.minhap.sim.query.TblOrganismosPdpQuery;
+import es.minhap.sim.model.TblPdpDiputaciones;
+import es.minhap.sim.query.TblPdpDiputacionesQuery;
 import es.minhap.sim.query.TblOrganismosQuery;
 
-public interface TblOrganismosPdpManager {
+public interface TblPdpDiputacionesManager {
 
 	
 	/**
-	 * Comprueba si existe el organismoPdp existe
+	 * Comprueba si existe el pdpDiputaciones existe
 	 * 
 	 * @param query
 	 * @return 
 	 */
-	public List<TblOrganismosPdp> getOrganismosPdpByQuery(TblOrganismosPdpQuery query);
+	public List<TblPdpDiputaciones> getPdpDiputacionesByQuery(TblPdpDiputacionesQuery query);
 
 	/**
 	 * Obtiene el organismo
@@ -24,14 +24,14 @@ public interface TblOrganismosPdpManager {
 	 * @param organismoId
 	 * @return TblOrganismos
 	 */
-	public TblOrganismosPdp getOrganismoPdpById(Long organismoId);
+	public TblPdpDiputaciones getPdpDiputacionesById(Long organismoId);
 
 	/**
 	 * Actualiza el organismo
 	 * 
 	 * @param organismoTO
 	 */
-	public void update(TblOrganismosPdp organismoTO, String source, String accion, Long accionId);
+	public void update(TblPdpDiputaciones organismoTO, String source, String accion, Long accionId);
 
 	/**
 	 * Inserta el organismo según datos pasados
@@ -42,7 +42,7 @@ public interface TblOrganismosPdpManager {
 	 * @param accionId
 	 * @return Long
 	 */
-	public Long insert(TblOrganismosPdp organismo, String source, String accion, Long accionId);
+	public Long insert(TblPdpDiputaciones organismo, String source, String accion, Long accionId);
 
 	
 }

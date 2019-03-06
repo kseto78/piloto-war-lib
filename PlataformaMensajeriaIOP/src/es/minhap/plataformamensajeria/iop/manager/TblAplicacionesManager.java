@@ -92,5 +92,7 @@ public interface TblAplicacionesManager {
 	 */
 	public List<TblAplicaciones> getAplicacionesNoEliminadasOrdenadas();
 
+	void updateSMS(TblAplicaciones aplicacion);
+
 
 }

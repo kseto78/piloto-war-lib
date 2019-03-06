@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusinessException;
 
@@ -47,7 +48,11 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "RespuestaNotificacionEstadoSMS",namespace = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Sal")
 public class RespuestaAcCLEV1 {
 
-    @XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Sal")
+	static Logger LOGGER = Logger.getLogger(RespuestaAcCLEV1.class);
+    private static final String MENSAJE = "\nMensaje: ";
+	private static final String XML = "\nXML:\n";
+	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
+	@XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Sal")
     protected ResponseStatusType status;
     
 
@@ -67,10 +72,10 @@ public class RespuestaAcCLEV1 {
 			return writer.toString();
 
 		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + MENSAJE
 					+ e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + MENSAJE
 					+ e.getMessage());
 		}
 	}
@@ -89,14 +94,14 @@ public class RespuestaAcCLEV1 {
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE
+					+ e.getMessage() + XML + xmlPeticion);
 		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE
+					+ e.getMessage() + XML + xmlPeticion);
 		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE
+					+ e.getMessage() + XML + xmlPeticion);
 		}
 	}
 	
@@ -119,7 +124,7 @@ public class RespuestaAcCLEV1 {
             setStatus(_status);
             
         } catch (java.lang.Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("[RespuestaAcCLEV1]",ex);
             throw new RuntimeException(ex);
         }
     }

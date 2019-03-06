@@ -155,7 +155,9 @@ public class RespuestaOperacion {
 		StringWriter writer = new StringWriter();
 		StreamResult result = new StreamResult(writer);
  		try {
-			transformer.transform(source, result);
+ 			if(transformer != null){
+ 				transformer.transform(source, result);
+ 			}
 		} catch (TransformerException e) {
 			LOG.error("Error en RespuestaOperacion",e);
 		}

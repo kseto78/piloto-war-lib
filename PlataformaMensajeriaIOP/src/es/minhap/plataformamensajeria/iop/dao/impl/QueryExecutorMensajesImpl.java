@@ -578,7 +578,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					.createSQLQuery(
 							"SELECT M.CABECERA as CABECERA, M.CUERPO as CUERPO, M.ICONO as ICONO, M.SONIDO as SONIDO, "
 									+ "up.NOMBREUSUARIO as NOMBREUSUARIO, dm.DESTINATARIO as DESTINATARIO, up.PLATAFORMAID as PLATAFORMA, "
-									+ "dm.DESTINATARIOSMENSAJES as DESTINATARIOSMENSAJES, S.GCMPROJECTKEY as GCMPROJECTKEY, "
+									+ "dm.DESTINATARIOSMENSAJES as DESTINATARIOSMENSAJES, S.FCMPROJECTKEY as FCMPROJECTKEY, "
 									+ "S.APNSRUTACERTIFICADO as APNSRUTACERTIFICADO, S.APNSPASSWORDCERTIFICADO as APNSPASSWORDCERTIFICADO, "
 									+ "S.BADGE as BADGE, m.CUERPOFILE as CUERPOFILE, M.NOTIFICACIONSILENCIOSA as NOTIFICACIONSILENCIOSA FROM TBL_MENSAJES M "
 									+ " INNER JOIN TBL_LOTESENVIOS LE ON LE.LOTEENVIOID = M.LOTEENVIOID"
@@ -600,7 +600,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query.addScalar("DESTINATARIO", new LongType());
 			query.addScalar("PLATAFORMA", new IntegerType());
 			query.addScalar("DESTINATARIOSMENSAJES", new LongType());
-			query.addScalar("GCMPROJECTKEY", new StringType());
+			query.addScalar("FCMPROJECTKEY", new StringType());
 			query.addScalar("APNSRUTACERTIFICADO", new StringType());
 			query.addScalar("APNSPASSWORDCERTIFICADO", new StringType());
 			query.addScalar("BADGE", new StringType());
@@ -617,7 +617,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				data.UsuarioId = (Long) row[5];
 				data.plataformaId = (Integer) row[6];
 				data.destinatarioMensajeId = (Long) row[7];
-				data.gCMApiKey = (String) row[8];
+				data.fCMApiKey = (String) row[8];
 				data.rutaCertificadoAPNS = (String) row[9];
 				data.passwordCertificadoAPNS = (String) row[10];
 				data.badge = (String) row[11];
@@ -736,7 +736,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 					.getCurrentSession()
 					.createSQLQuery(
 							"SELECT M.CABECERA as CABECERA, M.CUERPO as CUERPO, M.ICONO as ICONO, M.SONIDO as SONIDO, "
-									+ "M.NOMBREUSUARIO as NOMBREUSUARIO, S.GCMPROJECTKEY as GCMPROJECTKEY, "
+									+ "M.NOMBREUSUARIO as NOMBREUSUARIO, S.FCMPROJECTKEY as FCMPROJECTKEY, "
 									+ "S.APNSRUTACERTIFICADO as APNSRUTACERTIFICADO, S.APNSPASSWORDCERTIFICADO as APNSPASSWORDCERTIFICADO, "
 									+ "S.BADGE as BADGE, m.CUERPOFILE as CUERPOFILE FROM TBL_MENSAJES M "
 									+ " INNER JOIN TBL_LOTESENVIOS LE ON LE.LOTEENVIOID = M.LOTEENVIOID"
@@ -749,7 +749,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 			query.addScalar("ICONO", new StringType());
 			query.addScalar("SONIDO", new StringType());
 			query.addScalar("NOMBREUSUARIO", new StringType());
-			query.addScalar("GCMPROJECTKEY", new StringType());
+			query.addScalar("FCMPROJECTKEY", new StringType());
 			query.addScalar("APNSRUTACERTIFICADO", new StringType());
 			query.addScalar("APNSPASSWORDCERTIFICADO", new StringType());
 			query.addScalar("BADGE", new StringType());
@@ -762,7 +762,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 				data.icono = (String) row[2];
 				data.sonido = (String) row[3];
 				data.nombreUsuario = (String) row[4];
-				data.gCMApiKey = (String) row[5];
+				data.fCMApiKey = (String) row[5];
 				data.rutaCertificadoAPNS = (String) row[6];
 				data.passwordCertificadoAPNS = (String) row[7];
 				data.badge = (String) row[8];

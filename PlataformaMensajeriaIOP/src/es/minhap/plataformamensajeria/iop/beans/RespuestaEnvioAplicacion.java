@@ -47,7 +47,9 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "envioAplicacioResponse",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
 public class RespuestaEnvioAplicacion {
 
-    @XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    private static final String XML = "\nXML:\n";
+	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
+	@XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
     protected ResponseStatusType status;
     
 
@@ -89,14 +91,14 @@ public class RespuestaEnvioAplicacion {
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + "\nMensaje: "
+					+ e.getMessage() + XML + xmlPeticion);
 		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + "\nMensaje: "
+					+ e.getMessage() + XML + xmlPeticion);
 		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + "\nMensaje: "
+					+ e.getMessage() + XML + xmlPeticion);
 		}
 	}
 	

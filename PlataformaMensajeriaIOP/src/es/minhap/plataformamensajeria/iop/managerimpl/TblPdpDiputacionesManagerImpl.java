@@ -12,13 +12,13 @@ import es.minhap.common.entity.OrderType;
 import es.minhap.common.entity.TextComparator;
 import es.minhap.plataformamensajeria.iop.manager.TblLogManager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
-import es.minhap.plataformamensajeria.iop.manager.TblOrganismosPdpManager;
+import es.minhap.plataformamensajeria.iop.manager.TblPdpDiputacionesManager;
 import es.minhap.sim.dao.TblOrganismosDAO;
-import es.minhap.sim.dao.TblOrganismosPdpDAO;
+import es.minhap.sim.dao.TblPdpDiputacionesDAO;
 import es.minhap.sim.model.TblLog;
 import es.minhap.sim.model.TblOrganismos;
-import es.minhap.sim.model.TblOrganismosPdp;
-import es.minhap.sim.query.TblOrganismosPdpQuery;
+import es.minhap.sim.model.TblPdpDiputaciones;
+import es.minhap.sim.query.TblPdpDiputacionesQuery;
 import es.minhap.sim.query.TblOrganismosQuery;
 
 /**
@@ -26,29 +26,29 @@ import es.minhap.sim.query.TblOrganismosQuery;
  * @author everis
  *
  */
-@Service("TblOrganismosPdpManagerImpl")
-public class TblOrganismosPdpManagerImpl implements TblOrganismosPdpManager {
+@Service("TblPdpDiputacionesManagerImpl")
+public class TblPdpDiputacionesManagerImpl implements TblPdpDiputacionesManager {
 
 	@Resource 
-	private TblOrganismosPdpDAO organismosPdpDAO;
+	private TblPdpDiputacionesDAO organismosPdpDAO;
 	
 	@Resource 
 	private TblLogManager tblLogManager;
 	
 	
 	@Override
-	public List<TblOrganismosPdp> getOrganismosPdpByQuery(TblOrganismosPdpQuery query) {
+	public List<TblPdpDiputaciones> getPdpDiputacionesByQuery(TblPdpDiputacionesQuery query) {
 		return organismosPdpDAO.search(query).getResults();
 	}
 
 	@Override
-	public TblOrganismosPdp getOrganismoPdpById(Long organismoPdpId) {
-		return organismosPdpDAO.get(organismoPdpId);
+	public TblPdpDiputaciones getPdpDiputacionesById(Long pdpDiputacionesId) {
+		return organismosPdpDAO.get(pdpDiputacionesId);
 	}
 	
 	@Override
 	@Transactional
-	public void update(TblOrganismosPdp organismoTO, String source, String accion, Long accionId) {
+	public void update(TblPdpDiputaciones organismoTO, String source, String accion, Long accionId) {
 		organismosPdpDAO.update(organismoTO);		
 		
 		if (null != source && null != accion && null != accionId){
@@ -59,7 +59,7 @@ public class TblOrganismosPdpManagerImpl implements TblOrganismosPdpManager {
 			log.setLogaccion(accionId);
 			log.setLogdescripcion(accion);
 			log.setSourcedescription(organismoTO.getNombre());
-			log.setSourceid(organismoTO.getOrganismoPdpId());
+			log.setSourceid(organismoTO.getPdpDiputacionesId());
 			log.setSourcename(source);
 			tblLogManager.insertLog(log);
 		}
@@ -67,7 +67,7 @@ public class TblOrganismosPdpManagerImpl implements TblOrganismosPdpManager {
 	}
 	
 	@Override
-	public Long insert(TblOrganismosPdp organismo, String source, String accion, Long accionId) {
+	public Long insert(TblPdpDiputaciones organismo, String source, String accion, Long accionId) {
 		Long id = organismosPdpDAO.insert(organismo);
 		
 		TblLog log = new TblLog();
@@ -86,14 +86,14 @@ public class TblOrganismosPdpManagerImpl implements TblOrganismosPdpManager {
 	/**
 	 * @return the organismosDAO
 	 */
-	public TblOrganismosPdpDAO getOrganismosPdpDAO() {
+	public TblPdpDiputacionesDAO getOrganismosPdpDAO() {
 		return organismosPdpDAO;
 	}
 
 	/**
 	 * @param organismosDAO the organismosDAO to set
 	 */
-	public void setOrganismosPdpDAO(TblOrganismosPdpDAO organismosPdpDAO) {
+	public void setOrganismosPdpDAO(TblPdpDiputacionesDAO organismosPdpDAO) {
 		this.organismosPdpDAO = organismosPdpDAO;
 	}
 

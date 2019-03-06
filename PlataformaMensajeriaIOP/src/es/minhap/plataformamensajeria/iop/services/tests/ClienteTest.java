@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoBean;
@@ -32,7 +33,6 @@ import es.minhap.plataformamensajeria.iop.beans.PeticionClaveAuthResponse;
 import es.minhap.plataformamensajeria.iop.beans.RecepcionEstadoSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.RecibirSMSRequest;
 import es.minhap.plataformamensajeria.iop.beans.UsuariosXMLBean;
-import es.minhap.plataformamensajeria.iop.beans.lotes.DestinatariosPeticionLotesPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.MensajePeticionLotesPushXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.respone.RespuestaConsultaEstado;
@@ -47,7 +47,6 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 import es.minhap.plataformamensajeria.iop.services.operaciones.IOperacionesMensajesService;
 import es.minhap.plataformamensajeria.iop.services.procesarSAMLResponse.IGestionSAMLResponseService;
 import es.minhap.plataformamensajeria.iop.services.recepcion.IRecepcionMensajesService;
-import es.minhap.plataformamensajeria.iop.services.recepcion.RecibirSMSResponse;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.IRecepcionEstadoSMSService;
 import es.minhap.plataformamensajeria.iop.services.recepcionEstadoSMS.RespuestaEstadoSMSXMLBean;
 import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensajesService;
@@ -105,6 +104,8 @@ public class ClienteTest {
 	private static String USUARIO_NUEVO_PLATAFORMAID = "402";	
 	private static String USUARIO_NUEVO_TOKEN = "pepetoken modificado";	
 	private static String USUARIO_NUEVO_DISPOSITIVO = "ANDROID";
+	
+	static Logger LOGGER = Logger.getLogger(ClienteTest.class);
 	
 	
 
@@ -343,7 +344,7 @@ public class ClienteTest {
 //		notificacion.setIdentificadorUsuario("Usuario P1");
 //		notificacion.setIdExterno("idexterno_x");
 		notificacion.setTitulo("lalala");
-		DestinatariosPeticionLotesPushXMLBean d = new DestinatariosPeticionLotesPushXMLBean();
+//		DestinatariosPeticionLotesPushXMLBean d = new DestinatariosPeticionLotesPushXMLBean();
 //		d.setIdentificadorUsuario("70894428X");
 //		d.setIdExterno("lalala");
 //		notificacion.getDestinatariosPush().add(d);
@@ -592,7 +593,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		operacionesLotesMensajes.setUsuario("pruebasSIMdes");
 		operacionesLotesMensajes.setPassword("pruebasSIMdes");
 		
-		OperacionesLotesMensajesXMLBean.Mensaje mensaje = new OperacionesLotesMensajesXMLBean.Mensaje();
+//		OperacionesLotesMensajesXMLBean.Mensaje mensaje = new OperacionesLotesMensajesXMLBean.Mensaje();
 //		mensaje.setIdExterno("MSG_JUAN_3");
 //		mensaje.setIdMensaje("29082");
 //		operacionesLotesMensajes.setMensaje(mensaje);
@@ -630,7 +631,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		operacionesLotesMensajes.setUsuario("pruebasSIMdes");
 		operacionesLotesMensajes.setPassword("pruebasSIMdes");
 		
-		OperacionesLotesMensajesXMLBean.Mensaje mensaje = new OperacionesLotesMensajesXMLBean.Mensaje();
+//		OperacionesLotesMensajesXMLBean.Mensaje mensaje = new OperacionesLotesMensajesXMLBean.Mensaje();
 //		mensaje.setIdExterno("MSG_JUAN_3");
 //		mensaje.setIdMensaje("30034");
 //		operacionesLotesMensajes.setMensaje(mensaje);
@@ -680,9 +681,9 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		RecibirSMSRequest recepcionMensajes2 = new RecibirSMSRequest();
 		recepcionMensajes2.loadObjectFromXML(s);
 		
-		RecibirSMSResponse resultado = null;
-		
-		resultado = instanceRecepcionMensajes.recibirSMS(recepcionMensajes2);
+//		RecibirSMSResponse resultado = null;
+//		
+//		resultado = instanceRecepcionMensajes.recibirSMS(recepcionMensajes2);
 		String resultadoString = instanceRecepcionMensajes.recibirSMSXML(recepcionMensajes2);
 		System.out.println(resultadoString);	
 	}
@@ -711,7 +712,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		RespuestaEstadoSMSXMLBean resultado = null;
 		
 		String res = instanceRecepcionEstado.recibirEstadoSMSXML(recepcionEstado2);
-		System.out.println(resultado.toXML());		
+		System.out.println(res);		
 	}
 	
 	@Test
@@ -972,7 +973,7 @@ public void testProcesarSAML() throws PlataformaBusinessException {
 			ClienteTest ct = new ClienteTest();
 			ct.executeTest();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error("[ClienteTest] - ",ex);		
 		}
 	}
 

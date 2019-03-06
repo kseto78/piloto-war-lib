@@ -43,11 +43,14 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 public class EnvioSMSXMLBean {
 
+	private static final String XML = "\nXML:\n";
+	private static final String MENSAJE = "\nMensaje: ";
+	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
 	static final String TAG_PETICION = "pet:Peticion";
 	static final String TAG_NOMBRE_LOTE = "pet:NombreLote";
 	static final String TAG_SERVICIO = "pet:Servicio";
 	static final String TAG_USUARIO = "pet:Usuario";
-	static final String TAG_PASSWORD = "pet:Password";
+	static final String TAG_PASS = "pet:Password";
 
 	static final String TAG_MENSAJES = "pet:Mensasjes";
 	static final String TAG_MENSAJE = "pet:MensajeSMS";
@@ -152,11 +155,11 @@ public class EnvioSMSXMLBean {
 			this.password = responseXMLObject.getEnvio().getPassword();
 			this.listadoMensajes = responseXMLObject.getEnvio().getListadoMensajes();
 		} catch (ParserConfigurationException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlEnvio);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE + e.getMessage() + XML + xmlEnvio);
 		} catch (SAXException e2) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e2.getCause() + "\nMensaje: " + e2.getMessage() + "\nXML:\n" + xmlEnvio);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e2.getCause() + MENSAJE + e2.getMessage() + XML + xmlEnvio);
 		} catch (IOException e3) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e3.getCause() + "\nMensaje: " + e3.getMessage() + "\nXML:\n" + xmlEnvio);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e3.getCause() + MENSAJE + e3.getMessage() + XML + xmlEnvio);
 		}
 	}
 

@@ -89,8 +89,6 @@ public class RecibirSMSResponse {
 	}
 	public String toXML() throws PlataformaBusinessException {
 
-		RecibirSMSResponse resupestaEstadoSMS = this;
-
 		try {
 			
 			Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();

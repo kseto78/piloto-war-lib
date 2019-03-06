@@ -129,6 +129,12 @@ public class TblAplicacionesManagerImpl implements TblAplicacionesManager {
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
 	}
+	
+	@Override
+	@Transactional
+	public void updateSMS(TblAplicaciones aplicacion) {
+		aplicacionesDAO.update(aplicacion);
+	}
 
 	@Override
 	@Transactional

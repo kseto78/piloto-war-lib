@@ -74,10 +74,10 @@ public interface QueryExecutorOrganismos {
 	 */
 	public Integer getOrganismoIdByDir3(String search);
 
-	public List<String> getOrganismosHijos(String idOrganismo);
+	public List<TblOrganismos> getOrganismosHijos(String idOrganismo);
 
 	public Integer getOrganismoIdByDir3SoloEliminado(String search);
 
-	public List<TblOrganismos> getOrganismosByPdp(long idOrganismoPdp);
+	public List<TblOrganismos> getOrganismosByPdp(long idPdpDiputaciones);
 
 }

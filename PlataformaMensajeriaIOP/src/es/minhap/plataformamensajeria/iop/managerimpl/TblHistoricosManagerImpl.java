@@ -412,6 +412,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 				}
 				break;
 			}
+			break;
 		case 4:
 			List<String> listaDestinatariosPush = usuariosPushManager.getNombresUsuariosMensaje(Long.parseLong(mensajeId));
 			if (null != listaDestinatariosPush && listaDestinatariosPush.size() > 0){
@@ -420,6 +421,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 				}
 				break;
 			}
+			break;
 		case 5:
 			List<String> listaDestinatariosWebPush = usuariosWebPushManager.getUsuarioIdMensaje(Long.parseLong(mensajeId));
 			if (null != listaDestinatariosWebPush && !listaDestinatariosWebPush.isEmpty()){
@@ -428,6 +430,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 				}
 				break;
 			}
+			break;
 		default:
 			for (TblDestinatariosMensajes dm : destinatariosMensajesManager.getDestinatarioMensajes(Long.parseLong(mensajeId))) {
 				res.append(dm.getDestinatario() + ";");

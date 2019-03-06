@@ -12,7 +12,7 @@ import es.minhap.common.entity.OrderType;
 import es.minhap.common.entity.TextComparator;
 import es.minhap.plataformamensajeria.iop.manager.TblCertificadosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblLogManager;
-import es.minhap.plataformamensajeria.iop.manager.TblOrganismosPdpManager;
+import es.minhap.plataformamensajeria.iop.manager.TblPdpDiputacionesManager;
 import es.minhap.sim.dao.TblCertificadosDAO;
 import es.minhap.sim.dao.TblOrganismosDAO;
 import es.minhap.sim.model.TblCertificados;

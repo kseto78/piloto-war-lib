@@ -46,6 +46,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		return viewServiciosDAO.search(query).getResults();
 	}
 
+	
 	///MIGRADO
 	@Override
 	@Transactional
@@ -80,6 +81,26 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		return viewServiciosDAO.search(query).getResults();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ViewServicios> getCanalesByServicioId(String idServicio) {
+		ViewServiciosQuery query = new ViewServiciosQuery();
+		query.setServicioid(Long.parseLong(idServicio));
+		
+		return viewServiciosDAO.search(query).getResults();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ViewServicios> getServiciosPorCanal(String idAplicacion, String idCanal) {
+		ViewServiciosQuery query = new ViewServiciosQuery();
+		query.setAplicacionid(Long.parseLong(idAplicacion));
+		query.setCanalid(Long.valueOf(idCanal));
+		
+		return viewServiciosDAO.search(query).getResults();
+
+	}
 
 	/**
 	 * @return the viewServiciosDAO
@@ -95,5 +116,6 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		this.viewServiciosDAO = viewServiciosDAO;
 	}
 
+	
 
 }

@@ -283,7 +283,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
     	
     	if(evaluarParametro(recibirSMSRequest.getUser()) && evaluarParametro(recibirSMSRequest.getPassword())
     			&& evaluarParametro(recibirSMSRequest.getSender()) && evaluarParametro(recibirSMSRequest.getRecipient())
-    			&& evaluarParametro(recibirSMSRequest.getMessageId()) && evaluarParametro(recibirSMSRequest.getMessageId())){
+    			&& evaluarParametro(recibirSMSRequest.getMessageId()) ){
     		recibirSMSRequest.setRecipient(Utils.eliminarPrefijo(recibirSMSRequest.getRecipient(), telefonoExcepcion));
     		return true;
     	} else {

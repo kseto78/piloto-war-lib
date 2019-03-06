@@ -1,10 +1,12 @@
 package es.minhap.plataformamensajeria.iop.services.envio;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,22 +157,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				listaErroresGenerales.add(error);
 			}
 			if (listaErroresGenerales.isEmpty()) {
-				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
-						.getEstadoid();
-				idLote = lotesManager.insertarLote(Long.parseLong(envioEmail.getServicio()),
-						envioEmail.getNombreLote(), envioEmail.getUsuario(), envioEmail.getPassword(), envioEmail.getCodOrganismo());
-				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
-					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
-					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
-							listaErroresLote);
-
-					return xmlRespues;
-				}
-
-				if(LOG.isDebugEnabled()){
-					LOG.debug("[EnviarEmail] Lote creado correctamente con ID " + idLote);
-					LOG.debug("[EnviarEmail] Creando mensajes ");
-				}
 
 				ArrayList<MensajesXMLBean> listaMensajes = envioEmail.getListadoMensajes();
 				
@@ -191,7 +177,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							StringBuilder idExterno = new StringBuilder();
 							if(mensaje.getListaDestinatarios()!=null) {
 								for (DestinatarioPeticionLotesMailXMLBean em : mensaje.getListaDestinatarios()) {
-									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+									List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+									if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -210,6 +197,24 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							msj.setErrorMensaje(status);
 							listaMensajesProcesados.add(msj);
 						} else {
+							Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
+									.getEstadoid();
+							if (idLote == null){
+								idLote = lotesManager.insertarLote(Long.parseLong(envioEmail.getServicio()),
+										envioEmail.getNombreLote(), envioEmail.getUsuario(), envioEmail.getPassword(), envioEmail.getCodOrganismo());
+								if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+									listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+									xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+											listaErroresLote);
+
+									return xmlRespues;
+								}
+
+								if(LOG.isDebugEnabled()){
+									LOG.debug("[EnviarEmail] Lote creado correctamente con ID " + idLote);
+									LOG.debug("[EnviarEmail] Creando mensajes ");
+								}
+							}
 								StringBuilder idExterno = new StringBuilder();
 								for (DestinatarioPeticionLotesMailXMLBean destinatario : mensaje.getListaDestinatarios()) {
 									String to = (null != destinatario.getDestinatarios().getTo() && destinatario
@@ -221,8 +226,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									String bcc = (null != destinatario.getDestinatarios().getBcc() && destinatario
 											.getDestinatarios().getBcc().length() > 1) ? destinatario.getDestinatarios()
 											.getBcc() : null;
-											
-									if (destinatario.getIdExterno()!=null && !idExterno.toString().contains(destinatario.getIdExterno())) {
+									List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));	
+									if (destinatario.getIdExterno()!=null && !listaIdExternos.contains(destinatario.getIdExterno())) {
 										if (idExterno.toString().length() > 0) {
 											idExterno.append(",");
 										}
@@ -400,7 +405,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 					for (MensajesXMLBean mensaje : listaMensajes) {
 						if(mensaje.getListaDestinatarios()!=null) {
 							for (DestinatarioPeticionLotesMailXMLBean em : mensaje.getListaDestinatarios()) {
-								if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+								List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+								if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 									if(idExterno.toString().length()>0) {
 										idExterno.append(",");
 									}
@@ -428,26 +434,19 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 			if(LOG.isDebugEnabled()){
 				LOG.debug("[EnviarEmail] XML de respuesta generado");
 			}
-
-			String utilizarActiveMqEmail = ps.getMessage("constantes.ENVIO_ACTIVEMQEMAIL", null,"S");
 			
 			//Recuperamos el servicio para combrobar si es premuium
 			Long idServicio = Long.parseLong(envioEmail.getServicio());
-			TblServicios tblServicios = serviciosManager.getServicio(idServicio);
-			boolean esPremium = false;
+			TblServicios tblServicios = serviciosManager.getServicio(idServicio);			
+			boolean esExclusivo = false;
 			
-			if (tblServicios!= null && tblServicios.getPremium()!=null && tblServicios.getPremium()){
-				esPremium = true;
+			if (tblServicios!= null && tblServicios.getExclusivo()!=null && tblServicios.getExclusivo()){
+				esExclusivo = true;
 			}
 			
-			if(esPremium){
-				if("S".equals(utilizarActiveMqEmail)){
+			if(!esExclusivo){				
 					//creamos hilo para insertar los mensajes en ActiveMq
 					levantarHilo(listaMensajesEncolar, ps, sender, mensajesManager);
-				}
-			}else{
-				//creamos hilo para insertar los mensajes en ActiveMq
-				levantarHilo(listaMensajesEncolar, ps, sender, mensajesManager);
 			}
 			
 		}catch (Exception e) {
@@ -504,16 +503,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 				listaErroresGenerales.add(error);
 			}
 			if (listaErroresGenerales.isEmpty()) {
-				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
-						.getEstadoid();
-				idLote = lotesManager.insertarLote(Long.parseLong(envioSMS.getServicio()), envioSMS.getNombreLote(),
-						envioSMS.getUsuario(), envioSMS.getPassword(), envioSMS.getCodOrganismo());
-				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
-					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
-					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
-							listaErroresLote);
-					return xmlRespues;
-				}
 				ArrayList<MensajeSMSXMLBean> listaMensajes = envioSMS.getListadoMensajes();
 				
 				//Gestion numero maximo envios
@@ -542,28 +531,40 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									&& Utils.validarTelefono(destinatario.getDestinatario(),telefonoExcepcion) == 1) {
 								Mensaje msj = new Mensaje();
 								
-								StringBuilder idExterno = new StringBuilder();
-								if(mensaje.getListaDestinatarios()!=null) {
-									for (DestinatarioPeticionLotesSMSXMLBean em : mensaje.getListaDestinatarios()) {
-										if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
-											if(idExterno.toString().length()>0) {
-												idExterno.append(",");
-											}
-											idExterno.append(em.getIdExterno());
+								Boolean tieneError = false;
+								for(Mensaje men: listaMensajesProcesados){
+									if(men.getErrorMensaje() != null && men.getErrorMensaje().getDetails().equals(PlataformaErrores.STATUSDETAILS_KO_TELEFONO)){
+										tieneError = true;
+										if(destinatario !=null && destinatario.getIdExterno() != null && men.getIdExterno() != null){
+											men.setIdExterno(men.getIdExterno() +","+destinatario.getIdExterno());
 										}
 										
 									}
 								}
-								
-								msj.setIdExterno(idExterno.toString());
-								msj.setIdMensaje("");
-								ResponseStatusType status = new ResponseStatusType();
-								status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-								status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
-								status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-								msj.setErrorMensaje(status);
-								listaMensajesProcesados.add(msj);
+								if(!tieneError){
+									msj.setIdExterno(destinatario.getIdExterno());
+									msj.setIdMensaje("");
+									
+									ResponseStatusType status = new ResponseStatusType();
+									status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
+									status.setDetails(PlataformaErrores.STATUSDETAILS_KO_TELEFONO);
+									status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
+									msj.setErrorMensaje(status);
+									listaMensajesProcesados.add(msj);
+								}
 							} else {
+								Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
+										.getEstadoid();
+								if(idLote == null){
+									idLote = lotesManager.insertarLote(Long.parseLong(envioSMS.getServicio()), envioSMS.getNombreLote(),
+											envioSMS.getUsuario(), envioSMS.getPassword(), envioSMS.getCodOrganismo());
+									if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+										listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+										xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+												listaErroresLote);
+										return xmlRespues;
+									}
+								}
 								if (null == mensajeCreado) {
 									mensajeCreado = mensajesManager.insertarMensajeSMS(Long.valueOf(idLote), mensaje,
 											envioSMS.getUsuario(), envioSMS.getPassword());
@@ -596,11 +597,12 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 											maxRetries = Long.parseLong(ps.getMessage(
 													"constantes.servicio.numMaxReenvios", null));
 										}
-										
-										if(servicio.getPremium()!=null && servicio.getPremium()) {
-											premium = true;
+										if(servicio.getExclusivo() != null && !servicio.getExclusivo()){
+											if(servicio.getPremium()!=null && servicio.getPremium()) {
+												premium = true;
+											}
+											sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
 										}
-										sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
 									}
 
 								} else {// es un destinatario mas, hay que
@@ -610,7 +612,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										Long desMensaje = destinatariosMensajesManager.insertarDestinatarioMensaje(
 												mensajeCreado.getIdMensaje(), destinatario.getDestinatario(),
 												destinatario.getIdExterno(), envioSMS.getUsuario());
-										if (null != mensajeCreado.getIdExterno() && !mensajeCreado.getIdExterno().contains(destinatario.getIdExterno())){
+										List<String> listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+										if (null != mensajeCreado.getIdExterno() && !listaIdExternos.contains(destinatario.getIdExterno())){
 											mensajeCreado.setIdExterno(mensajeCreado.getIdExterno() + "," +destinatario.getIdExterno());
 										}else{
 											mensajeCreado.setIdExterno(destinatario.getIdExterno());
@@ -635,12 +638,13 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										} else {
 											maxRetries = Long.parseLong(ps.getMessage(
 													"constantes.servicio.numMaxReenvios", null));
-										}
-										
-										if(servicio.getPremium()!=null && servicio.getPremium()) {
-											premium = true;
-										}
-										sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
+										}	
+										if(!servicio.getExclusivo()){
+											if(servicio.getPremium()!=null && servicio.getPremium()) {
+												premium = true;
+											}
+											sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), premium);
+										}										
 
 									}
 								}
@@ -660,7 +664,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 					for (MensajeSMSXMLBean mensaje : listaMensajes) {
 						if(mensaje.getListaDestinatarios()!=null) {
 							for (DestinatarioPeticionLotesSMSXMLBean em : mensaje.getListaDestinatarios()) {
-								if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+								List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+								if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 									if(idExterno.toString().length()>0) {
 										idExterno.append(",");
 									}
@@ -741,16 +746,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 			}
 
 			if (listaErroresGenerales.isEmpty()) {
-				idLote = lotesManager.insertarLote(Long.parseLong(peticionXML.getServicio()),
-						peticionXML.getNombreLote(), peticionXML.getUsuario(), peticionXML.getPassword(), peticionXML.getCodOrganismo());
-
-				if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
-					listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
-					xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
-							listaErroresLote);
-
-					return xmlRespues;
-				}
 
 				ArrayList<MensajePeticionLotesWebPushXMLBean> listaMensajes = (ArrayList<MensajePeticionLotesWebPushXMLBean>) peticionXML
 						.getMensajes().getMensajeWebPush();
@@ -768,6 +763,19 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						String faltaCampoObligatorio = evaluarMensajeNotificacionCompletoServicio(mensaje.getTitulo(),
 								mensaje.getCuerpo());
 						if (faltaCampoObligatorio == null) {
+							if (idLote == null){
+								idLote = lotesManager.insertarLote(Long.parseLong(peticionXML.getServicio()),
+										peticionXML.getNombreLote(), peticionXML.getUsuario(), peticionXML.getPassword(), peticionXML.getCodOrganismo());
+
+								if (WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
+									listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
+									xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
+											listaErroresLote);
+
+									return xmlRespues;
+								}
+
+							}
 							if (null != mensaje.getDestinatariosWebPush()) {
 								for (DestinatarioPeticionLotesWebPushXMLBean d : mensaje.getDestinatariosWebPush()
 										.getDestinatarioWebPush()) {
@@ -847,7 +855,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							StringBuilder idExterno = new StringBuilder();
 							if(mensaje.getDestinatariosWebPush()!=null && mensaje.getDestinatariosWebPush().getDestinatarioWebPush()!=null) {
 								for (DestinatarioPeticionLotesWebPushXMLBean em : mensaje.getDestinatariosWebPush().getDestinatarioWebPush()) {
-									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+									List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+									if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -949,8 +958,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 														.getUsuarioPorServicio(Integer.parseInt(idServicioMovil));
 												ResponseStatusType status = new ResponseStatusType();
 												if (!listaDispositivos.isEmpty()) {
-													idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-															notificacionPush.getUsuario(), notificacionPush.getPassword(),notificacionPush.getCodOrganismo());
+													if(idLote == null){
+														idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
+														notificacionPush.getUsuario(), notificacionPush.getPassword(),notificacionPush.getCodOrganismo());
+													}
 													if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 														listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 														xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -1009,26 +1020,26 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 												} else {
 													Mensaje msj = new Mensaje();
 													
-													StringBuilder idExterno = new StringBuilder();
-													if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-														for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-															if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
-																if(idExterno.toString().length()>0) {
-																	idExterno.append(",");
-																}
-																idExterno.append(em.getIdExterno());
+													Boolean tieneError = false;
+													for(Mensaje men: listaMensajesProcesados){
+														if(men.getErrorMensaje() != null && men.getErrorMensaje().getDetails().equals(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO)){
+															tieneError = true;
+															if(d !=null && d.getIdExterno() != null && men.getIdExterno() != null){
+																men.setIdExterno(men.getIdExterno() +","+d.getIdExterno());
 															}
 															
 														}
 													}
-													
-													msj.setIdExterno(idExterno.toString());
-													msj.setIdMensaje("");
-													status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-													status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
-													status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-													msj.setErrorMensaje(status);
-													listaMensajesProcesados.add(msj);
+													if(!tieneError){
+														msj.setIdExterno(d.getIdExterno());
+														msj.setIdMensaje("");
+														
+														status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
+														status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
+														status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
+														msj.setErrorMensaje(status);
+														listaMensajesProcesados.add(msj);
+													}
 												}
 											} else {
 												// lleva destinatarios
@@ -1041,8 +1052,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 																Integer.parseInt(idServicioMovil));
 												ResponseStatusType status = new ResponseStatusType();
 												if (!listaDispositivos.isEmpty()) {
-													idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-															notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
+													if (idLote == null){
+														idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
+														notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
+													}
 													if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 														listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 														xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -1052,30 +1065,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 													}
 													
 													for (Integer usuarioId : listaDispositivos) {
-														if (d == null || d.getIdentificadorUsuario().length() <= 0) {
-															Mensaje msj = new Mensaje();
-															
-															StringBuilder idExterno = new StringBuilder();
-															if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-																for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-																	if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
-																		if(idExterno.toString().length()>0) {
-																			idExterno.append(",");
-																		}
-																		idExterno.append(em.getIdExterno());
-																	}
-																	
-																}
-															}
-															
-															msj.setIdExterno(idExterno.toString());
-															msj.setIdMensaje("");
-															status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-															status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
-															status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-															msj.setErrorMensaje(status);
-															listaMensajesProcesados.add(msj);
-														} else {
 															if (usuariosServiciosMovilesManager
 																	.comprobarUsuarioServicioValido(usuarioId,
 																			idServicioMovil)) {
@@ -1115,7 +1104,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 																					usuarioId.toString(),
 																					d.getIdExterno(),
 																					notificacionPush.getUsuario());
-																	if (null != mensajeCreado.getIdExterno() && !mensajeCreado.getIdExterno().contains(d.getIdExterno())){
+																	List<String> listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+																	if (null != mensajeCreado.getIdExterno() && !listaIdExternos.contains(d.getIdExterno())){
 																		mensajeCreado.setIdExterno(mensajeCreado.getIdExterno() + "," +d.getIdExterno());
 																	}else{
 																		mensajeCreado.setIdExterno(d.getIdExterno());
@@ -1134,29 +1124,30 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 																LOG.info("EnvioMensajeImpl [enviarNotificacion]: El usuario no esta suscrito al servicio movil indicado");
 																Mensaje msj = new Mensaje();
 																
-																StringBuilder idExterno = new StringBuilder();
-																if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-																	for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-																		if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
-																			if(idExterno.toString().length()>0) {
-																				idExterno.append(",");
-																			}
-																			idExterno.append(em.getIdExterno());
+																Boolean tieneError = false;
+																for(Mensaje men: listaMensajesProcesados){
+																	if(men.getErrorMensaje() != null && men.getErrorMensaje().getDetails().equals(PlataformaErrores.STATUSDETAILS_KO_USUARIONOSUSCRITO)){
+																		tieneError = true;
+																		if(d.getIdExterno() != null && men.getIdExterno() != null){
+																			men.setIdExterno(men.getIdExterno() +","+d.getIdExterno());
 																		}
 																		
 																	}
 																}
-																
-																msj.setIdExterno(idExterno.toString());
-																msj.setIdMensaje("");
-																status = new ResponseStatusType();
-																status.setStatusCode(PlataformaErrores.STATUSCODE_KO_CAMPOS_OBLIGATORIOS);
-																status.setDetails(PlataformaErrores.STATUSDETAILS_KO_USUARIONOSUSCRITO);
-																status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-																msj.setErrorMensaje(status);
-																listaMensajesProcesados.add(msj);
+																if(!tieneError){
+																	msj.setIdExterno(d.getIdExterno());
+																	msj.setIdMensaje("");
+																	
+																	status.setStatusCode(PlataformaErrores.STATUSCODE_KO_CAMPOS_OBLIGATORIOS);
+																	status.setDetails(PlataformaErrores.STATUSDETAILS_KO_USUARIONOSUSCRITO);
+																	status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
+																	msj.setErrorMensaje(status);
+																	listaMensajesProcesados.add(msj);
+																}
+
+															
+
 															}
-														}
 													}// del for de
 														// listaDispositivos
 												}// del
@@ -1164,26 +1155,26 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 												else {
 													Mensaje msj = new Mensaje();
 													
-													StringBuilder idExterno = new StringBuilder();
-													if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-														for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-															if(em.getIdExterno()!=null &&  !idExterno.toString().contains(em.getIdExterno())) {
-																if(idExterno.toString().length()>0) {
-																	idExterno.append(",");
-																}
-																idExterno.append(em.getIdExterno());
+													Boolean tieneError = false;
+													for(Mensaje men: listaMensajesProcesados){
+														if(men.getErrorMensaje() != null && men.getErrorMensaje().getDetails().equals(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO)){
+															tieneError = true;
+															if(d.getIdExterno() != null && men.getIdExterno() != null){
+																men.setIdExterno(men.getIdExterno() +","+d.getIdExterno());
 															}
 															
 														}
 													}
-													
-													msj.setIdExterno(idExterno.toString());
-													msj.setIdMensaje("");
-													status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-													status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
-													status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-													msj.setErrorMensaje(status);
-													listaMensajesProcesados.add(msj);
+													if(!tieneError){
+														msj.setIdExterno(d.getIdExterno());
+														msj.setIdMensaje("");
+														
+														status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
+														status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
+														status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
+														msj.setErrorMensaje(status);
+														listaMensajesProcesados.add(msj);
+													}
 
 												}
 											}
@@ -1282,7 +1273,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									StringBuilder idExterno = new StringBuilder();
 									if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 										for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-											if(em.getIdExterno()!=null &&  !idExterno.toString().contains(em.getIdExterno())) {
+											List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+											if(em.getIdExterno()!=null &&  !listaIdExternos.contains(em.getIdExterno())) {
 												if(idExterno.toString().length()>0) {
 													idExterno.append(",");
 												}
@@ -1310,7 +1302,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 								StringBuilder idExterno = new StringBuilder();
 								if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 									for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-										if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+										List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+										if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 											if(idExterno.toString().length()>0) {
 												idExterno.append(",");
 											}
@@ -1330,14 +1323,14 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 								listaMensajesProcesados.add(msj);
 							}
 
-						}// 
-						else {
+						}else {	//Cuando falta campo obligatorio
 							Mensaje msj = new Mensaje();
 							
 							StringBuilder idExterno = new StringBuilder();
 							if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 								for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+									List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+									if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -1365,7 +1358,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 							for (MensajePeticionLotesPushXMLBean mensaje : listaMensajes) {
 								if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 									for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-										if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+										List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+										if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 											if(idExterno.toString().length()>0) {
 												idExterno.append(",");
 											}
@@ -1403,32 +1397,32 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									.getDestinatarioPush()) {
 								if (d == null || null == d.getIdentificadorUsuario() || d.getIdentificadorUsuario().length() <= 0) {
 									Mensaje msj = new Mensaje();
+									ResponseStatusType status = new ResponseStatusType();
 									
-									StringBuilder idExterno = new StringBuilder();
-									if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-										for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-											if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
-												if(idExterno.toString().length()>0) {
-													idExterno.append(",");
-												}
-												idExterno.append(em.getIdExterno());
+									Boolean tieneError = false;
+									for(Mensaje men: listaMensajesProcesados){
+										if(men.getErrorMensaje() != null && men.getErrorMensaje().getDetails().equals(ps.getMessage(
+												"plataformaErrores.notificacionesPUSH.statusDetails.KO", null))){
+											tieneError = true;
+											if(d.getIdExterno() != null && men.getIdExterno() != null){
+												men.setIdExterno(men.getIdExterno() +","+d.getIdExterno());
 											}
 											
 										}
 									}
-									
-									msj.setIdExterno(idExterno.toString());
-									msj.setIdMensaje("");
-									ResponseStatusType status = new ResponseStatusType();
-									status.setStatusCode(ps.getMessage(
-											"plataformaErrores.notificacionesPUSH.statusCode.KO", null));
-									status.setDetails(ps.getMessage(
-											"plataformaErrores.notificacionesPUSH.statusDetails.KO", null));
-									status.setStatusText(ps.getMessage(
-											"plataformaErrores.notificacionesPUSH.statusText.KO", null));
-									msj.setErrorMensaje(status);
-									listaMensajesProcesados.add(msj);
-								} else {
+									if(!tieneError){
+										msj.setIdExterno(d.getIdExterno());
+										msj.setIdMensaje("");
+										
+										status.setStatusCode(ps.getMessage("plataformaErrores.notificacionesPUSH.statusCode.KO", null));
+										status.setDetails(ps.getMessage("plataformaErrores.notificacionesPUSH.statusDetails.KO", null));
+										status.setStatusText(ps.getMessage("plataformaErrores.notificacionesPUSH.statusText.KO", null));
+										
+										msj.setErrorMensaje(status);
+										listaMensajesProcesados.add(msj);
+									}
+
+								} else { //Mensaje (d) o identificador de usuario (d.getIdentificadorUsuario) no es null
 
 									List<Long> litaDispositvos = usuariosPushManager.getDispositivosUsuario(
 											d.getIdentificadorUsuario(),
@@ -1436,8 +1430,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 									ResponseStatusType status = new ResponseStatusType();
 									if (!litaDispositvos.isEmpty()) {
-										idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
-												notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
+										if(idLote == null){
+											idLote = lotesManager.insertarLote(Long.parseLong(notificacionPush.getServicio()), notificacionPush.getNombreLote(),
+													notificacionPush.getUsuario(), notificacionPush.getPassword(), notificacionPush.getCodOrganismo());
+										}
 										if (null != idLote && WSPlataformaErrors.getErrorCrearLote(idLote) != null) {
 											listaErroresLote.add(WSPlataformaErrors.getErrorCrearLote(idLote));
 											xmlRespues = respuesta.toXMLSMS(idLote, listaMensajesProcesados, listaErroresGenerales,
@@ -1447,30 +1443,6 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										}
 										
 										for (Long usuarioId : litaDispositvos) {
-											if (d == null || d.getIdentificadorUsuario().length() <= 0) {
-												Mensaje msj = new Mensaje();
-												
-												StringBuilder idExterno = new StringBuilder();
-												if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-													for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-														if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
-															if(idExterno.toString().length()>0) {
-																idExterno.append(",");
-															}
-															idExterno.append(em.getIdExterno());
-														}
-														
-													}
-												}
-												
-												msj.setIdExterno(idExterno.toString());
-												msj.setIdMensaje("");
-												status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-												status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
-												status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-												msj.setErrorMensaje(status);
-												listaMensajesProcesados.add(msj);
-											} else {
 												if (null == mensajeCreado) {
 													mensajeCreado = mensajesManager.insertarMensajePush(
 															Long.valueOf(idLote), mensaje, notificacionPush, d,
@@ -1498,7 +1470,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 															.insertarDestinatarioMensaje(mensajeCreado.getIdMensaje(),
 																	usuarioId.toString(), d.getIdExterno(),
 																	notificacionPush.getUsuario());
-													if (null != mensajeCreado.getIdExterno() && !mensajeCreado.getIdExterno().contains(d.getIdExterno())){
+													List<String> listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+													if (null != mensajeCreado.getIdExterno() && !listaIdExternos.contains(d.getIdExterno())){
 														mensajeCreado.setIdExterno(mensajeCreado.getIdExterno() + "," +d.getIdExterno());
 													}else{
 														mensajeCreado.setIdExterno(d.getIdExterno());
@@ -1510,45 +1483,45 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 													sendMensajeJMS(listaMensajesEncolar, notificacionPush, ps, mensajeCreado, d, desMensaje, idLote);
 													
 												}
-											}
 
 										}
 									} else {
 										Mensaje msj = new Mensaje();
 										
-										StringBuilder idExterno = new StringBuilder();
-										if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
-											for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-												if(null != em.getIdExterno() && !idExterno.toString().contains(em.getIdExterno())) {
-													if(idExterno.toString().length()>0) {
-														idExterno.append(",");
-													}
-													idExterno.append(em.getIdExterno());
+										Boolean tieneError = false;
+										for(Mensaje men: listaMensajesProcesados){
+											if(men.getErrorMensaje() != null && men.getErrorMensaje().getDetails().equals(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO)){
+												tieneError = true;
+												if(d.getIdExterno() != null && men.getIdExterno() != null){
+													men.setIdExterno(men.getIdExterno() +","+d.getIdExterno());
 												}
 												
 											}
 										}
-										
-										msj.setIdExterno(idExterno.toString());
-										msj.setIdMensaje("");
-										status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-										status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
-										status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
-										msj.setErrorMensaje(status);
-										listaMensajesProcesados.add(msj);
+										if(!tieneError){
+											msj.setIdExterno(d.getIdExterno());
+											msj.setIdMensaje("");
+											
+											status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
+											status.setDetails(PlataformaErrores.STATUSDETAILS_KO_DISPOSITIVO);
+											status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
+											msj.setErrorMensaje(status);
+											listaMensajesProcesados.add(msj);
+										}
 
 									}
 								}
 
 							}
 							mensajeCreado = null;
-						} else {
+						} else { //Falta campoObligatorio != null
 							Mensaje msj = new Mensaje();
 							
 							StringBuilder idExterno = new StringBuilder();
 							if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 								for (DestinatarioPeticionLotesPushXMLBean d : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-									if(d.getIdExterno()!=null &&  !idExterno.toString().contains(d.getIdExterno())) {
+									List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+									if(d.getIdExterno()!=null &&  !listaIdExternos.contains(d.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -1576,7 +1549,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 						for (MensajePeticionLotesPushXMLBean mensaje : listaMensajes) {
 							if(mensaje.getDestinatariosPush()!=null && mensaje.getDestinatariosPush().getDestinatarioPush()!=null) {
 								for (DestinatarioPeticionLotesPushXMLBean em : mensaje.getDestinatariosPush().getDestinatarioPush()) {
-									if(em.getIdExterno()!=null && !idExterno.toString().contains(em.getIdExterno())) {
+									List<String> listaIdExternos = Arrays.asList(idExterno.toString().split("\\s*,\\s*"));
+									if(em.getIdExterno()!=null && !listaIdExternos.contains(em.getIdExterno())) {
 										if(idExterno.toString().length()>0) {
 											idExterno.append(",");
 										}
@@ -1820,8 +1794,8 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		if (null == res && (esMultiorganismo(servicio))) {
 			res = checkOrganismoPagador(organismoPagador);
 
-			if (null == res)
-				res = checkOrganismoAsociado(servicio, organismoPagador);
+		if (null == res)
+			res = checkOrganismoAsociado(servicio, organismoPagador);
 
 		}
 
@@ -1865,10 +1839,9 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 		if (null == servicio || servicio.isEmpty()) {
 			res = WSPlataformaErrors.getErrorFaltaServicio();
 		}
-		try {
-			Integer.parseInt(servicio);
-		} catch (NumberFormatException e) {
-			res = WSPlataformaErrors.getErrorServicioNoNumerico();
+		
+		if(!NumberUtils.isNumber(servicio)){
+		    res = WSPlataformaErrors.getErrorServicioNoNumerico();
 		}
 		return res;
 	}

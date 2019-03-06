@@ -196,8 +196,7 @@ public class RespuestaEnvioXMLBean {
 			mensaje.appendChild(idMensaje);
 			
 			Element erroresMensaje = null;
-			if (mensajeBean.getListadoErroresMensajes() != null && mensajeBean.getListadoErroresMensajes().size() > 0) {
-				iEstado = 2;
+			if (mensajeBean.getListadoErroresMensajes() != null && mensajeBean.getListadoErroresMensajes().size() > 0) {			
 				erroresMensaje = doc.createElement(TAG_ERRORMENSAJE);
 				for (String errorStr : mensajeBean.getListadoErroresMensajes()) {
 					String[] errorSplited = errorStr.split("#");
@@ -348,7 +347,6 @@ public class RespuestaEnvioXMLBean {
 		rootElement = respuesta;
 		Element mensajes = doc.createElement(TAG_MENSAJES);
 		rootElement.appendChild(mensajes);
-		rootElement = mensajes;
 		
 		for (MensajeSMSXMLBean mensajeBean : listaMensajesProcesados) {
 			Element mensaje = doc.createElement(TAG_MENSAJE);
@@ -398,7 +396,9 @@ public class RespuestaEnvioXMLBean {
 		StringWriter writer = new StringWriter();
 		StreamResult result = new StreamResult(writer);
 		try {
-			transformer.transform(source, result);
+			if(transformer != null){
+				transformer.transform(source, result);
+			}
 		} catch (TransformerException e) {
 			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}
@@ -505,8 +505,7 @@ public class RespuestaEnvioXMLBean {
 		
 		Element mensajes = doc.createElement(TAG_MENSAJES);
 		rootElement.appendChild(mensajes);
-		rootElement = mensajes;
-		
+			
 		for (MensajePushXMLBean mensajeBean : listaMensajesProcesados) {
 			Element mensaje = doc.createElement(TAG_MENSAJE);
 			
@@ -520,7 +519,6 @@ public class RespuestaEnvioXMLBean {
 			
 			Element erroresMensaje = null;
 			if (mensajeBean.getListadoErroresMensajes() != null && mensajeBean.getListadoErroresMensajes().size() > 0) {
-				iEstado = 2;
 				erroresMensaje = doc.createElement(TAG_ERRORMENSAJE);
 				for (String errorStr : mensajeBean.getListadoErroresMensajes()) {
 					String[] errorSplited = errorStr.split("#");
@@ -555,7 +553,9 @@ public class RespuestaEnvioXMLBean {
 		StringWriter writer = new StringWriter();
 		StreamResult result = new StreamResult(writer);
 		try {
-			transformer.transform(source, result);
+			if(transformer != null){
+				transformer.transform(source, result);
+			}				
 		} catch (TransformerException e) {
 			LOG.error("Error en RespuestaEnvioXMLBean",e);
 		}

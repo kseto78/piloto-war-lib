@@ -244,8 +244,6 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 		try {
 
 			respuesta = new Respuesta();
-			listado = viewHistoricoManager.getHistorico(getFiltroHistorico(idMensaje, idExterno, usuario, password));
-			listaResultados = getListaResultadosHistorico(listado);
 			listadoMultidest = viewHistoricoManager.getHistoricoMultidest(getFiltroHistoricoMultidest(idMensaje,
 					idExterno, usuario, password));
 			listaResultados = getListaResultadosHistoricoMultidest(listadoMultidest);

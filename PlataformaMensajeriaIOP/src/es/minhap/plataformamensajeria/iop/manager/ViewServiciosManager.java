@@ -36,5 +36,15 @@ public interface ViewServiciosManager {
 	 */
 	public List<ViewServicios> getServiciosPaginado(int start, int size, String order, String columnSort, String nombreServicio, Long aplicacionId, int servicioId, boolean count);
 
+	/**
+	 * la lista con los canales
+	 * 
+	 * idServicio 
+	 * @return
+	 */
+	public List<ViewServicios> getCanalesByServicioId(String idServicio);
+
+	public List<ViewServicios> getServiciosPorCanal(String idAplicacion, String idCanal);
+
 	
 }

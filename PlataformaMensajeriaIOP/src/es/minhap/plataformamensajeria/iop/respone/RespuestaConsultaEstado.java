@@ -294,8 +294,6 @@ public class RespuestaConsultaEstado {
 
 		Element soapbody = doc.createElement(TAG_SOAP_BODY);
 		rootElement.appendChild(soapbody);
-		rootElement = soapbody;
-		
 
 		
 		Element respuesta = doc.createElement(TAG_FILTRO_RESPUESTA);

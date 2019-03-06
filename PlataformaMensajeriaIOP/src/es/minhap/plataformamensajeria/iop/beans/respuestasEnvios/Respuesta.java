@@ -228,8 +228,7 @@ public class Respuesta {
 				
 		
 		if (listaMensajesProcesados != null && listaMensajesProcesados.size()> 0){
-			ArrayList<Mensaje> s = new ArrayList<Mensaje>();
-			
+						
 			this.mensajes = new ArrayList<Mensajes>();
 			
 			for (es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje mensaje : listaMensajesProcesados) {

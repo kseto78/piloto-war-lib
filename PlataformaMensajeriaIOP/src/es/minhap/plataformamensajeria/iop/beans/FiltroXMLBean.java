@@ -26,7 +26,7 @@ public class FiltroXMLBean {
 	@Deprecated
 	private MensajesXMLBean mensaje;
 	
-	public FiltroXMLBean() {
+	public FiltroXMLBean() { //
 
 	}
 	

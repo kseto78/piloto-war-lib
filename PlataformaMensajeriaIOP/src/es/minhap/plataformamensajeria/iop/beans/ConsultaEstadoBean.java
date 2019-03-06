@@ -22,6 +22,9 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 public class ConsultaEstadoBean implements Serializable {
 
 
+	private static final String XML = "\nXML:\n";
+	private static final String MENSAJE = "\nMensaje: ";
+	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
 	static final String TAG_USUARIO="pet:Usuario";
 	static final String TAG_PASSWORD="pet:Password";
 
@@ -54,8 +57,6 @@ public class ConsultaEstadoBean implements Serializable {
 	private String canal;
 	private String idAplicacion;
 	private String aplicacion;
-	//private String idLote;
-
 	private String lote;
 	private String idMensaje;
 	private String idExterno;
@@ -70,7 +71,7 @@ public class ConsultaEstadoBean implements Serializable {
 	private String numeroReintentos;
 	private String fecha;
 
-	private FiltroXMLBean filtro;
+	private transient FiltroXMLBean filtro;
 
 
 
@@ -243,11 +244,11 @@ public class ConsultaEstadoBean implements Serializable {
 			//Cambio 2012-03-23
 			//this.listadoAdjuntosGenerales = responseXMLObject.getEnvio().getListadoAdjuntosGenerales();
 		}catch(ParserConfigurationException e){
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlEnvio);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
 		}catch(SAXException e2){
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e2.getCause()+"\nMensaje: " + e2.getMessage()+ "\nXML:\n"+xmlEnvio);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e2.getCause()+MENSAJE + e2.getMessage()+ XML+xmlEnvio);
 		} catch (IOException e3) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e3.getCause()+"\nMensaje: " + e3.getMessage()+ "\nXML:\n"+xmlEnvio);
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e3.getCause()+MENSAJE + e3.getMessage()+ XML+xmlEnvio);
 		}
 	}
 
