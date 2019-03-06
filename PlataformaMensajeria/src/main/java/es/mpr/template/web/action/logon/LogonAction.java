@@ -27,7 +27,6 @@ import com.map.j2ee.security.perm.model.User060VO;
 import com.map.j2ee.util.Constants;
 import com.opensymphony.xwork2.ActionSupport;
 
-import es.minhap.common.security.util.UtilsValidateSignature;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosManager;
 import es.minhap.sim.model.TblUsuariosAplicaciones;
@@ -97,10 +96,7 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     		if (logger.isDebugEnabled()) {
     			logger.debug("[LogonAction] - xmlAutentica: " + xml_user_autentica);
     		}
-    		boolean isValid=UtilsValidateSignature.validaSignature(xml_user_autentica, serialNumber, issuer);
-    		if(!isValid){
-    			return ERROR;
-    		}
+    		
     		try{
     			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     			InputSource src = new InputSource();
