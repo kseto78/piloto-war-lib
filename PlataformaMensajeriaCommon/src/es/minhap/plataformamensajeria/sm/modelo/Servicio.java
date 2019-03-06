@@ -38,7 +38,7 @@ public class Servicio {
 			this.pendienteAprobacion = null;
 			this.nombreLoteEnvio = null;
 			this.badge = null;
-			this.gcmProjectKey = null;
+			this.fcmProjectKey = null;
 			this.apnsRutaCertificado = null;
 			this.apnsPasswordCertificado = null;
 			this.androidPlataforma = null;
@@ -93,7 +93,7 @@ public class Servicio {
 		protected String isPendienteAprobacion = null;
 		protected String nombreLoteEnvio = null;
 		protected Integer badge = null;
-		protected String gcmProjectKey = null;
+		protected String fcmProjectKey = null;
 		protected String apnsRutaCertificado = null;
 		protected String apnsPasswordCertificado = null;
 		protected Integer androidPlataforma = null;
@@ -378,11 +378,11 @@ public class Servicio {
 		public void setBadge(Integer badge) {
 			this.badge = badge;
 		}
-		public String getGcmProjectKey() {
-			return gcmProjectKey;
+		public String getFcmProjectKey() {
+			return fcmProjectKey;
 		}
-		public void setGcmProjectKey(String gcmProjectKey) {
-			this.gcmProjectKey = gcmProjectKey;
+		public void setFcmProjectKey(String fcmProjectKey) {
+			this.fcmProjectKey = fcmProjectKey;
 		}
 		public String getApnsRutaCertificado() {
 			return apnsRutaCertificado;

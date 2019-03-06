@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 	    "sonido",
 	    "nombreUsuario",
 	    "tokensUsuario",
-	    "gCMApiKey",
+	    "fCMApiKey",
 	    "rutaCertificadoAPNS",
 	    "passwordCertificadoAPNS",
 	    "badge",	 
@@ -50,8 +50,8 @@ public class NotificacionPushData {
 	@XmlElement(name = "TokensUsuario", required = true)
 	public ArrayList<String> tokensUsuario;
 	
-	@XmlElement(name = "GCMApiKey", required = true)
-	public String gCMApiKey = "";
+	@XmlElement(name = "FCMApiKey", required = true)
+	public String fCMApiKey = "";
 	
 	@XmlElement(name = "RutaCertificadoAPNS", required = true)
 	public String rutaCertificadoAPNS = "";
@@ -136,12 +136,12 @@ public class NotificacionPushData {
 		this.tokensUsuario = tokensUsuario;
 	}
 
-	public String getgCMApiKey() {
-		return gCMApiKey;
+	public String getfCMApiKey() {
+		return fCMApiKey;
 	}
 
-	public void setgCMApiKey(String gCMApiKey) {
-		this.gCMApiKey = gCMApiKey;
+	public void setfCMApiKey(String fCMApiKey) {
+		this.fCMApiKey = fCMApiKey;
 	}
 
 	public String getRutaCertificadoAPNS() {
