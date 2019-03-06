@@ -3,6 +3,7 @@ package es.minhap.misim.components;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
@@ -17,13 +18,23 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
+import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensajes;
+import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesExclusivo;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.services.envioLotes.IEnvioLotesMensajesService;
+import es.minhap.sim.model.TblDestinatariosMensajes;
+import es.minhap.sim.model.TblServicios;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 
 /**
@@ -38,6 +49,21 @@ public class InvocarEnvioSMS implements Callable {
 
 	@Resource
 	IEnvioLotesMensajesService envioLotesMensajesImpl;
+	
+	@Resource
+	private TblServiciosManager serviciosManager;
+	
+	@Resource(name = "reloadableResourceBundleMessageSource")
+	ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+	
+	@Resource(name="TblMensajesManagerImpl")
+	private TblMensajesManager tblMensajesManager;
+	
+	@Resource(name="TblDestinatariosMensajesManagerImpl")
+	private TblDestinatariosMensajesManager tblDestinatariosMensajes;
+	
+	@Resource(name="sendMessageService")
+	private ISendMessageService sendMessageService;
 
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
@@ -59,10 +85,22 @@ public class InvocarEnvioSMS implements Callable {
 			PeticionXMLBean peticionXML = new PeticionXMLBean();
 			peticionXML.loadObjectFromXML(xmlPeticion);
 			String respuesta = envioLotesMensajesImpl.enviarLotesSMS(peticionXML);
+			
+			//Recogemos la respuesta y la pasamos a object
+			es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Respuesta respuestaEnvio = new es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Respuesta();
+			respuestaEnvio = respuestaEnvio.loadObjectFromXMLWithList(respuesta);
 
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
-
+			
+			//Recuperamos el servicio para combrobar si es premuium
+			Long idServicio = Long.parseLong(peticionXML.getServicio());
+			TblServicios tblServicios = serviciosManager.getServicio(idServicio);
+			boolean esExclusivo = ((tblServicios != null && tblServicios.getExclusivo())?true:false);
+			if(esExclusivo){
+				levantarHilo(respuestaEnvio);
+			}
+			
 			NodeList nodoLoteId = doc.getElementsByTagName("idLote");
 			
 			if(nodoLoteId!=null && nodoLoteId.item(0)!=null) {
@@ -127,5 +165,34 @@ public class InvocarEnvioSMS implements Callable {
 				new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 		return message;
 	}
-
+	
+	private void levantarHilo(es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Respuesta respuesta) {
+		
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String estadoPendiente = ps.getMessage("constantes.ESTADO_PENDIENTE", null);
+		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
+		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
+		Long idLote = null;
+		
+		if(null!=respuesta){
+			if(respuesta.getLote()!=null && respuesta.getLote().getIdLote()!=null){
+				idLote = Long.parseLong(respuesta.getLote().getIdLote());
+			
+				if(idLote!=null && respuesta.getMensajes()!=null && !respuesta.getMensajes().isEmpty()){
+					for(Mensajes mensajes : respuesta.getMensajes()){
+						if(mensajes != null && mensajes.getMensaje()!=null && mensajes.getMensaje().getIdMensaje()!=null){
+							String estadoActual = tblMensajesManager.getMensaje(Long.parseLong(mensajes.getMensaje().getIdMensaje())).getEstadoactual();
+							List<TblDestinatariosMensajes> listaDestinatarios = tblDestinatariosMensajes.getDestinatarioMensajes(Long.parseLong(mensajes.getMensaje().getIdMensaje()));
+							for (TblDestinatariosMensajes destinatario : listaDestinatarios) {
+								if (estadoActual.equals(estadoIncidencia) || estadoActual.equals(estadoAnulado) || estadoActual.equals(estadoPendiente)){
+									HiloEnviarMensajesExclusivo hilo1 = new HiloEnviarMensajesExclusivo(sendMessageService, tblMensajesManager, Long.parseLong(mensajes.getMensaje().getIdMensaje()), idLote, destinatario.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
+									hilo1.start();
+								}
+							}
+						}		
+					}
+				}
+			}
+		}
+	}
 }

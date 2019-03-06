@@ -28,7 +28,7 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.EnvioGISSXMLBean;
 import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
-import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesPremium;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesExclusivo;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumGISSService;
@@ -172,7 +172,7 @@ public class InvocarEnvioGiss implements Callable {
 
 		for (TblDestinatariosMensajes d : listaDestinatarios) {
 			if (estadoActual.equals(estadoPendiente)) {
-				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService, tblMensajesManager,
+				HiloEnviarMensajesExclusivo hilo1 = new HiloEnviarMensajesExclusivo(sendMessageService, tblMensajesManager,
 						idMensaje, idLote, d.getDestinatariosmensajes(), false, reloadableResourceBundleMessageSource);
 				hilo1.start();
 			}

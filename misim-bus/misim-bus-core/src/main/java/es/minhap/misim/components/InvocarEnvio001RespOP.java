@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.RespuestaEnvioXMLBean;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumService;
@@ -48,15 +49,14 @@ public class InvocarEnvio001RespOP implements Callable {
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
 		LOG.debug("Empezando el proceso de invocación del enviador...");
-		// PropertiesServices ps = new
-		// PropertiesServices(reloadableResourceBundleMessageSource);
+		 PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		// String usuarioAEAT = ps.getMessage("aeat.usuario.sms", null, null,
 		// null);
 		// String passwordAEAT = ps.getMessage("aeat.contrasena.sms", null,
 		// null, null);
-		// Integer idServicioAEAT = new
-		// Integer(ps.getMessage("aeat.servicio.sms.premium", null, null,
-		// null));
+		 Integer idServicioAEAT = new
+		 Integer(ps.getMessage("aeat.servicio.sms.premium", null, null,
+		 null));
 
 		try {
 			final Document docOriginal = SoapPayload.class.cast(eventContext.getMessage().getPayload())
@@ -119,7 +119,7 @@ public class InvocarEnvio001RespOP implements Callable {
 		} catch (Exception e) {
 			// Lanzar error
 			LOG.error("Error en la transmision: Error de sistema Invocar Emisor", e);
-			throw new ModelException("Error de sistema Invocar Emisor", 502);
+			throw new ModelException("Error de sistema Invocar Emisor, en el Servicio:"+idServicioAEAT, 502);
 		}
 
 		LOG.debug("Proceso de creación de invocación al emisor terminado.");

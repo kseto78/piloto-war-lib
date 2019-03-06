@@ -32,7 +32,7 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.Proveedor;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.misim.bus.model.servicios.ProveedorManager;
-import es.minhap.misim.tranformers.GMCSendMessage;
+import es.minhap.misim.tranformers.FCMSendMessage;
 import es.minhap.misim.tranformers.NotificacionDataRequest;
 import es.minhap.misim.tranformers.PushNotificationSender;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServicios;
@@ -191,8 +191,8 @@ public class InvocarEmisorPush implements Callable {
 
 			if ("Google".equals(company)) {
 
-				GMCSendMessage sendToGoogle = new GMCSendMessage();
-				respuesta = sendToGoogle.enviarGoogle(notificacion.getgCMApiKey(), notificacion.getToken(),
+				FCMSendMessage sendToGoogle = new FCMSendMessage();
+				respuesta = sendToGoogle.enviarGoogle(notificacion.getfCMApiKey(), notificacion.getToken(),
 						notificacion.getUrl(), notificacion.getBadge(), notificacion.getCabecera(),
 					notificacion.getCuerpo(), notificacion.getSound(), notificacion.getIcon(), idMensaje);
 //				respuesta = "{\"multicast_id\":6133432243628604373,\"success\":0,\"failure\":1,\"canonical_ids\":0,\"results\":[{\"error\":\"InvalidRegistration\"}]}";

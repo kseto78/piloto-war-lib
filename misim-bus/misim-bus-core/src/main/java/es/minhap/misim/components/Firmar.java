@@ -63,7 +63,7 @@ public class Firmar implements Callable {
 			
 			String tipoFirma= eventContext.getMessage().getOutboundProperty("tipoFirma");
 			
-			if(("WS-Security").equals(tipoFirma)){
+			if(("EnvioMensajesWSS").equals(tipoFirma)){
 			
 				// Invocamos al servicio de firma
 				final Document docFirmado = firmaService.firmarWSSecurity(

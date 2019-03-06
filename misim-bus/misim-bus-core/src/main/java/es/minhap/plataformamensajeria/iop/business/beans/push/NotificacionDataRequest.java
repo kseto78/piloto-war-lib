@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "notificacionDataRequest", propOrder = {
-	    "gCMApiKey",
+	    "fCMApiKey",
 	    "rutaCertificadoAPNS",
 	    "passwordCertificadoAPNS",
 	    "token",
@@ -28,8 +28,8 @@ import javax.xml.bind.annotation.XmlType;
 public class NotificacionDataRequest {
 	
 	
-	@XmlElement(name = "GCMApiKey", required = true)
-	public String gCMApiKey;
+	@XmlElement(name = "FCMApiKey", required = true)
+	public String fCMApiKey;
 	
 	@XmlElement(name = "RutaCertificadoAPNS", required = true)
 	public String rutaCertificadoAPNS;	
@@ -68,12 +68,12 @@ public class NotificacionDataRequest {
 	public String sound;
 	
 
-	public String getgCMApiKey() {
-		return gCMApiKey;
+	public String getfCMApiKey() {
+		return fCMApiKey;
 	}
 
-	public void setgCMApiKey(String gCMApiKey) {
-		this.gCMApiKey = gCMApiKey;
+	public void setfCMApiKey(String fCMApiKey) {
+		this.fCMApiKey = fCMApiKey;
 	}
 
 	public List getToken() {
@@ -150,7 +150,7 @@ public class NotificacionDataRequest {
 
 	@Override
 	public String toString() {
-		return "NotificacionDataRequest [gCMApiKey=" + gCMApiKey + ", rutaCertificadoAPNS=" + rutaCertificadoAPNS + ", passwordCertificadoAPNS=" + passwordCertificadoAPNS + ", token=" + token + ", url=" + url + ", puertoUrl=" + puertoUrl + ", urlFeedback=" + urlFeedback + ", badge=" + badge + ", cabecera=" + cabecera + ", cuerpo=" + cuerpo + "]";
+		return "NotificacionDataRequest [fCMApiKey=" + fCMApiKey + ", rutaCertificadoAPNS=" + rutaCertificadoAPNS + ", passwordCertificadoAPNS=" + passwordCertificadoAPNS + ", token=" + token + ", url=" + url + ", puertoUrl=" + puertoUrl + ", urlFeedback=" + urlFeedback + ", badge=" + badge + ", cabecera=" + cabecera + ", cuerpo=" + cuerpo + "]";
 	}
 
 	public String getPuertoUrlFeedback() {

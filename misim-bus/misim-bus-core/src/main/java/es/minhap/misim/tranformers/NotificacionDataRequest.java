@@ -17,7 +17,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "notificacionDataRequest", propOrder = {
-	    "gCMApiKey",
+	    "fCMApiKey",
 	    "rutaCertificadoAPNS",
 	    "passwordCertificadoAPNS",
 	    "token",
@@ -37,8 +37,8 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 public class NotificacionDataRequest {
 	
 	
-	@XmlElement(name = "GCMApiKey", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
-	public String gCMApiKey;
+	@XmlElement(name = "FCMApiKey", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	public String fCMApiKey;
 	
 	@XmlElement(name = "RutaCertificadoAPNS", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
 	public String rutaCertificadoAPNS;	
@@ -79,12 +79,12 @@ public class NotificacionDataRequest {
     @XmlElement(name = "NotificacionSilenciosa", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
     protected Boolean notificacionSilenciosa;    
 
-	public String getgCMApiKey() {
-		return gCMApiKey;
+	public String getfCMApiKey() {
+		return fCMApiKey;
 	}
 
-	public void setgCMApiKey(String gCMApiKey) {
-		this.gCMApiKey = gCMApiKey;
+	public void setfCMApiKey(String fCMApiKey) {
+		this.fCMApiKey = fCMApiKey;
 	}
 
 	public List<String> getToken() {
@@ -161,7 +161,7 @@ public class NotificacionDataRequest {
 
 	@Override
 	public String toString() {
-		return "NotificacionDataRequest [gCMApiKey=" + gCMApiKey + ", rutaCertificadoAPNS=" + rutaCertificadoAPNS + ", passwordCertificadoAPNS=" + passwordCertificadoAPNS + ", token=" + token + ", url=" + url + ", puertoUrl=" + puertoUrl + ", urlFeedback=" + urlFeedback + ", badge=" + badge + ", cabecera=" + cabecera + ", cuerpo=" + cuerpo + ", notificacionSilenciosa=" + notificacionSilenciosa + "]";
+		return "NotificacionDataRequest [fCMApiKey=" + fCMApiKey + ", rutaCertificadoAPNS=" + rutaCertificadoAPNS + ", passwordCertificadoAPNS=" + passwordCertificadoAPNS + ", token=" + token + ", url=" + url + ", puertoUrl=" + puertoUrl + ", urlFeedback=" + urlFeedback + ", badge=" + badge + ", cabecera=" + cabecera + ", cuerpo=" + cuerpo + ", notificacionSilenciosa=" + notificacionSilenciosa + "]";
 	}
 	
 	public String getPuertoUrlFeedback() {

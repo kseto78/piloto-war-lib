@@ -30,9 +30,9 @@ import es.minhap.misim.bus.model.exception.ModelException;
 
 
 
-public class GMCSendMessage {
+public class FCMSendMessage {
 	
-	private static final Logger log = LoggerFactory.getLogger(GMCSendMessage.class);
+	private static final Logger log = LoggerFactory.getLogger(FCMSendMessage.class);
 
 	
 	
@@ -40,8 +40,8 @@ public class GMCSendMessage {
 	 * Metodo que se encarga de realizar el envio de la notificacion Push a los dispositivos
 	 * a traves de Google Cloud Messaging 
 	 * 
-	 * @param gcmApiKey Key del proyecto Android
-	 * @param gcmTokens Tokens de los usuarios a los que se desea enviar la notificacion Push
+	 * @param fcmApiKey Key del proyecto Android
+	 * @param fcmTokens Tokens de los usuarios a los que se desea enviar la notificacion Push
 	 * @param url URL a la que realizar la peticion
 	 * @param badge Indica el numero de notificaciones que el usuario tiene pendientes de leer
 	 * @param title Titulo del mensaje de la notificacion Push
@@ -49,33 +49,33 @@ public class GMCSendMessage {
 	 * 
 	 * @return Respuesta de la peticion
 	 */
-	public String enviarGoogle(String gcmApiKey, List<String> gcmTokens, String url,
+	public String enviarGoogle(String fcmApiKey, List<String> fcmTokens, String url,
 			String badge, String title, String body, String sound, String icon, String idMensaje) throws ModelException {
 
 			try {
 	
-	        // Create connection to send GCM Message request
+	        // Create connection to send FCM Message request
 	        URL urlRequest = new URL(url);
 	        
 	        if(!urlRequest.getProtocol().contains("https")){
 	        
 	            HttpURLConnection conn = (HttpURLConnection) urlRequest.openConnection();
-	            conn.setRequestProperty("Authorization", "key=" + gcmApiKey);
+	            conn.setRequestProperty("Authorization", "key=" + fcmApiKey);
 	            conn.setRequestProperty("Content-Type", "application/json");
 	            conn.setRequestMethod("POST");
 	            conn.setDoOutput(true);
 	            
-	            String messageToSend = newMessage(gcmTokens, badge, title, body, sound, icon,idMensaje);
+	            String messageToSend = newMessage(fcmTokens, badge, title, body, sound, icon,idMensaje);
 	            
 	            log.info(messageToSend);
 	            
-	            // Send GCM message content
+	            // Send FCM message content
 	            OutputStream outputStream = conn.getOutputStream();
 	            outputStream.write(messageToSend.getBytes());
 	            
 	            log.info("Ha enviado el mensaje");
 	            
-	            // Read GCM response
+	            // Read FCM response
 	            InputStream inputStream = conn.getInputStream();
 	            String resp = IOUtils.toString(inputStream);
 	            
@@ -108,7 +108,7 @@ public class GMCSendMessage {
 				HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 				
 				conn = (HttpsURLConnection) urlRequest.openConnection();
-				conn.setRequestProperty("Authorization", "key=" + gcmApiKey);
+				conn.setRequestProperty("Authorization", "key=" + fcmApiKey);
 	            conn.setRequestProperty("Content-Type", "application/json");
 	            conn.setRequestMethod("POST");
 	            conn.setDoOutput(true);
@@ -116,17 +116,17 @@ public class GMCSendMessage {
 //	            { "registration_ids": [ "APA91bEAI5WzTsswjqftDmN9DW4_cczfc8eRveae9xoCvc-ME0uuoaqLz9Qy0D06Uek9189v4jm3sihpeYbWI2Zyp9mI5Ky1_jROLaaMkLTnEy_L7avvuYqZxwFPE147I8BPq5FAtfGe59GIrbEodbefI1fhTR_Mkg", "APA91bEVZx1Bxm7QGLXyCFNgsufhCFZ1EBt3R6J1kXxyQGp4CQXUp96fO7ZTRMuh0ga9OS0wMnxji4eDkc0W3NwC0SMsPbhNt6kJg1ktT39CNRkRsFH7Kp-6OOeBqZuz05zGApkHXLOPxUeQ5esDSHDk-N-eW4wlSg" ], 
 //	            	"data": {"contentTitle":"titulo", "tickerText":"TicketText", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "bodyMessage":"Prueba de avisos PUSH por favor avisad si os llega", "url": "http://google.com"}}
 //	            {"title":"titulo", "tickerText":"TicketText", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "bodyMessage":"ArmandoPichafloja", "url": "http://google.com"}	            
-	            String messageToSend = newMessage(gcmTokens, badge, title, body, sound, icon, idMensaje);
+	            String messageToSend = newMessage(fcmTokens, badge, title, body, sound, icon, idMensaje);
 	            
 	            log.info(messageToSend);
 	            
-	            // Send GCM message content
+	            // Send FCM message content
 	            OutputStream outputStream = conn.getOutputStream();
 	            outputStream.write(messageToSend.getBytes());
 	            
 	            log.info("Ha enviado el mensaje");
 	            
-	            // Read GCM response
+	            // Read FCM response
 	            InputStream inputStream = conn.getInputStream();
 	            String resp = IOUtils.toString(inputStream);
 	            
@@ -137,19 +137,19 @@ public class GMCSendMessage {
 	        }
 	
 	    } catch (MalformedURLException e) {
-	    	log.error("GMCSendMessage", e);
+	    	log.error("FCMSendMessage", e);
 	    	throw new ModelException(e.getMessage(),101);
 	    	
 	    } catch (UnknownServiceException e) {
-	    	log.error("GMCSendMessage", e);
+	    	log.error("FCMSendMessage", e);
 	    	throw new ModelException(e.getMessage(), 101);
 	
 	    } catch (IOException e) {
-	    	log.error("GMCSendMessage", e);
+	    	log.error("FCMSendMessage", e);
 	    	throw new ModelException(e.getMessage(), 101);
 	
 	    } catch (Exception e) {
-	    	log.error("GMCSendMessage", e);
+	    	log.error("FCMSendMessage", e);
 	    	throw new ModelException(e.toString(),101); 
 	    }
 
@@ -159,7 +159,7 @@ public class GMCSendMessage {
 	/**
 	 * Metodo que construye el mensaje que se envia a la peticion POST en formato JSON
 	 * 
-	 * @param gcmTokens Tokens de los usuarios a los que se desea enviar la notificacion Push
+	 * @param fcmTokens Tokens de los usuarios a los que se desea enviar la notificacion Push
 	 * @param badge Indica el numero de notificaciones que el usuario tiene pendientes de leer
 	 * @param title Titulo del mensaje de la notificacion Push
 	 * @param body Cuerpo del mensaje de la notificacion Push
@@ -167,7 +167,7 @@ public class GMCSendMessage {
 	 * @return Mensaje que se envia a la peticion POST
 	 * @throws JSONException 
 	 */
-	private String newMessage(List<String> gcmTokens, String badge, String title, String body, String sound, String icon, String idMensaje) throws JSONException{
+	private String newMessage(List<String> fcmTokens, String badge, String title, String body, String sound, String icon, String idMensaje) throws JSONException{
 		
 		JSONObject jsonObject = new JSONObject();
         JSONObject notificationObject = new JSONObject();
@@ -179,12 +179,12 @@ public class GMCSendMessage {
 //        	while (data.contains(":\\\"")){
 //        		data.replace(":\\", ":");
 //        	}
-	    	if(gcmTokens.size()>1){
+	    	if(fcmTokens.size()>1){
 	    		
 				string = "{ \"registration_ids\": [ ";
 	
 				boolean primerToken = true;
-				for (String token : gcmTokens) {
+				for (String token : fcmTokens) {
 					
 					if(primerToken){
 						string = string +"\""+ token +"\"";
@@ -199,20 +199,15 @@ public class GMCSendMessage {
 	    	}else{
 	    		
 	    		string = "{ \"to\": \"";
-	    		string = string + gcmTokens.get(0) + "\", ";
+	    		string = string + fcmTokens.get(0) + "\", ";
 	    	}
 	    	
 //	    	data = data.replace("contentTitle", "TituloNoValido");
 //	    	data = data.replace("tickerText", "contentTitle");
 //	    	data = data.replace("TituloNoValido", "tickerText");
-//	    	LOG.info("GMCSendMessage :".concat(data));
+//	    	LOG.info("FCMSendMessage :".concat(data));
 	    	data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ");
-	    	
-	    	StringBuilder b = new StringBuilder(data);
-	    	b.replace(data.lastIndexOf("}"), data.lastIndexOf("}") + 1, " ,\"idMensaje\":\""+ idMensaje +"\" } " );
-	    	data = b.toString();
-	    		    	
-	    	string = string.concat(" \"data\": ").concat(data).concat("}");
+	    	string = string.concat(" \"data\": ").concat(data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ")).concat("}");
 //        	{ "registration_ids": [ "APA91bEAI5WzTsswjqftDmN9DW4_cczfc8eRveae9xoCvc-ME0uuoaqLz9Qy0D06Uek9189v4jm3sihpeYbWI2Zyp9mI5Ky1_jROLaaMkLTnEy_L7avvuYqZxwFPE147I8BPq5FAtfGe59GIrbEodbefI1fhTR_Mkg", "APA91bEVZx1Bxm7QGLXyCFNgsufhCFZ1EBt3R6J1kXxyQGp4CQXUp96fO7ZTRMuh0ga9OS0wMnxji4eDkc0W3NwC0SMsPbhNt6kJg1ktT39CNRkRsFH7Kp-6OOeBqZuz05zGApkHXLOPxUeQ5esDSHDk-N-eW4wlSg" ], "data": {"contentTitle":"titulo", "tickerText":"TicketText", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "message":"Prueba de avisos PUSH por favor avisad si os llega", "url": "http://google.com"}}        	
         	
         	
@@ -222,8 +217,8 @@ public class GMCSendMessage {
         	
         	
         	//string = data;
-        	log.info("GMCSendMessage string:".concat(string));
-//	    	LOG.info("GMCSendMessage data:".concat(data));	    	
+        	log.info("FCMSendMessage string:".concat(string));
+//	    	LOG.info("FCMSendMessage data:".concat(data));	    	
         } 	else{
             notificationObject.accumulate("title", title);
             notificationObject.accumulate("badge", badge);
@@ -238,24 +233,24 @@ public class GMCSendMessage {
             notificationObject.accumulate("idMensaje", idMensaje);
             notificationObject.accumulate("body", body);
         
-//        if (gcmTokens!=null){
+//        if (fcmTokens!=null){
 //        	
-//        	if(gcmTokens.size()>1){
+//        	if(fcmTokens.size()>1){
 //        
 //		        JSONArray regIdArray = new JSONArray();
 //		        		        
-//			    for (String id : gcmTokens) {			    	
+//			    for (String id : fcmTokens) {			    	
 //			        regIdArray.put(id);
 //			    }
 			    
 //			    String tokens = null;
 //			    
-//			    for (int i=0; i<gcmTokens.size(); i++){
+//			    for (int i=0; i<fcmTokens.size(); i++){
 //			    	
 //			    	if(tokens!=null){
-//			    		tokens = tokens+ ",\"" +  gcmTokens.get(i) + "\"";
+//			    		tokens = tokens+ ",\"" +  fcmTokens.get(i) + "\"";
 //			    	}else{
-//			    		tokens = "\"" +  gcmTokens.get(i) + "\"";
+//			    		tokens = "\"" +  fcmTokens.get(i) + "\"";
 //			    	}
 //			    	
 //			    }
@@ -265,18 +260,18 @@ public class GMCSendMessage {
 //		        jsonObject.accumulate("registration_ids", regIdArray);
 //			}else{
 //				
-//				 jsonObject.accumulate("to", gcmTokens.get(0));
+//				 jsonObject.accumulate("to", fcmTokens.get(0));
 //			}
 //        }
         	jsonObject.accumulate("notification", notificationObject);
         
 	        	
-	    	if(gcmTokens.size()>1){
+	    	if(fcmTokens.size()>1){
 	    		
 				string = "{ \"registration_ids\": [ ";
 	
 				boolean primerToken = true;
-				for (String token : gcmTokens) {
+				for (String token : fcmTokens) {
 					
 					if(primerToken){
 						string = string +"\""+ token +"\"";
@@ -291,7 +286,7 @@ public class GMCSendMessage {
 	    	}else{
 	    		
 	    		string = "{ \"to\": \"";
-	    		string = string + gcmTokens.get(0) + "\", ";
+	    		string = string + fcmTokens.get(0) + "\", ";
 	    	}
 	    	
 	    	string = string + "\"notification\" :" + notificationObject.toString();
@@ -300,11 +295,11 @@ public class GMCSendMessage {
         
 //        return jsonObject.toString();
         
-//        String string = "{ \"registration_ids\": [ \"" +  gcmTokens.get(0) + "\" ], " +
+//        String string = "{ \"registration_ids\": [ \"" +  fcmTokens.get(0) + "\" ], " +
 //        "\"data\": {\"tickerText\":\"" + title + "\", " +
 //                   "\"contentTitle\":\"" + title + "\", " +
 //                   "\"message\": \"" + body + "\"}}";
-//    	LOG.info("GMCSendMessage string:".concat(string));	    	
+//    	LOG.info("FCMSendMessage string:".concat(string));	    	
         return string;
 
 //		return getJsonResponse(jsonObject);

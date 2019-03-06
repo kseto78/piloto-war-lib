@@ -601,6 +601,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 	private void sendMail(MailData mailData, int indice, String rutaTemporal) throws Exception {
 		boolean debug = false;
 
+		ArrayList<File> listaFicherosTemporales = new ArrayList<File>();
+		
 		Properties props = new Properties();
 
 		ParametrosServidor ps = (ParametrosServidor) mailData.Servers.get(indice);
@@ -688,7 +690,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			multipart = new MimeMultipart();
 		}
 		MimeBodyPart cuerpo = new MimeBodyPart();
-		String body = updateBody(mailData.Body, multipart, rutaTemporal);
+		String body = updateBody(mailData.Body, multipart, rutaTemporal, listaFicherosTemporales);
 		String typeContent = mailData.TipoCuerpo + "; charset=" + mailData.TipoCodificacion;
 
 		cuerpo.setContent(body, typeContent);
@@ -698,16 +700,22 @@ public class SendMessageServiceImpl implements ISendMessageService {
 			LOG.debug("Adjuntos: " + mailData.Attachments.size());
 		}
 		if (mailData.Attachments.size() > 0) {
-			addAttachToMail(mailData.Attachments, multipart, rutaTemporal);
+			addAttachToMail(mailData.Attachments, multipart, rutaTemporal, listaFicherosTemporales);
 		}
 		if (mailData.Images.size() > 0) {
-			addImagesToMail(mailData.Images, multipart, rutaTemporal);
+			addImagesToMail(mailData.Images, multipart, rutaTemporal, listaFicherosTemporales);
 		}
 		msg.setContent(multipart);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Realizamos el envio desde mail.jar (SendMail)");
 		}
 		Transport.send(msg);
+		
+		if(!listaFicherosTemporales.isEmpty()){	//Borramos los ficheros temporales
+			for(File f:listaFicherosTemporales){
+				f.delete();
+			}
+		}		
 
 	}
 
@@ -739,11 +747,12 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		return correos;
 	}
 
-	private void addAttachToMail(ArrayList<Adjunto> attachs, Multipart multipart, String rutaTemporal)
+	private void addAttachToMail(ArrayList<Adjunto> attachs, Multipart multipart, String rutaTemporal, ArrayList<File> listaFicheros)
 			throws FileNotFoundException, SQLException, IOException, MessagingException {
 		for (int indice = 0; indice < attachs.size(); indice++) {
 			FileOutputStream fos = null;
 			File file = File.createTempFile(rutaTemporal, String.valueOf(indice));
+			listaFicheros.add(file);
 			fos = new FileOutputStream(file);
 			MimeBodyPart adjunto = new MimeBodyPart();
 			Blob bin = ((Adjunto) attachs.get(indice)).getContenido();
@@ -771,11 +780,12 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		}
 	}
 
-	private void addImagesToMail(ArrayList<Adjunto> images, Multipart multipart, String rutaTemporal)
+	private void addImagesToMail(ArrayList<Adjunto> images, Multipart multipart, String rutaTemporal, ArrayList<File> listaFicheros)
 			throws FileNotFoundException, SQLException, IOException, MessagingException {
 		for (int indice = 0; indice < images.size(); indice++) {
 			FileOutputStream fos = null;
 			File file = File.createTempFile(rutaTemporal, String.valueOf(indice));
+			listaFicheros.add(file);
 			fos = new FileOutputStream(file);
 			Blob bin = ((Adjunto) images.get(indice)).getContenido();
 			InputStream input = bin.getBinaryStream();
@@ -803,7 +813,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		}
 	}
 
-	private String updateBody(String body, Multipart multipart, String rutaTemporal) throws IOException,
+	private String updateBody(String body, Multipart multipart, String rutaTemporal, ArrayList<File> listaFicheros) throws IOException,
 			MessagingException {
 		String newBody = "";
 		String[] partImages = body.split("<img");
@@ -816,8 +826,8 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 					byte[] bytes = Base64.decodeBase64(base64.getBytes());
 					FileOutputStream fos = null;
-					File file = File.createTempFile(rutaTemporal, String.valueOf(cont));
-
+					File file = File.createTempFile("File",null,new File(rutaTemporal));
+					listaFicheros.add(file);
 					fos = new FileOutputStream(file);
 					int size = bytes.length;
 					fos.write(bytes, 0, size);
@@ -1130,7 +1140,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
 		
 		if ((null != psp) && (psp.getPlataformaId() == 1)) {
 			if ((null != messageData.tokensUsuario) && (!messageData.tokensUsuario.isEmpty())) {
-				ndr.setgCMApiKey(messageData.gCMApiKey);
+				ndr.setfCMApiKey(messageData.fCMApiKey);
 
 				ndr.setBadge(messageData.badge);
 			} else {

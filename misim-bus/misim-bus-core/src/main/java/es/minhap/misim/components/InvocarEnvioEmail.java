@@ -28,7 +28,7 @@ import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.lotes.PeticionXMLBean;
 import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensajes;
 import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
-//import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarEmailPremium;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarEmailExclusivo;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
@@ -38,7 +38,7 @@ import es.minhap.sim.model.TblServicios;
 import es.redsara.intermediacion.scsp.esquemas.v3.respuesta.Respuesta;
 
 /**
- * Cliente genÃ©rico para JAX-WS
+ * Cliente genérico para JAX-WS
  * 
  * @author ludarcos
  * 
@@ -68,7 +68,7 @@ public class InvocarEnvioEmail implements Callable {
 	@Override
 	public Object onCall(final MuleEventContext eventContext) throws ModelException {
 
-		LOG.debug("Empezando el proceso de invocaciÃ³n del enviador...");
+		LOG.debug("Empezando el proceso de invocación del enviador...");
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		
 		try{
@@ -87,7 +87,7 @@ public class InvocarEnvioEmail implements Callable {
 			//Recuperamos el servicio para combrobar si es premuium
 			Long idServicio = Long.parseLong(peticionXML.getServicio());
 			TblServicios tblServicios = serviciosManager.getServicio(idServicio);
-			boolean esPremium = ((tblServicios != null && tblServicios.getPremium())?true:false);
+			boolean esExclusivo = ((tblServicios != null && tblServicios.getExclusivo())?true:false);
 			
 			ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 			String respuesta = envioLotesMensajesImpl.enviarLotesEmail(peticionXML, ps);
@@ -98,11 +98,9 @@ public class InvocarEnvioEmail implements Callable {
 			
 			Document doc = XMLUtils.xml2doc(respuesta, Charset.forName("UTF-8"));
 			String respuestaCompleta = XMLUtils.createSOAPFaultString((Node) doc.getDocumentElement());
-			
-			String utilizarActiveMqEmail = ps.getMessage("constantes.ENVIO_ACTIVEMQEMAIL", null,"S");
-			
-			//Utilizamos el hilo segÃºn si es Premium y segÃºn configuracion properties
-			if(esPremium && !"S".equals(utilizarActiveMqEmail)){
+						
+			//Utilizamos el hilo según si es Exclusivo y según configuracion properties
+			if(esExclusivo){
 				levantarHilo(respuestaEnvio);
 			}
 			
@@ -147,7 +145,7 @@ public class InvocarEnvioEmail implements Callable {
 				
 			}catch(Exception e){
 				//Lanzar error
-				LOG.error("Error en la transmisiÃ³n: Error al obtener la respuesta del servicio Web especificado", e);
+				LOG.error("Error en la transmisión: Error al obtener la respuesta del servicio Web especificado", e);
 				throw new ModelException("Error al obtener la respuesta del servicio Web especificado", 104);
 			}
 
@@ -157,11 +155,11 @@ public class InvocarEnvioEmail implements Callable {
 			
 		}catch(Exception e){
 			//Lanzar error
-			LOG.error("Error en la transmisiÃ³n: Error de sistema Invocar Emisor", e);
+			LOG.error("Error en la transmisión: Error de sistema Invocar Emisor", e);
 			throw new ModelException("Error de sistema Invocar Emisor", 502);
 		}
 
-		LOG.debug("Proceso de creaciÃ³n de invocaciÃ³n al emisor terminado.");
+		LOG.debug("Proceso de creación de invocación al emisor terminado.");
 
 		return eventContext.getMessage();
 	}
@@ -191,8 +189,8 @@ public class InvocarEnvioEmail implements Callable {
 							List<TblDestinatariosMensajes> listaDestinatarios = tblDestinatariosMensajes.getDestinatarioMensajes(Long.parseLong(mensajes.getMensaje().getIdMensaje()));
 							for (TblDestinatariosMensajes destinatario : listaDestinatarios) {
 								if (estadoActual.equals(estadoIncidencia) || estadoActual.equals(estadoAnulado) || estadoActual.equals(estadoPendiente)){
-//									HiloEnviarEmailPremium hilo1 = new HiloEnviarEmailPremium(sendMessageService, tblMensajesManager, Long.parseLong(mensajes.getMensaje().getIdMensaje()), idLote, destinatario.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
-//									hilo1.start();
+									HiloEnviarEmailExclusivo hilo1 = new HiloEnviarEmailExclusivo(sendMessageService, tblMensajesManager, Long.parseLong(mensajes.getMensaje().getIdMensaje()), idLote, destinatario.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
+									hilo1.start();
 								}
 							}
 						}		

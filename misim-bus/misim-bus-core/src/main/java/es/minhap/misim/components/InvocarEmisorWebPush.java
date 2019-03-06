@@ -37,7 +37,7 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.Proveedor;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.misim.bus.model.servicios.ProveedorManager;
-import es.minhap.misim.tranformers.GMCSendMessage;
+import es.minhap.misim.tranformers.FCMSendMessage;
 import es.minhap.misim.tranformers.NotificacionDataRequest;
 import es.minhap.misim.tranformers.PushNotificationSender;
 import es.minhap.plataformamensajeria.iop.beans.ConsultaEstadoXMLBean;

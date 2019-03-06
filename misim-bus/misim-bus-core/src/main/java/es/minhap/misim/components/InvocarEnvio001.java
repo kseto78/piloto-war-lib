@@ -27,7 +27,7 @@ import es.minhap.common.properties.PropertiesServices;
 import es.minhap.misim.bus.model.exception.ModelException;
 import es.minhap.plataformamensajeria.iop.beans.EnvioAEATXMLBean;
 import es.minhap.plataformamensajeria.iop.business.sendmail.ISendMessageService;
-import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesPremium;
+import es.minhap.plataformamensajeria.iop.business.thread.HiloEnviarMensajesExclusivo;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.services.envioPremium.IEnvioPremiumService;
@@ -154,7 +154,7 @@ public class InvocarEnvio001 implements Callable {
 		} catch (Exception e) {
 			// Lanzar error
 			LOG.error("Error en la transmision: Error de sistema Invocar Emisor", e);
-			throw new ModelException("Error de sistema Invocar Emisor", 502);
+			throw new ModelException("Error de sistema Invocar Emisor, en el Servicio: "+idServicioAEAT, 502);
 		}
 
 		LOG.debug("Proceso de creación de invocación al emisor terminado.");
@@ -169,7 +169,7 @@ public class InvocarEnvio001 implements Callable {
 		
 		for (TblDestinatariosMensajes d : listaDestinatarios) {
 			if (estadoActual.equals(estadoIncidencia) || estadoActual.equals(estadoAnulado) || estadoActual.equals(estadoPendiente)){
-				HiloEnviarMensajesPremium hilo1 = new HiloEnviarMensajesPremium(sendMessageService, tblMensajesManager, idMensaje, idLote, d.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
+				HiloEnviarMensajesExclusivo hilo1 = new HiloEnviarMensajesExclusivo(sendMessageService, tblMensajesManager, idMensaje, idLote, d.getDestinatariosmensajes(), true, reloadableResourceBundleMessageSource);
 				hilo1.start();
 			}
 		}
