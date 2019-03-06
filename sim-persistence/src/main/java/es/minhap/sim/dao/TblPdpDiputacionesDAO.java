@@ -1,5 +1,5 @@
 /*
- * archivo: TblOrganismosPdpDAO.java
+ * archivo: TblPdpDiputacionesDAO.java
  *
  * Proyecto: Administracion SIM
  *
@@ -13,13 +13,13 @@
 package es.minhap.sim.dao;
 
 import es.minhap.common.dao.EntityDAO;
-import es.minhap.sim.model.TblOrganismosPdp;
-import es.minhap.sim.query.TblOrganismosPdpQuery;
+import es.minhap.sim.model.TblPdpDiputaciones;
+import es.minhap.sim.query.TblPdpDiputacionesQuery;
 
 
 /**
  * Interfaz DAO que extiende de interfaz generica
  */
-public interface TblOrganismosPdpDAO extends EntityDAO<TblOrganismosPdp,Long,TblOrganismosPdpQuery> {
+public interface TblPdpDiputacionesDAO extends EntityDAO<TblPdpDiputaciones,Long,TblPdpDiputacionesQuery> {
 
 }

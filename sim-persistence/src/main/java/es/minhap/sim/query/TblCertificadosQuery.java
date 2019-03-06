@@ -56,7 +56,8 @@ public class TblCertificadosQuery extends AbstractHibernateQueryEntity<TblCertif
     public static final String FECHAACTUALIZACION = "fechaActualizacion";
     public static final String MODIFICADOPOR = "modificadoPor";
     public static final String CADUCADO = "caducado";
-
+    public static final String CREADOPOR = "modificadoPor";
+    public static final String FECHACADUCIDAD= "fechaCaducidad";
 
     /**
      * Valor de busqueda de campo certificadoid
@@ -239,7 +240,52 @@ public class TblCertificadosQuery extends AbstractHibernateQueryEntity<TblCertif
      * Permite buscar cuando campo caducado es NOT NULL
      */
     private boolean caducadoIsNotNull = false;
+    
+    /**
+     * Valor de busqueda de campo creadoPor
+     */
+    private String creadoPor;
 
+    /**
+     * Tipo de comparador para la busqueda por campo creadoPor
+     */
+    private TextComparator creadoPorComparator = TextComparator.CONTAINS;
+
+    /**
+     * Lista de valores del campo creadoPor para busquedas tipo IN
+     */
+    private List<String> creadoPorIn = new ArrayList<String>(0);
+
+    /**
+     * Permite buscar cuando campo creadoPor es NULL
+     */
+    private boolean creadoPorIsNull = false;
+
+    /**
+     * Permite buscar cuando campo creadoPor es NOT NULL
+     */
+    private boolean creadoPorIsNotNull = false;
+
+    /**
+     * Valor inferior de rango de busqueda de fecha fechaCaducidad
+     */
+    private Date fechaCaducidadMin;
+
+    /**
+     * Valor superior de rango de busqueda de fecha fechaCaducidad
+     */
+    private Date fechaCaducidadMax;
+
+    /**
+     * Permite buscar cuando campo fechaCaducidad es NULL
+     */
+    private boolean fechaCaducidadIsNull = false;
+
+    /**
+     * Permite buscar cuando campo fechaCaducidad es NOT NULL
+     */
+    private boolean fechaCaducidadIsNotNull = false;
+    
     /**
      * Indica si en la consulta se hace un inner join con el padre tblAplicaciones
      */
@@ -891,6 +937,168 @@ public class TblCertificadosQuery extends AbstractHibernateQueryEntity<TblCertif
     public void setCaducadoIsNotNull(boolean caducadoIsNotNull) {
         this.caducadoIsNotNull = caducadoIsNotNull;
     }
+    
+    /**
+     * Valor de busqueda de campo creadoPor
+     * @return String.
+     */
+    public String getCreadoPor() {
+        if (creadoPor != null) {
+            switch (creadoPorComparator) {
+	            case STARTS_WITH:
+	                return creadoPor + "%";
+	            case CONTAINS:
+	                return "%" + creadoPor + "%";
+	            case ENDS_WITH:
+	                return "%" + creadoPor;
+	            case EQUALS:
+                	return creadoPor;
+              	default:
+	            	break;
+            }
+        }
+        return creadoPor;
+    }
+
+    /**
+     * Valor de busqueda de campo creadoPor
+     * @param creadoPor Valor de seteo.
+     */
+    public void setCreadoPor(String creadoPor) {
+        this.creadoPor = creadoPor;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo creadoPor
+     * @return creadoPorComparator.
+     */
+    public TextComparator getCreadoPorComparator() {
+        return creadoPorComparator;
+    }
+
+    /**
+     * Tipo de comparador para la busqueda por campo creadoPor
+     * @param creadoPorComparator Valor de seteo.
+     */
+    public void setCreadoPorComparator(TextComparator creadoPorComparator) {
+        this.creadoPorComparator = creadoPorComparator;
+    }
+
+    /**
+     * @return List<String>.
+     */
+    public List<String> getCreadoPorIn() {
+        return this.creadoPorIn;
+    }
+
+    /**
+     * @param creadoPor Valor a agregar.
+     */
+    public void addCreadoPorIn(String creadoPor) {
+        this.creadoPorIn.add(creadoPor);
+    }
+
+    /**
+     * Permite buscar cuando campo creadoPor es NULL
+     * @return boolean.
+     */
+    public boolean isCreadoPorIsNull() {
+        return modificadoPorIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo creadoPor es NULL
+     * @param modificadoPorIsNull Valor de seteo.
+     */
+    public void setCreadoPorIsNull(boolean creadoPorIsNull) {
+        this.creadoPorIsNull = creadoPorIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo creadoPor es NOT NULL
+     * @return boolean.
+     */
+    public boolean isCreadoPorIsNotNull() {
+        return creadoPorIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo modificadoPor es NOT NULL
+     * @param creadoPorIsNotNull Valor de seteo.
+     */
+    public void setCreadoPorIsNotNull(boolean creadoPorIsNotNull) {
+        this.creadoPorIsNotNull = creadoPorIsNotNull;
+    }
+    
+    /**
+     * Valor inferior de rango de busqueda de fecha fechaCaducidad
+     * @return ${field.getName()}Min.
+     */
+    public Date getFechaCaducidadMin() {
+        if (fechaCaducidadMin != null) {
+            return DateUtil.toDayBegin(fechaCaducidadMin);
+        }
+        return fechaCaducidadMin;
+    }
+
+    /**
+     * Valor inferior de rango de busqueda de fecha fechaCaducidad
+     * @param fechaCaducidadMin Valor de seteo.
+     */
+    public void setFechaCaducidadMin(Date fechaCaducidadMin) {
+        this.fechaCaducidadMin = fechaCreacionMin;
+    }
+
+    /**
+     * Valor superior de rango de busqueda de fecha fechaCaducidad
+     * @return fechaCaducidadMax.
+     */
+    public Date getFechaCaducidadMax() {
+        if (fechaCaducidadMax != null) {
+            return DateUtil.toDayEnd(fechaCaducidadMax);
+        }
+        return fechaCaducidadMax;
+    }
+
+    /**
+     * Valor superior de rango de busqueda de fecha fechaCaducidad
+     * @param fechaCaducidadMax Valor de seteo.
+     */
+    public void setFechaCaducidadMax(Date fechaCaducidadMax) {
+        this.fechaCaducidadMax = fechaCaducidadMax;
+    }
+
+    /**
+     * Permite buscar cuando campo fechaCaducidad es NULL
+     * @return boolean.
+     */
+    public boolean isFechaCaducidadIsNull() {
+        return fechaCaducidadIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo fechaCaducidad es NULL
+     * @param fechaCaducidadIsNull Valor de seteo.
+     */
+    public void setFechaCaducidadIsNull(boolean fechaCaducidadIsNull) {
+        this.fechaCaducidadIsNull = fechaCaducidadIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo fechaCaducidad es NOT NULL
+     * @return boolean.
+     */
+    public boolean isFechaCaducidadIsNotNull() {
+        return fechaCaducidadIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo fechaCaducidad es NOT NULL
+     * @param fechaCaducidadIsNotNull Valor de seteo.
+     */
+    public void setFechaCaducidadIsNotNull(boolean fechaCaducidadIsNotNull) {
+        this.fechaCaducidadIsNotNull = fechaCaducidadIsNotNull;
+    }
 
     /**
      * @return boolean.
@@ -1155,6 +1363,34 @@ public class TblCertificadosQuery extends AbstractHibernateQueryEntity<TblCertif
         if (isCaducadoIsNotNull()) {
             criteria.add(Restrictions.isNotNull(CADUCADO));
         }
+        
+        if (getCreadoPor() != null) {
+            if (getCreadoPorComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(CREADOPOR, getCreadoPor()));
+            } 
+            else if (getCreadoPorComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(CREADOPOR, getCreadoPor()));
+            }
+            else if (getCreadoPorComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(CREADOPOR, getCreadoPor())));
+            }
+            else {
+                criteria.add(Restrictions.like(CREADOPOR, getCreadoPor()));
+            }
+        }
+
+        if (getCreadoPorIn().size() > 0) {
+            criteria.add(Restrictions.in(CREADOPOR, getCreadoPorIn()));
+        }
+
+        if (isCreadoPorIsNull()) {
+            criteria.add(Restrictions.isNull(CREADOPOR));
+        }
+
+        if (isCreadoPorIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(CREADOPOR));
+        }
+        
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);

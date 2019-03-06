@@ -1,6 +1,6 @@
 /*
  *
- * archivo: TblOrganismosPdpQuery.java
+ * archivo: TblPdpDiputacionesQuery.java
  *
  * Proyecto: Administracion SIM
  *
@@ -26,12 +26,12 @@ import es.minhap.common.util.DateUtil;
 import es.minhap.common.util.BeanFormatter;
 import es.minhap.common.entity.TextComparator;
 import es.minhap.common.persistence.hibernate.entity.AbstractHibernateQueryEntity;
-import es.minhap.sim.model.TblOrganismosPdp;
+import es.minhap.sim.model.TblPdpDiputaciones;
 
 /**
- * Clase con criterios de busqueda para la entidad TblOrganismosPdp
+ * Clase con criterios de busqueda para la entidad TblPdpDiputaciones
  */
-public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrganismosPdp> {
+public class TblPdpDiputacionesQuery extends AbstractHibernateQueryEntity<TblPdpDiputaciones> {
 
     /**
      * serialVersionUID
@@ -43,9 +43,10 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
     
     // Constantes para ser utilizadas como nombres de campos, para evitar
     // problemas de compilacion
-    public static final String ORGANISMOPDPID = "organismoPdpId";
+    public static final String PDPDIPUTACIONESID = "pdpDiputacionesId";
     public static final String NOMBRE = "nombre";
     public static final String DESCRIPCION = "descripcion";
+    public static final String ACTIVO = "activo";
     public static final String FECHACREACION = "fechacreacion";
     public static final String CREADOPOR = "creadopor";
     public static final String FECHAMODIFICACION = "fechamodificacion";
@@ -54,14 +55,14 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
 
 
     /**
-     * Valor de busqueda de campo organismoPdpId
+     * Valor de busqueda de campo pdpDiputacionesId
      */
-    private Long organismoPdpId;
+    private Long pdpDiputacionesId;
 
     /**
-     * Lista de valores del campo organismoPdpId para busquedas tipo IN
+     * Lista de valores del campo pdpDiputacionesId para busquedas tipo IN
      */
-    private List<Long> organismoPdpIdIn = new ArrayList<Long>(0);
+    private List<Long> pdpDiputacionesIdIn = new ArrayList<Long>(0);
 
     /**
      * Valor de busqueda de campo nombre
@@ -112,6 +113,21 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
      * Permite buscar cuando campo descripcion es NOT NULL
      */
     private boolean descripcionIsNotNull = false;
+    
+    /**
+     * Valor de busqueda de campo activo
+     */
+    private Boolean activo;
+
+    /**
+     * Permite buscar cuando campo activo es NULL
+     */
+    private boolean activoIsNull = false;
+
+    /**
+     * Permite buscar cuando campo activo es NOT NULL
+     */
+    private boolean activoIsNotNull = false;
 
     /**
      * Valor inferior de rango de busqueda de fecha fechacreacion
@@ -231,45 +247,45 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
     /**
      * Constructor default
      */
-    public TblOrganismosPdpQuery() {
+    public TblPdpDiputacionesQuery() {
     
     }
 
     /**
      * Constructor usando identificador
      */
-    public TblOrganismosPdpQuery(Long organismoPdpId) {
-        setOrganismoPdpId(organismoPdpId);
+    public TblPdpDiputacionesQuery(Long pdpDiputacionesId) {
+        setPdpDiputacionesId(pdpDiputacionesId);
     }
 
     /**
-     * Valor de busqueda de campo organismoPdpId
+     * Valor de busqueda de campo pdpDiputacionesId
      * @return Long.
      */
-    public Long getOrganismoPdpId() {
-        return organismoPdpId;
+    public Long getPdpDiputacionesId() {
+        return pdpDiputacionesId;
     }
 
     /**
-     * Valor de busqueda de campo organismoPdpId
-     * @param organismoPdpId Valor de seteo.
+     * Valor de busqueda de campo pdpDiputacionesId
+     * @param pdpDiputacionesId Valor de seteo.
      */
-    public void setOrganismoPdpId(Long organismoPdpId) {
-        this.organismoPdpId = organismoPdpId;
+    public void setPdpDiputacionesId(Long pdpDiputacionesId) {
+        this.pdpDiputacionesId = pdpDiputacionesId;
     }
 
     /**
      * @return List<Long>.
      */
-    public List<Long> getOrganismoPdpIdIn() {
-        return this.organismoPdpIdIn;
+    public List<Long> getPdpDiputacionesIdIn() {
+        return this.pdpDiputacionesIdIn;
     }
 
     /**
-     * @param organismoPdpId Valor a agregar.
+     * @param pdpDiputacionesId Valor a agregar.
      */
-    public void addOrganismoPdpIdIn(Long organismoPdpId) {
-        this.organismoPdpIdIn.add(organismoPdpId);
+    public void addPdpDiputacionesIdIn(Long pdpDiputacionesId) {
+        this.pdpDiputacionesIdIn.add(pdpDiputacionesId);
     }
 
     /**
@@ -362,6 +378,54 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
      */
     public void setNombreIsNotNull(boolean nombreIsNotNull) {
         this.nombreIsNotNull = nombreIsNotNull;
+    }
+    
+    /**
+     * Valor de busqueda de campo activo
+     * @return Boolean.
+     */
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    /**
+     * Valor de busqueda de campo activo
+     * @param activo Valor de seteo.
+     */
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+    
+    /**
+     * Permite buscar cuando campo activo es NULL
+     * @return boolean.
+     */
+    public boolean isActivoIsNull() {
+        return activoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo activo es NULL
+     * @param activoIsNull Valor de seteo.
+     */
+    public void setActivoIsNull(boolean activoIsNull) {
+        this.activoIsNull = activoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo activo es NOT NULL
+     * @return boolean.
+     */
+    public boolean isActivoIsNotNull() {
+        return activoIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo activo es NOT NULL
+     * @param activoIsNotNull Valor de seteo.
+     */
+    public void setActivoIsNotNull(boolean activoIsNotNull) {
+        this.activoIsNotNull = activoIsNotNull;
     }
 
     /**
@@ -877,12 +941,12 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
      */ 
     public void addCriteria(Criteria criteria, boolean useOrder) {
 
-        if (getOrganismoPdpId() != null) {
-            criteria.add(Restrictions.eq(ORGANISMOPDPID, getOrganismoPdpId()));
+        if (getPdpDiputacionesId() != null) {
+            criteria.add(Restrictions.eq(PDPDIPUTACIONESID, getPdpDiputacionesId()));
         }
 
-        if (getOrganismoPdpIdIn().size() > 0) {
-            criteria.add(Restrictions.in(ORGANISMOPDPID, getOrganismoPdpIdIn()));
+        if (getPdpDiputacionesIdIn().size() > 0) {
+            criteria.add(Restrictions.in(PDPDIPUTACIONESID, getPdpDiputacionesIdIn()));
         }
 
         if (getNombre() != null) {
@@ -941,6 +1005,19 @@ public class TblOrganismosPdpQuery extends AbstractHibernateQueryEntity<TblOrgan
         if (isDescripcionIsNotNull()) {
             criteria.add(Restrictions.isNotNull(DESCRIPCION));
         }
+        
+        if (getActivo() != null) {
+            criteria.add(Restrictions.eq(ACTIVO, getActivo()));
+        }
+        
+        if (isActivoIsNull()) {
+            criteria.add(Restrictions.isNull(ACTIVO));
+        }
+
+        if (isActivoIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(ACTIVO));
+        }
+
 
         if (getFechacreacionMin() != null) {
             criteria.add(Restrictions.ge(FECHACREACION, getFechacreacionMin()));

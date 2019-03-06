@@ -90,8 +90,8 @@ public class ViewServicios implements java.io.Serializable {
 	@Column(name = "BADGE", precision = 22, scale = 0)
 	private Long badge;
 
-	@Column(name = "GCMPROJECTKEY", length = 500)
-	private String gcmprojectkey;
+	@Column(name = "FCMPROJECTKEY", length = 500)
+	private String fcmprojectkey;
 
 	@Column(name = "APNSRUTACERTIFICADO", length = 500)
 	private String apnsrutacertificado;
@@ -316,12 +316,12 @@ public class ViewServicios implements java.io.Serializable {
 		this.badge = badge;
 	}
 
-	public String getGcmprojectkey() {
-		return gcmprojectkey;
+	public String getFcmprojectkey() {
+		return fcmprojectkey;
 	}
 
-	public void setGcmprojectkey(String gcmprojectkey) {
-		this.gcmprojectkey = gcmprojectkey;
+	public void setFcmprojectkey(String fcmprojectkey) {
+		this.fcmprojectkey = fcmprojectkey;
 	}
 
 	public String getApnsrutacertificado() {

@@ -58,6 +58,9 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
     public static final String RESPFUNCIONALEMAIL = "respFuncionalEmail";
     public static final String RESPTECNICONOMBRE = "respTecnicoNombre";
     public static final String RESPTECNICOEMAIL = "respTecnicoEmail";
+    public static final String SMSMAXIMOS = "smsMaximos";
+    public static final String SMSENVIADOSDIA = "smsEnviadosDia";
+    public static final String SMSFECHAULTIMO = "smsFechaUltimo";
 
 
     /**
@@ -404,6 +407,66 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
      * Permite buscar cuando campo respTecnicoEmail es NOT NULL
      */
     private boolean respTecnicoEmailIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo smsMaximos
+     */
+    private Integer smsMaximos;
+
+    /**
+     * Lista de valores del campo smsMaximos para busquedas tipo IN
+     */
+    private List<Integer> smsMaximosIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo smsMaximos es NULL
+     */
+    private boolean smsMaximosIsNull = false;
+
+    /**
+     * Permite buscar cuando campo smsMaximos es NOT NULL
+     */
+    private boolean smsMaximosIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo smsEnviadosDia
+     */
+    private Integer smsEnviadosDia;
+
+    /**
+     * Lista de valores del campo smsEnviadosDia para busquedas tipo IN
+     */
+    private List<Integer> smsEnviadosDiaIn = new ArrayList<Integer>(0);
+
+    /**
+     * Permite buscar cuando campo smsEnviadosDia es NULL
+     */
+    private boolean smsEnviadosDiaIsNull = false;
+
+    /**
+     * Permite buscar cuando campo smsEnviadosDia es NOT NULL
+     */
+    private boolean smsEnviadosDiaIsNotNull = false;
+
+    /**
+     * Valor inferior de rango de busqueda de fecha smsFechaUltimo
+     */
+    private Date smsFechaUltimoMin;
+
+    /**
+     * Valor superior de rango de busqueda de fecha smsFechaUltimo
+     */
+    private Date smsFechaUltimoMax;
+
+    /**
+     * Permite buscar cuando campo smsFechaUltimo es NULL
+     */
+    private boolean smsFechaUltimoIsNull = false;
+
+    /**
+     * Permite buscar cuando campo smsFechaUltimo es NOT NULL
+     */
+    private boolean smsFechaUltimoIsNotNull = false;
 
     /**
      * Constructor default
@@ -1664,6 +1727,200 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
     }
 
     /**
+     * Valor de busqueda de campo smsMaximos
+     * @return Integer.
+     */
+    public Integer getSmsMaximos() {
+        return smsMaximos;
+    }
+
+    /**
+     * Valor de busqueda de campo smsMaximos
+     * @param smsMaximos Valor de seteo.
+     */
+    public void setSmsMaximos(Integer smsMaximos) {
+        this.smsMaximos = smsMaximos;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getSmsMaximosIn() {
+        return this.smsMaximosIn;
+    }
+
+    /**
+     * @param smsMaximos Valor a agregar.
+     */
+    public void addSmsMaximosIn(Integer smsMaximos) {
+        this.smsMaximosIn.add(smsMaximos);
+    }
+
+    /**
+     * Permite buscar cuando campo smsMaximos es NULL
+     * @return boolean.
+     */
+    public boolean isSmsMaximosIsNull() {
+        return smsMaximosIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsMaximos es NULL
+     * @param smsMaximosIsNull Valor de seteo.
+     */
+    public void setSmsMaximosIsNull(boolean smsMaximosIsNull) {
+        this.smsMaximosIsNull = smsMaximosIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsMaximos es NOT NULL
+     * @return boolean.
+     */
+    public boolean isSmsMaximosIsNotNull() {
+        return smsMaximosIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsMaximos es NOT NULL
+     * @param smsMaximosIsNotNull Valor de seteo.
+     */
+    public void setSmsMaximosIsNotNull(boolean smsMaximosIsNotNull) {
+        this.smsMaximosIsNotNull = smsMaximosIsNotNull;
+    }
+
+    /**
+     * Valor de busqueda de campo smsEnviadosDia
+     * @return Number.
+     */
+    public Integer getSmsEnviadosDia() {
+        return smsEnviadosDia;
+    }
+
+    /**
+     * Valor de busqueda de campo smsEnviadosDia
+     * @param smsEnviadosDia Valor de seteo.
+     */
+    public void setSmsEnviadosDia(Integer smsEnviadosDia) {
+        this.smsEnviadosDia = smsEnviadosDia;
+    }
+
+    /**
+     * @return List<Integer>.
+     */
+    public List<Integer> getSmsEnviadosDiaIn() {
+        return this.smsEnviadosDiaIn;
+    }
+
+    /**
+     * @param smsEnviadosDia Valor a agregar.
+     */
+    public void addSmsEnviadosDiaIn(Integer smsEnviadosDia) {
+        this.smsEnviadosDiaIn.add(smsEnviadosDia);
+    }
+
+    /**
+     * Permite buscar cuando campo smsEnviadosDia es NULL
+     * @return boolean.
+     */
+    public boolean isSmsEnviadosDiaIsNull() {
+        return smsEnviadosDiaIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsEnviadosDia es NULL
+     * @param smsEnviadosDiaIsNull Valor de seteo.
+     */
+    public void setSmsEnviadosDiaIsNull(boolean smsEnviadosDiaIsNull) {
+        this.smsEnviadosDiaIsNull = smsEnviadosDiaIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsEnviadosDia es NOT NULL
+     * @return boolean.
+     */
+    public boolean isSmsEnviadosDiaIsNotNull() {
+        return smsEnviadosDiaIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsEnviadosDia es NOT NULL
+     * @param smsEnviadosDiaIsNotNull Valor de seteo.
+     */
+    public void setSmsEnviadosDiaIsNotNull(boolean smsEnviadosDiaIsNotNull) {
+        this.smsEnviadosDiaIsNotNull = smsEnviadosDiaIsNotNull;
+    }
+
+    /**
+     * Valor inferior de rango de busqueda de fecha smsFechaUltimo
+     * @return ${field.getName()}Min.
+     */
+    public Date getSmsFechaUltimoMin() {
+        if (smsFechaUltimoMin != null) {
+            return DateUtil.toDayBegin(smsFechaUltimoMin);
+        }
+        return smsFechaUltimoMin;
+    }
+
+    /**
+     * Valor inferior de rango de busqueda de fecha smsFechaUltimo
+     * @param smsFechaUltimoMin Valor de seteo.
+     */
+    public void setSmsFechaUltimoMin(Date smsFechaUltimoMin) {
+        this.smsFechaUltimoMin = smsFechaUltimoMin;
+    }
+
+    /**
+     * Valor superior de rango de busqueda de fecha smsFechaUltimo
+     * @return smsFechaUltimoMax.
+     */
+    public Date getSmsFechaUltimoMax() {
+        if (smsFechaUltimoMax != null) {
+            return DateUtil.toDayEnd(smsFechaUltimoMax);
+        }
+        return smsFechaUltimoMax;
+    }
+
+    /**
+     * Valor superior de rango de busqueda de fecha smsFechaUltimo
+     * @param smsFechaUltimoMax Valor de seteo.
+     */
+    public void setSmsFechaUltimoMax(Date smsFechaUltimoMax) {
+        this.smsFechaUltimoMax = smsFechaUltimoMax;
+    }
+
+    /**
+     * Permite buscar cuando campo smsFechaUltimo es NULL
+     * @return boolean.
+     */
+    public boolean isSmsFechaUltimoIsNull() {
+        return smsFechaUltimoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsFechaUltimo es NULL
+     * @param smsFechaUltimoIsNull Valor de seteo.
+     */
+    public void setSmsFechaUltimoIsNull(boolean smsFechaUltimoIsNull) {
+        this.smsFechaUltimoIsNull = smsFechaUltimoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsFechaUltimo es NOT NULL
+     * @return boolean.
+     */
+    public boolean isSmsFechaUltimoIsNotNull() {
+        return smsFechaUltimoIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo smsFechaUltimo es NOT NULL
+     * @param smsFechaUltimoIsNotNull Valor de seteo.
+     */
+    public void setSmsFechaUltimoIsNotNull(boolean smsFechaUltimoIsNotNull) {
+        this.smsFechaUltimoIsNotNull = smsFechaUltimoIsNotNull;
+    }
+
+    /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
      */ 
     public void addCriteria(Criteria criteria, boolean useOrder) {
@@ -2021,6 +2278,46 @@ public class TblAplicacionesQuery extends AbstractHibernateQueryEntity<TblAplica
 
         if (isRespTecnicoEmailIsNotNull()) {
             criteria.add(Restrictions.isNotNull(RESPTECNICOEMAIL));
+        }
+
+        if (getSmsMaximos() != null) {
+            criteria.add(Restrictions.eq(SMSMAXIMOS, getSmsMaximos()));
+        }
+
+        if (isSmsMaximosIsNull()) {
+            criteria.add(Restrictions.isNull(SMSMAXIMOS));
+        }
+
+        if (isSmsMaximosIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(SMSMAXIMOS));
+        }
+
+        if (getSmsEnviadosDia() != null) {
+            criteria.add(Restrictions.eq(SMSENVIADOSDIA, getSmsEnviadosDia()));
+        }
+
+        if (isSmsEnviadosDiaIsNull()) {
+            criteria.add(Restrictions.isNull(SMSENVIADOSDIA));
+        }
+
+        if (isSmsEnviadosDiaIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(SMSENVIADOSDIA));
+        }
+
+        if (getSmsFechaUltimoMin() != null) {
+            criteria.add(Restrictions.ge(SMSFECHAULTIMO, getSmsFechaUltimoMin()));
+        }
+
+        if (getSmsFechaUltimoMax() != null) {
+            criteria.add(Restrictions.le(SMSFECHAULTIMO, getSmsFechaUltimoMax()));
+        }
+
+        if (isSmsFechaUltimoIsNull()) {
+            criteria.add(Restrictions.isNull(SMSFECHAULTIMO));
+        }
+
+        if (isSmsFechaUltimoIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(SMSFECHAULTIMO));
         }
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {

@@ -103,7 +103,7 @@ public class TblOrganismosQuery extends AbstractHibernateQueryEntity<TblOrganism
     public static final String DIREXTRANJERA = "dirExtranjera";
     public static final String LOCEXTRANJERA = "locExtranjera";
     public static final String OBSERVACIONES = "observaciones";
-    public static final String IDORGANISMOPDP = "idOrganismoPdp";
+    public static final String IDDIPUTACIONESPDP = "idPdpDiputaciones";
 
 
     /**
@@ -1537,24 +1537,24 @@ public class TblOrganismosQuery extends AbstractHibernateQueryEntity<TblOrganism
    	private Integer primerResultado;
    	
     /**
-     * Valor de busqueda de campo idOrganismoPdp
+     * Valor de busqueda de campo idDiputacionesPdp
      */
-    private Long idOrganismoPdp;
+    private Long idPdpDiputaciones;
 
     /**
-     * Lista de valores del campo idOrganismoPdp para busquedas tipo IN
+     * Lista de valores del campo idPdpDiputaciones para busquedas tipo IN
      */
-    private List<Long> idOrganismoPdpIn = new ArrayList<Long>(0);
+    private List<Long> idPdpDiputacionesIn = new ArrayList<Long>(0);
 
     /**
-     * Permite buscar cuando campo idOrganismoPdp es NULL
+     * Permite buscar cuando campo idPdpDiputaciones es NULL
      */
-    private boolean idOrganismoPdpIsNull = false;
+    private boolean idPdpDiputacionesIsNull = false;
 
     /**
-     * Permite buscar cuando campo idOrganismoPdp es NOT NULL
+     * Permite buscar cuando campo idPdpDiputaciones es NOT NULL
      */
-    private boolean idOrganismoPdpIsNotNull = false;
+    private boolean idPdpDiputacionesIsNotNull = false;
     
     /**
      * Constructor default
@@ -6703,65 +6703,65 @@ public class TblOrganismosQuery extends AbstractHibernateQueryEntity<TblOrganism
     }
     
     /**
-     * Valor de busqueda de campo idOrganismoPdp
+     * Valor de busqueda de campo idPdpDiputaciones
      * @return Long.
      */
-    public Long getIdOrganismoPdp() {
-        return idOrganismoPdp;
+    public Long getIdPdpDiputaciones() {
+        return idPdpDiputaciones;
     }
 
     /**
-     * Valor de busqueda de campo idOrganismoPdp
-     * @param idOrganismoPdp Valor de seteo.
+     * Valor de busqueda de campo idPdpDiputaciones
+     * @param idPdpDiputaciones Valor de seteo.
      */
-    public void setIdOrganismoPdp(Long idOrganismoPdp) {
-        this.idOrganismoPdp = idOrganismoPdp;
+    public void setIdPdpDiputaciones(Long idPdpDiputaciones) {
+        this.idPdpDiputaciones = idPdpDiputaciones;
     }
 
     /**
      * @return List<Long>.
      */
-    public List<Long> getIdOrganismoPdpIn() {
-        return this.idOrganismoPdpIn;
+    public List<Long> getIdPdpDiputacionesIn() {
+        return this.idPdpDiputacionesIn;
     }
 
     /**
-     * @param idOrganismoPdp Valor a agregar.
+     * @param idPdpDiputaciones Valor a agregar.
      */
-    public void addIdOrganismoPdpIn(Long idOrganismoPdp) {
-        this.idOrganismoPdpIn.add(idOrganismoPdp);
+    public void addIdPdpDiputacionesIn(Long idPdpDiputaciones) {
+        this.idPdpDiputacionesIn.add(idPdpDiputaciones);
     }
 
     /**
-     * Permite buscar cuando campo idOrganismoPdp es NULL
+     * Permite buscar cuando campo idPdpDiputaciones es NULL
      * @return boolean.
      */
-    public boolean isIdOrganismoPdpIsNull() {
-        return idOrganismoPdpIsNull;
+    public boolean isIdPdpDiputacionesIsNull() {
+        return idPdpDiputacionesIsNull;
     }
 
     /**
-     * Permite buscar cuando campo idOrganismoPdp es NULL
-     * @param idOrganismoPdpIsNull Valor de seteo.
+     * Permite buscar cuando campo idPdpDiputaciones es NULL
+     * @param idPdpDiputacionesIsNull Valor de seteo.
      */
-    public void setIdOrganismoPdpIsNull(boolean idOrganismoPdpIsNull) {
-        this.idOrganismoPdpIsNull = idOrganismoPdpIsNull;
+    public void setIdPdpDiputacionesIsNull(boolean idPdpDiputacionesIsNull) {
+        this.idPdpDiputacionesIsNull = idPdpDiputacionesIsNull;
     }
 
     /**
-     * Permite buscar cuando campo idOrganismoPdp es NOT NULL
+     * Permite buscar cuando campo idPdpDiputaciones es NOT NULL
      * @return boolean.
      */
-    public boolean isIdOrganismoPdpIsNotNull() {
-        return idOrganismoPdpIsNotNull;
+    public boolean isIdPdpDiputacionesIsNotNull() {
+        return idPdpDiputacionesIsNotNull;
     }
 
     /**
-     * Permite buscar cuando campo idOrganismoPdp es NOT NULL
-     * @param idOrganismoPdpIsNotNull Valor de seteo.
+     * Permite buscar cuando campo idPdpDiputacionesPdp es NOT NULL
+     * @param idPdpDiputacionesIsNotNull Valor de seteo.
      */
-    public void setIdOrganismoPdpIsNotNull(boolean idOrganismoPdpIsNotNull) {
-        this.idOrganismoPdpIsNotNull = idOrganismoPdpIsNotNull;
+    public void setIdPdpDiputacionesPdpIsNotNull(boolean idPdpDiputacionesIsNotNull) {
+        this.idPdpDiputacionesIsNotNull = idPdpDiputacionesIsNotNull;
     }
 
 

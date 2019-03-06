@@ -1,7 +1,7 @@
 
 /*
  *
- * archivo: TblOrganismosPdpDAOImpl.java
+ * archivo: TblPdpDiputacionesDAOImpl.java
  *
  * Proyecto: Administracion SIM
  *
@@ -22,9 +22,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.persistence.hibernate.dao.AbstractHibernateDAO;
-import es.minhap.sim.dao.TblOrganismosPdpDAO;
-import es.minhap.sim.model.TblOrganismosPdp;
-import es.minhap.sim.query.TblOrganismosPdpQuery;
+import es.minhap.sim.dao.TblPdpDiputacionesDAO;
+import es.minhap.sim.model.TblPdpDiputaciones;
+import es.minhap.sim.query.TblPdpDiputacionesQuery;
 
 
 /**
@@ -32,11 +32,11 @@ import es.minhap.sim.query.TblOrganismosPdpQuery;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
-public class TblOrganismosPdpDAOImpl extends AbstractHibernateDAO<TblOrganismosPdp,Long,TblOrganismosPdpQuery> implements TblOrganismosPdpDAO {
+public class TblPpdDiputacionesDAOImpl extends AbstractHibernateDAO<TblPdpDiputaciones,Long,TblPdpDiputacionesQuery> implements TblPdpDiputacionesDAO {
 
     @Override
-    protected Class<TblOrganismosPdp> getEntityClass() {
-        return TblOrganismosPdp.class;
+    protected Class<TblPdpDiputaciones> getEntityClass() {
+        return TblPdpDiputaciones.class;
     }
 
     @Override

@@ -101,8 +101,8 @@ public class TblServicios implements java.io.Serializable {
 	@Column(name = "BADGE", precision = 22, scale = 0)
 	private Long badge;
 
-	@Column(name = "GCMPROJECTKEY", length = 500)
-	private String gcmprojectkey;
+	@Column(name = "FCMPROJECTKEY", length = 500)
+	private String fcmprojectkey;
 
 	@Column(name = "APNSRUTACERTIFICADO", length = 500)
 	private String apnsrutacertificado;
@@ -160,6 +160,9 @@ public class TblServicios implements java.io.Serializable {
 
 	@Column(name = "PREMIUM", precision = 1, scale = 0)
 	private Boolean premium;
+	
+	@Column(name = "EXCLUSIVO", precision = 1, scale = 0)
+	private Boolean exclusivo;
 	
 	@Column(name = "NMAXREENVIOS", precision = 22, scale = 0)
 	private Integer numeroMaxReenvios;
@@ -529,18 +532,18 @@ public class TblServicios implements java.io.Serializable {
 	}
 
 	/**
-	 * @return the gcmprojectkey
+	 * @return the fcmprojectkey
 	 */
-	public String getGcmprojectkey() {
-		return gcmprojectkey;
+	public String getFcmprojectkey() {
+		return fcmprojectkey;
 	}
 
 	/**
-	 * @param gcmprojectkey
-	 *            the gcmprojectkey to set
+	 * @param fcmprojectkey
+	 *            the fcmprojectkey to set
 	 */
-	public void setGcmprojectkey(String gcmprojectkey) {
-		this.gcmprojectkey = gcmprojectkey;
+	public void setFcmprojectkey(String fcmprojectkey) {
+		this.fcmprojectkey = fcmprojectkey;
 	}
 
 	/**
@@ -904,6 +907,20 @@ public class TblServicios implements java.io.Serializable {
 	 */
 	public void setVapidPrivateKey(String vapidPrivateKey) {
 		this.vapidPrivateKey = vapidPrivateKey;
+	}
+
+	/**
+	 * @return the exclusivo
+	 */
+	public Boolean getExclusivo() {
+		return exclusivo;
+	}
+
+	/**
+	 * @param exclusivo the exclusivo to set
+	 */
+	public void setExclusivo(Boolean exclusivo) {
+		this.exclusivo = exclusivo;
 	}
 	
 }

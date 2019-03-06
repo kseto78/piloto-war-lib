@@ -60,6 +60,13 @@ public class TblCertificados implements java.io.Serializable {
 	
 	@Column(name = "CADUCADO")
 	private Boolean caducado;
+	
+	@Column(name = "CREADOPOR", length = 150)
+	private String creadoPor;
+	
+	@Column(name = "FECHACADUCIDAD", length = 7)
+	private Date fechaCaducidad;
+	
 
 	/**
 	 * @return the certificadoid
@@ -185,6 +192,35 @@ public class TblCertificados implements java.io.Serializable {
 	 */
 	public void setCaducado(Boolean caducado) {
 		this.caducado = caducado;
+	}
+	
+	/**
+	 * @return the fechaCaducidad
+	 */
+	public Date getFechaCaducidad() {
+		return fechaCaducidad;
+	}
+
+	/**
+	 * @param fechaCaducidad the fechaCaducidad to set
+	 */
+	public void setFechaCaducidad(Date fechaCaducidad) {
+		this.fechaCaducidad = fechaCaducidad;
+	}
+	
+
+	/**
+	 * @return the creadoPor
+	 */
+	public String getCreadoPor() {
+		return creadoPor;
+	}
+
+	/**
+	 * @param creadoPor the creadoPor to set
+	 */
+	public void setCreadoPor(String creadoPor) {
+		this.creadoPor = creadoPor;
 	}
 
 	

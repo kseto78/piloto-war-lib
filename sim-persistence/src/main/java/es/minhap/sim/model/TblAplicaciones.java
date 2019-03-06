@@ -71,6 +71,15 @@ public class TblAplicaciones implements java.io.Serializable {
 
 	@Column(name = "RESP_TECNICO_EMAIL", length = 100)
 	private String respTecnicoEmail;
+	
+	@Column(name = "SMS_MAXIMOS")
+	private Integer smsMaximos;
+	
+	@Column(name = "SMS_ENVIADOS_DIA")
+	private Integer smsEnviadosDia;
+	
+	@Column(name = "SMS_FECHA_ULTIMO", length = 7)
+	private Date smsFechaUltimo;
 
 	public TblAplicaciones() {
 	}
@@ -298,6 +307,48 @@ public class TblAplicaciones implements java.io.Serializable {
 	 */
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
+	}
+
+	/**
+	 * @return the smsMaximos
+	 */
+	public Number getSmsMaximos() {
+		return smsMaximos;
+	}
+
+	/**
+	 * @param smsMaximos the smsMaximos to set
+	 */
+	public void setSmsMaximos(Integer smsMaximos) {
+		this.smsMaximos = smsMaximos;
+	}
+
+	/**
+	 * @return the smsEnviadosDia
+	 */
+	public Integer getSmsEnviadosDia() {
+		return smsEnviadosDia;
+	}
+
+	/**
+	 * @param smsEnviadosDia the smsEnviadosDia to set
+	 */
+	public void setSmsEnviadosDia(Integer smsEnviadosDia) {
+		this.smsEnviadosDia = smsEnviadosDia;
+	}
+
+	/**
+	 * @return the fechaUltimoSms
+	 */
+	public Date getSmsFechaUltimo() {
+		return smsFechaUltimo;
+	}
+
+	/**
+	 * @param fechaUltimoSms the fechaUltimoSms to set
+	 */
+	public void setSmsFechaUltimo(Date fechaUltimoSms) {
+		this.smsFechaUltimo = fechaUltimoSms;
 	}
 
 }

@@ -69,7 +69,7 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public static final String PENDIENTEAPROBACION = "pendienteaprobacion";
     public static final String NOMBRELOTEENVIO = "nombreloteenvio";
     public static final String BADGE = "badge";
-    public static final String GCMPROJECTKEY = "gcmprojectkey";
+    public static final String FCMPROJECTKEY = "fcmprojectkey";
     public static final String APNSRUTACERTIFICADO = "apnsrutacertificado";
     public static final String APNSPASSWORDCERTIFICADO = "apnspasswordcertificado";
     public static final String ANDROIDPLATAFORMA = "androidplataforma";
@@ -89,6 +89,7 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public static final String PROVEEDORPASSWORDSMS = "proveedorpasswordsms";
     public static final String MULTIORGANISMO = "multiorganismo";
     public static final String PREMIUM = "premium";
+    public static final String EXCLUSIVO = "exclusivo";
     public static final String NMAXREENVIOS = "numeroMaxReenvios";
     public static final String NUMEROMAXREENVIOS = "numeroMaxReenvios";
     public static final String REINTENTOSCONSULTAESTADO = "reintentosConsultaEStado";
@@ -614,29 +615,29 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     private boolean badgeIsNotNull = false;
 
     /**
-     * Valor de busqueda de campo gcmprojectkey
+     * Valor de busqueda de campo fcmprojectkey
      */
-    private String gcmprojectkey;
+    private String fcmprojectkey;
 
     /**
-     * Tipo de comparador para la busqueda por campo gcmprojectkey
+     * Tipo de comparador para la busqueda por campo fcmprojectkey
      */
-    private TextComparator gcmprojectkeyComparator = TextComparator.CONTAINS;
+    private TextComparator fcmprojectkeyComparator = TextComparator.CONTAINS;
 
     /**
-     * Lista de valores del campo gcmprojectkey para busquedas tipo IN
+     * Lista de valores del campo fcmprojectkey para busquedas tipo IN
      */
-    private List<String> gcmprojectkeyIn = new ArrayList<String>(0);
+    private List<String> fcmprojectkeyIn = new ArrayList<String>(0);
 
     /**
-     * Permite buscar cuando campo gcmprojectkey es NULL
+     * Permite buscar cuando campo fcmprojectkey es NULL
      */
-    private boolean gcmprojectkeyIsNull = false;
+    private boolean fcmprojectkeyIsNull = false;
 
     /**
-     * Permite buscar cuando campo gcmprojectkey es NOT NULL
+     * Permite buscar cuando campo fcmprojectkey es NOT NULL
      */
-    private boolean gcmprojectkeyIsNotNull = false;
+    private boolean fcmprojectkeyIsNotNull = false;
 
     /**
      * Valor de busqueda de campo apnsrutacertificado
@@ -1008,6 +1009,21 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
      */
     private boolean multiorganismoIsNotNull = false;
 
+    /**
+     * Valor de busqueda de campo exclusivo
+     */
+    private Boolean exclusivo;
+
+    /**
+     * Permite buscar cuando campo premium es NULL
+     */
+    private boolean exclusivoIsNull = false;
+
+    /**
+     * Permite buscar cuando campo premium es NOT NULL
+     */
+    private boolean exclusivoIsNotNull = false;
+    
     /**
      * Valor de busqueda de campo premium
      */
@@ -2962,95 +2978,95 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     }
 
     /**
-     * Valor de busqueda de campo gcmprojectkey
+     * Valor de busqueda de campo fcmprojectkey
      * @return String.
      */
-    public String getGcmprojectkey() {
-        if (gcmprojectkey != null) {
-            switch (gcmprojectkeyComparator) {
+    public String getFcmprojectkey() {
+        if (fcmprojectkey != null) {
+            switch (fcmprojectkeyComparator) {
 	            case STARTS_WITH:
-	                return gcmprojectkey + "%";
+	                return fcmprojectkey + "%";
 	            case CONTAINS:
-	                return "%" + gcmprojectkey + "%";
+	                return "%" + fcmprojectkey + "%";
 	            case ENDS_WITH:
-	                return "%" + gcmprojectkey;
+	                return "%" + fcmprojectkey;
 	            case EQUALS:
-                	return gcmprojectkey;
+                	return fcmprojectkey;
               	default:
 	            	break;
             }
         }
-        return gcmprojectkey;
+        return fcmprojectkey;
     }
 
     /**
-     * Valor de busqueda de campo gcmprojectkey
-     * @param gcmprojectkey Valor de seteo.
+     * Valor de busqueda de campo fcmprojectkey
+     * @param fcmprojectkey Valor de seteo.
      */
-    public void setGcmprojectkey(String gcmprojectkey) {
-        this.gcmprojectkey = gcmprojectkey;
+    public void setFcmprojectkey(String fcmprojectkey) {
+        this.fcmprojectkey = fcmprojectkey;
     }
 
     /**
-     * Tipo de comparador para la busqueda por campo gcmprojectkey
-     * @return gcmprojectkeyComparator.
+     * Tipo de comparador para la busqueda por campo fcmprojectkey
+     * @return fcmprojectkeyComparator.
      */
-    public TextComparator getGcmprojectkeyComparator() {
-        return gcmprojectkeyComparator;
+    public TextComparator getFcmprojectkeyComparator() {
+        return fcmprojectkeyComparator;
     }
 
     /**
-     * Tipo de comparador para la busqueda por campo gcmprojectkey
-     * @param gcmprojectkeyComparator Valor de seteo.
+     * Tipo de comparador para la busqueda por campo fcmprojectkey
+     * @param fcmprojectkeyComparator Valor de seteo.
      */
-    public void setGcmprojectkeyComparator(TextComparator gcmprojectkeyComparator) {
-        this.gcmprojectkeyComparator = gcmprojectkeyComparator;
+    public void setFcmprojectkeyComparator(TextComparator fcmprojectkeyComparator) {
+        this.fcmprojectkeyComparator = fcmprojectkeyComparator;
     }
 
     /**
      * @return List<String>.
      */
-    public List<String> getGcmprojectkeyIn() {
-        return this.gcmprojectkeyIn;
+    public List<String> getFcmprojectkeyIn() {
+        return this.fcmprojectkeyIn;
     }
 
     /**
-     * @param gcmprojectkey Valor a agregar.
+     * @param fcmprojectkey Valor a agregar.
      */
-    public void addGcmprojectkeyIn(String gcmprojectkey) {
-        this.gcmprojectkeyIn.add(gcmprojectkey);
+    public void addFcmprojectkeyIn(String fcmprojectkey) {
+        this.fcmprojectkeyIn.add(fcmprojectkey);
     }
 
     /**
-     * Permite buscar cuando campo gcmprojectkey es NULL
+     * Permite buscar cuando campo fcmprojectkey es NULL
      * @return boolean.
      */
-    public boolean isGcmprojectkeyIsNull() {
-        return gcmprojectkeyIsNull;
+    public boolean isFcmprojectkeyIsNull() {
+        return fcmprojectkeyIsNull;
     }
 
     /**
-     * Permite buscar cuando campo gcmprojectkey es NULL
-     * @param gcmprojectkeyIsNull Valor de seteo.
+     * Permite buscar cuando campo fcmprojectkey es NULL
+     * @param fcmprojectkeyIsNull Valor de seteo.
      */
-    public void setGcmprojectkeyIsNull(boolean gcmprojectkeyIsNull) {
-        this.gcmprojectkeyIsNull = gcmprojectkeyIsNull;
+    public void setFcmprojectkeyIsNull(boolean fcmprojectkeyIsNull) {
+        this.fcmprojectkeyIsNull = fcmprojectkeyIsNull;
     }
 
     /**
-     * Permite buscar cuando campo gcmprojectkey es NOT NULL
+     * Permite buscar cuando campo fcmprojectkey es NOT NULL
      * @return boolean.
      */
-    public boolean isGcmprojectkeyIsNotNull() {
-        return gcmprojectkeyIsNotNull;
+    public boolean isFcmprojectkeyIsNotNull() {
+        return fcmprojectkeyIsNotNull;
     }
 
     /**
-     * Permite buscar cuando campo gcmprojectkey es NOT NULL
-     * @param gcmprojectkeyIsNotNull Valor de seteo.
+     * Permite buscar cuando campo fcmprojectkey es NOT NULL
+     * @param fcmprojectkeyIsNotNull Valor de seteo.
      */
-    public void setGcmprojectkeyIsNotNull(boolean gcmprojectkeyIsNotNull) {
-        this.gcmprojectkeyIsNotNull = gcmprojectkeyIsNotNull;
+    public void setFcmprojectkeyIsNotNull(boolean fcmprojectkeyIsNotNull) {
+        this.fcmprojectkeyIsNotNull = fcmprojectkeyIsNotNull;
     }
 
     /**
@@ -4358,6 +4374,54 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     }
 
     /**
+     * Valor de busqueda de campo exclusivo
+     * @return Boolean.
+     */
+    public Boolean getExclusivo() {
+        return exclusivo;
+    }
+
+    /**
+     * Valor de busqueda de campo exclusivo
+     * @param exclusivo Valor de seteo.
+     */
+    public void setExclusivo(Boolean exclusivo) {
+        this.exclusivo = exclusivo;
+    }
+
+    /**
+     * Permite buscar cuando campo exclusivo es NULL
+     * @return boolean.
+     */
+    public boolean isExclusivoIsNull() {
+        return exclusivoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo exclusivo es NULL
+     * @param premiumIsNull Valor de seteo.
+     */
+    public void setExclusivoIsNull(boolean exclusivoIsNull) {
+        this.exclusivoIsNull = exclusivoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo exclusivo es NOT NULL
+     * @return boolean.
+     */
+    public boolean isExclusivoIsNotNull() {
+        return premiumIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo exclusivo es NOT NULL
+     * @param premiumIsNotNull Valor de seteo.
+     */
+    public void setExclusivoIsNotNull(boolean exclusivoIsNotNull) {
+        this.exclusivoIsNotNull = exclusivoIsNotNull;
+    }
+    
+    /**
      * Valor de busqueda de campo premium
      * @return Boolean.
      */
@@ -5428,31 +5492,31 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
             criteria.add(Restrictions.isNotNull(BADGE));
         }
 
-        if (getGcmprojectkey() != null) {
-            if (getGcmprojectkeyComparator() == TextComparator.EQUALS) {
-                criteria.add(Restrictions.eq(GCMPROJECTKEY, getGcmprojectkey()));
+        if (getFcmprojectkey() != null) {
+            if (getFcmprojectkeyComparator() == TextComparator.EQUALS) {
+                criteria.add(Restrictions.eq(FCMPROJECTKEY, getFcmprojectkey()));
             } 
-            else if (getGcmprojectkeyComparator() == TextComparator.ILIKE) {
-                criteria.add(Restrictions.ilike(GCMPROJECTKEY, getGcmprojectkey()));
+            else if (getFcmprojectkeyComparator() == TextComparator.ILIKE) {
+                criteria.add(Restrictions.ilike(FCMPROJECTKEY, getFcmprojectkey()));
             }
-            else if (getGcmprojectkeyComparator() == TextComparator.UPPERCASE_TRANSLATE) {
-                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(GCMPROJECTKEY, getGcmprojectkey())));
+            else if (getFcmprojectkeyComparator() == TextComparator.UPPERCASE_TRANSLATE) {
+                criteria.add(Restrictions.sqlRestriction(createUpperTranslateSQL(FCMPROJECTKEY, getFcmprojectkey())));
             }
             else {
-                criteria.add(Restrictions.like(GCMPROJECTKEY, getGcmprojectkey()));
+                criteria.add(Restrictions.like(FCMPROJECTKEY, getFcmprojectkey()));
             }
         }
 
-        if (getGcmprojectkeyIn().size() > 0) {
-            criteria.add(Restrictions.in(GCMPROJECTKEY, getGcmprojectkeyIn()));
+        if (getFcmprojectkeyIn().size() > 0) {
+            criteria.add(Restrictions.in(FCMPROJECTKEY, getFcmprojectkeyIn()));
         }
 
-        if (isGcmprojectkeyIsNull()) {
-            criteria.add(Restrictions.isNull(GCMPROJECTKEY));
+        if (isFcmprojectkeyIsNull()) {
+            criteria.add(Restrictions.isNull(FCMPROJECTKEY));
         }
 
-        if (isGcmprojectkeyIsNotNull()) {
-            criteria.add(Restrictions.isNotNull(GCMPROJECTKEY));
+        if (isFcmprojectkeyIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(FCMPROJECTKEY));
         }
 
         if (getApnsrutacertificado() != null) {
