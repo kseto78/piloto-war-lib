@@ -79,10 +79,7 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
 
     	String etiquetaPuestos = properties.getProperty("logonAction.ETIQUETA_PUESTOS",null);
     	
-    	String expresionOK = properties.getProperty("logonAction.OK",null);
-    	
-    	String serialNumber = properties.getProperty("autentica.cert.serialnumber",null).trim();
-		String issuer = properties.getProperty("autentica.cert.issuer",null).trim();
+    	String expresionOK = properties.getProperty("logonAction.OK",null);    	   	
 
     	//Si el usuario no esta en sesion, se intenta localizar el fichero XML de regreso de AutenticA
     	if(request.getSession().getAttribute("infoUser")==null){
