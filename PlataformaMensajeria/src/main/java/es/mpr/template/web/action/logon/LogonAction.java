@@ -1,5 +1,6 @@
 package es.mpr.template.web.action.logon;
 
+import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 import es.minhap.sim.query.TblUsuariosQuery;
 import es.mpr.plataformamensajeria.util.MapUser;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
+import es.sag.autentica.sign.ValidateSign;
 
 /**
  * The Class LogonAction.
@@ -76,10 +78,11 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     	String etiquetaResultado = properties.getProperty("logonAction.ETIQUETA_RESULTADO",null);
     	String etiquetaUsername = properties.getProperty("logonAction.ETIQUETA_USERNAME",null);
     	String etiquetaOrganismo = properties.getProperty("logonAction.ETIQUETA_ORGANISMO",null);
-
+    	String rutaCertificadoAutentica = properties.getProperty("logonAction.RUTA_CERTIFICADO_AUTENTICA",null);
+    	
     	String etiquetaPuestos = properties.getProperty("logonAction.ETIQUETA_PUESTOS",null);
     	
-    	String expresionOK = properties.getProperty("logonAction.OK",null);    	   	
+    	String expresionOK = properties.getProperty("logonAction.OK",null);        
 
     	//Si el usuario no esta en sesion, se intenta localizar el fichero XML de regreso de AutenticA
     	if(request.getSession().getAttribute("infoUser")==null){
@@ -89,11 +92,21 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     			return ERROR;
     		}
         		
+    		FileInputStream cerAutentica  =  new FileInputStream (rutaCertificadoAutentica);
+    		
     		String xml_user_autentica = request.getParameter(autenticaUserXML);
     		if (logger.isDebugEnabled()) {
     			logger.debug("[LogonAction] - xmlAutentica: " + xml_user_autentica);
     		}
+
+    		ValidateSign val = new ValidateSign();
+    		String isValid = val.validateSign(xml_user_autentica, cerAutentica);
     		
+    		cerAutentica.close();
+    		
+    		if(!isValid.equals("OK")){
+    			return ERROR;
+    		}
     		try{
     			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     			InputSource src = new InputSource();
