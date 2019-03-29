@@ -21,6 +21,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.map.j2ee.exceptions.BusinessException;
 
+import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
 import es.minhap.sim.model.TblEstadistitcasCons;
 import es.minhap.sim.model.TblGestionEnviosHist;
 import es.mpr.plataformamensajeria.beans.JobBean;
@@ -102,6 +103,9 @@ public class EstadisticasConsolidadasJob implements Job {
 	
 	/**  job bean. */
 	private JobBean jobBean = null;
+	
+	/**  tbl parametros manager. */
+	private TblParametrosServidorManagerImpl tblParametrosServidorManager;
 
 	/* (non-Javadoc)
 	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
@@ -384,7 +388,7 @@ public class EstadisticasConsolidadasJob implements Job {
 			long tiempo = tiempo2 - tiempo1;
 			logger.info("execute - Duracion del Proceso de Estadisticas consolidadas: " + tiempo + " milisegundos");
 			try {
-				sendMailService.initJob(NOMBRE_JOB, procesoConsBean.getCodigoEstado(), descripcionEstado.toString(), properties);
+				sendMailService.initJob(NOMBRE_JOB, procesoConsBean.getCodigoEstado(), descripcionEstado.toString(), properties, tblParametrosServidorManager);
 			} catch (ServletException e) {
 				logger.error("execute - ERROR  Enviando email - exception", e);
 			}
@@ -410,6 +414,7 @@ public class EstadisticasConsolidadasJob implements Job {
 			servicioHistoricoHist = (ServicioHistoricoHist) applicationContext.getBean("servicioHistoricoHistImpl");
 			servicioGestionEnviosHistoricos = (ServicioGestionEnviosHistoricos) applicationContext.getBean("servicioGestionEnviosHistoricosImpl");
 			servicioServidor = (ServicioServidor) applicationContext.getBean("servicioServidorImpl");
+			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
 			properties  = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 		
 		} catch (Exception objException) {

@@ -1298,14 +1298,16 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getIntercambiosMisim(int, int, java.lang.Long)
 	 */
 	@Override
-	public PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote, Long idMensaje) throws BusinessException {
+	public PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size, Long idLote, String idMensaje) throws BusinessException {
 		PaginatedList<ViewMisimBean> result = new PaginatedList<>();
 
 		try {
 			//traemos los intercambios
 			ViewMisimQuery query = new ViewMisimQuery();
 			query.setIdLote(idLote);
-			query.setIdMensaje(idMensaje); //El criteria esta modificado para que incluya los idMensajes que son nulos
+			if(!idMensaje.equals("null")){
+				query.setIdMensaje(Long.valueOf(idMensaje)); //El criteria esta modificado para que incluya los idMensajes que son nulos
+			}
 			List<ViewMisim> listaViewMisimTO = viewMisimManager.getIntercambiosMisimByQuery(query, start, size);
 			
 			if(!listaViewMisimTO.isEmpty()){

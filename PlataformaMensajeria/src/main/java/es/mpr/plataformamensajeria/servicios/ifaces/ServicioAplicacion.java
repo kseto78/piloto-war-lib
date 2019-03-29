@@ -1,6 +1,5 @@
 package es.mpr.plataformamensajeria.servicios.ifaces;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.map.j2ee.exceptions.BusinessException;

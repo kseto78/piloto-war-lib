@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.InformesServiciosCodOrgBean;
 import es.mpr.plataformamensajeria.beans.InformesServiciosCodOrgPagadorBean;
@@ -55,6 +56,8 @@ public class InformesServiciosJob implements Job {
 	/**  properties. */
 	private PlataformaMensajeriaProperties properties;
 	
+	/**  tbl parametros manager. */
+	private TblParametrosServidorManagerImpl tblParametrosServidorManager;
 	
 	/**  nombre job. */
 	private static String NOMBRE_JOB = "Informes Servicios";
@@ -340,7 +343,7 @@ public class InformesServiciosJob implements Job {
 						SendMailService sendMailService = new SendMailService();
 						try {
 							sendMailService.initInformesServicios(NOMBRE_JOB, ESTADO_PROCESO_OK, 
-									servicio.getInformesdestinatarios(), cuerpoMensajes.toString(), properties);
+									servicio.getInformesdestinatarios(), cuerpoMensajes.toString(), properties, tblParametrosServidorManager);
 						} catch (ServletException e) {
 							logger.error("InformesServiciosJob - execute:" + e);
 							exito = false;
@@ -374,7 +377,7 @@ public class InformesServiciosJob implements Job {
 		//Se envía un correo informando del resultado de la ejecución del JOB
 		SendMailService sendMailService = new SendMailService();
 		try {
-			sendMailService.initJob(NOMBRE_JOB, procesoInformesServiciosBean.getCodigoEstado(), procesoInformesServiciosBean.getDescripcionEstado(), properties);
+			sendMailService.initJob(NOMBRE_JOB, procesoInformesServiciosBean.getCodigoEstado(), procesoInformesServiciosBean.getDescripcionEstado(), properties, tblParametrosServidorManager);
 		} catch (ServletException e) {
 			logger.info("execute - FIN Job Informes Servicios - ServletException" + e);
 		}
@@ -397,6 +400,7 @@ public class InformesServiciosJob implements Job {
 			servicioProcesoInformesServicios = (ServicioProcesoInformesServicios) applicationContext.getBean("servicioProcesoInformesServiciosImpl");
 			servicioServicios = (ServicioServicio) applicationContext.getBean("servicioServicioImpl");
 			servicioAplicacion = (ServicioAplicacion) applicationContext.getBean("servicioAplicacionImpl");
+			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
 			properties  = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 		} catch (Exception objException) {
 			logger.error("InformesServiciosJob - InicializarVariables - Error: " + objException);

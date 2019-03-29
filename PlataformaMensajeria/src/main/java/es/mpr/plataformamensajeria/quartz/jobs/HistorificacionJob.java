@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
 import es.mpr.plataformamensajeria.beans.JobBean;
 import es.mpr.plataformamensajeria.beans.ProcesoHistBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
@@ -71,6 +72,9 @@ public class HistorificacionJob implements Job {
 
 	/**  job bean. */
 	private JobBean jobBean = null;
+	
+	/**  tbl parametros manager. */
+	private TblParametrosServidorManagerImpl tblParametrosServidorManager;
 
 	
 
@@ -382,7 +386,7 @@ public class HistorificacionJob implements Job {
 				//Se envia un correo informando del resultado de la ejecucion del JOB
 				SendMailService sendMailService = new SendMailService();
 				try {
-					sendMailService.initJob(NOMBRE_JOB, procesoHistBean.getCodigoEstado(), descripcionEstado.toString(), properties);
+					sendMailService.initJob(NOMBRE_JOB, procesoHistBean.getCodigoEstado(), descripcionEstado.toString(), properties, tblParametrosServidorManager);
 				} catch (ServletException e) {
 					logger.error("HistorificacionJob.Execute " , e);
 				}
@@ -407,6 +411,7 @@ public class HistorificacionJob implements Job {
 			servicioServicios = (ServicioServicio) applicationContext.getBean("servicioServicioImpl");
 			servicioLotesEnvios = (ServicioLotesEnvios) applicationContext.getBean("servicioLotesEnviosImpl");
 			servicioMensajes = (ServicioMensajes) applicationContext.getBean("servicioMensajesImpl");
+			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
 			properties  = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 			
 		} catch (Exception objException) {

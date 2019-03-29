@@ -36,6 +36,7 @@ import es.minhap.dir3.utils.ExcepcionesDir3;
 import es.minhap.plataformamensajeria.iop.manager.TblMonitorDIR3Manager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
 import es.minhap.plataformamensajeria.iop.managerimpl.TblOrganismosManagerImpl;
+import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
 import es.minhap.sim.model.TblMonitorDIR3;
 import es.minhap.sim.model.TblOrganismos;
 import es.minhap.sim.query.TblOrganismosQuery;
@@ -66,6 +67,9 @@ public class RecuperarInforDIRJob implements Job {
 	
 	/**  tbl organismos manager. */
 	private TblOrganismosManager tblOrganismosManager;
+	
+	/**  tbl parametros manager. */
+	private TblParametrosServidorManagerImpl tblParametrosServidorManager;
 
 	/**  unidades dir 3 WS client. */
 	private SD01UNDescargaUnidades unidadesDir3WSClient;
@@ -191,7 +195,7 @@ public class RecuperarInforDIRJob implements Job {
 		}finally{
 			SendMailService sendMailService = new SendMailService();
 			try {
-				sendMailService.initJob(nombreJob, mensajeEstado, descripcionEstado.toString(), properties);
+				sendMailService.initJob(nombreJob, mensajeEstado, descripcionEstado.toString(), properties, tblParametrosServidorManager);
 			} catch (ServletException e) {
 				logger.error("RecuperarInforDIRJob.ejecutar " , e);
 			}
@@ -424,6 +428,7 @@ public class RecuperarInforDIRJob implements Job {
 			tblMonitorDIR3Manager = (TblMonitorDIR3Manager) applicationContext.getBean("tblMonitorDIR3Manager");
 			unidadesDir3WSClient = (SD01UNDescargaUnidades) applicationContext.getBean("unidadesDir3WSClient");
 			tblOrganismosManager = (TblOrganismosManagerImpl) applicationContext.getBean("TblOrganismosManagerImpl");
+			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
 			
 			properties = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 		} catch (Exception objException) {

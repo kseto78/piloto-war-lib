@@ -2,6 +2,7 @@ package es.mpr.plataformamensajeria.web.action.servicios;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -24,6 +25,12 @@ import org.apache.log4j.Logger;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
 
+import es.minhap.plataformamensajeria.iop.manager.TblParametrosServidorManager;
+import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
+import es.minhap.sim.model.TblParametrosServidor;
+import es.minhap.sim.query.TblParametrosServidorQuery;
+import es.minhap.sim.query.TblServidoresQuery;
+import es.minhap.sim.query.TblTiposParametrosQuery;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 
 /**
@@ -84,9 +91,9 @@ public class SendMailService extends HttpServlet  {
 	 * @throws ServletException the servlet exception
 	 */
 	///MIGRADO
-	public void initJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp) throws ServletException{		
+	public void initJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManagerImpl tblParametrosServidorManager) throws ServletException{		
 		try {
-           sendMailService.sendMailJob(nombreJob, resultado, descripcionJob, configProp);
+           sendMailService.sendMailJob(nombreJob, resultado, descripcionJob, configProp, tblParametrosServidorManager);
 		} catch (IOException e) {
 			logger.error("SendMailService - initJob:" + e);
 		} catch (Exception e) {
@@ -114,9 +121,9 @@ public class SendMailService extends HttpServlet  {
 	 * @throws ServletException the servlet exception
 	 */
 	////MIGRADO
-	public void initInformesServicios(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp) throws ServletException{
+	public void initInformesServicios(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManager tblParametrosServidorManager) throws ServletException{
 		try {    
-          sendMailService.sendMailJobWithEmails(nombreJob, resultado, emails, descripcionJob, configProp);
+          sendMailService.sendMailJobWithEmails(nombreJob, resultado, emails, descripcionJob, configProp, tblParametrosServidorManager);
 		} catch (IOException e) {
 			logger.error("SendMailService - initInformesServicios:" + e);
 		} catch (Exception e) {
@@ -272,7 +279,7 @@ public class SendMailService extends HttpServlet  {
 	 * @throws Exception the exception
 	 */
 	////MIGRADO
-	private void sendMailJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp) throws Exception {
+	private void sendMailJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManager tblParametrosServidorManager) throws Exception {
 		
 		boolean debug = false;
 		
@@ -301,7 +308,24 @@ public class SendMailService extends HttpServlet  {
 		// SI REQUIERE AUTENTIFICACION 
 		if (configProp.getProperty("job.mail.requiereAutenticacion", null) != null && configProp.getProperty("job.mail.requiereAutenticacion", null).equals("S")) {
 			props.put("mail.smtp.auth", true);
-			auth = new SMTPAuthenticator(configProp.getProperty("job.mail.usuario", null), configProp.getProperty("job.mail.password", null));
+			
+			//Buscamos todos los parametros con el valor de la property de job.mail.usuario
+			TblParametrosServidorQuery tblParQuery = new TblParametrosServidorQuery();
+			tblParQuery.setValor(configProp.getProperty("job.mail.usuario", null));				
+			List<TblParametrosServidor> parametrosServidor = tblParametrosServidorManager.getByQuery(tblParQuery);
+			
+			//Buscamos los parametros con el servidor id de la consulta anterior y el tipo de parametro 3
+			TblParametrosServidorQuery tblParQuery2 = new TblParametrosServidorQuery();			
+			TblServidoresQuery queryServ = new TblServidoresQuery();
+			queryServ.setServidorid(parametrosServidor.get(0).getTblServidores().getServidorid());
+			tblParQuery2.setTblServidores(queryServ);
+			TblTiposParametrosQuery tiposQuery = new TblTiposParametrosQuery();
+			tiposQuery.setTipoparametroid(3L); //Tipo de parametro de contraseña
+			tblParQuery2.setTblTiposParametros(tiposQuery);
+			List<TblParametrosServidor> valorFinal = tblParametrosServidorManager.getByQuery(tblParQuery2);
+			String contraseniaJobs = valorFinal.get(0).getValor();
+
+			auth = new SMTPAuthenticator(configProp.getProperty("job.mail.usuario", null), contraseniaJobs);
 			session = Session.getInstance(props, auth);
 		}else{
 			props.put("mail.smtp.auth", false);
@@ -379,7 +403,7 @@ public class SendMailService extends HttpServlet  {
 	 * @throws Exception the exception
 	 */
 	////MIGRADO
-	private void sendMailJobWithEmails(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp) throws Exception {
+	private void sendMailJobWithEmails(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManager tblParametrosServidorManager) throws Exception {
 		
 		boolean debug = false;
 		
@@ -408,7 +432,24 @@ public class SendMailService extends HttpServlet  {
 		// SI REQUIERE AUTENTIFICACION 
 		if (configProp.getProperty("job.mail.requiereAutenticacion", null) != null && configProp.getProperty("job.mail.requiereAutenticacion", null).equals("S")) {
 			props.put("mail.smtp.auth", true);
-			auth = new SMTPAuthenticator(configProp.getProperty("job.mail.usuario", null), configProp.getProperty("job.mail.password", null));
+			
+			//Buscamos todos los parametros con el valor de la property de job.mail.usuario
+			TblParametrosServidorQuery tblParQuery = new TblParametrosServidorQuery();
+			tblParQuery.setValor(configProp.getProperty("job.mail.usuario", null));				
+			List<TblParametrosServidor> parametrosServidor = tblParametrosServidorManager.getByQuery(tblParQuery);
+			
+			//Buscamos los parametros con el servidor id de la consulta anterior y el tipo de parametro 3
+			TblParametrosServidorQuery tblParQuery2 = new TblParametrosServidorQuery();			
+			TblServidoresQuery queryServ = new TblServidoresQuery();
+			queryServ.setServidorid(parametrosServidor.get(0).getTblServidores().getServidorid());
+			tblParQuery2.setTblServidores(queryServ);
+			TblTiposParametrosQuery tiposQuery = new TblTiposParametrosQuery();
+			tiposQuery.setTipoparametroid(3L); //Tipo de parametro de contraseña
+			tblParQuery2.setTblTiposParametros(tiposQuery);
+			List<TblParametrosServidor> valorFinal = tblParametrosServidorManager.getByQuery(tblParQuery2);
+			String contraseniaJobs = valorFinal.get(0).getValor();
+
+			auth = new SMTPAuthenticator(configProp.getProperty("mail.usuario", null), contraseniaJobs);			
 			session = Session.getInstance(props, auth);
 		}else{
 			props.put("mail.smtp.auth", false);
