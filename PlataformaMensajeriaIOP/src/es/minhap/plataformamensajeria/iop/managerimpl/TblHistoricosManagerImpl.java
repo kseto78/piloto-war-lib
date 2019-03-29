@@ -371,9 +371,11 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 
 	private void updateGestionEnvios(Long servidorId, TblGestionEnvios ge, TblMensajes tblMensajes,
 			String estado, TblLotesEnvios lote, TblCanales canal) {
+		
+		String estadoLoteActual = estadosManager.getEstadoById(lote.getEstadoenvioid()).getNombre();		
 		ge.setEstado(tblMensajes.getEstadoactual());
 		ge.setEstadoid(estadosManager.getEstadoByName(estado).getEstadoid());
-		ge.setEstadolote(estadosManager.getEstadoById(lote.getEstadoenvioid()).getNombre());
+		ge.setEstadolote(estadoLoteActual);
 		ge.setUltimoenvio(Calendar.getInstance().getTime());
 		ge.setAnio(Calendar.getInstance().get(Calendar.YEAR));
 		ge.setMes(Calendar.getInstance().get(Calendar.MONTH)+1);
@@ -381,6 +383,17 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		//obtenemos los destinatarios
 		ge.setDestinatario(concatenarDestinatarios(tblMensajes.getMensajeid().toString(), canal));
 		gestionEnviosManager.actualizarGestionEnvios(ge);
+				
+		List <TblGestionEnvios> listaGestionEnvios = gestionEnviosManager.getEnviosLote(String.valueOf(lote.getLoteenvioid()));
+		for(TblGestionEnvios gestionEnvio : listaGestionEnvios){
+			if(!gestionEnvio.getEstadolote().equals(estadoLoteActual)){
+				TblGestionEnviosQuery query = new TblGestionEnviosQuery(gestionEnvio.getMensajeid());				
+				TblGestionEnvios geActual = gestionEnviosManager.getGestionEnvios(query);
+				geActual.setEstadolote(estadoLoteActual);
+				gestionEnviosManager.actualizarGestionEnvios(geActual);
+			}
+		}
+		
 	}
 	/**
 	 * @param mensajeId

@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -232,6 +233,12 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	
 	@Override
 	public List<TblParametrosServidor> getByQuery(TblParametrosServidorQuery query) {
+		List<TblParametrosServidor> tblParametrosServidor = tblParametrosServidorDAO.search(query).getResults();
+		for (TblParametrosServidor r : tblParametrosServidor) {
+			Hibernate.initialize(r.getTblServidores());
+			Hibernate.initialize(r.getTblTiposParametros());
+		}
+		
 		return tblParametrosServidorDAO.search(query).getResults();
 	}
 	

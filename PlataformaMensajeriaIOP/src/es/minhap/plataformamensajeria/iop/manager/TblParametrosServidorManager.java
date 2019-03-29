@@ -51,7 +51,7 @@ public interface TblParametrosServidorManager {
 	 * comprueba si existe el valor con el tipo de parametro
 	 * @param usuario
 	 * @param ps
-	 * @return RespuestaActualizarPasswordCorreo
+	 * @return RespuestaActualizarPasswordCorreo 
 	 */
 	public RespuestaActualizarPasswordCorreo checkActualizarPassword(PeticionActualizarPasswordCorreo peticion,
 			PropertiesServices ps);
