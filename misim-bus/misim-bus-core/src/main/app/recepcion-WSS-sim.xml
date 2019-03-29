@@ -39,7 +39,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 	<flow name="FLW-RCP-PBK-SIM" doc:name="FLW-RCP-PBK-SIM" doc:description="Procesa una nueva Peticion">
 
 		<!-- RECEPCION PETICION -->
-		<vm:inbound-endpoint exchange-pattern="request-response" path="recepcion-passbook-sim" responseTimeout="120000" doc:name="VM" />
+		<vm:inbound-endpoint exchange-pattern="request-response" path="recepcion-WSS-sim" responseTimeout="120000" doc:name="VM" />
 
 		<logger level="INFO" doc:name="Logger" message="[FLOW - RecepcionPassbookSIM] - Inicio peticion" />
 
@@ -59,15 +59,6 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Flujo de ida securizado" />
 			<logger level="INFO" doc:name="Logger" message="[FLOW - EnvioPeticion] - Despues del subfujo FLW-SEG-PET de securizacion el payload es : #[payload]" />
 		</processor-chain>
-		
-		<!-- desencriptar -->
-		<logger level="INFO" doc:name="Logger" message="[FLOW - actualizarPasswordCorreo - Desencriptar " />
-		<processor-chain doc:name="Processor Chain">
-			<component	doc:name="Encripta" >
-				<spring-object bean="desencriptar" />
-			</component>
-		</processor-chain>
-
 		
 
 		<set-property propertyName="${XML_PETICION}" value="#[groovy:misim.bus.common.util.XMLUtils.dom2xml(payload.soapMessage)]"	doc:name="Property XML_PETICION" />

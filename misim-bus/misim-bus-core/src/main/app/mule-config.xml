@@ -32,7 +32,7 @@
 		<spring:import resource="${classpath}recepcion-vodafone.xml" />
 		<spring:import resource="${classpath}recepcion-bt.xml" />
 		<spring:import resource="${classpath}recepcion-sim.xml" />
-		<spring:import resource="${classpath}recepcion-passbook-sim.xml" />
+		<spring:import resource="${classpath}recepcion-WSS-sim.xml" />
 		<spring:import resource="${classpath}registro-usuario.xml" />
 		<spring:import resource="${classpath}registro-usuario-en-servicio.xml" />
 		<spring:import resource="${classpath}consulta-servicios-disponibles.xml" />
