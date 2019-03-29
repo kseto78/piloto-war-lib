@@ -27,17 +27,17 @@ import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.Respuesta;
  * @author ralberoc
  *
  */
-@WebServiceProvider(portName = "EnvioMensajesPassbookServicePort", serviceName = "EnvioMensajesServiceWSS",  
+@WebServiceProvider(portName = "EnvioMensajesSecurityServicePort", serviceName = "EnvioMensajesServiceWSS",  
 targetNamespace = "http://misim.redsara.es/misim-bus-webapp/", 
-wsdlLocation = "WEB-INF/wsdl/recepcion-passbook-sim/envioMensajesPassbookSIM.wsdl")
+wsdlLocation = "WEB-INF/wsdl/recepción-WSS-sim/envioMensajesWssSim.wsdl")
 @ServiceMode(Mode.MESSAGE)
 @Scope(value="request")
-public class RecepcionMensajesPBKSIMWSProvider extends WSProvider {
+public class RecepcionMensajesWSSKSIMWSProvider extends WSProvider {
 
 	/** 
 	 * Cola de recepción VM de peticiones sincronas
 	 */
-	public static final String RECEPT_QUEUE = "vm://recepcion-passbook-sim";
+	public static final String RECEPT_QUEUE = "vm://recepcion-WSS-sim";
 	
 	/**
 	 * Metodo que implementa la logica de la peticion de envioMensajesPassbookSIM

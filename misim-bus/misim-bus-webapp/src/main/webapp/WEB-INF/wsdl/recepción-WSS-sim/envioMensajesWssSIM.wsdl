@@ -12,7 +12,7 @@
     <wsdl:part element="ns2:Respuesta" name="respuesta">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:portType name="EnvioMensajesPassbookServiceWSBindingPortType">
+  <wsdl:portType name="EnvioMensajesSecurityServiceWSBindingPortType">
     <wsdl:operation name="enviarMensaje">
       <wsdl:input message="impl:enviarMensajePeticion" name="Peticion">
     </wsdl:input>
@@ -20,7 +20,7 @@
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="EnvioMensajesPassbookServiceBinding" type="impl:EnvioMensajesPassbookServiceWSBindingPortType">
+  <wsdl:binding name="EnvioMensajesSecurityServiceBinding" type="impl:EnvioMensajesSecurityServiceWSBindingPortType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="enviarMensaje">
       <soap:operation soapAction="enviarMensaje" style="document"/>
@@ -33,7 +33,7 @@
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="EnvioMensajesServiceWSS">
-    <wsdl:port binding="impl:EnvioMensajesPassbookServiceBinding" name="EnvioMensajesPassbookServicePort">
+    <wsdl:port binding="impl:EnvioMensajesSecurityServiceBinding" name="EnvioMensajesSecurityServicePort">
       <soap:address location="http://des-misim.redsara.es/misim-bus-webapp/EnvioMensajesServiceWSS"/>
     </wsdl:port>
   </wsdl:service>
