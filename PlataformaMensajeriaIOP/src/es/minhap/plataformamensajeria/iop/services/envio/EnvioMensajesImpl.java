@@ -612,7 +612,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 										Long desMensaje = destinatariosMensajesManager.insertarDestinatarioMensaje(
 												mensajeCreado.getIdMensaje(), destinatario.getDestinatario(),
 												destinatario.getIdExterno(), envioSMS.getUsuario());
-										List<String> listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+										List<String> listaIdExternos = null; 
+										if (null != mensajeCreado.getIdExterno()){
+											listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+										}												
 										if (null != mensajeCreado.getIdExterno() && !listaIdExternos.contains(destinatario.getIdExterno())){
 											mensajeCreado.setIdExterno(mensajeCreado.getIdExterno() + "," +destinatario.getIdExterno());
 										}else{
@@ -1104,7 +1107,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 																					usuarioId.toString(),
 																					d.getIdExterno(),
 																					notificacionPush.getUsuario());
-																	List<String> listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+																	List<String> listaIdExternos = null; 
+																	if (null != mensajeCreado.getIdExterno()){
+																		listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+																	}	
 																	if (null != mensajeCreado.getIdExterno() && !listaIdExternos.contains(d.getIdExterno())){
 																		mensajeCreado.setIdExterno(mensajeCreado.getIdExterno() + "," +d.getIdExterno());
 																	}else{
@@ -1470,7 +1476,10 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 															.insertarDestinatarioMensaje(mensajeCreado.getIdMensaje(),
 																	usuarioId.toString(), d.getIdExterno(),
 																	notificacionPush.getUsuario());
-													List<String> listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+													List<String> listaIdExternos = null; 
+													if (null != mensajeCreado.getIdExterno()){
+														listaIdExternos = Arrays.asList(mensajeCreado.getIdExterno().split("\\s*,\\s*"));
+													}	
 													if (null != mensajeCreado.getIdExterno() && !listaIdExternos.contains(d.getIdExterno())){
 														mensajeCreado.setIdExterno(mensajeCreado.getIdExterno() + "," +d.getIdExterno());
 													}else{
