@@ -1166,6 +1166,7 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 			query.setMensajeid(mensajeId);
 			query.setMaxResult(size);
 			query.setFirstResult(start);
+			query.addOrder("fechamodificacion",OrderType.DESC);			
 			List<TblDestinatariosMensajes> listaDestinatariosMensajesTO = tblDestinatariosMensajesManager.getDestinatarioMensajesByQuery(query);
 			
 			listaDestinatariosMensajes = getListDestinatariosMensajesBean(listaDestinatariosMensajesTO);
@@ -1277,12 +1278,14 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 				query.setMensajeid(Long.parseLong(idMensaje));
 				query.setDestinatariosmensajes(Long.parseLong(idDestinatariosMensajes));
 				query.addOrder("fecha", OrderType.DESC);
+				query.addOrder("historicoid", OrderType.DESC);
 				List<ViewHistoricoMultidest> listaHistoricos = viewHistoricoManager.getHistoricoMultidest(query);
 				result = getListHistoricoMultidestBean(listaHistoricos);
 			} else {
 				ViewHistoricoQuery query = new ViewHistoricoQuery();
 				query.setMensajeid(Long.parseLong(idMensaje));
 				query.addOrder("fecha", OrderType.DESC);
+				query.addOrder("historicoid", OrderType.DESC);
 				List<ViewHistorico> listaHistoricos = viewHistoricoManager.getHistorico(query);
 				result = getListHistoricoBean(listaHistoricos);
 			}
