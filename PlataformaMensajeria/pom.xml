@@ -918,16 +918,16 @@
 			</plugin>			
 		</plugins>
 	</build>
-<!-- 	<distributionManagement> -->
-<!-- 		<repository> -->
-<!-- 			<id>SIM-release</id> -->
-<!-- 			<name>SIM-release</name> -->
-<!-- 			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url> -->
-<!-- 		</repository> -->
-<!-- 		<snapshotRepository> -->
-<!-- 			<id>SIM-snapshots</id> -->
-<!--             <name>SIM-snapshots</name> -->
-<!-- 			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url> -->
-<!-- 		</snapshotRepository> -->
-<!-- 	</distributionManagement> -->
+	<distributionManagement>
+		<repository>
+			<id>SIM-release</id>
+			<name>SIM-release</name>
+			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>SIM-snapshots</id>
+            <name>SIM-snapshots</name>
+			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
