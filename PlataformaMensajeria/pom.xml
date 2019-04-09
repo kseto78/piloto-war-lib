@@ -9,11 +9,11 @@
 	<version>1.0.0</version>
 	<groupId>es.minhap</groupId>
 	
-<!-- 	<parent> -->
-<!-- 		<groupId>es.minhap</groupId> -->
-<!-- 		<artifactId>minhap-sim-parent</artifactId> -->
-<!-- 		<version>1.0.0</version> -->
-<!-- 	</parent> -->
+	<parent>
+		<groupId>es.minhap</groupId>
+		<artifactId>minhap-sim-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
 	
 	<properties>
 		<encoding>UTF-8</encoding>
@@ -300,10 +300,6 @@
 				<exclusion>
 					<artifactId>slf4j-log4j12</artifactId>
 					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>spring-security-core</artifactId>
-					<groupId>org.springframework.security</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -922,16 +918,16 @@
 			</plugin>			
 		</plugins>
 	</build>
-	<distributionManagement>
-		<repository>
-			<id>SIM-release</id>
-			<name>SIM-release</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url>
-		</repository>
-		<snapshotRepository>
-			<id>SIM-snapshots</id>
-            <name>SIM-snapshots</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url>
-		</snapshotRepository>
-	</distributionManagement>
+<!-- 	<distributionManagement> -->
+<!-- 		<repository> -->
+<!-- 			<id>SIM-release</id> -->
+<!-- 			<name>SIM-release</name> -->
+<!-- 			<url>https://artefactos.scae.redsara.es/artifactory/SIM-release/</url> -->
+<!-- 		</repository> -->
+<!-- 		<snapshotRepository> -->
+<!-- 			<id>SIM-snapshots</id> -->
+<!--             <name>SIM-snapshots</name> -->
+<!-- 			<url>https://artefactos.scae.redsara.es/artifactory/SIM-snapshot/</url> -->
+<!-- 		</snapshotRepository> -->
+<!-- 	</distributionManagement> -->
 </project>
