@@ -9,11 +9,11 @@
 	<version>1.0.0</version>
 	<groupId>es.minhap</groupId>
 	
-	<parent>
-		<groupId>es.minhap</groupId>
-		<artifactId>minhap-sim-parent</artifactId>
-		<version>1.0.0</version>
-	</parent>
+<!-- 	<parent> -->
+<!-- 		<groupId>es.minhap</groupId> -->
+<!-- 		<artifactId>minhap-sim-parent</artifactId> -->
+<!-- 		<version>1.0.0</version> -->
+<!-- 	</parent> -->
 	
 	<properties>
 		<encoding>UTF-8</encoding>
