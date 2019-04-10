@@ -16,9 +16,11 @@ import es.minhap.common.entity.OrderType;
 import es.minhap.common.entity.TextComparator;
 import es.minhap.plataformamensajeria.iop.beans.UsuariosWebPushBean;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosWebPushManager;
 import es.minhap.sim.dao.TblUsuariosWebPushDAO;
 import es.minhap.sim.model.TblDestinatariosMensajes;
+import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUsuariosWebPush;
 import es.minhap.sim.query.TblAplicacionesQuery;
 import es.minhap.sim.query.TblServiciosQuery;
@@ -38,6 +40,9 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 	
 	@Resource
 	private TblDestinatariosMensajesManager destinatariosMensajesManager;
+	
+	@Resource
+	private TblServiciosManager serviciosManager;
 
 	@Override
 	@Transactional
@@ -185,6 +190,21 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 				queryAplicacion = new TblAplicacionesQuery();
 				queryAplicacion.setAplicacionid(criterio.getAplicacionId().longValue());
 				queryServicio.setTblAplicaciones(queryAplicacion);
+			}
+			else{
+				if(criterio.getListaIdAplicaciones() != null){
+					String[]  listaId = criterio.getListaIdAplicaciones().split(",");
+					TblServiciosQuery queryServ = new TblServiciosQuery();
+					queryAplicacion = new TblAplicacionesQuery();
+					for(String ids : listaId){						
+						queryAplicacion.addAplicacionidIn(Long.valueOf(ids));
+					}
+					queryServ.setTblAplicaciones(queryAplicacion);
+					List<TblServicios> listaServi = serviciosManager.getServicios(queryServ);
+					for(TblServicios tblServi : listaServi){
+						query.addTblServiciosIdIn(tblServi);
+					}					
+				}
 			}
 			if(criterio.getServicioId() != null  && criterio.getServicioId() != 0){
 				if (null == queryServicio){

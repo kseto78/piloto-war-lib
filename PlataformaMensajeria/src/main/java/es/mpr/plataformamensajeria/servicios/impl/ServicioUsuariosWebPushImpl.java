@@ -13,11 +13,16 @@ import org.springframework.stereotype.Service;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
+import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosWebPushManager;
 import es.minhap.plataformamensajeria.iop.services.usuariosplataformas.webpush.IPushService;
+import es.minhap.sim.model.TblUsuariosAplicaciones;
 import es.minhap.sim.model.TblUsuariosWebPush;
+import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
+import es.minhap.sim.query.TblUsuariosQuery;
 import es.mpr.plataformamensajeria.beans.UsuariosWebPushBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuariosWebPush;
+import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
 /**
  * <p>Maneja la persistencia y b&uacute;squeda de usuarios movil a traves de JPA.
@@ -39,6 +44,10 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 	/**  tbl usuarios web push manager impl. */
 	@Resource(name="tblUsuariosWebPushManagerImpl")
 	private TblUsuariosWebPushManager tblUsuariosWebPushManagerImpl;
+	
+	/**  tbl usuarios aplicaciones manager. */
+	@Resource(name = "TblUsuariosAplicacionesManagerImpl")
+	private TblUsuariosAplicacionesManager tblUsuariosAplicacionesManager;
 	
 	
 	/* (non-Javadoc)
@@ -80,6 +89,28 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 			
 			es.minhap.plataformamensajeria.iop.beans.UsuariosWebPushBean upb = new es.minhap.plataformamensajeria.iop.beans.UsuariosWebPushBean();
 			upb = createUsuariosWebPushBean(upb,criterio);
+			
+			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+	    	Integer userName = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+	    	if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)){
+	    		TblUsuariosAplicacionesQuery queryUsuariosAplicaciones = new TblUsuariosAplicacionesQuery();
+				TblUsuariosQuery queryUsuarios = new TblUsuariosQuery();
+				queryUsuarios.setUsuarioid((null != userName)? userName.longValue() : null);
+				queryUsuariosAplicaciones.setTblUsuarios(queryUsuarios);
+				List<TblUsuariosAplicaciones> listaUsuarioAplicaciones = tblUsuariosAplicacionesManager.getUsuariosAplicacionesByQuery(queryUsuariosAplicaciones);
+				if(listaUsuarioAplicaciones != null){	
+					boolean first = true;
+					String listaIdAplicaciones = "";
+					for(TblUsuariosAplicaciones apl : listaUsuarioAplicaciones){
+						if (!first) {
+							listaIdAplicaciones += ",";
+						}
+							listaIdAplicaciones += apl.getAplicacionid();
+							first = false;
+						}
+					upb.setListaIdAplicaciones(listaIdAplicaciones);
+					}				
+				}
 			
 			
 			List<TblUsuariosWebPush> lista = tblUsuariosWebPushManagerImpl.getUsuariosWebPushPaginado(start, size, order, column, 

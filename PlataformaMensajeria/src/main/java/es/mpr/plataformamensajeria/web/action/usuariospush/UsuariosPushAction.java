@@ -121,6 +121,8 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
     	String columnSort = getColumnSort("tableId"); //Columna usada para ordenar
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
     	int inicio = (page-1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+    	
+    	
     	PaginatedList<UsuariosPushBean> result = servicioUsuarioPush.getUsuariosPush(inicio,(export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")),
     			order, columnSort,usuariosPush,export,request); 
     	Integer totalSize = result.getTotalList();
@@ -183,8 +185,7 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
         ArrayList<AplicacionBean> keys;
 		String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
 		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
-		long canalId = 4; //Canal push
-		keys = (ArrayList<AplicacionBean>)servicioAplicacion.getAplicacionesByCanal(rolUsuario, idUsuario, canalId);
+		keys = (ArrayList<AplicacionBean>)servicioAplicacion.getAplicacionesMenu(rolUsuario, idUsuario);
 		if(keys!=null&&!keys.isEmpty()){
 	        for (AplicacionBean key :keys) {
 	            option = new KeyValueObject();
@@ -216,12 +217,11 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
 		}
 		if(keys!=null&&keys.size()>0){
 	        for (ServicioBean key :keys) {
-	        	if(key.getCanalid() != null && key.getCanalid() == 4){
-		            option = new KeyValueObject();
-		            option.setCodigo(key.getServicioId().toString());
-		            option.setDescripcion(key.getNombre());
-		            result.add(option);
-	        	}
+	            
+	            option = new KeyValueObject();
+	            option.setCodigo(key.getServicioId().toString());
+	            option.setDescripcion(key.getNombre());
+	            result.add(option);
 	        }
 		}
         return result;

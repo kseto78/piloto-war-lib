@@ -34,6 +34,7 @@ public class UsuariosWebPushBean implements Serializable{
 		
 		this.aplicacion = null;
 		this.servicio = null;
+		this.listaIdAplicaciones = null;
 	}
 	
 	
@@ -49,6 +50,8 @@ public class UsuariosWebPushBean implements Serializable{
 		
 	protected String aplicacion;
 	protected String servicio;
+	
+	private String listaIdAplicaciones; 
 	
 	public Integer getUsuarioId() {
 		return usuarioId;
@@ -146,6 +149,22 @@ public class UsuariosWebPushBean implements Serializable{
 
 	public void setServicio(String servicio) {
 		this.servicio = servicio;
+	}
+
+
+	/**
+	 * @return the listaIdAplicaciones
+	 */
+	public String getListaIdAplicaciones() {
+		return listaIdAplicaciones;
+	}
+
+
+	/**
+	 * @param listaIdAplicaciones the listaIdAplicaciones to set
+	 */
+	public void setListaIdAplicaciones(String listaIdAplicaciones) {
+		this.listaIdAplicaciones = listaIdAplicaciones;
 	}
 
 }

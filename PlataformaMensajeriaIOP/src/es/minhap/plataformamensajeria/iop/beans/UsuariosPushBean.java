@@ -35,6 +35,7 @@ public class UsuariosPushBean {
 	private Integer aplicacionId;
 	private Date fechaDesde;
 	private Date fechaHasta;
+	private String listaIdAplicaciones; 
 		
 	public Integer getUsuarioId() {
 		return usuarioId;
@@ -131,6 +132,18 @@ public class UsuariosPushBean {
 	 */
 	public void setPlataforma(String plataforma) {
 		this.plataforma = plataforma;
+	}
+	/**
+	 * @return the listaIdAplicaciones
+	 */
+	public String getListaIdAplicaciones() {
+		return listaIdAplicaciones;
+	}
+	/**
+	 * @param listaIdAplicaciones the listaIdAplicaciones to set
+	 */
+	public void setListaIdAplicaciones(String listaIdAplicaciones) {
+		this.listaIdAplicaciones = listaIdAplicaciones;
 	}
 	
 }

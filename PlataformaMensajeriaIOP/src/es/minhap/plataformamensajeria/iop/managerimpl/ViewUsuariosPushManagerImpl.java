@@ -54,6 +54,13 @@ public class ViewUsuariosPushManagerImpl implements ViewUsuariosPushManager {
 			}
 			if(criterio.getAplicacionId() != null && criterio.getAplicacionId() != 0){
 				query.setAplicacionid(Long.parseLong(criterio.getAplicacionId().toString()));
+			}else{
+				if(criterio.getListaIdAplicaciones() != null){
+					String[]  listaId = criterio.getListaIdAplicaciones().split(",");
+					for(String ids : listaId){
+						query.addAplicacionidIn(Long.valueOf(ids));
+					}					
+				}
 			}
 			if(criterio.getServicioId() != null  && criterio.getServicioId() != 0){
 				query.setServicioid(Long.parseLong(criterio.getServicioId().toString()));

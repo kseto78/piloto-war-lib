@@ -19,10 +19,15 @@ import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 import com.map.j2ee.util.beanutils.converters.DateConverter;
 
+import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewUsuariosPushManager;
+import es.minhap.sim.model.TblUsuariosAplicaciones;
 import es.minhap.sim.model.ViewUsuariosPush;
+import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
+import es.minhap.sim.query.TblUsuariosQuery;
 import es.mpr.plataformamensajeria.beans.UsuariosPushBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuariosPush;
+import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
 
 /**
@@ -40,6 +45,10 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 	/**  view usuarios push manager. */
 	@Resource(name="ViewUsuariosPushManager")
 	private ViewUsuariosPushManager viewUsuariosPushManager;
+	
+	/**  tbl usuarios aplicaciones manager. */
+	@Resource(name = "TblUsuariosAplicacionesManagerImpl")
+	private TblUsuariosAplicacionesManager tblUsuariosAplicacionesManager;
 	
 	/**  map permisos usuario aplicacion. */
 	static HashMap<Integer,Integer> mapPermisosUsuarioAplicacion = null;
@@ -79,6 +88,28 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 			if(upb != null){
 				upb = createUsuariosPushBean(upb,criterio);
 			}
+			
+			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+	    	Integer userName = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+	    	if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)){
+	    		TblUsuariosAplicacionesQuery queryUsuariosAplicaciones = new TblUsuariosAplicacionesQuery();
+				TblUsuariosQuery queryUsuarios = new TblUsuariosQuery();
+				queryUsuarios.setUsuarioid((null != userName)? userName.longValue() : null);
+				queryUsuariosAplicaciones.setTblUsuarios(queryUsuarios);
+				List<TblUsuariosAplicaciones> listaUsuarioAplicaciones = tblUsuariosAplicacionesManager.getUsuariosAplicacionesByQuery(queryUsuariosAplicaciones);
+				if(listaUsuarioAplicaciones != null){	
+					boolean first = true;
+					String listaIdAplicaciones = "";
+					for(TblUsuariosAplicaciones apl : listaUsuarioAplicaciones){
+						if (!first) {
+							listaIdAplicaciones += ",";
+						}
+							listaIdAplicaciones += apl.getAplicacionid();
+							first = false;
+						}
+					upb.setListaIdAplicaciones(listaIdAplicaciones);
+					}				
+				}			
 			
 			List<ViewUsuariosPush> lista = viewUsuariosPushManager.getUsuariosPushPaginado(start, size, order, column, 
 					upb, false);
