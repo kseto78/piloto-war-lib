@@ -29,7 +29,7 @@ import es.redsara.misim.misim_bus_webapp.respuesta.envio.aplicaciones.Respuesta;
  */
 @WebServiceProvider(portName = "EnvioMensajesSecurityServicePort", serviceName = "EnvioMensajesServiceWSS",  
 targetNamespace = "http://misim.redsara.es/misim-bus-webapp/", 
-wsdlLocation = "WEB-INF/wsdl/recepción-WSS-sim/envioMensajesWssSim.wsdl")
+wsdlLocation = "WEB-INF/wsdl/recepción-WSS-sim/envioMensajesWssSIM.wsdl")
 @ServiceMode(Mode.MESSAGE)
 @Scope(value="request")
 public class RecepcionMensajesWSSKSIMWSProvider extends WSProvider {
