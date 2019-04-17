@@ -11,7 +11,7 @@
 	
 	<parent>
 		<groupId>es.minhap</groupId>
-		<artifactId>minhap-sim-parent</artifactId>
+		<artifactId>minhap-parent</artifactId>
 		<version>1.0.0</version>
 	</parent>
 	
