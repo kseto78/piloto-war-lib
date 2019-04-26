@@ -298,9 +298,10 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			comboOrganismosHijos = cargarComboOrganismosHijos(organismo.getDir3());
 			organismoPadre = new OrganismoBean();			
 			int idPadre = servicioOrganismo.getOrganismoIdByDir3SoloEliminado(organismo.getCodUnidadSuperior());
-			organismoPadre.setOrganismoId(idPadre);
-			organismoPadre = servicioOrganismo.loadOrganismo(organismoPadre);
-
+			if(idPadre != 0){
+				organismoPadre.setOrganismoId(idPadre);
+				organismoPadre = servicioOrganismo.loadOrganismo(organismoPadre);
+			}
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
 			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { organismo.getOrganismoId().toString() });
