@@ -1585,6 +1585,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				servicioBBDD.setNombre(servicio.getNombre());
 				servicioBBDD.setDescripcion(servicio.getDescripcion());
 				servicioBBDD.setActivo(servicio.getActivo());
+				servicioBBDD.setPremium(servicio.getPremium());
+				servicioBBDD.setExclusivo(servicio.getExclusivo());
 				servicioBBDD.setAplicacionid(servicio.getAplicacionid());
 				servicioBBDD.setCanalid(servicio.getCanalid());
 				servicioBBDD.setNmaxenvios(servicio.getNmaxenvios());
