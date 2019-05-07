@@ -1,7 +1,6 @@
 package es.minhap.misim.bus.model.seguridad;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,8 +15,6 @@ import java.security.cert.X509Certificate;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import misim.bus.common.exceptions.ApplicationException;
 import misim.bus.common.util.KeyStoreUtils;
@@ -169,6 +166,16 @@ public class FirmaServiceImpl implements FirmaService {
 			
 			LOG.info("REQUEST ORIGINAL FIRMADA Y DESENCRIPTADA: " + XMLUtils.dom2xml(docDescifrado));
 			
+			//Comprobamos el nodo de cifrado
+			final NodeList encryptedDataDescifrado = docDescifrado.getElementsByTagNameNS(
+					"http://www.w3.org/2001/04/xmlenc#", 
+					"EncryptedData");
+			
+			if(encryptedDataDescifrado != null && encryptedDataDescifrado.getLength() > 0){
+				//Lanzar error
+				LOG.error("Descifrado: No se ha descifrado correctamente");
+				throw new ModelException("No se ha descifrado correctamente", 320);
+			}
 			// Obtenemos el id del servicio de la peticion para poder buscar en la BBDD el
 			// certificado correspondiente solo si el tipo de la peticion es de EnvioMensajesServiceWSS,
 			// si no encontramos el idServicio, la peticion es de tipo ActualizarPassword
