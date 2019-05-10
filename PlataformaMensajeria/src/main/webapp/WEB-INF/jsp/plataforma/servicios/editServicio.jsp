@@ -168,7 +168,7 @@
 							name="servicio.isActivo" value="%{servicio.activado}" />
 					</p>
 				</s:else>
-				<label id="exclusivoLabel">
+				<span id="exclusivoLabel">
 					<p class="criteria">
 							<label class="fieldText" style="width: 120px;">Premium</label>
 							<s:checkbox theme="simple" id="servicio.isPremium"
@@ -179,7 +179,7 @@
 						<s:checkbox theme="simple" id="servicio.isExclusivo"
 							name="servicio.isExclusivo" value="%{servicio.exclusivo}" onclick="selectOnlyThis(this.id)"/>
 					</p>
-				</label>	
+				</span>	
 				
 				
 				<p class="criteria">
