@@ -218,6 +218,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 						respuesta = generarSalida(respuesta, statusTextKO, statusCodeNoConnection, detailsNoConnection );
 					}
 				}catch(AuthenticationFailedException ex){
+					listaParametros.get(num).setValor(passAntiguo);
 					String detailsUserPassError = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_USERPASS", null);
 					String statusCodeUserPass = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_USERPASS", null);
 					respuesta = generarSalida(respuesta, statusTextKO, statusCodeUserPass, detailsUserPassError);
