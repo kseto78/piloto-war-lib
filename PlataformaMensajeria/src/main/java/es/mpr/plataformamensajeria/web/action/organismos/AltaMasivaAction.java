@@ -681,7 +681,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		if (keys != null && !keys.isEmpty())
 			for (ServicioBean key : keys) {
 				for(String idServ : serviciosAeatGiss){
-					if(idServ.equals(key.getServicioId().toString())){
+					if((idServ.trim()).equals(key.getServicioId().toString())){
 						option = new KeyValueObject();
 						option.setCodigo(key.getServicioId().toString());
 						option.setDescripcion(key.getNombre());
