@@ -206,8 +206,9 @@ public class FCMSendMessage {
 //	    	data = data.replace("tickerText", "contentTitle");
 //	    	data = data.replace("TituloNoValido", "tickerText");
 //	    	LOG.info("FCMSendMessage :".concat(data));
-	    	data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ");
-	    	string = string.concat(" \"data\": ").concat(data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ")).concat("}");
+	    	data.replaceAll("}", " ,\"idMensaje\":\""+ idMensaje +"\" } ");	    	
+	    	string = string.concat(" \"data\": ").concat(replaceLast(data,"}", " ,\"idMensaje\":\""+ idMensaje +"\" } ")).concat("}");
+	    	
 //        	{ "registration_ids": [ "APA91bEAI5WzTsswjqftDmN9DW4_cczfc8eRveae9xoCvc-ME0uuoaqLz9Qy0D06Uek9189v4jm3sihpeYbWI2Zyp9mI5Ky1_jROLaaMkLTnEy_L7avvuYqZxwFPE147I8BPq5FAtfGe59GIrbEodbefI1fhTR_Mkg", "APA91bEVZx1Bxm7QGLXyCFNgsufhCFZ1EBt3R6J1kXxyQGp4CQXUp96fO7ZTRMuh0ga9OS0wMnxji4eDkc0W3NwC0SMsPbhNt6kJg1ktT39CNRkRsFH7Kp-6OOeBqZuz05zGApkHXLOPxUeQ5esDSHDk-N-eW4wlSg" ], "data": {"contentTitle":"titulo", "tickerText":"TicketText", "id_convocatoria":"123891293812983", "id_suscripcion":"12931289312", "message":"Prueba de avisos PUSH por favor avisad si os llega", "url": "http://google.com"}}        	
         	
         	
@@ -311,6 +312,15 @@ public class FCMSendMessage {
 		
 		String result = gson.toJson(conResponse);
 		return result;
+	}
+	
+	public String replaceLast(String string, String substring, String replacement)
+	{
+	  int index = string.lastIndexOf(substring);
+	  if (index == -1)
+	    return string;
+	  return string.substring(0, index) + replacement
+	          + string.substring(index+substring.length());
 	}
 	
 }
