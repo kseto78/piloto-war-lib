@@ -1311,6 +1311,11 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			addActionErrorSession(this.getText("plataforma.aplicacion.field.responsable.tecnico.email"));
 			sw = false;
 		}
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getFrommail()) && servicio.getCanalid() == 1) {
+			addActionErrorSession(this.getText("plataforma.aplicacion.field.cuenta.envio.email"));
+			sw = false;
+		}
+		
 		return sw;
 	}
 

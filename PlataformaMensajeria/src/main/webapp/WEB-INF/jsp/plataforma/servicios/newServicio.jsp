@@ -138,7 +138,7 @@
 				</p>
 				<p class="criteria">
 					<label id="frommailLabel" style="width: 120px; visibility:hidden; display:none"
-						class="fieldText">Cuenta Env&iacute;o:</label>
+						class="fieldText">Cuenta Env&iacute;o (*):</label>
 					<s:textfield name="servicio.frommail" value="%{servicio.frommail}"
 						id="servicio.frommail" onblur="verifyEmail(this)" theme="simple"
 						cssStyle="visibility:hidden;display:none;" labelposition="left" size="70"
