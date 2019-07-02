@@ -314,5 +314,12 @@ public interface TblMensajesManager {
 	 */
 	public Integer countMensajesByQuery(TblMensajesQuery query);
 
+	public Integer setEstadoMensajeNoEnviados(Long idMensaje, String estado,
+			String descripcion, Boolean controlReintentos,
+			Long destinatarioMensajeId, String subEstadoCode, String usuario,
+			Long proveedorId);
+
+	public Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal);
+
 	
 }

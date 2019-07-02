@@ -101,6 +101,21 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	public TblDestinatariosMensajes getDestinatarioMensaje(Long destinatarioMensajeId) {
 		return destinatariosMensajesDAO.get(destinatarioMensajeId);
 	}
+	
+	@Override
+	@Transactional
+	public List<TblDestinatariosMensajes> getDestinatarioMensajesNoEnviado(
+			Long idMensaje) {
+		TblDestinatariosMensajesQuery query = new TblDestinatariosMensajesQuery();
+		
+		query.addEstadoIn("INCIDENCIA");
+		query.addEstadoIn("PENDIENTE DE ENVIO");
+		query.addEstadoIn("ANULADO");
+		query.addEstadoIn("PENDIENTE/INCIDENCIA");
+		query.setMensajeid(idMensaje);		
+
+		return destinatariosMensajesDAO.search(query).getResults();
+	}
 
 	@Override
 	@Transactional

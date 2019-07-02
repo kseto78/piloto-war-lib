@@ -50,7 +50,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			LOG.debug("[reenviarMensaje] Antes de reenviarMensaje" + idMensaje);
 			String estado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
 					.getNombre();
-			Integer confirmacion = mensajesManager.operacionMensaje(idMensaje.longValue(), usuario, password, estado);
+			Integer confirmacion = mensajesManager.operacionMensajeReenviar(idMensaje.longValue(), usuario, password, estado);
 			LOG.debug("[reenviarMensaje] Despues de reenviarMensaje reenviarMensaje");
 			RespuestaOperacionesMensajes respuestaOpracion = new RespuestaOperacionesMensajes();
 			es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();

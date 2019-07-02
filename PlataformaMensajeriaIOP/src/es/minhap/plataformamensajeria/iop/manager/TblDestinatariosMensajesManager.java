@@ -169,4 +169,8 @@ public interface TblDestinatariosMensajesManager {
 	 */
 	List<TblDestinatariosMensajes> getDestinatarioMensajesByQuery(TblDestinatariosMensajesQuery query);
 
+
+	public List<TblDestinatariosMensajes> getDestinatarioMensajesNoEnviado(
+			Long idMensaje);
+
 }

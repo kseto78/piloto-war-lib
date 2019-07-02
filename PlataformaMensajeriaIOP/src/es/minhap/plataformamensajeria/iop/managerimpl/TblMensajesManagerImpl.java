@@ -945,6 +945,141 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		}
 	}
 
+	@Override
+	@Transactional
+	public Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal) {
+
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String errorActiveMq = ps.getMessage("conexion.ERRORACTIVEMQ", null, "[ERROR-ACTIVEMQ]");
+		String operacionReenviar = ps.getMessage("mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE", null);
+		String operacionReenviarCorrecto = ps.getMessage(
+				"mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE_CORRECTO", null);
+		String errorMensajeIncorrecto = ps.getMessage("auditoria.errores.ERROR_MENSAJE_INCORRECTO", null);
+		Long codErrorMensajeIncorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_INCORRECTO",
+				null));
+		String errorUsuarioAplicacion = ps.getMessage("auditoria.errores.ERROR_USUARIO_APLICACION", null);
+		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_USUARIO_APLICACION",
+				null));
+		String errorMensajeYaEnviado = ps.getMessage("auditoria.errores.ERROR_MENSAJE_YA_ENVIADO", null);
+		Long codErrorMensajeYaEnviado = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_YA_ENVIADO",
+				null));
+		String errorMensajeAplicacion = ps.getMessage("auditoria.errores.ERROR_MENSAJE_APLICACION", null);
+		Long codErrorMensajeAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_APLICACION",
+				null));
+		String errorBBDD = ps.getMessage("auditoria.errores.ERROR_BBDD", null);
+		Long codErrorBBDD = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_BBDD", null));
+		Long codCorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_CORRECTO", null));
+		String estadoEnviado = ps.getMessage("constantes.ESTADO_ENVIADO", null);
+		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null))
+				.getNombre();
+		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+		TblMensajes tblMensaje = null;
+		
+		int activeMQ = 2;
+
+		try {
+			// Se comprueba que la aplicacion pertenece al usuario
+			TblAplicacionesQuery q = new TblAplicacionesQuery();
+			q.setUsuario(usuario);
+			q.setPassword(Utils.encode64(password));
+			q.setActivo(true);
+
+			List<TblAplicaciones> listaAplicaciones = aplicacionesManager.getAplicaciones(q);
+			Integer out = (null != listaAplicaciones) ? listaAplicaciones.size() : null;
+
+			// Auditamos con error -1
+			if (null == out || out.intValue() != 1) {
+				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
+						usuario, password, codErrorUsuarioAplicacion, errorUsuarioAplicacion);
+				auditoriaManager.insertarAuditoria(auditoria);
+				return codErrorUsuarioAplicacion.intValue();
+			}
+
+			// Se comprueba si EXISTE el mensaje
+			tblMensaje = tblMensajesDAO.get(idMensaje);
+
+			// Auditamos con error -2
+			if (null == tblMensaje) {
+				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
+						usuario, password, codErrorMensajeIncorrecto, errorMensajeIncorrecto);
+				auditoriaManager.insertarAuditoria(auditoria);
+				return codErrorMensajeIncorrecto.intValue();
+			}
+
+			// Se comprueba si el mensaje ha sido enviado
+			if (tblMensaje.getEstadoactual().equals(estadoEnviado)) {
+				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
+						usuario, password, codErrorMensajeYaEnviado, errorMensajeYaEnviado);
+				auditoriaManager.insertarAuditoria(auditoria);
+				return codErrorMensajeYaEnviado.intValue();
+			}
+
+			// Se comprueba si EXISTE LOTE PARA EL USUARIO/PASSWORD
+			Integer count = comprobarLote(tblMensaje.getTblLotesEnvios().getLoteenvioid(), usuario, password);
+
+			// Auditamos con error -4
+			if (null == count || count <= 0) {
+				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
+						usuario, password, codErrorMensajeAplicacion, errorMensajeAplicacion);
+				auditoriaManager.insertarAuditoria(auditoria);
+				return codErrorMensajeAplicacion.intValue();
+			}
+
+			if (setEstadoMensajeNoEnviados(idMensaje, estadoFinal, null, false, null, null, usuario, null) > 0) {
+				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
+						usuario, password, codCorrecto, operacionReenviarCorrecto);
+				auditoriaManager.insertarAuditoria(auditoria);
+
+				if (!estadoFinal.equalsIgnoreCase(estadoAnulado)) {
+					List<TblDestinatariosMensajes> destinatarios = destinatariosMensajesManager
+							.getDestinatarioMensajesNoEnviado(idMensaje);
+					Long canal = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
+					Integer modo = Integer.parseInt(ps.getMessage("constantes.email.modo", null));
+					if (tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().equals(canal)) {
+						checkEmailMode(idMensaje, tblMensaje, destinatarios, modo);
+					} else {
+						sendMessages(idMensaje, tblMensaje, destinatarios);
+						
+					}
+					//Comprobamos que si ya se ha actualizado la tabla de errores a true
+					activeMQ = 1;//true
+				}
+				return codCorrecto.intValue();
+			} else {
+				AuditoriaBean auditoria = new AuditoriaBean(operacionReenviar, new Date(), null, idMensaje, null, null,
+						usuario, password, codErrorBBDD, errorBBDD);
+				auditoriaManager.insertarAuditoria(auditoria);
+				return codErrorBBDD.intValue();
+			}
+		} catch (CannotCreateTransactionException e) {
+			//Comprobamos que si ya se ha actualizado la tabla de errores a false
+			LOG.error(errorActiveMq+" TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
+			activeMQ = 0;//false
+			
+
+			TblServicios servicio = serviciosManager.getServicio(tblMensaje.getTblLotesEnvios().getTblServicios()
+					.getServicioid());
+			if (servicio.getPremium() != null && servicio.getPremium()) { //Es premium revolvemos KO y anulamos
+				setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, false, null, null,
+						usuario, null);
+				return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			} else {// no es premium devolvemos OK
+				return codCorrecto.intValue();
+			}
+
+		} catch (Exception e) {
+			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
+			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+		}finally{
+//			Comprobamos que si ya se ha actualizado la tabla de errores
+			LOG.debug("Estamos en TblMensajesManagerImpl-operacionMensaje");					
+			if (activeMQ == 0){
+				erroresManager.comprobarActiveMqActivo(false);
+			}else if (activeMQ == 1){
+				erroresManager.comprobarActiveMqActivo(true);
+			}
+		}
+	}
 	private void checkEmailMode(Long idMensaje, TblMensajes tblMensaje, List<TblDestinatariosMensajes> destinatarios,
 			Integer modo) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
@@ -1039,6 +1174,84 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				destinatariosMensaje.add(destinatariosMensajesManager.getDestinatarioMensaje(destinatarioMensajeId));
 			} else {
 				destinatariosMensaje = destinatariosMensajesManager.getDestinatarioMensajes(idMensaje);
+			}
+			if (mensaje.getTblLotesEnvios().getMultidestinatario()) {
+
+				// Actualizamos la tabla destinatarios mensajes
+				for (TblDestinatariosMensajes destinatarioMensaje : destinatariosMensaje) {
+					destinatarioMensaje.setEstado(estado);
+					destinatarioMensaje.setModificadopor(usuario);
+					destinatarioMensaje.setFechamodificacion(new Date());
+					destinatarioMensaje.setUltimoenvio(new Date());
+					if (uim != null) {
+						destinatarioMensaje.setUim(uim);
+					}
+					destinatariosMensajesManager.update(destinatarioMensaje);
+				}
+			}
+			sessionFactorySIMApp.getCurrentSession().flush();
+
+			if (mensaje.getTblLotesEnvios().getMultidestinatario()) {
+				for (TblDestinatariosMensajes destinatarioMensaje : destinatariosMensaje) {
+					hitoricosManager.creaHistorico(idMensaje, destinatarioMensaje.getDestinatariosmensajes(),
+							estadosManager.getEstadoByName(estado).getEstadoid(), servidorId, descripcion,
+							subEstadoCode, usuario);
+				}
+			} else {
+				hitoricosManager.creaHistorico(idMensaje, null, estadosManager.getEstadoByName(estado).getEstadoid(),
+						servidorId, descripcion, subEstadoCode, usuario);
+			}
+
+		} catch (Exception e) {
+			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
+			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+		}
+		return res;
+	}
+	
+	@Override
+	@Transactional
+	public synchronized Integer setEstadoMensajeNoEnviados(Long idMensaje, String estado, String descripcion,
+			Boolean controlReintentos, Long destinatarioMensajeId, String subEstadoCode, String usuario,
+			Long proveedorId) {
+
+		Integer res = 1;
+		String uim = null;
+		Long servidorId = null;
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+
+		try {
+			if (null == proveedorId)
+				servidorId = queryExecutorServidores.obtenerServidorByIdMensaje(idMensaje);
+			else
+				servidorId = proveedorId;
+
+			// Actualizamos la tabla mensaje
+
+			TblMensajes mensaje = tblMensajesDAO.get(idMensaje);
+
+			if (mensaje != null && ps.getMessage(TIPOMENSAJESMS, null).equals(mensaje.getTipomensaje()) && null != descripcion
+					&& descripcion.contains("|") && descripcion.contains("OK"))
+				uim = descripcion.substring(descripcion.indexOf("|") + 1).trim();
+
+			// aumentamos el numero de envios para todos los mensajes GISS y los
+			// demas cuando el estado siguiente es
+			// INCIDENCIA
+			if (ps.getMessage("constantes.ESTADO_INCIDENCIA", null).equals(estado)) {
+				mensaje.setNumeroenvios(mensaje.getNumeroenvios() + 1);
+			} else if (ps.getMessage(ESTADOPENDIENTE, null).equals(estado)) {
+				mensaje.setNumeroenvios(0);
+			}
+			mensaje.setEstadoactual(estado);
+			mensaje.setFechamodificacion(new Date());
+			mensaje.setModificadopor(usuario);
+			tblMensajesDAO.update(mensaje);
+
+			List<TblDestinatariosMensajes> destinatariosMensaje = new ArrayList<>();
+			if (null != destinatarioMensajeId) {
+				destinatariosMensaje.add(destinatariosMensajesManager.getDestinatarioMensaje(destinatarioMensajeId));
+			} else {
+				destinatariosMensaje = destinatariosMensajesManager.getDestinatarioMensajesNoEnviado(idMensaje);
 			}
 			if (mensaje.getTblLotesEnvios().getMultidestinatario()) {
 
