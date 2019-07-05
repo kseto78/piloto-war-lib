@@ -348,8 +348,8 @@
 		}
 	
 	$('#archivoExcel').bind('change', function() {		
-		  if (this.files[0].size/1024 > 1024 ){
-			  alert(" El fichero no puede ocupar mas de 1 MB");
+		  if (this.files[0].size/1024 > 2048 ){
+			  alert(" El fichero no puede ocupar mas de 2 MB");
 			  archivoExcel.value = null;
 			  document.getElementsByName('filename')[0].innerText = "Ningún archivo seleccionado";
 			  }
