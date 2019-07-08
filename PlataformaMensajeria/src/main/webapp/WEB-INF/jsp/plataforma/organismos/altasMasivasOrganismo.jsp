@@ -29,7 +29,7 @@
 
 				<div style="height:0px;overflow:hidden">
    							<input type="file" id="archivoExcel2" name="fileInput" />
-						</div>		
+				</div>		
 					<p class="criteria">
 						<span> 
 							<label class="fieldText" style="width: 200px">Selecciona el fichero a importar(*): </label>
@@ -56,6 +56,19 @@
 					</span>
 										
 				</p>
+				<br>				
+				<p class="criteria">
+					<span style="width: 340px;"> <label>${textoEntradaAltasMasivas}</label> <strong><s:label
+								theme="simple" /></strong>
+					</span>
+				</p>				
+				<s:iterator value='textoAltasMasivas.split(";")'>
+					<p class="criteria">
+						<span style="width: 340px;"> <label class="fieldTextNoHeight"><s:property/></label><strong><s:label
+									theme="simple" /></strong>
+						</span>
+					</p>   					
+				</s:iterator>				
 			</div>
 	</div>
 

@@ -249,6 +249,13 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	
 	/** Constante RECOVERY. */
 	private static final String RECOVERY = "recovery";
+	
+	/** Property texto altas masivas */
+	private String textoAltasMasivas;
+	
+	/** Property texto entrada altas masivas */
+	private String textoEntradaAltasMasivas;
+	
 
 	/**
 	 * New search.
@@ -260,6 +267,8 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		if (getRequest().getSession().getAttribute(AltaMasivaAction.INFO_USER) == null)
 			return AltaMasivaAction.NO_USER;
 		
+		textoAltasMasivas = properties.getProperty("altasmasivas.texto", null);
+		textoEntradaAltasMasivas = properties.getProperty("altasmasivas.texto.entrada", null);
 		organismo = (OrganismoBean) getRequest().getSession().getAttribute("organismo");
 		
 		
@@ -286,6 +295,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		if (idOrganismo == null)
 			throw new BusinessException("EL idOrganismo recibido es nulo");
 		try {
+						
 			organismo = new OrganismoBean();
 			organismo.setOrganismoId(new Integer(idOrganismo));
 			organismo = servicioOrganismo.loadOrganismo(organismo);
@@ -1517,6 +1527,22 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	 */
 	public void setFormatoArchivoExcel(String nombreArchivoExcel) {
 		this.formatoArchivoExcel = nombreArchivoExcel;
+	}
+
+	public String getTextoAltasMasivas() {
+		return textoAltasMasivas;
+	}
+
+	public void setTextoAltasMasivas(String textoAltasMasivas) {
+		this.textoAltasMasivas = textoAltasMasivas;
+	}
+	
+	public String getTextoEntradaAltasMasivas() {
+		return textoEntradaAltasMasivas;
+	}
+
+	public void setTextoEntradaAltasMasivas(String textoEntradaAltasMasivas) {
+		this.textoEntradaAltasMasivas = textoEntradaAltasMasivas;
 	}
 
 }
