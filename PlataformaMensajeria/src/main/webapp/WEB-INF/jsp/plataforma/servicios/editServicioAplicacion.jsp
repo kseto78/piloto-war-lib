@@ -134,19 +134,7 @@
                            	<label class="fieldText" style="width: 120px;">Activo</label> 
                            	<s:checkbox theme="simple" id="servicio.isActivo" name="servicio.isActivo" value="%{servicio.activado}" />   
                        	</p>
-                    </s:else>
-                    <span id="exclusivoLabel">
-						<p class="criteria">
-								<label class="fieldText" style="width: 120px;">Premium</label>
-								<s:checkbox theme="simple" id="servicio.isPremium"
-									name="servicio.isPremium" value="%{servicio.premium}" onclick="selectOnlyThis(this.id)"/>
-						</p>				
-						<p class="criteria">
-							<label class="fieldText" style="width: 120px;">Exclusivo</label>
-							<s:checkbox theme="simple" id="servicio.isExclusivo"
-								name="servicio.isExclusivo" value="%{servicio.exclusivo}" onclick="selectOnlyThis(this.id)"/>
-						</p>
-					</span>	
+                    </s:else>                    
                     <p class="criteria">
                         <label style="width: 120px;" class="fieldText">Nº Max. envíos (*):</label>
                         <s:textfield
