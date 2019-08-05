@@ -72,6 +72,10 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		}
 		
 		query.addOrder(columnSort, ord);
+		if(columnSort != null && columnSort.equals("aplicacionnombre")){
+			query.addOrder("servicioid",ord);
+		}
+		
 		query.setEliminadoIsNull(true);
 		if (!count){
 			query.setPrimerResultado(start);
