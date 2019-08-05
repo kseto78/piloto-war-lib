@@ -8,6 +8,7 @@
 <div class="mainContent">
 	<s:form id="frmNuevoServicio" method="POST" action="saveServicio"
 		theme="simple" cssClass="">
+		<s:hidden id = "datosPlanificaciones" name="datosPlanificaciones" />
 		<h3 class="pageNameButtons">
 			<span class="floatRight"> <s:submit theme="simple"
 					value="%{getText('buttons.text.save')}" cssClass="button" /> <input
@@ -40,7 +41,7 @@
 				</p>
 				<p class="criteria">
 					<label style="width: 120px;" class="fieldText">Canal (*):</label>
-					<s:select onchange="checkCanalHeader(this)" id="servicio.canalid"
+					<s:select onchange="checkCanalHeader(this);cambioCanal(this);" id="servicio.canalid"
 						name="servicio.canalid" emptyOption="true" theme="simple"
 						labelposition="left" list="comboCanales" listKey="codigo" cssStyle="width:150px"
 						listValue="descripcion" cssClass="" value="%{servicio.canalid}"
@@ -393,7 +394,167 @@
 				</p>
 			</div>
 		</div>
-	</s:form>
+		</s:form>
+		<div class="editContainer">
+		<div class="nameDescription">
+			<label>Planificaciones(*)</label>
+			<p>Determina los horarios en los que el servicio va a estar
+				disponible para realizar los env&iacute;os</p>
+		</div>
+		<div class="editContent">		
+				<p class="criteria">
+					<span style="width: 350px;"> <label style="width: 120px;"
+						class="fieldText">Servidor / Proveedor:</label> <s:select style="min-width: 150px;"
+							id="planificacionServidorSelect"
+							name="planificacionServidorSelect" emptyOption="true"
+							theme="simple" labelposition="left"
+							list="comboConfiguracionesPlan" listKey="codigo"
+							listValue="descripcion" cssClass=""
+							value="%{planificacionServidor.servidorId}" /> <!-- Cambiado planificacionServicio por Servidor en id-->
+						<s:hidden name="planificacionServidor.servicioId"
+							id="planificacionServidor.servicioId" value="%{idServicio}" /> 
+						<s:hidden
+							name="servicio.canalid" id="servicio.canalid"
+							value="%{servicio.canalid}" />
+					</span>
+				</p>
+				<p class="criteria">
+					<span> <label class="fieldText">L <s:checkbox
+								id="planificacionServidor.lunes"
+								name="planificacionServidor.lunes"
+								value="%{planificacionServidor.lunes}" theme="simple" />
+					</label> <label class="fieldTextNoIco"> M <s:checkbox
+								id="planificacionServidor.martes"
+								name="planificacionServidor.martes"
+								value="%{planificacionServidor.martes}" theme="simple" />
+					</label> <label class="fieldTextNoIco"> X <s:checkbox
+								id="planificacionServidor.miercoles"
+								name="planificacionServidor.miercoles"
+								value="%{planificacionServidor.miercoles}" theme="simple" />
+					</label> <label class="fieldTextNoIco">J <s:checkbox
+								id="planificacionServidor.jueves"
+								name="planificacionServidor.jueves"
+								value="%{planificacionServidor.jueves}" theme="simple" />
+					</label> <label class="fieldTextNoIco">V <s:checkbox
+								id="planificacionServidor.viernes"
+								name="planificacionServidor.viernes"
+								value="%{planificacionServidor.viernes}" theme="simple" />
+					</label> <label class="fieldTextNoIco">S <s:checkbox
+								id="planificacionServidor.sabado"
+								name="planificacionServidor.sabado"
+								value="%{planificacionServidor.sabado}" theme="simple" />
+					</label> <label class="fieldTextNoIco">D <s:checkbox
+								id="planificacionServidor.domingo"
+								name="planificacionServidor.domingo"
+								value="%{planificacionServidor.domingo}" theme="simple" />
+					</label>
+
+					</span> <span> <label class="fieldText">Hora Inicio:</label> <s:select
+							id="planificacionServidor.horaDesde"
+							name="planificacionServidor.horaDesde" emptyOption="false"
+							theme="simple" labelposition="left" list="comboHorasInicio"
+							listKey="codigo" listValue="descripcion" cssClass="W65"
+							value="%{planificacionServidor.horaDesde}" disabled="false" />
+					</span> <span> <label class="fieldText">Hora Fin:</label> <s:select
+							id="planificacionServidor.horaHasta"
+							name="planificacionServidor.horaHasta" emptyOption="false"
+							theme="simple" labelposition="left" list="comboHorasFin"
+							listKey="codigo" listValue="descripcion" cssClass="W65"
+							value="%{planificacionServidor.horaHasta}" disabled="false" />
+					</span> <a class="addLink" id="addItem"
+						onclick="return comprobarPlanificacion();"
+						name="addItem">Añadir Item</a>
+				</p>			
+							
+				<table cellspacing="0" cellpadding="0" border="0">
+					<thead>
+						<tr>
+							<th class=""><input type="checkbox" id="checkAllP"
+								theme="simple" onclick="selectAllP(this)" /></th>
+							<th class="TH110">Días</th>
+							<th class="TH70 separator">Hora Inicio</th>
+							<th class="TH70 separator">Hora Fin</th>
+							<th class="TH150">Servidor / Proveedor</th>							
+							<th class="TH45 separator"></th>
+						</tr>
+					</thead>
+					<tbody id="bodyTablaPlanificaciones">
+						<s:iterator value="%{listaPlanificacionesServicio}"
+							var="planificacionServicio" status="planificacionServicioStatuts">
+							<tr
+								class="<s:if test='#planificacionServicioStatuts.odd == true '></s:if><s:else>odd</s:else>">
+								<!-- <td>L, M, J</td> -->
+								<td class="darkTD TH15"><input type="checkbox"
+									onclick="checkBotonEliminarSeleccionados2()"
+									id="checkDelListPlanificaciones"
+									name="checkDelListPlanificaciones"
+									value="${planificacionServicio.planificacionId }" />
+									</center> <input type="hidden"
+									idd="__checkbox_checkDelListPlanificaciones"
+									name="__checkbox_checkDelListPlanificaciones" />
+								<td><s:label value="%{dias}" /></td>
+								<td><s:label value="%{horaDesde}" /></td>
+								<td><s:label value="%{horaHasta}" /></td>
+								<td><s:label value="%{nombreServidor}" /></td>
+								<td>
+									<c:choose>
+									    <c:when test="${activo == 'true' }">
+									        <span class="activo"></span>
+									    </c:when>    
+									    <c:otherwise>
+									        <span class="inactivo"></span>
+									    </c:otherwise>
+									</c:choose>				
+								</td>
+								<td><s:label value="%{dir3Organismo}" /></td>
+								<td class="buttons"><span class="edit">
+										<div
+											id="ajaxloader_ajax_${planificacionServicio.planificacionId}">
+											<span id="ajax_${planificacionServicio.planificacionId}"
+												name="ajax" title="Editar"
+												onclick="return loadPlan(this,${planificacionServicio.planificacionId},${idServicio},'idServicio','updatePlanificacionServ')"
+												class="btnEdit planifications_link"></span>
+										</div>
+								</span> <span class="delete"> <a class="btnDelete"
+										onclick="return confirmDelete();" title="Eliminar"
+										href="deletePlanificacionServicio.action?idPlanificacion=${planificacionId}&idServicio=${servicio.servicioId}"></a>
+								</span></td>
+							</tr>
+						</s:iterator>
+						<s:if test="%{listaPlanificacionesServicio == null}">
+							<tr>
+								<td colspan="8">No se ha configurado ninguna planificación
+									para el servicio</td>
+							</tr>
+							<script>document.getElementById('checkAllP').style.visibility="hidden";</script>
+						</s:if>
+						<s:else>
+							<tr>
+							<tfoot>
+								<td colspan="7"><span class="leftSide"> <s:submit
+											id="eliminaSeleccionadosP" name="eliminaSeleccionados"
+											theme="simple" disabled="true"
+											value="%{getText('button.plataforma.eliminarseleccionados')}"
+											cssClass="button" />
+								</span>
+								<td>
+							</tfoot>
+							</tr>
+
+						</s:else>
+					</tbody>
+				</table>
+				<s:hidden name="idServicio" id="idServicio" value="%{idServicio}" />
+			
+			<script>
+				checkCanalHeader(document.getElementById("servicio.canalid"));
+				
+			</script>
+		</div>
+
+
+	</div>
+
 	<div class="editContainer">
 		<div class="nameDescription">
 			<label>Auditoría</label>
@@ -425,13 +586,259 @@
 	</div>
 </div>
 <script>
-	checkCanalHeader(document.getElementById("servicio.canalid"));
+	var datosPlanificacion = new Array();
 
+	checkCanalHeader(document.getElementById("servicio.canalid"));
+	
+	function escribirTablaPlanificaciones(){
+		if(document.getElementById("bodyTablaPlanificaciones").getElementsByTagName("td")[0].innerText == "No se ha configurado ninguna planificación para el servicio"){
+			document.getElementById("bodyTablaPlanificaciones").innerHTML = "";	
+			}	
+		document.getElementById("bodyTablaPlanificaciones").innerHTML = "";
+		  if(datosPlanificacion.length == 0){
+			  var trTabla = '<tr><td colspan="6">No se ha configurado ninguna planificación para el servicio</td></tr>';
+			  document.getElementById("bodyTablaPlanificaciones").innerHTML = trTabla;			
+			  document.getElementById('datosPlanificaciones').value = datosPlanificacion;
+			  return;
+			  }
+		  document.getElementById('datosPlanificaciones').value = "";
+		  for (var i=0; i<datosPlanificacion.length; i++) {		
+			  var isChecked;
+			  var trTabla = '<tr class>'
+        		+'<td class="darkTD TH15"><input type="checkbox" onclick="checkBotonEliminarSeleccionados4()" id="checkDelListOrganismosServicios" name="checkDelListOrganismosServicios" '+""+' value="'+datosPlanificacion[i][0]+'">'
+        		+'<input type="hidden" id="__checkbox_checkDelListOrganismosServicios" name="__checkbox_checkDelListOrganismosServicios">'
+        		+'</td><td><label>'+datosPlanificacion[i][1]+'</label></td><td><label>'+datosPlanificacion[i][2]+'</label></td><td><label>'+datosPlanificacion[i][3]+'</label></td><td><label>'+datosPlanificacion[i][4]+'</label></td><td class="buttons"><span class="edit">'	        	 
+        		+'<a class="btnDelete" title="Eliminar" onclick="return confirmDelete();" href="javascript:eliminarPlanificacion('+i+')"></a></span></td></tr>';
+
+			  document.getElementById("bodyTablaPlanificaciones").innerHTML = document.getElementById("bodyTablaPlanificaciones").innerHTML +trTabla;			  
+			  			  
+		  }
+		   var botonEliminarServicios = '<tfoot><tr><td colspan="4"><input type="button" value="Eliminar seleccionados" id="eliminaSeleccionadosOrganismosServicios" name="eliminaSeleccionadosOrganismosServicios" disabled="disabled" class="button" onclick="eliminarServiciosCheckeds()"></td><td></td></tr></tfoot>';
+		  document.getElementById('datosPlanificaciones').value = datosPlanificacion.map(a =>a.join(";")).join(';');
+	}
+	
+	function eliminarPlanificacion(idPlanificacion){
+		datosPlanificacion.splice(idPlanificacion,1);
+		escribirTablaPlanificaciones();
+	}
+	function comprobarPlanificacion(){
+		var valid=true;		
+		var i=0;
+		var msg = "Atención\n";
+		var prefix = "planificacionServidor";
+
+		var idServidor = document.getElementById("planificacionServidorSelect").value; //Id del servidor
+			var lunes,martes,miercoles,jueves,viernes,sabado,domingo;
+			lunes = document.getElementById(prefix+".lunes");
+			martes = document.getElementById(prefix+".martes");
+			miercoles = document.getElementById(prefix+".miercoles");
+			jueves = document.getElementById(prefix+".jueves");
+			viernes = document.getElementById(prefix+".viernes");
+			sabado = document.getElementById(prefix+".sabado");
+			domingo= document.getElementById(prefix+".domingo");
+			var horaDesde,horaHasta;
+			horaDesde = document.getElementById(prefix+".horaDesde");
+			horaHasta = document.getElementById(prefix+".horaHasta");
+			var servidorId = document.getElementById(prefix+".servidorId");
+			if(lunes.checked||martes.checked||miercoles.checked||jueves.checked||viernes.checked||sabado.checked||domingo.checked){
+				
+			}else{
+				valid=false;
+				msg+="Debe seleccionar al menos un día de la semana\n";
+			}
+			if(horaDesde.value==horaHasta.value){
+				valid=false;
+				msg+="Debe seleccionar Horas Inicio y Fin diferentes\n";
+			}else{
+				var horaInicio = horaDesde.value.split(":")[0];
+				var minInicio = horaDesde.value.split(":")[1];
+				
+				var horaFin = horaHasta.value.split(":")[0];
+				var minFin = horaHasta.value.split(":")[1];
+				var desde = new Date();
+				var hasta = new Date();
+				desde.setHours(horaInicio);
+				desde.setMinutes(minInicio);
+				hasta.setHours(horaFin);				
+				hasta.setMinutes(minFin);
+				if(desde>hasta){
+					valid=false;
+					msg+="Hora Inicio no puede ser mayor que Hora Fin";
+				}
+				 for (var i=0; i<datosPlanificacion.length; i++) {
+					var horaInicioPlanificacion = datosPlanificacion[i][2].split(":")[0];
+					var minInicioPlanificacion = datosPlanificacion[i][2].split(":")[1];
+						
+					var horaFinPlanificacion = datosPlanificacion[i][3].split(":")[0];
+					var minFinPlanificacion = datosPlanificacion[i][3].split(":")[1];
+					var desdePlanificacion = new Date();
+					var hastaPlanificacion = new Date();
+					desdePlanificacion.setHours(horaInicioPlanificacion);
+					desdePlanificacion.setMinutes(minInicioPlanificacion);
+					hastaPlanificacion.setHours(horaFinPlanificacion);
+					hastaPlanificacion.setMinutes(minFinPlanificacion);
+
+						if(lunes.checked &&	datosPlanificacion[i][1].includes("L")){													
+										if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+													&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+												valid = false;
+												msg+="Se solapan las horas del lunes\n";
+											}
+									}			
+							 
+						if(martes.checked && datosPlanificacion[i][1].includes("M")){													
+							if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+									&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+											valid = false;
+											msg+="Se solapan las horas del martes\n";
+										}
+								}						 
+						if(miercoles.checked && datosPlanificacion[i][1].includes("X")){													
+							if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+									&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+											valid = false;
+											msg+="Se solapan las horas del miercoles\n";
+										}
+								}
+						if(jueves.checked && datosPlanificacion[i][1].includes("J")){													
+							if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+									&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+									valid = false;
+									msg+="Se solapan las horas del jueves\n";
+								}
+						}
+						if(viernes.checked && datosPlanificacion[i][1].includes("V")){													
+							if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+									&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+									valid = false;
+									msg+="Se solapan las horas del viernes\n";
+								}
+						}
+						if(sabado.checked && datosPlanificacion[i][1].includes("S")){													
+							if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+									&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+									valid = false;
+									msg+="Se solapan las horas del sabado\n";
+								}
+						}
+						if(domingo.checked && datosPlanificacion[i][1].includes("D")){													
+							if( (60*desde.getHours()+desde.getMinutes()) >= ( 60*desdePlanificacion.getHours()+desdePlanificacion.getMinutes()) 
+									&& ( 60*desde.getHours()+desde.getMinutes()) < (hastaPlanificacion.getMinutes() + hastaPlanificacion.getHours()*60 )){
+									valid = false;
+									msg+="Se solapan las horas del domingo\n";
+								}
+						}
+						 
+						 
+		  		   		   			
+					}
+			}
+		
+		if(!valid){
+			alert(msg);
+			return false;
+		}else{
+			agregarPlanificacion();
+			return true;
+		}
+	}
+	
+	function agregarPlanificacion(){
+		
+		var idServidor = document.getElementById("planificacionServidorSelect").value; //Id del servidor
+		var nombreServidor = document.getElementById("planificacionServidorSelect").selectedOptions[0].text;
+		var horaInicio = document.getElementById("planificacionServidor.horaDesde").value;
+		var horaFin = document.getElementById("planificacionServidor.horaHasta").value;
+		var dias;
+		if(document.getElementById("planificacionServidor.lunes").checked ){
+			dias = "L";
+			}
+		if(document.getElementById("planificacionServidor.martes").checked){
+			if (dias == null )dias = "M";
+			else dias += ", M";
+			}
+		if(document.getElementById("planificacionServidor.miercoles").checked){
+			if (dias == null )dias = "X";
+			else dias += ", X";
+			}
+		if(document.getElementById("planificacionServidor.jueves").checked){
+			if (dias == null )dias = "J";
+			else dias += ", J";
+			}
+		if(document.getElementById("planificacionServidor.viernes").checked){
+			if (dias == null )dias = "V";
+			else dias += ", V";
+			}
+		if(document.getElementById("planificacionServidor.sabado").checked){
+			if (dias == null )dias = "S";
+			else dias += ", S";
+			}
+		if(document.getElementById("planificacionServidor.domingo").checked){
+			if (dias == null )dias = "D";
+			else dias += ", D";
+			}
+
+		datos = [idServidor,dias,horaInicio,horaFin,nombreServidor];		
+		datosPlanificacion.push(datos);
+
+		escribirTablaPlanificaciones();
+		}
+	
+	
+	
+	function cambioCanal(){
+
+		$('#planificacionServidorSelect option').each(function() {
+	        $(this).remove();
+			});		
+ 	    
+		$.ajax({
+	        type: "POST",
+	        url: "ajaxLoadServidoresPorCanal.action",
+	        data: {idCanal:document.getElementById("servicio.canalid").value}, // serializes the form's elements.
+	        success: function(data)
+	        {
+	     	  datos = data.items;
+	     	       	  
+	     	  $('#planificacionServidorSelect').append($('<option>', { 
+	     	        value: '',
+	     	        text : '' 
+	     	    }));	     	 
+		     	 
+	     	 for (var i=0; i<datos.length; i++) {
+		  		$('#planificacionServidorSelect').append($('<option>', { 
+			        value: datos[i].value,
+			        text : datos[i].text 
+			    }));	     		 
+	  			}
+	     	 
+	        },
+	        error: function(data)
+	        {
+	     	   alert("error..."); 
+	        }
+	      });
+
+		}
 	function cargarNuevaAplicacion() {              
         document.frmNuevoServicio.action="aplicacionSelectEvent.action";
     	document.frmNuevoServicio.submit();
 	}
 
-
+	//Si se da un error en la alta, necesitamos poner la informacion de la planificacion en sus variables correspondientes		
+	$(document).ready ( function(){
+			if(document.getElementById("servicio.canalid").value != ""){
+					cambioCanal();
+				}
+			if(document.getElementById("datosPlanificaciones").value != ""){
+				var datos = document.getElementById("datosPlanificaciones").value.split(';');
+				
+				for (var i=0; i<datos.length; i+=5) {
+					datoActual = [datos[i],datos[i+1],datos[i+2],datos[i+3],datos[i+4]];
+					datosPlanificacion.push(datoActual);					
+				}								
+				escribirTablaPlanificaciones();
+			}
+		});
 	
 </script>

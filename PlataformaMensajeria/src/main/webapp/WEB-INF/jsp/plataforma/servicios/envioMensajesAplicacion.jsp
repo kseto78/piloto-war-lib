@@ -326,7 +326,7 @@ function makeRequestServiciosPorCanal(){
                 <div class="editContent">   
                		<p class="criteria">
 						<label class="fieldText" id="idExternoLabelSMS" style="visibility:hidden;display:none;width: 120px;">Id Externo :</label>
-						<label class="fieldText" id="idExternoLabel" style="width: 120px;">Id Externo (*):</label>
+						<label class="fieldText" id="idExternoLabel" style="width: 120px;">Id Externo:</label>
 						<s:textfield name="envioMensajesAplicacionBean.idExterno" value="%{envioMensajesAplicacionBean.idExterno}"
 							id="envioMensajesAplicacionBean.idExterno" theme="simple" labelposition="left" size="45" maxlength="255"
 							cssClass="" />

@@ -1991,8 +1991,14 @@
 			botonClaves.style.display="none";
 
 			exclusivoLabel.style.display="";
-			document.getElementById("servicio.isPremium").disabled = false;
-			document.getElementById("servicio.isExclusivo").disabled = false;
+
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isPremium").disabled = false;
+				}
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isExclusivo").disabled = false;
+			}			
+
 		}
 		if(combo.value=="2"){//SMS
 			if (auna!=null)
@@ -2177,8 +2183,13 @@
 			botonClaves.style.display="none";
 
 			exclusivoLabel.style.display="";
-			document.getElementById("servicio.isPremium").disabled = false;
-			document.getElementById("servicio.isExclusivo").disabled = false;
+			
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isPremium").disabled = false;
+				}
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isExclusivo").disabled = false;
+			}			
 		}
 		if(combo.value=="3"){//Recepcion SMS
 			if (auna!=null)
@@ -2365,8 +2376,13 @@
 			botonClaves.style.display="none";
 
 			exclusivoLabel.style.display="none";
-			document.getElementById("servicio.isPremium").disabled = true;
-			document.getElementById("servicio.isExclusivo").disabled = true;
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isPremium").disabled = true;
+				}
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isExclusivo").disabled = true;
+			}
+			
 		}
 		if(combo.value=="4"){//Notificaciones Push
 
@@ -2538,8 +2554,12 @@
 			botonClaves.style.display="none";
 
 			exclusivoLabel.style.display="none";
-			document.getElementById("servicio.isPremium").disabled = true;
-			document.getElementById("servicio.isExclusivo").disabled = true;
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isPremium").disabled = true;
+				}
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isExclusivo").disabled = true;
+			}			
 
 		}
 		if(combo.value=="5"){//web push
@@ -2719,8 +2739,13 @@
 			botonClaves.style.display="block";
 
 			exclusivoLabel.style.display="none";
-			document.getElementById("servicio.isPremium").disabled = true;
-			document.getElementById("servicio.isExclusivo").disabled = true;
+
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isPremium").disabled = true;
+				}
+			if (document.getElementById("servicio.isPremium") != null){
+				document.getElementById("servicio.isExclusivo").disabled = true;
+			}			
 		}
 	}
 	function chkViewValue(boton){

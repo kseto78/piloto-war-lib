@@ -1191,7 +1191,12 @@
 			method="ajaxLoadServiciosEnvioMensajes">
 			<result name="success">/uploadOK.jsp</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
-		</action>	
+		</action>
+		<action name="ajaxLoadServidoresPorCanal" class="serviciosAction"
+			method="ajaxLoadServidoresPorCanal">
+			<result name="success">/uploadOK.jsp</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
 <!-- 		<action name="searchAction" class="es.mpr.plataformamensajeria.web.action.organismos.AutoCompleteAction">
                         <result type="json">
                            <param name="excludeNullProperties">true</param>

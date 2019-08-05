@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -323,6 +324,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	/**  result count. */
 	private String resultCount;
 	
+	/** datos planificaciones */
+	private String datosPlanificaciones;
+
 	/**  json. */
 	String json;
 	
@@ -527,6 +531,46 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				for (ServicioBean servicio : listado) {
 					rOptions.getItems()
 							.add(new SelectOption(servicio.getServicioId().toString(), servicio.getNombre()));					
+				}
+			} catch (Exception e) {
+				logger.error("ServicioAction - ajaxLoadServicios:" + e);
+			}
+			json = new Gson().toJson(rOptions);
+		}
+		return SUCCESS;
+
+	}
+	
+	/**
+	 * Ajax load servicios.
+	 *
+	 * @return the string
+	 */
+	///MIGRADO
+	public String ajaxLoadServidoresPorCanal() {
+		if (getRequest().getSession().getAttribute("infoUser") == null)
+			return "noUser";
+		if (idCanal == null) {
+			addFieldErrorSession("Datos incorrectos");
+		} else {
+			ResultOptions rOptions = new ResultOptions();
+			try {
+				idServicio = "-1";
+				ArrayList<ServicioBean> listado = new ArrayList<ServicioBean>();
+				List<KeyValueObject> resultado = new ArrayList<>();
+				if (idCanal != null && idCanal.length() > 0) {
+					resultado = getComboConfiguracion(Integer.valueOf(idCanal));
+//					listado = (ArrayList<ServicioBean>) servicioServicio.getServiciosByAplicacionId(Integer
+//							.valueOf(idAplicacion));
+				} else {
+					String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
+					Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
+					listado = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
+				}
+
+				for (KeyValueObject servicio : resultado) {
+					rOptions.getItems()
+							.add(new SelectOption(servicio.getCodigo().toString(), servicio.getDescripcion()));					
 				}
 			} catch (Exception e) {
 				logger.error("ServicioAction - ajaxLoadServicios:" + e);
@@ -919,23 +963,89 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			if (servicio != null) {
 				validServicio = validServicio(servicioBean);
 			}
-
+			if (datosPlanificaciones == null || datosPlanificaciones.equals("")){
+				validServicio = false;
+				addActionErrorSession(this.getText("plataforma.servicio.field.planificacion.faltaError"));
+			}			
+			
 			if (!validServicio) {
 				return ERROR;
 			} else {
-
-				Integer idServicio = servicioServicio.newServicio(servicioBean, source, accion, accionId);
-				this.idServicio = idServicio.toString();
-				try {
-					//Se crea una planificacion por defecto
-					crearPlanificacionPorDefecto(accion, accionId, source, servicioBean);
-				} catch(BusinessException e) {
-					addActionErrorSession(this.getText("plataforma.servicio.field.planificacion.error"));
-					return ERROR;
+				
+				List<String> listaPlanificaciones = Arrays.asList(datosPlanificaciones.split(";"));
+				ArrayList<PlanificacionBean> listaPlanifacionesBean = new ArrayList<PlanificacionBean>();
+				
+				for(int i=0;i<listaPlanificaciones.size();i+=5){
+					planificacionServidor = new PlanificacionBean();
+					planificacionServidor.setServicioId(null);
+					if(listaPlanificaciones.get(i) != null && !listaPlanificaciones.get(i).equals("")){
+						planificacionServidor.setServidorId(Integer.valueOf(listaPlanificaciones.get(i)));
+					}
+					else{
+						planificacionServidor.setServidorId(null);
+					}
+					planificacionServidor.setTipoPlanificacionId(servicioBean.getCanalid());
+					if(listaPlanificaciones.get(i+1).contains("L")){
+						planificacionServidor.setLunes("true");
+					}
+					else planificacionServidor.setLunes("false");
+					if(listaPlanificaciones.get(i+1).contains("M")){
+						planificacionServidor.setMartes("true");
+					}else planificacionServidor.setMartes("false");
+					if(listaPlanificaciones.get(i+1).contains("X")){
+						planificacionServidor.setMiercoles("true");
+					}else planificacionServidor.setMiercoles("false");
+					if(listaPlanificaciones.get(i+1).contains("J")){
+						planificacionServidor.setJueves("true");
+					}else planificacionServidor.setJueves("false");
+					if(listaPlanificaciones.get(i+1).contains("V")){
+						planificacionServidor.setViernes("true");
+					}else planificacionServidor.setViernes("false");
+					if(listaPlanificaciones.get(i+1).contains("S")){
+						planificacionServidor.setSabado("true");
+					}else planificacionServidor.setSabado("false");
+					if(listaPlanificaciones.get(i+1).contains("D")){
+						planificacionServidor.setDomingo("true");
+					}else planificacionServidor.setDomingo("false");
+					
+					planificacionServidor.setHoraDesde(listaPlanificaciones.get(i+2));
+					planificacionServidor.setHoraHasta(listaPlanificaciones.get(i+3));
+					
+					int valido = servicioPlanificacion.validaPlanificacionOptima(idPlanificacion,
+							planificacionServidor.getTipoPlanificacionId(), planificacionServidor.getServidorId(),
+							planificacionServidor.getServicioId(), planificacionServidor.getLunes(),
+							planificacionServidor.getMartes(), planificacionServidor.getMiercoles(),
+							planificacionServidor.getJueves(), planificacionServidor.getViernes(),
+							planificacionServidor.getSabado(), planificacionServidor.getDomingo(),
+							planificacionServidor.getHoraHasta(), planificacionServidor.getHoraDesde());
+					if (valido != 1) {
+						addActionErrorSession(this.getText("plataforma.servicio.field.planificacion.error"));
+						return ERROR;
+					}
+					
+					listaPlanifacionesBean.add(planificacionServidor);
 				}
+				
+				
+		Integer idServicio;	
+		try{
+			idServicio = servicioServicio.newServicio(servicioBean, source, accion, accionId);
+			
+			
+			for(int i=0;i<listaPlanifacionesBean.size();i++){
+					
+					planificacionServidor = listaPlanifacionesBean.get(i);
+					planificacionServidor.setServicioId(idServicio);
+					addPlanificacionServicio();
+				}
+			}catch(BusinessException e) {
+				addActionErrorSession(this.getText("plataforma.servicio.field.planificacion.error"));
+				return ERROR;
+			}
+		
+			this.idServicio = idServicio.toString();
 
-
-				addActionMessageSession(this.getText("plataforma.servicio.create.ok"));
+			addActionMessageSession(this.getText("plataforma.servicio.create.ok"));
 			}
 		}
 		return SUCCESS;
@@ -1315,6 +1425,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			addActionErrorSession(this.getText("plataforma.aplicacion.field.cuenta.envio.email"));
 			sw = false;
 		}
+		if (PlataformaMensajeriaUtil.isEmpty(servicio.getFrommail()) && servicio.getCanalid() == 1) {
+			addActionErrorSession(this.getText("plataforma.aplicacion.field.cuenta.envio.email"));
+			sw = false;
+		}
+//		if (PlataformaMensajeriaUtil.isEmpty(servicio.get) && servicio.getCanalid() == 1) {
+//			addActionErrorSession(this.getText("plataforma.aplicacion.field.cuenta.envio.email"));
+//			sw = false;
+//		}
 		
 		return sw;
 	}
@@ -4741,6 +4859,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	 */
 	public void setServiciosAEATGiss(String serviciosAEATGiss) {
 		this.serviciosAEATGiss = serviciosAEATGiss;
+	}
+	
+	public String getDatosPlanificaciones() {
+		return datosPlanificaciones;
+	}
+
+	public void setDatosPlanificaciones(String datosPlanificaciones) {
+		this.datosPlanificaciones = datosPlanificaciones;
 	}
 	
 }
