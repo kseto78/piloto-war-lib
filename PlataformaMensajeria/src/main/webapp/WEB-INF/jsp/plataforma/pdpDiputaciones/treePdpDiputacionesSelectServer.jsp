@@ -2,7 +2,7 @@
 <sj:dialog  id="dialogTree" title="ARBOL ORGANISMO PDP" cssStyle="height:auto;padding:0;" autoOpen="false">
 <div id="ArbolOrganismoPdp" class="ui-dialog-content ui-widget-content" style="display: block; min-height: 0px; height: auto;">
 <plataforma:securityRedirect isAction="true"
-	redirectTo="permisoDenegado" allowedTo="ROL_ADMINISTRADOR">
+	redirectTo="permisoDenegado" allowedTo="ROL_ADMINISTRADOR,ROL_CAID">
 	<script>
 		document.location.href = "permisoDenegado.action";
 	</script>

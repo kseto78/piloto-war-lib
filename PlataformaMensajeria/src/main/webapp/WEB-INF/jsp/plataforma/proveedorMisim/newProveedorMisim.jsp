@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/utils/taglibs.jsp"%>
 <plataforma:securityRedirect isAction="true"
-	redirectTo="permisoDenegado" allowedTo="ROL_ADMINISTRADOR">
+	redirectTo="permisoDenegado" allowedTo="ROL_ADMINISTRADOR,ROL_CAID">
 	<script>
 		document.location.href="permisoDenegado.action";
 	</script>

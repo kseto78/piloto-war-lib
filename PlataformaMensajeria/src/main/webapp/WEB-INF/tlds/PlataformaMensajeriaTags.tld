@@ -36,6 +36,33 @@
       </attribute>      
    </tag>
    <tag>
+      <name>securitycaid</name>
+      <tagclass>es.mpr.plataformamensajeria.web.tags.PlataformaSecurityTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Muestra el contenido de este tag dependiendo del rol asignado al usuario logueado o al indicado en el parametro usuarioNombre</info>
+      <attribute>
+         <name>usuarioLogueado</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>usuarioNombre</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+	  <attribute>
+      	 <name>showIfGranted</name>
+      	 <required>false</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>
+
+      <attribute>
+      	 <name>showIfNotGranted</name>
+      	 <required>false</required>
+      	 <rtexprvalue>true</rtexprvalue>
+      </attribute>      
+   </tag>
+   <tag>
       <name>puedeEditarAplicacion</name>
       <tagclass>es.mpr.plataformamensajeria.web.tags.PlataformaAppEditableTag</tagclass>
       <bodycontent>JSP</bodycontent>

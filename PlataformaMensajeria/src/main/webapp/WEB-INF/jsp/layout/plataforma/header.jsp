@@ -45,6 +45,8 @@
                 			tipoUsuarioCodificado="Administrador";
                 		}else if(tipoUsuario != null && tipoUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)){
                 			tipoUsuarioCodificado="Propiertario";
+                		}else if(tipoUsuario != null && tipoUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID)){
+                			tipoUsuarioCodificado="Caid";
                 		}
                 	%>
                 	<label><%=tipoUsuarioCodificado%></label>

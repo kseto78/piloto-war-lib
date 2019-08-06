@@ -1,11 +1,11 @@
 <%@include file="/WEB-INF/jsp/utils/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/tlds/PlataformaMensajeriaTags.tld" prefix="plataforma" %>
-<plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado" permisoIdAplicacion="${idAplicacion}"  allowedTo="ROL_ADMINISTRADOR,ROL_PROPIETARIO">
+<plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado" permisoIdAplicacion="${idAplicacion}"  allowedTo="ROL_ADMINISTRADOR,ROL_PROPIETARIO,ROL_CAID">
 	<script>
 		document.location.href="permisoDenegado.action";
 	</script>
 </plataforma:securityRedirect>
-<plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR,ROL_PROPIETARIO">
+<plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR,ROL_PROPIETARIO,ROL_CAID">
 	<script>
 		document.location.href="permisoDenegado.action";
 	</script>
