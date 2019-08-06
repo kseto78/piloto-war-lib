@@ -881,7 +881,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 						if (tipoPermiso != null
 								&& tipoPermiso == 2
 								|| PlataformaMensajeriaUtil.getRolFromSession(request).equals(
-										PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+										PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||(PlataformaMensajeriaUtil.getRolFromSession(request).equals(
+												PlataformaMensajeriaUtil.ROL_CAID))) {
 							// Tiene permisos lectura escritura sobre el envio
 							if (operacionMsg != null && operacionMsg.equals("A")) {
 								boolean anulacionCorrecta = false;

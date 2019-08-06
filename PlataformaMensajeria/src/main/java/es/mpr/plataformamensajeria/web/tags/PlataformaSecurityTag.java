@@ -61,7 +61,7 @@ public class PlataformaSecurityTag extends BodyTagSupport {
     		 rolUsuarioId = PlataformaMensajeriaUtil.getRolUsuarioByUsername(usuarioNombre, servicioUsuario);
     		 
     	 }
-         if(rolUsuarioId!=null&&rolUsuarioId==1){
+         if(rolUsuarioId!=null&&(rolUsuarioId==1||rolUsuarioId==3)){
         	 //Tiene permisos de administrador, por lo que hay que comprobar si en el tag se indica que se muestre o no
         	 if(showIfGranted!=null&&"false".equals(showIfGranted)){
         		 skipBody=true;

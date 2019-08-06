@@ -717,7 +717,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 			ServicioBean servicio = servicioServicio.loadServicio(servicioBean);
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-			if (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+			if ((rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 				comboConfiguraciones = getComboConfiguracion(servicio.getCanalid());
 			} else if (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)) {
 				comboConfiguraciones = getComboServidoresServicio(servicio.getServicioId());

@@ -156,7 +156,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	public List<AplicacionBean> getAplicacionesMenu(String rolUsuario, Integer userName) {
 		List<AplicacionBean> listBean = new ArrayList<>();
 		try {
-			if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 				TblAplicacionesQuery query = new TblAplicacionesQuery();
 				query.setActivo(true);
 				query.setEliminadoIsNull(true);
@@ -206,7 +206,8 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	public List<AplicacionBean> getAplicacionesByCanal(String rolUsuario, Integer userName, long canalId) {
 		List<AplicacionBean> listBean = new ArrayList<>();
 		try {
-			if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+			
+			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 				TblServiciosQuery squery = new TblServiciosQuery();
 				TblCanalesQuery canal= new TblCanalesQuery();
 				TblAplicacionesQuery aquery = new TblAplicacionesQuery();

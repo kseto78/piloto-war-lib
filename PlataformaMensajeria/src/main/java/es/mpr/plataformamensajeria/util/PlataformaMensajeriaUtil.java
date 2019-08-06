@@ -59,6 +59,11 @@ public class PlataformaMensajeriaUtil {
 	/** Constante ROL_ADMINISTRADOR. */
 	public static final String ROL_ADMINISTRADOR="ROL_ADMINISTRADOR";
 	
+	/* INIT srealarq  nº478	09-07-2019*/
+	/** Constante ROL_CAID. */
+	public static final String ROL_CAID="ROL_CAID";
+	/* END srealarq	09-07-2019*/
+	
 	/** Constante ROL_PROPIETARIO. */
 	public static final String ROL_PROPIETARIO="ROL_PROPIETARIO";
 	
@@ -89,6 +94,7 @@ public class PlataformaMensajeriaUtil {
  	{
 		ROLES.put(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR,1 );
 		ROLES.put(PlataformaMensajeriaUtil.ROL_PROPIETARIO,2);
+		ROLES.put(PlataformaMensajeriaUtil.ROL_CAID,3);
  		
  	}
 	
@@ -100,7 +106,7 @@ public class PlataformaMensajeriaUtil {
 	 * @return usuario logueado
 	 */
 	
-	////MIGRADO
+	
 	public static UsuariosForm getUsuarioLogueado(Object user){
 		
 		MapUser detallesUsuario = (MapUser)	user;
@@ -127,7 +133,7 @@ public class PlataformaMensajeriaUtil {
 	 *
 	 * @return usuario logueado
 	 */
-	///MIGRADO
+	
 	public static UsuariosForm getUsuarioLogueado(){
 		MapUser detallesUsuario = (MapUser)	SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 		UsuariosForm formUsuario = new UsuariosForm();
@@ -150,7 +156,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param value the value
 	 * @return true, si es empty
 	 */
-	////MIGRADO
+	
 	public static boolean isEmpty(String value){
 		if(value==null||(value!=null&&value.equals(""))){
 			return true;
@@ -165,7 +171,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param value the value
 	 * @return true, si es empty number
 	 */
-	///MIGRADO
+	
 	public static boolean isEmptyNumber(Integer value){
 		if(value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1))){
 			return true;
@@ -180,7 +186,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param value the value
 	 * @return true, si es empty number long
 	 */
-	///MIGRADO
+	
 	public static boolean isEmptyNumberLong(Long value){
 		if(value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1))){
 			return true;
@@ -195,7 +201,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param hora the hora
 	 * @return true, if successful
 	 */
-	////MIGRADO
+	
 	public static boolean validaFormatoHora(String hora){
 		ValidaFormatoHora formato24Horas=new ValidaFormatoHora();
 		return formato24Horas.validate(hora);
@@ -208,7 +214,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param servicioUsuario the servicio usuario
 	 * @return Rol Id
 	 */
-	////MIGRADO
+	
 	public static Integer getRolUsuarioByUsername(String userName, ServicioUsuario servicioUsuario){
 		Integer rolId = servicioUsuario.getRolIdByUsername(userName);
 		if (null == rolId){
@@ -225,7 +231,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param servicioUsuarioAplicacion the servicio usuario aplicacion
 	 * @return map permisos aplicaciones
 	 */
-	/////MIGRADO
+	
 	public static HashMap<Integer, Integer> getMapPermisosAplicaciones(String userName, ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		HashMap<Integer,Integer> mapPermisosAplicaciones = new HashMap<Integer,Integer>();
 		List<UsuarioAplicacionBean> lista = servicioUsuarioAplicacion.getListPermisosAplicacionesUsuario(userName);
@@ -250,7 +256,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param request the request
 	 * @return rol id from session
 	 */
-	////MIGRADO
+
 	public static Integer getRolIdFromSession(HttpServletRequest request){
 		Integer sessionRolIdUsuario = (Integer)request.getSession().getAttribute(ID_ROL_USUARIO_PLATAFORMA);
 		return sessionRolIdUsuario;
@@ -262,7 +268,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param request the request
 	 * @return rol from session
 	 */
-	////MIGRADO
+	
 	public static String getRolFromSession(HttpServletRequest request){
 		String sessionRolUsuario = (String)request.getSession().getAttribute(ROL_USUARIO_PLATAFORMA);
 		return sessionRolUsuario;
@@ -274,7 +280,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param request the request
 	 * @return id usuario from session
 	 */
-	////MIGRADO
+	
 	public static Integer getIdUsuarioFromSession(HttpServletRequest request){
 		Integer sessionIdUsuario = (Integer)request.getSession().getAttribute(ID_USUARIO_LOGUEADO);
 		return sessionIdUsuario;
@@ -289,12 +295,14 @@ public class PlataformaMensajeriaUtil {
 	 * @param rolId the rol id
 	 * @param httpSession the http session
 	 */
-	////MIGRADO
+
 	public static void changeSessionRol(Integer rolId, HttpSession httpSession) {
     	if(rolId!=null&&rolId == 1){
     		httpSession.setAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA, PlataformaMensajeriaUtil.ROL_ADMINISTRADOR);
     	}else if(rolId!=null&&rolId == 2){
     		httpSession.setAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA, PlataformaMensajeriaUtil.ROL_PROPIETARIO);
+    	}else if(rolId!=null&&rolId == 3){
+    		httpSession.setAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA, PlataformaMensajeriaUtil.ROL_CAID);
     	}
 		
 	}

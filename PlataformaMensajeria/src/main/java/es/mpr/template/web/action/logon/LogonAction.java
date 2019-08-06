@@ -176,6 +176,10 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null),
     			    				properties.getProperty("PlataformaMensajeriaUtil.ROL_PROPIETARIO",null));
 
+    			    	}else if(rolUsuarioId!=null&&rolUsuarioId == 3){
+    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null),
+    			    				properties.getProperty("PlataformaMensajeriaUtil.ROL_CAID",null));
+
     			    	}
     			    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ID_ROL_USUARIO_PLATAFORMA",null), rolUsuarioId);
     			    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ID_USUARIO_LOGUEADO",null), idUsuario);
@@ -251,6 +255,7 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
 	  {
 	    List<GrantedAuthority> authList = new ArrayList<>(2);
 	    
+	    
 	    authList.add(new GrantedAuthorityImpl("ROLE_"));
 	    String role = new String();
 	    if(rolUsuarioId==1){
@@ -258,6 +263,10 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
 	    }
 	    if(rolUsuarioId==2){
 	    	role = "ROLE_PROPIETARIO";
+	    }
+	    
+	    if(rolUsuarioId==3){
+	    	role = "ROLE_CAID";
 	    }
 	    authList.add(new GrantedAuthorityImpl(role));
 	    

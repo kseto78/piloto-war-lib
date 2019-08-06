@@ -146,7 +146,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 	public List<ServicioBean> getServicios(String rolUsuario, Integer idUsuario) throws BusinessException {
 		List<ServicioBean> res = new ArrayList<>();
 		try{
-			if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 				TblServiciosQuery query = new TblServiciosQuery();
 				query.setEliminadoIsNull(true);
 				query.setTblAplicacionesIsNotNull(true);

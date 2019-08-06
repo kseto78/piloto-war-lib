@@ -35,7 +35,7 @@ public class PlataformaAppEditableTag extends BodyTagSupport{
 	    			 skipBody=false;
 	    		 }
 	    	 }
-    	 }else  if(rolUsuario!=null&&rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)){
+    	 }else  if(rolUsuario!=null&&(rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))){
     		 skipBody=false;
     	 }
          if(skipBody){

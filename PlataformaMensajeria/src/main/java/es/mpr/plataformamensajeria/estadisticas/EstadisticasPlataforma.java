@@ -144,7 +144,7 @@ public class EstadisticasPlataforma {
 			
 			StringBuffer aplicaciones = new StringBuffer();
 			if(mapPermisosUsuario!=null&&(!PlataformaMensajeriaUtil.isEmpty(rolUsuario)
-					&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))){
+					&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))){
 				Set<Integer> idAplicaciones = mapPermisosUsuario.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
 				boolean first=true;

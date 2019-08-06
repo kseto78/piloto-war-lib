@@ -297,7 +297,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 		try{
 			StringBuffer sbf = new StringBuffer();
 			
-			if (mapPermisosUsuarioAplicacion != null && (!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && !rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))) {
+			if (mapPermisosUsuarioAplicacion != null && (!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && !rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 	
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
@@ -341,7 +341,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			
 			if (mapPermisosUsuarioAplicacion != null && 
 					(!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && 
-					!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))){
+					!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))){
 				
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();

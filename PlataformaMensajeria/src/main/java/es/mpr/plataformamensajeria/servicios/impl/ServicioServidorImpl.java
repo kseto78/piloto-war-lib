@@ -154,7 +154,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 		List<TblServidores> listaServidores = new ArrayList<>();
 		
 		try {
-			if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 				TblServidoresQuery query = new TblServidoresQuery();
 				query.setEliminadoIsNull(true);
 				query.addOrder("nombre", OrderType.ASC);

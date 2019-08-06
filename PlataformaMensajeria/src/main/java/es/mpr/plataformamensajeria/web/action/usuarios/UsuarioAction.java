@@ -132,7 +132,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	////MIGRADO
+	
 	public String search() throws BaseException {
 
 		if (getRequest().getSession().getAttribute("infoUser") == null)
@@ -200,52 +200,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 		this.userNameToLoad = userNameToLoad;
 	}
 
-	
-	///MIGRADO
-//	public String execute() throws BaseException {
-//		if (getRequest().getSession().getAttribute("infoUser") == null)
-//			return "noUser";
-//
-//		int page = getPage("tableId"); // Pagina a mostrar
-//		String order = getOrder("tableId"); // Ordenar de modo ascendente o
-//											// descendente
-//		String columnSort = getColumnSort("tableId"); // Columna usada para
-//														// ordenar
-//
-//		if (usuario != null)
-//			if (usuario.getNombre() != null && usuario.getNombre().length() <= 0)
-//				usuario.setNombre(null);
-//
-//		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
-//		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-//		PaginatedList<UsuarioBean> result = servicioUsuario.getUsuarios(inicio,
-//				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
-//				columnSort, usuario);
-//		Integer totalSize = result.getTotalList();
-//
-//		listaUsuarios = result.getPageList();
-//
-//		// Atributos de request
-//		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
-//
-//		if (!export) {
-//			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-//					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
-//		} else {
-//			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
-//		}
-//
-//		if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
-//			for (int indice = 0; indice < listaUsuarios.size(); indice++) {
-//
-//				UsuarioBean usuario = listaUsuarios.get(indice);
-//				usuario.setNombre(StringEscapeUtils.escapeHtml(usuario.getNombre()));
-//				usuario.setLogin(StringEscapeUtils.escapeHtml(usuario.getLogin()));
-//			}
-//		}
-//
-//		return SUCCESS;
-//	}
+
 
 	/**
 	 * Creates the.
@@ -253,7 +208,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	////MIGRADO
+	
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
@@ -287,7 +242,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return true, if successful
 	 * @throws BusinessException the business exception
 	 */
-	////MIGRADO
+	
 	private boolean existeUsuario(String loginUsuario) throws BusinessException {
 		boolean sw = servicioUsuario.existeUsuario(loginUsuario);
 		if (sw) {
@@ -309,7 +264,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @throws BusinessException the business exception
 	 */
 	
-	////MIGRADO
+	
 	private boolean existeUsuarioEdicion(Integer idUsuario, String loginUsuario) throws BusinessException {
 		boolean sw = servicioUsuario.existeUsuarioEdicion(idUsuario, loginUsuario);
 		if (sw) {
@@ -416,7 +371,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	////MIGRADO
+	
 	public String load() throws BaseException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
 			return "noUser";
@@ -445,7 +400,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	///MIGRADO
+	
 	public String delete() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
@@ -483,7 +438,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	///MIGRADO
+
 	public String deleteSelected() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
@@ -524,7 +479,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	////MIGRADO
+	
 	public String addUsuarioAplicacion() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
@@ -561,7 +516,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @param usuarioAplicacion2 the usuario aplicacion 2
 	 * @return true, if successful
 	 */
-	///MIGRADO
+	
 	private boolean validaCampos(UsuarioAplicacionBean usuarioAplicacion2) {
 		boolean sw = true;
 		if (PlataformaMensajeriaUtil.isEmptyNumber(usuarioAplicacion.getAplicacionId().intValue())) {
@@ -582,7 +537,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return the string
 	 * @throws BaseException the base exception
 	 */
-	///MIGRADO
+	
 	public String deleteUsuarioAplicacion() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
@@ -611,7 +566,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.impl.PlataformaPaginationAction#prepare()
 	 */
-	////MIGRADO
+	
 	@Override
 	public void prepare() throws Exception {
 		if (!PlataformaMensajeriaUtil.isEmpty(idUsuario)) {
@@ -633,7 +588,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
  * @param idUsuario the id usuario
  * @return combo aplicaciones no asignadas
  */
-////MIGRADO
+
 	public List<KeyValueObject> getComboAplicacionesNoAsignadas(String idUsuario) {
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
@@ -660,7 +615,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
  *
  * @return combo aplicaciones
  */
-////MIGRADO
+
 	public List<KeyValueObject> getComboAplicaciones() {
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
@@ -687,7 +642,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
  *
  * @return combo roles
  */
-///MIGRADO
+
 	public List<KeyValueObject> getComboRoles() {
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
@@ -699,6 +654,10 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 		option.setCodigo("2");
 		option.setDescripcion("Propietario Aplicacion");
 		result.add(option);
+		option = new KeyValueObject();
+		option.setCodigo("3");
+		option.setDescripcion("Caid");
+		result.add(option);
 		return result;
 	}
 
@@ -707,7 +666,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
  *
  * @return combo modos
  */
-////MIGRADO
+
 	public List<KeyValueObject> getComboModos() {
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;

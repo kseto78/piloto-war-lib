@@ -615,7 +615,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 				servicio = servicioServicio.loadServicio(servicio);
 			}
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-			if (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)) {
+			if ((rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 				comboServidores = loadComboServidores();
 			} else if (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)) {
 				comboServidores = loadComboServidoresServicio(servicio.getServicioId());

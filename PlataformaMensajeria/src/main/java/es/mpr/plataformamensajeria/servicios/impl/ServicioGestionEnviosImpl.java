@@ -406,7 +406,8 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 			if (mapPermisosUsuarioAplicacion != null
 					&& (!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && !rolUsuario
-							.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))) {
+							.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&(!rolUsuario
+									.equals(PlataformaMensajeriaUtil.ROL_CAID)))) {
 
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
@@ -452,7 +453,8 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 			if (mapPermisosUsuarioAplicacion != null
 					&& (!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && !rolUsuario
-							.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))) {
+							.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario
+							.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
@@ -498,7 +500,8 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 
 			if (mapPermisosUsuarioAplicacion != null
 					&& (!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && !rolUsuario
-							.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))) {
+							.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario
+							.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
 
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();

@@ -42,7 +42,7 @@ public class PlataformaSecurityRedirectTag extends TagSupport
 			HashMap<Integer,Integer> mapPermisosAplicaciones =(HashMap<Integer, Integer>)pageContext.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES); 
 			Integer idAplicacion = Integer.parseInt(permisoIdAplicacion);
 			
-			if(!mapPermisosAplicaciones.containsKey(idAplicacion)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)){
+			if(!mapPermisosAplicaciones.containsKey(idAplicacion)&&(!(rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR))){
 				return Tag.EVAL_BODY_INCLUDE;
 			}
 		}else{

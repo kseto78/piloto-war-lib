@@ -31,6 +31,7 @@ public class ServicioAuditoriaPlataformaImpl implements ServicioAuditoriaPlatafo
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioAuditoriaPlataformaImpl.class);
 
+	
 	/**  tbl log manager. */
 	@Resource(name = "tblLogManagerImpl")
 	private TblLogManager tblLogManager;
