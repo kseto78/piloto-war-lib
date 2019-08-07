@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -857,6 +859,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			ApplicationContextProvider.getInstance().loadApplicationContext(applicationContext);
 		}
 		ApplicationContextProvider context = ApplicationContextProvider.getInstance();
+		
+		
+		checkDelList = new HashSet<String>(Arrays.asList(checkDelList)).toArray(new String[0]); //Borramos ids duplicados
+
 		
 		if (checkDelList != null) {
 			for (String id : checkDelList) {
