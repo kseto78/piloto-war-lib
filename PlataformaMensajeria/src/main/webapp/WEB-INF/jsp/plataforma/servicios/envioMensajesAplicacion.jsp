@@ -414,12 +414,10 @@ function makeRequestServiciosPorCanal(){
                     
                     <p class="criteria">
                         <label theme="simple" id="adjuntoLabel" style="width: 120px;visibility:hidden; display:none" 
-                        class="fieldText">Adjunto :</label>
-                        <s:else>
+                        class="fieldText">Adjunto :</label>                        
 							<input type="file" name="envioMensajesAplicacionBean.adjunto" id="envioMensajesAplicacionBean.adjunto" 
 							value="%{envioMensajesAplicacionBean.adjunto}" onchange="subidaFichero()" style="visibility:hidden;display:none;"/>
-						</s:else>
-
+						
 					</p>
 					
 					<p class="criteria" id="passbook" style="visibility:hidden;display:none;" >
