@@ -657,6 +657,36 @@
 		</put-list-attribute>
 	</definition>
 	
+	<definition name="pages.editProceso" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.ejecutarJob.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/utiles/editProceso.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.job|home.action" />
+			<add-attribute value="panel.configuracion.job.ejecucionJob|ejecucionJob.action" />
+		</put-list-attribute>	
+	</definition>
+	
+	<definition name="pages.procesoManual.edit" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.editProcesoManual.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/utiles/editProcesoManual.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.job|home.action" />
+			<add-attribute value="panel.configuracion.job.ejecucionJob|ejecucionJob.action" />
+		</put-list-attribute>	
+	</definition>
+	
+	<definition name="pages.procesoManual.create" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.createProcesoManual.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/utiles/newProcesoManual.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.configuracion.job|home.action" />
+			<add-attribute value="panel.configuracion.job.ejecucionJob|ejecucionJob.action" />
+		</put-list-attribute>	
+	</definition>
+	
+	<definition name="pages.job.viewMensajes" template="/WEB-INF/jsp/utiles/viewMensajesReenvios.jsp">
+	</definition>
+		
 	<!--
 		******************************************************************
 	-->

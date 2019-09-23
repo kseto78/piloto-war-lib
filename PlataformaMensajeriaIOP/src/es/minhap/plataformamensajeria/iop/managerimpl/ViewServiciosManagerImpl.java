@@ -105,6 +105,16 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		return viewServiciosDAO.search(query).getResults();
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ViewServicios> getServicios() {
+		ViewServiciosQuery query = new ViewServiciosQuery();
+		query.addOrder("nombre", OrderType.ASC);
+		
+		return viewServiciosDAO.search(query).getResults();
+
+	}
 
 	/**
 	 * @return the viewServiciosDAO

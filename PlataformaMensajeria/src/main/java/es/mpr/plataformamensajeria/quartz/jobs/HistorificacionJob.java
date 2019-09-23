@@ -161,7 +161,6 @@ public class HistorificacionJob implements Job {
 
 
 				for(ServicioBean servicio : listaServicios){
-							
 					
 					Calendar calendar = Calendar.getInstance();
 
@@ -191,9 +190,9 @@ public class HistorificacionJob implements Job {
 						
 						servicioAnalizado = servicio.getNombre();
 						idServicioAnalizado = servicio.getServicioId();
-							List<Long> listaLotesEnvios = servicioLotesEnvios.getLotesEnviosTOHist(servicio.getServicioId(), calendar.getTime());
-							
-//						////esto es para borrar
+						List<Long> listaLotesEnvios = servicioLotesEnvios.getLotesEnviosTOHist(servicio.getServicioId(), calendar.getTime());
+	
+//					////esto es para borrar
 //							listaLotesEnvios = new ArrayList<>();
 //							listaLotesEnvios.add(32267L);
 //							Date leche = new Date("20/04/2016");
@@ -216,7 +215,7 @@ public class HistorificacionJob implements Job {
 										
 										//Se obtienen todos los mensajes del lote actual
 										logger.info("Obtener mensajes del lote "+ idLote +" del servicio con ID "+servicio.getServicioId()+". ");
-										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote, calendar.getTime());
+										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote);
 //										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote, leche );
 
 										if(null != listaMensajesHist && !listaMensajesHist.isEmpty()){
@@ -231,6 +230,7 @@ public class HistorificacionJob implements Job {
 											
 											}else{ 	//Estamos en un lote que no tiene mensajes
 												try{
+													
 													exitoLE = servicioProcesoHistoricos.procesoHistoricoLotesEnvio(idLote, listaMensajesHist);
 
 													if(exitoLE){

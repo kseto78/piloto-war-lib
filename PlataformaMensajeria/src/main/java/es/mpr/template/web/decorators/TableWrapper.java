@@ -10,6 +10,8 @@ import com.map.j2ee.security.perm.model.UserVO;
 import com.map.j2ee.util.Constants;
 
 import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
+import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
+import es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesHistoricosBean;
@@ -140,6 +142,31 @@ public class TableWrapper extends TableDecorator {
 		String idOrganismoPdp = organismoPdp.getPdpDiputacionesId().toString();
 		
 		return "<div id=\"ajaxloader_ajax_"+organismoPdp.getPdpDiputacionesId()+"\" style=\"float:left\"> <span  class=\"btnTree\" title=\"Arbol\" onclick=\"return loadArbol(this,"+ idOrganismoPdp +")\"></span></div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editPdpDiputaciones.action?pdpDiputacionesId=" + idOrganismoPdp + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + organismoPdp.getNombre() + "');\" href=\"deletePdpDiputaciones.action?pdpDiputacionesId=" + idOrganismoPdp + "\"></a>";		
+	}
+	
+	/**
+	 * Obtener ejecucionJob action.
+	 *
+	 * @return ejecucionJob action
+	 */
+	public String getEjecucionJobAction() {
+
+		ProcesosBean proceso = (ProcesosBean) getCurrentRowObject();
+		String idProceso = proceso.getProcesosId().toString();
+		
+		return "<div id=\"ajaxloader_ajax_"+proceso.getProcesosId()+"\" style=\"float:left\"> </div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editProceso.action?procesosId=" + idProceso + "\"></a> <a  class=\"btnRun\" title=\"Ejecutar\" onclick=\"return confirmEjecutar('" + proceso.getNombre() + "');\" href=\"ejecutarJobExterno.action?procesosId=" + idProceso + "\"></a>";		
+	}
+	
+	/**
+	 * Obtener proceso Manuales action.
+	 *
+	 * @return proceso Manuales action
+	 */
+	public String getProcesosManualesAction() {
+
+		ProcesosManualesBean procesoManual = (ProcesosManualesBean) getCurrentRowObject();
+		String idProceso = procesoManual.getProcesosManualesId().toString();		
+		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editProcesoManual.action?procesoManualId=" + idProceso + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + procesoManual.getNombre() + "');\" href=\"deleteProcesoManual.action?procesoManualId=" + idProceso + "\"></a><a  class=\"btnRun\" title=\"Ejecutar\" onclick=\"return confirmEjecutarManual('" + procesoManual.getNombre() + "');\" href=\"ejecutarJobExterno.action?procesoManualId=" + idProceso + "\"></a>";		
 	}
 	
 	/**

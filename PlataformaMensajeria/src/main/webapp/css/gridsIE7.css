@@ -92,6 +92,9 @@ TD.buttons A:hover {
 .btnEdit {
 	DISPLAY: block; HEIGHT: 16px
 }
+.btnRun {
+	DISPLAY: block; HEIGHT: 16px
+}
 .btnDelete {
 	DISPLAY: block; HEIGHT: 16px
 }
@@ -105,7 +108,10 @@ TD.buttons A:hover {
 	DISPLAY: block; HEIGHT: 16px
 }
 .btnEdit {
-	WIDTH: 23px; BACKGROUND: url(../img/grids/btnEdit.gif) no-repeat left top
+	WIDTH: 16px; BACKGROUND: url(../img/grids/btnEdit.gif) no-repeat left top
+}
+.btnRun {
+	WIDTH: 23px; BACKGROUND: url(../img/grids/btnRun.gif) no-repeat left top
 }
 .btnDelete {
 	WIDTH: 15px; BACKGROUND: url(../img/grids/btnDelete.gif) no-repeat left top

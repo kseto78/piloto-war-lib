@@ -83,6 +83,8 @@ public interface QueryExecutorGestionEnvios {
 	 * @return
 	 */
 	Integer countGestionEnviosDestinatarios(GestionEnvioBean eg);
+	
+	Integer countGestionEnviosDestinatariosReenvios(GestionEnvioBean eg, String serviciosExcluidos, String serviciosIncluidos);
 
 	
 	/**
@@ -97,4 +99,9 @@ public interface QueryExecutorGestionEnvios {
 	 */
 	List<ViewGestionEnviosDestId> getGestionEnvioDestinatariosPaginado(Integer inicio, Integer pagesize, String order,
 			String column, GestionEnvioBean criterio);
+
+	List<ViewGestionEnviosDestId> getGestionEnvioDestinatariosPaginadoReenvioJob(
+			Integer inicio, Integer pagesize, String order, String column,
+			GestionEnvioBean criterio, String serviciosExcluidos, String serviciosIncluidos);
+	
 }

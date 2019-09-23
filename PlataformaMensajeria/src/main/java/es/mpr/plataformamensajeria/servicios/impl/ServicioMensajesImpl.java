@@ -37,15 +37,17 @@ public class ServicioMensajesImpl implements ServicioMensajes{
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes#getTodosMensajesLoteHistorificar(java.lang.Long, java.util.Date)
 	 */
 	@Override
-	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID, Date fecha) throws BusinessException {
+	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID) throws BusinessException {
 
 		List<Long> res = queryMensajes.getIdMensajesByLote(loteEnvioID);
-		
-		if (res.size() == queryMensajes.countMensajesHistorificacion(loteEnvioID, fecha)){
-			return res;
-		}else{
-			return new ArrayList<>();
-		}
+		return res;
+		/* Antes hacia una comparacion para ver si los mensajes y los estados de la tabla mensajes correspondia con la misma cantidad
+		  en la tabla gestion de envios con un estado final*/
+//		if (res.size() == queryMensajes.countMensajesHistorificacion(loteEnvioID, fecha)){
+//			return res;
+//		}else{
+//			return new ArrayList<>();
+//		}
 	}
 	
 	/* (non-Javadoc)

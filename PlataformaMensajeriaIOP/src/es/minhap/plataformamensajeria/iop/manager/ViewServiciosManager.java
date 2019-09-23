@@ -15,6 +15,9 @@ public interface ViewServiciosManager {
 	 */
 	public ViewServicios getAplicacionId(ViewServiciosQuery query);
 	
+	
+	public List<ViewServicios> getServicios();
+	
 	/**
 	 * Se obtiene la lista de servicios por aplicacion
 	 * 

@@ -1,0 +1,60 @@
+
+<pet:PassBook>
+ <!--type: string-->
+ <pet:URL>https://des-sede-administracion.redsara.es/pagSedeFront/servicios/descargaCSV.htm?csvquery=FA5v6p6pRvz---2BJKj7CUhnu8nwPJEit7Clsi---2BbpgsMlqV4VakYkYUXmsqW5---2Bp0CFYtmJ---2Bar6R719OTviEU8tEXYA---3D---3D</pet:URL>
+ <!--type: string-->
+ <pet:LogoText></pet:LogoText>
+ <!--type: string-->
+ <pet:Description>Justificante de ausencia de delitos penales sexuales.</pet:Description>
+<pet:CamposPrincipales>
+	<pet:PkFields>
+	   <!--type: string-->
+	   <pet:Clave>p1</pet:Clave>
+	   <!--type: string-->
+	   <pet:Etiqueta>Ausencia de antecedentes</pet:Etiqueta>
+	   <!--type: string-->
+	   <pet:Valor>de delitos de naturaleza sexual</pet:Valor>
+	</pet:PkFields>
+ </pet:CamposPrincipales>
+ <pet:CamposSecundarios>
+	 <pet:PkFields>
+	   <pet:Clave>s1</pet:Clave>
+	   <pet:Etiqueta>Fecha</pet:Etiqueta>
+	  <pet:Valor>27/06/2016 13:20</pet:Valor>
+	</pet:PkFields>
+	<pet:PkFields>
+	   <pet:Clave>s2</pet:Clave>
+	   <pet:Etiqueta>Documento de identidad</pet:Etiqueta>
+	  <pet:Valor>11111111X</pet:Valor>
+	</pet:PkFields>
+ </pet:CamposSecundarios>
+ <pet:CamposAuxiliares>
+	  <pet:PkFields>
+	   <pet:Clave>a1</pet:Clave>
+	   <pet:Etiqueta>Nombre y apellidos</pet:Etiqueta>
+	  <pet:Valor>JUAN ESPAÑOL ESPAÑOL</pet:Valor>
+	</pet:PkFields>
+	<pet:PkFields>
+	   <pet:Clave>a2</pet:Clave>
+	   <pet:Etiqueta>Código de verificación (CSV)</pet:Etiqueta>
+	  <pet:Valor>CCD-a714-04a3-ea3b-425a-c6f8-5c32-2c3c</pet:Valor>
+	</pet:PkFields>
+ </pet:CamposAuxiliares>
+ <pet:CamposDetalleTrasero>
+<pet:PkFields>
+	   <pet:Clave>fp1</pet:Clave>
+	   <pet:Etiqueta>Documento</pet:Etiqueta>
+	   <pet:Valor>Justificante de ausencia de antecedentes de delitos de naturaleza sexual</pet:Valor>
+  </pet:PkFields>
+  <pet:PkFields>
+	   <pet:Clave>fp2</pet:Clave>
+	   <pet:Etiqueta>Descripción</pet:Etiqueta>
+	   <pet:Valor>La consulta realizada al Registro Central de Penados del Ministerio de Justicia en fecha 27/06/2016 13:20 indica que no constan antecedentes penales</pet:Valor>
+  </pet:PkFields>
+	<pet:PkFields>
+	   <pet:Clave>fp3</pet:Clave>
+	   <pet:Etiqueta>Código de verificación (CSV)</pet:Etiqueta>
+	   <pet:Valor>CCD-a714-04a3-ea3b-425a-c6f8-5c32-2c3c</pet:Valor>
+	</pet:PkFields>
+ </pet:CamposDetalleTrasero>
+</pet:PassBook> 

@@ -1,5 +1,6 @@
 package es.minhap.plataformamensajeria.iop.manager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -276,8 +277,9 @@ public interface TblMensajesManager {
 	 * 
 	 * @return
 	 */
-	public Map<Long, List<MensajeJMS>> getMensajesReenviar();
-
+	
+	public Map<Long, List<MensajeJMS>> getMensajesReenviar(String serviciosExcluidos,
+			Date fechaInicio, Date fechaFin, String serviciosIncluidos);
 
 	/**
 	 * Elimina un mensaje
@@ -321,5 +323,6 @@ public interface TblMensajesManager {
 
 	public Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal);
 
+	
 	
 }

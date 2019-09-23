@@ -13,6 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.map.j2ee.exceptions.BusinessException;
 
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosHistManager;
+import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesHistManager;
+import es.minhap.plataformamensajeria.iop.manager.TblGestionEnviosHistManager;
+import es.minhap.plataformamensajeria.iop.manager.TblHistoricosHistManager;
+import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosHistManager;
+import es.minhap.plataformamensajeria.iop.manager.TblMensajesHistManager;
 import es.minhap.plataformamensajeria.iop.manager.TblProcesoHistManager;
 import es.minhap.sim.model.TblDestinatariosHist;
 import es.minhap.sim.model.TblDestinatariosMensHist;
@@ -78,6 +84,31 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	@Resource(name = "TblProcesoHistManagerImpl")
 	private TblProcesoHistManager tblProcesoHistManager;
 	
+	/**  tbl proceso hist manager. */
+	@Resource(name = "TblLotesEnviosHistManagerImpl")
+	private TblLotesEnviosHistManager tblLotesEnviosHistManager;
+	
+	
+	/**  tbl destinatarios mensajes hist manager. */
+	@Resource(name = "TblDestinatariosMensHistManagerImpl")
+	private TblDestinatariosMensajesHistManager tblDestinatariosMensajesHistManager;
+	
+	/**  tbl proceso hist manager. */
+	@Resource(name = "TblMensajesHistManagerImpl")
+	private TblMensajesHistManager tblMensajesHistManager;
+	
+	/**  tbl destinatarios historicos. */
+	@Resource(name = "TblDestinatariosHistManagerImpl")
+	private TblDestinatariosHistManager tblDestinatariosHistManager;
+	
+	/**  tbl gestion envios hist manager. */
+	@Resource(name = "TblGestionEnviosHistManagerImpl")
+	private TblGestionEnviosHistManager tblGestionEnviosHistManager;
+	
+	/**  servicio historico hist. */
+	@Resource(name = "TblHistoricosHistManagerImpl")
+	private TblHistoricosHistManager tblHistoricosHistManager;
+	
 	/**  session factory SIM app. */
 	@Autowired
     private SessionFactory sessionFactorySIMApp;
@@ -121,8 +152,11 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 			// Realizamos la inserccion de las tablas de historicos
 			TblLotesEnviosHist loteHistorico = servicioLotesEnviosHist.getLoteEnvioHist(loteEnvio);
 			loteHistorico.setFechahistorificacion(new Date());
+
+			if ( tblLotesEnviosHistManager.getLoteHistoricoById(loteHistorico.getLoteenvioid()) == null ){
+				servicioLotesEnviosHist.insert(loteHistorico);
+			} 		
 			
-			servicioLotesEnviosHist.insert(loteHistorico);
 			
 			
 			Integer partes = (int) Math.ceil((double) listaMensajes.size() / MAX);
@@ -202,8 +236,11 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	///MIGRADO
 	private void historificaMensajesHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
 		for (TblMensajesHist ma : procesoHistorificacionBean.getListaMensajeHistorico()) {
-			ma.setFechahistorificacion(fecha);
-			servicioMensajesHist.insert(ma);
+			if(tblMensajesHistManager.getMensaje(ma.getMensajeid()) == null){
+				ma.setFechahistorificacion(fecha);
+				servicioMensajesHist.insert(ma);
+			}
+			
 		}
 	}
 
@@ -306,8 +343,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	private void historificaDestinatariosMensHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
 		for (List<TblDestinatariosMensHist> l :procesoHistorificacionBean.getListasDestinatariosMensajesHist()){
 			for (TblDestinatariosMensHist dmh : l) {
-				dmh.setFechahistorificacion(fecha);
-				servicioDestinatarioHist.insert(dmh);
+				if ( tblDestinatariosMensajesHistManager.getDestinatarioMensaje(dmh.getDestinatariosmensajes()) == null){
+					dmh.setFechahistorificacion(fecha);
+					servicioDestinatarioHist.insert(dmh);
+				}
 			}
 		}
 	}
@@ -324,8 +363,10 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	private void historificaGestionEnviosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean)
 			throws BusinessException {
 		for (TblGestionEnviosHist geh : procesoHistorificacionBean.getListaGestionEnviosHist()) {
-			geh.setFechahistorificacion(fecha);
-			servicioGestionEnviosHist.insert(geh);
+			if ( tblGestionEnviosHistManager.getGestionEnviosById(geh.getMensajeid()) == null ){
+				geh.setFechahistorificacion(fecha);
+				servicioGestionEnviosHist.insert(geh);
+			}			
 		}
 	}
 
@@ -340,8 +381,11 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	private void historificaHistoricoHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
 		for (List<TblHistoricosHist> l :procesoHistorificacionBean.getListasHistoricoHist()){
 			for (TblHistoricosHist hh : l) {
-				hh.setFechahistorificacion(fecha);
-				servicioHistoricoHist.insert(hh);
+				if(tblHistoricosHistManager.getHistoricosHistById(hh.getHistoricoid()) == null){
+					hh.setFechahistorificacion(fecha);
+					servicioHistoricoHist.insert(hh);
+				}
+				
 			}
 		}
 	}
@@ -355,10 +399,13 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	 */
 	///MIGRADO
 	private void historificaDestinatariosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
-		for (List<TblDestinatariosHist> l :procesoHistorificacionBean.getListasDestinatariosHist()){
+		for (List<TblDestinatariosHist> l :procesoHistorificacionBean.getListasDestinatariosHist()){			
 			for (TblDestinatariosHist dh : l) {
-				dh.setFechahistorificacion(fecha);
-				servicioDestinatarioHist.insert(dh);
+				if ( tblDestinatariosHistManager.getDestinatario(dh.getDestinatarioid()) == null){
+					dh.setFechahistorificacion(fecha);
+					servicioDestinatarioHist.insert(dh);
+				}
+				
 			}
 		}
 	}

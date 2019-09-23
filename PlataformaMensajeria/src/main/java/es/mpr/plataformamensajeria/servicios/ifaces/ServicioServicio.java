@@ -28,6 +28,8 @@ public interface ServicioServicio {
 	 */
 	List<ServicioBean> getServiciosMultiorganismo() throws BusinessException;
 	
+	List<ViewServicios> getServiciosActivosNoEliminados() throws BusinessException;
+	
 	/**
 	 * Obtener servicios.
 	 *

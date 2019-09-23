@@ -22,7 +22,7 @@ public interface ServicioMensajes {
 	 * @return todos mensajes lote historificar
 	 * @throws BusinessException the business exception
 	 */
-	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID, Date date) throws BusinessException;
+	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID) throws BusinessException;
 	
 	/**
 	 * Test lote sin mensajes.

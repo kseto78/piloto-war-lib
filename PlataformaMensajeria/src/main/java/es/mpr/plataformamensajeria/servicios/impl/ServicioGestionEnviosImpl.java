@@ -7,15 +7,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Message;
+import javax.jms.Queue;
+import javax.jms.QueueBrowser;
+import javax.jms.Session;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +32,13 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.Gson;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
+import es.map.sim.negocio.modelo.MensajeJMS;
 import es.minhap.common.entity.OrderType;
+import es.minhap.common.properties.PropertiesServices;
 import es.minhap.common.spring.ApplicationContextProvider;
 import es.minhap.misim.bus.model.ViewMisim;
 import es.minhap.misim.bus.query.ViewMisimQuery;
@@ -41,17 +53,20 @@ import es.minhap.plataformamensajeria.iop.manager.TblGestionEnviosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblHistoricosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblLotesEnviosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewHistoricoManager;
 import es.minhap.plataformamensajeria.iop.manager.ViewLotesEnviosDetalladaManager;
 import es.minhap.plataformamensajeria.iop.misim.manager.PeticionManager;
 import es.minhap.plataformamensajeria.iop.misim.manager.ViewMisimManager;
+import es.minhap.sim.dao.TblMensajesDAO;
 import es.minhap.sim.model.TblAdjuntos;
 import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblDestinatarios;
 import es.minhap.sim.model.TblDestinatariosMensajes;
 import es.minhap.sim.model.TblGestionEnvios;
 import es.minhap.sim.model.TblMensajes;
+import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUsuariosPush;
 import es.minhap.sim.model.ViewGestionEnviosDestId;
 import es.minhap.sim.model.ViewHistorico;
@@ -59,6 +74,7 @@ import es.minhap.sim.model.ViewHistoricoMultidest;
 import es.minhap.sim.model.ViewLotesEnviosDetallada;
 import es.minhap.sim.query.TblDestinatariosMensajesQuery;
 import es.minhap.sim.query.TblGestionEnviosQuery;
+import es.minhap.sim.query.TblLotesEnviosQuery;
 import es.minhap.sim.query.ViewHistoricoMultidestQuery;
 import es.minhap.sim.query.ViewHistoricoQuery;
 import es.minhap.sim.query.ViewLotesEnviosDetalladaQuery;
@@ -194,8 +210,23 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	
+	@Resource
+	private TblMensajesDAO tblMensajesDAO;
+	
+	@Autowired
+	private TblLotesEnviosManager lotesEnviosManager;
+	
+	@Autowired
+	private TblServiciosManager serviciosManager;
+	
+	@Autowired
+	private TblDestinatariosMensajesManager destinatariosMensajesManager;
+	
 //	@Resource(name = "AplicacionManagerImp")
 //	AplicacionManager aplicacionManager;
+	
+	@Resource
+	ConnectionFactory pooledConnectionFactory;
 	
 	/**  query executor gestion envios impl. */
 @Autowired
@@ -235,6 +266,12 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 	
 	/** Constante OK. */
 	private static final String OK = "OK";
+	
+	private static final String ESTADOPENDIENTE = "constantes.ESTADO_PENDIENTE";
+	
+	private static final String prefijoPremium = "sim.premium";
+	
+	private static final String prefijoNormal = "sim.normal.";
 	
 	/**  adjunto. */
 	private String adjunto;
@@ -384,8 +421,57 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 		
 		return result;
 	}
-
 	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnvios#getGestionDeEnviosDestinatarios(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioBean, javax.servlet.http.HttpServletRequest)
+	 */
+	////MIGRADO
+	@SuppressWarnings("unchecked")
+	@Override
+	public PaginatedList<GestionEnvioBean> getGestionDeEnviosDestinatariosReenvioJob(int inicio, Integer pagesize, String order, String columnSort, GestionEnvioBean criterio, HttpServletRequest request, String serviciosExcluidos, String serviciosIncluidos) throws BusinessException {
+		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>)request.getSession().
+				getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
+		rolUsuario = (String)request.getSession().getAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA);
+		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
+		String estadoPend = ps.getMessage(ESTADOPENDIENTE, null);
+		Long canalMail = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
+		
+		Hashtable<String, String> columns = new Hashtable<String,String>();	
+		columns.put("0","aplicacion");
+		columns.put("1", "servicio");
+		columns.put("2", "loteenvio");
+		columns.put("3", "loteenvioid");
+		columns.put("4", "mensajeid");
+		columns.put("5", "ultimoenvio");
+		columns.put("6", "estado");
+		columns.put("7", "destinatario");
+		
+		if (columnSort==null){
+			columnSort = "5"; //FECHA
+		}
+		if(order==null){
+			order = "2";
+		}
+		
+		String column = columns.get(columnSort) ;	
+		
+		es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg = new es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean();
+		eg = createGestionEnvioBean(criterio,eg);
+		
+		Integer rowcount = queryExecutorGestionEnviosImpl.countGestionEnviosDestinatariosReenvios(eg,serviciosExcluidos, serviciosIncluidos);
+		List<ViewGestionEnviosDestId> lista = new ArrayList<>();
+		lista = queryExecutorGestionEnviosImpl.getGestionEnvioDestinatariosPaginadoReenvioJob(inicio, pagesize, order, column, eg, serviciosExcluidos, serviciosIncluidos);	
+			
+		List<GestionEnvioBean> pageList = getListGestionEnvioBeanFromDestinatario(lista);
+		
+		PaginatedList<GestionEnvioBean> result = new PaginatedList<>();
+		result.setPageList(pageList);
+		result.setTotalList(rowcount);
+		
+		return result;
+	}	
+	
+			
 	/**
 	 * Obtener total gestion envio.
 	 *
@@ -1562,8 +1648,8 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 							adjunto64 = generateDataURI(path);
 							
 							adj.setContenido(adjunto64);
-//							adj.setNombre(envioMensajesAplicacionBean.getAdjunto().getName());
-							adj.setNombre("descarga.jpg");
+							adj.setNombre(envioMensajesAplicacionBean.getNombreAdjunto());
+//							adj.setNombre("descarga.jpg");
 						}
 			    		
 						adjuntos.getAdjunto().add(adj);

@@ -2485,7 +2485,7 @@
 		<!-- PLATAFORMA MENSAJERIA - EjecucionJobAction -->
 		<!-- ************************************* -->
 		
-		<action name="ejecucionJob" class="ejecucionJobAction">
+		<action name="ejecucionJob" class="ejecucionJobAction" method="inicio">
 			<result name="success" type="tiles">pages.ejecutarJob</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
@@ -2499,8 +2499,101 @@
 			<result name="success" type="tiles">pages.ejecutarJob</result>		
 		</action>
 		
+		<action name="editProceso" class="ejecucionJobAction" method="load">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.editProceso</result>
+		</action>
 		
+		<action name="editProcesoManual" class="ejecucionJobAction" method="loadProcesoManual">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.procesoManual.edit</result>
+		</action>
 		
+		<action name="ejecutarJob" class="ejecucionJobAction" method="ejecutarJob">			
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProceso</param>
+				<param name="parse">true</param> 
+				<param name="procesosId">${proceso.procesosId}</param>
+			</result>
+		</action>
+		
+		<action name="ejecutarJobExterno" class="ejecucionJobAction" method="ejecutarJob">			
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">cargarServiciosConservacionEvent</param>
+				<param name="parse">true</param>
+				<param name="jobBean.nombreJob">REENVIO</param>
+			</result>			
+		</action>
+		
+		<action name="ejecutarJobManual" class="ejecucionJobAction" method="ejecutarJob">			
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProcesoManual</param>
+				<param name="parse">true</param> 
+				<param name="procesoManualId">${procesoManual.procesosManualesId}</param>
+			</result>
+		</action>
+		
+		<action name="guardarJob" class="ejecucionJobAction" method="update">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProceso</param>
+				<param name="parse">true</param>
+				<param name="procesosId">${proceso.procesosId}</param>			
+			</result>			
+		</action>
+		
+		<action name="guardarProcesoManual" class="ejecucionJobAction" method="updateProcesoManual">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProcesoManual</param>
+				<param name="parse">true</param>
+				<param name="procesoManualId">${procesoManual.procesosManualesId}</param>			
+			</result>			
+		</action>
+		
+		<action name="viewMensajeReenvios" class="ejecucionJobAction" method="loadMensajesReenvios">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.job.viewMensajes
+			</result>
+		</action>
+				
+				
+		<action name="deleteProcesoManual" class="ejecucionJobAction" method="deleteProcesoManual">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">cargarServiciosConservacionEvent</param>
+				<param name="parse">true</param>
+				<param name="jobBean.nombreJob">REENVIO</param>
+			</result>
+		</action>
+		
+		<action name="nuevoProcesoManual" class="ejecucionJobAction">
+			<result name="success" type="tiles">pages.procesoManual.create</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
+		
+		<action name="salveProcesoManual" class="ejecucionJobAction" method="createProcesoManual">
+			<result name="error" type="tiles">pages.procesoManual.create</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editProcesoManual</param>
+				<param name="parse">true</param> 
+				<param name="procesoManualId">${procesoManualId}</param>
+			</result>
+		</action>
+		
+		<action name="deleteProcesosManualesSeleccionados" class="ejecucionJobAction"
+			method="deleteSelected">
+			<result name="success"  type="redirectAction">
+				<param name="actionName">cargarServiciosConservacionEvent</param>
+				<param name="parse">true</param>
+				<param name="jobBean.nombreJob">REENVIO</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+		</action>
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - MISIM -->
 		<!-- ************************************* -->

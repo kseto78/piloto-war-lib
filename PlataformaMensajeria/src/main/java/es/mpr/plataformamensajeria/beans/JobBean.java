@@ -32,6 +32,7 @@ public class JobBean implements Audit, Serializable {
 		this.nombreJob = null;
 		this.fecha = null;
 		this.fechaFin = null;
+		this.parametro1 = null;
 		
 	}
 
@@ -46,6 +47,9 @@ public class JobBean implements Audit, Serializable {
 	
 	/**  fecha fin. */
 	private Date fechaFin;
+	
+	/** parametro 1 */
+	private String parametro1;
 	
 	
 
@@ -143,6 +147,18 @@ public class JobBean implements Audit, Serializable {
 	 */
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
+	}
+
+
+
+	public String getParametro1() {
+		return parametro1;
+	}
+
+
+
+	public void setParametro1(String parametro1) {
+		this.parametro1 = parametro1;
 	}
 
 

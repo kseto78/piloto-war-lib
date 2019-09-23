@@ -184,10 +184,11 @@ public interface QueryExecutorMensajes {
 
 	/***
 	 * Recupera una lista con los mensajes que tienen algún destinatrario pendiente de envío
+	 * @param serviciosExcluidos 
 	 * 
 	 * @return
 	 */
-	public List<Long> getMensajesPendientes();
+	public List<Long> getMensajesPendientes(Date fechaInicio, Date fechaFinal, String serviciosExcluidos, String serviciosIncluidos);
 	
 	/***
 	 * Numero de mensajes enviados/anulados por lote y fecha 

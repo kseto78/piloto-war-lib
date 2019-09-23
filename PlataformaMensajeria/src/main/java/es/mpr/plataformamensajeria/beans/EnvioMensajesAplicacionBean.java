@@ -57,6 +57,7 @@ public class EnvioMensajesAplicacionBean implements Audit{
 			this.logoPassbook = null;
 			this.descripcionPassbook = null;
 			
+			this.nombreAdjunto = null;
 		}
 		
 	/**  aplicacion id. */
@@ -163,6 +164,9 @@ public class EnvioMensajesAplicacionBean implements Audit{
 	
 	/**  descripcion passbook. */
 	private String descripcionPassbook;
+	
+	/**  nombre adjunto */
+	private String nombreAdjunto;
 	
 	
 	/* (non-Javadoc)
@@ -813,6 +817,14 @@ public class EnvioMensajesAplicacionBean implements Audit{
 	 */
 	public void setDescripcionPassbook(String descripcionPassbook) {
 		this.descripcionPassbook = descripcionPassbook;
+	}
+
+	public String getNombreAdjunto() {
+		return nombreAdjunto;
+	}
+
+	public void setNombreAdjunto(String nombreAdjunto) {
+		this.nombreAdjunto = nombreAdjunto;
 	}
 
 

@@ -54,13 +54,15 @@ span.reply{width: 29px;}
 td.buttons{text-align: center;}
 td.buttons a:hover{opacity: 0.5; filter: alpha(opacity=50);}
 
-.btnEdit, .btnDelete, .btnView, .btnDecline, .btnReply, .btnTree{display: inline-block; height: 16px;}
+.btnEdit, .btnDelete, .btnView, .btnDecline, .btnReply, .btnTree, .btnRun{display: inline-block; height: 16px;}
 .btnEdit{background:url(../img/grids/btnEdit.gif) left top no-repeat; width: 23px;}
 .btnTree{background:url(../img/grids/btnTree.gif) left top no-repeat; width: 23px;}
+.btnRun{background:url(../img/grids/btnRun.gif) left top no-repeat; width: 16px;}
 .btnDelete{background:url(../img/grids/btnDelete.gif) left top no-repeat; width: 15px;}
 .btnView{background:url(../img/grids/btnView.gif) left top no-repeat; width: 29px;}
 .btnDecline{background:url(../img/grids/btnDecline.gif) left top no-repeat; width: 16px;}
 .btnReply{background:url(../img/grids/btnReply.gif) left top no-repeat; width: 18px;}
+
 
 span.activo, span.inactivo{display: inline-block; width: 16px; height: 13px;}
 span.activo{background:url(../img/grids/icoActivo.png) left top no-repeat;}

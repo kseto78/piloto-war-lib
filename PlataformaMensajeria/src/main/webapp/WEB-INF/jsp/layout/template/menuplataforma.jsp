@@ -89,7 +89,7 @@
 		<div>
 			<s:if test="#session.ROL_USUARIO_PLATAFORMA == 'ROL_ADMINISTRADOR'">
 				<h3 id="desplegable42">
-					<a href="ejecucionJob.action">Ejecución de jobs</a>
+					<a href="ejecucionJob.action">Ejecución de Jobs</a>
 				</h3>
 			</s:if>
 

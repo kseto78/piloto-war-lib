@@ -151,7 +151,7 @@ td.buttons a:hover {
 	opacity: 0.5;
 }
 
-.btnEdit,.btnDelete,.btnView,.btnDecline,.btnReply,.btnPassbook,.btnTree{
+.btnEdit,.btnDelete,.btnView,.btnDecline,.btnReply,.btnPassbook,.btnTree,.btnRun{
 	display: inline-block;
 	height: 16px;
 }
@@ -165,6 +165,12 @@ td.buttons a:hover {
 	background: url("../img/grids/btnEdit.gif") no-repeat scroll left top
 		transparent;
 	width: 23px;
+	cursor: pointer;
+}
+.btnRun {
+	background: url("../img/grids/btnRun.gif") no-repeat scroll left top
+		transparent;
+	width: 16px;
 	cursor: pointer;
 }
 

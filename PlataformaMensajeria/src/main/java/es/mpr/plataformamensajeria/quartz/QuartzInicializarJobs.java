@@ -2,12 +2,14 @@ package es.mpr.plataformamensajeria.quartz;
 
 import java.text.ParseException;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 import org.quartz.CronExpression;
 import org.quartz.Job;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -16,7 +18,13 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.quartz.Trigger;
+import org.quartz.TriggerKey;
 
+import com.map.j2ee.exceptions.BusinessException;
+
+import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesos;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 
 
@@ -25,6 +33,7 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
  */
 public class QuartzInicializarJobs extends HttpServlet  {
 
+		
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -61,6 +70,8 @@ public class QuartzInicializarJobs extends HttpServlet  {
 	/** Constante DIR3_TRIGGER_NAME. */
 	private static final String DIR3_TRIGGER_NAME = "DIR3_TRIGGER";
 	
+	private static final String TRIGGER = "_TRIGGER";
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.GenericServlet#init()
 	 */
@@ -69,8 +80,14 @@ public class QuartzInicializarJobs extends HttpServlet  {
 	public void init() throws ServletException{
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		configProp  = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
+		String nodoPrincipal = configProp.getProperty("jobNodoActivos.activacion", null);
+		
 		try {
            this.planificarJobs();
+           if(nodoPrincipal != null && nodoPrincipal.equals("S")){
+        	   Planificador p = new Planificador(applicationContext);
+               p.run();
+           }         
 		} catch (Exception e) {
 			logger.error("[QuartzInicializarJobs - init] ",e);
 		}
@@ -84,47 +101,48 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		
 	}
 	
-/**
- * Planificar jobs.
- */
-////MIGRADO
-	public void planificarJobs(){
-		try{
-			String activarJobHist = configProp.getProperty("jobHist.activacion", null);
-			String activarJobCons = configProp.getProperty("jobCons.activacion", null);
-			String activarJobInformesServicios = configProp.getProperty("jobInformesServicios.activacion", null);
-			String activarJobDIR3 = configProp.getProperty("jobDIR3.activacion", null);
-			
-			if((activarJobHist!=null && activarJobHist.equals("S")) ||
-					(activarJobCons!=null && activarJobCons.equals("S")) ||
-					(activarJobInformesServicios!=null && activarJobInformesServicios.equals("S")) ||
-					(activarJobDIR3!=null && activarJobDIR3.equals("S"))){
+	
+	/**
+	 * Planificar jobs.
+	 */
+	////MIGRADO
+		public void planificarJobs(){
+			try{
+				String activarJobHist = configProp.getProperty("jobHist.activacion", null);
+				String activarJobCons = configProp.getProperty("jobCons.activacion", null);
+				String activarJobInformesServicios = configProp.getProperty("jobInformesServicios.activacion", null);
+				String activarJobDIR3 = configProp.getProperty("jobDIR3.activacion", null);
 				
-		        // Obtenemos la referencia del planificador
-				SchedulerFactory sf = new StdSchedulerFactory();
-				Scheduler scheduler = sf.getScheduler();
-				scheduler.getContext().put("applicationContext",applicationContext);
-				
-				if(activarJobHist!=null && "S".equals(activarJobHist)){
-					this.planificarJobHist(scheduler);
+				if((activarJobHist!=null && activarJobHist.equals("S")) ||
+						(activarJobCons!=null && activarJobCons.equals("S")) ||
+						(activarJobInformesServicios!=null && activarJobInformesServicios.equals("S")) ||
+						(activarJobDIR3!=null && activarJobDIR3.equals("S"))){
+					
+			        // Obtenemos la referencia del planificador
+					SchedulerFactory sf = new StdSchedulerFactory();
+					Scheduler scheduler = sf.getScheduler();
+					scheduler.getContext().put("applicationContext",applicationContext);
+					
+					if(activarJobHist!=null && "S".equals(activarJobHist)){
+						this.planificarJobHist(scheduler);
+					}
+					if(activarJobCons!=null && "S".equals(activarJobCons)){
+						this.planificarJobCons(scheduler);
+					}
+					if(activarJobInformesServicios!=null && "S".equals(activarJobInformesServicios)){
+						this.planificarJobInformesServicios(scheduler);
+					}
+					
+					if(activarJobDIR3!= null && "S".equals(activarJobDIR3)){
+						this.planificarJobDIR3(scheduler);
+					}
+					scheduler.start();
 				}
-				if(activarJobCons!=null && "S".equals(activarJobCons)){
-					this.planificarJobCons(scheduler);
-				}
-				if(activarJobInformesServicios!=null && "S".equals(activarJobInformesServicios)){
-					this.planificarJobInformesServicios(scheduler);
-				}
-				
-				if(activarJobDIR3!= null && "S".equals(activarJobDIR3)){
-					this.planificarJobDIR3(scheduler);
-				}
-				scheduler.start();
+			}catch (SchedulerException se){
+				logger.error("[QuartzInicializarJobs - planificarJobs] ",se);
+				logger.debug("planificar - Error: " + se.getMessage());
 			}
-		}catch (SchedulerException se){
-			logger.error("[QuartzInicializarJobs - planificarJobs] ",se);
-			logger.debug("planificar - Error: " + se.getMessage());
 		}
-	}
 	
 /**
  * Planificar job hist.
@@ -243,12 +261,8 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			logger.debug("planificarJobInformes - Error: " + se.getMessage());
 		}
 	}
+		
 	
-	/**
-	 * Planificar job DIR 3.
-	 *
-	 * @param scheduler the scheduler
-	 */
 	private void planificarJobDIR3(Scheduler scheduler){
 		try{
 			// Creación del job

@@ -137,6 +137,23 @@ public class ServicioServicioImpl implements ServicioServicio {
 			throw new BusinessException(e, "errors.organismo.getOrganismos");
 		}
 	}
+	
+	@Override
+	public List<ViewServicios> getServiciosActivosNoEliminados() throws BusinessException{
+		try {
+			TblServiciosQuery query = new TblServiciosQuery();
+			query.setEliminadoIsNull(true);
+			query.setActivo(true);
+			query.addOrder("nombre", OrderType.ASC);
+			List<ViewServicios> lista = viewServiciosManager.getServicios();
+//			List<TblServicios> lista = tblServiciosManager.getServicios(query); 
+			return lista;
+		} catch (Exception e) {
+			logger.error("ServicioServicioImpl - getServiciosActivosNoEliminados:" + e);
+			throw new BusinessException(e, "errors.job.ejecucionjobs.getServicios");
+		}
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio#getServicios(java.lang.String, java.lang.Integer)
@@ -918,7 +935,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 	public List<ServicioBean> getServiciosHistorico() throws BusinessException {
 		try {
 			TblServiciosQuery query = new TblServiciosQuery();
-			query.setEliminadoIsNull(true);
+//			query.setEliminadoIsNull(true);
 			query.setHistorificacionIsNotNull(true);
 			query.setActivo(true);
 			List<TblServicios> listaServicios = tblServiciosManager.getServicios(query);
@@ -1083,6 +1100,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 		}
 		return new ArrayList<>();
 	}
+
+	
 
 
 

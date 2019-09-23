@@ -2,6 +2,7 @@ package es.minhap.plataformamensajeria.iop.manager;
 
 import java.util.List;
 
+import es.minhap.sim.model.TblGestionEnviosHist;
 import es.minhap.sim.model.TblHistoricosHist;
 
 public interface TblHistoricosHistManager {
@@ -28,6 +29,14 @@ public interface TblHistoricosHistManager {
 	 * @param id
 	 */
 	void eliminar(Long id);
+	
+	/**
+	 * obtiene historico hist por idMensaje
+	 * 
+	 * @param idMensaje
+	 * @return 
+	 */
+	TblHistoricosHist getHistoricosHistById(Long HISTORICOID);
 	
 
 }

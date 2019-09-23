@@ -220,7 +220,7 @@ P.criteria STRONG {
 	PADDING-BOTTOM: 4px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: inline-block; FLOAT: left; PADDING-TOP: 4px
 }
 LABEL.fieldText {
-	PADDING-BOTTOM: 0px; PADDING-LEFT: 8px; PADDING-RIGHT: 0px; DISPLAY: inline-block; BACKGROUND: url(../img/icoText.gif) no-repeat left 7px; FLOAT: left; HEIGHT: 16px; FONT-SIZE: 10px; VERTICAL-ALIGN: top; PADDING-TOP: 4px
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 8px; PADDING-RIGHT: 0px; DISPLAY: inline-block; FLOAT: left; HEIGHT: 16px; FONT-SIZE: 10px; VERTICAL-ALIGN: top; PADDING-TOP: 4px
 }
 LABEL.fieldTextNoHeight {
 	PADDING-BOTTOM: 0px; PADDING-LEFT: 8px; PADDING-RIGHT: 0px; DISPLAY: inline-block; BACKGROUND: url(../img/icoText.gif) no-repeat left 7px; FLOAT: left; FONT-SIZE: 10px; VERTICAL-ALIGN: top; PADDING-TOP: 4px

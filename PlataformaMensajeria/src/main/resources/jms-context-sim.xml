@@ -21,9 +21,9 @@
 		<!-- Constructor con solo brokerURL -->
 		<!--  <constructor-arg index="0" value="tcp://10.253.114.219:61616" /> -->
 		<!-- Constructor con autenticacion -->
-		<property name="brokerURL" value="tcp://10.253.114.219:61616" />
-		<property name="userName" value="sim" />
-		<property name="password" value="glksgavmwa" />
+		<property name="brokerURL" value="${activemq.brokerURL}" />
+		<property name="userName" value="${activemq.userName}" />
+		<property name="password" value="${activemq.password}" />
 		<property name="transactedIndividualAck" value="true" />
 	</bean>
 

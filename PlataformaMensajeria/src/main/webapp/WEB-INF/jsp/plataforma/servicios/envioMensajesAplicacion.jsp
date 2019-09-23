@@ -5,6 +5,18 @@
  		document.location.href="permisoDenegado.action";
 	</script>
 </plataforma:securityRedirect>
+<style>
+
+.description {
+    display:none;
+    position:absolute;
+    border:1px solid #000;
+    max-width:150px;
+/*     height:100px; */
+    background:yellow;
+}
+
+</style>
 <script>
 function submitForm(){
 	//en sms confirmar que tiene costes adicionales
@@ -18,7 +30,7 @@ function submitForm(){
 			var form = document.getElementById('frmEnvioMensajesAplicacion');
 			form.submit();
 		}
-}
+	}
 function setValue(obj){
 	var value = obj.value;
 	document.getElementById('envioMensajesAplicacionBean.servicioId').value=value;
@@ -235,6 +247,7 @@ function makeRequestServiciosPorCanal(){
 </script>
 <div class="mainContent">            
         <s:form id="frmEnvioMensajesAplicacion" enctype="multipart/form-data" method="POST" action="envioMensajesAplicacion" validate="false" cssClass="" theme="simple">
+        <s:hidden id = "envioMensajesAplicacionBean.nombreAdjunto" name="envioMensajesAplicacionBean.nombreAdjunto" />
             <h3 class="pageNameButtons">
                 <label>Envío de Mensajes
                 </label>
@@ -295,10 +308,12 @@ function makeRequestServiciosPorCanal(){
 			<div class="editContent">
 				<p class="criteria">		
 					<label style="width: 120px;" class="fieldText">Nombre Lote (*):</label>
+					
 					<s:textfield name="envioMensajesAplicacionBean.nombreLote"
 							value="%{envioMensajesAplicacionBean.nombreLote}" id="envioMensajesAplicacionBean.nombreLote"
 							theme="simple" cssStyle="" labelposition="left"
 							size="45" maxlength="255" cssClass="" />
+					<label class="tiptext"><img src="./img/icoHelp.png" height="10" width="10" "><label class="description">${textoAyudaNombreLote}</label></label>
 				</p>
 
 				
@@ -330,6 +345,8 @@ function makeRequestServiciosPorCanal(){
 						<s:textfield name="envioMensajesAplicacionBean.idExterno" value="%{envioMensajesAplicacionBean.idExterno}"
 							id="envioMensajesAplicacionBean.idExterno" theme="simple" labelposition="left" size="45" maxlength="255"
 							cssClass="" />
+
+<label class="tiptext"><img src="./img/icoHelp.png" height="10" width="10" "><label class="description">${textoAyudaIdExterno}</label></label>
 					</p>
 
                 	<p class="criteria">
@@ -401,14 +418,14 @@ function makeRequestServiciosPorCanal(){
                     	<label theme="simple" id="mensajeLabel" style="width: 120px;" 
                     	class="fieldText">Mensaje (*):</label>
 						<s:textarea  name="envioMensajesAplicacionBean.mensaje" value="%{envioMensajesAplicacionBean.mensaje}" id="envioMensajesAplicacionBean.mensaje" 
-						theme="simple" cssClass="W240"/> 
+						theme="simple" maxlength="1000" cssClass="W240" /> 
                     </p>
                     
                     <p class="criteria">
                     	<label theme="simple" id="cuerpoLabel" style="width: 120px;visibility:hidden; display:none" 
                     	class="fieldText">Cuerpo (*):</label>
 						<s:textarea  name="envioMensajesAplicacionBean.cuerpo" value="%{envioMensajesAplicacionBean.cuerpo}" id="envioMensajesAplicacionBean.cuerpo" 
-						theme="simple" cssClass="W240" style="visibility:hidden;display:none;"/> 
+						theme="simple" cssClass="W240" maxlength="1000" style="visibility:hidden;display:none;"/> 
                     </p>
 
                     
@@ -442,6 +459,11 @@ function makeRequestServiciosPorCanal(){
 					<label>Passbook </label>
 				</div>
 				<div class="editContent">
+					<p class="criteria">
+						<span style="width: 340px;"> <label class="fieldTextInfoPassbook" style="height:0px0px">Pulse <a href="peticionPassbook.txt" target="_blank">aquí</a> para descargarse un xml de ejemplo con la información requerida en los campos del formulario.</label> <strong><s:label
+								theme="simple" /></strong>
+						</span>
+					</p>					
 					<p class="criteria">		
 						<label style="width: 120px;visibility:hidden;display:none;" id="urlLabel" class="fieldText">URL :</label>
 						<s:textfield name="envioMensajesAplicacionBean.url"
@@ -609,10 +631,27 @@ function makeRequestServiciosPorCanal(){
         	   if(document.getElementById('envioMensajesAplicacionBean.adjunto').value.split('.').pop() == "exe"){
         		  alert("El tipo de fichero no puede ser de tipo exe.");
         		  document.getElementById('envioMensajesAplicacionBean.adjunto').value = null; 
-            	}        	   
+            	}else{
+                	   var nombreFich = document.getElementById('envioMensajesAplicacionBean.adjunto').value;
+                		   
+            			document.getElementById('envioMensajesAplicacionBean.nombreAdjunto').value = nombreFich.split(/(\\|\/)/g).pop();
+                	}      	   
            }
            
            		checkCanalEnvio(document.getElementById('cid'));
+
+           		$(".tiptext").mouseover(function() {
+           		    $(this).children(".description").show();
+           		}).mouseout(function() {
+           		    $(this).children(".description").hide();
+           		});
+           		$(document).ready ( function(){
+           			if (document.getElementById('envioMensajesAplicacionBean.passbook').value){
+           					checkPassbook();
+               			}
+           			
+           		});
+           		               	
   		   </script>
 			
         </div>

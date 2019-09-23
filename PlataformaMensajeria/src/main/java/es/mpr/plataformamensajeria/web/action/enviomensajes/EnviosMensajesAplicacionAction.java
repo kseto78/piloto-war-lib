@@ -3,6 +3,7 @@ package es.mpr.plataformamensajeria.web.action.enviomensajes;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -15,6 +16,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.util.KeyValueObject;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 
 import es.minhap.common.spring.ApplicationContextProvider;
@@ -103,6 +105,12 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	
 	/** Constante TIPO_FICHERO. */
 	public static final String TIPO_FICHERO = "xml";
+	
+	/** Constante Ayuda Nombre lote. */
+	private String textoAyudaNombreLote;
+	
+	/** Constante Ayuda IdLote. */
+	private String textoAyudaIdLote;
 
 	/**
 	 * Load.
@@ -113,14 +121,14 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	public String load() throws BusinessException {
 		if (getRequest().getSession().getAttribute("infoUser") == null)
 			return "noUser";
-		if (validUsuario()) {
-			envioMensajesAplicacionBean = new EnvioMensajesAplicacionBean();
+		if (validUsuario()) {			
+			envioMensajesAplicacionBean = new EnvioMensajesAplicacionBean();			
 			return SUCCESS;
 		} else {
 			return ERROR;
 		}
 	}
-
+	
 	/**
 	 * Enviar peticion.
 	 *
@@ -133,7 +141,7 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 		Respuesta respuesta = null;
 
 		boolean validPeticion = false;
-
+				
 		if (envioMensajesAplicacionBean != null) {
 			validPeticion = validEnvioPeticion(envioMensajesAplicacionBean);
 		}
@@ -658,6 +666,21 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	 */
 	public void setSearch(String search) {
 		this.search = search;
+	}
+
+	public String getTextoAyudaNombreLote() {
+		return properties.getProperty("envioMensajes.ayuda.nombreLote", null);
+	}
+
+	public void setTextoAyudaNombreLote(String textoAyudaNombreLote) {
+		this.textoAyudaNombreLote = textoAyudaNombreLote;
+	}
+	public String getTextoAyudaIdExterno() {
+		return properties.getProperty("envioMensajes.ayuda.idExterno", null);
+	}
+
+	public void setTextoAyudaIdExterno(String textoAyudaIdLote) {
+		this.textoAyudaIdLote = textoAyudaNombreLote;
 	}
 	
 

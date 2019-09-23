@@ -176,4 +176,15 @@
 		<servlet-name>resources</servlet-name>
 		<url-pattern>/resources/*</url-pattern>
 	</servlet-mapping> 		
+    <servlet>
+	    <description></description>
+	    <display-name>ServletSetEstadoProceso</display-name>
+	    <servlet-name>ServletSetEstadoProceso</servlet-name>
+	    <servlet-class>es.mpr.plataformamensajeria.servlet.ServletSetEstadoProceso</servlet-class>
+  	</servlet>
+    <servlet-mapping>
+  	  <servlet-name>ServletSetEstadoProceso</servlet-name>
+  	  <url-pattern>/setEstadoProceso</url-pattern>
+ 	</servlet-mapping>
+	
 </web-app>

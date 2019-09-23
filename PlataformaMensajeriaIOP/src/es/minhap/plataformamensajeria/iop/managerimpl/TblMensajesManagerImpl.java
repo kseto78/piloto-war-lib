@@ -1,7 +1,10 @@
 package es.minhap.plataformamensajeria.iop.managerimpl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -944,7 +947,6 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}
 		}
 	}
-
 	@Override
 	@Transactional
 	public Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal) {
@@ -1460,10 +1462,11 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	@Override
-	public Map<Long, List<MensajeJMS>> getMensajesReenviar() {
+	public Map<Long, List<MensajeJMS>> getMensajesReenviar(String serviciosExcluidos, Date fechaInicio, Date fechaFin, String serviciosIncluidos) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String estadoPend = ps.getMessage(ESTADOPENDIENTE, null);
-		List<Long> listaMensajes = queryExecutorMensajes.getMensajesPendientes();
+				
+		List<Long> listaMensajes = queryExecutorMensajes.getMensajesPendientes(fechaInicio,fechaFin,serviciosExcluidos,serviciosIncluidos);
 		Long canalMail = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
 		Map<Long, List<MensajeJMS>> map = new HashMap<>();
 

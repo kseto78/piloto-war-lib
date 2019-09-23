@@ -2,6 +2,7 @@ package es.minhap.plataformamensajeria.iop.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -316,6 +317,84 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		}
 	}
 	
+	@Override
+	public Integer countGestionEnviosDestinatariosReenvios(GestionEnvioBean eg, String serviciosExcluidos, String serviciosIncluidos) {
+		try {
+			StringBuilder sql = new StringBuilder();
+			
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_START);
+			}
+			
+			List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(serviciosExcluidos.split(",")));
+			String sqlExcluidos = "";
+			
+			if(serviciosExcluidos != null && !serviciosExcluidos.equals("")){
+				for(String idServ : serviciosAeatGiss){
+					sqlExcluidos += " AND NOT ge.servicioid = "+idServ;
+				}
+			}
+			
+			
+			StringBuilder sqlIncluidos = new StringBuilder();
+			if(serviciosIncluidos != null && !serviciosIncluidos.equals("")){
+				List<String> servicios = new ArrayList<String>(Arrays.asList(serviciosIncluidos.split(",")));
+				sqlIncluidos.append(" AND (ge.servicioid = "+servicios.get(0));
+				servicios.remove(0);			
+				for(String idServ : servicios){
+					sqlIncluidos.append(" OR ge.servicioid = "+idServ);
+				}
+				sqlIncluidos.append(")");
+			}
+						
+			sql.append("SELECT count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
+					+ " ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID "
+					+ " FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL " + sqlExcluidos + sqlIncluidos);
+			
+//			sql.append("select count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
+//					+ "ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID, "
+//					+ "ge.ENVIOID FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL ");
+			
+			addSqlParameter(eg, sql, false);
+			
+			if(eg.getArrayOrganismos()!=null && !eg.getArrayOrganismos().isEmpty()){
+				String organismosAeat = null;
+				StringBuffer sb = new StringBuffer(); 
+				
+				for (String organismo : eg.getArrayOrganismos()){
+					sb.append("'").append(organismo).append("', ");
+				}
+				
+				organismosAeat = sb.toString();
+				organismosAeat = organismosAeat.replaceAll(", $", "");
+				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+			}
+			
+			
+			sql.append(")");
+			
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+			if (null != eg.getFechaDesde()){
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(eg.getFechaDesde());
+				
+				query.setTimestamp("fechaDesde", cal.getTime());
+			}
+			if (null != eg.getFechaHasta()){
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(eg.getFechaHasta());
+				
+				query.setTimestamp("fechaHasta", cal.getTime());
+			}
+			
+			return ((BigDecimal)query.uniqueResult()).intValue();
+			
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -580,6 +659,110 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 	}
 
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ViewGestionEnviosDestId> getGestionEnvioDestinatariosPaginadoReenvioJob(Integer inicio, Integer pagesize, String order,
+			String column, GestionEnvioBean criterio, String serviciosExcluidos, String serviciosIncluidos) {
+		try {
+			List<ViewGestionEnviosDestId> res = new ArrayList<>();
+			StringBuilder sql = new StringBuilder();
+			
+			// Orden ascendente o descendente
+			String orden = "";
+			if (order == null || order.equals("1")){
+				orden = " ASC";
+			} else {
+				orden = " DESC";
+			}
+			
+			List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(serviciosExcluidos.split(",")));
+			String sqlExcluidos = "";
+			
+			if(serviciosExcluidos != null && !serviciosExcluidos.equals("")){
+				for(String idServ : serviciosAeatGiss){
+					sqlExcluidos += " AND NOT ge.servicioid = "+idServ;
+				}
+			}
+			
+			
+			
+			StringBuilder sqlIncluidos = new StringBuilder();
+			if(serviciosIncluidos != null && !serviciosIncluidos.equals("")){
+				List<String> servicios = new ArrayList<String>(Arrays.asList(serviciosIncluidos.split(",")));
+				sqlIncluidos.append(" AND (ge.servicioid = "+servicios.get(0));
+				servicios.remove(0);			
+				for(String idServ : servicios){
+					sqlIncluidos.append(" OR ge.servicioid = "+idServ);
+				}
+				sqlIncluidos.append(")");
+			}
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_START);
+			}
+			sql.append("SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
+					+ " ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID "
+					+ " FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL " + sqlExcluidos + sqlIncluidos);
+			
+			
+			addSqlParameter(criterio, sql, false);
+			
+			if(criterio.getArrayOrganismos()!=null && !criterio.getArrayOrganismos().isEmpty()){
+				String organismosAeat = null;
+				StringBuffer sb = new StringBuffer(); 
+				
+				for (String organismo : criterio.getArrayOrganismos()){
+					sb.append("'").append(organismo).append("', ");
+				}
+				
+				organismosAeat = sb.toString();
+				organismosAeat = organismosAeat.replaceAll(", $", "");
+				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+			}
+			
+			sql.append(" ORDER BY " + column + orden);
+			
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
+			if (null != criterio.getFechaDesde()){
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(criterio.getFechaDesde());
+				
+				query.setTimestamp("fechaDesde", cal.getTime());
+			}
+			if (null != criterio.getFechaHasta()){
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(criterio.getFechaHasta());
+				
+				query.setTimestamp("fechaHasta", cal.getTime());
+			}
+			if (pagesize >=0){
+				query.setMaxResults(pagesize);
+			}
+			query.setFirstResult(inicio);
+			List<Object[]> rows = query.list();
+			
+			for (Object[] row : rows) {
+				ViewGestionEnviosDestId ge = new ViewGestionEnviosDestId();
+				ge.setAplicacion((String)row[0]);
+				ge.setServicio((String) row[1]);
+				ge.setLoteenvio((String) row[2]);
+				ge.setAplicacionid(((BigDecimal) null != row[3])? ((BigDecimal) row[3]).longValue() : null);
+				ge.setDestinatario((String) row[4]);
+				ge.setServicioid(((BigDecimal) null != row[5])? ((BigDecimal) row[5]).longValue() : null);
+				ge.setLoteenvioid(((BigDecimal) null != row[6])? ((BigDecimal) row[6]).longValue() : null);
+				ge.setMensajeid(((BigDecimal) null != row[7])? ((BigDecimal) row[7]).longValue() : null);
+				ge.setUltimoenvio(((Date) null != row[8])? (Date) row[8] : null);
+				ge.setEstado((String) row[10]);
+				ge.setDestinatariosmensajes(((BigDecimal) null != row[11])? ((BigDecimal) row[11]).longValue() : null);
+				ge.setCanalid(((BigDecimal) null != row[12])? ((BigDecimal) row[12]).longValue() : null);
+				res.add(ge);
+			}
+			return res;
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+
 	
 	private String getSubqueryEstado(Integer idEstado, String columna){
 		String res = "";

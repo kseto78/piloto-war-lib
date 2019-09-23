@@ -2,6 +2,8 @@ package es.minhap.plataformamensajeria.iop.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -956,17 +958,45 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 @SuppressWarnings("unchecked")
 @Override
 @Transactional
-public List<Long> getMensajesPendientes() {
+//Consulta para sacar los mensajes pendientes, sin los servicios excluidos que estaran por properties y seran los de AEAT y GISS
+public List<Long> getMensajesPendientes(Date fechaInicio, Date fechaFin, String serviciosExcluidos, String serviciosIncluidos) {
 	List<Long> res = new ArrayList<>();
 	try {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(LOG_START);
 		}
-		String sql = "select MENSAJEID from TBL_MENSAJES where MENSAJEID in "
-				+ "(select MENSAJEID from TBL_DESTINATARIOS_MENSAJES where ESTADO = 'PENDIENTE DE ENVIO' or ESTADO = 'PENDIENTE') "
-				+ "order by MENSAJEID desc";
+		
+		List<String> serviciosAeatGiss = new ArrayList<>();
+		if(!serviciosExcluidos.equals("")) serviciosAeatGiss = new ArrayList<>(Arrays.asList(serviciosExcluidos.split(","))); 
+		
+		StringBuilder sqlExcluidos = new StringBuilder();
+		
+		
+		for(String idServ : serviciosAeatGiss){
+			sqlExcluidos.append(" AND NOT ge.servicioid = "+idServ);
+		}
+		
+		StringBuilder sqlIncluidos = new StringBuilder();
+		if(serviciosIncluidos != null && !serviciosIncluidos.equals("")){
+			List<String> servicios = new ArrayList<String>(Arrays.asList(serviciosIncluidos.split(",")));
+			sqlIncluidos.append(" AND (ge.servicioid = "+servicios.get(0));
+			servicios.remove(0);			
+			for(String idServ : servicios){
+				sqlIncluidos.append(" OR ge.servicioid = "+idServ);
+			}
+			sqlIncluidos.append(")");
+		}
+		
+		
+			String sql = "SELECT DISTINCT ge.MENSAJEID FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL AND (" +
+	        "estado ='PENDIENTE DE ENVIO' or estado= 'PENDIENTE') and ge.ULTIMOENVIO IS NOT NULL "+ sqlExcluidos + sqlIncluidos +
+	        " AND ge.ultimoEnvio >=:fechaDesde AND ge.ultimoEnvio <=:fechaHasta";
 		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-
+		
+		
+		query.setTimestamp("fechaDesde", fechaInicio);		
+		query.setTimestamp("fechaHasta", fechaFin);
+		
 		List<Object> rows = query.list();
 		for (Object row : rows) {
 			res.add(((BigDecimal) row).longValue());
@@ -994,7 +1024,9 @@ public List<Long> getMensajesPendientes() {
 			}
 
 			String sql = "select count(m.mensajeid) from TBL_GESTIONENVIOS ge inner join TBL_MENSAJES m on ge.mensajeid = m.mensajeid where m.loteenvioid = :lote and "
-					+ "(m.estadoactual = 'ENVIADO' or m.estadoactual = 'ANULADO') and ge.ultimoenvio <= :fecha";
+					+ " ge.ultimoenvio <= :fecha";
+//			String sql = "select count(m.mensajeid) from TBL_GESTIONENVIOS ge inner join TBL_MENSAJES m on ge.mensajeid = m.mensajeid where m.loteenvioid = :lote and "
+//					+ "(m.estadoactual = 'ENVIADO' or m.estadoactual = 'ANULADO') and ge.ultimoenvio <= :fecha";
 
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 			query.setLong("lote", loteId);

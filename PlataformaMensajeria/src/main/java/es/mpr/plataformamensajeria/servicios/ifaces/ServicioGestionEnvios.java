@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
@@ -250,5 +249,10 @@ public interface ServicioGestionEnvios {
 //	nat
 	Respuesta enviarPeticion(ApplicationContextProvider applicationContext, EnvioMensajesAplicacionBean envioMensajesAplicacionBean);
 //	nat
+
+PaginatedList<GestionEnvioBean> getGestionDeEnviosDestinatariosReenvioJob(
+		int inicio, Integer pagesize, String order, String columnSort,
+		GestionEnvioBean criterio, HttpServletRequest request, String serviciosExcluidos, String serviciosIncluidos)
+		throws BusinessException;
 
 }
