@@ -98,7 +98,7 @@ public class ReenviarMensajesPendientesJob {
 			
 			// Obtenemos mensaje pendientes de envío.Hay que mirar el estado en
 			// destinatarios-mensaje
-			Map<Long, List<MensajeJMS>> mapMensajes = tblMensajesManager.getMensajesReenviar(serviciosExcluidos);
+			Map<Long, List<MensajeJMS>> mapMensajes = tblMensajesManager.getMensajesReenviar(serviciosExcluidos, null, null, null);
 			for (Map.Entry<Long, List<MensajeJMS>> entry : mapMensajes.entrySet()) {
 				Long servicioId = entry.getKey();
 				List<MensajeJMS> listaMensajesPendientes = entry.getValue();
