@@ -81,11 +81,13 @@ public class SIMMessageSender {
 		}
 		public Message createMessage(Session session) throws JMSException {
 			Message msg = converter.toMessage(message, session);
-			if(!StringUtils.isEmpty(maxRetriesProperty)&&maxRetries!=null){
-				msg.setLongProperty(maxRetriesProperty, maxRetries);
-			}
+//			if(!StringUtils.isEmpty(maxRetriesProperty)&&maxRetries!=null){			
+			if(!(maxRetriesProperty == null) || ("".equals(maxRetriesProperty))&&maxRetries!=null){
+				msg.setLongProperty(maxRetriesProperty, maxRetries);			
+			}			
 			msg.setStringProperty("SIM_QUEUE_NAME", queue);
-			if(!StringUtils.isEmpty(deliveryDelayProperty)&&deliveryDelay!=null) {
+			if((deliveryDelayProperty == null) || ("".equals(deliveryDelayProperty))&&deliveryDelay!=null) {
+//			if(!StringUtils.isEmpty(deliveryDelayProperty)&&deliveryDelay!=null) {
 				msg.setLongProperty(deliveryDelayProperty, deliveryDelay);
 			}
 			return msg;
