@@ -85,6 +85,7 @@ public class ReenviarMensajesPendientesJob {
 	public void execute() throws JobExecutionException {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String errorActiveMq = ps.getMessage("conexion.ERRORACTIVEMQ", null, "[ERROR-ACTIVEMQ]");
+		String serviciosExcluidos = ps.getMessage("activemq.job.cronReenvio.serviciosExcluidos", null, null, null);
 		
 		if("S".equals(ps.getMessage("activemq.job.activarReenvio", null, null, null))) {
 			String prefijoNormal = ps.getMessage("activemq.queueNamePrefix", null);
@@ -97,7 +98,7 @@ public class ReenviarMensajesPendientesJob {
 			
 			// Obtenemos mensaje pendientes de envío.Hay que mirar el estado en
 			// destinatarios-mensaje
-			Map<Long, List<MensajeJMS>> mapMensajes = tblMensajesManager.getMensajesReenviar();
+			Map<Long, List<MensajeJMS>> mapMensajes = tblMensajesManager.getMensajesReenviar(serviciosExcluidos);
 			for (Map.Entry<Long, List<MensajeJMS>> entry : mapMensajes.entrySet()) {
 				Long servicioId = entry.getKey();
 				List<MensajeJMS> listaMensajesPendientes = entry.getValue();
