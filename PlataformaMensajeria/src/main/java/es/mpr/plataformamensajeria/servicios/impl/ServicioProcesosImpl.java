@@ -389,14 +389,7 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 			ConvertUtils.register(integerConverter, java.lang.Integer.class);
 			ConvertUtils.register(converter, java.util.Date.class);
 			BeanUtils.copyProperties(proceso, o);
-			proceso.setProcesosId(o.getProcesosid().intValue());			
-//			proceso.setInicioUltimaEjecucion(o.getInicioUltimaEjecucion());
-//			proceso.setFinUltimaEjecucion(o.getFinUltimaEjecucion());
-//			proceso.setModificadoPor(o.getModificadoPor());
-//			proceso.setFechaModificacion(o.getFechaModificacion());
-			
-			
-			
+			proceso.setProcesosId(o.getProcesosid().intValue());
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("ServicioProcesosImpl - getProcesosBean:" + e);
