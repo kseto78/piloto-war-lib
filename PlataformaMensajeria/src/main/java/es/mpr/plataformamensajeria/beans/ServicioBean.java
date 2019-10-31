@@ -70,6 +70,7 @@ public class ServicioBean implements Audit, Serializable {
 		this.isMultiorganismo = null;
 		this.premium = null;
 		this.exclusivo = null;
+		this.smsExtranjeros= null;
 		this.numeroMaxReenvios = null;
 		this.eliminado = null;
 		this.caducidadWebPush = null;
@@ -244,6 +245,12 @@ public class ServicioBean implements Audit, Serializable {
 	
 	/**  is exclusivo. */
 	protected String isExclusivo = null;
+	
+	/**  smsExtranjeros. */
+	protected Boolean smsExtranjeros = null;
+	
+	/**  is smsExtranjeros. */
+	protected String isSmsExtranjeros = null;
 	
 	/**  numero max reenvios. */
 	protected Integer numeroMaxReenvios = null;
@@ -774,6 +781,33 @@ public class ServicioBean implements Audit, Serializable {
 			this.exclusivo = false;
 		}
 		this.isExclusivo = isExclusivo;
+	}
+	
+	/**
+	 * Obtener checks if is smsExtranjeros.
+	 *
+	 * @return checks if is smsExtranjeros
+	 */
+	public String getIsSmsExtranjeros() {
+		if (smsExtranjeros != null && smsExtranjeros) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+
+	/**
+	 * Modificar checks if is smsExtranjeros.
+	 *
+	 * @param isSmsExtranjeros new checks if is smsExtranjeros
+	 */
+	public void setIsSmsExtranjeros(String isSmsExtranjeros) {
+		if (isSmsExtranjeros!= null && isSmsExtranjeros.equals("true")) {
+			this.smsExtranjeros = true;
+		} else {
+			this.smsExtranjeros = false;
+		}
+		this.isSmsExtranjeros = isSmsExtranjeros;
 	}
 
 	/**
@@ -1568,7 +1602,13 @@ public class ServicioBean implements Audit, Serializable {
 		this.exclusivo = exclusivo;
 	}
 	
-	
+	public Boolean getSmsExtranjeros() {
+		return smsExtranjeros;
+	}
+
+	public void setSmsExtranjeros(Boolean smsExtranjeros) {
+		this.smsExtranjeros = smsExtranjeros;
+	}
 	
 	/**
 	 * Obtener numero max reenvios.
