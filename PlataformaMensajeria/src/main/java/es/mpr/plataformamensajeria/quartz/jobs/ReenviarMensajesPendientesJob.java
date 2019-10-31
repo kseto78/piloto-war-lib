@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.jms.Connection;
@@ -17,15 +17,10 @@ import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
-import javax.mail.Authenticator;
-import javax.mail.Multipart;
-import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.log4j.Logger;
@@ -45,25 +40,21 @@ import com.google.gson.Gson;
 
 import es.map.sim.jms.sender.SIMMessageSender;
 import es.map.sim.negocio.modelo.MensajeJMS;
-import es.minhap.plataformamensajeria.iop.beans.SMTPAuthenticator;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
-import es.minhap.plataformamensajeria.iop.manager.TblParametrosServidorManager;
 import es.minhap.plataformamensajeria.iop.manager.TblProcesosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
+import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
 import es.minhap.plataformamensajeria.iop.managerimpl.TblServiciosManagerImpl;
 import es.minhap.plataformamensajeria.iop.misim.manager.ErroresManager;
-import es.minhap.sim.model.TblParametrosServidor;
 import es.minhap.sim.model.TblProcesos;
 import es.minhap.sim.model.TblServicios;
-import es.minhap.sim.query.TblParametrosServidorQuery;
 import es.minhap.sim.query.TblProcesosQuery;
-import es.minhap.sim.query.TblServidoresQuery;
-import es.minhap.sim.query.TblTiposParametrosQuery;
 import es.mpr.plataformamensajeria.beans.JobBean;
 import es.mpr.plataformamensajeria.beans.ProcesoHistBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoHistoricos;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
+import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 
 /**
  * Clase para el Job de Reenvios de mensajes pendientes
@@ -85,7 +76,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 	private TblMensajesManager tblMensajesManager;
 	
 	@Resource(name = "tblParametrosServidorManagerImpl")
-	private TblParametrosServidorManager tblParametrosServidorManager;
+	private TblParametrosServidorManagerImpl tblParametrosServidorManager;
 
 	@Resource(name = "TblDestinatariosMensajesManagerImpl")
 	private TblDestinatariosMensajesManager tblDestinatariosMensajesManager;
@@ -107,6 +98,9 @@ public class ReenviarMensajesPendientesJob implements Job{
 	
 	/**  estado proceso ko. */
 	private static String ESTADO_PROCESO_KO = "KO";
+	
+	/**  nombre job. */
+	private static String NOMBRE_JOB = "Reenvio";
 	
 	/**  job bean. */
 	private JobBean jobBean = null;
@@ -243,6 +237,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 			tblProcesosManager = (TblProcesosManager) applicationContext.getBean("TblProcesosManagerImpl");
 			serviciosManager = (TblServiciosManagerImpl) applicationContext.getBean("TblServiciosManagerImpl");
 			servicioProcesoHistoricos = (ServicioProcesoHistoricos) applicationContext.getBean("servicioProcesoHistoricosImpl");
+			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
 			properties = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 		} catch (Exception objException) {
 			logger.error("RecuperarInforDIRJob - InicializarVariables - Error: " + objException);
@@ -255,6 +250,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 	 */
 	@Transactional(noRollbackFor = Throwable.class)
 	public void ejecutar() throws JobExecutionException {
+		StringBuilder descripcionEstado = new StringBuilder();
 		
 		ProcesoHistBean procesoHistBean = new ProcesoHistBean();
 		procesoHistBean.setFechaInicio(new Date());		
@@ -295,6 +291,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 			String prefijoNormal = properties.getProperty("activemq.queueNamePrefix", null);
 			String prefijoPremium = properties.getProperty("activemq.premiumQueueName", null);
 			List<String> mensajesConError = new ArrayList<>();
+			HashMap<Long, String> mensajesEnviados = new HashMap<Long, String>();
 			List<String> destinatariosConError = new ArrayList<>();
 			
 			LOG.info("---Inicio JOB ReenviarMensajes---");
@@ -340,6 +337,14 @@ public class ReenviarMensajesPendientesJob implements Job{
 						if (!encolado) {
 							LOG.info("Mensaje " + mensajeJMSPendiente.getIdMensaje() + " - " + mensajeJMSPendiente.getDestinatarioMensajeId() + " no ha sido encolado previamente.");
 							encolarMensaje(servicioId, servicio, mensajeJMSPendiente);
+							if(mensajesEnviados.containsKey(servicioId)){
+								if(!mensajesEnviados.get(servicioId).contains(mensajeJMSPendiente.getIdMensaje())){
+									mensajesEnviados.put(servicioId,mensajesEnviados.get(servicioId) + ","+mensajeJMSPendiente.getIdMensaje());
+								}
+								
+							}else{
+								mensajesEnviados.put(servicioId,mensajeJMSPendiente.getIdMensaje());
+							}							
 							//Comprobamos que si ya se ha actualizado la tabla de errores a true
 							activeMQ = 1;//true
 						} else {
@@ -368,11 +373,7 @@ public class ReenviarMensajesPendientesJob implements Job{
  			
  			
 			
-			if (null != mensajesConError && mensajesConError.size() > 0) {
-				LOG.info("--- Envio email Job ReenviarMensajesPendientes ---");
-				if("S".equals(properties.getProperty("job.mail.avisar", null))) {
-					enviarEmail(mensajesConError, destinatariosConError);
-				}
+			if (null != mensajesConError && mensajesConError.size() > 0) {								
 				procesoHistBean.setCodigoEstado(ESTADO_PROCESO_KO);
 				procesoHistBean.setDescripcionEstado("Se han producido fallos en el reenvio job. Para mas informacion, consulte logs.");
 				
@@ -382,6 +383,33 @@ public class ReenviarMensajesPendientesJob implements Job{
 			}
 			procesoHistBean.setFechaFin(new Date());
 			servicioProcesoHistoricos.newServicioProcesoHistoricos(procesoHistBean);
+			
+			if("S".equals(properties.getProperty("job.mail.avisar", null))) {
+				LOG.info("--- Envio email Job ReenviarMensajesPendientes ---");
+				SendMailService sendMailService = new SendMailService();
+				try {
+					if(mensajesEnviados.size() == 0){
+						descripcionEstado.append("No se ha reenviado ningun mensaje");
+					}
+					if(mensajesEnviados.size() > 0){
+						descripcionEstado.append("Se han enviado los siguientes mensajes: ");
+						for (Map.Entry<Long, String> entry : mensajesEnviados.entrySet()) {
+							descripcionEstado.append("<br>");
+							descripcionEstado.append("-Servicio: ["+entry.getKey()+"] ID Mensajes: ["+entry.getValue()+"]");
+						}
+					}
+					if(!mensajesConError.isEmpty()){
+						descripcionEstado.append("No se han enviado los siguientes mensajes: ");
+						for(String mensaje:mensajesConError){
+							descripcionEstado.append(mensaje);
+						}
+					}					
+					sendMailService.initJob(NOMBRE_JOB, procesoHistBean.getCodigoEstado(), descripcionEstado.toString(), properties, tblParametrosServidorManager);
+				} catch (ServletException e) {
+					logger.error("HistorificacionJob.Execute " , e);
+				}
+			}
+			
 			
 			LOG.info("--- Fin Job ReenvioMensajesPendientes ---");
 		
@@ -408,6 +436,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 //		throw new CannotCreateTransactionException("Error manual");
 		LOG.info("Se encola Mensaje:  ---->" + mensajeJMS.getIdMensaje() + " -- DestinatarioMensajeId: " + mensajeJMS.getDestinatarioMensajeId());
 		sender.send(mensajeJMS, maxRetries, servicioId.toString(), premium);
+		
 	}
 
 	/**
@@ -421,134 +450,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 		LOG.info("MENSAJES ---->" + listaMensajes.size());
 		LOG.info("------------------");
 	}
-
-	/**
-	 * Metodo encargado de enviar los mensajes
-	 * @param ps
-	 * @param mensajesConError
-	 * @param destinatariosConError
-	 */
-	private void enviarEmail(List<String> mensajesConError, List<String> destinatariosConError) {
-		String dns = properties.getProperty("job.mail.ip.dns", null);
-		String usuario = properties.getProperty("job.mail.usuario", null);
-//		String password = properties.getProperty("job.mail.password", null);
-		String conexionSegura = properties.getProperty("job.mail.requiereConexionSegura", null);
-		String puerto = properties.getProperty("job.mail.puerto", null);
-		String autenticacion = properties.getProperty("job.mail.requiereAutenticacion", null);
-		String tiempEspera = properties.getProperty("job.mail.tiempoEspera", null);
-		String destTO = properties.getProperty("job.mail.to", null);
-		String destCC = properties.getProperty("job.mail.cc", null);
-		String destBcc = properties.getProperty("job.mail.bcc", null);
-		String tituloCorreo = properties.getProperty("job.mail.titulo", null);
-		String cuerpoCorreo = properties.getProperty("job.mail.cuerpo", null);
 	
-		boolean debug = false;
-		
-		
-		//Buscamos todos los parametros con el valor de la property de job.mail.usuario
-		TblParametrosServidorQuery tblParQuery = new TblParametrosServidorQuery();
-		tblParQuery.setValor(usuario);				
-		List<TblParametrosServidor> parametrosServidor = tblParametrosServidorManager.getByQuery(tblParQuery);
-
-		//Buscamos los parametros con el servidor id de la consulta anterior y el tipo de parametro 3
-		TblParametrosServidorQuery tblParQuery2 = new TblParametrosServidorQuery();			
-		TblServidoresQuery queryServ = new TblServidoresQuery();
-		queryServ.setServidorid(parametrosServidor.get(0).getTblServidores().getServidorid());
-		tblParQuery2.setTblServidores(queryServ);
-		TblTiposParametrosQuery tiposQuery = new TblTiposParametrosQuery();
-		tiposQuery.setTipoparametroid(3L); //Tipo de parametro de contraseña
-		tblParQuery2.setTblTiposParametros(tiposQuery);
-		List<TblParametrosServidor> valorFinal = tblParametrosServidorManager.getByQuery(tblParQuery2);
-		String password = valorFinal.get(0).getValor();
-		
-		try {
-			// CONFIGURAMOS EL SERVIDOR
-			Properties props = new Properties();
-			javax.mail.Session session = null;
-			Authenticator auth = null;
-
-			// HOST
-			props.put("mail.smtp.host", dns);
-
-			// PUERTO
-			props.put("mail.smtp.port", puerto);
-
-			// TIEMPO DE ESPERA
-			int timeout = Integer.parseInt(tiempEspera) * 1000;
-			props.put("mail.smtp.connectiontimeout", timeout);
-			props.put("mail.smtp.timeout", timeout);
-
-			// SI REQUIERE CONEXION SEGURA
-			if (conexionSegura != null && conexionSegura.equals("S")) {
-				props.setProperty("mail.smtp.starttls.enable", "true");
-			}
-
-			// SI REQUIERE AUTENTIFICACION
-			if (null != autenticacion && autenticacion.equals("S")) {
-				props.put("mail.smtp.auth", true);
-				auth = new SMTPAuthenticator(usuario, password);
-				session = javax.mail.Session.getInstance(props, auth);
-			} else {
-				props.put("mail.smtp.auth", false);
-				session = javax.mail.Session.getInstance(props, null);
-			}
-
-			session.setDebug(debug);
-
-			// CREAMOS EL MENSAJE
-			MimeMessage msg = new MimeMessage(session);
-
-			InternetAddress addressFrom = null;
-
-			// ANADIR EL SENDER
-			if (usuario != null) {
-				addressFrom = new InternetAddress(usuario, "Informe SIM");
-				msg.setFrom(addressFrom);
-			} else {
-				addressFrom = new InternetAddress(usuario);
-				msg.setFrom(addressFrom);
-			}
-
-			String addressToProperties = destTO;
-			String addressCcProperties = destCC;
-			String addressBccProperties = destBcc;
-
-			ArrayList<String> recipientsTo = recuperarInternetAddress(addressToProperties);
-			ArrayList<String> recipientsCc = recuperarInternetAddress(addressCcProperties);
-			ArrayList<String> recipientsBcc = recuperarInternetAddress(addressBccProperties);
-
-			// ANADIR DESTINATARIOS
-			InternetAddress[] addressTo = generateInternetAddress(recipientsTo);
-			InternetAddress[] addressCC = generateInternetAddress(recipientsCc);
-			InternetAddress[] addressBCC = generateInternetAddress(recipientsBcc);
-
-			msg.setRecipients(javax.mail.Message.RecipientType.TO, addressTo);
-			msg.setRecipients(javax.mail.Message.RecipientType.CC, addressCC);
-			msg.setRecipients(javax.mail.Message.RecipientType.BCC, addressBCC);
-
-			msg.setSubject(tituloCorreo, "UTF-8");
-
-			// /////// CREACION DEL CUERPO DEL MENSAJE ///////////////
-			Multipart multipart = new MimeMultipart();
-			MimeBodyPart cuerpo = new MimeBodyPart();
-
-			cuerpoCorreo = cuerpoCorreo.concat(caracterSeparadorLineas);
-			cuerpoCorreo = cuerpoCorreo.concat(mensajesConError.toString());
-
-			String typeContent = "text/HTML" + "; charset=" + "UTF-8";
-			cuerpo.setContent(cuerpoCorreo, typeContent);
-			multipart.addBodyPart(cuerpo);
-
-			// INSERTAR EL CUERPO EN EL MENSAJE
-			msg.setContent(multipart);
-
-			// REALIZAR EL ENVIO FISICO DEL MENSAJE
-			Transport.send(msg);
-		} catch (Exception e) {
-			LOG.error("ReenviarMensajesPendientesJob.enviarEmail", e);
-		}
-
-	}
 
 	/**
 	 * Encola los mensajes con error
