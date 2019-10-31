@@ -463,6 +463,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			sTO.setPendienteaprobacion(servicio.getPendienteaprobacion());
 			sTO.setPremium(servicio.getPremium());
 			sTO.setExclusivo(servicio.getExclusivo());
+			sTO.setSmsExtranjeros(servicio.getSmsExtranjeros());
 			sTO.setRespFuncionalEmail(servicio.getResponsablefuncionalemail());
 			sTO.setRespFuncionalNombre(servicio.getResponsablefuncionalnombre());
 			sTO.setRespTecnicoEmail(servicio.getResponsabletecnicoemail());
@@ -615,6 +616,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			servicio.setPendienteaprobacion(serv.getPendienteaprobacion());
 			servicio.setPremium(serv.getPremium());
 			servicio.setExclusivo(serv.getExclusivo());
+			servicio.setSmsExtranjeros(serv.getSmsExtranjeros());
 			servicio.setResponsablefuncionalemail(serv.getRespFuncionalEmail());
 			servicio.setResponsablefuncionalnombre(serv.getRespFuncionalNombre());
 			servicio.setResponsabletecnicoemail(serv.getRespTecnicoEmail());

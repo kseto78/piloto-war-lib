@@ -279,9 +279,12 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	/**  new premium. */
 	private String newPremium;
 	
-	/**  new premium. */
+	/**  new exclusivo. */
 	private String newExclusivo;
 	
+	/**  new extranjero. */
+	private String newExtranjero;
+
 	/**  new plataforma android. */
 	private String newPlataformaAndroid;
 	
@@ -816,7 +819,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			} else {
 				servicio.setActivo(false);
 			}
-			if (servicio.getCanalid() != null && (servicio.getCanalid().equals(1) || servicio.getCanalid().equals(2) ) ) {
+			if (servicio.getCanalid() != null && (servicio.getCanalid().equals(1) || servicio.getCanalid().equals(canalSMSId) ) ) {
 				if (newPremium != null && newPremium.equals("true")) {
 					servicio.setPremium(true);
 				} else {
@@ -826,6 +829,13 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					servicio.setExclusivo(true);
 				} else {
 					servicio.setExclusivo(false);
+				}
+			}
+			if (servicio.getCanalid() != null && (servicio.getCanalid().equals(canalSMSId) ) ) {
+				if(newExtranjero != null && newExtranjero.equals("true")){
+					servicio.setSmsExtranjeros(true);
+				}else{
+					servicio.setSmsExtranjeros(false);
 				}
 			}
 			if (servicio.getCanalid() != null && servicio.getCanalid().equals(Integer.valueOf(canalServidorPushId))) {
@@ -1470,6 +1480,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				servicioBBDD.setActivo(servicio.getActivo());
 				servicioBBDD.setPremium(servicio.getPremium());
 				servicioBBDD.setExclusivo(servicio.getExclusivo());
+				servicioBBDD.setSmsExtranjeros(servicio.getSmsExtranjeros());
 				servicioBBDD.setMultiorganismo(servicio.getMultiorganismo());
 				servicioBBDD.setAplicacionid(servicio.getAplicacionid());
 				servicioBBDD.setCanalid(servicio.getCanalid());
@@ -4856,7 +4867,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 	public void setServiciosAEATGiss(String serviciosAEATGiss) {
 		this.serviciosAEATGiss = serviciosAEATGiss;
 	}
-	
+
+
 	public String getDatosPlanificaciones() {
 		return datosPlanificaciones;
 	}
@@ -4865,4 +4877,14 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 		this.datosPlanificaciones = datosPlanificaciones;
 	}
 	
+
+	public String getNewExtranjero() {
+		return newExtranjero;
+	}
+
+	public void setNewExtranjero(String newExtranjero) {
+		this.newExtranjero = newExtranjero;
+	}
+	
+
 }
