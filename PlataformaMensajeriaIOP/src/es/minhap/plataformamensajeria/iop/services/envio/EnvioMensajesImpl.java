@@ -40,6 +40,7 @@ import es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Respuesta;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismos;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorUsuariosPush;
 import es.minhap.plataformamensajeria.iop.manager.TblAdjuntosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblDestinatariosMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblEstadosManager;
@@ -58,6 +59,7 @@ import es.minhap.plataformamensajeria.iop.threads.HiloEncolarMensajesActiveMq;
 import es.minhap.plataformamensajeria.iop.util.PlataformaErrores;
 import es.minhap.plataformamensajeria.iop.util.Utils;
 import es.minhap.plataformamensajeria.iop.util.WSPlataformaErrors;
+import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblServicios;
 
 /**
@@ -90,6 +92,9 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 	@Resource
 	private TblServiciosManager serviciosManager;
+	
+	@Resource
+	private TblAplicacionesManager aplicacionesManager;
 
 	@Resource
 	private TblServiciosMovilesManager serviciosMovilesManager;
@@ -527,8 +532,12 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 
 					} else {
 						for (DestinatarioPeticionLotesSMSXMLBean destinatario : mensaje.getListaDestinatarios()) {
+													
+							 TblServicios servicioSMS = serviciosManager.getServicio(Long.parseLong(envioSMS.getServicio()));
+							 TblAplicaciones aplicacion = aplicacionesManager.getAplicacion(servicioSMS.getTblAplicaciones().getAplicacionid());
+							
 							if (destinatario.getDestinatario() != null
-									&& Utils.validarTelefono(destinatario.getDestinatario(),telefonoExcepcion) == 1) {
+									&& Utils.validarTelefonoExtranjeros(destinatario.getDestinatario(),telefonoExcepcion,servicioSMS.getSmsExtranjeros()) == 1) {
 								Mensaje msj = new Mensaje();
 								
 								Boolean tieneError = false;
@@ -547,7 +556,7 @@ public class EnvioMensajesImpl implements IEnvioMensajesService {
 									
 									ResponseStatusType status = new ResponseStatusType();
 									status.setStatusCode(PlataformaErrores.STATUS_KO_DISPOSITIVO);
-									status.setDetails(PlataformaErrores.STATUSDETAILS_KO_TELEFONO);
+									status.setDetails(PlataformaErrores.STATUSDETAILS_KO_TELEFONO + "\n Aplicacion: "+aplicacion.getNombre() + " Destinatario: "+destinatario.getDestinatario());
 									status.setStatusText(PlataformaErrores.STATUSTEXT_KO);
 									msj.setErrorMensaje(status);
 									listaMensajesProcesados.add(msj);

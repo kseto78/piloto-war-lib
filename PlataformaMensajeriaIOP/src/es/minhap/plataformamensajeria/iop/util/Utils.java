@@ -99,6 +99,93 @@ public class Utils {
 		 return 1;
 	 }
 	 
+ public static int validarTelefonoExtranjeros(String telefono, String telefonoExcepcion,boolean extranjero){
+	
+	 	
+		 if (telefono!=null){
+			 telefono= telefono.trim();
+			 if(telefonoExcepcion.contains(telefono)) {
+				 return 0;
+			 }
+		 } else {
+			 return 1;
+		 }
+		 if(extranjero){			 
+			 if (telefono.length() == 9){
+				 //comprobamos si son todos digitosif (cadenaUno.matches("[0-9]*"))
+				 if (telefono.matches("[0-9]*")){ 
+				 	return 0;
+				 }
+				  else{
+				   return 1;
+				  }
+			 }else{
+				 if (telefono.substring(0,1).equals("0")){
+					 if (telefono.substring(1, telefono.length()).matches("[0-9]*")){
+						 return 0;
+					 }else{
+						 return 1;
+					 }
+				 }
+				 
+				 if (telefono.substring(0,1).equals("+")){
+					 if (telefono.substring(1, telefono.length()).matches("[0-9]*")){
+						 return 0;
+					 }else{
+						 return 1;
+					 }
+				 }
+			 }
+			 
+			 return 1;
+	 	}else{
+	 		
+					 
+			 if (telefono.length() == 9){
+				 //comprobamos si son todos digitosif (cadenaUno.matches("[0-9]*"))
+				 if (telefono.matches("[0-9]*")){ 
+					 if ( telefono.substring(0,1).equals("6") || telefono.substring(0,1).equals("7") ){
+						 return 0;
+					 }else{
+						 return 1;
+					 }				 
+				 }
+				  else{
+				   return 1;
+				  }
+				 }else{
+					 if ( telefono.substring(0,4).equals("0034") && 
+							 (telefono.substring(1, telefono.length()).matches("[0-9]*")) &&
+							 telefono.length() == 13 && 
+							 ( telefono.substring(4,5).equals("6") || telefono.substring(0,1).equals("7") )){
+						 return 0;
+						 
+					 }			
+					 if ( telefono.substring(0,5).equals("+0034") && 
+							 (telefono.substring(1, telefono.length()).matches("[0-9]*")) &&
+							 telefono.length() == 14 && 
+							 ( telefono.substring(5,6).equals("6") || telefono.substring(0,1).equals("7") )){
+								 						 
+							 return 0;	 
+								
+						 }
+					 
+					 if ( telefono.substring(0,3).equals("+34") && 
+						 (telefono.substring(1, telefono.length()).matches("[0-9]*")) &&
+						 telefono.length() == 12 && 
+						 ( telefono.substring(3,4).equals("6") || telefono.substring(0,1).equals("7") )){
+							 						 
+						 return 0;	 
+							
+					 }else{
+						 return 1;
+					 }
+						
+				 }	 
+			
+	 	}
+	 }
+	 
 	 public static boolean validarEmail(String email){
 		Pattern pattern = Pattern.compile(PATTERN_EMAIL);
 

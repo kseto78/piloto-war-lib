@@ -831,7 +831,7 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			sql.append(" AND ge.loteenvioid ="+criterio.getIdLote()+" ");
 		}
 		if (criterio.getDestinatario()!= null && criterio.getDestinatario().length()>0){
-			sql.append(" AND ge.destinatario like lower('%"+criterio.getDestinatario()+"%') ");
+			sql.append(" AND LOWER(ge.destinatario) like lower('%"+criterio.getDestinatario()+"%') ");
 		}
 		if (criterio.getFechaDesde()!= null){
 			sql.append(" AND ge.ultimoEnvio >=:fechaDesde ");
