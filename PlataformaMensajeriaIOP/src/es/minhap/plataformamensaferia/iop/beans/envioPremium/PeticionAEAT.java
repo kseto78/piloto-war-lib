@@ -107,6 +107,7 @@ public class PeticionAEAT {
 			return Utils.convertToUTF8(writer.toString());
 			
 		} catch (Exception e) {
+			// TODO logger.warn(e.getMessage(), e);
 			return Utils.convertToUTF8(TAG_ERROR_GENERANDO_RESPUESTA_XML);
 		}
 	}

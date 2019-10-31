@@ -58,9 +58,10 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
     "messageStatus",
     "statusText"
 })
-@XmlRootElement(name = "PeticionNotificacionEstadoSMS", namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd" )
+@XmlRootElement(name = "PeticionNotificacionEstadoSMS", namespace=PeticionNotificacionEstadoSMS.R_CONST_1 )
 public class PeticionNotificacionEstadoSMS {
 
+	protected static final String R_CONST_1 = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd";
 	private static final String XML2 = "\nXML:\n";
 	private static final String MENSAJE = "\nMensaje: ";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
@@ -72,13 +73,13 @@ public class PeticionNotificacionEstadoSMS {
 	private static String ENVIADO= "ENVIADO";
 	private static String ANULADO= "ANULADO";
 	
-    @XmlElement(name="IdExterno", required = true, namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd" )
+    @XmlElement(name="IdExterno", required = true, namespace=R_CONST_1 )
     protected String idExterno;
-    @XmlElement(required = true, namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd" )
+    @XmlElement(required = true, namespace=R_CONST_1 )
     protected String messageId;
-    @XmlElement(required = true, namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd" )
+    @XmlElement(required = true, namespace=R_CONST_1 )
     protected String messageStatus;
-    @XmlElement(required = true, namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Ent.xsd" )
+    @XmlElement(required = true, namespace=R_CONST_1 )
     protected String statusText;
 
 
@@ -210,6 +211,7 @@ public String toXMLEstado(ArrayList<SeguimientoMensaje> listaResultados, String 
 			return Utils.convertToUTF8(writer.toString());
 			
 		} catch (Exception e) {
+			// TODO logger.warn(e.getMessage(), e);
 			return Utils.convertToUTF8(TAG_ERROR_GENERANDO_RESPUESTA_XML);
 		}
 	}
@@ -230,17 +232,7 @@ public void loadObjectFromXML(String xml)
 				respuesta);
 
 		
-	} catch (JAXBException e) {
-		throw new PlataformaBusinessException(
-				ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
-						+ MENSAJE + e.getMessage() + XML2
-						+ xml);
-	} catch (IllegalAccessException e) {
-		throw new PlataformaBusinessException(
-				ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
-						+ MENSAJE + e.getMessage() + XML2
-						+ xml);
-	} catch (InvocationTargetException e) {
+	} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 		throw new PlataformaBusinessException(
 				ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
 						+ MENSAJE + e.getMessage() + XML2
@@ -264,8 +256,6 @@ public String toXML() throws PlataformaBusinessException{
 //	jaxbMarshaller.marshal(envioXML, System.out);
 	
 	return writer.toString();
-	} catch (PropertyException e) {
-		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
 	} catch (JAXBException e) {
 		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
 	}

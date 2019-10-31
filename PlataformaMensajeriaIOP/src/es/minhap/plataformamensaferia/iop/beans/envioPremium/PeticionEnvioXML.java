@@ -49,14 +49,15 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "proveedor",
     "urlEndpoint",
     "mensajeId",
-    "idLote",
+    PeticionEnvioXML.R_CONST_1,
     "datosEspecificos",
     "notificacionSilenciosa"
 })
 @XmlRootElement(name = "Peticion")
 public class PeticionEnvioXML {
 
-    @XmlElement(name = "Usuario", required = false)
+    protected static final String R_CONST_1 = "idLote";
+	@XmlElement(name = "Usuario", required = false)
     protected String usuario;
     @XmlElement(name = "Password", required = false)
     protected String password;
@@ -68,7 +69,7 @@ public class PeticionEnvioXML {
     protected String urlEndpoint;
     @XmlElement(name = "MensajeId", required = false)
     protected String mensajeId;
-    @XmlElement(name = "idLote", required = false)
+    @XmlElement(name = R_CONST_1, required = false)
     protected String idLote;
     @XmlElement(name = "DatosEspecificos")
     protected DatosEspecificos datosEspecificos;
@@ -285,10 +286,6 @@ public class PeticionEnvioXML {
 
 			return writer.toString();
 
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException(
-					"Error generando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException(
 					"Error generando el XML.\nCausa: " + e.getCause()

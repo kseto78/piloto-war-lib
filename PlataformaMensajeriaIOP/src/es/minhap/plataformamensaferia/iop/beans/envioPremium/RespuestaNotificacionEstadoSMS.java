@@ -50,14 +50,15 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "statusText",
     "details"
 })
-@XmlRootElement(name = "RespuestaNotificacionEstadoSMS", namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd")
+@XmlRootElement(name = "RespuestaNotificacionEstadoSMS", namespace=RespuestaNotificacionEstadoSMS.R_CONST_1)
 public class RespuestaNotificacionEstadoSMS {
 
-    @XmlElement(name = "StatusCode", namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd", required = true)
+    protected static final String R_CONST_1 = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd";
+	@XmlElement(name = "StatusCode", namespace=R_CONST_1, required = true)
     protected String statusCode;
-    @XmlElement(name = "StatusText", namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd", required = true)
+    @XmlElement(name = "StatusText", namespace=R_CONST_1, required = true)
     protected String statusText;
-    @XmlElement(name = "Details", namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aduanas/es/aeat/dit/adu/itea/server/AcCLEV1Sal.xsd", required = true)
+    @XmlElement(name = "Details", namespace=R_CONST_1, required = true)
     protected String details;
 
     /**
@@ -147,8 +148,6 @@ public class RespuestaNotificacionEstadoSMS {
 //    	jaxbMarshaller.marshal(envioXML, System.out);
     	
     	return writer.toString();
-    	} catch (PropertyException e) {
-    		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     	} catch (JAXBException e) {
     		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     	}

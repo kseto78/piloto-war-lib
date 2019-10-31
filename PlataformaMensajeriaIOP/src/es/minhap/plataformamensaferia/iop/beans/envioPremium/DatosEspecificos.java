@@ -33,26 +33,32 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DatosEspecificos", propOrder = {
-	    "SMS_ID",
-	    "SMS_USUARIO",
-	    "SMS_PASSWORD",
-	    "SMS_DESTINATARIO",
-	    "SMS_HEADER",
-	    "SMS_TEXTO"})
+	    DatosEspecificos.R_CONST_1,
+	    DatosEspecificos.R_CONST_5,
+	    DatosEspecificos.R_CONST_2,
+	    DatosEspecificos.R_CONST_6,
+	    DatosEspecificos.R_CONST_3,
+	    DatosEspecificos.R_CONST_4})
 
 public class DatosEspecificos  {
 
-	@XmlElement(name = "SMS_ID", required = true)
+	protected static final String R_CONST_1 = "SMS_ID";
+	protected static final String R_CONST_2 = "SMS_PASSWORD";
+	protected static final String R_CONST_3 = "SMS_HEADER";
+	protected static final String R_CONST_4 = "SMS_TEXTO";
+	protected static final String R_CONST_5 = "SMS_USUARIO";
+	protected static final String R_CONST_6 = "SMS_DESTINATARIO";
+	@XmlElement(name = R_CONST_1, required = true)
 	protected String SMS_ID;
-	@XmlElement(name = "SMS_USUARIO", required = true)
+	@XmlElement(name = R_CONST_5, required = true)
 	protected String SMS_USUARIO;
-	@XmlElement(name = "SMS_PASSWORD", required = true)
+	@XmlElement(name = R_CONST_2, required = true)
 	protected String SMS_PASSWORD;
-	@XmlElement(name = "SMS_DESTINATARIO", required = true)
+	@XmlElement(name = R_CONST_6, required = true)
 	protected String SMS_DESTINATARIO;
-	@XmlElement(name = "SMS_HEADER", required = true)
+	@XmlElement(name = R_CONST_3, required = true)
 	protected String SMS_HEADER;
-	@XmlElement(name = "SMS_TEXTO", required = true)
+	@XmlElement(name = R_CONST_4, required = true)
 	protected String SMS_TEXTO;
 
 	/**
@@ -65,8 +71,8 @@ public class DatosEspecificos  {
 		return SMS_ID;
 	}
 
-	public void setSMS_ID(String sMS_ID) {
-		SMS_ID = sMS_ID;
+	public void setSMS_ID(String sMsId) {
+		SMS_ID = sMsId;
 	}
 
 	/**
@@ -79,8 +85,8 @@ public class DatosEspecificos  {
 		return SMS_HEADER;
 	}
 
-	public void setSMS_HEADER(String sMS_HEADER) {
-		SMS_HEADER = sMS_HEADER;
+	public void setSMS_HEADER(String sMsHeader) {
+		SMS_HEADER = sMsHeader;
 	}
 
 	/**
@@ -93,8 +99,8 @@ public class DatosEspecificos  {
 		return SMS_DESTINATARIO;
 	}
 
-	public void setSMS_DESTINATARIO(String sMS_DESTINATARIO) {
-		SMS_DESTINATARIO = sMS_DESTINATARIO;
+	public void setSMS_DESTINATARIO(String sMsDestinatario) {
+		SMS_DESTINATARIO = sMsDestinatario;
 	}
 	
 	
@@ -108,8 +114,8 @@ public class DatosEspecificos  {
 		return SMS_TEXTO;
 	}
 
-	public void setSMS_TEXTO(String sMS_TEXTO) {
-		SMS_TEXTO = sMS_TEXTO;
+	public void setSMS_TEXTO(String sMsTexto) {
+		SMS_TEXTO = sMsTexto;
 	}
 
 	@Override
@@ -121,15 +127,15 @@ public class DatosEspecificos  {
 		return SMS_USUARIO;
 	}
 
-	public void setSMS_USUARIO(String sMS_USUARIO) {
-		SMS_USUARIO = sMS_USUARIO;
+	public void setSMS_USUARIO(String sMsUsuario) {
+		SMS_USUARIO = sMsUsuario;
 	}
 
 	public String getSMS_PASSWORD() {
 		return SMS_PASSWORD;
 	}
 
-	public void setSMS_PASSWORD(String sMS_PASSWORD) {
-		SMS_PASSWORD = sMS_PASSWORD;
+	public void setSMS_PASSWORD(String sMsPassword) {
+		SMS_PASSWORD = sMsPassword;
 	}
 }

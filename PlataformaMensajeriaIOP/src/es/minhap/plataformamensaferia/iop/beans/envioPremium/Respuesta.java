@@ -50,21 +50,22 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "idExterno",
     "idMensaje"
 })
-@XmlRootElement(name = "Respuesta" , namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "Respuesta" , namespace=Respuesta.R_CONST_1)
 public class Respuesta {
 
-    private static final String MENSAJE = "\nMensaje: ";
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	private static final String MENSAJE = "\nMensaje: ";
 	private static final String XML = "\nXML:\n";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
-	@XmlElement(name = "StatusCode", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+	@XmlElement(name = "StatusCode", required = true, namespace=R_CONST_1)
     protected String statusCode;
-    @XmlElement(name = "StatusText", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "StatusText", required = true, namespace=R_CONST_1)
     protected String statusText;
-    @XmlElement(name = "Details", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Details", namespace=R_CONST_1)
     protected String details;
-    @XmlElement(name = "IdExterno", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdExterno", required = true, namespace=R_CONST_1)
     protected String idExterno;
-    @XmlElement(name = "IdMensaje", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdMensaje", required = true, namespace=R_CONST_1)
     protected String idMensaje;
 
     /**
@@ -134,8 +135,6 @@ public class Respuesta {
     		return writer.toString();
     		
     		
-    		} catch (PropertyException e) {
-    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
     		} catch (JAXBException e) {
     			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
     		}
@@ -158,17 +157,7 @@ public class Respuesta {
 					respuesta);
 
 			
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException(
-					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
-							+ MENSAJE + e.getMessage() + XML
-							+ xmlRespuesta);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(
-					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
-							+ MENSAJE + e.getMessage() + XML
-							+ xmlRespuesta);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(
 					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
 							+ MENSAJE + e.getMessage() + XML
