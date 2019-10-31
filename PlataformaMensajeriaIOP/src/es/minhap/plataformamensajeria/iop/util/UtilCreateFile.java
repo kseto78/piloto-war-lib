@@ -32,6 +32,22 @@ import es.minhap.common.properties.PropertiesServices;
 @Service("UtilCreateFile")
 public class UtilCreateFile {
 
+	protected static final String R_CONST_1 = "UTF-8";
+
+	protected static final String R_CONST_2 = "UtilCreateFile.getCuerpoMensajeFromFile: Error general";
+
+	protected static final String R_CONST_3 = "windows";
+
+	protected static final String R_CONST_4 = "UtilCreateFile.getCuerpoMensajeFromFile: IOException";
+
+	protected static final String R_CONST_5 = "UtilCreateFile.createFileMensaje: IOException";
+
+	protected static final String R_CONST_6 = "os.name";
+
+	protected static final String R_CONST_7 = "filesystem.pathBase";
+
+	protected static final String R_CONST_8 = "UtilCreateFile.createFileMensaje: Error general";
+
 	private static final Logger LOG = LoggerFactory.getLogger(UtilCreateFile.class);
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
@@ -41,44 +57,44 @@ public class UtilCreateFile {
 
 	public String createFileMensaje(Long idMensaje, String cuerpo, Long idServicio, Integer conservacion, Date fechaCreacion) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		String pathBase = ps.getMessage(R_CONST_7, null);
 		String prefijo =  ps.getMessage("filesystem.prefijoMensaje", null);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(fechaCreacion);
 		Path path = null;
 		try {
-			String sistem = System.getProperty("os.name");
+			String sistem = System.getProperty(R_CONST_6);
 			Set<PosixFilePermission> perms = createPermisos();
 						
 			path = Paths.get(pathBase + SEPARATOR + conservacion + SEPARATOR + idServicio+SEPARATOR + cal.get(Calendar.YEAR) 
-					+SEPARATOR +(cal.get(Calendar.MONTH)+1) +SEPARATOR + (cal.get(Calendar.DAY_OF_MONTH)) + SEPARATOR + prefijo + idMensaje);
+					+SEPARATOR +(cal.get(Calendar.MONTH)+1) +SEPARATOR + cal.get(Calendar.DAY_OF_MONTH) + SEPARATOR + prefijo + idMensaje);
 		
 			Path base = Paths.get(pathBase);
 			
 			//crea la ruta total con todos los directorios y le pone permisos a todo
 			Files.createDirectories(path.getParent());
-			if (!sistem.toLowerCase().contains("windows")){
+			if (!sistem.toLowerCase().contains(R_CONST_3)){
 				Files.setPosixFilePermissions(path.getParent(), perms);
 			}
 			
 			//actualizamos todos los demas directorios
 			Path aux = path.getParent();
 			while (!Files.isSameFile(base, aux)){
-				if (!sistem.toLowerCase().contains("windows")){
+				if (!sistem.toLowerCase().contains(R_CONST_3)){
 					Files.setPosixFilePermissions(aux, perms);
 				}
 				aux = aux.getParent();
 			}
 			
 			
-			Files.write(path, Arrays.asList(cuerpo), Charset.forName("UTF-8"), StandardOpenOption.CREATE);
-			if (!sistem.toLowerCase().contains("windows")){
+			Files.write(path, Arrays.asList(cuerpo), Charset.forName(R_CONST_1), StandardOpenOption.CREATE);
+			if (!sistem.toLowerCase().contains(R_CONST_3)){
 				Files.setPosixFilePermissions(path, perms);	
 			}
 		} catch (IOException e) {
-			LOG.error("UtilCreateFile.createFileMensaje: IOException", e);
+			LOG.error(R_CONST_5, e);
 		}catch (Exception e) {
-			LOG.error("UtilCreateFile.createFileMensaje: Error general", e);
+			LOG.error(R_CONST_8, e);
 		}
 
 		return null != path ? path.normalize().toString() : null;
@@ -88,14 +104,14 @@ public class UtilCreateFile {
 	public String createFileAdjunto(Long adjuntoid, byte[] contenido, Long idServicio, Integer conservacion,
 			Date fechaCreacion) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String pathBase = ps.getMessage("filesystem.pathBase", null);
+		String pathBase = ps.getMessage(R_CONST_7, null);
 		String prefijo =  ps.getMessage("filesystem.prefijoAdjunto", null);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(fechaCreacion);
 		Path path = null;
 		
 		try {
-			String sistem = System.getProperty("os.name");
+			String sistem = System.getProperty(R_CONST_6);
 			Set<PosixFilePermission> perms = createPermisos();
 			
 			path = Paths.get(pathBase + SEPARATOR + conservacion + SEPARATOR + idServicio+SEPARATOR + cal.get(Calendar.YEAR) 
@@ -105,27 +121,27 @@ public class UtilCreateFile {
 			
 			//crea la ruta total con todos los directorios y le pone permisos a todo
 			Files.createDirectories(path.getParent());
-			if (!sistem.toLowerCase().contains("windows")){
+			if (!sistem.toLowerCase().contains(R_CONST_3)){
 				Files.setPosixFilePermissions(path.getParent(), perms);
 			}
 			
 			//actualizamos todos los demás directorios
 			Path aux = path.getParent();
 			while (!Files.isSameFile(base, aux)){
-				if (!sistem.toLowerCase().contains("windows")){
+				if (!sistem.toLowerCase().contains(R_CONST_3)){
 					Files.setPosixFilePermissions(aux, perms);
 				}
 				aux = aux.getParent();
 			}
 			Files.write(path, contenido);
-			if (!sistem.toLowerCase().contains("windows")){
+			if (!sistem.toLowerCase().contains(R_CONST_3)){
 				Files.setPosixFilePermissions(path, perms);
 			}
 						
 		} catch (IOException e) {
-			LOG.error("UtilCreateFile.createFileMensaje: IOException", e);
+			LOG.error(R_CONST_5, e);
 		}catch (Exception e) {
-			LOG.error("UtilCreateFile.createFileMensaje: Error general", e);
+			LOG.error(R_CONST_8, e);
 		}
 		
 		return null != path ? path.normalize().toString() : null;
@@ -138,7 +154,7 @@ public class UtilCreateFile {
 		try {
 			path = Paths.get(ruta);
 			
-			List<String> listaLineas = Files.readAllLines(path, Charset.forName("UTF-8"));
+			List<String> listaLineas = Files.readAllLines(path, Charset.forName(R_CONST_1));
 			sb = new StringBuilder();
 			for (String string : listaLineas) {
 				sb.append(string);
@@ -146,9 +162,9 @@ public class UtilCreateFile {
 			
 						
 		} catch (IOException e) {
-			LOG.error("UtilCreateFile.getCuerpoMensajeFromFile: IOException", e);
+			LOG.error(R_CONST_4, e);
 		}catch (Exception e) {
-			LOG.error("UtilCreateFile.getCuerpoMensajeFromFile: Error general", e);
+			LOG.error(R_CONST_2, e);
 		}
 
 		return null != sb ? sb.toString() : "";
@@ -165,9 +181,9 @@ public class UtilCreateFile {
 						
 						
 		} catch (IOException e) {
-			LOG.error("UtilCreateFile.getCuerpoMensajeFromFile: IOException", e);
+			LOG.error(R_CONST_4, e);
 		}catch (Exception e) {
-			LOG.error("UtilCreateFile.getCuerpoMensajeFromFile: Error general", e);
+			LOG.error(R_CONST_2, e);
 		}
 
 		return blob;

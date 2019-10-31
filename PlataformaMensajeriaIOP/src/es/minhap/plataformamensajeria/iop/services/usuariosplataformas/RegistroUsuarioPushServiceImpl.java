@@ -31,6 +31,8 @@ import es.minhap.sim.model.TblUsuariosPush;
 @Service("registroUsuarioPushImpl")
 public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushService {
 
+	protected static final String R_CONST_1 = "plataformaErrores.registroUsuarioPush.TAG_ERROR_ALTA_USUARIO_PUSH";
+
 	private static final Logger LOG = LoggerFactory.getLogger(RegistroUsuarioPushServiceImpl.class);
 
 	@Resource
@@ -52,7 +54,7 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 		String tagOK = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_OK", null);
 		String tagMensajeOK = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_MENSAJE_OK", null);
 		String errorAltaUsuarioPush = ps.getMessage(
-				"plataformaErrores.registroUsuarioPush.TAG_ERROR_ALTA_USUARIO_PUSH", null);
+				R_CONST_1, null);
 		String tagKO = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_KO", null);
 		String errorGeneral = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_MENSAJE_KO_GENERAL", null);
 		String errorUsuarioAplicacion = ps.getMessage(
@@ -66,7 +68,7 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 				"plataformaErrores.registroUsuarioPush.TAG_ERROR_NOEXTSITE_USUARIO_PASSWORD_APLICACION", null);
 		String detailsErrorNoExisteUsuarioAplicacion = ps.getMessage(
 				"plataformaErrores.registroUsuarioPush.TAG_MENSAJE_KO_NOEXISTE_USUARIO_PASSWORD_APLICACION", null);
-		String errorAltaUsuario = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_ERROR_ALTA_USUARIO_PUSH",
+		String errorAltaUsuario = ps.getMessage(R_CONST_1,
 				null);
 		String errorNoExistePlataforma = ps.getMessage(
 				"plataformaErrores.registroUsuarioPush.TAG_MENSAJE_KO_NOEXISTE_PLATAFORMA", null);
@@ -91,12 +93,13 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 
 			if (dispositivoId == null){
 				dispositivoId = completarDispositivo(true);
-			}else if (null != uidDispositivo && (null == tokenSession || tokenSession.length() <= 0)){
+			}else if (null != uidDispositivo && (null == tokenSession || tokenSession.isEmpty())){
 				dispositivoId = completarDispositivo(true);
 			}
 
-			if (nombreUsuario == null)
+			if (nombreUsuario == null) {
 				nombreUsuario = dispositivoId;
+			}
 
 			boolean peticionCorrecta = evaluarAltaUsuario(nombreUsuario, servicioId, usuario, password, plataformaId,
 					tokenUsuario, dispositivoId);
@@ -105,7 +108,7 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 				TblUsuariosPush tblUsuario;
 				if (null != uidDispositivo
 						&& (tblUsuario = usuariosPushManager.existeUimDispositivo(uidDispositivo, Long.parseLong(servicioId))) != null) {
-					if(null != tokenSession && tokenSession.length() > 0){ //Indicamos tokenSession
+					if(null != tokenSession && !tokenSession.isEmpty()){ //Indicamos tokenSession
 						if(tokenSession.equals(tblUsuario.getTokensession()) && evaluaIntervalo(tblUsuario, intervaloPeticion)){
 							tokenSession = prefijoTokenSession + completarDispositivo(false);
 							tblUsuario.setTokensession(tokenSession);
@@ -220,7 +223,7 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 		
 		calendar.add(Calendar.MINUTE, intervaloPeticion);
 
-		return calendar.before(calendar2)? true : false;
+		return calendar.before(calendar2);
 	}
 
 	private String completarDispositivo(boolean comprobarUnico) {
@@ -260,18 +263,14 @@ public class RegistroUsuarioPushServiceImpl implements IRegistroUsuarioPushServi
 	private boolean evaluarAltaUsuario(String nombreUsuario, String servicioId, String usuario, String password,
 			String plataformaId, String tokenUsuario, String dispositivoId) {
 
-		if (evaluarParametro(nombreUsuario) && evaluarParametro(servicioId) && evaluarParametro(usuario)
+		return evaluarParametro(nombreUsuario) && evaluarParametro(servicioId) && evaluarParametro(usuario)
 				&& evaluarParametro(password) && evaluarParametro(plataformaId) && evaluarParametro(tokenUsuario)
-				&& evaluarParametro(dispositivoId)) {
-			return true;
-		} else {
-			return false;
-		}
+				&& evaluarParametro(dispositivoId);
 
 	}
 
 	private boolean evaluarParametro(String parametro) {
-		return (null != parametro && !parametro.isEmpty()) ? true : false;
+		return null != parametro && !parametro.isEmpty();
 
 	}
 

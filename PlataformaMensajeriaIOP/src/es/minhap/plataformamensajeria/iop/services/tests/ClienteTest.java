@@ -63,6 +63,31 @@ import es.minhap.plataformamensajeria.iop.util.FactoryServiceSim;
 
 public class ClienteTest {
 
+	protected static final String R_CONST_1 = "2909";
+	protected static final String R_CONST_2 = "testReenviarLote";
+	protected static final String R_CONST_3 = "Ejecutado correctamente. Se ha anulado el lote: ";
+	protected static final String R_CONST_4 = " || ";
+	protected static final String R_CONST_5 = "612485";
+	protected static final String R_CONST_6 = "Ejecutado correctamente. Se ha reenviado el mensaje: ";
+	protected static final String R_CONST_7 = "pruebasSIMdes";
+	protected static final String R_CONST_8 = "Ejecutado correctamente. Se ha anulado el mensaje: ";
+	protected static final String R_CONST_9 = "imprimido el primero";
+	protected static final String R_CONST_10 = "Error reenviando lote ";
+	protected static final String R_CONST_11 = "Error reenviando mensaje: ";
+	protected static final String R_CONST_12 = "609691700";
+	protected static final String R_CONST_13 = "anularLote.xml";
+	protected static final String R_CONST_14 = "Ejecutado correctamente. Se ha reenviado el lote: ";
+	protected static final String R_CONST_15 = "2";
+	protected static final String R_CONST_16 = "[TEST] Error consultado estado";
+	protected static final String R_CONST_17 = "?";
+	protected static final String R_CONST_18 = " | ";
+	protected static final String R_CONST_19 = "Error anulando lote ";
+	protected static final String R_CONST_20 = "lalala";
+	protected static final String R_CONST_21 = "ESPAÑOL";
+	protected static final String R_CONST_22 = "Errro anulando mensaje: ";
+	protected static final String R_CONST_23 = "Total resultados: ";
+	protected static final String R_CONST_24 = "26/01/2012";
+	protected static final String R_CONST_25 = "ximoim@gmail.com";
 	private IEnvioMensajesService instance = FactoryServiceSim.getInstance()
 			.getInstanceMensajes();
 	private ISeguimientoMensajesService instanceSeguimiento = FactoryServiceSim
@@ -89,7 +114,7 @@ public class ClienteTest {
 	private static  Integer LOTE_PRUEBAS = 28546;// 84//86
 	private static  Integer MENSAJE_PRUEBAS = 29082;
 	private static  String USUARIO = "portalNOTIFICA@";
-	private static  String PASSWORD = "portalNOTIFICA@";
+	private static  String PASS = "portalNOTIFICA@";
 	private static  String NOMBRE_LOTE_SMS = "LOTE_SMS_TEST_20160129";
 	private static  String NOMBRE_LOTE_MAIL = "LOTE_MAIL_TEST_20160129";
 	private static  String NOMBRE_LOTE_PUSH = "LOTE_PUSHL_TEST_20160129";
@@ -134,17 +159,17 @@ public class ClienteTest {
 
 	@Test
 	public void testReenviarLote() throws PlataformaBusinessException {
-		System.out.println("testReenviarLote");
+		System.out.println(R_CONST_2);
 		String resultado = instanceOperaciones.reenviarLote(LOTE_PRUEBAS,
-				USUARIO, PASSWORD);
+				USUARIO, PASS);
 		RespuestaOperacion respuestaOperacion = new RespuestaOperacion();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha reenviado el lote: "
+					.println(R_CONST_14
 							+ LOTE_PRUEBAS);
 		} else {
-			System.out.println("Error reenviando lote " + LOTE_PRUEBAS + " | "
+			System.out.println(R_CONST_10 + LOTE_PRUEBAS + R_CONST_18
 					+ respuestaOperacion.getErrores().get(0));
 		}
 
@@ -152,17 +177,17 @@ public class ClienteTest {
 
 	@Test
 	public void testAnularLote() throws PlataformaBusinessException {
-		System.out.println("testReenviarLote");
+		System.out.println(R_CONST_2);
 		String resultado = instanceOperaciones.anularLote(LOTE_PRUEBAS,
-				USUARIO, PASSWORD);
+				USUARIO, PASS);
 		RespuestaOperacion respuestaOperacion = new RespuestaOperacion();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha anulado el lote: "
+					.println(R_CONST_3
 							+ LOTE_PRUEBAS);
 		} else {
-			System.out.println("Error anulando lote " + LOTE_PRUEBAS + " | "
+			System.out.println(R_CONST_19 + LOTE_PRUEBAS + R_CONST_18
 					+ respuestaOperacion.getErrores().get(0));
 		}
 	}
@@ -171,16 +196,16 @@ public class ClienteTest {
 	public void testReenviarMensaje() throws PlataformaBusinessException {
 		System.out.println("testReenviarMensaje");
 		String resultado = instanceOperaciones.reenviarMensaje(MENSAJE_PRUEBAS,
-				USUARIO, PASSWORD);
+				USUARIO, PASS);
 		RespuestaOperacion respuestaOperacion = new RespuestaOperacion();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha reenviado el mensaje: "
+					.println(R_CONST_6
 							+ MENSAJE_PRUEBAS);
 		} else {
-			System.out.println("Error reenviando mensaje: " + MENSAJE_PRUEBAS
-					+ " | " + respuestaOperacion.getErrores().get(0));
+			System.out.println(R_CONST_11 + MENSAJE_PRUEBAS
+					+ R_CONST_18 + respuestaOperacion.getErrores().get(0));
 		}
 
 	}
@@ -189,16 +214,16 @@ public class ClienteTest {
 	public void testAnularMensaje() throws PlataformaBusinessException {
 		System.out.println("testAnularMensaje");
 		String resultado = instanceOperaciones.anularMensaje(MENSAJE_PRUEBAS,
-				USUARIO, PASSWORD);
+				USUARIO, PASS);
 		RespuestaOperacion respuestaOperacion = new RespuestaOperacion();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha anulado el mensaje: "
+					.println(R_CONST_8
 							+ MENSAJE_PRUEBAS);
 		} else {
-			System.out.println("Errro anulando mensaje: " + MENSAJE_PRUEBAS
-					+ " | " + respuestaOperacion.getErrores().get(0));
+			System.out.println(R_CONST_22 + MENSAJE_PRUEBAS
+					+ R_CONST_18 + respuestaOperacion.getErrores().get(0));
 		}
 
 	}
@@ -208,26 +233,27 @@ public class ClienteTest {
 		System.out.println("testConsultarEstado");
 
 		String resultado = instanceSeguimiento.consultarEstado(SERVICIO_ID, 0, 0, 0, 0,
-				null, 0, "26/01/2012", "26/01/2012", USUARIO, PASSWORD);
+				null, 0, R_CONST_24, R_CONST_24, USUARIO, PASS);
 		System.out.println(resultado);
 		RespuestaConsultaEstado estado = new RespuestaConsultaEstado();
 		try {
 			estado.parseResponse(resultado);
 		} catch (PlataformaBusinessException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new PlataformaBusinessException(
-					"[TEST] Error consultado estado");
+					R_CONST_16);
 		}
 		ArrayList<ConsultaEstadoBean> resultados = estado.getResultados();
 		int i = 0;
 		for (ConsultaEstadoBean consultaEstadoBean : resultados) {
-			System.out.println(consultaEstadoBean.getAplicacion() + " || "
-					+ consultaEstadoBean.getFecha() + " || "
-					+ consultaEstadoBean.getCanal() + " || "
-					+ consultaEstadoBean.getEstado() + " || "
+			System.out.println(consultaEstadoBean.getAplicacion() + R_CONST_4
+					+ consultaEstadoBean.getFecha() + R_CONST_4
+					+ consultaEstadoBean.getCanal() + R_CONST_4
+					+ consultaEstadoBean.getEstado() + R_CONST_4
 					+ consultaEstadoBean.getIdMensaje());
 			i++;
 		}
-		System.out.println("Total resultados: " + i);
+		System.out.println(R_CONST_23 + i);
 
 	}
 
@@ -236,19 +262,19 @@ public class ClienteTest {
 		System.out.println("testConsultarHistorico");
 
 		String resultado = instanceSeguimiento.consultarHistorial(MENSAJE_PRUEBAS, null,
-				USUARIO, PASSWORD);
+				USUARIO, PASS);
 		// System.out.println(resultado);
 		RespuestaConsultaHistorial respuesta = new RespuestaConsultaHistorial();
 		respuesta.parseResponse(resultado);
 		ArrayList<ConsultaHistoricoBean> listado = respuesta.getResultados();
 		int i = 0;
 		for (ConsultaHistoricoBean consultaHistoricoBean : listado) {
-			System.out.println(consultaHistoricoBean.getIdMensaje() + " || "
-					+ consultaHistoricoBean.getIdExterno() + " || "
+			System.out.println(consultaHistoricoBean.getIdMensaje() + R_CONST_4
+					+ consultaHistoricoBean.getIdExterno() + R_CONST_4
 					+ consultaHistoricoBean.getFecha());
 			i++;
 		}
-		System.out.println("Total resultados: " + i);
+		System.out.println(R_CONST_23 + i);
 
 	}
 
@@ -260,19 +286,19 @@ public class ClienteTest {
 		envio.setNombreLote(NOMBRE_LOTE_MAIL);
 		envio.setServicio(SERVICIO_MAIL_ID);
 		envio.setUsuario(USUARIO);
-		envio.setPassword(PASSWORD);
+		envio.setPassword(PASS);
 		MensajesXMLBean mensaje = new MensajesXMLBean();
 		mensaje.setAsunto("Asunto Mensaje - MSG_JUAN_3");
 		mensaje.setCuerpo("Envío de prueba a traves del servicio web ");
 		mensaje.setIdExterno("MSG_JUAN_3");
-		mensaje.setModo("2");
+		mensaje.setModo(R_CONST_15);
 
 		DestinatarioXMLBean destinatario = new DestinatarioXMLBean();
-		destinatario.setEmailDestinatario("ximoim@gmail.com");
+		destinatario.setEmailDestinatario(R_CONST_25);
 		destinatario.setTipoDestinatario(DestinatarioXMLBean.TIPO_TO);
 //		mensaje.addDestinatario(destinatario);
 		destinatario = new DestinatarioXMLBean();
-		destinatario.setEmailDestinatario("ximoim@gmail.com");
+		destinatario.setEmailDestinatario(R_CONST_25);
 		destinatario.setTipoDestinatario(DestinatarioXMLBean.TIPO_CC);
 //		mensaje.addDestinatario(destinatario);
 		/*
@@ -304,8 +330,8 @@ public class ClienteTest {
 		EnvioSMSXMLBean envio = new EnvioSMSXMLBean();
 		envio.setNombreLote("Pruebas SMS");
 		envio.setServicio("1362"); // sms
-		envio.setUsuario("pruebasSIMdes");
-		envio.setPassword("pruebasSIMdes");
+		envio.setUsuario(R_CONST_7);
+		envio.setPassword(R_CONST_7);
 		MensajeSMSXMLBean sms = new MensajeSMSXMLBean();
 		sms.setIdExterno("IDEXTERNO");
 		sms.setCuerpo("Mensaje Jokin pruebas");
@@ -331,19 +357,19 @@ public class ClienteTest {
 		EnvioPushXMLBean envio = new EnvioPushXMLBean();
 		envio.setNombreLote("Prueba");
 		envio.setServicio("822"); // sms
-		envio.setUsuario("pruebasSIMdes");
-		envio.setPassword("pruebasSIMdes");
+		envio.setUsuario(R_CONST_7);
+		envio.setPass(R_CONST_7);
 
 		MensajePeticionLotesPushXMLBean notificacion = new MensajePeticionLotesPushXMLBean();
 //		notificacion.setIdExterno("ID_SMS_IOP_2");
 		
-		notificacion.setCuerpo("lalala");
+		notificacion.setCuerpo(R_CONST_20);
 		
-		notificacion.setIcono("?");
-		notificacion.setSonido("?");
+		notificacion.setIcono(R_CONST_17);
+		notificacion.setSonido(R_CONST_17);
 //		notificacion.setIdentificadorUsuario("Usuario P1");
 //		notificacion.setIdExterno("idexterno_x");
-		notificacion.setTitulo("lalala");
+		notificacion.setTitulo(R_CONST_20);
 //		DestinatariosPeticionLotesPushXMLBean d = new DestinatariosPeticionLotesPushXMLBean();
 //		d.setIdentificadorUsuario("70894428X");
 //		d.setIdExterno("lalala");
@@ -364,7 +390,7 @@ public class ClienteTest {
 	public void testRegistroUsuario() {
 		
 		RegistroUsuarioPushResponse respuesta;		
-		respuesta = instanceUsuarios.registroUsuario(USUARIO_NUEVO_NOMBRE, USUARIO_NUEVO_SERVIDIOID, USUARIO, PASSWORD, USUARIO_NUEVO_PLATAFORMAID, USUARIO_NUEVO_TOKEN, USUARIO_NUEVO_DISPOSITIVO, null,null);
+		respuesta = instanceUsuarios.registroUsuario(USUARIO_NUEVO_NOMBRE, USUARIO_NUEVO_SERVIDIOID, USUARIO, PASS, USUARIO_NUEVO_PLATAFORMAID, USUARIO_NUEVO_TOKEN, USUARIO_NUEVO_DISPOSITIVO, null,null);
 
 
 		
@@ -378,8 +404,8 @@ public class ClienteTest {
 		
 		ConsultaEstadoXMLBean consultaEstado = new ConsultaEstadoXMLBean();
 		
-		consultaEstado.setUsuario("pruebasSIMdes");
-		consultaEstado.setPassword("pruebasSIMdes");
+		consultaEstado.setUsuario(R_CONST_7);
+		consultaEstado.setPassword(R_CONST_7);
 		
 //		ConsultaEstadoXMLBean.Mensaje mensaje = new ConsultaEstadoXMLBean.Mensaje();
 //		mensaje.setIdExterno("1");
@@ -400,7 +426,7 @@ public class ClienteTest {
 //		filtro.setDocUsuario("doc usuario");
 		ConsultaEstadoXMLBean.Filtro.Mensaje mensajeFiltro = new ConsultaEstadoXMLBean.Filtro.Mensaje();
 	//	mensajeFiltro.setIdExterno("MSG_JUAN_3");
-		mensajeFiltro.setIdMensaje("612485");
+		mensajeFiltro.setIdMensaje(R_CONST_5);
 		filtro.setMensaje(mensajeFiltro);
 		
 		consultaEstado.setFiltro(filtro);
@@ -409,7 +435,7 @@ public class ClienteTest {
 		String s = consultaEstado.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 	
 		ConsultaEstadoXMLBean consultaEstado2 = new ConsultaEstadoXMLBean();
 		consultaEstado2.loadObjectFromXML(s);
@@ -426,20 +452,21 @@ public class ClienteTest {
 		try {
 			estado.parseResponse(result);
 		} catch (PlataformaBusinessException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new PlataformaBusinessException(
-					"[TEST] Error consultado estado");
+					R_CONST_16);
 		}
 		ArrayList<ConsultaEstadoBean> resultados = estado.getResultados();
 		int i = 0;
 		for (ConsultaEstadoBean consultaEstadoBean : resultados) {
-			System.out.println(consultaEstadoBean.getAplicacion() + " || "
-					+ consultaEstadoBean.getFecha() + " || "
-					+ consultaEstadoBean.getCanal() + " || "
-					+ consultaEstadoBean.getEstado() + " || "
+			System.out.println(consultaEstadoBean.getAplicacion() + R_CONST_4
+					+ consultaEstadoBean.getFecha() + R_CONST_4
+					+ consultaEstadoBean.getCanal() + R_CONST_4
+					+ consultaEstadoBean.getEstado() + R_CONST_4
 					+ consultaEstadoBean.getIdMensaje());
 			i++;
 		}
-		System.out.println("Total resultados: " + i);
+		System.out.println(R_CONST_23 + i);
 	}
 
 	@Test
@@ -449,12 +476,12 @@ public class ClienteTest {
 ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 //String resultado = instanceSeguimiento.consultarHistorial(MENSAJE_PRUEBAS, null,
 //		USUARIO, PASSWORD);
-		consultaEstado.setUsuario("pruebasSIMdes");
-		consultaEstado.setPassword("pruebasSIMdes");
+		consultaEstado.setUsuario(R_CONST_7);
+		consultaEstado.setPassword(R_CONST_7);
 		
 		ConsultaHistoricoXMLBean.Mensaje mensaje = new ConsultaHistoricoXMLBean.Mensaje();
 		mensaje.setIdExterno(null);
-		mensaje.setIdMensaje("612485");
+		mensaje.setIdMensaje(R_CONST_5);
 		consultaEstado.setMensaje(mensaje);
 		
 //		ConsultaHistoricoXMLBean.Filtro filtro = new ConsultaHistoricoXMLBean.Filtro();
@@ -478,7 +505,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		String s = consultaEstado.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		ConsultaHistoricoXMLBean consultaHistorico2 = new ConsultaHistoricoXMLBean();
 		consultaHistorico2.loadObjectFromXML(s);
@@ -493,12 +520,12 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		ArrayList<ConsultaHistoricoBean> listado = respuesta.getResultados();
 		int i = 0;
 		for (ConsultaHistoricoBean consultaHistoricoBean : listado) {
-			System.out.println(consultaHistoricoBean.getIdMensaje() + " || "
-					+ consultaHistoricoBean.getIdExterno() + " || "
+			System.out.println(consultaHistoricoBean.getIdMensaje() + R_CONST_4
+					+ consultaHistoricoBean.getIdExterno() + R_CONST_4
 					+ consultaHistoricoBean.getFecha());
 			i++;
 		}
-		System.out.println("Total resultados: " + i);
+		System.out.println(R_CONST_23 + i);
 		
 		
 		respuesta.parseResponse(resultado);
@@ -512,8 +539,8 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		
 		OperacionesMensajesXMLBean operacionesMensajes = new OperacionesMensajesXMLBean();
 //		operacionesMensajes.setLote(LOTE_PRUEBAS+"");
-		operacionesMensajes.setUsuario("pruebasSIMdes");
-		operacionesMensajes.setPassword("pruebasSIMdes");
+		operacionesMensajes.setUsuario(R_CONST_7);
+		operacionesMensajes.setPassword(R_CONST_7);
 		
 		OperacionesMensajesXMLBean.Mensaje mensaje = new OperacionesMensajesXMLBean.Mensaje();
 //		mensaje.setIdExterno("MSG_JUAN_3");
@@ -523,7 +550,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		String s = operacionesMensajes.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		OperacionesMensajesXMLBean operacionesMensajes2 = new OperacionesMensajesXMLBean();
 		operacionesMensajes2.loadObjectFromXML(s);
@@ -535,11 +562,11 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha reenviado el mensaje: "
+					.println(R_CONST_6
 							+ MENSAJE_PRUEBAS);
 		} else {
-			System.out.println("Error reenviando mensaje: " + MENSAJE_PRUEBAS
-					+ " | " + respuestaOperacion.getErrores().get(0));
+			System.out.println(R_CONST_11 + MENSAJE_PRUEBAS
+					+ R_CONST_18 + respuestaOperacion.getErrores().get(0));
 		}
 
 	}
@@ -550,8 +577,8 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		
 		OperacionesMensajesXMLBean operacionesMensajes = new OperacionesMensajesXMLBean();
 //		operacionesMensajes.setLote(LOTE_PRUEBAS+"");
-		operacionesMensajes.setUsuario("pruebasSIMdes");
-		operacionesMensajes.setPassword("pruebasSIMdes");
+		operacionesMensajes.setUsuario(R_CONST_7);
+		operacionesMensajes.setPassword(R_CONST_7);
 		
 		OperacionesMensajesXMLBean.Mensaje mensaje = new OperacionesMensajesXMLBean.Mensaje();
 //		mensaje.setIdExterno("IDEXTERNO2");
@@ -562,7 +589,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		
 				
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		OperacionesMensajesXMLBean operacionesMensajes2 = new OperacionesMensajesXMLBean();
 		operacionesMensajes2.loadObjectFromXML(s);
@@ -574,11 +601,11 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha anulado el mensaje: "
+					.println(R_CONST_8
 							+ MENSAJE_PRUEBAS);
 		} else {
-			System.out.println("Errro anulando mensaje: " + MENSAJE_PRUEBAS
-					+ " | " + respuestaOperacion.getErrores().get(0));
+			System.out.println(R_CONST_22 + MENSAJE_PRUEBAS
+					+ R_CONST_18 + respuestaOperacion.getErrores().get(0));
 		}
 
 	}
@@ -590,8 +617,8 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		String kk = "";
 		OperacionesLotesMensajesXMLBean operacionesLotesMensajes = new OperacionesLotesMensajesXMLBean();
 		operacionesLotesMensajes.setLote("34385");
-		operacionesLotesMensajes.setUsuario("pruebasSIMdes");
-		operacionesLotesMensajes.setPassword("pruebasSIMdes");
+		operacionesLotesMensajes.setUsuario(R_CONST_7);
+		operacionesLotesMensajes.setPassword(R_CONST_7);
 		
 //		OperacionesLotesMensajesXMLBean.Mensaje mensaje = new OperacionesLotesMensajesXMLBean.Mensaje();
 //		mensaje.setIdExterno("MSG_JUAN_3");
@@ -601,7 +628,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		String s = operacionesLotesMensajes.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 //		OperacionesLotesMensajesXMLBean operacionesLotesMensajes2 = new OperacionesLotesMensajesXMLBean();
 //		operacionesLotesMensajes2.loadObjectFromXML(kk);
@@ -613,10 +640,10 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha reenviado el lote: "
+					.println(R_CONST_14
 							+ LOTE_PRUEBAS);
 		} else {
-			System.out.println("Error reenviando lote " + LOTE_PRUEBAS + " | "
+			System.out.println(R_CONST_10 + LOTE_PRUEBAS + R_CONST_18
 					+ respuestaOperacion.getErrores().get(0));
 		}
 		
@@ -628,8 +655,8 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		
 		OperacionesLotesMensajesXMLBean operacionesLotesMensajes = new OperacionesLotesMensajesXMLBean();
 		operacionesLotesMensajes.setLote("34335");
-		operacionesLotesMensajes.setUsuario("pruebasSIMdes");
-		operacionesLotesMensajes.setPassword("pruebasSIMdes");
+		operacionesLotesMensajes.setUsuario(R_CONST_7);
+		operacionesLotesMensajes.setPassword(R_CONST_7);
 		
 //		OperacionesLotesMensajesXMLBean.Mensaje mensaje = new OperacionesLotesMensajesXMLBean.Mensaje();
 //		mensaje.setIdExterno("MSG_JUAN_3");
@@ -639,7 +666,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		String s = operacionesLotesMensajes.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		OperacionesLotesMensajesXMLBean operacionesLotesMensajes2 = new OperacionesLotesMensajesXMLBean();
 		operacionesLotesMensajes2.loadObjectFromXML(s);
@@ -651,10 +678,10 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		respuestaOperacion.parseResponse(resultado);
 		if (respuestaOperacion.getErrores().isEmpty()) {
 			System.out
-					.println("Ejecutado correctamente. Se ha anulado el lote: "
+					.println(R_CONST_3
 							+ LOTE_PRUEBAS);
 		} else {
-			System.out.println("Error anulando lote " + LOTE_PRUEBAS + " | "
+			System.out.println(R_CONST_19 + LOTE_PRUEBAS + R_CONST_18
 					+ respuestaOperacion.getErrores().get(0));
 		}
 		
@@ -671,12 +698,12 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		recepcionMensajes.setSMSText("");
 		recepcionMensajes.setUser("movistar");
 		recepcionMensajes.setPassword("bW92aXN0YXI=");
-		recepcionMensajes.setSender("609691700");
+		recepcionMensajes.setSender(R_CONST_12);
 		
 		String s = recepcionMensajes.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		RecibirSMSRequest recepcionMensajes2 = new RecibirSMSRequest();
 		recepcionMensajes2.loadObjectFromXML(s);
@@ -693,18 +720,18 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		System.out.println("testRecepcionEstadoXML");
 		
 		RecepcionEstadoSMSXMLBean recepcionEstado = new RecepcionEstadoSMSXMLBean();
-		recepcionEstado.setRecipient("pruebasSIMdes");
-		recepcionEstado.setMensajeId("2909");
-		recepcionEstado.setMessajeStatus("2909");
-		recepcionEstado.setUser("pruebasSIMdes");
-		recepcionEstado.setPassword("pruebasSIMdes");
+		recepcionEstado.setRecipient(R_CONST_7);
+		recepcionEstado.setMensajeId(R_CONST_1);
+		recepcionEstado.setMessajeStatus(R_CONST_1);
+		recepcionEstado.setUser(R_CONST_7);
+		recepcionEstado.setPassword(R_CONST_7);
 		recepcionEstado.setSender("Remitente");
 		recepcionEstado.setStatusText("Texto OK estado");
 		
 		String s = recepcionEstado.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		RecepcionEstadoSMSXMLBean recepcionEstado2 = new RecepcionEstadoSMSXMLBean();
 		recepcionEstado2.loadObjectFromXML(s);
@@ -722,8 +749,8 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		UsuariosXMLBean usuarioXML = new UsuariosXMLBean();
 //		usuarioXML.setNombreUsuario("Usuario P1");
 		usuarioXML.setServicioId("1042");
-		usuarioXML.setUsuario("portalNOTIFICA@");
-		usuarioXML.setPassword("portalNOTIFICA@");
+		usuarioXML.setUsuario(USUARIO);
+		usuarioXML.setPassword(USUARIO);
 		usuarioXML.setPlataformaId("1");	//1 ANDROID - 2 APPLE
 //		usuarioXML.setTokenUsuario("TOKEN APPLE");
 		usuarioXML.setTokenUsuario("TOKEN ANDROID MODIFICADO");
@@ -733,7 +760,7 @@ ConsultaHistoricoXMLBean consultaEstado = new ConsultaHistoricoXMLBean();
 		String s = usuarioXML.toXML();
 		
 		System.out.println(s);
-		System.out.println("imprimido el primero");
+		System.out.println(R_CONST_9);
 		
 		UsuariosXMLBean usuarioXML2 = new UsuariosXMLBean();
 		usuarioXML2.loadObjectFromXML(s);
@@ -795,7 +822,7 @@ public void testReenviarLote2() throws PlataformaBusinessException {
 public void testAnularLote2() throws PlataformaBusinessException {
 	
 //	InputStream is = ClienteTest.class.getResourceAsStream("peticionLotes.xml");
-	InputStream is = ClienteTest.class.getResourceAsStream("anularLote.xml");
+	InputStream is = ClienteTest.class.getResourceAsStream(R_CONST_13);
 	 
 	 OperacionesLotesMensajesXMLBean peticion = new OperacionesLotesMensajesXMLBean();
 	peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
@@ -823,7 +850,7 @@ public void testReenviarMensaje2() throws PlataformaBusinessException {
 public void testAnularMensaje2() throws PlataformaBusinessException {
 	
 //	InputStream is = ClienteTest.class.getResourceAsStream("peticionLotes.xml");
-	InputStream is = ClienteTest.class.getResourceAsStream("anularLote.xml");
+	InputStream is = ClienteTest.class.getResourceAsStream(R_CONST_13);
 	 
 	 OperacionesMensajesXMLBean peticion = new OperacionesMensajesXMLBean();
 	peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
@@ -857,7 +884,7 @@ public void testEnviarAEAT() throws PlataformaBusinessException {
 	envio.setCodOrganismoPagadorSMS("AEAT");
 	envio.setCuerpo("Mensaje de AEAT");
 	envio.setDeliveryReportURL("http://hola.com");
-	envio.setDestinatario("609691700");
+	envio.setDestinatario(R_CONST_12);
 	envio.setIdExterno(new Date().toString());
 	String result = instancePremium.cambiarEstadoSMSPremium(763403, "La danza de los nadie, OK");
 //	String result = instancePremium.enviarSMSPremium(envio,"pruebasSIMdes","pruebasSIMdes",1602,"pruebasSIMdes","pruebasSIMdes");
@@ -893,14 +920,14 @@ public void testProcesarSAML() throws PlataformaBusinessException {
 	PeticionClaveAuthResponse peticion = new PeticionClaveAuthResponse();
 	
 	peticion.setDispositivoId("822_322");
-	peticion.setIdPlataforma("2");
+	peticion.setIdPlataforma(R_CONST_15);
 	peticion.setIdServicio("842");
-	peticion.setPassword("pruebasSIMdes");
-	peticion.setUsuario("pruebasSIMdes");
+	peticion.setPassword(R_CONST_7);
+	peticion.setUsuario(R_CONST_7);
 	
 	
 	String result = instanceSAML.insertarDatosUsuario(peticion, "JUAN ESPAÑOL ESPAÑOL",
-			"70894428X", "ESPAÑOL", "ESPAÑOL");
+			"70894428X", R_CONST_21, R_CONST_21);
 	System.out.println(result);
 }
 

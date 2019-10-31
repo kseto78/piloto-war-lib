@@ -21,13 +21,13 @@ public interface IPushService {
 	 * @param mensajeId is the mensaje id
 	 * @return
 	 */
-	public String sendPush(DatosEspecificosWebPush datos, String mensajeId); 
+	String sendPush(DatosEspecificosWebPush datos, String mensajeId); 
 	
 	/**
 	 * Se generan nuevas clasves para codificar la web push
 	 * 
 	 * @return String
 	 */
-	public String getNewKeys(); 
+	String getNewKeys(); 
 
 }

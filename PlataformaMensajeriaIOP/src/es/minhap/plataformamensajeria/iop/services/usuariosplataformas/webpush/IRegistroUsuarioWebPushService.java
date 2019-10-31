@@ -12,9 +12,9 @@ import es.minhap.plataformamensajeria.iop.beans.RespuestaRegistroWebPush;
 public interface IRegistroUsuarioWebPushService {
 
 	
-	public RespuestaRegistroWebPush registroUsuario(PeticionRegistroUsuarioWebPush peticion);
+	RespuestaRegistroWebPush registroUsuario(PeticionRegistroUsuarioWebPush peticion);
 	
-	public boolean eliminarUsuario(String endpoint, String auth, String pdh);
-	public boolean eliminarUsuarioServicio(PeticionRegistroUsuarioWebPush peticion);
+	boolean eliminarUsuario(String endpoint, String auth, String pdh);
+	boolean eliminarUsuarioServicio(PeticionRegistroUsuarioWebPush peticion);
 
 }

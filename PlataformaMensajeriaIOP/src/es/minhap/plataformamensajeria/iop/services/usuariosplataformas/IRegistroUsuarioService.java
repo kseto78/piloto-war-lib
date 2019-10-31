@@ -9,6 +9,6 @@ package es.minhap.plataformamensajeria.iop.services.usuariosplataformas;
 
 public interface IRegistroUsuarioService {
 
-	public RegistroUsuarioResponse registroUsuario(String nombreUsuario, String servicioId, String usuario, String password,
+	RegistroUsuarioResponse registroUsuario(String nombreUsuario, String servicioId, String usuario, String password,
 			String plataformaId, String tokenUsuario, String dispositivoId);
 }

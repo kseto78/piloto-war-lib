@@ -10,12 +10,12 @@ import es.minhap.plataformamensajeria.iop.beans.UsuariosXMLBean;
 
 public interface IRegistroUsuarioPushService {
 
-	public RegistroUsuarioPushResponse registroUsuario(String nombreUsuario, String servicioId, String usuario, String password,
+	RegistroUsuarioPushResponse registroUsuario(String nombreUsuario, String servicioId, String usuario, String password,
 			String plataformaId, String tokenUsuario, String dispositivoId);
 	
-	public RegistroUsuarioPushResponse registroUsuario(UsuariosXMLBean usuariosXML);
+	RegistroUsuarioPushResponse registroUsuario(UsuariosXMLBean usuariosXML);
 	
-	public boolean eliminarUsuario(String tokem);
+	boolean eliminarUsuario(String tokem);
 
 	RegistroUsuarioPushResponse registroUsuario(String nombreUsuario,
 			String servicioId, String usuario, String password,

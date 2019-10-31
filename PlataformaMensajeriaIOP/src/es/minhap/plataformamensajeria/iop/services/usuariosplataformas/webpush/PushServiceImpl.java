@@ -27,6 +27,12 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @Service("pushServiceImpl")
 public class PushServiceImpl implements IPushService {
 	
+	protected static final String R_CONST_1 = "plataformaErrores.registroWebPush.DETAILS_ERROR_GENERAL";
+
+	protected static final String R_CONST_2 = "PushServiceImp.sendPush ";
+
+	protected static final String R_CONST_3 = "plataformaErrores.registroWebPush.COD_ERROR_GENERAL";
+
 	private static final Logger LOG = LoggerFactory.getLogger(PushServiceImpl.class);
 
 	@Resource(name = "registroUsuarioWebPushImpl")
@@ -40,7 +46,7 @@ public class PushServiceImpl implements IPushService {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		String statusOK = ps.getMessage("plataformaErrores.registroWebPush.STATUSTEXT_OK", null);
 		String statusKO = ps.getMessage("plataformaErrores.registroWebPush.STATUSTEXT_KO", null);
-		RespuestaGenerica response = null;; 
+		RespuestaGenerica response = null; 
 		try{ 
 			
 			
@@ -93,8 +99,8 @@ public class PushServiceImpl implements IPushService {
 						ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERRORSERVER_413", null));
 				break;
 			default:
-				response = generarRespuesta(mensajeId, statusKO, ps.getMessage("plataformaErrores.registroWebPush.COD_ERROR_GENERAL", null),
-						ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_GENERAL", null));
+				response = generarRespuesta(mensajeId, statusKO, ps.getMessage(R_CONST_3, null),
+						ps.getMessage(R_CONST_1, null));
 				break;
 			}
 			return response.toXML(response);
@@ -104,14 +110,15 @@ public class PushServiceImpl implements IPushService {
 				ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_CERTIFICADO", null));
 			}
 			else{
-				response = generarRespuesta(mensajeId, statusKO, ps.getMessage("plataformaErrores.registroWebPush.COD_ERROR_GENERAL", null),
-				ps.getMessage("plataformaErrores.registroWebPush.DETAILS_ERROR_GENERAL", null));
+				response = generarRespuesta(mensajeId, statusKO, ps.getMessage(R_CONST_3, null),
+				ps.getMessage(R_CONST_1, null));
 			}			
-			 LOG.error("PushServiceImp.sendPush " ,e);			 
+			 LOG.error(R_CONST_2 ,e);			 
 			 try {
 				return response.toXML(response);
 			} catch (PlataformaBusinessException e1) {
-				 LOG.error("PushServiceImp.sendPush " ,e);
+				 // TODO logger.warn(e1.getMessage(), e1);
+				LOG.error(R_CONST_2 ,e);
 			}
 		}
 		return "";

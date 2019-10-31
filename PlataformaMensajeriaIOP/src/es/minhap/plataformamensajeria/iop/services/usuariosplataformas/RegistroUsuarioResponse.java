@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "registroUsuarioResponse")
 public class RegistroUsuarioResponse {
 
-    @XmlElement(name = "Status", required = true)
+    protected static final String R_CONST_1 = " ";
+	@XmlElement(name = "Status", required = true)
     protected ResponseStatusType status;
 
     /**
@@ -65,7 +66,7 @@ public class RegistroUsuarioResponse {
     	
     	String s ="";
     	
-    	s += status.getStatusCode()+" "+status.getStatusText()+" "+status.getDetails();
+    	s += status.getStatusCode()+R_CONST_1+status.getStatusText()+R_CONST_1+status.getDetails();
     	
     	return s;
     	

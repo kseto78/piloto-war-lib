@@ -68,7 +68,19 @@ import es.minhap.plataformamensajeria.iop.services.usuariosplataformas.RegistroU
 @ContextConfiguration(locations = { ModelTestUtil.SPRING_CONTEXT_LOCATION, ModelTestUtil.SPRING_JMS_CONTEXT_LOCATION })
 public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 
-	private static Logger logger = LoggerFactory.getLogger(ClienteSpringTest.class);
+	protected static final String R_CONST_1 = "pruebasSIMdes";
+
+	protected static final String R_CONST_2 = "ejemploGenerarSAMLRequest.xml";
+
+	protected static final String R_CONST_3 = "1";
+
+	protected static final String R_CONST_4 = "822_500";
+
+	protected static final String R_CONST_5 = "Se ha producido un error en testEnvioMensaje:";
+
+	protected static final String R_CONST_6 = "resultado -> ";
+
+	private static Logger logg = LoggerFactory.getLogger(ClienteSpringTest.class);
 
 	@Resource(name = "envioLotesMensajesImpl")
 	IEnvioLotesMensajesService envioLotesMensajes;
@@ -127,7 +139,7 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 
 	@Test
 	public final void testViewMisimDAO() throws InterruptedException {
-		logger.debug("Starting test testViewMisimDAO");
+		logg.debug("Starting test testViewMisimDAO");
 		ViewMisimQuery query = new ViewMisimQuery();
 		SearchResult<ViewMisim> resultado = viewMisimDao.search(query);
 		assertNotNull(resultado);
@@ -140,14 +152,14 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 	 */
 	@Test
 	public final void JMSComponentEncolarPremium() throws InterruptedException {
-		logger.debug("Starting test JMSComponentEncolarPremium");
+		logg.debug("Starting test JMSComponentEncolarPremium");
 		for (int i = 0; i < 10; i++) {
 			MensajeJMS mensaje = new MensajeJMS();
 			mensaje.setIdMensaje("839557");
 			mensaje.setDestinatarioMensajeId("92124");
 //			mensaje.setIdExterno(new Timestamp(System.currentTimeMillis()).toString());
 //			mensaje.setCodSia("TestCodSia1");
-			mensaje.setIdCanal("1");
+			mensaje.setIdCanal(R_CONST_3);
 			long maxRetries = 0L;
 			String serviceName = "283";
 			boolean premium = false;
@@ -171,10 +183,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String result = envioLotesMensajes.enviarLotesSMS(peticion);
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -191,10 +203,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String result = envioLotesMensajes.enviarLotesNotificacion(peticion);
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -212,10 +224,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String result = envioLotesMensajes.enviarLotesEmail(peticion);
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -233,10 +245,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String result = recepcionMensajes.recibirSMSXML(peticion);
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -248,10 +260,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		String result = operacionesMensajes.reenviarMensaje(787640, "pruebasSIMdes", "pruebasSIMdes");
-		logger.info("resultado -> " + result);
-		result = operacionesMensajes.anularMensaje(787640, "pruebasSIMdes", "pruebasSIMdes");
-		logger.info("resultado -> " + result);
+		String result = operacionesMensajes.reenviarMensaje(787640, R_CONST_1, R_CONST_1);
+		logg.info(R_CONST_6 + result);
+		result = operacionesMensajes.anularMensaje(787640, R_CONST_1, R_CONST_1);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -263,8 +275,8 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		String result = operacionesMensajes.anularMensaje(787645, "pruebasSIMdes", "pruebasSIMdes");
-		logger.info("resultado -> " + result);
+		String result = operacionesMensajes.anularMensaje(787645, R_CONST_1, R_CONST_1);
+		logg.info(R_CONST_6 + result);
 	}
 
 //	 @Test
@@ -276,11 +288,11 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		String result = operacionesMensajes.reenviarLote(37971, "pruebasSIMdes", "pruebasSIMdes");
-		logger.info("resultado -> " + result);
+		String result = operacionesMensajes.reenviarLote(37971, R_CONST_1, R_CONST_1);
+		logg.info(R_CONST_6 + result);
 		// result = operacionesMensajes.anularLote(37710, "pruebasSIMdes",
 		// "pruebasSIMdes");
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -294,7 +306,7 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 
 		List<Long> res = planificacionesManager.getServiciosPlanificacion();
 
-		logger.info("resultado -> " + res.toString());
+		logg.info(R_CONST_6 + res);
 	}
 
 	// @Test
@@ -309,14 +321,14 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		RecepcionEstadoSMSXMLBean x = new RecepcionEstadoSMSXMLBean();
 		x.setMensajeId("SwitchSMS_MT_37328_1161349");
 		x.setMessajeStatus("-20");
-		x.setPassword("pruebasSIMdes");
+		x.setPassword(R_CONST_1);
 		x.setRecipient("696644884");
 		x.setSender("609691700");
 		x.setStatusText("Esto es lo qeu es statustext");
-		x.setUser("pruebasSIMdes");
+		x.setUser(R_CONST_1);
 		String res = recepcionEstado.recibirEstadoSMSXML(x);
 
-		logger.info("resultado -> " + res.toString());
+		logg.info(R_CONST_6 + res);
 	}
 
 	// @Test
@@ -334,10 +346,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String result = seguimientoMensaje.consultarEstado(peticion);
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -355,10 +367,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String result = seguimientoMensaje.consultarHistorial(peticion);
-		logger.info("resultado -> " + result);
+		logg.info(R_CONST_6 + result);
 	}
 
 	// @Test
@@ -370,10 +382,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		String res = seguimientoMensaje.consultarEstadoAEAT(822, 793133, null, "pruebasSIMdes", "pruebasSIMdes", null,
+		String res = seguimientoMensaje.consultarEstadoAEAT(822, 793133, null, R_CONST_1, R_CONST_1, null,
 				null, null);
 
-		logger.info("resultado -> " + res.toString());
+		logg.info(R_CONST_6 + res);
 	}
 
 	// @Test
@@ -390,15 +402,15 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		RegistroUsuarioPushResponse res = registroUsuarioPush.registroUsuario(peticion);
 
-		logger.info("resultado -> " + res.toString());
+		logg.info(R_CONST_6 + res);
 
 		// Esto es para comprobar el metodo eliminarUsuario:
 		boolean eliminado = registroUsuarioPush.eliminarUsuario("2345sdlkjasdfkjasdflkjasdfkqwer");
-		logger.info("resultado eliminar -> " + eliminado);
+		logg.info("resultado eliminar -> " + eliminado);
 	}
 
 	// @Test
@@ -410,10 +422,10 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		RegistroUsuarioResponse res = registroUsuario.registroUsuario("822_500", "822", "pruebasSIMdes",
-				"pruebasSIMdes", "1", "riauriau", "822_500");
+		RegistroUsuarioResponse res = registroUsuario.registroUsuario(R_CONST_4, "822", R_CONST_1,
+				R_CONST_1, R_CONST_3, "riauriau", R_CONST_4);
 
-		logger.info("resultado -> " + res.toString());
+		logg.info(R_CONST_6 + res);
 	}
 
 	// @Test
@@ -424,17 +436,17 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		InputStream is = ClienteTest.class.getResourceAsStream("ejemploGenerarSAMLRequest.xml");
+		InputStream is = ClienteTest.class.getResourceAsStream(R_CONST_2);
 
 		PeticionClaveAuthRequest peticion = new PeticionClaveAuthRequest();
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = samlRequest.comprobarDatosUsuario(peticion);
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 
 	}
 
@@ -452,11 +464,11 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = samlResponse.insertarDatosUsuario(peticion, "Jokin", "77522552V", "Chachi", "Piruli");
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 
 	}
 
@@ -468,17 +480,17 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		InputStream is = ClienteTest.class.getResourceAsStream("ejemploGenerarSAMLRequest.xml");
+		InputStream is = ClienteTest.class.getResourceAsStream(R_CONST_2);
 
 		PeticionClaveAuthRequest peticion = new PeticionClaveAuthRequest();
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = getAuthService.getDatosUsuario(peticion);
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 
 	}
 
@@ -491,9 +503,9 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		context = ApplicationContextProvider.getInstance();
 		ps = new PropertiesServices(context);
 
-		String res = gestionAyuda.gestionAyuda("pruebasSIMdes", "pruebasSIMdes");
+		String res = gestionAyuda.gestionAyuda(R_CONST_1, R_CONST_1);
 
-		logger.info("resultado -> " + res.toString());
+		logg.info(R_CONST_6 + res);
 	}
 
 	// @Test
@@ -512,14 +524,14 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 			String username = ps.getMessage("giss.usuario.sms", null, null, null);
 			String password = ps.getMessage("giss.contrasena.sms", null, null, null);
-			Integer servicio = new Integer(ps.getMessage("giss.servicio.sms.premium", null, null, null));
+			Integer servicio = Integer.valueOf(ps.getMessage("giss.servicio.sms.premium", null, null, null));
 			String usuarioMISIM = ps.getMessage("misim.aplicacion.giss.usuario.sms", null, null, null);
 			String passwordMISIM = ps.getMessage("misim.aplicacion.giss.contrasena.sms", null, null, null);
 			String result = envioPremiumGISSService.enviarSMSGISS(peticion, username, password, servicio, usuarioMISIM,
 					passwordMISIM);
-			logger.info("resultado -> " + result);
+			logg.info(R_CONST_6 + result);
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 
 		}
 	}
@@ -540,11 +552,11 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = gestionNotificacionesPush.notificacionCambioEstado(peticion);
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 	}
 	
 //	@Test
@@ -562,11 +574,11 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = gestionNotificacionesPush.getAvisosUsuarioPush(peticion);
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 	}
 	
 	//@Test
@@ -584,11 +596,11 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = gestionServiciosPush.registroUsuarioEnServicio(peticion);
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 	}
 
 //	@Test
@@ -606,11 +618,11 @@ public class ClienteSpringTest extends AbstractJUnit38SpringContextTests {
 		try {
 			peticion.loadObjectFromXML(es.minhap.plataformamensajeria.iop.util.Utils.getStringFromInputStream(is));
 		} catch (PlataformaBusinessException e) {
-			logger.error("Se ha producido un error en testEnvioMensaje:", e);
+			logg.error(R_CONST_5, e);
 		}
 		String res = gestionServiciosPush.consultaServiciosDisponibles(peticion);
 
-		logger.info("resultado -> " + res);
+		logg.info(R_CONST_6 + res);
 	}
 	
 }

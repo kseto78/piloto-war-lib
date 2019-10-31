@@ -42,6 +42,14 @@ import es.minhap.sim.query.TblUsuariosWebPushQuery;
 @Service("registroUsuarioWebPushImpl")
 public class RegistroUsuarioWebPushServiceImpl implements IRegistroUsuarioWebPushService {
 
+	protected static final String R_CONST_1 = "plataformaErrores.registroWebPush.STATUSTEXT_OK";
+
+	protected static final String R_CONST_2 = "plataformaErrores.registroWebPush.CODOK";
+
+	protected static final String R_CONST_3 = "plataformaErrores.registroWebPush.DESCOK";
+
+	protected static final String R_CONST_4 = "RegistroUsuarioWebPush.eliminarUsuario";
+
 	private static final String PLATAFORMA_ERRORES_REGISTRO_WEB_PUSH_STATUSTEXT_KO = "plataformaErrores.registroWebPush.STATUSTEXT_KO";
 
 	private static final Logger LOG = LoggerFactory.getLogger(RegistroUsuarioWebPushServiceImpl.class);
@@ -68,9 +76,9 @@ public class RegistroUsuarioWebPushServiceImpl implements IRegistroUsuarioWebPus
 		String codKO = ps.getMessage("plataformaErrores.registroWebPush.COD_ERROR_GENERAL", null);
 		String detailsKOPeticion = ps.getMessage("plataformaErrores.registroWebPush.DESC_0020_GENRAL", null);
 		String codKOPeticion = ps.getMessage("plataformaErrores.registroWebPush.COD_0020_GENERAL", null);
-		String detailsOK = ps.getMessage("plataformaErrores.registroWebPush.DESCOK", null);
-		String codOK = ps.getMessage("plataformaErrores.registroWebPush.CODOK", null);
-		String statusOK = ps.getMessage("plataformaErrores.registroWebPush.STATUSTEXT_OK", null);
+		String detailsOK = ps.getMessage(R_CONST_3, null);
+		String codOK = ps.getMessage(R_CONST_2, null);
+		String statusOK = ps.getMessage(R_CONST_1, null);
 		
 		RespuestaRegistroWebPush retorno = new RespuestaRegistroWebPush();
 		
@@ -125,7 +133,7 @@ public class RegistroUsuarioWebPushServiceImpl implements IRegistroUsuarioWebPus
 			usuariosWebPushManager.establecerUsuarioEliminado(query);
 			return true;
 		} catch (Exception e) {
-			LOG.error("RegistroUsuarioWebPush.eliminarUsuario", e);
+			LOG.error(R_CONST_4, e);
 			return false;
 		}
 
@@ -146,16 +154,16 @@ public class RegistroUsuarioWebPushServiceImpl implements IRegistroUsuarioWebPus
 			usuariosWebPushManager.establecerUsuarioEliminado(query);
 			return true;
 		} catch (Exception e) {
-			LOG.error("RegistroUsuarioWebPush.eliminarUsuario", e);
+			LOG.error(R_CONST_4, e);
 			return false;
 		}
 
 	}
 	
 	private RespuestaRegistroWebPush insertarUsuario(PeticionRegistroUsuarioWebPush peticion, PropertiesServices ps) {
-		String detailsOK = ps.getMessage("plataformaErrores.registroWebPush.DESCOK", null);
-		String codOK = ps.getMessage("plataformaErrores.registroWebPush.CODOK", null);
-		String statusOK = ps.getMessage("plataformaErrores.registroWebPush.STATUSTEXT_OK", null);
+		String detailsOK = ps.getMessage(R_CONST_3, null);
+		String codOK = ps.getMessage(R_CONST_2, null);
+		String statusOK = ps.getMessage(R_CONST_1, null);
 		
 		//Comprobamos si el usuario ya existe en BBDD con todos los datos iguales
 		TblUsuariosWebPush uwp = comprobarExisteUsuario(peticion);
@@ -228,6 +236,7 @@ public class RegistroUsuarioWebPushServiceImpl implements IRegistroUsuarioWebPus
 			try{
 				servicioId = Long.parseLong(idServicio);
 			}catch(NumberFormatException e){
+				// TODO logger.warn(e.getMessage(), e);
 				return generarRespuesta(statusKO, errorServicio, codErrorServicio);
 			}
 			TblServiciosQuery servicio = new TblServiciosQuery();
@@ -272,12 +281,12 @@ public class RegistroUsuarioWebPushServiceImpl implements IRegistroUsuarioWebPus
 
 	private boolean evaluarAltaUsuario(String auth, String endpoint, String idServicio, String key) {
 
-		return (evaluarParametro(auth) && evaluarParametro(endpoint) && evaluarParametro(idServicio)
-				&& evaluarParametro(key))? true : false;
+		return evaluarParametro(auth) && evaluarParametro(endpoint) && evaluarParametro(idServicio)
+				&& evaluarParametro(key);
 	}
 
 	private boolean evaluarParametro(String parametro) {
-		return (null != parametro && !parametro.isEmpty()) ? true : false;
+		return null != parametro && !parametro.isEmpty();
 
 	}
 

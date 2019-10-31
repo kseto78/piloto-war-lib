@@ -65,7 +65,7 @@ public class WSPlataformaErrors {
 	static final String ANULARMENSAJE_4 = "El mensaje no pertenece a esta aplicacion.";
 	static final String ANULARMENSAJE_10 = "Error BBDD al actualizar el estado";
 
-	private static final HashMap<Integer, String> anularMensaje = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> ANULARMENSAJE = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
@@ -80,7 +80,7 @@ public class WSPlataformaErrors {
 			put(-10, ANULARMENSAJE_10);
 		}
 	};
-	private static final HashMap<Integer, String> reenviarMensaje = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> REENVIARMENSAJE = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
@@ -95,7 +95,7 @@ public class WSPlataformaErrors {
 			put(-10, REENVIARMENSAJE_10);
 		}
 	};
-	private static final HashMap<Integer, String> anularLote = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> ANULARLOTE = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
@@ -109,7 +109,7 @@ public class WSPlataformaErrors {
 			put(-10, ANULARLOTE_10);
 		}
 	};
-	private static final HashMap<Integer, String> reenviarLote = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> REENVIARLOTE = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
@@ -124,90 +124,90 @@ public class WSPlataformaErrors {
 		}
 	};
 
-	private static final HashMap<Integer, String> crearLoteErrores = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> CREARLOTEERRORES = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), CREARLOTE_1);
-			put(new Integer(-2), CREARLOTE_2);
-			put(new Integer(-3), CREARLOTE_3);
-			put(new Integer(-4), CREARLOTE_4);
-			put(new Integer(-10), CREARLOTE_10);
+			put(Integer.valueOf(-1), CREARLOTE_1);
+			put(Integer.valueOf(-2), CREARLOTE_2);
+			put(Integer.valueOf(-3), CREARLOTE_3);
+			put(Integer.valueOf(-4), CREARLOTE_4);
+			put(Integer.valueOf(-10), CREARLOTE_10);
 		}
 	};
-	private static final HashMap<Integer, String> crearImagen = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> CREARIMAGEN = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), NUEVAIMAGEN_1);
-			put(new Integer(-10), NUEVAIMAGEN_10);
+			put(Integer.valueOf(-1), NUEVAIMAGEN_1);
+			put(Integer.valueOf(-10), NUEVAIMAGEN_10);
 		}
 	};
-	private static final HashMap<Integer, String> asociarImagen = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> ASOCIARIMAGEN = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), ASOCIARIMAGEN_1);
-			put(new Integer(-2), ASOCIARIMAGEN_2);
-			put(new Integer(-10), ASOCIARIMAGEN_10);
+			put(Integer.valueOf(-1), ASOCIARIMAGEN_1);
+			put(Integer.valueOf(-2), ASOCIARIMAGEN_2);
+			put(Integer.valueOf(-10), ASOCIARIMAGEN_10);
 		}
 	};
-	private static final HashMap<Integer, String> crearAnexo = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> CREARANEXO = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), CREARANEXO_1);
-			put(new Integer(-10), CREARANEXO_10);
+			put(Integer.valueOf(-1), CREARANEXO_1);
+			put(Integer.valueOf(-10), CREARANEXO_10);
 		}
 	};
-	private static final HashMap<Integer, String> asociarAnexo = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> ASOCIARANEXO = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), ASOCIARANEXO_1);
-			put(new Integer(-2), ASOCIARANEXO_2);
-			put(new Integer(-10), ASOCIARANEXO_10);
+			put(Integer.valueOf(-1), ASOCIARANEXO_1);
+			put(Integer.valueOf(-2), ASOCIARANEXO_2);
+			put(Integer.valueOf(-10), ASOCIARANEXO_10);
 		}
 	};
-	private static final HashMap<Integer, String> crearEmail = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> CREAREMAIL = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), CREAREMAIL_1);
-			put(new Integer(-2), CREAREMAIL_2);
-			put(new Integer(-3), CREAREMAIL_3);
-			put(new Integer(-10), CREAREMAIL_10);
+			put(Integer.valueOf(-1), CREAREMAIL_1);
+			put(Integer.valueOf(-2), CREAREMAIL_2);
+			put(Integer.valueOf(-3), CREAREMAIL_3);
+			put(Integer.valueOf(-10), CREAREMAIL_10);
 		}
 	};
-	private static final HashMap<Integer, String> crearSMS = new HashMap<Integer, String>() {
+	private static final HashMap<Integer, String> CREARSMS = new HashMap<Integer, String>() {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		{
-			put(new Integer(-1), CREARSMS_1);
-			put(new Integer(-2), CREARSMS_2);
-			put(new Integer(-3), CREARSMS_3);
-			put(new Integer(-10), CREARSMS_10);
+			put(Integer.valueOf(-1), CREARSMS_1);
+			put(Integer.valueOf(-2), CREARSMS_2);
+			put(Integer.valueOf(-3), CREARSMS_3);
+			put(Integer.valueOf(-10), CREARSMS_10);
 		}
 	};
 
@@ -220,7 +220,7 @@ public class WSPlataformaErrors {
 		if (idLote == null) {
 			return "Error desconocido creando lote";
 		}
-		return crearLoteErrores.get(idLote);
+		return CREARLOTEERRORES.get(idLote);
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class WSPlataformaErrors {
 		if (idMensaje == null) {
 			return "Error desconocido creando email";
 		}
-		return crearEmail.get(idMensaje);
+		return CREAREMAIL.get(idMensaje);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class WSPlataformaErrors {
 		if (idImagen == null) {
 			return "Error desconocido creando imagen";
 		}
-		return crearImagen.get(idImagen);
+		return CREARIMAGEN.get(idImagen);
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class WSPlataformaErrors {
 		if (salida == null) {
 			return "Error desconocido asociando imagen";
 		}
-		return asociarImagen.get(salida);
+		return ASOCIARIMAGEN.get(salida);
 	}
 
 	/**
@@ -268,7 +268,7 @@ public class WSPlataformaErrors {
 		if (idAnexo == null) {
 			return "Error desconocido creando anexo";
 		}
-		return crearAnexo.get(idAnexo);
+		return CREARANEXO.get(idAnexo);
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class WSPlataformaErrors {
 		if (salida == null) {
 			return "Error desconocido asociando anexo";
 		}
-		return asociarAnexo.get(salida);
+		return ASOCIARANEXO.get(salida);
 	}
 
 	/**
@@ -292,7 +292,7 @@ public class WSPlataformaErrors {
 		if (idSMS == null) {
 			return "Error desconocido creando SMS";
 		}
-		return crearSMS.get(idSMS);
+		return CREARSMS.get(idSMS);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class WSPlataformaErrors {
 		if (idLote == null) {
 			return "Error desconocido reenviando lote";
 		}
-		return reenviarLote.get(idLote);
+		return REENVIARLOTE.get(idLote);
 	}
 
 	/**
@@ -316,7 +316,7 @@ public class WSPlataformaErrors {
 		if (idLote == null) {
 			return "Error desconocido anulando lote";
 		}
-		return anularLote.get(idLote);
+		return ANULARLOTE.get(idLote);
 	}
 
 	/**
@@ -328,7 +328,7 @@ public class WSPlataformaErrors {
 		if (idMensaje == null) {
 			return "Error desconocido reenviando mensaje";
 		}
-		return reenviarMensaje.get(idMensaje);
+		return REENVIARMENSAJE.get(idMensaje);
 	}
 
 	/**
@@ -340,7 +340,7 @@ public class WSPlataformaErrors {
 		if (idMensaje == null) {
 			return "Error desconocido anulando mensaje";
 		}
-		return anularMensaje.get(idMensaje);
+		return ANULARMENSAJE.get(idMensaje);
 	}
 
 	public static String getErrorFaltaIdExterno() {

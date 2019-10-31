@@ -33,6 +33,7 @@ public class HiloEncolarMensajesActiveMq extends Thread {
 	private PropertiesServices ps;
 
 	public HiloEncolarMensajesActiveMq() {
+		// This method has to be empty.
 
 	}
 
@@ -62,6 +63,7 @@ public class HiloEncolarMensajesActiveMq extends Thread {
 					sender.send(mBean.getMensajeJms(), mBean.getMaxRetries(), mBean.getServicioId(), mBean.getPremium());
 					activeMQ = 1;//true
 				}catch (CannotCreateTransactionException e) {
+					// TODO logger.warn(e.getMessage(), e);
 					activeMQ = 0;//false
 					LOG.error(errorActiveMq+" HiloEnviarMensajesPremium.run --Error ActiveMq-- Mensaje: " + mBean.getMensajeJms().getIdMensaje());
 					if (mBean.getPremium()){
@@ -73,6 +75,7 @@ public class HiloEncolarMensajesActiveMq extends Thread {
 			}
 		
 		} catch (CannotCreateTransactionException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			//Comprobamos que si ya se ha actualizado la tabla de errores a false
 			LOG.debug("Estamos en HiloEncolarMensajesActiveMQ-run en el catch, comprobamos si ya se ha actualizado la tabla de errores a false");
 			activeMQ = 0;//false
@@ -82,10 +85,13 @@ public class HiloEncolarMensajesActiveMq extends Thread {
 		}finally{
 //			Comprobamos que si ya se ha actualizado la tabla de errores
 			LOG.debug("Estamos en HiloEncolarMensajesActiveMQ-run");					
-			if (activeMQ == 0){
+			switch (activeMQ) {
+			case 0:
 				erroresManager.comprobarActiveMqActivo(false);
-			}else if (activeMQ == 1){
+				break;
+			case 1:
 				erroresManager.comprobarActiveMqActivo(true);
+				break;
 			}
 		}
 	}

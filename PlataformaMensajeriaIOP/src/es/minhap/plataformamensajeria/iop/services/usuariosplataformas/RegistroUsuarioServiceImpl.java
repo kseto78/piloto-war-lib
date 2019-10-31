@@ -24,6 +24,8 @@ import es.minhap.plataformamensajeria.iop.manager.TblUsuariosPushManager;
 @Service("registroUsuarioServiceImpl")
 public class RegistroUsuarioServiceImpl implements IRegistroUsuarioService {
     
+	protected static final String R_CONST_1 = "plataformaErrores.registroUsuarioPush.TAG_ERROR_ALTA_USUARIO_PUSH";
+
 	private static final Logger LOG = LoggerFactory.getLogger(RegistroUsuarioServiceImpl.class);
 	
 	@Resource
@@ -44,7 +46,7 @@ public class RegistroUsuarioServiceImpl implements IRegistroUsuarioService {
 		String statusCodeOK = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_STATUSCODE_OK", null);
 		String tagOK = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_OK", null);
 		String tagMensajeOK = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_MENSAJE_OK", null);
-		String errorAltaUsuarioPush = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_ERROR_ALTA_USUARIO_PUSH", null);
+		String errorAltaUsuarioPush = ps.getMessage(R_CONST_1, null);
 		String tagKO = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_KO", null);
 		String errorGeneral = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_MENSAJE_KO_GENERAL", null);
 		String errorUsuarioAplicacion = ps.getMessage(
@@ -57,7 +59,7 @@ public class RegistroUsuarioServiceImpl implements IRegistroUsuarioService {
 				"plataformaErrores.registroUsuarioPush.TAG_ERROR_NOEXTSITE_USUARIO_PASSWORD_APLICACION", null);
 		String detailsErrorNoExisteUsuarioAplicacion = ps.getMessage(
 				"plataformaErrores.registroUsuarioPush.TAG_MENSAJE_KO_NOEXISTE_USUARIO_PASSWORD_APLICACION", null);
-		String errorAltaUsuario = ps.getMessage("plataformaErrores.registroUsuarioPush.TAG_ERROR_ALTA_USUARIO_PUSH", null);
+		String errorAltaUsuario = ps.getMessage(R_CONST_1, null);
 		String detailsErrorPeticion = ps.getMessage(
 				"plataformaErrores.registroUsuarioPush.TAG_MENSAJE_KO_ERROR_ALTA_USUARIO_PUSH", null);
     	
@@ -119,18 +121,14 @@ public class RegistroUsuarioServiceImpl implements IRegistroUsuarioService {
     private boolean evaluarAltaUsuario(String nombreUsuario, String servicioId, String usuario, String password,
 			String plataformaId, String tokenUsuario, String dispositivoId){
     	
-    	if(evaluarParametro(nombreUsuario) && evaluarParametro(servicioId)
+    	return evaluarParametro(nombreUsuario) && evaluarParametro(servicioId)
     			&& evaluarParametro(usuario) && evaluarParametro(password)
-    			&& evaluarParametro(plataformaId) && evaluarParametro(tokenUsuario)){
-    		return true;
-    	} else {
-    		return false;
-    	}
+    			&& evaluarParametro(plataformaId) && evaluarParametro(tokenUsuario);
     	
     }
     
     private boolean evaluarParametro(String parametro){
-    	return (null != parametro && !parametro.isEmpty()) ? true : false;
+    	return null != parametro && !parametro.isEmpty();
     }
 
 	/**

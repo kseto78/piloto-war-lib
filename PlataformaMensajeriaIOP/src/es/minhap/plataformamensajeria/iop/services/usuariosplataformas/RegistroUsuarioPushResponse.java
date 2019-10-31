@@ -44,7 +44,8 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
 @XmlRootElement(name = "Respuesta")
 public class RegistroUsuarioPushResponse {
 
-    @XmlElement(name = "Status", required = true)
+    protected static final String R_CONST_1 = " ";
+	@XmlElement(name = "Status", required = true)
     protected ResponseStatusType status;
     @XmlElement(name = "IdDispositivo")
     protected String idDispositivo;
@@ -108,7 +109,7 @@ public class RegistroUsuarioPushResponse {
     	
     	String s ="";
     	
-    	s += status.getStatusCode()+" "+status.getStatusText()+" "+status.getDetails();
+    	s += status.getStatusCode()+R_CONST_1+status.getStatusText()+R_CONST_1+status.getDetails();
     	
     	return s;
     	
@@ -129,10 +130,6 @@ public class RegistroUsuarioPushResponse {
 			
 
 			return Utils.convertToUTF8(writer.toString());
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException(
-					"Error generando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException(
 					"Error generando el XML.\nCausa: " + e.getCause()
