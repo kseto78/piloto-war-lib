@@ -90,6 +90,7 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public static final String MULTIORGANISMO = "multiorganismo";
     public static final String PREMIUM = "premium";
     public static final String EXCLUSIVO = "exclusivo";
+    public static final String SMSEXTRANJEROS = "smsExtranjeros";
     public static final String NMAXREENVIOS = "numeroMaxReenvios";
     public static final String NUMEROMAXREENVIOS = "numeroMaxReenvios";
     public static final String REINTENTOSCONSULTAESTADO = "reintentosConsultaEStado";
@@ -1023,6 +1024,23 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
      * Permite buscar cuando campo premium es NOT NULL
      */
     private boolean exclusivoIsNotNull = false;
+
+    /**
+     * Valor de busqueda de campo smsExtranjeros
+     */
+    private Boolean smsExtranjeros;
+
+    /**
+     * Permite buscar cuando campo smsExtranjeros es NULL
+     */
+    private boolean smsExtranjerosIsNull = false;
+  
+
+	/**
+     * Permite buscar cuando campo smsExtranjeros es NOT NULL
+     */
+    private boolean smsExtranjerosIsNotNull = false;
+
     
     /**
      * Valor de busqueda de campo premium
@@ -4388,7 +4406,39 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public void setExclusivo(Boolean exclusivo) {
         this.exclusivo = exclusivo;
     }
+    
+    /**
+     * Valor de busqueda de campo smsExtranjeros
+     * @return Boolean.
+     */
+    public Boolean getSmsExtranjeros() {
+        return smsExtranjeros;
+    }
 
+    /**
+     * Valor de busqueda de campo exclusivo
+     * @param smsExtrnajeros Valor de seteo.
+     */
+    public void setSmsExtranjeros(Boolean smsExtranjeros) {
+        this.smsExtranjeros= smsExtranjeros;
+    }
+
+    public boolean isSmsExtranjerosIsNull() {
+		return smsExtranjerosIsNull;
+	}
+
+	public void setSmsExtranjerosIsNull(boolean smsExtranjerosIsNull) {
+		this.smsExtranjerosIsNull = smsExtranjerosIsNull;
+	}
+
+	public boolean isSmsExtranjerosIsNotNull() {
+		return smsExtranjerosIsNotNull;
+	}
+
+	public void setSmsExtranjerosIsNotNull(boolean smsExtranjerosIsNotNull) {
+		this.smsExtranjerosIsNotNull = smsExtranjerosIsNotNull;
+	}
+	
     /**
      * Permite buscar cuando campo exclusivo es NULL
      * @return boolean.
