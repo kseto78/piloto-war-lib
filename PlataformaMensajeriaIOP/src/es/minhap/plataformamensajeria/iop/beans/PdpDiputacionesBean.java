@@ -6,10 +6,20 @@ import java.util.Date;
 public class PdpDiputacionesBean implements Serializable{
 
 
+	protected static final String R_CONST_1 = "true";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8095598141992922210L;
+	private Integer pdpDiputacionesId;
+	private String nombre = null;
+	private String descripcion = null;
+	private Boolean activo = null;
+	private String isActivo = null;
+	private Date fechacreacion = null;
+	private Date fechamodificacion = null;
+	private String creadopor = null;
+	private String modificadopor = null;
 	public PdpDiputacionesBean() {
 		super();
 		this.pdpDiputacionesId = null;		
@@ -22,16 +32,6 @@ public class PdpDiputacionesBean implements Serializable{
 		this.activo = null;
 		
 	}
-
-	private Integer pdpDiputacionesId;	
-	private String nombre = null;
-	private String descripcion = null;
-	private Boolean activo = null;
-	private String isActivo = null;
-	private Date fechacreacion = null;
-	private Date fechamodificacion = null;
-	private String creadopor = null;
-	private String modificadopor = null;
 
 	/**
 	 * @return the pdpDiputacionesId
@@ -130,7 +130,7 @@ public class PdpDiputacionesBean implements Serializable{
 		this.activo = activo;
 	}
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (R_CONST_1.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -147,7 +147,7 @@ public class PdpDiputacionesBean implements Serializable{
 	}
 
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (R_CONST_1.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -157,7 +157,7 @@ public class PdpDiputacionesBean implements Serializable{
 
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return R_CONST_1;
 		} else {
 			return "false";
 		}

@@ -18,6 +18,7 @@ public class EstadosBean {
 	}
 	
 	public EstadosBean() {
+		// This method has to be empty.
 		
 	}
 

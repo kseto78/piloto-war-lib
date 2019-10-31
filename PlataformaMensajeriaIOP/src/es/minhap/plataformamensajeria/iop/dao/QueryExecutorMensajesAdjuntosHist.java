@@ -20,14 +20,14 @@ public interface QueryExecutorMensajesAdjuntosHist {
 	 * @param max 
 	 * @return 
 	 */
-	public List<TblMensajesAdjuntosHist> convertAdjuntosTOAdjuntosHist(List<Long> subList, TblLotesEnviosHist loteHistorico, Integer max, Integer firstResult);
+	List<TblMensajesAdjuntosHist> convertAdjuntosTOAdjuntosHist(List<Long> subList, TblLotesEnviosHist loteHistorico, Integer max, Integer firstResult);
 
 	/**
 	 * Obtiene lista de TblMensajesAdjuntosHist a partir de la lista de mensajes
 	 * @param listaMensajes
 	 * @return 
 	 */
-	public List<Long> getIdMensajesAdjuntosCons(List<Long> listaMensajes);
+	List<Long> getIdMensajesAdjuntosCons(List<Long> listaMensajes);
 
 	/**
 	 * Cuenta el total lista de TblMensajesAdjuntosHist a partir de la lista de mensajes en TblMensajesAdjuntos
@@ -35,6 +35,6 @@ public interface QueryExecutorMensajesAdjuntosHist {
 	 * @param loteHistorico
 	 * @return 
 	 */
-	public Integer countConvertAdjuntosTOAdjuntosHist(List<Long> subList, TblLotesEnviosHist loteHistorico);
+	Integer countConvertAdjuntosTOAdjuntosHist(List<Long> subList, TblLotesEnviosHist loteHistorico);
 
 }

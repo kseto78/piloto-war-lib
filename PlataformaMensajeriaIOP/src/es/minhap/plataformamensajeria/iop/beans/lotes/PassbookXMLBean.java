@@ -50,30 +50,31 @@ import javax.xml.bind.annotation.XmlType;
     "camposAuxiliares",
     "camposDetalleTrasero"
 })
-@XmlRootElement(name = "PassBook", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "PassBook", namespace=PassbookXMLBean.R_CONST_1)
 public class PassbookXMLBean {
 
-    @XmlElement(name = "URL", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "URL", required = true, namespace=R_CONST_1)
     protected String url;
-    @XmlElement(name = "LogoText", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "LogoText", required = true, namespace=R_CONST_1)
     protected String logoText;
-    @XmlElement(name = "Description", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Description", required = true, namespace=R_CONST_1)
     protected String description;
-    @XmlElement(name = "BackgroundColor", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "BackgroundColor", required = true, namespace=R_CONST_1)
     protected String backgroundColor;
-    @XmlElement(name = "ForegroundColor", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "ForegroundColor", required = true, namespace=R_CONST_1)
     protected String foregroundColor;
-    @XmlElement(name = "PassTypeIdentifier", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "PassTypeIdentifier", required = true, namespace=R_CONST_1)
     protected String passTypeIdentifier;
-    @XmlElement(name = "CamposPrincipales", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CamposPrincipales", required = true, namespace=R_CONST_1)
     protected CamposPrincipalesXMLBean camposPrincipales;
-    @XmlElement(name = "CamposCabecera", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CamposCabecera", namespace=R_CONST_1)
     protected CamposCabeceraXMLBean camposCabecera;
-    @XmlElement(name = "CamposSecundarios", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CamposSecundarios", namespace=R_CONST_1)
     protected CamposSecundariosXMLBean camposSecundarios;
-    @XmlElement(name = "CamposAuxiliares", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CamposAuxiliares", namespace=R_CONST_1)
     protected CamposAuxiliaresXMLBean camposAuxiliares;
-    @XmlElement(name = "CamposDetalleTrasero", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CamposDetalleTrasero", namespace=R_CONST_1)
     protected CamposDetalleTraseroXMLBean camposDetalleTrasero;
 
     /**

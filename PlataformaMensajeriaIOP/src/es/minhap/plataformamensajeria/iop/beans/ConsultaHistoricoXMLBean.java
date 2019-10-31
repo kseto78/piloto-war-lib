@@ -22,21 +22,28 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlType(name = "", propOrder = {
     "usuario",
     "password",
-    "mensaje"
+    ConsultaHistoricoXMLBean.R_CONST_7
 })
-@XmlRootElement(name = "PeticionHistorico", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "PeticionHistorico", namespace=ConsultaHistoricoXMLBean.R_CONST_2)
 public class ConsultaHistoricoXMLBean {
 
-    private static final String XML = "\nXML:\n";
+    protected static final String R_CONST_1 = "IdExterno";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	protected static final String R_CONST_3 = "idExterno";
+	protected static final String R_CONST_4 = "idMensaje";
+	protected static final String R_CONST_5 = "Mensaje";
+	protected static final String R_CONST_6 = "IdMensaje";
+	protected static final String R_CONST_7 = "mensaje";
+	private static final String XML = "\nXML:\n";
 	private static final String MENSAJE2 = "\nMensaje: ";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
-	@XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Usuario", required = true, namespace=R_CONST_2)
     protected String usuario;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Password", required = true, namespace=R_CONST_2)
     protected String password;
 //    @XmlElement(name = "Filtro", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
 //    protected ConsultaHistoricoXMLBean.Filtro filtro;
-    @XmlElement(name = "Mensaje", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = R_CONST_5, required = false, namespace=R_CONST_2)
     protected ConsultaHistoricoXMLBean.Mensaje mensaje;
 
     /**
@@ -182,7 +189,7 @@ public class ConsultaHistoricoXMLBean {
         "idServicio",
         "idCanal",
         "idLote",
-        "mensaje",
+        ConsultaHistoricoXMLBean.R_CONST_7,
         "idEstado",
         "fechaDesde",
         "fechaHasta",
@@ -191,32 +198,32 @@ public class ConsultaHistoricoXMLBean {
         "codOrganismo",
         "codOrganismoPagador"
     })
-    @XmlRootElement(name = "Filtro", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlRootElement(name = "Filtro", namespace=ConsultaHistoricoXMLBean.R_CONST_2)
     public static class Filtro {
 
-        @XmlElement(name = "IdAplicacion", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdAplicacion", required = false, namespace=R_CONST_2)
         protected String idAplicacion;
-        @XmlElement(name = "IdServicio", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdServicio", required = false, namespace=R_CONST_2)
         protected String idServicio;
-        @XmlElement(name = "IdCanal", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdCanal", required = false, namespace=R_CONST_2)
         protected String idCanal;
-        @XmlElement(name = "IdLote", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdLote", required = false, namespace=R_CONST_2)
         protected String idLote;
-        @XmlElement(name = "Mensaje", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = R_CONST_5, required = false, namespace=R_CONST_2)
         protected ConsultaHistoricoXMLBean.Filtro.Mensaje mensaje;
-        @XmlElement(name = "IdEstado", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdEstado", required = false, namespace=R_CONST_2)
         protected String idEstado;
-        @XmlElement(name = "FechaDesde", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "FechaDesde", required = false, namespace=R_CONST_2)
         protected String fechaDesde;
-        @XmlElement(name = "FechaHasta", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "FechaHasta", required = false, namespace=R_CONST_2)
         protected String fechaHasta;
-        @XmlElement(name = "DocUsuario", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "DocUsuario", required = false, namespace=R_CONST_2)
         protected String docUsuario;
-        @XmlElement(name = "CodSia", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "CodSia", required = false, namespace=R_CONST_2)
         protected String codSia;
-        @XmlElement(name = "CodOrganismo", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "CodOrganismo", required = false, namespace=R_CONST_2)
         protected String codOrganismo;
-        @XmlElement(name = "CodOrganismoPagador", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "CodOrganismoPagador", required = false, namespace=R_CONST_2)
         protected String codOrganismoPagador;
 
         /**
@@ -530,15 +537,15 @@ public class ConsultaHistoricoXMLBean {
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
-            "idMensaje",
-            "idExterno"
+            ConsultaHistoricoXMLBean.R_CONST_4,
+            ConsultaHistoricoXMLBean.R_CONST_3
         })
-        @XmlRootElement(name = "Mensaje", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlRootElement(name = ConsultaHistoricoXMLBean.R_CONST_5, namespace=ConsultaHistoricoXMLBean.R_CONST_2)
         public static class Mensaje {
 
-            @XmlElement(name = "IdMensaje", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+            @XmlElement(name = R_CONST_6, required = false, namespace=R_CONST_2)
             protected String idMensaje;
-            @XmlElement(name = "IdExterno", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+            @XmlElement(name = R_CONST_1, required = false, namespace=R_CONST_2)
             protected String idExterno;
 
             /**
@@ -616,15 +623,15 @@ public class ConsultaHistoricoXMLBean {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "idMensaje",
-        "idExterno"
+        ConsultaHistoricoXMLBean.R_CONST_4,
+        ConsultaHistoricoXMLBean.R_CONST_3
     })
-    @XmlRootElement(name = "Mensaje", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlRootElement(name = ConsultaHistoricoXMLBean.R_CONST_5, namespace=ConsultaHistoricoXMLBean.R_CONST_2)
     public static class Mensaje {
 
-        @XmlElement(name = "IdMensaje", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion" )
+        @XmlElement(name = R_CONST_6, required = false, namespace=R_CONST_2 )
         protected String idMensaje;
-        @XmlElement(name = "IdExterno", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = R_CONST_1, required = false, namespace=R_CONST_2)
         protected String idExterno;
 
         /**
@@ -693,11 +700,7 @@ public class ConsultaHistoricoXMLBean {
 		
 		
 		
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE2 + e.getMessage()+ XML+xmlConsultaHistorico);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE2 + e.getMessage()+ XML+xmlConsultaHistorico);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE2 + e.getMessage()+ XML+xmlConsultaHistorico);
 		}
 	}
@@ -718,8 +721,6 @@ public class ConsultaHistoricoXMLBean {
 //		jaxbMarshaller.marshal(consultaHistorico, System.out);
 		
 		return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE2 + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE2 + e.getMessage());
 		}

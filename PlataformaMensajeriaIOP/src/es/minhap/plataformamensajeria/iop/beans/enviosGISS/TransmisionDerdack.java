@@ -43,11 +43,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class TransmisionDerdack {
 
-    @XmlElement(name = "Return", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "Return", required = true, namespace=R_CONST_1)
     protected String _return;
-    @XmlElement(name = "NIndex", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "NIndex", required = true, namespace=R_CONST_1)
     protected String nIndex;
-    @XmlElement(name = "StrErrorDescription", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "StrErrorDescription", required = true, namespace=R_CONST_1)
     protected String strErrorDescription;
 
     /**

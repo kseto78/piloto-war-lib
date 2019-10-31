@@ -15,6 +15,35 @@ public class FiltroProveedorMisimBean {
 
 	
 
+	protected Long idProveedor = null;
+	protected String nombre = null;
+	protected Long idProducto = null;
+	protected Long idEndpoint = null;
+	protected Long idTransformacion = null;
+	protected String usuario = null;
+	protected String password = null;
+	protected String company = null;
+	protected String type = null;
+	/*DUDA proveedores*/
+	protected String encoding = null;
+	protected String basicAutentication = null;
+	protected String method = null;
+	protected String mediaType = null;
+	protected String anadirUim = null;
+	protected String userAutentication = null;
+	protected String passAutentication = null;
+	protected String certificado = null;
+	protected String certificadoPass = null;
+	protected String firma = null;
+	protected String cifrado = null;
+	protected String nodoCifrado = null;
+	protected String esquemaCifrado = null;
+	protected String tipoFirma = null;
+	protected Endpoint endpoint = null;
+	protected Producto producto = null;
+	protected Transformacion transformacion = null;
+
+
 	public FiltroProveedorMisimBean() {
 		super();
 		this.idProveedor = null;
@@ -48,35 +77,6 @@ public class FiltroProveedorMisimBean {
 	}
 
 
-	protected Long idProveedor = null;
-	protected String nombre = null;
-	protected Long idProducto = null;
-	protected Long idEndpoint = null;
-	protected Long idTransformacion = null;	
-	protected String usuario = null;
-	protected String password = null;
-	protected String company = null;
-	protected String type = null;
-	/*DUDA proveedores*/
-	protected String encoding = null;
-	protected String basicAutentication = null;
-	protected String method = null;
-	protected String mediaType = null;
-	protected String anadirUim = null;
-	protected String userAutentication = null;
-	protected String passAutentication = null;
-	protected String certificado = null;
-	protected String certificadoPass = null;
-	protected String firma = null;
-	protected String cifrado = null;
-	protected String nodoCifrado = null;
-	protected String esquemaCifrado = null;
-	protected String tipoFirma = null;
-	protected Endpoint endpoint = null;
-	protected Producto producto = null;
-	protected Transformacion transformacion = null;
-
-	
 	public Long getIdProveedor() {
 		return idProveedor;
 	}

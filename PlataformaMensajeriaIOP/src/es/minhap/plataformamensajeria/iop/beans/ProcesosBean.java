@@ -6,10 +6,33 @@ import java.util.Date;
 public class ProcesosBean implements Serializable{
 
 
+	protected static final String R_CONST_1 = "true";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8610134834369690886L;
+	private Integer procesosId;
+	private String nombre = null;
+	private String nombreClase = null;
+	private Date inicioUltimaEjecucion = null;
+	private Date finUltimaEjecucion = null;
+	private String estado = null;
+	private String proximaEjecucion = null;
+	private String parametro1 = null;
+	private String parametro2 = null;
+	private Boolean activo = null;
+	private String isActivo = null;
+	private String modificadoPor = null;
+	private Date fechaModificacion = null;
+	private String tipo;
+	private String horaInicio;
+	private Boolean lunes;
+	private Boolean martes;
+	private Boolean miercoles;
+	private Boolean jueves;
+	private Boolean viernes;
+	private Boolean sabado;
+	private Boolean domingo;
 
 	/**
 	 * 
@@ -40,29 +63,6 @@ public class ProcesosBean implements Serializable{
 		this.domingo = null;		
 	}
 	
-
-	private Integer procesosId;	
-	private String nombre = null;
-	private String nombreClase = null;
-	private Date inicioUltimaEjecucion = null;
-	private Date finUltimaEjecucion = null;	
-	private String estado = null;
-	private String proximaEjecucion = null;
-	private String parametro1 = null;
-	private String parametro2 = null;
-	private Boolean activo = null;
-	private String isActivo = null;
-	private String modificadoPor = null;
-	private Date fechaModificacion = null;
-	private String tipo;
-	private String horaInicio;
-	private Boolean lunes;
-	private Boolean martes;
-	private Boolean miercoles;
-	private Boolean jueves;
-	private Boolean viernes;
-	private Boolean sabado;
-	private Boolean domingo;
 
 	public String getNombreClase() {
 		return nombreClase;
@@ -137,7 +137,7 @@ public class ProcesosBean implements Serializable{
 		return activo;
 	}
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (R_CONST_1.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -154,7 +154,7 @@ public class ProcesosBean implements Serializable{
 	}
 
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (R_CONST_1.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -164,7 +164,7 @@ public class ProcesosBean implements Serializable{
 
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return R_CONST_1;
 		} else {
 			return "false";
 		}

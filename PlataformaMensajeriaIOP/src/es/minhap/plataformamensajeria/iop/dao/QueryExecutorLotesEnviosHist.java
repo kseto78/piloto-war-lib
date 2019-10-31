@@ -16,7 +16,7 @@ public interface QueryExecutorLotesEnviosHist {
 	 * @param fecha
 	 * @return 
 	 */
-	public Integer countLotesByServicioYFecha(Long servicioId, Date fecha);
+	Integer countLotesByServicioYFecha(Long servicioId, Date fecha);
 
 	/**
 	 * Obtiene los idlotes segun datos
@@ -26,6 +26,6 @@ public interface QueryExecutorLotesEnviosHist {
 	 * @param firstResult
 	 * @return 
 	 */
-	public List<Long> getIdLotesByServicio(Long servicioId, Date fecha, Integer max, Integer firstResult);
+	List<Long> getIdLotesByServicio(Long servicioId, Date fecha, Integer max, Integer firstResult);
 
 }

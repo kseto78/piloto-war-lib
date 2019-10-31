@@ -37,19 +37,21 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DestinatarioMail", propOrder = {
+@XmlType(name = DestinatarioPeticionLotesMailXMLBean.R_CONST_2, propOrder = {
     "docUsuario",
     "idExterno",
     "destinatarios"
 })
-@XmlRootElement(name = "DestinatarioMail", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = DestinatarioPeticionLotesMailXMLBean.R_CONST_2, namespace=DestinatarioPeticionLotesMailXMLBean.R_CONST_1)
 public class DestinatarioPeticionLotesMailXMLBean {
 
-    @XmlElement(name = "DocUsuario", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	protected static final String R_CONST_2 = "DestinatarioMail";
+	@XmlElement(name = "DocUsuario", namespace=R_CONST_1)
     protected String docUsuario;
-    @XmlElement(name = "IdExterno", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "IdExterno", required = true, namespace=R_CONST_1)
     protected String idExterno;
-    @XmlElement(name = "Destinatarios", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Destinatarios", required = true, namespace=R_CONST_1)
     protected DestinatariosPeticionLotesXMLBean destinatarios;
 
     /**

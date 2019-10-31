@@ -15,12 +15,17 @@ public class MensajePushXMLBean {
 	private String icono="";
 	private String sonido="";
 	private String titulo="";
+	private ArrayList<String> listadoErroresMensajes;
 	
 	
 	
 
 	//errores para la respuesta
 	 
+	public MensajePushXMLBean() {		
+		listadoErroresMensajes= new ArrayList<>();
+	}
+
 	public ArrayList<String> getListadoErroresMensajes() {
 		return listadoErroresMensajes;
 	}
@@ -28,12 +33,6 @@ public class MensajePushXMLBean {
 	public void setListadoErroresMensajes(ArrayList<String> listadoErroresMensajes) {
 		this.listadoErroresMensajes = listadoErroresMensajes;
 	}
-	private ArrayList<String> listadoErroresMensajes;
-	
-	public MensajePushXMLBean() {		
-		listadoErroresMensajes= new ArrayList<String>();
-	}
-	
 	public String getIdMensaje() {
 		return idMensaje;
 	}

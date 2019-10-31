@@ -5,6 +5,73 @@ import java.util.Date;
 public class OrganismoBean {
 
 
+	protected static final String R_CONST_1 = "true";
+	private Integer organismoId;
+	private String dir3;
+	private String nombre = null;
+	private String descripcion = null;
+	private Boolean activo = null;
+	private Date fechacreacion = null;
+	private Date fechaCreacionDesde = null;
+	private Date fechaCreacionHasta = null;
+	private Date fechamodificacion = null;
+	private String creadopor = null;
+	private String modificadopor = null;
+	private Long externalid;
+	private String nombrecuentaenvio;
+	private Integer historificacion;
+	private String motivohistorificacion;
+	private Integer conservacion;
+	private String motivoconservacion;
+	private String isActivo = null;
+	private String estado;
+	private String nifcif;
+	private String siglas;
+	private Integer nivelAdministracion;
+	private Integer nivelJerarquico;
+	private String codUnidadSuperior;
+	private String denomUnidadSuperior;
+	private String codUnidadRaiz;
+	private String denomUnidadRaiz;
+	private String esEdp;
+	private String codEdpPrincipal;
+	private String denomEdpPrincipal;
+	private String codTipoEntPublic;
+	private String codTipoUnidad;
+	private String codAmbTerritorial;
+	private String codAmbEntGeografica;
+	private String codAmbPais;
+	private String codAmbComunidad;
+	private String codAmbProvincia;
+	private String codAmbMunicipio;
+	private String codAmbIsla;
+	private String codAmbElm;
+	private String codAmbLocExtranjera;
+	private String competencias;
+	private String disposicionLegal;
+	private Date fechaAltaOficial;
+	private Date fechaBajaOficial;
+	private Date fechaExtincion;
+	private Date fechaAnulacion;
+	private String observGenerales;
+	private String observBaja;
+	private String tipoVia;
+	private String nombreVia;
+	private String numVia;
+	private String complemento;
+	private String codPostal;
+	private String codPais;
+	private String codComunidad;
+	private String codProvincia;
+	private String codLocalidad;
+	private String codEntGeografica;
+	private String dirExtranjera;
+	private String locExtranjera;
+	private String observaciones;
+	private Boolean asociadosServicio;
+	private Date fechaEstado;
+	private Date fechaActivo;
+
 	public OrganismoBean() {
 		super();
 		this.organismoId = null;
@@ -74,72 +141,6 @@ public class OrganismoBean {
 
 	}
 
-	private Integer organismoId;
-	private String dir3;
-	private String nombre = null;
-	private String descripcion = null;
-	private Boolean activo = null;
-	private Date fechacreacion = null;
-	private Date fechaCreacionDesde = null;
-	private Date fechaCreacionHasta = null;
-	private Date fechamodificacion = null;
-	private String creadopor = null;
-	private String modificadopor = null;
-	private Long externalid;
-	private String nombrecuentaenvio;
-	private Integer historificacion;
-	private String motivohistorificacion;
-	private Integer conservacion;
-	private String motivoconservacion;
-	private String isActivo = null;
-	private String estado;
-	private String nifcif;
-	private String siglas;
-	private Integer nivelAdministracion;
-	private Integer nivelJerarquico;
-	private String codUnidadSuperior;
-	private String denomUnidadSuperior;
-	private String codUnidadRaiz;
-	private String denomUnidadRaiz;
-	private String esEdp;
-	private String codEdpPrincipal;
-	private String denomEdpPrincipal;
-	private String codTipoEntPublic;
-	private String codTipoUnidad;
-	private String codAmbTerritorial;
-	private String codAmbEntGeografica;
-	private String codAmbPais;
-	private String codAmbComunidad;
-	private String codAmbProvincia;
-	private String codAmbMunicipio;
-	private String codAmbIsla;
-	private String codAmbElm;
-	private String codAmbLocExtranjera;
-	private String competencias;
-	private String disposicionLegal;
-	private Date fechaAltaOficial;
-	private Date fechaBajaOficial;
-	private Date fechaExtincion;
-	private Date fechaAnulacion;
-	private String observGenerales;
-	private String observBaja;
-	private String tipoVia;
-	private String nombreVia;
-	private String numVia;
-	private String complemento;
-	private String codPostal;
-	private String codPais;
-	private String codComunidad;
-	private String codProvincia;
-	private String codLocalidad;
-	private String codEntGeografica;
-	private String dirExtranjera;
-	private String locExtranjera;
-	private String observaciones;
-	private Boolean asociadosServicio;
-	private Date fechaEstado;
-	private Date fechaActivo;
-
 	public Integer getOrganismoId() {
 		return organismoId;
 	}
@@ -149,7 +150,7 @@ public class OrganismoBean {
 	}
 
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (R_CONST_1.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -166,7 +167,7 @@ public class OrganismoBean {
 	}
 
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (R_CONST_1.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -176,7 +177,7 @@ public class OrganismoBean {
 
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return R_CONST_1;
 		} else {
 			return "false";
 		}

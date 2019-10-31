@@ -37,19 +37,21 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DestinatarioWebPush", propOrder = {
+@XmlType(name = DestinatarioPeticionLotesWebPushXMLBean.R_CONST_2, propOrder = {
     "docUsuario",
     "idExterno",
     "identificadorUsuario"
 })
-@XmlRootElement(name = "DestinatarioWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = DestinatarioPeticionLotesWebPushXMLBean.R_CONST_2, namespace=DestinatarioPeticionLotesWebPushXMLBean.R_CONST_1)
 public class DestinatarioPeticionLotesWebPushXMLBean {
 
-    @XmlElement(name = "DocUsuario", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	protected static final String R_CONST_2 = "DestinatarioWebPush";
+	@XmlElement(name = "DocUsuario", namespace=R_CONST_1)
     protected String docUsuario;
-    @XmlElement(name = "IdExterno", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "IdExterno", required = true, namespace=R_CONST_1)
     protected String idExterno;
-    @XmlElement(name = "IdentificadorUsuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "IdentificadorUsuario", required = true, namespace=R_CONST_1)
     protected String identificadorUsuario;
 
     /**

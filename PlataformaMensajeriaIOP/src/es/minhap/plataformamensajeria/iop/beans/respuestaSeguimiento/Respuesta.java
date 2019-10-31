@@ -53,8 +53,9 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "status", "seguimientoMensajes", "historial" })
-@XmlRootElement(name = "Respuesta", namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "Respuesta", namespace = Respuesta.R_CONST_1)
 public class Respuesta {
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
 	private static Properties p = new Properties();
 	private static String STATUSCODE_OK = "1000";
 	private static String STATUSCODE_KO = "0998";
@@ -64,11 +65,11 @@ public class Respuesta {
 	private static String STATUSDETAILS_KO = "Error en la Peticion";
 	static final String TAG_ERROR_GENERANDO_RESPUESTA_XML = "Se ha producido un error generando la cadena de respuesta";
 
-	@XmlElement(name = "Status", namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta", required = true)
+	@XmlElement(name = "Status", namespace = R_CONST_1, required = true)
 	protected ResponseStatusType status;
-	@XmlElement(name = "SeguimientoMensajes", namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+	@XmlElement(name = "SeguimientoMensajes", namespace = R_CONST_1)
 	protected SeguimientoMensajes seguimientoMensajes;
-	@XmlElement(name = "Historial", namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+	@XmlElement(name = "Historial", namespace = R_CONST_1)
 	protected Historial historial;
 
 	/**
@@ -147,13 +148,7 @@ public class Respuesta {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, respuesta);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlRespuesta);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlRespuesta);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
 					+ e.getMessage() + "\nXML:\n" + xmlRespuesta);
 		}
@@ -193,6 +188,7 @@ public class Respuesta {
 			return Utils.convertToUTF8(writer.toString());
 
 		} catch (Exception e) {
+			// TODO logger.warn(e.getMessage(), e);
 			status.setStatusCode(STATUSCODE_KO);
 			status.setStatusText(STATUSCTEXT_KO);
 			status.setDetails(STATUSDETAILS_KO);
@@ -217,6 +213,7 @@ public class Respuesta {
 			return Utils.convertToUTF8(writer.toString());
 
 		} catch (Exception e) {
+			// TODO logger.warn(e.getMessage(), e);
 			status.setStatusCode(STATUSCODE_KO);
 			status.setStatusText(STATUSCTEXT_KO);
 			status.setDetails(STATUSDETAILS_KO);
@@ -252,11 +249,8 @@ public class Respuesta {
 						}
 						break;
 					case 2:
-						if (null != codEstadoPEI) {
-							mensaje.setIdEstado(Integer.parseInt(codEstadoPEI));
-						}
-						break;
 					case 3:
+					case 9:
 						if (null != codEstadoPEI) {
 							mensaje.setIdEstado(Integer.parseInt(codEstadoPEI));
 						}
@@ -269,11 +263,6 @@ public class Respuesta {
 					case 6:
 						if (null != codEstadoPO) {
 							mensaje.setIdEstado(Integer.parseInt(codEstadoPO));
-						}
-						break;
-					case 9:
-						if (null != codEstadoPEI) {
-							mensaje.setIdEstado(Integer.parseInt(codEstadoPEI));
 						}
 						break;
 					default:
@@ -305,6 +294,7 @@ public class Respuesta {
 			return Utils.convertToUTF8(writer.toString());
 
 		} catch (Exception e) {
+			// TODO logger.warn(e.getMessage(), e);
 			status.setStatusCode(STATUSCODE_KO);
 			status.setStatusText(STATUSCTEXT_KO);
 			status.setDetails(STATUSDETAILS_KO);

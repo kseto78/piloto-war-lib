@@ -55,9 +55,13 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "lote",
     "mensajes"
 })
-@XmlRootElement(name = "Respuesta", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "Respuesta", namespace=Respuesta.R_CONST_2)
 public class Respuesta {
 
+	protected static final String R_CONST_1 = "\\nXML:\\n";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	protected static final String R_CONST_3 = "\\nMensaje: ";
+	protected static final String R_CONST_4 = "Error procesando el XML.\\nCausa: ";
 	private static String STATUSCODE_OK = "1000";
 	private static String STATUSCODE_KO = "0998";
 	private static String STATUSTEXT_OK = "OK";
@@ -68,11 +72,11 @@ public class Respuesta {
 	
 	static final String TAG_ERROR_GENERANDO_RESPUESTA_XML = "Se ha producido un error generando la cadena de respuesta";
 	
-    @XmlElement(name = "Status", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Status", required = true, namespace=R_CONST_2)
     protected ResponseStatusType status;
-    @XmlElement(name = "Lote", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Lote", required = true, namespace=R_CONST_2)
     protected Lote lote;
-    @XmlElement(name = "Mensajes", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Mensajes", namespace=R_CONST_2)
     protected List<Mensajes> mensajes;
 
     /**
@@ -147,7 +151,7 @@ public class Respuesta {
      */
     public List<Mensajes> getMensajes() {
         if (mensajes == null) {
-            mensajes = new ArrayList<Mensajes>();
+            mensajes = new ArrayList<>();
         }
         return this.mensajes;
     }
@@ -168,12 +172,8 @@ public class Respuesta {
 		
 		
 		
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException(R_CONST_4 + e.getCause()+R_CONST_3 + e.getMessage()+ R_CONST_1+xmlRespuesta);
 		}
 	}
     
@@ -190,7 +190,7 @@ public class Respuesta {
 
 
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
+			throw new PlataformaBusinessException(R_CONST_4 + e.getCause()+R_CONST_3 + e.getMessage()+ R_CONST_1+xmlRespuesta);
 		}
 		
 		return respuesta;
@@ -204,7 +204,7 @@ public class Respuesta {
 		
 		
 		
-		if (listaErroresLote != null && listaErroresLote.size()>0){
+		if (listaErroresLote != null && !listaErroresLote.isEmpty()){
 			error = true;
 			Lote lote = new Lote();
 			for (String string : listaErroresLote) {
@@ -227,9 +227,9 @@ public class Respuesta {
 		}
 				
 		
-		if (listaMensajesProcesados != null && listaMensajesProcesados.size()> 0){
+		if (listaMensajesProcesados != null && !listaMensajesProcesados.isEmpty()){
 						
-			this.mensajes = new ArrayList<Mensajes>();
+			this.mensajes = new ArrayList<>();
 			
 			for (es.minhap.plataformamensajeria.iop.beans.respuestasEnvios.Mensaje mensaje : listaMensajesProcesados) {
 				mensaje.setIdExterno((null == mensaje.getIdExterno())? "" : mensaje.getIdExterno());
@@ -243,19 +243,19 @@ public class Respuesta {
 			
 		}
 
-		if ((error)||(listaErroresGenerales != null && listaErroresGenerales.size() > 0)){
+		if (error||(listaErroresGenerales != null && !listaErroresGenerales.isEmpty())){
 			
 			ResponseStatusType status = new ResponseStatusType();
 			status.setStatusCode(STATUSCODE_KO);
 			status.setStatusText(STATUSTEXT_KO);
-			if (listaErroresGenerales.size()>0){
+			if (!listaErroresGenerales.isEmpty()){
 				status.setDetails(listaErroresGenerales.get(0));
 			}else{
 				status.setDetails(STATUSDETAILS_KO);
 			}
 			this.setStatus(status);
 		}else{
-			if (listaMensajesProcesados.size() > 0){
+			if (!listaMensajesProcesados.isEmpty()){
 				ResponseStatusType status = new ResponseStatusType();
 				status.setStatusCode(STATUSCODE_OK);
 				status.setStatusText(STATUSTEXT_OK);
@@ -287,10 +287,8 @@ public class Respuesta {
 		return writer.toString();
 		
 		
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+R_CONST_3 + e.getMessage());
 		}
 		
 	}

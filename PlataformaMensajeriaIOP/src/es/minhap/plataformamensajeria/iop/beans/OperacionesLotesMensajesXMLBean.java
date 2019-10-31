@@ -24,15 +24,17 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "lote"
 })
 
-@XmlRootElement(name = "PeticionLote", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "PeticionLote", namespace=OperacionesLotesMensajesXMLBean.R_CONST_2)
 public class OperacionesLotesMensajesXMLBean {
-    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "\\nMensaje: ";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Usuario", required = true, namespace=R_CONST_2)
     protected String usuario;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Password", required = true, namespace=R_CONST_2)
     protected String password;
 //    @XmlElement(name = "Mensaje", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
 //    protected OperacionesLotesMensajesXMLBean.Mensaje mensaje;
-    @XmlElement(name = "Lote", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Lote", required = false, namespace=R_CONST_2)
     protected String lote;
 
     /**
@@ -157,12 +159,12 @@ public class OperacionesLotesMensajesXMLBean {
         "idMensaje",
         "idExterno"
     })
-    @XmlRootElement(name = "Mensaje", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlRootElement(name = "Mensaje", namespace=OperacionesLotesMensajesXMLBean.R_CONST_2)
     public static class Mensaje {
 
-        @XmlElement(name = "IdMensaje", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdMensaje", required = false, namespace=R_CONST_2)
         protected String idMensaje;
-        @XmlElement(name = "IdExterno", required = false, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+        @XmlElement(name = "IdExterno", required = false, namespace=R_CONST_2)
         protected String idExterno;
 
         /**
@@ -230,12 +232,8 @@ public class OperacionesLotesMensajesXMLBean {
 		
 		
 		
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlOperacionesLotesMensajes);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlOperacionesLotesMensajes);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlOperacionesLotesMensajes);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+R_CONST_1 + e.getMessage()+ "\nXML:\n"+xmlOperacionesLotesMensajes);
 		}
 	}
 	
@@ -278,10 +276,8 @@ public class OperacionesLotesMensajesXMLBean {
 //        return output;
 
 		
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+R_CONST_1 + e.getMessage());
 		}
 		
 	}

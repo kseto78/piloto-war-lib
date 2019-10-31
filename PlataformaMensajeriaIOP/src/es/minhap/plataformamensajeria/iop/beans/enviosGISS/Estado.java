@@ -43,11 +43,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Estado {
 
-    @XmlElement(name = "CodigoEstado", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "CodigoEstado", required = true, namespace=R_CONST_1)
     protected String codigoEstado;
-    @XmlElement(name = "LiteralError", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "LiteralError", required = true, namespace=R_CONST_1)
     protected String literalError;
-    @XmlElement(name = "DescripcionError", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "DescripcionError", required = true, namespace=R_CONST_1)
     protected String descripcionError;
 
     /**

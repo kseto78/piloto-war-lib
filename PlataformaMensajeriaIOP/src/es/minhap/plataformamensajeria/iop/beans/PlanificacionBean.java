@@ -11,6 +11,39 @@ import java.util.Date;
  */
 public class PlanificacionBean {
 
+	protected static final String R_CONST_1 = "S";
+	protected static final String R_CONST_2 = ", ";
+	protected static final String R_CONST_3 = "true";
+	protected Integer planificacionId;
+	protected Integer servidorId;
+	protected Integer servicioId;
+	protected Integer tipoPlanificacionId;
+	protected String lunes;
+	protected String martes;
+	protected String miercoles;
+	protected String jueves;
+	protected String viernes;
+	protected String sabado;
+	protected String domingo;
+	protected String horaDesde;
+	protected String horaHasta;
+	protected Boolean activo;
+	protected Date fechaCreacion = null;
+	protected String creadoPor = null;
+	protected Date fechaModificacion = null;
+	protected String modificadoPor = null;
+	protected Integer externalId = null;
+	protected Integer canalId;
+	protected String nombreAplicacion = null;
+	protected String nombreTipoPlanificacion = null;
+	protected Integer organismoId = null;
+	protected String dir3Organismo = null;
+	protected Integer aplicacionId;
+	protected String nombreServidor;
+	protected String nombreServicio;
+	protected String horaDesdeFin;
+	protected String horaHastaFin;
+
 	public PlanificacionBean() {
 		this.planificacionId = null;
 		this.servidorId = null;
@@ -42,36 +75,6 @@ public class PlanificacionBean {
 		this.organismoId = null;
 		this.dir3Organismo = null;
 	}
-
-	protected Integer planificacionId;
-	protected Integer servidorId;
-	protected Integer servicioId;
-	protected Integer tipoPlanificacionId;
-	protected String lunes;
-	protected String martes;
-	protected String miercoles;
-	protected String jueves;
-	protected String viernes;
-	protected String sabado;
-	protected String domingo;
-	protected String horaDesde;
-	protected String horaHasta;
-	protected Boolean activo;
-	protected Date fechaCreacion = null;
-	protected String creadoPor = null;
-	protected Date fechaModificacion = null;
-	protected String modificadoPor = null;
-	protected Integer externalId = null;
-	protected Integer canalId;
-	protected String nombreAplicacion = null;
-	protected String nombreTipoPlanificacion = null;
-	protected Integer organismoId = null;
-	protected String dir3Organismo = null;
-	protected Integer aplicacionId;
-	protected String nombreServidor;
-	protected String nombreServicio;
-	protected String horaDesdeFin;
-	protected String horaHastaFin;
 
 	public String getNombreTipoPlanificacion() {
 		return nombreTipoPlanificacion;
@@ -106,7 +109,7 @@ public class PlanificacionBean {
 	}
 
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (R_CONST_3.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -115,7 +118,7 @@ public class PlanificacionBean {
 
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return R_CONST_3;
 		} else {
 			return "false";
 		}
@@ -310,48 +313,48 @@ public class PlanificacionBean {
 	public String getDias() {
 		StringBuffer sbf = new StringBuffer();
 		boolean sw = true;
-		if (lunes != null && (lunes.equals("S") || lunes.equals("true"))) {
+		if (lunes != null && (R_CONST_1.equals(lunes) || R_CONST_3.equals(lunes))) {
 			sbf.append("L");
 			sw = false;
 		}
-		if (martes != null && (martes.equals("S") || martes.equals("true"))) {
+		if (martes != null && (R_CONST_1.equals(martes) || R_CONST_3.equals(martes))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(R_CONST_2);
 			}
 			sbf.append("M");
 			sw = false;
 		}
-		if (miercoles != null && (miercoles.equals("S") || miercoles.equals("true"))) {
+		if (miercoles != null && (R_CONST_1.equals(miercoles) || R_CONST_3.equals(miercoles))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(R_CONST_2);
 			}
 			sbf.append("X");
 			sw = false;
 		}
-		if (jueves != null && (jueves.equals("S") || jueves.equals("true"))) {
+		if (jueves != null && (R_CONST_1.equals(jueves) || R_CONST_3.equals(jueves))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(R_CONST_2);
 			}
 			sbf.append("J");
 			sw = false;
 		}
-		if (viernes != null && (viernes.equals("S") || viernes.equals("true"))) {
+		if (viernes != null && (R_CONST_1.equals(viernes) || R_CONST_3.equals(viernes))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(R_CONST_2);
 			}
 			sbf.append("V");
 			sw = false;
 		}
-		if (sabado != null && (sabado.equals("S") || sabado.equals("true"))) {
+		if (sabado != null && (R_CONST_1.equals(sabado) || R_CONST_3.equals(sabado))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(R_CONST_2);
 			}
-			sbf.append("S");
+			sbf.append(R_CONST_1);
 			sw = false;
 		}
-		if (domingo != null && (domingo.equals("S") || domingo.equals("true"))) {
+		if (domingo != null && (R_CONST_1.equals(domingo) || R_CONST_3.equals(domingo))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(R_CONST_2);
 			}
 			sbf.append("D");
 		}
@@ -369,7 +372,7 @@ public class PlanificacionBean {
 	}
 
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (R_CONST_3.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;

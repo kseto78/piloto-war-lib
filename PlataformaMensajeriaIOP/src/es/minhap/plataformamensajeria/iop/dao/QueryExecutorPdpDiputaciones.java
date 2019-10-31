@@ -27,7 +27,7 @@ public interface QueryExecutorPdpDiputaciones {
 	 * @param criterio
 	 * @return
 	 */
-	public List<TblPdpDiputaciones> getPdpDiputacionesPaginado(int start, int size, String order, String column,
+	List<TblPdpDiputaciones> getPdpDiputacionesPaginado(int start, int size, String order, String column,
 			es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob);
 	
 	/**
@@ -36,7 +36,7 @@ public interface QueryExecutorPdpDiputaciones {
 	 * @param ob
 	 * @return
 	 */
-	public Integer countPdpDiputacionesPaginado(es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob);
+	Integer countPdpDiputacionesPaginado(es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob);
 	
 	/**
 	 * Obtiene el listado
@@ -44,7 +44,7 @@ public interface QueryExecutorPdpDiputaciones {
 	 * @param term
 	 * @return List<String>
 	 */
-	public List<String> getListAutocomplete(String term);
+	List<String> getListAutocomplete(String term);
 
 	/**
 	 * Obtiene id
@@ -53,6 +53,6 @@ public interface QueryExecutorPdpDiputaciones {
 	 * @return Integer
 	 */
 
-	public List<String> getOrganismosHijos(String idOrganismo);
+	List<String> getOrganismosHijos(String idOrganismo);
 
 }

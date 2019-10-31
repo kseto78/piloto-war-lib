@@ -71,7 +71,7 @@ public class Avisos {
      */
     public List<Aviso> getAviso() {
         if (aviso == null) {
-            aviso = new ArrayList<Aviso>();
+            aviso = new ArrayList<>();
         }
         return this.aviso;
     }

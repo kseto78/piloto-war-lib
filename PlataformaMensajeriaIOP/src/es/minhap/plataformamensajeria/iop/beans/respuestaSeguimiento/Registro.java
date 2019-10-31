@@ -44,7 +44,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "registro", propOrder = {
-    "idServidor",
+    Registro.R_CONST_1,
     "servidor",
     "idCanal",
     "idMensaje",
@@ -54,21 +54,23 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "fecha"
 })
 public class Registro {
-	@XmlElement(name = "idServidor", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+	protected static final String R_CONST_1 = "idServidor";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = R_CONST_1, required = true,namespace = R_CONST_2)
     protected int idServidor;
-    @XmlElement(name = "Servidor", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Servidor", required = true,namespace = R_CONST_2)
     protected String servidor;
-    @XmlElement(name = "IdCanal",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdCanal",namespace = R_CONST_2)
     protected int idCanal;
-    @XmlElement(name = "IdMensaje",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdMensaje",namespace = R_CONST_2)
     protected int idMensaje;
-    @XmlElement(name = "IdExterno", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdExterno", required = true,namespace = R_CONST_2)
     protected String idExterno;
-    @XmlElement(name = "IdEstado",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdEstado",namespace = R_CONST_2)
     protected int idEstado;
-    @XmlElement(name = "Estado", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Estado", required = true,namespace = R_CONST_2)
     protected String estado;
-    @XmlElement(name = "Fecha", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Fecha", required = true,namespace = R_CONST_2)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar fecha;
 

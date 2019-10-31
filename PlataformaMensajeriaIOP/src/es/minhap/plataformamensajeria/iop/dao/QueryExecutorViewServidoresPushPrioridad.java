@@ -20,7 +20,7 @@ public interface QueryExecutorViewServidoresPushPrioridad {
 	 * @param plataformaId
 	 * @return
 	 */
-	public List<ParametrosServidorPush> getServidoresPush(Long mensajeId, Integer plataformaId);
+	List<ParametrosServidorPush> getServidoresPush(Long mensajeId, Integer plataformaId);
 
 	/**
 	 * Se recupera la lista de parametros de servidores web push a partir del mensajeId
@@ -28,7 +28,7 @@ public interface QueryExecutorViewServidoresPushPrioridad {
 	 * @param mensajeId
 	 * @return
 	 */
-	public List<ParametrosServidorWebPush> getServidoresWebPush(Long mensajeId);
+	List<ParametrosServidorWebPush> getServidoresWebPush(Long mensajeId);
 	
 	
 }

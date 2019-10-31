@@ -54,6 +54,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "recibirSMSRequest")
 public class RecibirSMSRequest {
 
+	protected static final String R_CONST_1 = "\\nMensaje: ";
 	@XmlElement(name = "User", required = true)
     protected String user;
     @XmlElement(name = "Password", required = true)
@@ -227,12 +228,8 @@ public void loadObjectFromXML (String xmlrecibirRequestSms)throws PlataformaBusi
 		
 		
 		
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlrecibirRequestSms);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlrecibirRequestSms);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlrecibirRequestSms);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+R_CONST_1 + e.getMessage()+ "\nXML:\n"+xmlrecibirRequestSms);
 		}
 	}
 	
@@ -252,10 +249,8 @@ public void loadObjectFromXML (String xmlrecibirRequestSms)throws PlataformaBusi
 //		jaxbMarshaller.marshal(recibirRequestSms, System.out);
 		
 		return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+R_CONST_1 + e.getMessage());
 		}
 		
 	}

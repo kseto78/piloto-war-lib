@@ -17,7 +17,7 @@ public interface QueryExecutorViewEnviosPendientesPorCanal {
 	 * 
 	 * @return
 	 */
-	public List<ViewEnviosPendientesPorCanal> getAll();
+	List<ViewEnviosPendientesPorCanal> getAll();
 	
 	
 }

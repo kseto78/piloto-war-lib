@@ -198,8 +198,6 @@ public class EstadoUsuarioRequest {
 //    	jaxbMarshaller.marshal(estadoUsuarioRequestXML, System.out);
     	
     	return writer.toString();
-    	} catch (PropertyException e) {
-    		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     	} catch (JAXBException e) {
     		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     	}

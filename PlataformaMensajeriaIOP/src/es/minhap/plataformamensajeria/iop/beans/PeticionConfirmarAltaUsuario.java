@@ -51,22 +51,24 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "uidDispositivo",
 	"tokenSession"
 })
-@XmlRootElement(name = "PeticionConfirmarAltaUsuario", namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario")
+@XmlRootElement(name = "PeticionConfirmarAltaUsuario", namespace=PeticionConfirmarAltaUsuario.R_CONST_2)
 public class PeticionConfirmarAltaUsuario {
 
-    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticionConfirmarAltaUsuario";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario";
+	@XmlElement(name = "Usuario", required = true, namespace=R_CONST_2)
     protected String usuario;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario")
+    @XmlElement(name = "Password", required = true, namespace=R_CONST_2)
     protected String password;
-    @XmlElement(name = "IdDispositivo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario")
+    @XmlElement(name = "IdDispositivo", required = true, namespace=R_CONST_2)
     protected String idDispositivo;
-    @XmlElement(name = "IdServicioMovil", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario")
+    @XmlElement(name = "IdServicioMovil", required = true, namespace=R_CONST_2)
     protected String idServicioMovil;
-    @XmlElement(name = "CodConfirmacion", namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionConfirmarAltaUsuario")
+    @XmlElement(name = "CodConfirmacion", namespace=R_CONST_2)
     protected String codConfirmacion;
-    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionConfirmarAltaUsuario")
+    @XmlElement(name = "UidDispositivo", namespace = R_CONST_1)
 	protected String uidDispositivo;
-	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionConfirmarAltaUsuario")
+	@XmlElement(name = "TokenSession", namespace = R_CONST_1)
 	protected String tokenSession;
 	
 	
@@ -83,13 +85,7 @@ public class PeticionConfirmarAltaUsuario {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		}

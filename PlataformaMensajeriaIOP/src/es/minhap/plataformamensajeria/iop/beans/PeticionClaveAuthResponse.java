@@ -49,26 +49,28 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "uidDispositivo",
     "tokenSession"
 })
-@XmlRootElement(name = "PeticionClaveAuthResponse", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+@XmlRootElement(name = "PeticionClaveAuthResponse", namespace=PeticionClaveAuthResponse.R_CONST_2)
 public class PeticionClaveAuthResponse {
 
-    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse";
+	@XmlElement(name = "Usuario", required = true, namespace=R_CONST_2)
     protected String usuario;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+    @XmlElement(name = "Password", required = true, namespace=R_CONST_2)
     protected String password;
-    @XmlElement(name = "IdServicio", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest")
+    @XmlElement(name = "IdServicio", required = true, namespace=R_CONST_1)
     protected String idServicio;
-    @XmlElement(name = "IdPlataforma", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthRequest")
+    @XmlElement(name = "IdPlataforma", required = true, namespace=R_CONST_1)
     protected String idPlataforma;
-    @XmlElement(name = "DispositivoId", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+    @XmlElement(name = "DispositivoId", namespace=R_CONST_2)
     protected String dispositivoId;
-    @XmlElement(name = "SAMLResponse", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+    @XmlElement(name = "SAMLResponse", namespace=R_CONST_2)
     protected String samlResponse;
-    @XmlElement(name = "RemoteHost", namespace="http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+    @XmlElement(name = "RemoteHost", namespace=R_CONST_2)
     protected String remoteHost;
-    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+    @XmlElement(name = "UidDispositivo", namespace = R_CONST_2)
 	protected String uidDispositivo;
-	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/PeticionClaveAuthResponse")
+	@XmlElement(name = "TokenSession", namespace = R_CONST_2)
 	protected String tokenSession;
 	
     /**
@@ -200,17 +202,7 @@ public class PeticionClaveAuthResponse {
 					respuesta);
 
 			
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
-							+ xmlSamlResponse);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
-							+ xmlSamlResponse);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(
 					"Error procesando el XML.\nCausa: " + e.getCause()
 							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"

@@ -43,12 +43,19 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "status" })
-@XmlRootElement(name = "Respuesta", namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "Respuesta", namespace = RespuestaServiciosRegistrarUsuario.R_CONST_2)
 public class RespuestaServiciosRegistrarUsuario {
 
 	
 	
-		@XmlElement(name = "Status", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+		protected static final String R_CONST_1 = "plataformaErrores.gestionServicioPush.STATUSTEXT_KO";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	protected static final String R_CONST_3 = "plataformaErrores.gestionServicioPush.STATUSTEXT_OK";
+	protected static final String R_CONST_4 = "\\nMensaje: ";
+	protected static final String R_CONST_5 = "plataformaErrores.gestionServicioPush.STATUSDETAILS_OK";
+	protected static final String R_CONST_6 = "plataformaErrores.gestionServicioPush.STATUSUSER_EXISTS_CODE_KO";
+	protected static final String R_CONST_7 = "plataformaErrores.gestionServicioPush.STATUSCODE_OK";
+		@XmlElement(name = "Status", required = true, namespace = R_CONST_2)
 	private ResponseUsuariosServicosStatusType status;
 
 	public void loadObjectFromXML(String xmlRespuesta) throws PlataformaBusinessException {
@@ -64,17 +71,13 @@ public class RespuestaServiciosRegistrarUsuario {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, operacionesMensajes);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlRespuesta);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlRespuesta);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlRespuesta);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_4 + e.getMessage() + "\nXML:\n" + xmlRespuesta);
 		}
 	}
 	
 	public String loginIncorrectotoXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String statusKO = ps.getMessage(R_CONST_1, null);
 		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSLOGINCODE_KO", null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSLOGIN_KO", null);
 		RespuestaServiciosRegistrarUsuario respuesta = this;
@@ -87,8 +90,8 @@ public class RespuestaServiciosRegistrarUsuario {
 	}
 	
 	public String userExistsXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
-		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSUSER_EXISTS_CODE_KO", null);
+		String statusKO = ps.getMessage(R_CONST_1, null);
+		String codeKO = ps.getMessage(R_CONST_6, null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_USER_EXISTS_DETAILS_KO", null);
 		RespuestaServiciosRegistrarUsuario respuesta = this;
 		ResponseUsuariosServicosStatusType responseStatusType = new ResponseUsuariosServicosStatusType();
@@ -100,7 +103,7 @@ public class RespuestaServiciosRegistrarUsuario {
 	}
 	
 	public String invalidMobielServiceXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String statusKO = ps.getMessage(R_CONST_1, null);
 		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STAT_INVALID_SERVICE_CODE_KO", null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_INVALID_SERVICE_KO", null);
 		RespuestaServiciosRegistrarUsuario respuesta = this;
@@ -113,12 +116,12 @@ public class RespuestaServiciosRegistrarUsuario {
 	}
 	
 	public String checkUserService(String estadoSuscripcion, PropertiesServices ps) throws PlataformaBusinessException {
-		String statusOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_OK", null);
-		String codeOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSCODE_OK", null);
+		String statusOK = ps.getMessage(R_CONST_3, null);
+		String codeOK = ps.getMessage(R_CONST_7, null);
 		String detailsOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_DETAILS_OK", null);
-		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSUSER_EXISTS_CODE_KO", null);
+		String codeKO = ps.getMessage(R_CONST_6, null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_DETAILS_KO", null);
-		String detailsKO_2 = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_NO_AVAILAIBLE_KO", null);
+		String detailsKo2 = ps.getMessage("plataformaErrores.gestionServicioPush.STATUS_SUBSCRIPTION_NO_AVAILAIBLE_KO", null);
 		String suscripcionActiva = ps.getMessage("plataformaErrores.gestionServicioPush.SUSCRIPCION_ACTIVA", null);
 		String suscripcionNoActiva = ps.getMessage("plataformaErrores.gestionServicioPush.SUSCRIPCION_NO_ACTIVA", null);
 		RespuestaServiciosRegistrarUsuario respuesta = this;
@@ -133,18 +136,18 @@ public class RespuestaServiciosRegistrarUsuario {
 			responseStatusType.setDetails(detailsKO);
 		} else {
 			responseStatusType.setStatusCode(codeKO);
-			responseStatusType.setDetails(detailsKO_2);
+			responseStatusType.setDetails(detailsKo2);
 		}
 		respuesta.setStatus(responseStatusType);
 		return writeResponse(respuesta);
 	}
 	public String userExistsXML(boolean updateSubscription, PropertiesServices ps)  throws PlataformaBusinessException{
-		String statusOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_OK", null);
-		String codeOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSCODE_OK", null);
-		String detailsOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSDETAILS_OK", null);
+		String statusOK = ps.getMessage(R_CONST_3, null);
+		String codeOK = ps.getMessage(R_CONST_7, null);
+		String detailsOK = ps.getMessage(R_CONST_5, null);
 		RespuestaServiciosRegistrarUsuario respuesta = this;
 		ResponseUsuariosServicosStatusType status = new ResponseUsuariosServicosStatusType();
-		if (updateSubscription == true) {
+		if (updateSubscription) {
 			status.setStatusCode(codeOK);
 			status.setStatusText(statusOK);
 			status.setDetails(detailsOK);
@@ -157,7 +160,7 @@ public class RespuestaServiciosRegistrarUsuario {
 	}
 
 	public String accionIncorrectaXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String statusKO = ps.getMessage(R_CONST_1, null);
 		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STAT_INVALID_ACCION_CODE", null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.DETAILS_ACCION_INCORRECTA", null);
 
@@ -173,7 +176,7 @@ public class RespuestaServiciosRegistrarUsuario {
 	}
 	
 	public String errorToken(PropertiesServices ps) throws PlataformaBusinessException{
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String statusKO = ps.getMessage(R_CONST_1, null);
 		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
 		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
 		RespuestaServiciosRegistrarUsuario respuesta = this;
@@ -189,16 +192,16 @@ public class RespuestaServiciosRegistrarUsuario {
 	
 
 	public String toXML(boolean success, PropertiesServices ps) throws PlataformaBusinessException {
-		String statusOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_OK", null);
-		String codeOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSCODE_OK", null);
-		String detailsOK = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSDETAILS_OK", null);
-		String statusKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSTEXT_KO", null);
+		String statusOK = ps.getMessage(R_CONST_3, null);
+		String codeOK = ps.getMessage(R_CONST_7, null);
+		String detailsOK = ps.getMessage(R_CONST_5, null);
+		String statusKO = ps.getMessage(R_CONST_1, null);
 		String codeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSCODE_KO", null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSDETAILS_KO", null);
 		
 		RespuestaServiciosRegistrarUsuario respuesta = this;
 		ResponseUsuariosServicosStatusType status = new ResponseUsuariosServicosStatusType();
-		if (success == true) {
+		if (success) {
 			status.setStatusCode(codeOK);
 			status.setStatusText(statusOK);
 			status.setDetails(detailsOK);
@@ -224,10 +227,8 @@ public class RespuestaServiciosRegistrarUsuario {
 			jaxbMarshaller.marshal(respuesta, writer);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_4 + e.getMessage());
 		}
 	}
 	

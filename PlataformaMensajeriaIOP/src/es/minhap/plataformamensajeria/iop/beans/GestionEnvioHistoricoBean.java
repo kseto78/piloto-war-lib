@@ -8,47 +8,6 @@ import java.util.Date;
  */
 public class GestionEnvioHistoricoBean {
 
-	public GestionEnvioHistoricoBean() {
-		this.aplicacion = null;
-		this.servicio = null;
-		this.loteEnvio = null;
-		this.servidor = null;
-		this.ultimoEnvio = null;
-		this.estado = null;
-		this.destinatario = null;
-		this.canalId = null;
-		this.aplicacionId = null;
-		this.servidorId = null;
-		this.servicioId = null;
-		this.estadoId = null;
-		this.fechaDesde = null;
-		this.fechaHasta = null;
-		this.email = null;
-		this.telefonoMovil = null;
-		this.envioId = null;
-		this.id = null;
-		this.idLote = null;
-		this.idExterno = null;
-		this.editableCheckbox = null;
-		this.canal = null;
-		this.nombre = null;
-		this.codigoExterno = null;
-		this.anio = null;
-		this.mes = null;
-		this.fechaHistorificacion = null;
-		this.docUsuario = null;
-		this.codSIA = null;
-		this.codOrganismo = null;
-		this.codOrganismoPagador = null;
-		this.icono = null;
-		this.sonido = null;
-		this.nombreUsuario = null;
-		this.vistaEnviosId = null;
-		this.multidestinatario = null;
-		this.destinatariosMensajes = null;
-		this.listaIdAplicaciones = null;
-	}
-
 	private String editableCheckbox;
 	private Long mensajeId;
 	private String id;
@@ -90,6 +49,47 @@ public class GestionEnvioHistoricoBean {
 	private Long destinatariosMensajes;
 	private String listaIdAplicaciones;
 
+
+	public GestionEnvioHistoricoBean() {
+		this.aplicacion = null;
+		this.servicio = null;
+		this.loteEnvio = null;
+		this.servidor = null;
+		this.ultimoEnvio = null;
+		this.estado = null;
+		this.destinatario = null;
+		this.canalId = null;
+		this.aplicacionId = null;
+		this.servidorId = null;
+		this.servicioId = null;
+		this.estadoId = null;
+		this.fechaDesde = null;
+		this.fechaHasta = null;
+		this.email = null;
+		this.telefonoMovil = null;
+		this.envioId = null;
+		this.id = null;
+		this.idLote = null;
+		this.idExterno = null;
+		this.editableCheckbox = null;
+		this.canal = null;
+		this.nombre = null;
+		this.codigoExterno = null;
+		this.anio = null;
+		this.mes = null;
+		this.fechaHistorificacion = null;
+		this.docUsuario = null;
+		this.codSIA = null;
+		this.codOrganismo = null;
+		this.codOrganismoPagador = null;
+		this.icono = null;
+		this.sonido = null;
+		this.nombreUsuario = null;
+		this.vistaEnviosId = null;
+		this.multidestinatario = null;
+		this.destinatariosMensajes = null;
+		this.listaIdAplicaciones = null;
+	}
 
 	public void setMensajeId(Long mensajeId) {
 		this.mensajeId = mensajeId;

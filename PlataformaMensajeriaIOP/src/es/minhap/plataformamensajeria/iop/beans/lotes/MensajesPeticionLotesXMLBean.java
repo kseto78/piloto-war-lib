@@ -41,22 +41,24 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Mensajes", propOrder = {
+@XmlType(name = MensajesPeticionLotesXMLBean.R_CONST_1, propOrder = {
     "mensajeSMS",
     "mensajeEmail",
     "mensajePush",
     "mensajeWebPush"
 })
-@XmlRootElement(name = "Mensajes", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = MensajesPeticionLotesXMLBean.R_CONST_1, namespace=MensajesPeticionLotesXMLBean.R_CONST_2)
 public class MensajesPeticionLotesXMLBean {
 
-    @XmlElement(name = "MensajeSMS", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "Mensajes";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "MensajeSMS", namespace=R_CONST_2)
     protected List<MensajePeticionLotesSMSXMLBean> mensajeSMS;
-    @XmlElement(name = "MensajeEmail", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "MensajeEmail", namespace=R_CONST_2)
     protected List<MensajePeticionLotesEmailXMLBean> mensajeEmail;
-    @XmlElement(name = "MensajePush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "MensajePush", namespace=R_CONST_2)
     protected List<MensajePeticionLotesPushXMLBean> mensajePush;
-    @XmlElement(name = "MensajeWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "MensajeWebPush", namespace=R_CONST_2)
     protected List<MensajePeticionLotesWebPushXMLBean> mensajeWebPush;
 
     /**
@@ -83,7 +85,7 @@ public class MensajesPeticionLotesXMLBean {
      */
     public List<MensajePeticionLotesSMSXMLBean> getMensajeSMS() {
         if (mensajeSMS == null) {
-            mensajeSMS = new ArrayList<MensajePeticionLotesSMSXMLBean>();
+            mensajeSMS = new ArrayList<>();
         }
         return this.mensajeSMS;
     }
@@ -112,7 +114,7 @@ public class MensajesPeticionLotesXMLBean {
      */
     public List<MensajePeticionLotesEmailXMLBean> getMensajeEmail() {
         if (mensajeEmail == null) {
-            mensajeEmail = new ArrayList<MensajePeticionLotesEmailXMLBean>();
+            mensajeEmail = new ArrayList<>();
         }
         return this.mensajeEmail;
     }
@@ -141,7 +143,7 @@ public class MensajesPeticionLotesXMLBean {
      */
     public List<MensajePeticionLotesPushXMLBean> getMensajePush() {
         if (mensajePush == null) {
-            mensajePush = new ArrayList<MensajePeticionLotesPushXMLBean>();
+            mensajePush = new ArrayList<>();
         }
         return this.mensajePush;
     }
@@ -171,7 +173,7 @@ public class MensajesPeticionLotesXMLBean {
      */
     public List<MensajePeticionLotesWebPushXMLBean> getMensajeWebPush() {
         if (mensajeWebPush == null) {
-        	mensajeWebPush = new ArrayList<MensajePeticionLotesWebPushXMLBean>();
+        	mensajeWebPush = new ArrayList<>();
         }
         return this.mensajeWebPush;
     }

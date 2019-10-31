@@ -40,13 +40,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DestinatariosWebPush", propOrder = {
+@XmlType(name = DestinatariosPeticionLotesWebPushXMLBean.R_CONST_2, propOrder = {
     "destinatarioWebPush"
 })
-@XmlRootElement(name = "DestinatariosWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = DestinatariosPeticionLotesWebPushXMLBean.R_CONST_2, namespace=DestinatariosPeticionLotesWebPushXMLBean.R_CONST_1)
 public class DestinatariosPeticionLotesWebPushXMLBean {
 
-	@XmlElement(name = "DestinatarioWebPush", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	protected static final String R_CONST_2 = "DestinatariosWebPush";
+	@XmlElement(name = "DestinatarioWebPush", required = true, namespace=R_CONST_1)
 	protected List<DestinatarioPeticionLotesWebPushXMLBean> destinatarioWebPush;
 
 	 /**
@@ -73,7 +75,7 @@ public class DestinatariosPeticionLotesWebPushXMLBean {
      */
     public List<DestinatarioPeticionLotesWebPushXMLBean> getDestinatarioWebPush() {
         if (destinatarioWebPush == null) {
-        	destinatarioWebPush = new ArrayList<DestinatarioPeticionLotesWebPushXMLBean>();
+        	destinatarioWebPush = new ArrayList<>();
         }
         return this.destinatarioWebPush;
     }

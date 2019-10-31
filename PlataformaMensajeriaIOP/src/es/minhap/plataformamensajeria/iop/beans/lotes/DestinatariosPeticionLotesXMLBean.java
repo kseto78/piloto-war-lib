@@ -43,11 +43,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class DestinatariosPeticionLotesXMLBean {
 
-    @XmlElement(name = "To", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "To", required = true, namespace=R_CONST_1)
     protected String to;
-    @XmlElement(name = "CC", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CC", namespace=R_CONST_1)
     protected String cc;
-    @XmlElement(name = "Bcc", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Bcc", namespace=R_CONST_1)
     protected String bcc;
 
     /**

@@ -16,7 +16,7 @@ public interface QueryExecutorServidoresOrganismos {
 	 * @param proveedorId
 	 * @return
 	 */
-	public String getUsuario(String codigoOrganismo, Integer proveedorId);
+	String getUsuario(String codigoOrganismo, Integer proveedorId);
 	
 	/**
 	 * Obtiene el password a partir del codigo de organismo y el proveedor
@@ -25,7 +25,7 @@ public interface QueryExecutorServidoresOrganismos {
 	 * @param proveedorId
 	 * @return
 	 */
-	public String getPassword(String codigoOrganismo, Integer proveedorId);
+	String getPassword(String codigoOrganismo, Integer proveedorId);
 	
 	
 }

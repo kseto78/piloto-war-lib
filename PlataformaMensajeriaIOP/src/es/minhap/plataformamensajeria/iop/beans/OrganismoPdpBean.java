@@ -10,6 +10,13 @@ public class OrganismoPdpBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -8095598141992922210L;
+	private Integer organismoPdpId;
+	private String nombre = null;
+	private String descripcion = null;
+	private Date fechacreacion = null;
+	private Date fechamodificacion = null;
+	private String creadopor = null;
+	private String modificadopor = null;
 	public OrganismoPdpBean() {
 		super();
 		this.organismoPdpId = null;		
@@ -22,13 +29,6 @@ public class OrganismoPdpBean implements Serializable{
 		
 	}
 
-	private Integer organismoPdpId;	
-	private String nombre = null;
-	private String descripcion = null;	
-	private Date fechacreacion = null;
-	private Date fechamodificacion = null;
-	private String creadopor = null;
-	private String modificadopor = null;
 	/**
 	 * @return the organismoPdpId
 	 */

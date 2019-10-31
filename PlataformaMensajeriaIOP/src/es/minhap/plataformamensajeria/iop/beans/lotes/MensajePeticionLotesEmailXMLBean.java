@@ -50,22 +50,23 @@ import javax.xml.bind.annotation.XmlType;
     "destinatariosMail",
     "passbook"
 })
-@XmlRootElement(name = "MensajeEmail", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "MensajeEmail", namespace=MensajePeticionLotesEmailXMLBean.R_CONST_1)
 public class MensajePeticionLotesEmailXMLBean {
 
-    @XmlElement(name = "Asunto", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Asunto", required = true, namespace=R_CONST_1)
     protected String asunto;
-    @XmlElement(name = "Cuerpo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Cuerpo", required = true, namespace=R_CONST_1)
     protected String cuerpo;
-    @XmlElement(name = "Origen", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Origen", namespace=R_CONST_1)
     protected String origen;
-    @XmlElement(name = "Modo", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Modo", namespace=R_CONST_1)
     protected String modo;
-    @XmlElement(name = "Adjuntos", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Adjuntos", namespace=R_CONST_1)
     protected AdjuntosPeticionLotesXMLBean adjuntos;
-    @XmlElement(name = "DestinatariosMail", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "DestinatariosMail", required = true, namespace=R_CONST_1)
     protected DestinatariosPeticionLotesMailXMLBean destinatariosMail;
-    @XmlElement(name = "PassBook",namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "PassBook",namespace=R_CONST_1)
 	protected PassbookXMLBean passbook;
 
     /**

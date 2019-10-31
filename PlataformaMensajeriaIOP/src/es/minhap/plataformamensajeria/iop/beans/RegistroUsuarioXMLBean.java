@@ -19,24 +19,27 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "usuario", "password", "idUsuario", "idServicioMovil", "idDispositivo", "accion", "uidDispositivo", "tokenSession" })
-@XmlRootElement(name = "PeticionRegistroUsuario", namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+@XmlRootElement(name = "PeticionRegistroUsuario", namespace = RegistroUsuarioXMLBean.R_CONST_1)
 public class RegistroUsuarioXMLBean {
 
-	@XmlElement(name = "Usuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio";
+	protected static final String R_CONST_2 = "\\nMensaje: ";
+	protected static final String R_CONST_3 = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio";
+	@XmlElement(name = "Usuario", required = true, namespace = R_CONST_1)
 	private String usuario;
-	@XmlElement(name = "Password", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "Password", required = true, namespace = R_CONST_1)
 	private String password;
-	@XmlElement(name = "IdUsuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "IdUsuario", required = true, namespace = R_CONST_1)
 	private String idUsuario;
-	@XmlElement(name = "IdServicioMovil", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "IdServicioMovil", required = true, namespace = R_CONST_1)
 	private String idServicioMovil;
-	@XmlElement(name = "IdDispositivo", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "IdDispositivo", required = true, namespace = R_CONST_1)
 	protected String idDispositivo;
-	@XmlElement(name = "Accion", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "Accion", required = true, namespace = R_CONST_1)
 	private String accion;
-	@XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "UidDispositivo", namespace = R_CONST_3)
 	protected String uidDispositivo;
-	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "TokenSession", namespace = R_CONST_3)
 	protected String tokenSession;
 
 	public void loadObjectFromXML(String xmlUsuario) throws PlataformaBusinessException {
@@ -52,14 +55,8 @@ public class RegistroUsuarioXMLBean {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, usuarios);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_2
 					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
 		}
 	}
@@ -79,11 +76,8 @@ public class RegistroUsuarioXMLBean {
 //			jaxbMarshaller.marshal(usuariosBean, System.out);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_2
 					+ e.getMessage());
 		}
 

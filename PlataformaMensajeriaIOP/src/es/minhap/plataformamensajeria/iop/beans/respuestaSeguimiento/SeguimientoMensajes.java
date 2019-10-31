@@ -69,7 +69,7 @@ public class SeguimientoMensajes {
      */
     public List<SeguimientoMensaje> getMensaje() {
         if (seguimientoMensaje == null) {
-            seguimientoMensaje = new ArrayList<SeguimientoMensaje>();
+            seguimientoMensaje = new ArrayList<>();
         }
         return this.seguimientoMensaje;
     }

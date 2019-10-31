@@ -18,6 +18,17 @@ public class FiltroAuditoriaMisimBean {
 
 	
 
+	protected Long idAuditoria = null;
+	protected Proveedor proveedor = null;
+	protected Aplicacion aplicacion = null;
+	protected Producto producto = null;
+	protected Peticion peticion = null;
+	protected Long idMensaje = null;
+	protected Date fechaCreacion = null;
+	protected Date fechaActualizacion = null;
+	protected Long idLote = null;
+
+
 	public FiltroAuditoriaMisimBean() {
 		super();
 		this.idAuditoria = null;
@@ -31,17 +42,6 @@ public class FiltroAuditoriaMisimBean {
 		this.idLote = null;
 	}
 
-	protected Long idAuditoria = null;
-	protected Proveedor proveedor = null;
-	protected Aplicacion aplicacion = null;
-	protected Producto producto = null;
-	protected Peticion peticion = null;
-	protected Long idMensaje = null;
-	protected Date fechaCreacion = null;
-	protected Date fechaActualizacion = null;
-	protected Long idLote = null;
-	
-	
 	public Long getIdAuditoria() {
 		return idAuditoria;
 	}

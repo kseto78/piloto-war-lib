@@ -41,9 +41,10 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Lote {
 
-    @XmlElement(required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(required = true, namespace=R_CONST_1)
     protected String idLote;
-    @XmlElement(name = "ErrorLote", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "ErrorLote", namespace=R_CONST_1)
     protected ResponseStatusType errorLote;
 
     /**

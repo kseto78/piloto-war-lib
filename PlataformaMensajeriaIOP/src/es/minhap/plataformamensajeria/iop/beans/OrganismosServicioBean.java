@@ -4,6 +4,19 @@ import java.util.Date;
 
 public class OrganismosServicioBean {
 
+	protected Integer servicioOrganismoId;
+	protected Integer organismoId;
+	protected Integer servicioId;
+	protected String nombreServicio;
+	protected String nombreOrganismo;
+	protected String DIR3Organismo;
+	protected String descripcionOrganismo;
+	protected String descripcionServicio;
+	protected String creadoPor;
+	protected Date fechaCreacion;
+	protected String modificadoPor;
+	protected Date fechaModificacion;
+
 	public OrganismosServicioBean() {
 		super();
 		this.servicioOrganismoId = null;
@@ -19,19 +32,6 @@ public class OrganismosServicioBean {
 		this.modificadoPor = null;
 		this.fechaModificacion = null;
 	}
-
-	protected Integer servicioOrganismoId;
-	protected Integer organismoId;
-	protected Integer servicioId;
-	protected String nombreServicio;
-	protected String nombreOrganismo;
-	protected String DIR3Organismo;
-	protected String descripcionOrganismo;
-	protected String descripcionServicio;
-	protected String creadoPor;
-	protected Date fechaCreacion;
-	protected String modificadoPor;
-	protected Date fechaModificacion;
 
 	public Integer getServicioOrganismoId() {
 		return servicioOrganismoId;

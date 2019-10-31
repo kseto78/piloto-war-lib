@@ -50,14 +50,15 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "estado",
     "transmisionDerdack"
 })
-@XmlRootElement(name = "EnvioResponse", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "EnvioResponse", namespace=Respuesta.R_CONST_1)
 public class Respuesta {
 
-    @XmlElement(name = "IdPeticion", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "IdPeticion", required = true, namespace=R_CONST_1)
     protected String idPeticion;
-    @XmlElement(name = "Estado", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Estado", required = true, namespace=R_CONST_1)
     protected Estado estado;
-    @XmlElement(name = "TransmisionDerdack", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "TransmisionDerdack", required = true, namespace=R_CONST_1)
     protected TransmisionDerdack transmisionDerdack;
 
     /**
@@ -150,8 +151,6 @@ public class Respuesta {
     		return writer.toString();
     		
     		
-    		} catch (PropertyException e) {
-    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     		} catch (JAXBException e) {
     			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     		}

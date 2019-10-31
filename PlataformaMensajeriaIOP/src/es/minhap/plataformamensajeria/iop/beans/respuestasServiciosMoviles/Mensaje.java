@@ -37,17 +37,20 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "mensaje", propOrder = {
-    "idExterno",
-    "idMensaje",
+    Mensaje.R_CONST_3,
+    Mensaje.R_CONST_1,
     "errorMensaje"
 })
 public class Mensaje {
 
-    @XmlElement(name = "idExterno",required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "idMensaje";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	protected static final String R_CONST_3 = "idExterno";
+	@XmlElement(name = R_CONST_3,required = true, namespace=R_CONST_2)
     protected String idExterno;
-    @XmlElement(name = "idMensaje", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = R_CONST_1, required = true, namespace=R_CONST_2)
     protected String idMensaje;
-    @XmlElement(name = "ErrorMensaje", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "ErrorMensaje", namespace=R_CONST_2)
     protected ResponseStatusType errorMensaje;
 
     /**

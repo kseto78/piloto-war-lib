@@ -48,21 +48,22 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class ServicioMovil {
 
-    @XmlElement(name = "IdService", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles";
+	@XmlElement(name = "IdService", required = true, namespace = R_CONST_1)
 	protected String idService;
-    @XmlElement(name = "MobileService", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "MobileService", required = true, namespace = R_CONST_1)
 	protected String mobileService;
-    @XmlElement(name = "DescMobileService", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "DescMobileService", required = true, namespace = R_CONST_1)
 	protected String descMobileService;
-    @XmlElement(name = "Icon", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "Icon", required = true, namespace = R_CONST_1)
 	protected String icon;
-    @XmlElement(name = "UrlService", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "UrlService", namespace = R_CONST_1)
 	protected String urlService;
-    @XmlElement(name = "Tipo", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "Tipo", required = true, namespace = R_CONST_1)
 	protected String tipo;
-    @XmlElement(name = "Estado", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "Estado", required = true, namespace = R_CONST_1)
 	protected String estado;
-    @XmlElement(name = "Imagen", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "Imagen", required = true, namespace = R_CONST_1)
 	protected String imagen;
 
 	/**

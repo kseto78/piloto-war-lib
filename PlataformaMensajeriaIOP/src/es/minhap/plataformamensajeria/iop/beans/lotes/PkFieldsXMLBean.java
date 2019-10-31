@@ -35,14 +35,15 @@ import javax.xml.bind.annotation.XmlType;
     "label",
     "value"
 })
-@XmlRootElement(name = "PkFields", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "PkFields", namespace=PkFieldsXMLBean.R_CONST_1)
 public class PkFieldsXMLBean {
 
-    @XmlElement(name = "Key",required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Key",required = true, namespace=R_CONST_1)
     protected String key;
-    @XmlElement(name = "Label",required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Label",required = true, namespace=R_CONST_1)
     protected String label;
-    @XmlElement(name = "Value", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Value", required = true, namespace=R_CONST_1)
     protected String value;
 
     /**

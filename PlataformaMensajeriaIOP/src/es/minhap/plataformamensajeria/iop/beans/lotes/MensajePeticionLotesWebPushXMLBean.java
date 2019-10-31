@@ -42,14 +42,15 @@ import javax.xml.bind.annotation.XmlType;
     "cuerpo",
     "destinatariosWebPush"
 })
-@XmlRootElement(name = "MensajeWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "MensajeWebPush", namespace=MensajePeticionLotesWebPushXMLBean.R_CONST_1)
 public class MensajePeticionLotesWebPushXMLBean {
 
-    @XmlElement(name = "Titulo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Titulo", required = true, namespace=R_CONST_1)
     protected String titulo;
-    @XmlElement(name = "Cuerpo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Cuerpo", required = true, namespace=R_CONST_1)
     protected String cuerpo;
-    @XmlElement(name = "DestinatariosWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "DestinatariosWebPush", namespace=R_CONST_1)
     protected DestinatariosPeticionLotesWebPushXMLBean destinatariosWebPush;
 
     /**

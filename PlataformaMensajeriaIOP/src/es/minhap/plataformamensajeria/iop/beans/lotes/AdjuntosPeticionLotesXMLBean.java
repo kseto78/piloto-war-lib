@@ -70,7 +70,7 @@ public class AdjuntosPeticionLotesXMLBean {
 	     */
 	    public List<AdjuntoPeticionLotesXMLBean> getAdjunto() {
 	        if (adjunto == null) {
-	            adjunto = new ArrayList<AdjuntoPeticionLotesXMLBean>();
+	            adjunto = new ArrayList<>();
 	        }
 	        return this.adjunto;
 	    }

@@ -44,13 +44,17 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "status",
     "codConfirmacion"
 })
-@XmlRootElement(name = "RespuestaRegistroMovil",namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroMovil")
+@XmlRootElement(name = "RespuestaRegistroMovil",namespace = RespuestaRegistroMovil.R_CONST_2)
 public class RespuestaRegistroMovil {
 
-    @XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroMovil")
+    protected static final String R_CONST_1 = "\\nMensaje: ";
+
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroMovil";
+
+	@XmlElement(name = "Status", required = true,namespace = R_CONST_2)
     protected ResponseStatusTypeRegistroMovil status;
     
-    @XmlElement(name = "CodConfirmacion", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroMovil")
+    @XmlElement(name = "CodConfirmacion", namespace = R_CONST_2)
     protected String codConfirmacion;
 
     /**
@@ -106,11 +110,8 @@ public class RespuestaRegistroMovil {
 
 			return writer.toString();
 
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_1
 					+ e.getMessage());
 		}
 	}
@@ -128,14 +129,8 @@ public class RespuestaRegistroMovil {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_1
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		}
 	}

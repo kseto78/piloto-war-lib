@@ -23,7 +23,7 @@ public class EnvioEmailXMLBean {
 	static final String TAG_NOMBRE_LOTE = "pet:NombreLote";
 	static final String TAG_SERVICIO = "pet:Servicio";
 	static final String TAG_USUARIO = "pet:Usuario";
-	static final String TAG_PASSWORD = "pet:Password";
+	static final String TAG_PASS = "pet:Password";
 
 	static final String TAG_MENSAJES = "pet:Mensasjes";
 	static final String TAG_MENSAJE = "pet:MensajeEmail";
@@ -64,6 +64,11 @@ public class EnvioEmailXMLBean {
 	private ArrayList<MensajesXMLBean> listadoMensajes;
 	private ArrayList<AdjuntosXMLBean> listadoAdjuntosGenerales;
 
+	public EnvioEmailXMLBean() {
+		listadoMensajes = new ArrayList<>();
+		listadoAdjuntosGenerales = new ArrayList<>();
+	}
+
 	public void addAdjuntoGeneral(AdjuntosXMLBean adjunto) {
 		listadoAdjuntosGenerales.add(adjunto);
 	}
@@ -75,11 +80,6 @@ public class EnvioEmailXMLBean {
 	public void setListadoAdjuntosGenerales(
 			ArrayList<AdjuntosXMLBean> listadoAdjuntosGenerales) {
 		this.listadoAdjuntosGenerales = listadoAdjuntosGenerales;
-	}
-
-	public EnvioEmailXMLBean() {
-		listadoMensajes = new ArrayList<MensajesXMLBean>();
-		listadoAdjuntosGenerales = new ArrayList<AdjuntosXMLBean>();
 	}
 
 	public String getNombreLote() {
@@ -156,17 +156,7 @@ public class EnvioEmailXMLBean {
 			// Cambio 2012-03-23
 			this.listadoAdjuntosGenerales = responseXMLObject.getEnvio()
 					.getListadoAdjuntosGenerales();
-		} catch (ParserConfigurationException e) {
-			throw new PlataformaBusinessException(
-					ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()
-							+ MENSAJE + e.getMessage() + XML
-							+ xmlEnvio);
-		} catch (SAXException e2) {
-			throw new PlataformaBusinessException(
-					ERROR_PROCESANDO_EL_XML_CAUSA + e2.getCause()
-							+ MENSAJE + e2.getMessage() + XML
-							+ xmlEnvio);
-		} catch (IOException e3) {
+		} catch (ParserConfigurationException | SAXException | IOException e3) {
 			throw new PlataformaBusinessException(
 					ERROR_PROCESANDO_EL_XML_CAUSA + e3.getCause()
 							+ MENSAJE + e3.getMessage() + XML
@@ -204,23 +194,22 @@ public class EnvioEmailXMLBean {
 			builder.setLength(0);
 
 			contenido = "";
-			if (qName.equals(TAG_MENSAJE)) {
+			if (TAG_MENSAJE.equals(qName)) {
 				mensaje = new MensajesXMLBean();
 			}
-			if (qName.equals(TAG_ADJUNTO)) {
+			if (TAG_ADJUNTO.equals(qName)) {
 				adjunto = new AdjuntosXMLBean();
 				readingAdjunto = true;
 			}
 
-			if (qName.equals(TAG_DESTINATARIOS) || qName.equals(TAG_TO)
-					|| qName.equals(TAG_CC) || qName.equals(TAG_BCC)) {
+			if (TAG_DESTINATARIOS.equals(qName) || TAG_TO.equals(qName)
+					|| TAG_CC.equals(qName) || TAG_BCC.equals(qName)) {
 				destinatario = new DestinatarioXMLBean();
 			}
-			if (qName.equals(TAG_TO)) {
+			if (TAG_TO.equals(qName)) {
 				destinatario.setTipoDestinatario(DestinatarioXMLBean.TIPO_TO);
-				;
 			}
-			if (qName.equals(TAG_ADJUNTO_CONTENIDO)) {
+			if (TAG_ADJUNTO_CONTENIDO.equals(qName)) {
 				readingContent = true;
 			}
 			// if(qName.equals(TAG_ADJUNTOS_GENERALES)){

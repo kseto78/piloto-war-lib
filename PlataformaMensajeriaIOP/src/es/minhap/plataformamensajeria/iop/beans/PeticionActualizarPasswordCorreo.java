@@ -41,12 +41,13 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "usuario",
     "password_new"
 })
-@XmlRootElement(name = "ActualizarPasswordPeticion", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "ActualizarPasswordPeticion", namespace=PeticionActualizarPasswordCorreo.R_CONST_1)
 public class PeticionActualizarPasswordCorreo {
 
-    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Usuario", required = true, namespace=R_CONST_1)
     protected String usuario;
-    @XmlElement(name = "Password_New", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Password_New", required = true, namespace=R_CONST_1)
     protected String password_new;
    
 	
@@ -64,13 +65,7 @@ public class PeticionActualizarPasswordCorreo {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		}
@@ -106,10 +101,10 @@ public class PeticionActualizarPasswordCorreo {
 
 
 	/**
-	 * @param password_new the password_new to set
+	 * @param passwordNew the password_new to set
 	 */
-	public void setPassword_new(String password_new) {
-		this.password_new = password_new;
+	public void setPassword_new(String passwordNew) {
+		this.password_new = passwordNew;
 	}
 	
 	

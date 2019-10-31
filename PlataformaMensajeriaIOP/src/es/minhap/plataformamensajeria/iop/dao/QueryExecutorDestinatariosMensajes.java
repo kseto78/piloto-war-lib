@@ -20,7 +20,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param sended
 	 * @return
 	 */
-	public Integer checkIdExternoExists(String idExterno, Boolean sended);
+	Integer checkIdExternoExists(String idExterno, Boolean sended);
 	
 	/**
 	 * Obtiene el numero de diferentes estados de los distintos destinatarios mensajes
@@ -29,7 +29,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	public Integer countDistinctStatus(Long mensajeId);
+	Integer countDistinctStatus(Long mensajeId);
 	
 	/**
 	 * Obtenermos un bean del tipo DestinatariosMensajesBean con la información
@@ -39,7 +39,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param destinatariosMensajesId
 	 * @return
 	 */
-	public  DestinatariosMensajesBean getDestMenByFilters(Long mensajeId, Long destinatariosMensajesId);
+	DestinatariosMensajesBean getDestMenByFilters(Long mensajeId, Long destinatariosMensajesId);
 	
 	/**
 	 * Obtenemos un listado de peticiones para reenviar a partir del id servicio y el rango de reintetos
@@ -48,7 +48,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param reintentos
 	 * @return
 	 */
-	public List<EnvioGISSXMLBean> obtenerMensajesReenvioGISS(Long servicio, Integer reintentos);
+	List<EnvioGISSXMLBean> obtenerMensajesReenvioGISS(Long servicio, Integer reintentos);
 	
 	
 	/**
@@ -58,7 +58,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param destinatarioMensajeId
 	 * @return
 	 */
-	public Recipients getRecipientsMultidestinatarioModo1(Long mensajeId, Long destinatarioMensajeId);
+	Recipients getRecipientsMultidestinatarioModo1(Long mensajeId, Long destinatarioMensajeId);
 	
 	
 	/**
@@ -67,7 +67,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	public Recipients getRecipientsMultidestinatario(Long mensajeId);
+	Recipients getRecipientsMultidestinatario(Long mensajeId);
 	
 	/**
 	 * Recupera los destinatarios a partir del identificador de mensaje
@@ -75,7 +75,7 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	public Recipients getRecipients(Long mensajeId);
+	Recipients getRecipients(Long mensajeId);
 
 	/**
 	 * Cuenta los destinatarios a partir del identificador de mensaje
@@ -83,6 +83,6 @@ public interface QueryExecutorDestinatariosMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	public Integer countDestinatariosByMensaje(Long mensajeId);
+	Integer countDestinatariosByMensaje(Long mensajeId);
 	
 }

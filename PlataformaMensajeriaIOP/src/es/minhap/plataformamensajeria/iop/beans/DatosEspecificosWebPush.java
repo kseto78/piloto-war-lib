@@ -43,23 +43,24 @@ import javax.xml.bind.annotation.XmlType;
 		    "cabecera",
 		    "cuerpo"})
 
-@XmlRootElement(name="DatosEspecificosWebPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name="DatosEspecificosWebPush", namespace=DatosEspecificosWebPush.R_CONST_1)
 public class DatosEspecificosWebPush  {
-	@XmlElement(name = "Endpoint", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Endpoint", required = true, namespace=R_CONST_1)
 	protected String endpoint;
-	@XmlElement(name = "Auth", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Auth", required = true, namespace=R_CONST_1)
 	protected String auth;
-	@XmlElement(name = "Pdh", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Pdh", required = true, namespace=R_CONST_1)
 	protected String pdh;
-	@XmlElement(name = "VapidPrivateKey", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "VapidPrivateKey", required = true, namespace=R_CONST_1)
 	protected String vapidPrivateKey;
-	@XmlElement(name = "VapidPublicKey", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "VapidPublicKey", required = true, namespace=R_CONST_1)
 	protected String vapidPublicKey;
-	@XmlElement(name = "Caducidad", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Caducidad", required = true, namespace=R_CONST_1)
 	protected String caducidad;
-	@XmlElement(name = "Cabecera", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Cabecera", required = true, namespace=R_CONST_1)
 	public String cabecera;
-	@XmlElement(name = "Cuerpo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Cuerpo", required = true, namespace=R_CONST_1)
 	public String cuerpo;
 
 

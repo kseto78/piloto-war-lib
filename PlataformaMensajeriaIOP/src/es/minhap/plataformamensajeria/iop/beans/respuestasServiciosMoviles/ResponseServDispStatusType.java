@@ -35,11 +35,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class ResponseServDispStatusType {
 
-    @XmlElement(name = "StatusCode", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles";
+	@XmlElement(name = "StatusCode", required = true, namespace=R_CONST_1)
     protected String statusCode;
-    @XmlElement(name = "StatusText", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "StatusText", required = true, namespace=R_CONST_1)
     protected String statusText;
-    @XmlElement(name = "Details", namespace="http://misim.redsara.es/misim-bus-webapp/respuestaServiciosDisponibles")
+    @XmlElement(name = "Details", namespace=R_CONST_1)
     protected String details;
 
     /**

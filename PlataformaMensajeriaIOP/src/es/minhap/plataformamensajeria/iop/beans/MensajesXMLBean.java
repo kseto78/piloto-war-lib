@@ -31,10 +31,10 @@ public class MensajesXMLBean {
 	private ArrayList<String> listadoErroresMensajes;
 	
 	public MensajesXMLBean() {
-		listaDestinatarios = new ArrayList<DestinatarioPeticionLotesMailXMLBean>();
-		listaAdjuntos = new ArrayList<AdjuntosXMLBean>();
-		listadoErroresMensajes= new ArrayList<String>();
-		listaImagenes = new ArrayList<ImagenXMLBean>();
+		listaDestinatarios = new ArrayList<>();
+		listaAdjuntos = new ArrayList<>();
+		listadoErroresMensajes= new ArrayList<>();
+		listaImagenes = new ArrayList<>();
 	}
 	
 	public String getCodificacion() {

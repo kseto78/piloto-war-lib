@@ -18,6 +18,25 @@ import java.util.Date;
 public class AuditoriaPlataformaBean{
 
 							  
+	protected Integer logId;
+
+	protected String sourceName;
+
+	protected Integer sourceId;
+
+	protected Integer logAccion = null;
+
+	protected String logDescripcion = null;
+
+	protected String adtUsuario = null;
+
+	protected Date adtFecha = null;
+
+	protected Date fechaDesde = null;
+
+	protected Date fechaHasta = null;
+
+	protected String sourceDescription = null;
 	public AuditoriaPlataformaBean() {
 		super();
 		this.logId = null;
@@ -33,28 +52,8 @@ public class AuditoriaPlataformaBean{
 	}
 	
 	
-	protected Integer logId;
-
-	
-	protected String sourceName;
-	
-	protected Integer sourceId;
-	
-	protected Integer logAccion = null;
-	
-	protected String logDescripcion = null;
-	
-	protected String adtUsuario = null;
-	
-	protected Date adtFecha = null;
-	
-	protected Date fechaDesde = null;
-	protected Date fechaHasta = null;
-	
-	protected String sourceDescription = null;
 	public String getOperacionHTML(){
-		String res = "<span title=\""+getOperacion()+"\"/>";
-		return res;
+		return "<span title=\""+getOperacion()+"\"/>";
 	}
 	public String getOperacionCSSClass(){
 		String res="";

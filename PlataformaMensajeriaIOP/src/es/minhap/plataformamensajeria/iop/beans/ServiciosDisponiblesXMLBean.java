@@ -25,18 +25,20 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "uidDispositivo",
     "tokenSession"
 })
-@XmlRootElement(name = "PeticionConsultaServiciosDisponibles", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+@XmlRootElement(name = "PeticionConsultaServiciosDisponibles", namespace=ServiciosDisponiblesXMLBean.R_CONST_2)
 public class ServiciosDisponiblesXMLBean {
 
-	    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    protected static final String R_CONST_1 = "\\nMensaje: ";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles";
+		@XmlElement(name = "Usuario", required = true, namespace=R_CONST_2)
 		private String usuario;
-	    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    @XmlElement(name = "Password", required = true, namespace=R_CONST_2)
 		private String password;
-	    @XmlElement(name = "IdUsuario", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    @XmlElement(name = "IdUsuario", namespace=R_CONST_2)
 	    private String idUsuario;
-	    @XmlElement(name = "UidDispositivo", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    @XmlElement(name = "UidDispositivo", namespace=R_CONST_2)
 	    protected String uidDispositivo;
-	    @XmlElement(name = "TokenSession", namespace="http://misim.redsara.es/misim-bus-webapp/peticionConsultaServiciosDisponibles")
+	    @XmlElement(name = "TokenSession", namespace=R_CONST_2)
 	    protected String tokenSession;
 
 	public String getUsuario() {
@@ -115,12 +117,8 @@ public class ServiciosDisponiblesXMLBean {
 		
 		
 		
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlConsultaServicios);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlConsultaServicios);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlConsultaServicios);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+R_CONST_1 + e.getMessage()+ "\nXML:\n"+xmlConsultaServicios);
 		}
 	}
 	
@@ -140,10 +138,8 @@ public class ServiciosDisponiblesXMLBean {
 //		jaxbMarshaller.marshal(consultasServiciosBean, System.out);
 		
 		return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+R_CONST_1 + e.getMessage());
 		}
 		
 	}

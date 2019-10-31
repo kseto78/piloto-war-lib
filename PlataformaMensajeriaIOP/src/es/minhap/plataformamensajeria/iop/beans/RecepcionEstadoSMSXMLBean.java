@@ -30,6 +30,7 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "recepcionEstadoSMSXMLBean")
 public class RecepcionEstadoSMSXMLBean {
 
+	protected static final String R_CONST_1 = "\\nMensaje: ";
 	@XmlElement(name = "Sender", required = true)
 	private String sender;
 	@XmlElement(name = "Recipient", required = true)
@@ -118,20 +119,10 @@ public class RecepcionEstadoSMSXMLBean {
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this,	recepcionEstado);
 
 			
-		} catch (JAXBException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(
 					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
-							+ xmlRecepcionEstadoSMS);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
-							+ xmlRecepcionEstadoSMS);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
+							+ R_CONST_1 + e.getMessage() + "\nXML:\n"
 							+ xmlRecepcionEstadoSMS);
 		}
 	}
@@ -151,14 +142,10 @@ public class RecepcionEstadoSMSXMLBean {
 //			jaxbMarshaller.marshal(recepcionEstadoSMS, System.out);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException(
-					"Error generando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException(
 					"Error generando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage());
+							+ R_CONST_1 + e.getMessage());
 		}
 
 	}

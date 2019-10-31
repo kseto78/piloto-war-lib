@@ -40,13 +40,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DestinatariosPush", propOrder = {
+@XmlType(name = DestinatariosPeticionLotesPushXMLBean.R_CONST_2, propOrder = {
     "destinatarioPush"
 })
-@XmlRootElement(name = "DestinatariosPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = DestinatariosPeticionLotesPushXMLBean.R_CONST_2, namespace=DestinatariosPeticionLotesPushXMLBean.R_CONST_1)
 public class DestinatariosPeticionLotesPushXMLBean {
 
-	@XmlElement(name = "DestinatarioPush", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	protected static final String R_CONST_2 = "DestinatariosPush";
+	@XmlElement(name = "DestinatarioPush", required = true, namespace=R_CONST_1)
 	protected List<DestinatarioPeticionLotesPushXMLBean> destinatarioPush;
 
 	 /**
@@ -73,7 +75,7 @@ public class DestinatariosPeticionLotesPushXMLBean {
      */
     public List<DestinatarioPeticionLotesPushXMLBean> getDestinatarioPush() {
         if (destinatarioPush == null) {
-        	destinatarioPush = new ArrayList<DestinatarioPeticionLotesPushXMLBean>();
+        	destinatarioPush = new ArrayList<>();
         }
         return this.destinatarioPush;
     }

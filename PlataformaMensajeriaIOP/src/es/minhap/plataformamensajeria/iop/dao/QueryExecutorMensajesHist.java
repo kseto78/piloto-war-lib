@@ -20,7 +20,7 @@ public interface QueryExecutorMensajesHist {
 	 * @param fecha
 	 * @return
 	 */
-	public Integer countMensajesHistorificacion(Long loteId, Date fecha);
+	Integer countMensajesHistorificacion(Long loteId, Date fecha);
 
 	/***
 	 * Recupera una lista con los Id mensajes 
@@ -39,7 +39,7 @@ public interface QueryExecutorMensajesHist {
 	 * @param loteHistorico
 	 * @return
 	 */
-	public List<TblMensajesHist> convertMensajeTOMensajeHist(List<Long> subList, TblLotesEnviosHist loteHistorico);
+	List<TblMensajesHist> convertMensajeTOMensajeHist(List<Long> subList, TblLotesEnviosHist loteHistorico);
 
 	/***
 	 * Numero de mensajes enviados/anulados por lote 
@@ -47,7 +47,7 @@ public interface QueryExecutorMensajesHist {
 	 * @param loteId
 	 * @return
 	 */
-	public Integer countMensajesByLote(Long loteId);
+	Integer countMensajesByLote(Long loteId);
 
 	
 }

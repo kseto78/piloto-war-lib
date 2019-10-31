@@ -44,12 +44,14 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlType(name = "", propOrder = {
     "status"
 })
-@XmlRootElement(name = "envioAplicacioResponse",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "envioAplicacioResponse",namespace = RespuestaEnvioAplicacion.R_CONST_1)
 public class RespuestaEnvioAplicacion {
 
-    private static final String XML = "\nXML:\n";
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	protected static final String R_CONST_2 = "\\nMensaje: ";
+	private static final String XML = "\nXML:\n";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
-	@XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+	@XmlElement(name = "Status", required = true,namespace = R_CONST_1)
     protected ResponseStatusType status;
     
 
@@ -68,11 +70,8 @@ public class RespuestaEnvioAplicacion {
 
 			return writer.toString();
 
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_2
 					+ e.getMessage());
 		}
 	}
@@ -90,14 +89,8 @@ public class RespuestaEnvioAplicacion {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + XML + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + XML + xmlPeticion);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + "\nMensaje: "
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + R_CONST_2
 					+ e.getMessage() + XML + xmlPeticion);
 		}
 	}
@@ -106,34 +99,27 @@ public class RespuestaEnvioAplicacion {
         System.out.println(parameters);
         try {
             
-            ResponseStatusType _status = new ResponseStatusType();
+            ResponseStatusType status = new ResponseStatusType();
             
             if (validarParametros(parameters)) {
-                _status.setStatusCode("1000");
-                _status.setStatusText("OK");
-                _status.setDetails("Petición procesada correctamente");
+                status.setStatusCode("1000");
+                status.setStatusText("OK");
+                status.setDetails("Petición procesada correctamente");
             } else {
-                _status.setStatusCode("0001");
-                _status.setStatusText("KO");
-                _status.setDetails("Faltan parámetros en la petición");
+                status.setStatusCode("0001");
+                status.setStatusText("KO");
+                status.setDetails("Faltan parámetros en la petición");
             }
             
-            setStatus(_status);
+            setStatus(status);
             
         } catch (java.lang.Exception ex) {
-            ex.printStackTrace();
             throw new RuntimeException(ex);
         }
     }
 
 	private boolean validarParametros(PeticionEnvioAplicacion parameters) {
-		if (StringUtils.isEmpty(parameters.getUser()) || StringUtils.isEmpty(parameters.getPassword()) 
-				|| StringUtils.isEmpty(parameters.getSender()) || StringUtils.isEmpty(parameters.getRecipient()) 
-				|| StringUtils.isEmpty(parameters.smsText) || StringUtils.isEmpty(parameters.getLoteId())
-				|| StringUtils.isEmpty(parameters.getMessageId())) {
-			return false;
-		}
-		return true;
+		return !StringUtils.isEmpty(parameters.getUser()) && !StringUtils.isEmpty(parameters.getPassword()) && !StringUtils.isEmpty(parameters.getSender()) && !StringUtils.isEmpty(parameters.getRecipient()) && !StringUtils.isEmpty(parameters.smsText) && !StringUtils.isEmpty(parameters.getLoteId()) && !StringUtils.isEmpty(parameters.getMessageId());
 	}	
 
 	/**

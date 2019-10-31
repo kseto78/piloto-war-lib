@@ -19,6 +19,17 @@ import java.util.Date;
 public class UsuariosWebPushBean implements Serializable{
 							  
 	private static final long serialVersionUID = 1L;
+	protected Integer usuarioId;
+	protected String nombreUsuario;
+	protected Integer servicioId;
+	protected Date fechaCreacion;
+	protected Date fechaModificacion;
+	protected Integer aplicacionId;
+	protected Date fechaDesde;
+	protected Date fechaHasta;
+	protected String aplicacion;
+	protected String servicio;
+	private String listaIdAplicaciones;
 
 	public UsuariosWebPushBean() {
 		super();
@@ -37,21 +48,6 @@ public class UsuariosWebPushBean implements Serializable{
 		this.listaIdAplicaciones = null;
 	}
 	
-	
-	protected Integer usuarioId;
-	protected String nombreUsuario;
-	protected Integer servicioId;
-	protected Date fechaCreacion;
-	protected Date fechaModificacion;
-		
-	protected Integer aplicacionId;
-	protected Date fechaDesde;
-	protected Date fechaHasta;
-		
-	protected String aplicacion;
-	protected String servicio;
-	
-	private String listaIdAplicaciones; 
 	
 	public Integer getUsuarioId() {
 		return usuarioId;

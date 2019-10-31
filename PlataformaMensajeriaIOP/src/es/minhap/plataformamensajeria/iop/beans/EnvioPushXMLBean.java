@@ -29,7 +29,7 @@ public class EnvioPushXMLBean {
 		static final String TAG_SERVICIO="pet:Servicio";
 		static final String TAG_USUARIO="pet:Usuario";
 		static final String TAG_IDENTIFICADOR_USUARIO="pet:IdentificadorUsuario";
-		static final String TAG_PASSWORD="pet:Password";
+		static final String TAG_PASS="pet:Password";
 		static final String TAG_MENSAJES="pet:Mensajes";
 		static final String TAG_MENSAJE="pet:MensajePush";
 		static final String TAG_TITULO="pet:Titulo";
@@ -46,8 +46,8 @@ public class EnvioPushXMLBean {
 		private String nombreLote="";
 		private String servicio="";
 		private String usuario="";
-		private String password="";
-		private ArrayList<MensajePeticionLotesPushXMLBean> listadoMensajes = new ArrayList<MensajePeticionLotesPushXMLBean>();
+		private String pass="";
+		private ArrayList<MensajePeticionLotesPushXMLBean> listadoMensajes = new ArrayList<>();
 		
 		private String docUsuario="";
 		private String codSIA="";
@@ -76,17 +76,17 @@ public class EnvioPushXMLBean {
 		public void setUsuario(String usuario) {
 			this.usuario = usuario;
 		}
-		public String getPassword() {
-			return password;
+		public String getPass() {
+			return pass;
 		}
-		public void setPassword(String password) {
-			this.password = password;
+		public void setPass(String pass) {
+			this.pass = pass;
 		}
 		public ArrayList<MensajePeticionLotesPushXMLBean> getListadoMensajes() {
-			return new ArrayList<MensajePeticionLotesPushXMLBean>(listadoMensajes);
+			return new ArrayList<>(listadoMensajes);
 		}
 		public void setListadoMensajes(ArrayList<MensajePeticionLotesPushXMLBean> listadoMensajes) {
-			this.listadoMensajes = new ArrayList<MensajePeticionLotesPushXMLBean>(listadoMensajes);
+			this.listadoMensajes = new ArrayList<>(listadoMensajes);
 		}
 		
 		public void addMensaje(MensajePeticionLotesPushXMLBean mensaje){
@@ -115,13 +115,9 @@ public class EnvioPushXMLBean {
 				this.nombreLote = responseXMLObject.getEnvio().getNombreLote();
 				this.servicio = responseXMLObject.getEnvio().getServicio();
 				this.usuario = responseXMLObject.getEnvio().getUsuario();
-				this.password = responseXMLObject.getEnvio().getPassword();
+				this.pass = responseXMLObject.getEnvio().getPass();
 				this.listadoMensajes = responseXMLObject.getEnvio().getListadoMensajes();
-			} catch (ParserConfigurationException e) {
-				throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE + e.getMessage() + XML + xmlEnvio);
-			} catch (SAXException e2) {
-				throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e2.getCause() + MENSAJE + e2.getMessage() + XML + xmlEnvio);
-			} catch (IOException e3) {
+			} catch (ParserConfigurationException | SAXException | IOException e3) {
 				throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e3.getCause() + MENSAJE + e3.getMessage() + XML + xmlEnvio);
 			}
 		}
@@ -146,7 +142,7 @@ class EnvioXMLReader extends DefaultHandler {
 		 */
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		builder.setLength(0);
-		if (qName.equals(TAG_MENSAJE)) {
+		if (TAG_MENSAJE.equals(qName)) {
 			mensaje = new MensajePushXMLBean();
 		}
 		
@@ -179,47 +175,47 @@ class EnvioXMLReader extends DefaultHandler {
 	 */
 	public void endElement(String uri, String localName, String qName) {
 
-		if (qName.equals(TAG_NOMBRELOTE)) {
+		if (TAG_NOMBRELOTE.equals(qName)) {
 			envio.setNombreLote(builder.toString());
 		}
-		if (qName.equals(TAG_SERVICIO)) {
+		if (TAG_SERVICIO.equals(qName)) {
 			envio.setServicio(builder.toString());
 		}
-		if (qName.equals(TAG_USUARIO)) {
+		if (TAG_USUARIO.equals(qName)) {
 			envio.setUsuario(builder.toString());
 		}
-		if (qName.equals(TAG_PASSWORD)) {
-			envio.setPassword(builder.toString());
+		if (TAG_PASS.equals(qName)) {
+			envio.setPass(builder.toString());
 		}
-		if (qName.equals(TAG_DOC_USUARIO)) {
+		if (TAG_DOC_USUARIO.equals(qName)) {
 			mensaje.setDocUsuario(builder.toString());
 		}
-		if (qName.equals(TAG_CODIGO_SIA)) {
+		if (TAG_CODIGO_SIA.equals(qName)) {
 			mensaje.setCodSIA(builder.toString());
 		}
-		if (qName.equals(TAG_CODIGO_ORGANISMO)) {
+		if (TAG_CODIGO_ORGANISMO.equals(qName)) {
 			mensaje.setCodOrganismo(builder.toString());
 		}
 		
-		if (qName.equals(TAG_IDENTIFICADOR_USUARIO)) {
+		if (TAG_IDENTIFICADOR_USUARIO.equals(qName)) {
 			mensaje.setIdentificadorUsuario(builder.toString());
 		}
 		
-		if (qName.equals(TAG_TITULO)) {
+		if (TAG_TITULO.equals(qName)) {
 			mensaje.setTitulo(builder.toString());
 		}
 		
-		if (qName.equals(TAG_ICONO)) {
+		if (TAG_ICONO.equals(qName)) {
 			mensaje.setIcono(builder.toString());
 		}
 		
-		if (qName.equals(TAG_SONIDO)) {
+		if (TAG_SONIDO.equals(qName)) {
 			mensaje.setSonido(builder.toString());
 		}							
-		if (qName.equals(TAG_IDEXTERNO)) {
+		if (TAG_IDEXTERNO.equals(qName)) {
 			mensaje.setIdExterno(builder.toString());
 		}
-		if (qName.equals(TAG_CUERPO)) {
+		if (TAG_CUERPO.equals(qName)) {
 			mensaje.setCuerpo(builder.toString());
 		}
 		

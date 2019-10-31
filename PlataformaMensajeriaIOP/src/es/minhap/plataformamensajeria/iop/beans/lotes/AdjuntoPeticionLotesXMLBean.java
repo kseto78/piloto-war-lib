@@ -42,9 +42,10 @@ import javax.xml.bind.annotation.XmlType;
 public class AdjuntoPeticionLotesXMLBean {
 
 
-    @XmlElement(name = "Nombre", namespace="http://misim.redsara.es/misim-bus-webapp/peticion", required = true)
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Nombre", namespace=R_CONST_1, required = true)
     protected String nombre;
-    @XmlElement(name = "Contenido" , namespace="http://misim.redsara.es/misim-bus-webapp/peticion", required = true)
+    @XmlElement(name = "Contenido" , namespace=R_CONST_1, required = true)
     protected String contenido;
 
     /**

@@ -65,12 +65,12 @@ public class EnvioSMSXMLBean {
 	private String nombreLote = "";
 	private String servicio = "";
 	private String usuario = "";
-	private String password = "";
+	private String pass = "";
 	private String organismoPagador ="";
 	private String codOrganismo = "";
 
-	private ArrayList<MensajeSMSXMLBean> listadoMensajes = new ArrayList<MensajeSMSXMLBean>();
-	private ArrayList<String> listaDestinatarios = new ArrayList<String>();
+	private ArrayList<MensajeSMSXMLBean> listadoMensajes = new ArrayList<>();
+	private ArrayList<String> listaDestinatarios = new ArrayList<>();
 
 	public ArrayList<String> getListaDestinatarios() {
 		return listaDestinatarios;
@@ -104,12 +104,12 @@ public class EnvioSMSXMLBean {
 		this.usuario = usuario;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getPass() {
+		return pass;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassword(String pass) {
+		this.pass = pass;
 	}
 		
 	public String getCodOrganismo() {
@@ -121,11 +121,11 @@ public class EnvioSMSXMLBean {
 	}
 
 	public ArrayList<MensajeSMSXMLBean> getListadoMensajes() {
-		return new ArrayList<MensajeSMSXMLBean>(listadoMensajes);
+		return new ArrayList<>(listadoMensajes);
 	}
 
 	public void setListadoMensajes(ArrayList<MensajeSMSXMLBean> listadoMensajes) {
-		this.listadoMensajes = new ArrayList<MensajeSMSXMLBean>(listadoMensajes);
+		this.listadoMensajes = new ArrayList<>(listadoMensajes);
 	}
 
 	public String getOrganismoPagador() {
@@ -152,13 +152,9 @@ public class EnvioSMSXMLBean {
 			this.nombreLote = responseXMLObject.getEnvio().getNombreLote();
 			this.servicio = responseXMLObject.getEnvio().getServicio();
 			this.usuario = responseXMLObject.getEnvio().getUsuario();
-			this.password = responseXMLObject.getEnvio().getPassword();
+			this.pass = responseXMLObject.getEnvio().getPass();
 			this.listadoMensajes = responseXMLObject.getEnvio().getListadoMensajes();
-		} catch (ParserConfigurationException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE + e.getMessage() + XML + xmlEnvio);
-		} catch (SAXException e2) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e2.getCause() + MENSAJE + e2.getMessage() + XML + xmlEnvio);
-		} catch (IOException e3) {
+		} catch (ParserConfigurationException | SAXException | IOException e3) {
 			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e3.getCause() + MENSAJE + e3.getMessage() + XML + xmlEnvio);
 		}
 	}
@@ -192,10 +188,10 @@ public class EnvioSMSXMLBean {
 			 */
 		public void startElement(String uri, String localName, String qName, Attributes attributes) {
 			builder.setLength(0);
-			if (qName.equals(TAG_MENSAJE)) {
+			if (TAG_MENSAJE.equals(qName)) {
 				mensaje = new MensajeSMSXMLBean();
 			}
-			if (qName.equals(TAG_DESTINATARIO)) {
+			if (TAG_DESTINATARIO.equals(qName)) {
 				destinatario = new DestinatarioXMLBean();
 			}
 

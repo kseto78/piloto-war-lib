@@ -13,7 +13,7 @@ public class MensajesType {
  
     public List<ResponseStatusType> getMensaje() {
         if (mensaje == null) {
-            mensaje = new ArrayList<ResponseStatusType>();
+            mensaje = new ArrayList<>();
         }
         return this.mensaje;
     }

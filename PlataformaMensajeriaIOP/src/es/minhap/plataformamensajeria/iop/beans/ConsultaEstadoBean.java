@@ -26,7 +26,7 @@ public class ConsultaEstadoBean implements Serializable {
 	private static final String MENSAJE = "\nMensaje: ";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
 	static final String TAG_USUARIO="pet:Usuario";
-	static final String TAG_PASSWORD="pet:Password";
+	static final String TAG_PASS="pet:Password";
 
 	static final String TAG_FILTRO="pet:Filtro";
 	static final String TAG_APLICACION="pet:Aplicacion";
@@ -243,11 +243,7 @@ public class ConsultaEstadoBean implements Serializable {
 			// this.listadoMensajes = responseXMLObject.getEnvio().getListadoMensajes();
 			//Cambio 2012-03-23
 			//this.listadoAdjuntosGenerales = responseXMLObject.getEnvio().getListadoAdjuntosGenerales();
-		}catch(ParserConfigurationException e){
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
-		}catch(SAXException e2){
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e2.getCause()+MENSAJE + e2.getMessage()+ XML+xmlEnvio);
-		} catch (IOException e3) {
+		}catch (ParserConfigurationException | SAXException | IOException e3) {
 			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e3.getCause()+MENSAJE + e3.getMessage()+ XML+xmlEnvio);
 		}
 	}
@@ -288,10 +284,10 @@ public class ConsultaEstadoBean implements Serializable {
 			builder.setLength(0);
 
 			contenido="";
-			if(qName.equals(TAG_FILTRO)){
+			if(TAG_FILTRO.equals(qName)){
 				filtro = new FiltroXMLBean();
 			}
-			if(qName.equals(TAG_MENSAJE)){
+			if(TAG_MENSAJE.equals(qName)){
 				mensaje = new MensajesXMLBean();
 			}
 
@@ -323,53 +319,53 @@ public class ConsultaEstadoBean implements Serializable {
 		public void endElement(String uri, String localName, String qName) {
 
 			
-			if(qName.equals(TAG_USUARIO)){
+			if(TAG_USUARIO.equals(qName)){
 				consulta.setUsuario(builder.toString());
 			}
-			if(qName.equals(TAG_PASSWORD)){
+			if(TAG_PASS.equals(qName)){
 				consulta.setPassword(builder.toString());
 			}
 
-			if(qName.equals(TAG_APLICACION)){
+			if(TAG_APLICACION.equals(qName)){
 				filtro.setIdAplicacion(builder.toString());
 			}
-			if(qName.equals(TAG_SERVICIO)){
+			if(TAG_SERVICIO.equals(qName)){
 				filtro.setIdServicio(builder.toString());
 			}
-			if(qName.equals(TAG_LOTE)){
+			if(TAG_LOTE.equals(qName)){
 				filtro.setLote(builder.toString());
 			}
 
-			if(qName.equals(TAG_IDMENSAJE)){
+			if(TAG_IDMENSAJE.equals(qName)){
 				mensaje.setIdMensaje(builder.toString());
 			}
-			if(qName.equals(TAG_IDEXTERNO)){
+			if(TAG_IDEXTERNO.equals(qName)){
 				mensaje.setIdExterno(builder.toString());
 			}
 
-			if(qName.equals(TAG_ESTADO)){
+			if(TAG_ESTADO.equals(qName)){
 				filtro.setEstado(builder.toString());
 			}
-			if(qName.equals(TAG_FECHADESDE)){
+			if(TAG_FECHADESDE.equals(qName)){
 				filtro.setFechaDesde(builder.toString());
 			}
-			if(qName.equals(TAG_FECHAHASTA)){
+			if(TAG_FECHAHASTA.equals(qName)){
 				filtro.setFechaHasta(builder.toString());
 			}
-			if(qName.equals(TAG_DOC_USUARIO)){
+			if(TAG_DOC_USUARIO.equals(qName)){
 				filtro.setDocUsuario(builder.toString());
 			}
-			if(qName.equals(TAG_CODIGO_SIA)){
+			if(TAG_CODIGO_SIA.equals(qName)){
 				filtro.setCodSia(builder.toString());
 			}
-			if(qName.equals(TAG_CODIGO_ORGANISMO)){
+			if(TAG_CODIGO_ORGANISMO.equals(qName)){
 				filtro.setCodOrganismo(builder.toString());
 			}
-			if(qName.equals(TAG_CODIGO_ORGANISMOPAGADOR)){
+			if(TAG_CODIGO_ORGANISMOPAGADOR.equals(qName)){
 				filtro.setCodOrganismoPagador(builder.toString());
 			}
 
-			if(qName.equals(TAG_FILTRO)){
+			if(TAG_FILTRO.equals(qName)){
 				filtro.addMensaje(mensaje);
 				consulta.setFiltro(filtro);
 			}

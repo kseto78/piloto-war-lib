@@ -49,20 +49,22 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "uidDispositivo",
 	"tokenSession"
 })
-@XmlRootElement(name = "PeticionSolicitudRegistroMovil", namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudRegistroMovil")
+@XmlRootElement(name = "PeticionSolicitudRegistroMovil", namespace=PeticionSolicitudRegistroMovil.R_CONST_1)
 public class PeticionSolicitudRegistroMovil {
 
-    @XmlElement(name = "Usuario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudRegistroMovil")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudRegistroMovil";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticionSolicitudRegistroMovil";
+	@XmlElement(name = "Usuario", required = true, namespace=R_CONST_1)
     protected String usuario;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudRegistroMovil")
+    @XmlElement(name = "Password", required = true, namespace=R_CONST_1)
     protected String password;
-    @XmlElement(name = "NumMovil", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudRegistroMovil")
+    @XmlElement(name = "NumMovil", required = true, namespace=R_CONST_1)
     protected String numMovil;
-    @XmlElement(name = "IdServicioMovil", namespace="http://misim.redsara.es/misim-bus-webapp/rest/peticionSolicitudRegistroMovil")
+    @XmlElement(name = "IdServicioMovil", namespace=R_CONST_1)
     protected String idServicioMovil;
-    @XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionSolicitudRegistroMovil")
+    @XmlElement(name = "UidDispositivo", namespace = R_CONST_2)
 	protected String uidDispositivo;
-	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionSolicitudRegistroMovil")
+	@XmlElement(name = "TokenSession", namespace = R_CONST_2)
 	protected String tokenSession;
 	
 	public void loadObjectFromXML(String xmlPeticion) throws PlataformaBusinessException {
@@ -78,13 +80,7 @@ public class PeticionSolicitudRegistroMovil {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		}

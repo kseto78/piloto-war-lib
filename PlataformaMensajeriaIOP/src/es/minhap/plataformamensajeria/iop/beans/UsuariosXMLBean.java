@@ -20,26 +20,28 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "usuario", "password", "servicioId", "nombreUsuario", "plataformaId", "tokenUsuario",
 		"dispositivoId", "uidDispositivo", "tokenSession" })
-@XmlRootElement(name = "Peticion", namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "Peticion", namespace = UsuariosXMLBean.R_CONST_2)
 public class UsuariosXMLBean {
 
-	@XmlElement(name = "Usuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	protected static final String R_CONST_1 = "\\nMensaje: ";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Usuario", required = true, namespace = R_CONST_2)
 	private String usuario;
-	@XmlElement(name = "Password", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Password", required = true, namespace = R_CONST_2)
 	private String password;
-	@XmlElement(name = "Servicio", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Servicio", required = true, namespace = R_CONST_2)
 	private String servicioId;
-	@XmlElement(name = "IdUsuario", namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "IdUsuario", namespace = R_CONST_2)
 	private String nombreUsuario;
-	@XmlElement(name = "Plataforma", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "Plataforma", required = true, namespace = R_CONST_2)
 	private String plataformaId;
-	@XmlElement(name = "IdRegistro", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "IdRegistro", required = true, namespace = R_CONST_2)
 	private String tokenUsuario;
-	@XmlElement(name = "IdDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "IdDispositivo", namespace = R_CONST_2)
 	private String dispositivoId;
-	@XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "UidDispositivo", namespace = R_CONST_2)
 	protected String uidDispositivo;
-	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "TokenSession", namespace = R_CONST_2)
 	protected String tokenSession;
 
 	public String getNombreUsuario() {
@@ -141,14 +143,8 @@ public class UsuariosXMLBean {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, usuarios);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_1
 					+ e.getMessage() + "\nXML:\n" + xmlUsuario);
 		}
 	}
@@ -168,11 +164,8 @@ public class UsuariosXMLBean {
 //			jaxbMarshaller.marshal(usuariosBean, System.out);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_1
 					+ e.getMessage());
 		}
 

@@ -43,11 +43,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class ResponseNotificacionPushStatusType {
 
-    @XmlElement(name = "StatusCode", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "StatusCode", required = true, namespace=R_CONST_1)
     protected String statusCode;
-    @XmlElement(name = "StatusText", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "StatusText", required = true, namespace=R_CONST_1)
     protected String statusText;
-    @XmlElement(name = "Details", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Details", namespace=R_CONST_1)
     protected String details;
 
     /**

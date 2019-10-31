@@ -2,13 +2,13 @@ package es.minhap.plataformamensajeria.iop.beans;
 import org.apache.axis.encoding.Base64;
 public class ImagenXMLBean {
 
+	private String cid;
+	private byte[] contenido;
+	private Integer idImagen = null;
 	public void setIdImagen(Integer idImagen) {
 		this.idImagen = idImagen;
 	}
 	
-	private String cid;
-	private byte[] contenido;
-	private Integer idImagen = null;
 	public Integer getIdImagen() {
 		return idImagen;
 	} 
@@ -32,8 +32,7 @@ public class ImagenXMLBean {
 	}
 	
 	public String getContenidoBase64(){
-		String contenidoBase64 = Base64.encode(contenido);
-		return contenidoBase64;
+		return Base64.encode(contenido);
 	}
 	
 	public String toXML(){

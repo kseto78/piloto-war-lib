@@ -39,12 +39,13 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "status", "avisos" })
-@XmlRootElement(name = "Respuesta", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+@XmlRootElement(name = "Respuesta", namespace = RespuestaGetAvisosUsuario.R_CONST_1)
 public class RespuestaGetAvisosUsuario {
 
-	@XmlElement(name = "Status", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario";
+	@XmlElement(name = "Status", required = true, namespace = R_CONST_1)
 	protected ResponseStatusType status;
-	@XmlElement(name = "Avisos",namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	@XmlElement(name = "Avisos",namespace = R_CONST_1)
 	protected Avisos avisos;
 
 	/**
@@ -93,8 +94,6 @@ public class RespuestaGetAvisosUsuario {
 
 			return writer.toString();
 
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
 		}

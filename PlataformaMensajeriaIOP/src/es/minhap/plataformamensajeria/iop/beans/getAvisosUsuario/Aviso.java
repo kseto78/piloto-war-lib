@@ -37,18 +37,24 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "aviso", propOrder = { "IdAviso", "Titulo", "Cuerpo", "Estado", "FechaEstado" })
+@XmlType(name = "aviso", propOrder = { Aviso.R_CONST_1, Aviso.R_CONST_4, Aviso.R_CONST_3, Aviso.R_CONST_5, Aviso.R_CONST_2 })
 public class Aviso {
 
-	@XmlElement(name = "IdAviso", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	protected static final String R_CONST_1 = "IdAviso";
+	protected static final String R_CONST_2 = "FechaEstado";
+	protected static final String R_CONST_3 = "Cuerpo";
+	protected static final String R_CONST_4 = "Titulo";
+	protected static final String R_CONST_5 = "Estado";
+	protected static final String R_CONST_6 = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario";
+	@XmlElement(name = R_CONST_1, required = true, namespace = R_CONST_6)
 	protected String IdAviso;
-	@XmlElement(name = "Titulo", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	@XmlElement(name = R_CONST_4, required = true, namespace = R_CONST_6)
 	protected String Titulo;
-	@XmlElement(name = "Cuerpo", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	@XmlElement(name = R_CONST_3, namespace = R_CONST_6)
 	protected String Cuerpo;
-	@XmlElement(name = "Estado", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	@XmlElement(name = R_CONST_5, namespace = R_CONST_6)
 	protected String Estado;
-	@XmlElement(name = "FechaEstado", namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaGetAvisosUsuario")
+	@XmlElement(name = R_CONST_2, namespace = R_CONST_6)
 	protected String FechaEstado;
 	/**
 	 * @return the idAviso

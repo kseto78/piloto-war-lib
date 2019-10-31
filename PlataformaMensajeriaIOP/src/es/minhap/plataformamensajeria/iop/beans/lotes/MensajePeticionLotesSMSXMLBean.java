@@ -40,12 +40,13 @@ import javax.xml.bind.annotation.XmlType;
     "cuerpo",
     "destinatariosSMS"
 })
-@XmlRootElement(name = "MensajeSMS", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "MensajeSMS", namespace=MensajePeticionLotesSMSXMLBean.R_CONST_1)
 public class MensajePeticionLotesSMSXMLBean {
 
-    @XmlElement(name = "Cuerpo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Cuerpo", required = true, namespace=R_CONST_1)
     protected String cuerpo;
-    @XmlElement(name = "DestinatariosSMS", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "DestinatariosSMS", required = true, namespace=R_CONST_1)
     protected DestinatariosPeticionLotesSMSXMLBean destinatariosSMS;
 
     /**

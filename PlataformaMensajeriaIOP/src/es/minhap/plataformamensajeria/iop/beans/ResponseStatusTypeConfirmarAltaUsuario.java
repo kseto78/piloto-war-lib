@@ -36,11 +36,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class ResponseStatusTypeConfirmarAltaUsuario {
 
-    @XmlElement(name = "StatusCode", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario";
+	@XmlElement(name = "StatusCode", required = true,namespace = R_CONST_1)
     protected String statusCode;
-    @XmlElement(name = "StatusText", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario")
+    @XmlElement(name = "StatusText", required = true,namespace = R_CONST_1)
     protected String statusText;
-    @XmlElement(name = "Details",namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaConfirmarAltaUsuario")
+    @XmlElement(name = "Details",namespace = R_CONST_1)
     protected String details;
 
     /**

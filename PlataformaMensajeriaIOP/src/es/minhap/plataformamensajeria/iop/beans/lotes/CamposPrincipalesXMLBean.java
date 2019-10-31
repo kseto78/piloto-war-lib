@@ -34,10 +34,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "camposPrincipales", propOrder = {
     "pkFields"
 })
-@XmlRootElement(name = "CamposPrincipales", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "CamposPrincipales", namespace=CamposPrincipalesXMLBean.R_CONST_1)
 public class CamposPrincipalesXMLBean {
 
-    @XmlElement(name = "PkFields", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "PkFields", required = true, namespace=R_CONST_1)
     protected PkFieldsXMLBean pkFields;
 
     /**
@@ -65,7 +66,7 @@ public class CamposPrincipalesXMLBean {
     }
     
     public List<PkFieldsXMLBean> getPkFieldsList() {
-    	List<PkFieldsXMLBean> pkFields = new ArrayList<PkFieldsXMLBean>();
+    	List<PkFieldsXMLBean> pkFields = new ArrayList<>();
     	if (null != getPkFields()) {
     		pkFields.add(getPkFields());
     	}

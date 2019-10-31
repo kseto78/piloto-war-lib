@@ -51,12 +51,28 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "status" })
-@XmlRootElement(name = "RespuestaNotificacionesPush", namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "RespuestaNotificacionesPush", namespace = RespuestaNotificacionesPush.R_CONST_2)
 public class RespuestaNotificacionesPush {
+
+	protected static final String R_CONST_1 = "plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO";
+
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+
+	protected static final String R_CONST_3 = "plataformaErrores.gestionNotificacionesPush.STATUSCODE_OK";
+
+	protected static final String R_CONST_4 = "plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA";
+
+	protected static final String R_CONST_5 = "plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO";
+
+	protected static final String R_CONST_6 = "\\nMensaje: ";
+
+	protected static final String R_CONST_7 = "plataformaErrores.gestionNotificacionesPush.STATUSCODE_KO";
+
+	protected static final String R_CONST_8 = "plataformaErrores.gestionNotificacionesPush.STATUSTEXT_OK";
 
 	static final String TAG_ERROR_GENERANDO_RESPUESTA_XML = "Se ha producido un error generando la cadena de respuesta";
 
-	@XmlElement(name = "Status", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+	@XmlElement(name = "Status", required = true, namespace = R_CONST_2)
 	private ResponseNotificacionPushStatusType status;
 
 	public void loadObjectFromXML(String xmlRespuesta) throws PlataformaBusinessException {
@@ -72,22 +88,18 @@ public class RespuestaNotificacionesPush {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, operacionesMensajes);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlRespuesta);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlRespuesta);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlRespuesta);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_6 + e.getMessage() + "\nXML:\n" + xmlRespuesta);
 		}
 	}
 
 	public String toXML(int resultado, PropertiesServices ps) throws PlataformaBusinessException {
 		RespuestaNotificacionesPush respuesta = this;
-		String codeOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_OK", null);
-		String statusTextOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_OK", null);
+		String codeOK = ps.getMessage(R_CONST_3, null);
+		String statusTextOK = ps.getMessage(R_CONST_8, null);
 		String detailsOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSDETAILS_CHANGE_MESSAGE_STATUS_OK", null);
-		String codeKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_KO", null);
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String codeKO = ps.getMessage(R_CONST_7, null);
+		String statusTextKO = ps.getMessage(R_CONST_5, null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSDETAILS_KO", null);
 		ResponseNotificacionPushStatusType stat = new ResponseNotificacionPushStatusType();
 		if (resultado >= 1) {
@@ -106,11 +118,11 @@ public class RespuestaNotificacionesPush {
 	
 	public String actualizarTodosMensajes(int resultado, PropertiesServices ps) throws PlataformaBusinessException {
 		RespuestaNotificacionesPush respuesta = this;
-		String codeOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_OK", null);
-		String statusTextOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_OK", null);
+		String codeOK = ps.getMessage(R_CONST_3, null);
+		String statusTextOK = ps.getMessage(R_CONST_8, null);
 		String detailsOK = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_MODIFICACION_TODOS_MENSAJES", null);
-		String codeKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSCODE_KO", null);
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String codeKO = ps.getMessage(R_CONST_7, null);
+		String statusTextKO = ps.getMessage(R_CONST_5, null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_ERROR_MODIFICACION_TODOS_MENSAJES", null);
 		ResponseNotificacionPushStatusType stat = new ResponseNotificacionPushStatusType();
 		if (resultado == 1) {
@@ -128,8 +140,8 @@ public class RespuestaNotificacionesPush {
 	}
 
 	public String loginIncorrectotoXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO", null);
-		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String code = ps.getMessage(R_CONST_1, null);
+		String statusText = ps.getMessage(R_CONST_5, null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGIN_KO", null);
 		RespuestaNotificacionesPush respuesta = this;
 		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
@@ -141,8 +153,8 @@ public class RespuestaNotificacionesPush {
 	}
 	
 	public String incorrectStatusXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA", null);
-		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String code = ps.getMessage(R_CONST_4, null);
+		String statusText = ps.getMessage(R_CONST_5, null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUS_DETAILS_MESSAGE_KO", null);
 		RespuestaNotificacionesPush respuesta = this;
 		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
@@ -155,8 +167,8 @@ public class RespuestaNotificacionesPush {
 	
 	
 	public String peticionIncorrectaXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA", null);
-		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String code = ps.getMessage(R_CONST_4, null);
+		String statusText = ps.getMessage(R_CONST_5, null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_PETICION_INCORRECTA", null);
 		RespuestaNotificacionesPush respuesta = this;
 		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
@@ -168,8 +180,8 @@ public class RespuestaNotificacionesPush {
 	}
 	
 	public String noExisteUsuarioPush(PropertiesServices ps) throws PlataformaBusinessException {
-		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_PETICION_INCORRECTA", null);
-		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String code = ps.getMessage(R_CONST_4, null);
+		String statusText = ps.getMessage(R_CONST_5, null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_ERROR_USUARIO_PUSH", null);
 		
 		RespuestaNotificacionesPush respuesta = this;
@@ -183,7 +195,7 @@ public class RespuestaNotificacionesPush {
 	
 	public String incorrectUserXML(PropertiesServices ps) throws PlataformaBusinessException {
 		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSUSERCODE_KO", null);
-		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String statusText = ps.getMessage(R_CONST_5, null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSDETAILS_USER_OK", null);
 		RespuestaNotificacionesPush respuesta = this;
 		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
@@ -196,8 +208,8 @@ public class RespuestaNotificacionesPush {
 
 	
 	public String notPushXML(PropertiesServices ps) throws PlataformaBusinessException {
-		String code = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSLOGINCODE_KO", null);
-		String statusText = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUSTEXT_KO", null);
+		String code = ps.getMessage(R_CONST_1, null);
+		String statusText = ps.getMessage(R_CONST_5, null);
 		String details = ps.getMessage("plataformaErrores.gestionNotificacionesPush.STATUS_DETAILS_PUSH_MESSAGE_KO", null);
 		RespuestaNotificacionesPush respuesta = this;
 		ResponseNotificacionPushStatusType responseNotificacionPushStatusType = new ResponseNotificacionPushStatusType();
@@ -232,10 +244,8 @@ public class RespuestaNotificacionesPush {
 			jaxbMarshaller.marshal(respuesta, writer);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_6 + e.getMessage());
 		}
 	}
 

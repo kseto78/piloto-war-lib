@@ -73,40 +73,41 @@ import javax.xml.datatype.XMLGregorianCalendar;
 })
 public class SeguimientoMensaje {
 
-    @XmlElement(name = "IdServicio",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "IdServicio",namespace = R_CONST_1)
     protected int idServicio;
-    @XmlElement(name = "Servicio", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Servicio", required = true,namespace = R_CONST_1)
     protected String servicio;
-    @XmlElement(name = "IdAplicacion",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdAplicacion",namespace = R_CONST_1)
     protected int idAplicacion;
-    @XmlElement(name = "Aplicacion", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Aplicacion", required = true,namespace = R_CONST_1)
     protected String aplicacion;
-    @XmlElement(name = "IdCanal",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdCanal",namespace = R_CONST_1)
     protected int idCanal;
-    @XmlElement(name = "Canal", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Canal", required = true,namespace = R_CONST_1)
     protected String canal;
-    @XmlElement(name = "IdLote",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdLote",namespace = R_CONST_1)
     protected int idLote;
-    @XmlElement(name = "IdMensaje",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdMensaje",namespace = R_CONST_1)
     protected int idMensaje;
-    @XmlElement(name = "IdExterno", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdExterno", required = true,namespace = R_CONST_1)
     protected String idExterno;
-    @XmlElement(name = "IdEstado",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "IdEstado",namespace = R_CONST_1)
     protected int idEstado;
-    @XmlElement(name = "Estado", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Estado", required = true,namespace = R_CONST_1)
     protected String estado;
-    @XmlElement(name = "Reintentos",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Reintentos",namespace = R_CONST_1)
     protected int reintentos;
-    @XmlElement(name = "Fecha", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Fecha", required = true,namespace = R_CONST_1)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar fecha;
-    @XmlElement(name = "DocUsuario",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "DocUsuario",namespace = R_CONST_1)
     protected String docUsuario;
-    @XmlElement(name = "CodSia",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "CodSia",namespace = R_CONST_1)
     protected String codSia;
-    @XmlElement(name = "CodOrganismo",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "CodOrganismo",namespace = R_CONST_1)
     protected String codOrganismo;
-    @XmlElement(name = "CodOrganismoPagador",namespace = "http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "CodOrganismoPagador",namespace = R_CONST_1)
     protected String codOrganismoPagador;
 
     /**

@@ -29,23 +29,24 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 		"numeroTelefonoDestino",
 		"contenidoMsj"
 })
-@XmlRootElement(name = "Peticion", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "Peticion", namespace=EnvioGISSXMLBean.R_CONST_1)
 public class EnvioGISSXMLBean {
 
-    private static final String XML = "\nXML:\n";
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	private static final String XML = "\nXML:\n";
 	private static final String MENSAJE = "\nMensaje: ";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
-	@XmlElement(name = "IdPeticion", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "IdPeticion", required = true, namespace=R_CONST_1)
     protected String idPeticion;
-    @XmlElement(name = "UsuSistemaEnvio", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "UsuSistemaEnvio", required = true, namespace=R_CONST_1)
     protected String usuSistemaEnvio;
-    @XmlElement(name = "PassSistemaEnvio", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "PassSistemaEnvio", required = true, namespace=R_CONST_1)
     protected String passSistemaEnvio;
-    @XmlElement(name = "Aplicacion", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Aplicacion", required = true, namespace=R_CONST_1)
     protected String aplicacion;
-    @XmlElement(name = "NumeroTelefonoDestino", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "NumeroTelefonoDestino", required = true, namespace=R_CONST_1)
     protected String numeroTelefonoDestino;
-    @XmlElement(name = "ContenidoMsj", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "ContenidoMsj", required = true, namespace=R_CONST_1)
     protected String contenidoMsj;
     
     private static Logger LOG = LoggerFactory.getLogger(EnvioGISSXMLBean.class);
@@ -69,9 +70,7 @@ public class EnvioGISSXMLBean {
 		} catch (JAXBException e) {
 			LOG.error("Error en EnvioGISSXMLBean", e);
 			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
 		}
 	}
@@ -92,8 +91,6 @@ public class EnvioGISSXMLBean {
 	//	jaxbMarshaller.marshal(envioXML, System.out);
 		
 		return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
 		}

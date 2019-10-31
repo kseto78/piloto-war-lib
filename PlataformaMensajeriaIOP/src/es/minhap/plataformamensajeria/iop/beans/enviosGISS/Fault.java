@@ -53,11 +53,12 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlRootElement(name = "Fault")
 public class Fault {
 
-    @XmlElement(name = "Faultcode", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "Faultcode", required = true, namespace=R_CONST_1)
     protected String faultcode;
-    @XmlElement(name = "Faultstring", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Faultstring", required = true, namespace=R_CONST_1)
     protected String faultstring;
-    @XmlElement(name = "Detail", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Detail", required = true, namespace=R_CONST_1)
     protected Detail detail;
 
     /**
@@ -149,8 +150,6 @@ public class Fault {
     				
     		return writer.toString();
     		   		
-    		} catch (PropertyException e) {
-    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     		} catch (JAXBException e) {
     			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
     		}

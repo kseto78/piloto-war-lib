@@ -28,21 +28,22 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "destinatario",
     "deliveryReportURL"
 })
-@XmlRootElement(name = "Peticion", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "Peticion", namespace=EnvioAEATXMLBean.R_CONST_1)
 public class EnvioAEATXMLBean {
 
-    private static final String XML = "\nXML:\n";
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	private static final String XML = "\nXML:\n";
 	private static final String MENSAJE = "\nMensaje: ";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
-	@XmlElement(name = "IdExterno", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+	@XmlElement(name = "IdExterno", required = true, namespace=R_CONST_1)
     protected String idExterno;
-    @XmlElement(name = "CodOrganismoPagadorSMS", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "CodOrganismoPagadorSMS", required = true, namespace=R_CONST_1)
     protected String codOrganismoPagadorSMS;
-    @XmlElement(name = "Cuerpo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Cuerpo", required = true, namespace=R_CONST_1)
     protected String cuerpo;
-    @XmlElement(name = "Destinatario", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Destinatario", required = true, namespace=R_CONST_1)
     protected String destinatario;
-    @XmlElement(name = "DeliveryReportURL", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "DeliveryReportURL", required = true, namespace=R_CONST_1)
     protected String deliveryReportURL;
     
     private static Logger LOG = LoggerFactory.getLogger(EnvioAEATXMLBean.class);
@@ -65,9 +66,7 @@ public void loadObjectFromXML (String xmlEnvio)throws PlataformaBusinessExceptio
 	} catch (JAXBException e) {
 		LOG.error("Error en EnvioAEATXMLBean", e);
 		throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
-	} catch (IllegalAccessException e) {
-		throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
-	} catch (InvocationTargetException e) {
+	} catch (IllegalAccessException | InvocationTargetException e) {
 		throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause()+MENSAJE + e.getMessage()+ XML+xmlEnvio);
 	}
 }
@@ -88,8 +87,6 @@ public String toXML() throws PlataformaBusinessException{
 //	jaxbMarshaller.marshal(envioAEATXML, System.out);
 	
 	return writer.toString();
-	} catch (PropertyException e) {
-		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
 	} catch (JAXBException e) {
 		throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+MENSAJE + e.getMessage());
 	}

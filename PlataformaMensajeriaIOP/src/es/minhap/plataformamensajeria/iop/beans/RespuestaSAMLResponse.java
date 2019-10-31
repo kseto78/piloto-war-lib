@@ -45,18 +45,19 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "apellido1",
     "apellido2"
 })
-@XmlRootElement(name = "Respuesta",namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+@XmlRootElement(name = "Respuesta",namespace = RespuestaSAMLResponse.R_CONST_1)
 public class RespuestaSAMLResponse {
 
-    @XmlElement(name = "Status", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse";
+	@XmlElement(name = "Status", required = true, namespace = R_CONST_1)
 	private ResponseSAMLStatusType status;
-    @XmlElement(name = "NIF", required = false, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "NIF", required = false, namespace = R_CONST_1)
 	private String nif;
-    @XmlElement(name = "Nombre", required = false, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "Nombre", required = false, namespace = R_CONST_1)
 	private String nombre;
-    @XmlElement(name = "Apellido1", required = false, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "Apellido1", required = false, namespace = R_CONST_1)
 	private String apellido1;
-    @XmlElement(name = "Apellido2", required = false, namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaSAMLResponse")
+    @XmlElement(name = "Apellido2", required = false, namespace = R_CONST_1)
 	private String apellido2;
 	
     /**
@@ -139,9 +140,7 @@ public class RespuestaSAMLResponse {
 	    		return writer.toString();
 	    		
 	    		
-	    		}  catch (PropertyException e) {
-	    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
-	    		} catch (JAXBException e) {
+	    		}  catch (JAXBException e) {
 	    			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
 	    		}
 	    }

@@ -45,16 +45,17 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "messageStatus",
     "statusText"
 })
-@XmlRootElement(name = "PeticionNotificacionEstadoSMS", namespace="http://misim.redsara.es/misim-bus-webapp/AcCLEV1Ent")
+@XmlRootElement(name = "PeticionNotificacionEstadoSMS", namespace=PeticionAcCLEV1.R_CONST_1)
 public class PeticionAcCLEV1 {
 	
-	@XmlElement(required = true, namespace="http://misim.redsara.es/misim-bus-webapp/AcCLEV1Ent")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Ent";
+	@XmlElement(required = true, namespace=R_CONST_1)
     protected String idExterno;
-    @XmlElement(required = true, namespace="http://misim.redsara.es/misim-bus-webapp/AcCLEV1Ent")
+    @XmlElement(required = true, namespace=R_CONST_1)
     protected String messageId;
-    @XmlElement(required = true, namespace="http://misim.redsara.es/misim-bus-webapp/AcCLEV1Ent")
+    @XmlElement(required = true, namespace=R_CONST_1)
     protected String messageStatus;
-    @XmlElement(required = true, namespace="http://misim.redsara.es/misim-bus-webapp/AcCLEV1Ent")
+    @XmlElement(required = true, namespace=R_CONST_1)
     protected String statusText;
 
     
@@ -71,13 +72,7 @@ public class PeticionAcCLEV1 {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		}

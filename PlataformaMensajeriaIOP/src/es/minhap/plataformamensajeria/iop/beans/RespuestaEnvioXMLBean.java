@@ -22,12 +22,14 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "status",
     "messageId"
 })
-@XmlRootElement(name = "Respuesta", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+@XmlRootElement(name = "Respuesta", namespace=RespuestaEnvioXMLBean.R_CONST_1)
 public class RespuestaEnvioXMLBean {
 
-    @XmlElement(name = "Status", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	protected static final String R_CONST_2 = "\\nMensaje: ";
+	@XmlElement(name = "Status", required = true, namespace=R_CONST_1)
     protected ResponseStatusTypeEnvioSMS status;
-    @XmlElement(name = "MessageId", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "MessageId", required = true, namespace=R_CONST_1)
     protected String messageId;
 
 	public void loadObjectFromXML (String xmlRespuesta)throws PlataformaBusinessException {
@@ -45,12 +47,8 @@ public class RespuestaEnvioXMLBean {
 		
 		
 		
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause()+R_CONST_2 + e.getMessage()+ "\nXML:\n"+xmlRespuesta);
 		}
 	}
 	
@@ -70,10 +68,8 @@ public class RespuestaEnvioXMLBean {
 //		jaxbMarshaller.marshal(consultasServiciosBean, System.out);
 		
 		return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+"\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause()+R_CONST_2 + e.getMessage());
 		}
 		
 	}

@@ -69,7 +69,7 @@ public class Historial {
      */
     public List<Registro> getHistorico() {
         if (historico == null) {
-            historico = new ArrayList<Registro>();
+            historico = new ArrayList<>();
         }
         return this.historico;
     }

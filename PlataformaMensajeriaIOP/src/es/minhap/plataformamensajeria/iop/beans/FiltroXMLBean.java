@@ -5,7 +5,7 @@ public class FiltroXMLBean {
 	
 	private String idServicio="";
 	private String usuario="";
-	private String password="";
+	private String pass="";
 	private String servicio="";
 	private String idCanal="";
 	private String canal="";
@@ -105,14 +105,14 @@ public class FiltroXMLBean {
 
 
 
-	public String getPassword() {
-		return password;
+	public String getPass() {
+		return pass;
 	}
 
 
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPass(String pass) {
+		this.pass = pass;
 	}
 
 

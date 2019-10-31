@@ -19,18 +19,20 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "usuario", "password", "idUsuario", "idServicioMovil", "accion" })
-@XmlRootElement(name = "PeticionRegistroUsuario", namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+@XmlRootElement(name = "PeticionRegistroUsuario", namespace = NotificacionEstadoAEATXMLBean.R_CONST_1)
 public class NotificacionEstadoAEATXMLBean {
 
-	@XmlElement(name = "Usuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio";
+	protected static final String R_CONST_2 = "\\nMensaje: ";
+	@XmlElement(name = "Usuario", required = true, namespace = R_CONST_1)
 	private String usuario;
-	@XmlElement(name = "Password", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "Password", required = true, namespace = R_CONST_1)
 	private String password;
-	@XmlElement(name = "IdUsuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "IdUsuario", required = true, namespace = R_CONST_1)
 	private String idUsuario;
-	@XmlElement(name = "IdServicioMovil", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "IdServicioMovil", required = true, namespace = R_CONST_1)
 	private String idServicioMovil;
-	@XmlElement(name = "Accion", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/rest/peticionRegistroUsuarioEnServicio")
+	@XmlElement(name = "Accion", required = true, namespace = R_CONST_1)
 	private String accion;
 
 	public void loadObjectFromXML(String xmlUsuario) throws PlataformaBusinessException {
@@ -46,12 +48,8 @@ public class NotificacionEstadoAEATXMLBean {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, usuarios);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlUsuario);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlUsuario);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlUsuario);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_2 + e.getMessage() + "\nXML:\n" + xmlUsuario);
 		}
 	}
 
@@ -70,10 +68,8 @@ public class NotificacionEstadoAEATXMLBean {
 //			jaxbMarshaller.marshal(usuariosBean, System.out);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_2 + e.getMessage());
 		}
 
 	}

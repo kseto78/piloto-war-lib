@@ -51,22 +51,23 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
     "loteId",
     "messageId"
 })
-@XmlRootElement(name = "envioAplicacionRequest", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "envioAplicacionRequest", namespace=PeticionEnvioAplicacion.R_CONST_1)
 public class PeticionEnvioAplicacion {
 
-    @XmlElement(name = "User", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "User", required = true, namespace=R_CONST_1)
     protected String user;
-    @XmlElement(name = "Password", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Password", required = true, namespace=R_CONST_1)
     protected String password;
-    @XmlElement(name = "Sender", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Sender", required = true, namespace=R_CONST_1)
     protected String sender;
-    @XmlElement(name = "Recipient", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Recipient", required = true, namespace=R_CONST_1)
     protected String recipient;
-    @XmlElement(name = "SMSText", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "SMSText", required = true, namespace=R_CONST_1)
     protected String smsText;
-    @XmlElement(name = "LoteId", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "LoteId", required = true, namespace=R_CONST_1)
     protected String loteId;
-    @XmlElement(name = "MessageId", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "MessageId", required = true, namespace=R_CONST_1)
     protected String messageId;
     
     
@@ -83,13 +84,7 @@ public class PeticionEnvioAplicacion {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
-					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		}

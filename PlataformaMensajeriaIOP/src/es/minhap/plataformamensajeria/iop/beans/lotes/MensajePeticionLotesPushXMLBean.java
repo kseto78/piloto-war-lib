@@ -47,20 +47,21 @@ import javax.xml.bind.annotation.XmlType;
     "notificacionesSilenciosas",
     "destinatariosPush"
 })
-@XmlRootElement(name = "MensajePush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+@XmlRootElement(name = "MensajePush", namespace=MensajePeticionLotesPushXMLBean.R_CONST_1)
 public class MensajePeticionLotesPushXMLBean {
 
-    @XmlElement(name = "Titulo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/peticion";
+	@XmlElement(name = "Titulo", required = true, namespace=R_CONST_1)
     protected String titulo;
-    @XmlElement(name = "Cuerpo", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Cuerpo", required = true, namespace=R_CONST_1)
     protected String cuerpo;
-    @XmlElement(name = "Icono", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Icono", namespace=R_CONST_1)
     protected String icono;
-    @XmlElement(name = "Sonido", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "Sonido", namespace=R_CONST_1)
     protected String sonido;
-    @XmlElement(name = "NotificacionesSilenciosas", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "NotificacionesSilenciosas", namespace=R_CONST_1)
     protected Boolean notificacionesSilenciosas;    
-    @XmlElement(name = "DestinatariosPush", namespace="http://misim.redsara.es/misim-bus-webapp/peticion")
+    @XmlElement(name = "DestinatariosPush", namespace=R_CONST_1)
     protected DestinatariosPeticionLotesPushXMLBean destinatariosPush;
 
     /**

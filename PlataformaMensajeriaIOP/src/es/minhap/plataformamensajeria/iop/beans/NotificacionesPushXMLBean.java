@@ -19,22 +19,24 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "usuario", "password", "notificacionId", "status", "idUsuario", "uidDispositivo", "tokenSession" })
-@XmlRootElement(name = "PeticionNotificacionPush", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+@XmlRootElement(name = "PeticionNotificacionPush", namespace = NotificacionesPushXMLBean.R_CONST_2)
 public class NotificacionesPushXMLBean {
 
-	@XmlElement(name = "Usuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	protected static final String R_CONST_1 = "\\nMensaje: ";
+	protected static final String R_CONST_2 = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush";
+	@XmlElement(name = "Usuario", required = true, namespace = R_CONST_2)
 	private String usuario;
-	@XmlElement(name = "Password", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	@XmlElement(name = "Password", required = true, namespace = R_CONST_2)
 	private String password;
-	@XmlElement(name = "NotificacionId", required= false, namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	@XmlElement(name = "NotificacionId", required= false, namespace = R_CONST_2)
 	private String notificacionId;
-	@XmlElement(name = "Status", required = false, namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	@XmlElement(name = "Status", required = false, namespace = R_CONST_2)
 	private String status;
-	@XmlElement(name = "IdUsuario", required = true, namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	@XmlElement(name = "IdUsuario", required = true, namespace = R_CONST_2)
 	private String idUsuario;
-	@XmlElement(name = "UidDispositivo", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	@XmlElement(name = "UidDispositivo", namespace = R_CONST_2)
 	protected String uidDispositivo;
-	@XmlElement(name = "TokenSession", namespace = "http://misim.redsara.es/misim-bus-webapp/peticionNotificacionPush")
+	@XmlElement(name = "TokenSession", namespace = R_CONST_2)
 	protected String tokenSession;
 	
 	/**
@@ -149,12 +151,8 @@ public class NotificacionesPushXMLBean {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, consultasServicios);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlConsultaServicios);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlConsultaServicios);
-		} catch (InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage() + "\nXML:\n" + xmlConsultaServicios);
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_1 + e.getMessage() + "\nXML:\n" + xmlConsultaServicios);
 		}
 	}
 
@@ -173,10 +171,8 @@ public class NotificacionesPushXMLBean {
 //			jaxbMarshaller.marshal(notificacionesPushBean, System.out);
 
 			return writer.toString();
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_1 + e.getMessage());
 		}
 
 	}

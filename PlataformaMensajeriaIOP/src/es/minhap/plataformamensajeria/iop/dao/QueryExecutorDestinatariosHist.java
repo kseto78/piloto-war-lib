@@ -18,20 +18,20 @@ public interface QueryExecutorDestinatariosHist {
 	 * @param firstResult
 	 * @return 
 	 */
-	public List<TblDestinatariosHist> convertDestinatarioTODestinatarioHist(List<Long> subList, Integer max, Integer firstResult);
+	List<TblDestinatariosHist> convertDestinatarioTODestinatarioHist(List<Long> subList, Integer max, Integer firstResult);
 
 	/**
 	 * Obtiene lista de TblDestinatariosHist a partir de la lista de mensajes
 	 * @param listaMensajes
 	 * @return 
 	 */
-	public List<Long> getIdDestinatariosCons(List<Long> listaMensajes);
+	List<Long> getIdDestinatariosCons(List<Long> listaMensajes);
 
 	/**
 	 * Obtiene el total de TblDestinatariosHist a partir de la lista de mensajes en TblDestinatarios
 	 * @param subList
 	 * @return 
 	 */
-	public Integer countConvertDestinatarioTODestinatarioHist(List<Long> subList);
+	Integer countConvertDestinatarioTODestinatarioHist(List<Long> subList);
 
 }

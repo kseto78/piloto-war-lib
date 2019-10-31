@@ -45,14 +45,15 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlType(name = "", propOrder = {
     "status"
 })
-@XmlRootElement(name = "RespuestaNotificacionEstadoSMS",namespace = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Sal")
+@XmlRootElement(name = "RespuestaNotificacionEstadoSMS",namespace = RespuestaAcCLEV1.R_CONST_1)
 public class RespuestaAcCLEV1 {
 
+	protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Sal";
 	static Logger LOGGER = Logger.getLogger(RespuestaAcCLEV1.class);
     private static final String MENSAJE = "\nMensaje: ";
 	private static final String XML = "\nXML:\n";
 	private static final String ERROR_PROCESANDO_EL_XML_CAUSA = "Error procesando el XML.\nCausa: ";
-	@XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/AcCLEV1Sal")
+	@XmlElement(name = "Status", required = true,namespace = R_CONST_1)
     protected ResponseStatusType status;
     
 
@@ -71,9 +72,6 @@ public class RespuestaAcCLEV1 {
 
 			return writer.toString();
 
-		} catch (PropertyException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + MENSAJE
-					+ e.getMessage());
 		} catch (JAXBException e) {
 			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + MENSAJE
 					+ e.getMessage());
@@ -93,13 +91,7 @@ public class RespuestaAcCLEV1 {
 
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE
-					+ e.getMessage() + XML + xmlPeticion);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE
-					+ e.getMessage() + XML + xmlPeticion);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(ERROR_PROCESANDO_EL_XML_CAUSA + e.getCause() + MENSAJE
 					+ e.getMessage() + XML + xmlPeticion);
 		}
@@ -109,19 +101,19 @@ public class RespuestaAcCLEV1 {
         System.out.println(parameters);
         try {
             
-            ResponseStatusType _status = new ResponseStatusType();
+            ResponseStatusType status = new ResponseStatusType();
             
             if (validarParametros(parameters)) {
-                _status.setStatusCode("1000");
-                _status.setStatusText("OK");
-                _status.setDetails("Petición procesada correctamente");
+                status.setStatusCode("1000");
+                status.setStatusText("OK");
+                status.setDetails("Petición procesada correctamente");
             } else {
-                _status.setStatusCode("0001");
-                _status.setStatusText("KO");
-                _status.setDetails("Faltan parámetros en la petición");
+                status.setStatusCode("0001");
+                status.setStatusText("KO");
+                status.setDetails("Faltan parámetros en la petición");
             }
             
-            setStatus(_status);
+            setStatus(status);
             
         } catch (java.lang.Exception ex) {
             LOGGER.error("[RespuestaAcCLEV1]",ex);
@@ -130,11 +122,7 @@ public class RespuestaAcCLEV1 {
     }
 
 	private boolean validarParametros(PeticionAcCLEV1 parameters) {
-		if (StringUtils.isEmpty(parameters.getIdExterno()) || StringUtils.isEmpty(parameters.getMessageId()) 
-				|| StringUtils.isEmpty(parameters.getMessageStatus()) || StringUtils.isEmpty(parameters.getStatusText())) {
-			return false;
-		}
-		return true;
+		return !StringUtils.isEmpty(parameters.getIdExterno()) && !StringUtils.isEmpty(parameters.getMessageId()) && !StringUtils.isEmpty(parameters.getMessageStatus()) && !StringUtils.isEmpty(parameters.getStatusText());
 	}	
 
 	/**

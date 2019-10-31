@@ -11,6 +11,18 @@ public class ProcesosManualesBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -5425782927314124581L;
+	private Integer procesosManualesId;
+	private Integer procesoId = null;
+	private String nombre = null;
+	private String job = null;
+	private String parametro1 = null;
+	private String parametro2 = null;
+	private String parametro3 = null;
+	private String creadoPor = null;
+	private Date fechaCreacion= null;
+	private String modificadoPor = null;
+	private Date fechaModificacion = null;
+	private String eliminado = null;
 
 	public ProcesosManualesBean() {
 		super();
@@ -28,19 +40,6 @@ public class ProcesosManualesBean implements Serializable{
 		this.eliminado = null;
 	}
 	
-
-	private Integer procesosManualesId;
-	private Integer procesoId = null;
-	private String nombre = null;
-	private String job = null;
-	private String parametro1 = null;
-	private String parametro2 = null;
-	private String parametro3 = null;
-	private String creadoPor = null;
-	private Date fechaCreacion= null;
-	private String modificadoPor = null;
-	private Date fechaModificacion = null;
-	private String eliminado = null;
 
 	public Integer getProcesosManualesId() {
 		return procesosManualesId;

@@ -16,13 +16,13 @@ public interface QueryExecutorAdjuntosHist {
 	 * @param listaMensajes
 	 * @return 
 	 */
-	public List<Long> getIdAdjuntosCons(List<Long> listaMensajes);
+	List<Long> getIdAdjuntosCons(List<Long> listaMensajes);
 
 	/**
 	 * Obtiene lista de TblAdjuntosHist de un mensaje
 	 * @param mensajeId
 	 * @return 
 	 */
-	public List<TblAdjuntosHist> getAdjuntosByMensaje(Long mensajeId);
+	List<TblAdjuntosHist> getAdjuntosByMensaje(Long mensajeId);
 
 }

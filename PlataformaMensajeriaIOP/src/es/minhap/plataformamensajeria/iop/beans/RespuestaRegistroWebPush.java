@@ -41,10 +41,12 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @XmlType(name = "", propOrder = {
     "status",
 })
-@XmlRootElement(name = "RespuestaRegistroWebPush",namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroWebPush")
+@XmlRootElement(name = "RespuestaRegistroWebPush",namespace = RespuestaRegistroWebPush.R_CONST_1)
 public class RespuestaRegistroWebPush {
 
-    @XmlElement(name = "Status", required = true,namespace = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroWebPush")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuestaRegistroWebPush";
+	protected static final String R_CONST_2 = "\\nMensaje: ";
+	@XmlElement(name = "Status", required = true,namespace = R_CONST_1)
     protected ResponseStatusTypeRegistroWebPush status;
 
     /**
@@ -88,7 +90,7 @@ public class RespuestaRegistroWebPush {
 			return writer.toString();
 
 		} catch (JAXBException e) {
-			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error generando el XML.\nCausa: " + e.getCause() + R_CONST_2
 					+ e.getMessage());
 		} 
 	}
@@ -107,7 +109,7 @@ public class RespuestaRegistroWebPush {
 			org.apache.commons.beanutils.BeanUtils.copyProperties(this, peticion);
 
 		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
-			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + "\nMensaje: "
+			throw new PlataformaBusinessException("Error procesando el XML.\nCausa: " + e.getCause() + R_CONST_2
 					+ e.getMessage() + "\nXML:\n" + xmlPeticion);
 		} 
 	}

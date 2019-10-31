@@ -2,13 +2,13 @@ package es.minhap.plataformamensajeria.iop.beans;
 import org.apache.axis.encoding.Base64;
 public class AdjuntosXMLBean {
 
+	private String nombre;
+	private byte[] contenido;
+	private Integer idAdjunto = null;
 	public void setIdAdjunto(Integer idAdjunto) { 
 		this.idAdjunto = idAdjunto;
 	}
 	
-	private String nombre;
-	private byte[] contenido;
-	private Integer idAdjunto = null;
 	public Integer getIdAdjunto() {
 		return idAdjunto; 
 	} 
@@ -32,8 +32,7 @@ public class AdjuntosXMLBean {
 	}
 	
 	public String getContenidoBase64(){
-		String contenidoBase64 = Base64.encode(contenido);
-		return contenidoBase64;
+		return Base64.encode(contenido);
 	}
 	
 	public String toXML(){

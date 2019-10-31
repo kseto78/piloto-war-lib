@@ -13,6 +13,19 @@ package es.minhap.plataformamensajeria.iop.beans;
 public class TblServidoresServiciosBean  {
 
 
+	protected Integer servidorServicioId;
+	protected Integer servidorId;
+	protected Integer servicioId;
+	protected Integer numIntentos = null;
+	protected String headerSMS = null;
+	protected String nombreServidor;
+	protected String nombreServicio;
+	protected String proveedorUsuarioSMS;
+	protected String proveedorPasswordSMS;
+	protected Integer organismoId;
+	protected String DIR3Organismo;
+	protected String prefijoSMS = null;
+
 	public TblServidoresServiciosBean() {
 		super();
 		this.servidorServicioId = null;
@@ -28,19 +41,6 @@ public class TblServidoresServiciosBean  {
 		this.DIR3Organismo = null;
 		this.prefijoSMS = null;
 	}
-
-	protected Integer servidorServicioId;
-	protected Integer servidorId;
-	protected Integer servicioId;
-	protected Integer numIntentos = null;
-	protected String headerSMS = null;
-	protected String nombreServidor;
-	protected String nombreServicio;
-	protected String proveedorUsuarioSMS;
-	protected String proveedorPasswordSMS;
-	protected Integer organismoId;
-	protected String DIR3Organismo;
-	protected String prefijoSMS = null;
 
 	public String getNombreServidor() {
 		return nombreServidor;

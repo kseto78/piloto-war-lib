@@ -69,7 +69,7 @@ public class Historial {
      */
     public List<Registro> getMensaje() {
         if (mensaje == null) {
-            mensaje = new ArrayList<Registro>();
+            mensaje = new ArrayList<>();
         }
         return this.mensaje;
     }

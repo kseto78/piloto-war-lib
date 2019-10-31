@@ -44,11 +44,12 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 })
 public class ResponseStatusTypeGenerica {
 
-    @XmlElement(name = "StatusCode", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    protected static final String R_CONST_1 = "http://misim.redsara.es/misim-bus-webapp/respuesta";
+	@XmlElement(name = "StatusCode", required = true, namespace=R_CONST_1)
     protected String statusCode;
-    @XmlElement(name = "StatusText", required = true, namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "StatusText", required = true, namespace=R_CONST_1)
     protected String statusText;
-    @XmlElement(name = "Details", namespace="http://misim.redsara.es/misim-bus-webapp/respuesta")
+    @XmlElement(name = "Details", namespace=R_CONST_1)
     protected String details;
 
     
@@ -69,17 +70,7 @@ public class ResponseStatusTypeGenerica {
 					respuesta);
 
 			
-		} catch (JAXBException e) {
-			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
-							+ xml);
-		} catch (IllegalAccessException e) {
-			throw new PlataformaBusinessException(
-					"Error procesando el XML.\nCausa: " + e.getCause()
-							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"
-							+ xml);
-		} catch (InvocationTargetException e) {
+		} catch (JAXBException | IllegalAccessException | InvocationTargetException e) {
 			throw new PlataformaBusinessException(
 					"Error procesando el XML.\nCausa: " + e.getCause()
 							+ "\nMensaje: " + e.getMessage() + "\nXML:\n"

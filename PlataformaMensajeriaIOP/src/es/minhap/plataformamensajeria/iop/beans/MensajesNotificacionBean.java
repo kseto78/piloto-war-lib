@@ -13,7 +13,7 @@ public class MensajesNotificacionBean {
 
        public List<MensajeNotificacionBean> getMensajeNotificacion() {
         if (mensajeNotificacion == null) {
-            mensajeNotificacion = new ArrayList<MensajeNotificacionBean>();
+            mensajeNotificacion = new ArrayList<>();
         }
         return this.mensajeNotificacion;
     }
