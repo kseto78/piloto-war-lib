@@ -18,7 +18,7 @@ public interface TblLotesEnviosManager {
 	 * @param<T> servicioId, nombre lote, usuario, password
 	 * 
 	 */
-	public Integer insertarLote(Long servicioId, String nombreLote,
+	Integer insertarLote(Long servicioId, String nombreLote,
 			String usuario, String password, String codOrganismo);
 
 	/**
@@ -36,7 +36,7 @@ public interface TblLotesEnviosManager {
 	 * @param<T> idLote
 	 * 
 	 */
-	public TblLotesEnvios getLoteEnvioById(Long idLote);
+	TblLotesEnvios getLoteEnvioById(Long idLote);
 	
 
 	/**
@@ -49,7 +49,7 @@ public interface TblLotesEnviosManager {
 	 * @return RecepcionSMSBean
 	 * 
 	 */
-	public RecepcionSMSBean buscarInfoLote(String recipient, String usuario, String password, String prefijoSMS);
+	RecepcionSMSBean buscarInfoLote(String recipient, String usuario, String password, String prefijoSMS);
 	
 	
 	/**
@@ -57,7 +57,7 @@ public interface TblLotesEnviosManager {
 	 * 
 	 * @param lote
 	 */
-	public void update(TblLotesEnvios lote);
+	void update(TblLotesEnvios lote);
 
 	/**
 	 * Obtiene si para el mensaje si es de tipo multidestinatario
@@ -65,7 +65,7 @@ public interface TblLotesEnviosManager {
 	 * @param mensajeId
 	 * @return
 	 */
-	public Boolean isMultidestinatario(Long mensajeId);
+	Boolean isMultidestinatario(Long mensajeId);
 
 	
 	/**
@@ -77,7 +77,7 @@ public interface TblLotesEnviosManager {
 	 * @param estado 
 	 * @return
 	 */
-	public Integer operacionesLotes(Long idLote, String usuario, String password, String estado);
+	Integer operacionesLotes(Long idLote, String usuario, String password, String estado);
 
 	/**
 	 * Cambia el estado de un lote
@@ -89,7 +89,7 @@ public interface TblLotesEnviosManager {
 	 * @param usuario
 	 * @return 
 	 */
-	public Integer setEstadoLote(Long idLote, String estado, String descripcion, Boolean controlReintentos, String usuario);
+	Integer setEstadoLote(Long idLote, String estado, String descripcion, Boolean controlReintentos, String usuario);
 
 	
 	/**
@@ -98,13 +98,13 @@ public interface TblLotesEnviosManager {
 	 * @param query
 	 * @return
 	 */
-	public List<Long> getIdLotesEnviosByQuery(TblLotesEnviosQuery query);
+	List<Long> getIdLotesEnviosByQuery(TblLotesEnviosQuery query);
 
 	/**
 	 * Elimina el lote indicado por id
 	 * 
 	 * @param loteenvioid
 	 */
-	public void delete(Long loteenvioid);
+	void delete(Long loteenvioid);
 
 }

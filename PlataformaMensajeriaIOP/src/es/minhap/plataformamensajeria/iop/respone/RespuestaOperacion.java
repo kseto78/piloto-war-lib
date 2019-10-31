@@ -39,6 +39,14 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  */
 public class RespuestaOperacion {
 	
+	protected static final String R_CONST_1 = "#";
+
+	protected static final String R_CONST_2 = "DESCRIPCION";
+
+	protected static final String R_CONST_3 = "Error en RespuestaOperacion";
+
+	protected static final String R_CONST_4 = "CODIGO";
+
 	private static Logger LOG = LoggerFactory.getLogger(RespuestaOperacion.class);
 	
 	public static final String TAG_OPERACION="OPERACION";
@@ -52,7 +60,7 @@ public class RespuestaOperacion {
 	
 	
 	private String operacion;
-	private ArrayList<String> errores = new ArrayList<String>(); 
+	private ArrayList<String> errores = new ArrayList<>(); 
 	
 	
 	public String getOperacion() {
@@ -100,12 +108,9 @@ public class RespuestaOperacion {
 	            sp.parse(is, responseXMLObject);
 	            this.operacion = responseXMLObject.getResp().getOperacion();
 	            this.errores = responseXMLObject.getResp().getErrores();
-	        }catch(ParserConfigurationException e){
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-	        }catch(SAXException e2){
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-	        } catch (IOException e3) {
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
+	        }catch (ParserConfigurationException | SAXException | IOException e3) {
+	        	// TODO logger.warn(e3.getMessage(), e3);
+				throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
 	        }
 	       
 	}
@@ -121,9 +126,11 @@ public class RespuestaOperacion {
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			try {
 				throw new ParserConfigurationException("Error creando documento DOM XML");
 			} catch (ParserConfigurationException e1) {
+				// TODO logger.warn(e1.getMessage(), e1);
 				return "<ERROR></ERROR>";
 			}
 		}
@@ -132,14 +139,14 @@ public class RespuestaOperacion {
 		Element rootElement = doc.createElement(TAG_OPERACION);
 		doc.appendChild(rootElement);
 		Element tipoOperacion = doc.createElement(operacionTag);
-		if(error==null||(error.isEmpty())){
+		if(error==null||error.isEmpty()){
 			Element okTag = doc.createElement(TAG_OK);
 			tipoOperacion.appendChild(okTag);
 		}else if(!error.isEmpty()){
 				Element errorTag = doc.createElement(TAG_ERROR);
-				String[] splited=error.split("#");
-				errorTag.setAttribute("CODIGO", splited[0]);
-				errorTag.setAttribute("DESCRIPCION", splited[1]);
+				String[] splited=error.split(R_CONST_1);
+				errorTag.setAttribute(R_CONST_4, splited[0]);
+				errorTag.setAttribute(R_CONST_2, splited[1]);
 				tipoOperacion.appendChild(errorTag);
 		}
 		rootElement.appendChild(tipoOperacion);
@@ -149,7 +156,7 @@ public class RespuestaOperacion {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			LOG.error("Error en RespuestaOperacion",e);
+			LOG.error(R_CONST_3,e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -159,7 +166,7 @@ public class RespuestaOperacion {
  				transformer.transform(source, result);
  			}
 		} catch (TransformerException e) {
-			LOG.error("Error en RespuestaOperacion",e);
+			LOG.error(R_CONST_3,e);
 		}
 		return Utils.convertToUTF8(writer.toString());
 		
@@ -202,21 +209,21 @@ public class OperacionReader extends DefaultHandler {
    	 * 
    	 */
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-			if(qName.equals(TAG_ANULARLOTE)){
+			if(TAG_ANULARLOTE.equals(qName)){
 				resp.setOperacion(TAG_ANULARLOTE);
 			}
-			if(qName.equals(TAG_REENVIARLOTE)){
+			if(TAG_REENVIARLOTE.equals(qName)){
 				resp.setOperacion(TAG_REENVIARLOTE);
 			}
-			if(qName.equals(TAG_ANULARMENSAJE)){
+			if(TAG_ANULARMENSAJE.equals(qName)){
 				resp.setOperacion(TAG_ANULARMENSAJE);
 			}
-			if(qName.equals(TAG_REENVIARMENSAJE)){
+			if(TAG_REENVIARMENSAJE.equals(qName)){
 				resp.setOperacion(TAG_REENVIARMENSAJE);
 			}
-			if(qName.equals(TAG_ERROR)){
-				errMsgCodigo = attributes.getValue(uri, "CODIGO");
-				errMsgDescripcion = attributes.getValue(uri, "DESCRIPCION");
+			if(TAG_ERROR.equals(qName)){
+				errMsgCodigo = attributes.getValue(uri, R_CONST_4);
+				errMsgDescripcion = attributes.getValue(uri, R_CONST_2);
 		}
 
     }
@@ -239,8 +246,8 @@ public class OperacionReader extends DefaultHandler {
      * @param qName
      */
     public void endElement(String uri, String localName, String qName) {
-   	  	if(qName.equals(TAG_ERROR)){
-   	  		resp.addError(errMsgCodigo+"#"+errMsgDescripcion);
+   	  	if(TAG_ERROR.equals(qName)){
+   	  		resp.addError(errMsgCodigo+R_CONST_1+errMsgDescripcion);
    	  	}
     }
     /**

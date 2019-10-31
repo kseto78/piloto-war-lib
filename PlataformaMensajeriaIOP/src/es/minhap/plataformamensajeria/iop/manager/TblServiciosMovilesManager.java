@@ -16,7 +16,7 @@ public interface TblServiciosMovilesManager {
 	* @param idServicioMovil
 	 * @return boolean
 	 */
-	public Boolean checkMobileServie(String idServicioMovil);
+	Boolean checkMobileServie(String idServicioMovil);
 
 	
 	/**
@@ -25,7 +25,7 @@ public interface TblServiciosMovilesManager {
 	* @param idDispositivo
 	 * @return List<ServicioMovil>
 	 */
-	public List<ServicioMovil> consultarServiciosDisponibles(String idDispositivo);
+	List<ServicioMovil> consultarServiciosDisponibles(String idDispositivo);
 
 	/**
 	 * obtiene el servicio m�vil a partir del ID
@@ -33,7 +33,7 @@ public interface TblServiciosMovilesManager {
 	* @param idServicioMovil
 	 * @return Long
 	 */
-	public Long getServicioMovil(long idServicioMovil);
+	Long getServicioMovil(long idServicioMovil);
 
 
 
@@ -65,5 +65,5 @@ public interface TblServiciosMovilesManager {
 			String nombreServicioMovil, boolean count);
 
 
-	public void delete(Long serviciosmovilesid, String source, String accionServicioMovil, Long accionIdServicioMovil);
+	void delete(Long serviciosmovilesid, String source, String accionServicioMovil, Long accionIdServicioMovil);
 }

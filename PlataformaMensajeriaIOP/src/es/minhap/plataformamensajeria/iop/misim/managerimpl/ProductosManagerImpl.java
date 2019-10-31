@@ -37,9 +37,7 @@ public class ProductosManagerImpl implements ProductosManager {
 	@Override
 	@Transactional
 	public List<Producto> getProductos(ProductoQuery query) {
-		List<Producto> productos = getProductoDAO().search(query).getResults();
-		
-		return productos;
+		return getProductoDAO().search(query).getResults();
 	}
 
 	@Transactional

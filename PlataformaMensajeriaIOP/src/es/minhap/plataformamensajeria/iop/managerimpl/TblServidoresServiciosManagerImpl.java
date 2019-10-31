@@ -28,6 +28,8 @@ import es.minhap.sim.query.TblServidoresServiciosQuery;
 @Service("TblServidoresServiciosManagerImpl")
 public class TblServidoresServiciosManagerImpl implements TblServidoresServiciosManager {
 
+	protected static final String R_CONST_1 = " ";
+
 	@Resource 
 	private TblServidoresServiciosDAO servidoresServiciosDAO;
 	
@@ -111,7 +113,7 @@ public class TblServidoresServiciosManagerImpl implements TblServidoresServicios
 		log.setAdtusuario(servidorServicio.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + servidorServicio.getTblServidores().getServidorid());
+		log.setSourcedescription(descripcion + R_CONST_1 + servidorServicio.getTblServidores().getServidorid());
 		log.setSourceid(servidorServicio.getTblServicios().getServicioid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
@@ -130,7 +132,7 @@ public class TblServidoresServiciosManagerImpl implements TblServidoresServicios
 		log.setAdtusuario(ss.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + ss.getTblServidores().getServidorid());
+		log.setSourcedescription(descripcion + R_CONST_1 + ss.getTblServidores().getServidorid());
 		log.setSourceid(ss.getTblServicios().getServicioid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);

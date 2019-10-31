@@ -34,9 +34,7 @@ public class TblMensajesAdjuntosManagerImpl implements TblMensajesAdjuntosManage
 	public Long insertarMensajesAdjuntos(TblMensajesAdjuntos menAd) {
 		Long res;
 
-		res = getMensajesAdjuntosDAO().insert(menAd);
-
-		return res;
+		return getMensajesAdjuntosDAO().insert(menAd);
 	}
 	
 	

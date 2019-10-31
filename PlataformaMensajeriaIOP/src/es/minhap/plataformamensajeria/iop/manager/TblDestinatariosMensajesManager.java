@@ -16,7 +16,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param idExterno @param usuario
 	 * @return Long
 	 */
-	public Long insertarDestinatarioMensaje(String mensajeId,String destinatario, String idExterno, String usuario);
+	Long insertarDestinatarioMensaje(String mensajeId,String destinatario, String idExterno, String usuario);
 
 	
 	/**
@@ -27,7 +27,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param estadoId
 	 * @return 
 	 */
-	public List<Long> insertarDestinatarioMensajeEmail(String mensajeId, List<Long> destinatarios, String idExterno, String usuario,Long estadoId);
+	List<Long> insertarDestinatarioMensajeEmail(String mensajeId, List<Long> destinatarios, String idExterno, String usuario,Long estadoId);
 	
 	/**
 	 * recupera los DetinatariosMensajes
@@ -35,7 +35,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param mensajeId @param destinatarios
 	 * @param idExterno @param usuario
 	 */
-	public List<TblDestinatariosMensajes> getDestinatarioMensajes(Long mensajeId);
+	List<TblDestinatariosMensajes> getDestinatarioMensajes(Long mensajeId);
 	
 	
 	/**
@@ -44,7 +44,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param destinatariomensajeId 
 	 * @return
 	 */
-	public TblDestinatariosMensajes getDestinatarioMensaje(Long destinatarioMensajeId);
+	TblDestinatariosMensajes getDestinatarioMensaje(Long destinatarioMensajeId);
 	
 	/**
 	 * Comprueba si existe el id exexteno
@@ -53,21 +53,21 @@ public interface TblDestinatariosMensajesManager {
 	 * @param sended
 	 * @return
 	 */
-	public Integer checkIdExternoExists(String idExterno);
+	Integer checkIdExternoExists(String idExterno);
 	
 	/**
 	 * Inserta en la tabla Destinatarios mensajes
 	 * 
 	 * @param destinatariosMensajes
 	 */
-	public Long insertar(TblDestinatariosMensajes destinatariosMensajes);
+	Long insertar(TblDestinatariosMensajes destinatariosMensajes);
 	
 	/**
 	 * 
 	 * @param mensajeId
 	 * @return
 	 */
-	public Integer contarEstadosDestinatariosMensajes(Long mensajeId);
+	Integer contarEstadosDestinatariosMensajes(Long mensajeId);
 	
 	/**
 	 * Este metodo recupera el codigo externo a partir del id del mensaje
@@ -75,7 +75,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param mensajeId
 	 * @return
 	 */
-	public String getIdExterno(Long mensajeId);
+	String getIdExterno(Long mensajeId);
 	
 	/**
 	 * Este metodo recupera UIN del destinatarioMensaje
@@ -83,7 +83,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param destinatariosMensaje
 	 * @return
 	 */
-	public String getUim(Long destinatariosMensaje);
+	String getUim(Long destinatariosMensaje);
 	
 	
 	/**
@@ -91,7 +91,7 @@ public interface TblDestinatariosMensajesManager {
 	 * 
 	 * @param destinatarioMensaje
 	 */
-	public void update(TblDestinatariosMensajes destinatarioMensaje);
+	void update(TblDestinatariosMensajes destinatarioMensaje);
 	
 	
 	/**
@@ -103,7 +103,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param mensajeId
 	 * @return
 	 */
-	public TblDestinatariosMensajes getDestinatariosMensajes(String idExterno, String destinatario, String usuario,
+	TblDestinatariosMensajes getDestinatariosMensajes(String idExterno, String destinatario, String usuario,
 			PropertiesServices ps, Long mensajeId);
 
 
@@ -113,7 +113,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param uim
 	 * @return 
 	 */
-	public TblDestinatariosMensajes getDestinatarioMensajeByUim(String uim);
+	TblDestinatariosMensajes getDestinatarioMensajeByUim(String uim);
 
 
 	/**
@@ -123,7 +123,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param estadoInicial
 	 * @return
 	 */
-	public List<TblDestinatariosMensajes> getDestinatarioMensajesUsuarios(Long mensajeId, List<String> usuarios,
+	List<TblDestinatariosMensajes> getDestinatarioMensajesUsuarios(Long mensajeId, List<String> usuarios,
 			String estadoInicial);
 
 
@@ -133,7 +133,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param destinatarioMensajeId
 	 * @return Integer
 	 */
-	public Integer updateNumIntentosEncolar(Long destinatarioMensajeId);
+	Integer updateNumIntentosEncolar(Long destinatarioMensajeId);
 
 
 	/**
@@ -143,7 +143,7 @@ public interface TblDestinatariosMensajesManager {
 	 * @param estadoPendiente
 	 * @return
 	 */
-	public List<TblDestinatariosMensajes> getDestinatarioMensajesPendientes(Long mensajeid, String estadoPendiente);
+	List<TblDestinatariosMensajes> getDestinatarioMensajesPendientes(Long mensajeid, String estadoPendiente);
 
 	
 	/**
@@ -152,14 +152,14 @@ public interface TblDestinatariosMensajesManager {
 	 * @param idExterno 
 	 * @return TblMensajes
 	 */
-	public List<Long> getIdMensajeByIdExterno(String idExterno);
+	List<Long> getIdMensajeByIdExterno(String idExterno);
 
 	/**
 	 * Elimina los DetinatariosMensajes
 	 * 
 	 * @param destinatarioMensajeId 
 	 */
-	public void delete(Long destinatarioMensajeId);
+	void delete(Long destinatarioMensajeId);
 
 	/**
 	 * recupera los DetinatariosMensajes by query
@@ -170,7 +170,7 @@ public interface TblDestinatariosMensajesManager {
 	List<TblDestinatariosMensajes> getDestinatarioMensajesByQuery(TblDestinatariosMensajesQuery query);
 
 
-	public List<TblDestinatariosMensajes> getDestinatarioMensajesNoEnviado(
+	List<TblDestinatariosMensajes> getDestinatarioMensajesNoEnviado(
 			Long idMensaje);
 
 }

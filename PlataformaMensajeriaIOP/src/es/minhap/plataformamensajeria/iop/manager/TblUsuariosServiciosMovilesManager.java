@@ -12,7 +12,7 @@ public interface TblUsuariosServiciosMovilesManager {
 	 * @param idServicioMovil
 	 * @return boolean
 	 */
-	public Boolean comprobarUsuarioServicio(List<String> users, String idServicioMovil);
+	Boolean comprobarUsuarioServicio(List<String> users, String idServicioMovil);
 
 	/**
 	 * Registra el usuario en el servicio push
@@ -22,7 +22,7 @@ public interface TblUsuariosServiciosMovilesManager {
 	 * @param usuario
 	 * @return boolean
 	 */
-	public Boolean registraUsuarioServicio(String idUsuario, String idServicioMovil, String usuario);
+	Boolean registraUsuarioServicio(String idUsuario, String idServicioMovil, String usuario);
 
 	
 	/**
@@ -34,7 +34,7 @@ public interface TblUsuariosServiciosMovilesManager {
 	 * @param activo
 	 * @return boolean
 	 */
-	public Boolean updateUsuarioServicio(String idUsuario, String idServicioMovil, String usuario, boolean activo);
+	Boolean updateUsuarioServicio(String idUsuario, String idServicioMovil, String usuario, boolean activo);
 
 	
 	/**
@@ -44,7 +44,7 @@ public interface TblUsuariosServiciosMovilesManager {
 	 * @param idServicioMovil
 	 * @return String
 	 */
-	public String checkSuscriptionStatus(String idUsuario, String idServicioMovil);
+	String checkSuscriptionStatus(String idUsuario, String idServicioMovil);
 	
 	/**
 	 * Comprueba si es un usuario servicio válido
@@ -53,5 +53,5 @@ public interface TblUsuariosServiciosMovilesManager {
 	 * @param idServicioMovil
 	 * @return String
 	 */
-	public boolean comprobarUsuarioServicioValido(Integer usuario, String idServicioMovil);
+	boolean comprobarUsuarioServicioValido(Integer usuario, String idServicioMovil);
 }

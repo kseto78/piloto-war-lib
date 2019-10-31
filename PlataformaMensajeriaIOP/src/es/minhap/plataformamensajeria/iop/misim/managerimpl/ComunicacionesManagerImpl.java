@@ -35,9 +35,7 @@ public class ComunicacionesManagerImpl implements ComunicacionesManager {
 	@Override
 	@Transactional
 	public List<Comunicacion> getComunicaciones(ComunicacionQuery query) {
-		List<Comunicacion> comunicaciones = getComunicacionDAO().search(query).getResults();
-		
-		return comunicaciones;
+		return getComunicacionDAO().search(query).getResults();
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ public interface TblAplicacionesManager {
 	 * @param TblAplicacionesQuery
 	 * @return
 	 */
-	public List<TblAplicaciones> getAplicaciones(TblAplicacionesQuery auditoria);
+	List<TblAplicaciones> getAplicaciones(TblAplicacionesQuery auditoria);
 	
 	/**
 	 * recupera la aplicacion según datos pasados
@@ -21,7 +21,7 @@ public interface TblAplicacionesManager {
 	 * @param TblAplicacionesQuery
 	 * @return TblAplicaciones
 	 */
-	public TblAplicaciones getAplicacion(TblAplicacionesQuery query);
+	TblAplicaciones getAplicacion(TblAplicacionesQuery query);
 
 	
 	/**
@@ -31,7 +31,7 @@ public interface TblAplicacionesManager {
 	 * @param password
 	 * @return Boolean
 	 */
-	public Boolean existeAplicacion(String usuario, String password);
+	Boolean existeAplicacion(String usuario, String password);
 	
 	
 	/**
@@ -40,7 +40,7 @@ public interface TblAplicacionesManager {
 	 * @param usuario
 	 * @return Boolean
 	 */
-	public Boolean existeAplicacionUsuario(String usuario);
+	Boolean existeAplicacionUsuario(String usuario);
 
 	/**
 	 * recupera la aplicacion según datos pasados
@@ -48,7 +48,7 @@ public interface TblAplicacionesManager {
 	 * @param idAplicacion
 	 * @return
 	 */
-	public TblAplicaciones getAplicacion(Long idAplicacion);
+	TblAplicaciones getAplicacion(Long idAplicacion);
 	
 	/**
 	 * recupera el servidor según datos pasados
@@ -61,7 +61,7 @@ public interface TblAplicacionesManager {
 	 * @param idAplicacion
 	 * @return List<TblAplicaciones>
 	 */
-	public List<TblAplicaciones> getAplicacionesPaginado(int start, int size, String order, String columnSort, String nombreAplicacion, int idAplicacion);
+	List<TblAplicaciones> getAplicacionesPaginado(int start, int size, String order, String columnSort, String nombreAplicacion, int idAplicacion);
 	
 	/**
 	 * actualizamos la aplicacion
@@ -71,7 +71,7 @@ public interface TblAplicacionesManager {
 	 * @param accion
 	 * @param accionId
 	 */
-	public void update(TblAplicaciones aplicacion, String source, String accion, Long accionId);
+	void update(TblAplicaciones aplicacion, String source, String accion, Long accionId);
 
 	
 	/**
@@ -83,14 +83,14 @@ public interface TblAplicacionesManager {
 	 * @param accionId
 	 * @return
 	 */
-	public Long insert(TblAplicaciones aplicacion, String source, String accion, Long accionId);
+	Long insert(TblAplicaciones aplicacion, String source, String accion, Long accionId);
 	
 	
 	/**
 	 * recupera todas las aplicaciones no eliminadas ordenadas por nombre
 	 * @return
 	 */
-	public List<TblAplicaciones> getAplicacionesNoEliminadasOrdenadas();
+	List<TblAplicaciones> getAplicacionesNoEliminadasOrdenadas();
 
 	void updateSMS(TblAplicaciones aplicacion);
 

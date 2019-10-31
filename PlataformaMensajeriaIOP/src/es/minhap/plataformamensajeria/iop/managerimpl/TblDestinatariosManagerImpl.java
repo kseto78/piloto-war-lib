@@ -25,6 +25,8 @@ import es.minhap.sim.query.TblDestinatariosQuery;
 @Service("TblDestinatariosManagerImpl")
 public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 
+	protected static final String R_CONST_1 = ";";
+
 	@Resource
 	private TblDestinatariosDAO destinatariosDAO;
 
@@ -43,7 +45,7 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 		List<String> lista;
 		if (null != to){
 		// analizamos destinatarios TO
-		lista = Arrays.asList(to.split(";"));
+		lista = Arrays.asList(to.split(R_CONST_1));
 		for (String email : lista) {
 			TblDestinatarios d = createDestinatario(mensajeId, usuario, email, ps.getMessage("constantes.email.tipoDestinatarioTO",null));
 			listaIds.add(getDestinatariosDAO().insert(d));
@@ -52,7 +54,7 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 
 		// analizamos destinatarios CC
 		if (null != cc){
-		lista = Arrays.asList(cc.split(";"));
+		lista = Arrays.asList(cc.split(R_CONST_1));
 		for (String email : lista) {
 			TblDestinatarios d = createDestinatario(mensajeId, usuario, email, ps.getMessage("constantes.email.tipoDestinatarioCC",null));
 			listaIds.add(getDestinatariosDAO().insert(d));
@@ -61,7 +63,7 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 
 		// analizamos destinatarios BCC
 		if (null != bcc){
-		lista = Arrays.asList(bcc.split(";"));
+		lista = Arrays.asList(bcc.split(R_CONST_1));
 		for (String email : lista) {
 			TblDestinatarios d = createDestinatario(mensajeId, usuario, email, ps.getMessage("constantes.email.tipoDestinatarioBCC",null));
 			listaIds.add(getDestinatariosDAO().insert(d));
@@ -78,8 +80,9 @@ public class TblDestinatariosManagerImpl implements TblDestinatariosManager {
 		query.setMensajeid(mensajeId);
 		
 		for (TblDestinatarios d : getDestinatariosDAO().search(query).getResults()) {
-			if (!res.contains(d.getEmail()))
+			if (!res.contains(d.getEmail())) {
 				res.add(d.getEmail());
+			}
 		}
 		
 		return res;

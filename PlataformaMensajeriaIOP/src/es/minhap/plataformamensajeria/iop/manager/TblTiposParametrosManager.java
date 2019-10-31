@@ -13,7 +13,7 @@ public interface TblTiposParametrosManager {
 	 * @param tipo
 	 * @return 
 	 */
-	public List<TblTiposParametros> listaTiposParametrosPorTipo(Integer tipo);
+	List<TblTiposParametros> listaTiposParametrosPorTipo(Integer tipo);
 	
 	/**
 	 * Obtiene el tipoParametro por su id
@@ -21,5 +21,5 @@ public interface TblTiposParametrosManager {
 	 * @param tipoParametroId
 	 * @return 
 	 */
-	public TblTiposParametros getTipoParametroById(Long tipoParametroId);
+	TblTiposParametros getTipoParametroById(Long tipoParametroId);
 }

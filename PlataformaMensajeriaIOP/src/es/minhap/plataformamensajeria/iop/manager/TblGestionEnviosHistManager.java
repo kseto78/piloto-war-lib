@@ -31,14 +31,14 @@ public interface TblGestionEnviosHistManager {
 	 * @param idMensaje
 	 * @return TblMensajesHist
 	 */
-	public List<TblGestionEnviosHist> convertGestionEnviosTOGestionEnviosHist(Long idMensaje);
+	List<TblGestionEnviosHist> convertGestionEnviosTOGestionEnviosHist(Long idMensaje);
 	
 	/**
 	 * Elimina id en BBDD
 	 * 
 	 * @param idGestionEnvioHist
 	 */
-	public void eliminar(Long idGestionEnvioHist);
+	void eliminar(Long idGestionEnvioHist);
 	
 	
 	/**

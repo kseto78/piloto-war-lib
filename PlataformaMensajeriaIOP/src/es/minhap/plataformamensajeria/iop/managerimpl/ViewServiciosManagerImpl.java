@@ -22,6 +22,9 @@ import es.minhap.sim.query.ViewServiciosQuery;
 @Service("ViewServiciosManagerImpl")
 public class ViewServiciosManagerImpl implements ViewServiciosManager {
 
+	protected static final String R_CONST_1 = "%";
+	protected static final String R_CONST_2 = "unchecked";
+	protected static final String R_CONST_3 = "nombre";
 	@Resource
 	private ViewServiciosDAO viewServiciosDAO;
 
@@ -42,7 +45,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 	public List<ViewServicios> getServiciosByAplicacion(Long aplicacionId) {
 		ViewServiciosQuery query = new ViewServiciosQuery();
 		query.setAplicacionid(aplicacionId);
-		query.addOrder("nombre", OrderType.ASC);
+		query.addOrder(R_CONST_3, OrderType.ASC);
 		return viewServiciosDAO.search(query).getResults();
 	}
 
@@ -53,7 +56,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 	public List<ViewServicios> getServiciosPaginado(int start, int size, String order, String columnSort, String nombreServicio, Long aplicacionId, int servicioId, boolean count) {
 		OrderType ord = null;
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")) {
+		if (order == null || "1".equals(order)) {
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -62,7 +65,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 
 		if (null != nombreServicio) {
 			query.setNombreComparator(TextComparator.ILIKE);
-			query.setNombre("%"+nombreServicio+"%");
+			query.setNombre(R_CONST_1+nombreServicio+R_CONST_1);
 		}
 		if (null != aplicacionId) {
 			query.setAplicacionid(aplicacionId);
@@ -72,7 +75,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		}
 		
 		query.addOrder(columnSort, ord);
-		if(columnSort != null && columnSort.equals("aplicacionnombre")){
+		if("aplicacionnombre".equals(columnSort)){
 			query.addOrder("servicioid",ord);
 		}
 		
@@ -85,7 +88,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 		return viewServiciosDAO.search(query).getResults();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<ViewServicios> getCanalesByServicioId(String idServicio) {
 		ViewServiciosQuery query = new ViewServiciosQuery();
@@ -95,7 +98,7 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<ViewServicios> getServiciosPorCanal(String idAplicacion, String idCanal) {
 		ViewServiciosQuery query = new ViewServiciosQuery();
@@ -106,11 +109,11 @@ public class ViewServiciosManagerImpl implements ViewServiciosManager {
 
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<ViewServicios> getServicios() {
 		ViewServiciosQuery query = new ViewServiciosQuery();
-		query.addOrder("nombre", OrderType.ASC);
+		query.addOrder(R_CONST_3, OrderType.ASC);
 		
 		return viewServiciosDAO.search(query).getResults();
 

@@ -14,7 +14,7 @@ public interface TblUsuariosPushManager {
 	 * @param servicioId
 	 * @return List<Integer>
 	 */
-	public List<Long> getDispositivosUsuario(String identificadorUsuario, Integer servicioId);
+	List<Long> getDispositivosUsuario(String identificadorUsuario, Integer servicioId);
 
 	/**
 	 * recupera el estado segun datos pasados
@@ -22,7 +22,7 @@ public interface TblUsuariosPushManager {
 	 * @param mensajeId
 	* @return List<String>
 	 */
-	public List<String> getNombresUsuariosMensaje(Long mensajeId);
+	List<String> getNombresUsuariosMensaje(Long mensajeId);
 	
 	/**
 	 * Da de alta un usuario Push
@@ -38,7 +38,7 @@ public interface TblUsuariosPushManager {
 	 * @param tokenSession 
 	 * @return Integer
 	 */
-	public Integer altaUsuario(String nombreUsuario, String servicioId,
+	Integer altaUsuario(String nombreUsuario, String servicioId,
 			String usuario, String password, String plataformaId,
 			String tokenUsuario, String dispositivoId, String tokenSession, String uidDispositivo);
 
@@ -48,7 +48,7 @@ public interface TblUsuariosPushManager {
 	 * @param token
 	* @return boolean
 	 */
-	public boolean eliminarUsuario(String token);
+	boolean eliminarUsuario(String token);
 	
 	
 	/**
@@ -60,7 +60,7 @@ public interface TblUsuariosPushManager {
 	 * @param nombreUsuario
 	* @return Boolean
 	 */
-	public Boolean comprobarExisteDispositivo(String idServicio, String idDispositivo, String idPlataforma, String nombreUsuario);
+	Boolean comprobarExisteDispositivo(String idServicio, String idDispositivo, String idPlataforma, String nombreUsuario);
 	
 	
 	/**
@@ -73,7 +73,7 @@ public interface TblUsuariosPushManager {
 	 * @param filtroEqualNombreUsuario
 	* @return TblUsuariosPush
 	 */
-	public TblUsuariosPush getDatosUsuario(String idServicio, String idPlataforma, String idDispositivo, String nombreUsuario, boolean filtroEqualNombreUsuario);
+	TblUsuariosPush getDatosUsuario(String idServicio, String idPlataforma, String idDispositivo, String nombreUsuario, boolean filtroEqualNombreUsuario);
 	
 	
 	/**
@@ -82,7 +82,7 @@ public interface TblUsuariosPushManager {
 	 * @param usuario
 	 * @return boolean
 	 */
-	public boolean updateUsuario(TblUsuariosPush usuario);
+	boolean updateUsuario(TblUsuariosPush usuario);
 	
 
 	/**
@@ -93,7 +93,7 @@ public interface TblUsuariosPushManager {
 	 * @param idPlataforma
 	* @return TblUsuariosPush
 	 */
-	public TblUsuariosPush getDispositivoAplicacion(String idServicio, String idDispositivo, String idPlataforma);
+	TblUsuariosPush getDispositivoAplicacion(String idServicio, String idDispositivo, String idPlataforma);
 	
 	
 	/**
@@ -102,7 +102,7 @@ public interface TblUsuariosPushManager {
 	 * @param usuario
 	 * @return Long
 	 */
-	public boolean insertUsuario(TblUsuariosPush usuario);
+	boolean insertUsuario(TblUsuariosPush usuario);
 
 	/**
 	 * Obtiene el listado con los id de usuario
@@ -112,7 +112,7 @@ public interface TblUsuariosPushManager {
 	 * @param idDispositivo
 	 * @return List<Long>
 	 */
-	public List<Long> getDatosUsuario(String idServicio, String idPlataforma, String idDispositivo);
+	List<Long> getDatosUsuario(String idServicio, String idPlataforma, String idDispositivo);
 
 	/**
 	 * Obtiene el listado con los id de usuario
@@ -121,7 +121,7 @@ public interface TblUsuariosPushManager {
 	 * @param idDispositivo
 	 * @return List<String>
 	 */
-	public List<String> getIdUsersFromDispositivo(String idDispositivo, String nombreUsuario);
+	List<String> getIdUsersFromDispositivo(String idDispositivo, String nombreUsuario);
 
 	
 	/**
@@ -130,7 +130,7 @@ public interface TblUsuariosPushManager {
 	 * @param idUsuario
 	 * @return TblUsuariosPush
 	 */
-	public TblUsuariosPush getUsuarioPush(long idUsuario);
+	TblUsuariosPush getUsuarioPush(long idUsuario);
 
 	/**
 	 * Comnprpueba si el id_dispositivo generado es repetido
@@ -138,7 +138,7 @@ public interface TblUsuariosPushManager {
 	 * @param codigo
 	 * @return boolean
 	 */
-	public boolean comprobarDispositivoRepetido(String codigo);
+	boolean comprobarDispositivoRepetido(String codigo);
 
 	
 
@@ -148,7 +148,7 @@ public interface TblUsuariosPushManager {
 	 * @param uidDispositivo
 	 * @return TblUsuariosPush
 	 */
-	public TblUsuariosPush existeUimDispositivo(String uidDispositivo, Long servicioId);
+	TblUsuariosPush existeUimDispositivo(String uidDispositivo, Long servicioId);
 
 	/**
 	 * Comnprpueba si el toten de sessión es válido y esta caducado
@@ -158,7 +158,7 @@ public interface TblUsuariosPushManager {
 	 * @param timeSession
 	 * @return boolean
 	 */
-	public boolean comprobarTokenSession(String uidDispositivo, String tokenSession, Integer timeSession);
+	boolean comprobarTokenSession(String uidDispositivo, String tokenSession, Integer timeSession);
 
 	/**
 	 * Comnprpueba si el toten de sessión es válido y esta caducado
@@ -166,7 +166,7 @@ public interface TblUsuariosPushManager {
 	 * @param query
 	 * @return TblUsuariosPush
 	 */
-	public TblUsuariosPush getUsuarioPushByQuery(TblUsuariosPushQuery query);
+	TblUsuariosPush getUsuarioPushByQuery(TblUsuariosPushQuery query);
 
 
 

@@ -15,11 +15,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.minhap.common.exception.ApplicationException;
-import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
-import es.minhap.plataformamensajeria.iop.dao.QueryExecutorPdpDiputaciones;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorProcesos;
-import es.minhap.sim.model.TblPdpDiputaciones;
 import es.minhap.sim.model.TblProcesos;
 
 /**
@@ -31,7 +28,11 @@ import es.minhap.sim.model.TblProcesos;
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
 public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements QueryExecutorProcesos {
 
-	private static final Logger log = LoggerFactory.getLogger(QueryExecutorProcesosImpl.class);
+	protected static final String R_CONST_1 = "%')";
+
+	protected static final String R_CONST_2 = "unchecked";
+
+	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorProcesosImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -46,12 +47,12 @@ public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements Qu
 	}
 
 				
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<TblProcesos> getProcesosPaginado(int size, String order, String column, ProcesosBean ob) {
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
 			String sql = " from TblProcesos o";
 			String slqWhere = createWhere(ob, order, column);
@@ -64,7 +65,7 @@ public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements Qu
 			return  query.list();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -72,8 +73,8 @@ public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements Qu
 	@Override
 	public Integer countProcesosPaginado(ProcesosBean ob) {
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
 			String sql = "select count(o.procesosid) from TblProcesos o ";
 			String slqWhere = createWhere(ob, null, null);
@@ -83,23 +84,28 @@ public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements Qu
 			return  ((Long)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<String> getListAutocomplete(String term) {
 		try {
 			List<String> res = new ArrayList<>();
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
-			String sql = "select o.dir3, o.nombre from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') and activo = 1 and "
-					+ " (o.dir3 like '%" + term + "%' or o.nombre like '%" + term + "%')";
+			StringBuilder queryString = new StringBuilder();
+			queryString.append("select o.dir3, o.nombre from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') and activo = 1 and ");
+			queryString.append(" (o.dir3 like '%");
+			queryString.append(term);
+			queryString.append("%' or o.nombre like '%");
+			queryString.append(term);
+			queryString.append(R_CONST_1);
 			
-			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			Query query = getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			List<Object[]> rows = query.list();
 			
 			for (Object[] row : rows) {
@@ -108,7 +114,7 @@ public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements Qu
 			}
 			return res;
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -117,8 +123,8 @@ public class QueryExecutorProcesosImpl extends HibernateDaoSupport implements Qu
 	private String createWhere(ProcesosBean ob, String order, String column) {
 		StringBuilder sb = new StringBuilder();
 	
-		if (null != ob.getNombre() && ob.getNombre().length() > 0) {
-			sb.append(" and Upper(o.nombre) like UPPER('%" + ob.getNombre() + "%')");
+		if (null != ob.getNombre() && !ob.getNombre().isEmpty()) {
+			sb.append(" and Upper(o.nombre) like UPPER('%" + ob.getNombre() + R_CONST_1);
 		}
 		
 		if (null != column) {

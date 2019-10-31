@@ -13,7 +13,7 @@ public interface TblDestinatariosMensajesHistManager {
 	 * @param idMensaje
 	 * @return TblMensajesHist
 	 */
-	public List<TblDestinatariosMensHist> convertDestinatarioMensTODestinatarioMensHist(Long idMensaje);
+	List<TblDestinatariosMensHist> convertDestinatarioMensTODestinatarioMensHist(Long idMensaje);
 
 	/**
 	 * Inserta el  TblDestinatariosMensHist
@@ -21,7 +21,7 @@ public interface TblDestinatariosMensajesHistManager {
 	 * @param m
 	 * @return Long
 	 */
-	public Long insert(TblDestinatariosMensHist d);
+	Long insert(TblDestinatariosMensHist d);
 
 	/**
 	 * Elimina el  TblDestinatariosMensHist
@@ -36,7 +36,7 @@ public interface TblDestinatariosMensajesHistManager {
 	 * @param query 
 	 * @return 
 	 */
-	public List<TblDestinatariosMensHist> getDestinatarioMensHistByQuery(TblDestinatariosMensHistQuery query);
+	List<TblDestinatariosMensHist> getDestinatarioMensHistByQuery(TblDestinatariosMensHistQuery query);
 
 	/**
 	 * recupera un DetinatariosMensajes
@@ -44,7 +44,7 @@ public interface TblDestinatariosMensajesHistManager {
 	 * @param destinatariomensajeId 
 	 * @return
 	 */
-	public TblDestinatariosMensHist getDestinatarioMensaje(Long destinatarioMensajeId);
+	TblDestinatariosMensHist getDestinatarioMensaje(Long destinatarioMensajeId);
 	
 
 }

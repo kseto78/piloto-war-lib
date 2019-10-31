@@ -10,7 +10,7 @@ import es.minhap.plataformamensajeria.iop.beans.RecibirSMSRequest;
 public interface IRecepcionMensajesService {
 
 	
-	public RecibirSMSResponse recibirSMS(RecibirSMSRequest parameters);
+	RecibirSMSResponse recibirSMS(RecibirSMSRequest parameters);
 	
-	public String recibirSMSXML(RecibirSMSRequest recepcionMensajes);
+	String recibirSMSXML(RecibirSMSRequest recepcionMensajes);
 }

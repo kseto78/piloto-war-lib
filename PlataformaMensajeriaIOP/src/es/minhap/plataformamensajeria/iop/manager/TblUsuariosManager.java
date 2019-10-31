@@ -14,7 +14,7 @@ public interface TblUsuariosManager {
 	 * @param login
 	 * @return 
 	 */
-	public Integer getRolByUsername(String login);
+	Integer getRolByUsername(String login);
 	
 	
 	/**
@@ -23,7 +23,7 @@ public interface TblUsuariosManager {
 	 * @param login
 	 * @return 
 	 */
-	public Long getUsuarioByUsername(String login);
+	Long getUsuarioByUsername(String login);
 
 	/**
 	 * obtiene el idUsuario activo según el login
@@ -31,7 +31,7 @@ public interface TblUsuariosManager {
 	 * @param login
 	 * @return 
 	 */
-	public Long getUsuarioByUsernameActivo(String login);
+	Long getUsuarioByUsernameActivo(String login);
 
 	
 	/**
@@ -40,7 +40,7 @@ public interface TblUsuariosManager {
 	 * @param usuarioid
 	 * @return 
 	 */
-	public TblUsuarios getById(Long usuarioid);
+	TblUsuarios getById(Long usuarioid);
 
 
 	/**
@@ -49,7 +49,7 @@ public interface TblUsuariosManager {
 	 * @param query
 	 * @return TblUsuarios
 	 */
-	public List<TblUsuarios> getUsuariosAplicacionesByQuery(TblUsuariosQuery query);
+	List<TblUsuarios> getUsuariosAplicacionesByQuery(TblUsuariosQuery query);
 
 
 	/**
@@ -61,7 +61,7 @@ public interface TblUsuariosManager {
 	 * @param accionId
 	 * @return Long
 	 */
-	public Long insert(TblUsuarios usuarioTO, String source, String accion, Long accionId);
+	Long insert(TblUsuarios usuarioTO, String source, String accion, Long accionId);
 
 
 	/**
@@ -72,7 +72,7 @@ public interface TblUsuariosManager {
 	 * @param accion
 	 * @param accionId
 	 */
-	public void update(TblUsuarios usuario, String source, String accion, Long accionId);
+	void update(TblUsuarios usuario, String source, String accion, Long accionId);
 
 	/**
 	 * Elimina el usuario según datos pasados
@@ -82,7 +82,7 @@ public interface TblUsuariosManager {
 	 * @param accion
 	 * @param accionId
 	 */
-	public void delete(Long usuarioId, String source, String accion, Long accionId);
+	void delete(Long usuarioId, String source, String accion, Long accionId);
 
 
 	

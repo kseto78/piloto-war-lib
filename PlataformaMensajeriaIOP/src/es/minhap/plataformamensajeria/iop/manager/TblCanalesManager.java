@@ -13,11 +13,11 @@ public interface TblCanalesManager {
 	 * @param canalId
 	 * @return 
 	 */
-	public TblCanales getCanalById(Long canalId );
+	TblCanales getCanalById(Long canalId );
 	
 	/**
 	 * recupera todas las canales ordenadas por nombre
 	 * @return
 	 */
-	public List<TblCanales> getCanalesOrdenados();
+	List<TblCanales> getCanalesOrdenados();
 }

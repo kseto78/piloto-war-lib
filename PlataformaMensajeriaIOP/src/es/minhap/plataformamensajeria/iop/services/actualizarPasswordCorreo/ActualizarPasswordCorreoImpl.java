@@ -24,6 +24,14 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @Service("actualizarPasswordCorreoImpl")
 public class ActualizarPasswordCorreoImpl implements IActualizarPasswordCorreoService {
 
+	protected static final String R_CONST_1 = "plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_GENERAL";
+
+	protected static final String R_CONST_2 = "plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_GENERAL";
+
+	protected static final String R_CONST_3 = "[ActualizarPasswordCorreoImpl] Generando XML de respuesta";
+
+	protected static final String R_CONST_4 = "plataformaErrores.ActualizarPasswordCorreo.KO";
+
 	private static final Logger LOG = LoggerFactory.getLogger(ActualizarPasswordCorreoImpl.class);
 	
 	@Resource(name="tblParametrosServidorManagerImpl")
@@ -50,28 +58,29 @@ public class ActualizarPasswordCorreoImpl implements IActualizarPasswordCorreoSe
 					return respuesta.toXML(respuesta);
 				}else{
 					String statusTextKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.OK", null);
-					String statusCodeKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_GENERAL", null);
-					String detailsKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_GENERAL", null);
+					String statusCodeKO = ps.getMessage(R_CONST_1, null);
+					String detailsKO = ps.getMessage(R_CONST_2, null);
 					respuesta = generarSalida(statusTextKO, statusCodeKO, detailsKO );
 				}
 			}
 		}catch(Exception e){
-			LOG.error("[ActualizarPasswordCorreoImpl] Generando XML de respuesta", e);
-			String statusTextKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
-			String statusCodeKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_GENERAL", null);
-			String detailsKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_GENERAL", null);
+			LOG.error(R_CONST_3, e);
+			String statusTextKO = ps.getMessage(R_CONST_4, null);
+			String statusCodeKO = ps.getMessage(R_CONST_1, null);
+			String detailsKO = ps.getMessage(R_CONST_2, null);
 			respuesta = generarSalida(statusTextKO, statusCodeKO, detailsKO );
 			try {
 				return respuesta.toXML(respuesta);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error("[ActualizarPasswordCorreoImpl] Generando XML de respuesta", e);
+				// TODO logger.warn(e1.getMessage(), e1);
+				LOG.error(R_CONST_3, e);
 			}
 		}
 		return null;
 	}
 
 	private RespuestaActualizarPasswordCorreo checkCampos(PeticionActualizarPasswordCorreo peticion, PropertiesServices ps) {
-		String statusTextKO = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_4, null);
 		
 		String statusCodeCamposNulos = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_CAMPOS_OBLIGATORIOS", null);
 		String detailsCamposNulos = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_CAMPOS_OBLIGATORIOS", null);
@@ -124,7 +133,8 @@ public class ActualizarPasswordCorreoImpl implements IActualizarPasswordCorreoSe
 		      InternetAddress emailAddr = new InternetAddress(email);
 		      emailAddr.validate();
 		   } catch (AddressException ex) {
-		      result = false;
+		      // TODO logger.warn(ex.getMessage(), ex);
+			result = false;
 		   }
 		   return result;
 		}

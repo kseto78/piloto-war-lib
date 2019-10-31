@@ -41,6 +41,12 @@ import es.minhap.sim.query.TblTiposParametrosQuery;
 @Service("tblParametrosServidorManagerImpl")
 public class TblParametrosServidorManagerImpl implements TblParametrosServidorManager {
 
+	protected static final String R_CONST_1 = " | ";
+
+	protected static final String R_CONST_2 = " ";
+
+	protected static final String R_CONST_3 = "false";
+
 	private static final Logger LOG = LoggerFactory.getLogger(TblParametrosServidorManagerImpl.class);
 	
 	@Resource 
@@ -74,7 +80,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 		log.setAdtusuario(parametroServidor.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + parametroServidor.getTblTiposParametros().getNombre());
+		log.setSourcedescription(descripcion + R_CONST_2 + parametroServidor.getTblTiposParametros().getNombre());
 		log.setSourceid(parametroServidor.getTblServidores().getServidorid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
@@ -98,7 +104,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 		log.setAdtusuario(ps.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + ps.getTblTiposParametros().getNombre());
+		log.setSourcedescription(descripcion + R_CONST_2 + ps.getTblTiposParametros().getNombre());
 		log.setSourceid(ps.getTblServidores().getServidorid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
@@ -218,6 +224,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 						respuesta = generarSalida(respuesta, statusTextKO, statusCodeNoConnection, detailsNoConnection );
 					}
 				}catch(AuthenticationFailedException ex){
+					// TODO logger.warn(ex.getMessage(), ex);
 					listaParametros.get(num).setValor(passAntiguo);
 					String detailsUserPassError = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.DES_ERROR_USERPASS", null);
 					String statusCodeUserPass = ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.COD_ERROR_USERPASS", null);
@@ -255,9 +262,9 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 			res.setStatus(status);
 			return res;
 		}else{
-			respuesta.getStatus().setDetails(respuesta.getStatus().getDetails() + " | " + detailsCamposNulos);
-			respuesta.getStatus().setStatusCode(respuesta.getStatus().getStatusCode() + " | " + statusCodeCamposNulos);
-			respuesta.getStatus().setStatusText(respuesta.getStatus().getStatusText() + " | " + statusTextKO);
+			respuesta.getStatus().setDetails(respuesta.getStatus().getDetails() + R_CONST_1 + detailsCamposNulos);
+			respuesta.getStatus().setStatusCode(respuesta.getStatus().getStatusCode() + R_CONST_1 + statusCodeCamposNulos);
+			respuesta.getStatus().setStatusText(respuesta.getStatus().getStatusText() + R_CONST_1 + statusTextKO);
 			return respuesta;
 		}
 		
@@ -309,8 +316,8 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	     if(user!=null){
 	    	 props.put("mail.stmp.user", user);
 	     }	
-	     props.put("mail.smtp.auth", (reqAuth==null)?"false":reqAuth); 
-	     props.put("mail.smtp.starttls.enable", (secure==null)?"false":secure);
+	     props.put("mail.smtp.auth", (reqAuth==null)?R_CONST_3:reqAuth); 
+	     props.put("mail.smtp.starttls.enable", (secure==null)?R_CONST_3:secure);
 	     if(password!=null){
 	    	 props.put("mail.smtp.password",password);
 	     }
@@ -323,16 +330,18 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 	         try {
 	           Transport transport = session.getTransport("smtp");
 
-	           transport.connect(ip,new Integer(port),user,password);
+	           transport.connect(ip,Integer.valueOf(port),user,password);
 
 	           if(transport.isConnected()){
 	        	  return true;
 	           }
 	         }catch(javax.mail.AuthenticationFailedException exc) {
-	        	 throw new javax.mail.AuthenticationFailedException();
+	        	 // TODO logger.warn(exc.getMessage(), exc);
+				throw new javax.mail.AuthenticationFailedException();
 //	        	   LOG.info("---Usuario o password incorrectos---");
 	         }catch (NumberFormatException e) {
-	        	 LOG.info("---Puerto introducido incorrecto---");
+	        	 // TODO logger.warn(e.getMessage(), e);
+				LOG.info("---Puerto introducido incorrecto---");
 	         } catch (MessagingException e) {
 	        	 LOG.info("---Mensaje del servidor: " + e.getMessage());
 			}
@@ -350,7 +359,7 @@ public class TblParametrosServidorManagerImpl implements TblParametrosServidorMa
 		log.setAdtusuario(ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.auditar.USUARIO", null));
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.auditar.SOURCEID", null)+" "+ cuenta);
+		log.setSourcedescription(ps.getMessage("plataformaErrores.ActualizarPasswordCorreo.auditar.SOURCEID", null)+R_CONST_2+ cuenta);
 		log.setSourceid(servidorId);
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);

@@ -36,12 +36,14 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  *
  */
 public class RespuestaConsultaHistorial {
+	protected static final String R_CONST_1 = "\\nMensaje: ";
+	protected static final String R_CONST_2 = "Se ha producido un error creando el XML de respuesta.\\nCausa: ";
 	static final String TAG_FILTRO_RESPUESTA="RESPUESTA";
 	static final String TAG_FILTRO_FILTRO="FILTRO";
 	static final String TAG_FILTRO_IDMENSAJE="IDMENSAJE";
 	static final String TAG_FILTRO_IDEXTERNO="IDEXTERNO";
 	static final String TAG_FILTRO_USUARIO="USUARIO";
-	static final String TAG_FILTRO_PASSWORD="PASSWORD";
+	static final String TAG_FILTRO_PASS="PASSWORD";
 	static final String TAG_RESULTADOS="RESULTADOS";
 	static final String TAG_ITEM="ITEM";
 	static final String TAG_ITEM_IDSERVIDOR="IDSERVIDOR";
@@ -55,7 +57,8 @@ public class RespuestaConsultaHistorial {
 	private String filtroIdExterno;
 	private String filtroUsuario;
 	private String filtroPassword;
-	private ArrayList<ConsultaHistoricoBean> resultados = new ArrayList<ConsultaHistoricoBean>();
+	private ArrayList<ConsultaHistoricoBean> resultados = new ArrayList<>();
+	private String xmlRespuesta;
 	
 	public void addConsultaHistoricoBean(ConsultaHistoricoBean consultaHistorico){
 		if(resultados!=null){
@@ -91,16 +94,14 @@ public class RespuestaConsultaHistorial {
 		this.filtroPassword = filtroPassword;
 	}
 	public ArrayList<ConsultaHistoricoBean> getResultados() {
-		return new ArrayList<ConsultaHistoricoBean>(resultados);
+		return new ArrayList<>(resultados);
 	}
 	protected void setResultados(ArrayList<ConsultaHistoricoBean> resultados) {
-		this.resultados = new ArrayList<ConsultaHistoricoBean>(resultados);
+		this.resultados = new ArrayList<>(resultados);
 	}
 	private void setXmlRespuesta(String xmlRespuesta) {
 		this.xmlRespuesta = xmlRespuesta;
 	}
-	private String xmlRespuesta;
-	
 	/**
 	 * Parsea la respuesta
 	 * @param responseXML
@@ -130,12 +131,9 @@ public class RespuestaConsultaHistorial {
 	        	 filtroUsuario = responseXMLObject.getResp().getFiltroUsuario();
 	        	 filtroPassword = responseXMLObject.getResp().getFiltroPassword();
 	        	 resultados = responseXMLObject.getResp().getResultados(); 	            
-	        }catch(ParserConfigurationException e){
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-	        }catch(SAXException e2){
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-	        } catch (IOException e3) {
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
+	        }catch (ParserConfigurationException | SAXException | IOException e3) {
+	        	// TODO logger.warn(e3.getMessage(), e3);
+				throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
 	        }
 	       
 	}
@@ -171,9 +169,11 @@ public class RespuestaConsultaHistorial {
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			try {
 				throw new ParserConfigurationException("Error creando documento DOM XML");
 			} catch (ParserConfigurationException e1) {
+				// TODO logger.warn(e1.getMessage(), e1);
 				return "<ERROR></ERROR>";
 			}
 		}
@@ -195,7 +195,7 @@ public class RespuestaConsultaHistorial {
 		usuario.appendChild(doc.createTextNode(getValidValue(filtroUsuario)));
 		filtro.appendChild(usuario);
 		//PASSWORD
-		Element password = doc.createElement(TAG_FILTRO_PASSWORD);
+		Element password = doc.createElement(TAG_FILTRO_PASS);
 		password.appendChild(doc.createTextNode(getValidValue(filtroPassword)));
 		filtro.appendChild(password);
 		rootElement.appendChild(filtro);
@@ -236,7 +236,7 @@ public class RespuestaConsultaHistorial {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
-			throw new PlataformaBusinessException("Se ha producido un error creando el XML de respuesta.\nCausa: " + e.getCause()+"\nMensaje: "+ e.getMessage());
+			throw new PlataformaBusinessException(R_CONST_2 + e.getCause()+R_CONST_1+ e.getMessage());
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -245,7 +245,7 @@ public class RespuestaConsultaHistorial {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
-			throw new PlataformaBusinessException("Se ha producido un error creando el XML de respuesta.\nCausa: " + e.getCause()+"\nMensaje: "+ e.getMessage());
+			throw new PlataformaBusinessException(R_CONST_2 + e.getCause()+R_CONST_1+ e.getMessage());
 		}
 		return Utils.convertToUTF8(writer.toString());
 		
@@ -276,7 +276,7 @@ public class ConsultarHistoricoReader extends DefaultHandler {
 	 * 
 	 */
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-			if(qName.equals(TAG_ITEM)){
+			if(TAG_ITEM.equals(qName)){
 				consultaHistoricoBean = new ConsultaHistoricoBean();
 				swHistoricoBean=true;
 			}
@@ -300,37 +300,37 @@ public class ConsultarHistoricoReader extends DefaultHandler {
      * @param qName
      */
     public void endElement(String uri, String localName, String qName) {
-   	   if(qName.equals(TAG_FILTRO_IDMENSAJE)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_IDMENSAJE.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroIdMensaje(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_IDEXTERNO)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_IDEXTERNO.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroIdExterno(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_USUARIO)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_USUARIO.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroUsuario(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_FILTRO_PASSWORD)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_PASS.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroPassword(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_ITEM_IDMENSAJE)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDMENSAJE.equals(qName)&&swHistoricoBean){
    		   consultaHistoricoBean.setIdMensaje(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_IDEXTERNO)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDEXTERNO.equals(qName)&&swHistoricoBean){
    		consultaHistoricoBean.setIdExterno(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_ITEM_IDSERVIDOR)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDSERVIDOR.equals(qName)&&swHistoricoBean){
    		consultaHistoricoBean.setIdServidor(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_SERVIDOR)&&swHistoricoBean){
+   	   if(TAG_ITEM_SERVIDOR.equals(qName)&&swHistoricoBean){
    		consultaHistoricoBean.setServidor(contenido);
    	   }   	      	   
-   	   if(qName.equals(TAG_ITEM_FECHA)&&swHistoricoBean){
+   	   if(TAG_ITEM_FECHA.equals(qName)&&swHistoricoBean){
    		consultaHistoricoBean.setFecha(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_ESTADO)&&swHistoricoBean){
+   	   if(TAG_ITEM_ESTADO.equals(qName)&&swHistoricoBean){
    		consultaHistoricoBean.setEstado(contenido);
    	   }   	      	      	   
-   	   if(qName.equals(TAG_ITEM)&&swHistoricoBean){
+   	   if(TAG_ITEM.equals(qName)&&swHistoricoBean){
    		   resp.addConsultaHistoricoBean(consultaHistoricoBean);
    		   consultaHistoricoBean=null;
    		   swHistoricoBean=false;

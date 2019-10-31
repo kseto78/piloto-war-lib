@@ -10,14 +10,14 @@ public interface TblAdjuntosHistManager {
 	 * @param adjunto
 	* @return idAdjunto
 	 */
-	public Long insertar(TblAdjuntosHist adjunto);
+	Long insertar(TblAdjuntosHist adjunto);
 
 	/**
 	 * Elimina una entrada 
 	 * 
 	 * @param adjunto
 	 */
-	public void eliminar(Long adjunto);
+	void eliminar(Long adjunto);
 
 	/**
 	 * Recupera el adjunto por id
@@ -25,7 +25,7 @@ public interface TblAdjuntosHistManager {
 	 * @param idAdjunto
 	 * @return TblAdjuntos
 	 */
-	public TblAdjuntosHist getById(Long idAdjunto);
+	TblAdjuntosHist getById(Long idAdjunto);
 	
 	/**
 	 * Inserta una entrada en la tabla adjuntos
@@ -33,7 +33,7 @@ public interface TblAdjuntosHistManager {
 	 * @param adjunto
 	 * @return idAdjunto
 	 */
-	public Long insertarAdjunto(TblAdjuntosHist adjunto);
+	Long insertarAdjunto(TblAdjuntosHist adjunto);
 
 	/**
 	 * Obtiene un adjunto por Id
@@ -41,7 +41,7 @@ public interface TblAdjuntosHistManager {
 	 * @param adjuntoid
 	 * @return TblAdjuntosHist
 	 */
-	public TblAdjuntosHist getAdjuntoById(Long adjuntoid);
+	TblAdjuntosHist getAdjuntoById(Long adjuntoid);
 
 	
 	/**
@@ -49,7 +49,7 @@ public interface TblAdjuntosHistManager {
 	 * 
 	 * @param adjunto
 	 */
-	public void update(TblAdjuntosHist adjunto);
+	void update(TblAdjuntosHist adjunto);
 	
 
 }

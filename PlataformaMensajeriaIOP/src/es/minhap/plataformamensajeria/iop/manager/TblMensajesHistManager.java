@@ -15,14 +15,14 @@ public interface TblMensajesHistManager {
 	 * @param m
 	 * @return Long
 	 */
-	public Long insert(TblMensajesHist m);
+	Long insert(TblMensajesHist m);
 
 	/**
 	 * Elimina el mensaje historicos
 	 * 
 	 * @param mensajeId
 	 */
-	public void delete(Long mensajeId);
+	void delete(Long mensajeId);
 
 
 	/**
@@ -30,7 +30,7 @@ public interface TblMensajesHistManager {
 	 * 
 	 * @param mensajeId
 	 */
-	public TblMensajesHist getMensaje(Long mensajeid);
+	TblMensajesHist getMensaje(Long mensajeid);
 
 	/**
 	 * Obtiene una Lista de  TblMensajesHist que pertenecen a un lote con límites
@@ -40,7 +40,7 @@ public interface TblMensajesHistManager {
 	 * @param firstResult
 	 * @return
 	 */
-	public List<TblMensajesHist> getMensajesByLote(Long loteId, int max, int firstResult);
+	List<TblMensajesHist> getMensajesByLote(Long loteId, int max, int firstResult);
 
 /**
 	 * Obtiene Los mensajes a partir de query
@@ -48,7 +48,7 @@ public interface TblMensajesHistManager {
 	 * @param query
 	 * @return
 	 */
-	public List<TblMensajesHist> getMensajesByQuery(TblMensajesHistQuery query);
+	List<TblMensajesHist> getMensajesByQuery(TblMensajesHistQuery query);
 
 	
 	/**
@@ -56,7 +56,7 @@ public interface TblMensajesHistManager {
 	 * 
 	 * @param mensaje
 	 */
-	public void update(TblMensajesHist mensaje);
+	void update(TblMensajesHist mensaje);
 
 
 	/**
@@ -65,7 +65,7 @@ public interface TblMensajesHistManager {
 	 * @param createQueryMensaje
 	 * @return Integer
 	 */
-	public Integer countMensajesHistoricosByQuery(TblMensajesHistQuery createQueryMensaje);
+	Integer countMensajesHistoricosByQuery(TblMensajesHistQuery createQueryMensaje);
 
 	/**
 	 * Se obtiene el id de servicio a partir del id mensaje
@@ -73,6 +73,6 @@ public interface TblMensajesHistManager {
 	 * @param idMensaje
 	 * @return TblServicios
 	 */
-	public TblServicios getServicioByIdMensaje(Long idMensaje);
+	TblServicios getServicioByIdMensaje(Long idMensaje);
 	
 }

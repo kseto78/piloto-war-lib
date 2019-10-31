@@ -30,7 +30,9 @@ import es.minhap.plataformamensajeria.iop.services.seguimiento.ISeguimientoMensa
  */
 @Service("gestionServiciosPushImpl")
 public class GestionServiciosPushServiceImpl implements IGestionServiciosPushService {
-	private final static Logger LOG = LoggerFactory.getLogger(GestionServiciosPushServiceImpl.class);
+	protected static final String R_CONST_1 = "constantes.tiempoSessionPush";
+
+	private static final Logger LOG = LoggerFactory.getLogger(GestionServiciosPushServiceImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
@@ -63,11 +65,12 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 		
 		String xmlResultado = "";
 		RespuestaServiciosRegistrarUsuario respuesta = new RespuestaServiciosRegistrarUsuario(); 
-		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		String stringTimeSession = ps.getMessage(R_CONST_1, null);
 		Integer timeSession = null;
 		try{
 			timeSession = Integer.parseInt(stringTimeSession);
 		}catch(NumberFormatException e){
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = null;
 		}
 		try {
@@ -110,11 +113,12 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
 		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
 		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
-		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		String stringTimeSession = ps.getMessage(R_CONST_1, null);
 		Integer timeSession = null;
 		try{
 			timeSession = Integer.parseInt(stringTimeSession);
 		}catch(NumberFormatException e){
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = null;
 		}
 		try {
@@ -148,8 +152,7 @@ public class GestionServiciosPushServiceImpl implements IGestionServiciosPushSer
 	private String accionIncorrecta(RegistroUsuarioXMLBean registroUsuarioXMLBean,
 			RespuestaServiciosRegistrarUsuario respuesta, List<String> users, PropertiesServices ps) throws PlataformaBusinessException{
 		
-		String xmlResultado = respuesta.accionIncorrectaXML(ps);
-		return xmlResultado;
+		return respuesta.accionIncorrectaXML(ps);
 	}
 	
 

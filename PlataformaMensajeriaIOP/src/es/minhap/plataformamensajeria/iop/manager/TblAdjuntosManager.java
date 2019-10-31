@@ -15,7 +15,7 @@ public interface TblAdjuntosManager {
 	 * @param password
 	 * @return idAdjunto
 	 */
-	public Integer insertarAdjunto(Long mensajeId, String nombre, byte[] contenido, String usuario, String password);
+	Integer insertarAdjunto(Long mensajeId, String nombre, byte[] contenido, String usuario, String password);
 
 	/**
 	 * asocia un adjunto
@@ -26,7 +26,7 @@ public interface TblAdjuntosManager {
 	 * @param password
 	 * @return idAdjunto
 	 */
-	public Integer asociarAnexo(Long mensajeId, Long idAdjunto, String usuario, String password);
+	Integer asociarAnexo(Long mensajeId, Long idAdjunto, String usuario, String password);
 
 
 	/**
@@ -35,7 +35,7 @@ public interface TblAdjuntosManager {
 	 * @param adjuntoid
 	 * @return idAdjunto
 	 */
-	public void delete(Long adjuntoid);
+	void delete(Long adjuntoid);
 
 
 	/**
@@ -44,7 +44,7 @@ public interface TblAdjuntosManager {
 	 * @param idAdjunto
 	 * @return TblAdjuntos
 	 */
-	public TblAdjuntos getById(Long idAdjunto);
+	TblAdjuntos getById(Long idAdjunto);
 
 
 	/**
@@ -53,7 +53,7 @@ public interface TblAdjuntosManager {
 	 * @param adjuntoid
 	 * @return TblAdjuntos
 	 */
-	public TblAdjuntos getAdjuntoById(Long adjuntoid);
+	TblAdjuntos getAdjuntoById(Long adjuntoid);
 
 	
 	/**
@@ -61,6 +61,6 @@ public interface TblAdjuntosManager {
 	 * 
 	 * @param adjunto
 	 */
-	public void update(TblAdjuntos adjunto);
+	void update(TblAdjuntos adjunto);
 
 }

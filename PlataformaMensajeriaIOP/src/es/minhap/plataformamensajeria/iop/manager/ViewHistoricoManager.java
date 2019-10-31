@@ -15,7 +15,7 @@ public interface ViewHistoricoManager {
 	 * @param ViewHistoricoQuery
 	 * @return List
 	 */
-	public List<ViewHistorico> getHistorico(ViewHistoricoQuery query);
+	List<ViewHistorico> getHistorico(ViewHistoricoQuery query);
 
 	
 	/**
@@ -24,7 +24,7 @@ public interface ViewHistoricoManager {
 	 * @param ViewHistoricoQuery
 	 * @return List
 	 */
-	public List<ViewHistoricoMultidest> getHistoricoMultidest(ViewHistoricoMultidestQuery query);
+	List<ViewHistoricoMultidest> getHistoricoMultidest(ViewHistoricoMultidestQuery query);
 	
 
 }

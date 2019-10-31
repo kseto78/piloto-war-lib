@@ -23,6 +23,8 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
 @Service("gestionSAMLRequestImpl")
 public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService {
 
+	protected static final String R_CONST_1 = "plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO";
+
 	private static final Logger LOG = LoggerFactory.getLogger(GestionSAMLRequestServiceImpl.class);
 
 	@Resource
@@ -37,7 +39,7 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 	@Override
 	public String comprobarDatosUsuario(PeticionClaveAuthRequest peticion) {
 		PropertiesServices ps = new PropertiesServices(getReloadableResourceBundleMessageSource());
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_1, null);
 		String codErrorPeticion = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_PETICION", null);
 		String detailsErrorPeticion = ps.getMessage(
 				"plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_PETICION", null);
@@ -59,6 +61,7 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 			try {
 				timeSession = Integer.parseInt(stringTimeSession);
 			} catch (NumberFormatException e) {
+				// TODO logger.warn(e.getMessage(), e);
 				timeSession = null;
 			}
 
@@ -115,15 +118,16 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 		String statusTextOK = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_OK", null);
 		String statusOK = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUS_OK", null);
 		String detailsOK = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_OK", null);
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_1, null);
 		String statusKO = ps.getMessage(
 				"plataformaErrores.gestionSAMLRequestService.COD_ERROR_DISPOSITIVO_NO_ENCONTRADO", null);
 		String detailsKO = ps.getMessage(
 				"plataformaErrores.gestionSAMLRequestService.DETAILS_DISPOSITIVO_NO_ENCONTRADO", null);
-		if (null != existeDispositivo)
+		if (null != existeDispositivo) {
 			respuesta = generarRespuesta(statusTextOK, statusOK, detailsOK);
-		else
+		} else {
 			respuesta = generarRespuesta(statusTextKO, statusKO, detailsKO);
+		}
 		return respuesta;
 	}
 
@@ -131,27 +135,24 @@ public class GestionSAMLRequestServiceImpl implements IGestionSAMLRequestService
 			String plataforma) {
 		boolean res = false;
 
-		if (checkUsuarioPassword(usuario, password) || null == servicio || servicio.length() <= 0
-				|| checkDispositivoPlataforma(dispositivo, plataforma))
-			return true;
-
-		return res;
+		return checkUsuarioPassword(usuario, password) || null == servicio || servicio.isEmpty()
+				|| checkDispositivoPlataforma(dispositivo, plataforma) || res;
 	}
 
 	private boolean checkUsuarioPassword(String usuario, String password) {
-		return (checkUsuario(usuario) || null == password || password.length() <= 0) ? true : false;
+		return checkUsuario(usuario) || null == password || password.isEmpty();
 	}
 
 	private boolean checkUsuario(String usuario) {
-		return (null == usuario || usuario.length() <= 0) ? true : false;
+		return null == usuario || usuario.isEmpty();
 	}
 
 	private boolean checkDispositivoPlataforma(String dispositivo, String palataforma) {
-		return (checkDispositivo(dispositivo) || null == palataforma || palataforma.length() <= 0) ? true : false;
+		return checkDispositivo(dispositivo) || null == palataforma || palataforma.isEmpty();
 	}
 
 	private boolean checkDispositivo(String dispositivo) {
-		return (null == dispositivo || dispositivo.length() <= 0) ? true : false;
+		return null == dispositivo || dispositivo.isEmpty();
 	}
 
 	private RespuestaSAMLResponse generarRespuesta(String statustext, String codigo, String details) {

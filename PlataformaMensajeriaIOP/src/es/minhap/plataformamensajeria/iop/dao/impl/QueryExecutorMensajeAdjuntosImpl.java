@@ -27,6 +27,12 @@ import es.minhap.plataformamensajeria.sm.modelo.Adjunto;
 @Service
 public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implements QueryExecutorMensajeAdjuntos {
 
+	protected static final String R_CONST_1 = " ON MA.ADJUNTOID = A.ADJUNTOID WHERE MA.MENSAJEID = ";
+
+	protected static final String R_CONST_2 = "SELECT NOMBRE, CONTENIDOFILE FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A ";
+
+	protected static final String R_CONST_3 = "unchecked";
+
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorMensajeAdjuntosImpl.class);
 	
 	@Resource(name="UtilCreateFile")
@@ -41,11 +47,12 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 	@Override
 	public List<Adjunto> getAttachment(Long mensajeId) {
 		List<Adjunto> adjuntos = new ArrayList<>();
-		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-				"SELECT NOMBRE, CONTENIDOFILE FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A "
-							+ " ON MA.ADJUNTOID = A.ADJUNTOID WHERE MA.MENSAJEID = "
-							+ mensajeId);
-		@SuppressWarnings("unchecked")
+		StringBuilder queryString = new StringBuilder();
+		queryString.append(R_CONST_2);
+		queryString.append(R_CONST_1);
+		queryString.append(mensajeId);
+		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		@SuppressWarnings(R_CONST_3)
 		List<Object[]> rows = query.list();
 		for (Object[] row : rows) {
 			Adjunto adjunto= new Adjunto();
@@ -63,11 +70,14 @@ public class QueryExecutorMensajeAdjuntosImpl extends HibernateDaoSupport implem
 	@Override
 	public List<Adjunto> getImage(Long mensajeId) {
 		List<Adjunto> adjuntos = new ArrayList<>();
-		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-				"SELECT NOMBRE, CONTENIDOFILE FROM TBL_MENSAJESADJUNTOS MA INNER JOIN TBL_ADJUNTOS A "
-						+ " ON MA.ADJUNTOID = A.ADJUNTOID WHERE MA.MENSAJEID = "
-						+ mensajeId + "" + "AND IMAGEN = 1");
-		@SuppressWarnings("unchecked")
+		StringBuilder queryString = new StringBuilder();
+		queryString.append(R_CONST_2);
+		queryString.append(R_CONST_1);
+		queryString.append(mensajeId);
+		queryString.append("");
+		queryString.append("AND IMAGEN = 1");
+		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		@SuppressWarnings(R_CONST_3)
 		List<Object[]> rows = query.list();
 		for (Object[] row : rows) {
 			Adjunto adjunto= new Adjunto();

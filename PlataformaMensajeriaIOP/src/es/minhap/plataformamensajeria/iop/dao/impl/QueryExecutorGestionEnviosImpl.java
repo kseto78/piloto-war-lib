@@ -32,7 +32,63 @@ import es.minhap.sim.model.ViewGestionEnviosDestId;
 @Service
 public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implements QueryExecutorGestionEnvios {
 
-	private static final Logger log = LoggerFactory.getLogger(QueryExecutorGestionEnviosImpl.class);
+	protected static final String R_CONST_1 = "SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, ";
+
+	protected static final String R_CONST_2 = "fechaHasta";
+
+	protected static final String R_CONST_3 = " OR ge.servicioid = ";
+
+	protected static final String R_CONST_4 = " AND ";
+
+	protected static final String R_CONST_5 = " AND (";
+
+	protected static final String R_CONST_6 = " FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL ";
+
+	protected static final String R_CONST_7 = " ";
+
+	protected static final String R_CONST_8 = "GROUP BY ge.LOTEENVIOID, ge.APLICACION, ge.SERVICIO,ge.CANALID, ge.APLICACIONID,";
+
+	protected static final String R_CONST_9 = "ge.DOCUSUARIO, ge.CODSIA, ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.ICONO, ge.SONIDO ";
+
+	protected static final String R_CONST_10 = "'";
+
+	protected static final String R_CONST_11 = "unchecked";
+
+	protected static final String R_CONST_12 = ")";
+
+	protected static final String R_CONST_13 = ",";
+
+	protected static final String R_CONST_14 = "tbl_gestionenvios ges where ge.loteenvioid = ges.LOTEENVIOID) as ULTIMOENVIO, ge.SERVICIOID,  ge.LOTEENVIOID,";
+
+	protected static final String R_CONST_15 = ", $";
+
+	protected static final String R_CONST_16 = "1";
+
+	protected static final String R_CONST_17 = " AND ge.CODORGANISMO IN (";
+
+	protected static final String R_CONST_18 = " ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID ";
+
+	protected static final String R_CONST_19 = " ASC";
+
+	protected static final String R_CONST_20 = "fechaDesde";
+
+	protected static final String R_CONST_21 = " ge.SERVICIOID, ge.MENSAJEID,ge.ULTIMOENVIO, ge.ESTADOID, ge.LOTEENVIOID,ge.SERVIDORID, ge.codigoexterno, ";
+
+	protected static final String R_CONST_22 = " DESC";
+
+	protected static final String R_CONST_23 = " AND NOT ge.servicioid = ";
+
+	protected static final String R_CONST_24 = "' ";
+
+	protected static final String R_CONST_25 = "', ";
+
+	protected static final String R_CONST_26 = " ORDER BY ";
+
+	protected static final String R_CONST_27 = "FROM tbl_gestionenvios ge WHERE 1=1 ";
+
+	protected static final String R_CONST_28 = " AND (ge.servicioid = ";
+
+	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorGestionEnviosImpl.class);
 	
 	private static final String UPDATE_END= "search - end";
 	
@@ -53,14 +109,14 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		super.setSessionFactory(sessionFactory);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_11)
 	@Override
 	public List<ViewEstadoLotesEnvios> getUltimosEstadoEnviosLotes()  {
 		List<ViewEstadoLotesEnvios> res = new ArrayList<>();
 
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			////ORIGINAL QUE CREO MAL porque salen los de 2012
 //			String sql = "SELECT GE.loteenvioid, lo.nombre, GE.servicioid, GE.SERVICIO, GE.aplicacionid, GE.APLICACION, "
@@ -100,30 +156,40 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				res.add(ele);
 			}
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_END);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_END);
 			}
 
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_11)
 	@Override
 	public List<TblGestionEnvios> getInformesServiciosBy(Long servicioId, Integer year, Integer month, String columna) {
 		List<TblGestionEnvios> res = new ArrayList<>();
 
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
-			String sql = "SELECT servicioid, anio, mes, " + columna + " , count(*) as numTotal from TBL_GESTIONENVIOS where servicioid = "+ servicioId +" and anio = "+year+" and "
-					+ "mes = "+month+" GROUP BY SERVICIOID, anio, mes, " + columna;
+			StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT servicioid, anio, mes, ");
+			queryString.append(columna);
+			queryString.append(" , count(*) as numTotal from TBL_GESTIONENVIOS where servicioid = ");
+			queryString.append(servicioId);
+			queryString.append(" and anio = ");
+			queryString.append(year);
+			queryString.append(" and ");
+			queryString.append("mes = ");
+			queryString.append(month);
+			queryString.append(" GROUP BY SERVICIOID, anio, mes, ");
+			queryString.append(columna);
 			
-			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
 
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
@@ -132,24 +198,24 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				ge.setAnio((null != row[1])? ((BigDecimal) row[1]).intValue() : null);
 				ge.setMes((null != row[2])? ((BigDecimal) row[2]).intValue() : null);
 				if(ESTADO.equals(columna)){
-					ge.setEstado((null != row[3])? ((String) row[3]) : null);
+					ge.setEstado((null != row[3])? (String) row[3] : null);
 				}else if (CODORGANISMO.equals(columna)){
-					ge.setCodorganismo((null != row[3])? ((String) row[3]) : null);
+					ge.setCodorganismo((null != row[3])? (String) row[3] : null);
 				}else if (CODORGANISMOPAGADOR.equals(columna)){
-					ge.setCodorganismopagador((null != row[3])? ((String) row[3]) : null);
+					ge.setCodorganismopagador((null != row[3])? (String) row[3] : null);
 				}else if (CODSIA.equals(columna)){
-					ge.setCodsia((null != row[3])? ((String) row[3]) : null);
+					ge.setCodsia((null != row[3])? (String) row[3] : null);
 				}
 				ge.setNumTotal((null != row[4])? ((BigDecimal) row[4]).intValue() : null);
 				res.add(ge);
 			}
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_END);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_END);
 			}
 
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	
@@ -160,11 +226,11 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		try {
 			StringBuilder sql = new StringBuilder();
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			sql.append("select count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.CANALID, ge.APLICACIONID,(select max(distinct ges.ULTIMOENVIO) FROM "
-					+ "tbl_gestionenvios ges where ge.loteenvioid = ges.LOTEENVIOID) as ULTIMOENVIO, ge.SERVICIOID,  ge.LOTEENVIOID,"
+					+ R_CONST_14
 					+ " ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.NOMBREUSUARIO,  ge.ESTADOLOTE FROM tbl_gestionenvios ge WHERE  1=1  ");
 			
 	
@@ -175,15 +241,15 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : eg.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
-			sql.append("GROUP BY ge.LOTEENVIOID, ge.APLICACION, ge.SERVICIO,ge.CANALID, ge.APLICACIONID,"
+			sql.append(R_CONST_8
 					+ " ge.SERVICIOID,  ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.NOMBREUSUARIO,  ge.ESTADOLOTE)");
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
@@ -191,19 +257,19 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != eg.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -215,13 +281,13 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		try {
 			StringBuilder sql = new StringBuilder();
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			sql.append("select count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.NOMBRE, ge.ESTADO, ge.DESTINATARIO, ge.CANALID, ge.APLICACIONID,"
-					+ " ge.SERVICIOID, ge.MENSAJEID,ge.ULTIMOENVIO, ge.ESTADOID, ge.LOTEENVIOID,ge.SERVIDORID, ge.codigoexterno, "
-					+ "ge.DOCUSUARIO, ge.CODSIA, ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.ICONO, ge.SONIDO "
-					+ "FROM tbl_gestionenvios ge WHERE 1=1 ");
+					+ R_CONST_21
+					+ R_CONST_9
+					+ R_CONST_27);
 			
 	
 			addSqlParameter(eg, sql, false);
@@ -232,34 +298,34 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : eg.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
-			sql.append(")");
+			sql.append(R_CONST_12);
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != eg.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != eg.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -269,8 +335,8 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		try {
 			StringBuilder sql = new StringBuilder();
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			sql.append("select count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
 					+ "ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID, "
@@ -284,35 +350,35 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : eg.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
 			
-			sql.append(")");
+			sql.append(R_CONST_12);
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != eg.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != eg.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -322,34 +388,34 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		try {
 			StringBuilder sql = new StringBuilder();
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			
-			List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(serviciosExcluidos.split(",")));
+			List<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(serviciosExcluidos.split(R_CONST_13)));
 			String sqlExcluidos = "";
 			
-			if(serviciosExcluidos != null && !serviciosExcluidos.equals("")){
+			if(serviciosExcluidos != null && !"".equals(serviciosExcluidos)){
 				for(String idServ : serviciosAeatGiss){
-					sqlExcluidos += " AND NOT ge.servicioid = "+idServ;
+					sqlExcluidos += R_CONST_23+idServ;
 				}
 			}
 			
 			
 			StringBuilder sqlIncluidos = new StringBuilder();
-			if(serviciosIncluidos != null && !serviciosIncluidos.equals("")){
-				List<String> servicios = new ArrayList<String>(Arrays.asList(serviciosIncluidos.split(",")));
-				sqlIncluidos.append(" AND (ge.servicioid = "+servicios.get(0));
+			if(serviciosIncluidos != null && !"".equals(serviciosIncluidos)){
+				List<String> servicios = new ArrayList<>(Arrays.asList(serviciosIncluidos.split(R_CONST_13)));
+				sqlIncluidos.append(R_CONST_28+servicios.get(0));
 				servicios.remove(0);			
 				for(String idServ : servicios){
-					sqlIncluidos.append(" OR ge.servicioid = "+idServ);
+					sqlIncluidos.append(R_CONST_3+idServ);
 				}
-				sqlIncluidos.append(")");
+				sqlIncluidos.append(R_CONST_12);
 			}
 						
 			sql.append("SELECT count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
-					+ " ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID "
-					+ " FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL " + sqlExcluidos + sqlIncluidos);
+					+ R_CONST_18
+					+ R_CONST_6 + sqlExcluidos + sqlIncluidos);
 			
 //			sql.append("select count(*) from (SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
 //					+ "ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID, "
@@ -362,41 +428,41 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : eg.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
 			
-			sql.append(")");
+			sql.append(R_CONST_12);
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != eg.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != eg.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(eg.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_11)
 	@Override
 	public List<TblGestionEnvios> getGestionEnvioLotesPaginado(Integer inicio, Integer pagesize, String order,
 			String column, GestionEnvioBean criterio) {
@@ -406,17 +472,17 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			
 			// Orden ascendente o descendente
 			String orden = "";
-			if (order == null || order.equals("1")){
-				orden = " ASC";
+			if (order == null || R_CONST_16.equals(order)){
+				orden = R_CONST_19;
 			} else {
-				orden = " DESC";
+				orden = R_CONST_22;
 			}
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			sql.append("SELECT ge.APLICACION, ge.SERVICIO, ge.CANALID, ge.APLICACIONID,(select max(distinct ges.ULTIMOENVIO) FROM "
-					+ "tbl_gestionenvios ges where ge.loteenvioid = ges.LOTEENVIOID) as ULTIMOENVIO, ge.SERVICIOID,  ge.LOTEENVIOID,"
+					+ R_CONST_14
 					+ " ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.NOMBRE,  ge.ESTADOLOTE FROM tbl_gestionenvios ge WHERE  1=1  ");
 			
 			
@@ -427,31 +493,31 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : criterio.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
 			
-			sql.append("GROUP BY ge.LOTEENVIOID, ge.APLICACION, ge.SERVICIO,ge.CANALID, ge.APLICACIONID,"
+			sql.append(R_CONST_8
 					+ " ge.SERVICIOID,  ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.NOMBRE,  ge.ESTADOLOTE ");
-			sql.append(" ORDER BY " + column + orden);
+			sql.append(R_CONST_26 + column + orden);
 						
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != criterio.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != criterio.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			if (pagesize >=0){
 				query.setMaxResults(pagesize);
@@ -476,12 +542,12 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			}
 			return res;
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_11)
 	@Override
 	public List<TblGestionEnvios> getGestionEnvioMensajesPaginado(int inicio, Integer pagesize, String order,
 			String column, GestionEnvioBean criterio) {
@@ -491,19 +557,19 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			
 			// Orden ascendente o descendente
 			String orden = "";
-			if (order == null || order.equals("1")){
-				orden = " ASC";
+			if (order == null || R_CONST_16.equals(order)){
+				orden = R_CONST_19;
 			} else {
-				orden = " DESC";
+				orden = R_CONST_22;
 			}
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
 			sql.append("SELECT ge.APLICACION, ge.SERVICIO, ge.NOMBRE, ge.ESTADO, ge.DESTINATARIO, ge.CANALID, ge.APLICACIONID,"
-					+ " ge.SERVICIOID, ge.MENSAJEID,ge.ULTIMOENVIO, ge.ESTADOID, ge.LOTEENVIOID,ge.SERVIDORID, ge.codigoexterno, "
-					+ "ge.DOCUSUARIO, ge.CODSIA, ge.CODORGANISMO, ge.CODORGANISMOPAGADOR, ge.ICONO, ge.SONIDO "
-					+ "FROM tbl_gestionenvios ge WHERE 1=1 ");
+					+ R_CONST_21
+					+ R_CONST_9
+					+ R_CONST_27);
 			
 			
 			addSqlParameter(criterio, sql, false);
@@ -513,28 +579,28 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : criterio.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 
-			sql.append(" ORDER BY " + column + orden);
+			sql.append(R_CONST_26 + column + orden);
 						
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != criterio.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != criterio.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			if (pagesize >=0){
 				query.setMaxResults(pagesize);
@@ -569,13 +635,13 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			}
 			return res;
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_11)
 	@Override
 	public List<ViewGestionEnviosDestId> getGestionEnvioDestinatariosPaginado(Integer inicio, Integer pagesize, String order,
 			String column, GestionEnvioBean criterio) {
@@ -585,18 +651,18 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			
 			// Orden ascendente o descendente
 			String orden = "";
-			if (order == null || order.equals("1")){
-				orden = " ASC";
+			if (order == null || R_CONST_16.equals(order)){
+				orden = R_CONST_19;
 			} else {
-				orden = " DESC";
+				orden = R_CONST_22;
 			}
 			
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
-			sql.append("SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
-					+ " ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID "
-					+ " FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL ");
+			sql.append(R_CONST_1
+					+ R_CONST_18
+					+ R_CONST_6);
 			
 			
 			addSqlParameter(criterio, sql, false);
@@ -606,28 +672,28 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : criterio.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
-			sql.append(" ORDER BY " + column + orden);
+			sql.append(R_CONST_26 + column + orden);
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != criterio.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != criterio.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			if (pagesize >=0){
 				query.setMaxResults(pagesize);
@@ -653,13 +719,13 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			}
 			return res;
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_11)
 	@Override
 	public List<ViewGestionEnviosDestId> getGestionEnvioDestinatariosPaginadoReenvioJob(Integer inicio, Integer pagesize, String order,
 			String column, GestionEnvioBean criterio, String serviciosExcluidos, String serviciosIncluidos) {
@@ -669,39 +735,39 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			
 			// Orden ascendente o descendente
 			String orden = "";
-			if (order == null || order.equals("1")){
-				orden = " ASC";
+			if (order == null || R_CONST_16.equals(order)){
+				orden = R_CONST_19;
 			} else {
-				orden = " DESC";
+				orden = R_CONST_22;
 			}
 			
-			List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(serviciosExcluidos.split(",")));
+			List<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(serviciosExcluidos.split(R_CONST_13)));
 			String sqlExcluidos = "";
 			
-			if(serviciosExcluidos != null && !serviciosExcluidos.equals("")){
+			if(serviciosExcluidos != null && !"".equals(serviciosExcluidos)){
 				for(String idServ : serviciosAeatGiss){
-					sqlExcluidos += " AND NOT ge.servicioid = "+idServ;
+					sqlExcluidos += R_CONST_23+idServ;
 				}
 			}
 			
 			
 			
 			StringBuilder sqlIncluidos = new StringBuilder();
-			if(serviciosIncluidos != null && !serviciosIncluidos.equals("")){
-				List<String> servicios = new ArrayList<String>(Arrays.asList(serviciosIncluidos.split(",")));
-				sqlIncluidos.append(" AND (ge.servicioid = "+servicios.get(0));
+			if(serviciosIncluidos != null && !"".equals(serviciosIncluidos)){
+				List<String> servicios = new ArrayList<>(Arrays.asList(serviciosIncluidos.split(R_CONST_13)));
+				sqlIncluidos.append(R_CONST_28+servicios.get(0));
 				servicios.remove(0);			
 				for(String idServ : servicios){
-					sqlIncluidos.append(" OR ge.servicioid = "+idServ);
+					sqlIncluidos.append(R_CONST_3+idServ);
 				}
-				sqlIncluidos.append(")");
+				sqlIncluidos.append(R_CONST_12);
 			}
-			if (log.isDebugEnabled()) {
-				log.debug(UPDATE_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(UPDATE_START);
 			}
-			sql.append("SELECT ge.APLICACION, ge.SERVICIO, ge.LOTEENVIO, ge.APLICACIONID, ge.DESTINATARIO, ge.SERVICIOID, ge.LOTEENVIOID, "
-					+ " ge.MENSAJEID, ge.ULTIMOENVIO AS ULTIMOENVIO, ge.ULTIMOENVIO AS FECHA, ge.ESTADO, ge.DESTINATARIOSMENSAJES, ge.CANALID "
-					+ " FROM VIEW_GESTIONENVIOS_DEST ge WHERE 1=1 and ge.ULTIMOENVIO IS NOT NULL " + sqlExcluidos + sqlIncluidos);
+			sql.append(R_CONST_1
+					+ R_CONST_18
+					+ R_CONST_6 + sqlExcluidos + sqlIncluidos);
 			
 			
 			addSqlParameter(criterio, sql, false);
@@ -711,28 +777,28 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 				StringBuffer sb = new StringBuffer(); 
 				
 				for (String organismo : criterio.getArrayOrganismos()){
-					sb.append("'").append(organismo).append("', ");
+					sb.append(R_CONST_10).append(organismo).append(R_CONST_25);
 				}
 				
 				organismosAeat = sb.toString();
-				organismosAeat = organismosAeat.replaceAll(", $", "");
-				sql.append(" AND ge.CODORGANISMO IN (" + organismosAeat +")");
+				organismosAeat = organismosAeat.replaceAll(R_CONST_15, "");
+				sql.append(R_CONST_17 + organismosAeat +R_CONST_12);
 			}
 			
-			sql.append(" ORDER BY " + column + orden);
+			sql.append(R_CONST_26 + column + orden);
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql.toString());
 			if (null != criterio.getFechaDesde()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaDesde());
 				
-				query.setTimestamp("fechaDesde", cal.getTime());
+				query.setTimestamp(R_CONST_20, cal.getTime());
 			}
 			if (null != criterio.getFechaHasta()){
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(criterio.getFechaHasta());
 				
-				query.setTimestamp("fechaHasta", cal.getTime());
+				query.setTimestamp(R_CONST_2, cal.getTime());
 			}
 			if (pagesize >=0){
 				query.setMaxResults(pagesize);
@@ -758,7 +824,7 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			}
 			return res;
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -768,31 +834,31 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		String res = "";
 		switch (idEstado){
 		case 1:
-			res = " AND "+columna+" ='ENVIADO' ";
+			res = R_CONST_4+columna+" ='ENVIADO' ";
 			break;
 		case 2:
-			res = " AND "+columna+" ='INCIDENCIA' ";
+			res = R_CONST_4+columna+" ='INCIDENCIA' ";
 			break;
 		case 3:
-			res = " AND ("+columna+" ='PENDIENTE DE ENVIO' or "+columna+"= 'PENDIENTE') ";
+			res = R_CONST_5+columna+" ='PENDIENTE DE ENVIO' or "+columna+"= 'PENDIENTE') ";
 			break;
 		case 4:
-			res = " AND "+columna+" ='ANULADO' ";
+			res = R_CONST_4+columna+" ='ANULADO' ";
 			break;
 		case 5:
-			res = " AND ("+columna+" ='PENDIENTE' or "+columna+"='INCIDENCIA' or "+columna+"='PENDIENTE DE ENVIO') ";
+			res = R_CONST_5+columna+" ='PENDIENTE' or "+columna+"='INCIDENCIA' or "+columna+"='PENDIENTE DE ENVIO') ";
 			break;
 		case 6:
-			res = " AND "+columna+" ='PENDIENTE DE OPERADORA' ";
+			res = R_CONST_4+columna+" ='PENDIENTE DE OPERADORA' ";
 			break;
 		case 7:
-			res = " AND "+columna+" ='RECIBIDO' ";
+			res = R_CONST_4+columna+" ='RECIBIDO' ";
 			break;
 		case 8:
-			res = " AND "+columna+" ='LEIDO' ";
+			res = R_CONST_4+columna+" ='LEIDO' ";
 			break;
 		case 9:
-			res = " AND "+columna+" ='ENVIANDO' ";
+			res = R_CONST_4+columna+" ='ENVIANDO' ";
 			break;
 		default:
 			break;
@@ -806,16 +872,16 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 	 */
 	private void addSqlParameter(GestionEnvioBean criterio, StringBuilder sql, boolean porLotes) {
 		if (criterio.getAplicacionId()!= null){
-			sql.append(" AND ge.aplicacionid ="+criterio.getAplicacionId()+" ");
+			sql.append(" AND ge.aplicacionid ="+criterio.getAplicacionId()+R_CONST_7);
 		}
 		if (criterio.getServidorId()!= null){
-			sql.append(" AND ge.servidorid ="+criterio.getServidorId()+" ");
+			sql.append(" AND ge.servidorid ="+criterio.getServidorId()+R_CONST_7);
 		}
 		if (criterio.getCanalId()!= null){
-			sql.append(" AND ge.canalid ="+criterio.getCanalId()+" ");
+			sql.append(" AND ge.canalid ="+criterio.getCanalId()+R_CONST_7);
 		}
 		if (criterio.getServicioId()!= null){
-			sql.append(" AND ge.servicioid ="+criterio.getServicioId()+" ");
+			sql.append(" AND ge.servicioid ="+criterio.getServicioId()+R_CONST_7);
 		}
 		if (criterio.getEstadoId()!= null){
 			String e;
@@ -828,9 +894,9 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 			sql.append(e);
 		}
 		if (criterio.getIdLote()!= null){
-			sql.append(" AND ge.loteenvioid ="+criterio.getIdLote()+" ");
+			sql.append(" AND ge.loteenvioid ="+criterio.getIdLote()+R_CONST_7);
 		}
-		if (criterio.getDestinatario()!= null && criterio.getDestinatario().length()>0){
+		if (criterio.getDestinatario()!= null && !criterio.getDestinatario().isEmpty()){
 			sql.append(" AND LOWER(ge.destinatario) like lower('%"+criterio.getDestinatario()+"%') ");
 		}
 		if (criterio.getFechaDesde()!= null){
@@ -839,23 +905,23 @@ public class QueryExecutorGestionEnviosImpl extends HibernateDaoSupport implemen
 		if (criterio.getFechaHasta()!= null){
 			sql.append(" AND ge.ultimoEnvio <=:fechaHasta ");
 		}
-		if (criterio.getListaIdAplicaciones()!= null && criterio.getListaIdAplicaciones().length()>0){
+		if (criterio.getListaIdAplicaciones()!= null && !criterio.getListaIdAplicaciones().isEmpty()){
 			sql.append(" AND ge.aplicacionid IN ("+criterio.getListaIdAplicaciones()+") ");
 		}
-		if (criterio.getDocUsuario()!= null && criterio.getDocUsuario().length() > 0){
-			sql.append(" AND ge.DocUsuario ='"+criterio.getDocUsuario()+"' ");
+		if (criterio.getDocUsuario()!= null && !criterio.getDocUsuario().isEmpty()){
+			sql.append(" AND ge.DocUsuario ='"+criterio.getDocUsuario()+R_CONST_24);
 		}
-		if (criterio.getCodSIA()!= null && criterio.getCodSIA().length() > 0){
-			sql.append(" AND ge.CodSIA ='"+criterio.getCodSIA()+"' ");
+		if (criterio.getCodSIA()!= null && !criterio.getCodSIA().isEmpty()){
+			sql.append(" AND ge.CodSIA ='"+criterio.getCodSIA()+R_CONST_24);
 		}
-		if (criterio.getCodOrganismo()!= null && criterio.getCodOrganismo().length() > 0){
-			sql.append(" AND ge.CodOrganismo ='"+criterio.getCodOrganismo()+"' ");
+		if (criterio.getCodOrganismo()!= null && !criterio.getCodOrganismo().isEmpty()){
+			sql.append(" AND ge.CodOrganismo ='"+criterio.getCodOrganismo()+R_CONST_24);
 		}
-		if (criterio.getCodOrganismoPagador()!= null && criterio.getCodOrganismoPagador().length() > 0){
-			sql.append(" AND ge.CodOrganismoPagador ='"+criterio.getCodOrganismoPagador()+"' ");
+		if (criterio.getCodOrganismoPagador()!= null && !criterio.getCodOrganismoPagador().isEmpty()){
+			sql.append(" AND ge.CodOrganismoPagador ='"+criterio.getCodOrganismoPagador()+R_CONST_24);
 		}
 		if (criterio.getMensajeId()!= null){
-			sql.append(" AND ge.mensajeid ="+criterio.getMensajeId()+" ");
+			sql.append(" AND ge.mensajeid ="+criterio.getMensajeId()+R_CONST_7);
 		}
 	}
 

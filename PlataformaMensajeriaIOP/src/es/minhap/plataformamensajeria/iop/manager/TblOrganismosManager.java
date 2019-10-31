@@ -12,7 +12,7 @@ public interface TblOrganismosManager {
 	 * 
 	 * @return boolean
 	 */
-	public boolean existeOrganismo(String codOrganismoPagadorSMS);
+	boolean existeOrganismo(String codOrganismoPagadorSMS);
 	
 	/**
 	 * Comprueba si existe el organismo existe
@@ -20,7 +20,7 @@ public interface TblOrganismosManager {
 	 * @param query
 	 * @return 
 	 */
-	public List<TblOrganismos> getOrganismosByQuery(TblOrganismosQuery query);
+	List<TblOrganismos> getOrganismosByQuery(TblOrganismosQuery query);
 
 	/**
 	 * Obtiene el organismo
@@ -28,14 +28,14 @@ public interface TblOrganismosManager {
 	 * @param organismoId
 	 * @return TblOrganismos
 	 */
-	public TblOrganismos getOrganismoById(Long organismoId);
+	TblOrganismos getOrganismoById(Long organismoId);
 
 	/**
 	 * Actualiza el organismo
 	 * 
 	 * @param organismoTO
 	 */
-	public void update(TblOrganismos organismoTO, String source, String accion, Long accionId);
+	void update(TblOrganismos organismoTO, String source, String accion, Long accionId);
 
 	/**
 	 * Inserta el organismo según datos pasados
@@ -46,6 +46,6 @@ public interface TblOrganismosManager {
 	 * @param accionId
 	 * @return Long
 	 */
-	public Long insert(TblOrganismos organismo, String source, String accion, Long accionId);
+	Long insert(TblOrganismos organismo, String source, String accion, Long accionId);
 	
 }

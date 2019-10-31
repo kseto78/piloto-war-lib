@@ -10,7 +10,7 @@ public interface TblProcesoConsManager {
 	 * @param procesoCons
 	* @return id
 	 */
-	public Long insertar(TblProcesoCons procesoCons);
+	Long insertar(TblProcesoCons procesoCons);
 	
 	
 

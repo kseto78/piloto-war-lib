@@ -22,6 +22,8 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @Service("gestionAyudaImpl")
 public class GestionAyudaImpl implements IGestionAyudaService {
+	protected static final String R_CONST_1 = "plataformaErrores.gestionAyudaService.STATUSTEXT_KO";
+
 	static Logger logger = LoggerFactory.getLogger(GestionAyudaImpl.class);
 
 	@Resource
@@ -37,7 +39,7 @@ public class GestionAyudaImpl implements IGestionAyudaService {
 	public String gestionAyuda(String username, String password) {
 		logger.debug("[GestionAyuda] Consultando la ayuda de la app movil");
 		PropertiesServices ps = new PropertiesServices(getReloadableResourceBundleMessageSource());
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_1, null);
 		String codKO = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSLOGINCODE_KO", null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSLOGIN_KO", null);
 		String detailsGenerando = ps.getMessage("plataformaErrores.gestionAyudaService.TAG_ERROR_GENERANDO_RESPUESTA_XML", null);
@@ -76,13 +78,14 @@ public class GestionAyudaImpl implements IGestionAyudaService {
 		String codOK = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSCODE_OK", null);
 		String detailsOK = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSDETAILS_OK", null);
 		String statusTextKO = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSCODE_KO", null);
-		String codKO = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSTEXT_KO", null);
+		String codKO = ps.getMessage(R_CONST_1, null);
 		String detailsKO = ps.getMessage("plataformaErrores.gestionAyudaService.STATUSDETAILS_KO", null);
 
-		if (null != ayuda && ayuda.length() > 0)
+		if (null != ayuda && !ayuda.isEmpty()) {
 			return generarRespuesta(ayuda, codOK, statusTextOK, detailsOK);
-		else
+		} else {
 			return generarRespuesta("", codKO, statusTextKO, detailsKO);
+		}
 	}
 
 	private Respuesta generarRespuesta(String ayuda, String statusCode, String statusText, String details) {

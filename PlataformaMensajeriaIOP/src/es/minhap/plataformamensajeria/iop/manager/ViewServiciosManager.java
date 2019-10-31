@@ -13,10 +13,10 @@ public interface ViewServiciosManager {
 	 * @param ViewServiciosQuery
 	 * @return ViewServicios
 	 */
-	public ViewServicios getAplicacionId(ViewServiciosQuery query);
+	ViewServicios getAplicacionId(ViewServiciosQuery query);
 	
 	
-	public List<ViewServicios> getServicios();
+	List<ViewServicios> getServicios();
 	
 	/**
 	 * Se obtiene la lista de servicios por aplicacion
@@ -24,7 +24,7 @@ public interface ViewServiciosManager {
 	 * @param aplicacionId
 	 * @return
 	 */
-	public List<ViewServicios> getServiciosByAplicacion(Long aplicacionId);
+	List<ViewServicios> getServiciosByAplicacion(Long aplicacionId);
 	
 	/**
 	 * la lista con los servicios
@@ -37,7 +37,7 @@ public interface ViewServiciosManager {
 	 * @param aplicacionId
 	 * @return
 	 */
-	public List<ViewServicios> getServiciosPaginado(int start, int size, String order, String columnSort, String nombreServicio, Long aplicacionId, int servicioId, boolean count);
+	List<ViewServicios> getServiciosPaginado(int start, int size, String order, String columnSort, String nombreServicio, Long aplicacionId, int servicioId, boolean count);
 
 	/**
 	 * la lista con los canales
@@ -45,9 +45,9 @@ public interface ViewServiciosManager {
 	 * idServicio 
 	 * @return
 	 */
-	public List<ViewServicios> getCanalesByServicioId(String idServicio);
+	List<ViewServicios> getCanalesByServicioId(String idServicio);
 
-	public List<ViewServicios> getServiciosPorCanal(String idAplicacion, String idCanal);
+	List<ViewServicios> getServiciosPorCanal(String idAplicacion, String idCanal);
 
 	
 }

@@ -13,7 +13,7 @@ public interface TblServiciosManager {
 	 * @param TblAplicacionesQuery
 	 * @return
 	 */
-	public List<TblServicios> getServicios(TblServiciosQuery servicio);
+	List<TblServicios> getServicios(TblServiciosQuery servicio);
 	
 	/**
 	 * recupera el servicio por el id
@@ -21,7 +21,7 @@ public interface TblServiciosManager {
 	 * @param servicioId
 	 * @return TblServicios
 	 */
-	public TblServicios getServicio(Long servicioId);
+	TblServicios getServicio(Long servicioId);
 	
 	/**
 	 * retorna si es multi organismo o no
@@ -29,7 +29,7 @@ public interface TblServiciosManager {
 	 * @param servicioId
 	 * @return
 	 */
-	public boolean isMultiOrganismo(Integer servicioId);
+	boolean isMultiOrganismo(Integer servicioId);
 
 	/**
 	 * Insertamos un nuevo servicio
@@ -40,7 +40,7 @@ public interface TblServiciosManager {
 	 * @param accionId
 	 * @return
 	 */
-	public Long insert(TblServicios servicio, String source, String accion, Long accionId);
+	Long insert(TblServicios servicio, String source, String accion, Long accionId);
 
 	/**
 	 * Actualizamos el servicio
@@ -51,7 +51,7 @@ public interface TblServiciosManager {
 	 * @param accionId
 	 * @return
 	 */
-	public void update(TblServicios servicio, String source, String accion, Long accionId);
+	void update(TblServicios servicio, String source, String accion, Long accionId);
 
 	
 

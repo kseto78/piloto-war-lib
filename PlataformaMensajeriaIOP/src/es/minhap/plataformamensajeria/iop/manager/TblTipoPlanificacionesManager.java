@@ -9,7 +9,7 @@ public interface TblTipoPlanificacionesManager {
 	 * @param tipoPlanificacionId
 	 * @return 
 	 */
-	public TblTipoPlanificaciones getTipoPlanificacionById(Long tipoPlanificacionId);
+	TblTipoPlanificaciones getTipoPlanificacionById(Long tipoPlanificacionId);
 	
 	
 	

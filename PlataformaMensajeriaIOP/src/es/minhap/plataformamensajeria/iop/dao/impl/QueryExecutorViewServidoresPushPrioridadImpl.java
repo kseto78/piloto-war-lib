@@ -33,6 +33,24 @@ import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidorWebPush;
 public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSupport implements
 		QueryExecutorViewServidoresPushPrioridad {
 
+	protected static final String R_CONST_1 = "      \t\tAND url is not null";
+
+	protected static final String R_CONST_2 = " and servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid";
+
+	protected static final String R_CONST_3 = ") OR servicioId IS NULL)";
+
+	protected static final String R_CONST_4 = "search - end";
+
+	protected static final String R_CONST_5 = "unchecked";
+
+	protected static final String R_CONST_6 = "\t    order by Prioridad";
+
+	protected static final String R_CONST_7 = "\t\t\t                  WHERE mensajeid  = ";
+
+	protected static final String R_CONST_8 = "      WHERE ( plataformaID = ";
+
+	protected static final String R_CONST_9 = "Se ha producido un error ";
+
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorViewServidoresPushPrioridadImpl.class);
 	
 	@Resource
@@ -44,7 +62,7 @@ public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSu
 		super.setSessionFactory(sessionFactory);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_5)
 	@Override
 	public List<ParametrosServidorPush> getServidoresPush(Long mensajeId, Integer plataformaId) {
 		List<ParametrosServidorPush> pss = new ArrayList<>();
@@ -53,33 +71,39 @@ public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSu
 			// Obtenemos primero la prioridad del mensaje
 			Integer prioridad = getMensajesManager().getPrioridadByIdMessage(mensajeId);
 			SQLQuery query;
+			
 			if (null != prioridad && prioridad.intValue() == 1) {
+				StringBuilder queryString = new StringBuilder();
+				queryString.append("SELECT servidorpushid,plataformaid,url,urlfeedback,puertourl,puertourlfeedback,servicioid,prioridad FROM view_servidorespush_prioridad");
+				queryString.append(R_CONST_8);
+				queryString.append("?");
+				queryString.append(R_CONST_2);
+				queryString.append(R_CONST_7);
+				queryString.append("?");
+				queryString.append("R_CONST_3");
+				queryString.append(R_CONST_1);
+				queryString.append(R_CONST_6);
 				query = getSessionFactory()
 						.getCurrentSession()
-						.createSQLQuery(
-								"SELECT servidorpushid,plataformaid,url,urlfeedback,puertourl,puertourlfeedback,servicioid,prioridad FROM view_servidorespush_prioridad"
-										+ "      WHERE ( plataformaID = "
-										+ plataformaId
-										+ " and servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid"
-										+ "			                  WHERE mensajeid  = "
-										+ mensajeId
-										+ ") OR servicioId IS NULL)"
-										+ "      		AND url is not null"
-										+ "	    order by Prioridad");
-
+						.createSQLQuery(queryString.toString());
+				query.setInteger(0,plataformaId);
+				query.setLong(1,mensajeId);
 			} else {
+				StringBuilder queryString = new StringBuilder();
+				queryString.append("SELECT servidorpushid,plataformaid,url,urlfeedback,puertourl,puertourlfeedback,servicioid,prioridad FROM VIEW_SERV_SERVIDOR_PUSH");
+				queryString.append(R_CONST_8);
+				queryString.append("?");
+				queryString.append(R_CONST_2);
+				queryString.append(R_CONST_7);
+				queryString.append("?");
+				queryString.append(R_CONST_3);
+				queryString.append(R_CONST_1);
+				queryString.append(R_CONST_6);
 				query = getSessionFactory()
 						.getCurrentSession()
-						.createSQLQuery(
-								"SELECT servidorpushid,plataformaid,url,urlfeedback,puertourl,puertourlfeedback,servicioid,prioridad FROM VIEW_SERV_SERVIDOR_PUSH"
-										+ "      WHERE ( plataformaID = "
-										+ plataformaId
-										+ " and servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid"
-										+ "			                  WHERE mensajeid  = "
-										+ mensajeId
-										+ ") OR servicioId IS NULL)"
-										+ "      		AND url is not null"
-										+ "	    order by Prioridad");
+						.createSQLQuery(queryString.toString());
+				query.setInteger(0,plataformaId);
+				query.setLong(1, mensajeId);
 			}
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
@@ -95,18 +119,18 @@ public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSu
 				pss.add(ps);
 			}
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("search - end");
+				LOG.debug(R_CONST_4);
 			}
 
 		} catch (Exception e) {
-			LOG.error("Se ha producido un error ", e);
+			LOG.error(R_CONST_9, e);
 			throw new ApplicationException(e);
 		}
 		return pss;
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_5)
 	@Override
 	public List<ParametrosServidorWebPush> getServidoresWebPush(Long mensajeId) {
 		List<ParametrosServidorWebPush> pss = new ArrayList<>();
@@ -117,12 +141,12 @@ public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSu
 			sb.append("SELECT distinct servidorwebpushid,servicioid, prioridad FROM VIEW_SERV_SERVIDOR_WEBPUSH ");
 			sb.append("WHERE ( servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid");
 			sb.append(" WHERE mensajeid  = ");
-			sb.append(mensajeId);
+			sb.append("?");
 			sb.append(") OR servicioId IS NULL) order by Prioridad");
 			query = getSessionFactory()
 					.getCurrentSession()
 					.createSQLQuery(sb.toString());
-
+			query.setLong(0, mensajeId);
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 				ParametrosServidorWebPush ps = new ParametrosServidorWebPush();
@@ -131,11 +155,11 @@ public class QueryExecutorViewServidoresPushPrioridadImpl extends HibernateDaoSu
 				pss.add(ps);
 			}
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("search - end");
+				LOG.debug(R_CONST_4);
 			}
 
 		} catch (Exception e) {
-			LOG.error("Se ha producido un error ", e);
+			LOG.error(R_CONST_9, e);
 			throw new ApplicationException(e);
 		}
 		return pss;

@@ -40,6 +40,40 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  */
 public class RespuestaEnvioXMLBean {
 	
+	protected static final String R_CONST_1 = "http://www.w3.org/2001/XMLSchema";
+
+	protected static final String R_CONST_2 = "xmlns:xsi";
+
+	protected static final String R_CONST_3 = "\\nMensaje: ";
+
+	protected static final String R_CONST_4 = "http://schemas.xmlsoap.org/soap/envelope/";
+
+	protected static final String R_CONST_5 = "xmlns:xsd";
+
+	protected static final String R_CONST_6 = "Problemas al procesar la peticion";
+
+	protected static final String R_CONST_7 = "xmlns:soapenv";
+
+	protected static final String R_CONST_8 = "Se ha producido un error creando el XML de respuesta.\\nCausa: ";
+
+	protected static final String R_CONST_9 = "Error creando documento DOM XML";
+
+	protected static final String R_CONST_10 = "OK";
+
+	protected static final String R_CONST_11 = "Error en RespuestaEnvioXMLBean";
+
+	protected static final String R_CONST_12 = "#";
+
+	protected static final String R_CONST_13 = "KO";
+
+	protected static final String R_CONST_14 = "<ERROR></ERROR>";
+
+	protected static final String R_CONST_15 = "Hay mensajes recibidos con errores";
+
+	protected static final String R_CONST_16 = "Peticion procesada correctamente";
+
+	protected static final String R_CONST_17 = "http://www.w3.org/2001/XMLSchema-instance";
+
 	private static Logger LOG = LoggerFactory.getLogger(RespuestaEnvioXMLBean.class);
 
 	static final String TAG_SOAP_ENV = "soapenv:Envelope";
@@ -90,6 +124,14 @@ public class RespuestaEnvioXMLBean {
 	 */
 	private String xmlRespuesta;
 
+	private String idLote;
+
+	private ArrayList<String> listadoErroresLote = new ArrayList<>();
+
+	private ArrayList<String> listadoErroresGeneral = new ArrayList<>();
+
+	private ArrayList<MensajesXMLBean> listadoMensajes = new ArrayList<>();
+
 	/**
 	 * Crear un XML de respuesta seg�n los par�metros que se pasan al m�todo
 	 * 
@@ -106,10 +148,12 @@ public class RespuestaEnvioXMLBean {
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			try {
-				throw new ParserConfigurationException("Error creando documento DOM XML");
+				throw new ParserConfigurationException(R_CONST_9);
 			} catch (ParserConfigurationException e1) {
-				return "<ERROR></ERROR>";
+				// TODO logger.warn(e1.getMessage(), e1);
+				return R_CONST_14;
 			}
 		}
 		// 0 = TODO OK
@@ -118,9 +162,9 @@ public class RespuestaEnvioXMLBean {
 		int iEstado = 0;
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement(TAG_SOAP_ENV);
-		rootElement.setAttribute("xmlns:soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
-		rootElement.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		rootElement.setAttribute(R_CONST_7, R_CONST_4);
+		rootElement.setAttribute(R_CONST_5, R_CONST_1);
+		rootElement.setAttribute(R_CONST_2, R_CONST_17);
 		doc.appendChild(rootElement);
 
 		Element soapbody = doc.createElement(TAG_SOAP_BODY);
@@ -138,14 +182,14 @@ public class RespuestaEnvioXMLBean {
 		Element statusCode= doc.createElement(TAG_STATUSCODE);
 		Element statusText= doc.createElement(TAG_STATUSTEXT);
 		Element details= doc.createElement(TAG_DETAILS);
-		if(listaErroresGenerales.size()==0 && listaErroresLote.size()==0){
-			statusCode.appendChild(doc.createTextNode("OK"));
-			statusText.appendChild(doc.createTextNode("OK"));
-			details.appendChild(doc.createTextNode("Peticion procesada correctamente"));
+		if(listaErroresGenerales.isEmpty() && listaErroresLote.isEmpty()){
+			statusCode.appendChild(doc.createTextNode(R_CONST_10));
+			statusText.appendChild(doc.createTextNode(R_CONST_10));
+			details.appendChild(doc.createTextNode(R_CONST_16));
 		}else{
-			statusCode.appendChild(doc.createTextNode("KO"));
-			statusText.appendChild(doc.createTextNode("KO"));
-			details.appendChild(doc.createTextNode("Problemas al procesar la peticion"));
+			statusCode.appendChild(doc.createTextNode(R_CONST_13));
+			statusText.appendChild(doc.createTextNode(R_CONST_13));
+			details.appendChild(doc.createTextNode(R_CONST_6));
 		}
 		rootElement.appendChild(statusCode);
 		rootElement.appendChild(statusText);
@@ -161,22 +205,22 @@ public class RespuestaEnvioXMLBean {
 		idlote.appendChild(doc.createTextNode(Integer.toString(idLote)));
 		rootElement.appendChild(idlote);
 		rootElement = lote;
-		if(listaErroresLote.size()!=0){
+		if(!listaErroresLote.isEmpty()){
 			Element errorLote = doc.createElement(TAG_ERRORLOTE);
 			rootElement.appendChild(errorLote);
 			rootElement = errorLote;
 			
-			Element e_statuscode = doc.createElement(TAG_E_STATUSCODE);
-			e_statuscode.appendChild(doc.createTextNode("KO"));
-			rootElement.appendChild(e_statuscode);
+			Element eStatuscode = doc.createElement(TAG_E_STATUSCODE);
+			eStatuscode.appendChild(doc.createTextNode(R_CONST_13));
+			rootElement.appendChild(eStatuscode);
 			
-			Element e_statustext = doc.createElement(TAG_E_STATUSTEXT);
-			e_statustext.appendChild(doc.createTextNode(listaErroresLote.get(0)));
-			rootElement.appendChild(e_statustext);
+			Element eStatustext = doc.createElement(TAG_E_STATUSTEXT);
+			eStatustext.appendChild(doc.createTextNode(listaErroresLote.get(0)));
+			rootElement.appendChild(eStatustext);
 
-			Element e_details = doc.createElement(TAG_E_DETAILS);
-			e_details.appendChild(doc.createTextNode(listaErroresLote.get(0)));
-			rootElement.appendChild(e_details);
+			Element eDetails = doc.createElement(TAG_E_DETAILS);
+			eDetails.appendChild(doc.createTextNode(listaErroresLote.get(0)));
+			rootElement.appendChild(eDetails);
 			
 		}
 		rootElement = respuesta;
@@ -196,22 +240,22 @@ public class RespuestaEnvioXMLBean {
 			mensaje.appendChild(idMensaje);
 			
 			Element erroresMensaje = null;
-			if (mensajeBean.getListadoErroresMensajes() != null && mensajeBean.getListadoErroresMensajes().size() > 0) {			
+			if (mensajeBean.getListadoErroresMensajes() != null && !mensajeBean.getListadoErroresMensajes().isEmpty()) {			
 				erroresMensaje = doc.createElement(TAG_ERRORMENSAJE);
 				for (String errorStr : mensajeBean.getListadoErroresMensajes()) {
-					String[] errorSplited = errorStr.split("#");
+					String[] errorSplited = errorStr.split(R_CONST_12);
 					
-					Element em_statuscode = doc.createElement(TAG_EM_STATUSCODE);
-					em_statuscode.appendChild(doc.createTextNode(errorSplited[0]));
-					erroresMensaje.appendChild(em_statuscode);
+					Element emStatuscode = doc.createElement(TAG_EM_STATUSCODE);
+					emStatuscode.appendChild(doc.createTextNode(errorSplited[0]));
+					erroresMensaje.appendChild(emStatuscode);
 					
-					Element em_statustext = doc.createElement(TAG_EM_STATUSTEXT);
-					em_statuscode.appendChild(doc.createTextNode(errorSplited[1]));
-					erroresMensaje.appendChild(em_statustext);
+					Element emStatustext = doc.createElement(TAG_EM_STATUSTEXT);
+					emStatuscode.appendChild(doc.createTextNode(errorSplited[1]));
+					erroresMensaje.appendChild(emStatustext);
 					
-					Element em_details = doc.createElement(TAG_EM_DETAILS);
-					em_details.appendChild(doc.createTextNode(errorSplited[1]));
-					erroresMensaje.appendChild(em_details);
+					Element emDetails = doc.createElement(TAG_EM_DETAILS);
+					emDetails.appendChild(doc.createTextNode(errorSplited[1]));
+					erroresMensaje.appendChild(emDetails);
 					
 					
 				}
@@ -226,7 +270,7 @@ public class RespuestaEnvioXMLBean {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
-			throw new PlataformaBusinessException("Se ha producido un error creando el XML de respuesta.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException(R_CONST_8 + e.getCause() + R_CONST_3 + e.getMessage());
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -235,7 +279,7 @@ public class RespuestaEnvioXMLBean {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
-			throw new PlataformaBusinessException("Se ha producido un error creando el XML de respuesta.\nCausa: " + e.getCause() + "\nMensaje: " + e.getMessage());
+			throw new PlataformaBusinessException(R_CONST_8 + e.getCause() + R_CONST_3 + e.getMessage());
 		}
 		return Utils.convertToUTF8(writer.toString());
 	}
@@ -257,10 +301,12 @@ public class RespuestaEnvioXMLBean {
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			try {
-				throw new ParserConfigurationException("Error creando documento DOM XML");
+				throw new ParserConfigurationException(R_CONST_9);
 			} catch (ParserConfigurationException e1) {
-				return "<ERROR></ERROR>";
+				// TODO logger.warn(e1.getMessage(), e1);
+				return R_CONST_14;
 			}
 		}
 		// 0 = TODO OK
@@ -269,9 +315,9 @@ public class RespuestaEnvioXMLBean {
 		int iEstado = 0;
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement(TAG_SOAP_ENV);
-		rootElement.setAttribute("xmlns:soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
-		rootElement.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		rootElement.setAttribute(R_CONST_7, R_CONST_4);
+		rootElement.setAttribute(R_CONST_5, R_CONST_1);
+		rootElement.setAttribute(R_CONST_2, R_CONST_17);
 		doc.appendChild(rootElement);
 
 		Element soapbody = doc.createElement(TAG_SOAP_BODY);
@@ -290,25 +336,25 @@ public class RespuestaEnvioXMLBean {
 		Element statusCode= doc.createElement(TAG_STATUSCODE);
 		Element statusText= doc.createElement(TAG_STATUSTEXT);
 		Element details= doc.createElement(TAG_DETAILS);
-		if(listaErroresGenerales.size()==0 && listaErroresLote.size()==0){
-			statusCode.appendChild(doc.createTextNode("OK"));
-			statusText.appendChild(doc.createTextNode("OK"));
-			details.appendChild(doc.createTextNode("Peticion procesada correctamente"));
+		if(listaErroresGenerales.isEmpty() && listaErroresLote.isEmpty()){
+			statusCode.appendChild(doc.createTextNode(R_CONST_10));
+			statusText.appendChild(doc.createTextNode(R_CONST_10));
+			details.appendChild(doc.createTextNode(R_CONST_16));
 			
 		}else{
 			boolean mensajesConErrores = false;
 			for ( MensajeSMSXMLBean mensajeBean : listaMensajesProcesados){
-				if (mensajeBean.getListadoErroresMensajes().size() > 0){
+				if (!mensajeBean.getListadoErroresMensajes().isEmpty()){
 					mensajesConErrores = true;
 					break;
 				}
 			}
-			statusCode.appendChild(doc.createTextNode("KO"));
-			statusText.appendChild(doc.createTextNode("KO"));
+			statusCode.appendChild(doc.createTextNode(R_CONST_13));
+			statusText.appendChild(doc.createTextNode(R_CONST_13));
 			if (mensajesConErrores){
-				details.appendChild(doc.createTextNode("Hay mensajes recibidos con errores"));
+				details.appendChild(doc.createTextNode(R_CONST_15));
 			}else{
-				details.appendChild(doc.createTextNode("Problemas al procesar la peticion"));
+				details.appendChild(doc.createTextNode(R_CONST_6));
 			}
 		}
 		rootElement.appendChild(statusCode);
@@ -325,22 +371,22 @@ public class RespuestaEnvioXMLBean {
 		rootElement.appendChild(idlote);
 		rootElement = lote;
 		
-		if(listaErroresLote.size()!=0){
+		if(!listaErroresLote.isEmpty()){
 			Element errorLote = doc.createElement(TAG_ERRORLOTE);
 			rootElement.appendChild(errorLote);
 			rootElement = errorLote;
 			
-			Element e_statuscode = doc.createElement(TAG_E_STATUSCODE);
-			e_statuscode.appendChild(doc.createTextNode("KO"));
-			rootElement.appendChild(e_statuscode);
+			Element eStatuscode = doc.createElement(TAG_E_STATUSCODE);
+			eStatuscode.appendChild(doc.createTextNode(R_CONST_13));
+			rootElement.appendChild(eStatuscode);
 			
-			Element e_statustext = doc.createElement(TAG_E_STATUSTEXT);
-			e_statustext.appendChild(doc.createTextNode(listaErroresLote.get(0)));
-			rootElement.appendChild(e_statustext);
+			Element eStatustext = doc.createElement(TAG_E_STATUSTEXT);
+			eStatustext.appendChild(doc.createTextNode(listaErroresLote.get(0)));
+			rootElement.appendChild(eStatustext);
 
-			Element e_details = doc.createElement(TAG_E_DETAILS);
-			e_details.appendChild(doc.createTextNode(listaErroresLote.get(0)));
-			rootElement.appendChild(e_details);
+			Element eDetails = doc.createElement(TAG_E_DETAILS);
+			eDetails.appendChild(doc.createTextNode(listaErroresLote.get(0)));
+			rootElement.appendChild(eDetails);
 			
 		}
 		
@@ -360,23 +406,23 @@ public class RespuestaEnvioXMLBean {
 			mensaje.appendChild(idMensaje);
 			
 			Element erroresMensaje = null;
-			if (mensajeBean.getListadoErroresMensajes() != null && mensajeBean.getListadoErroresMensajes().size() > 0) {
+			if (mensajeBean.getListadoErroresMensajes() != null && !mensajeBean.getListadoErroresMensajes().isEmpty()) {
 				iEstado = 2;
 				erroresMensaje = doc.createElement(TAG_ERRORMENSAJE);
 				for (String errorStr : mensajeBean.getListadoErroresMensajes()) {
-					String[] errorSplited = errorStr.split("#");
+					String[] errorSplited = errorStr.split(R_CONST_12);
 					
-					Element em_statuscode = doc.createElement(TAG_EM_STATUSCODE);
-					em_statuscode.appendChild(doc.createTextNode(errorSplited[0]));
-					erroresMensaje.appendChild(em_statuscode);
+					Element emStatuscode = doc.createElement(TAG_EM_STATUSCODE);
+					emStatuscode.appendChild(doc.createTextNode(errorSplited[0]));
+					erroresMensaje.appendChild(emStatuscode);
 					
-					Element em_statustext = doc.createElement(TAG_EM_STATUSTEXT);
-					em_statuscode.appendChild(doc.createTextNode(errorSplited[1]));
-					erroresMensaje.appendChild(em_statustext);
+					Element emStatustext = doc.createElement(TAG_EM_STATUSTEXT);
+					emStatuscode.appendChild(doc.createTextNode(errorSplited[1]));
+					erroresMensaje.appendChild(emStatustext);
 					
-					Element em_details = doc.createElement(TAG_EM_DETAILS);
-					em_details.appendChild(doc.createTextNode(errorSplited[1]));
-					erroresMensaje.appendChild(em_details);
+					Element emDetails = doc.createElement(TAG_EM_DETAILS);
+					emDetails.appendChild(doc.createTextNode(errorSplited[1]));
+					erroresMensaje.appendChild(emDetails);
 					
 					
 				}
@@ -390,7 +436,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			LOG.error("Error en RespuestaEnvioXMLBean",e);
+			LOG.error(R_CONST_11,e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -400,7 +446,7 @@ public class RespuestaEnvioXMLBean {
 				transformer.transform(source, result);
 			}
 		} catch (TransformerException e) {
-			LOG.error("Error en RespuestaEnvioXMLBean",e);
+			LOG.error(R_CONST_11,e);
 		}
 		return Utils.convertToUTF8(writer.toString());
 	}
@@ -414,10 +460,12 @@ public class RespuestaEnvioXMLBean {
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			try {
-				throw new ParserConfigurationException("Error creando documento DOM XML");
+				throw new ParserConfigurationException(R_CONST_9);
 			} catch (ParserConfigurationException e1) {
-				return "<ERROR></ERROR>";
+				// TODO logger.warn(e1.getMessage(), e1);
+				return R_CONST_14;
 			}
 		}
 		// 0 = TODO OK
@@ -426,9 +474,9 @@ public class RespuestaEnvioXMLBean {
 		int iEstado = 0;
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement(TAG_SOAP_ENV);
-		rootElement.setAttribute("xmlns:soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
-		rootElement.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-		rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		rootElement.setAttribute(R_CONST_7, R_CONST_4);
+		rootElement.setAttribute(R_CONST_5, R_CONST_1);
+		rootElement.setAttribute(R_CONST_2, R_CONST_17);
 		doc.appendChild(rootElement);
 
 		Element soapbody = doc.createElement(TAG_SOAP_BODY);
@@ -446,25 +494,25 @@ public class RespuestaEnvioXMLBean {
 		Element statusCode= doc.createElement(TAG_STATUSCODE);
 		Element statusText= doc.createElement(TAG_STATUSTEXT);
 		Element details= doc.createElement(TAG_DETAILS);
-		if(listaErroresGenerales.size()==0 && listaErroresLote.size()==0){
-			statusCode.appendChild(doc.createTextNode("OK"));
-			statusText.appendChild(doc.createTextNode("OK"));
-			details.appendChild(doc.createTextNode("Peticion procesada correctamente"));
+		if(listaErroresGenerales.isEmpty() && listaErroresLote.isEmpty()){
+			statusCode.appendChild(doc.createTextNode(R_CONST_10));
+			statusText.appendChild(doc.createTextNode(R_CONST_10));
+			details.appendChild(doc.createTextNode(R_CONST_16));
 			
 		}else{
 			boolean mensajesConErrores = false;
 			for (MensajePushXMLBean mensajeBean : listaMensajesProcesados){
-				if (mensajeBean.getListadoErroresMensajes().size() > 0){
+				if (!mensajeBean.getListadoErroresMensajes().isEmpty()){
 					mensajesConErrores = true;
 					break;
 				}
 			}
-			statusCode.appendChild(doc.createTextNode("KO"));
-			statusText.appendChild(doc.createTextNode("KO"));
+			statusCode.appendChild(doc.createTextNode(R_CONST_13));
+			statusText.appendChild(doc.createTextNode(R_CONST_13));
 			if (mensajesConErrores){
-				details.appendChild(doc.createTextNode("Hay mensajes recibidos con errores"));
+				details.appendChild(doc.createTextNode(R_CONST_15));
 			}else{
-				details.appendChild(doc.createTextNode("Problemas al procesar la peticion"));
+				details.appendChild(doc.createTextNode(R_CONST_6));
 			}
 		}
 		rootElement.appendChild(statusCode);
@@ -482,22 +530,22 @@ public class RespuestaEnvioXMLBean {
 		rootElement.appendChild(idlote);
 		rootElement = lote;
 		
-		if(listaErroresLote.size()!=0){
+		if(!listaErroresLote.isEmpty()){
 			Element errorLote = doc.createElement(TAG_ERRORLOTE);
 			rootElement.appendChild(errorLote);
 			rootElement = errorLote;
 			
-			Element e_statuscode = doc.createElement(TAG_E_STATUSCODE);
-			e_statuscode.appendChild(doc.createTextNode("KO"));
-			rootElement.appendChild(e_statuscode);
+			Element eStatuscode = doc.createElement(TAG_E_STATUSCODE);
+			eStatuscode.appendChild(doc.createTextNode(R_CONST_13));
+			rootElement.appendChild(eStatuscode);
 			
-			Element e_statustext = doc.createElement(TAG_E_STATUSTEXT);
-			e_statustext.appendChild(doc.createTextNode(listaErroresLote.get(0)));
-			rootElement.appendChild(e_statustext);
+			Element eStatustext = doc.createElement(TAG_E_STATUSTEXT);
+			eStatustext.appendChild(doc.createTextNode(listaErroresLote.get(0)));
+			rootElement.appendChild(eStatustext);
 
-			Element e_details = doc.createElement(TAG_E_DETAILS);
-			e_details.appendChild(doc.createTextNode(listaErroresLote.get(0)));
-			rootElement.appendChild(e_details);
+			Element eDetails = doc.createElement(TAG_E_DETAILS);
+			eDetails.appendChild(doc.createTextNode(listaErroresLote.get(0)));
+			rootElement.appendChild(eDetails);
 			
 		}
 		
@@ -518,22 +566,22 @@ public class RespuestaEnvioXMLBean {
 			mensaje.appendChild(idMensaje);
 			
 			Element erroresMensaje = null;
-			if (mensajeBean.getListadoErroresMensajes() != null && mensajeBean.getListadoErroresMensajes().size() > 0) {
+			if (mensajeBean.getListadoErroresMensajes() != null && !mensajeBean.getListadoErroresMensajes().isEmpty()) {
 				erroresMensaje = doc.createElement(TAG_ERRORMENSAJE);
 				for (String errorStr : mensajeBean.getListadoErroresMensajes()) {
-					String[] errorSplited = errorStr.split("#");
+					String[] errorSplited = errorStr.split(R_CONST_12);
 					
-					Element em_statuscode = doc.createElement(TAG_EM_STATUSCODE);
-					em_statuscode.appendChild(doc.createTextNode(errorSplited[0]));
-					erroresMensaje.appendChild(em_statuscode);
+					Element emStatuscode = doc.createElement(TAG_EM_STATUSCODE);
+					emStatuscode.appendChild(doc.createTextNode(errorSplited[0]));
+					erroresMensaje.appendChild(emStatuscode);
 					
-					Element em_statustext = doc.createElement(TAG_EM_STATUSTEXT);
-					em_statuscode.appendChild(doc.createTextNode(errorSplited[1]));
-					erroresMensaje.appendChild(em_statustext);
+					Element emStatustext = doc.createElement(TAG_EM_STATUSTEXT);
+					emStatuscode.appendChild(doc.createTextNode(errorSplited[1]));
+					erroresMensaje.appendChild(emStatustext);
 					
-					Element em_details = doc.createElement(TAG_EM_DETAILS);
-					em_details.appendChild(doc.createTextNode(errorSplited[1]));
-					erroresMensaje.appendChild(em_details);
+					Element emDetails = doc.createElement(TAG_EM_DETAILS);
+					emDetails.appendChild(doc.createTextNode(errorSplited[1]));
+					erroresMensaje.appendChild(emDetails);
 					
 					
 				}
@@ -547,7 +595,7 @@ public class RespuestaEnvioXMLBean {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			LOG.error("Error en RespuestaEnvioXMLBean",e);
+			LOG.error(R_CONST_11,e);
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -557,7 +605,7 @@ public class RespuestaEnvioXMLBean {
 				transformer.transform(source, result);
 			}				
 		} catch (TransformerException e) {
-			LOG.error("Error en RespuestaEnvioXMLBean",e);
+			LOG.error(R_CONST_11,e);
 		}
 		return Utils.convertToUTF8(writer.toString());
 	}
@@ -702,25 +750,16 @@ public class RespuestaEnvioXMLBean {
 			this.listadoErroresLote = responseXMLObject.getResp().getListadoErroresLote();
 			this.listadoErroresGeneral = responseXMLObject.getResp().getListadoErroresGeneral();
 			this.listadoMensajes = responseXMLObject.getResp().getListadoMensajes();
-		} catch (ParserConfigurationException e) {
-			throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-		} catch (SAXException e2) {
-			throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-		} catch (IOException e3) {
+		} catch (ParserConfigurationException | SAXException | IOException e3) {
+			// TODO logger.warn(e3.getMessage(), e3);
 			throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
 		}
 
 	}
 
-	private String idLote;
-	private ArrayList<String> listadoErroresLote = new ArrayList<String>();
-
 	public ArrayList<String> getListadoErroresLote() {
 		return listadoErroresLote;
 	}
-
-	private ArrayList<String> listadoErroresGeneral = new ArrayList<String>();
-	private ArrayList<MensajesXMLBean> listadoMensajes = new ArrayList<MensajesXMLBean>();
 
 	public String getXmlRespuesta() {
 		return xmlRespuesta;
@@ -740,7 +779,7 @@ public class RespuestaEnvioXMLBean {
 	 * @return
 	 */
 	public ArrayList<String> getListadoErroresGeneral() {
-		return new ArrayList<String>(listadoErroresGeneral);
+		return new ArrayList<>(listadoErroresGeneral);
 	}
 
 	/**
@@ -749,7 +788,7 @@ public class RespuestaEnvioXMLBean {
 	 * @return
 	 */
 	public ArrayList<MensajesXMLBean> getListadoMensajes() {
-		return new ArrayList<MensajesXMLBean>(listadoMensajes);
+		return new ArrayList<>(listadoMensajes);
 	}
 
 	/**
@@ -807,13 +846,13 @@ public class RespuestaEnvioXMLBean {
 	 * 
 	 */
 		public void startElement(String uri, String localName, String qName, Attributes attributes) {
-			if (qName.equals(TAG_ERRORLOTE) && !errorMessage) {
+			if (TAG_ERRORLOTE.equals(qName) && !errorMessage) {
 				erroresGenerales = true;
 			}
-			if (qName.equals(TAG_MENSAJE)) {
+			if (TAG_MENSAJE.equals(qName)) {
 				mensaje = new MensajesXMLBean();
 			}
-			if (qName.equals(TAG_ERRORMENSAJE)) {
+			if (TAG_ERRORMENSAJE.equals(qName)) {
 				errorMessage = true;
 			}
 //			if (qName.equals(TAG_ERROR)) {
@@ -845,10 +884,10 @@ public class RespuestaEnvioXMLBean {
 //			if (qName.equals(TAG_ID)) {
 //				resp.setIdLote(contenido);
 //			}
-			if (qName.equals(TAG_IDMENSAJE)) {
+			if (TAG_IDMENSAJE.equals(qName)) {
 				mensaje.setIdMensaje(contenido);
 			}
-			if (qName.equals(TAG_IDEXTERNO)) {
+			if (TAG_IDEXTERNO.equals(qName)) {
 				mensaje.setIdExterno(contenido);
 			}
 //			if (qName.equals(TAG_ERROR)) {
@@ -873,7 +912,7 @@ public class RespuestaEnvioXMLBean {
 //			if (qName.equals(TAG_ESTADO)) {
 //				estado = Integer.valueOf(estado);
 //			}
-			if (qName.equals(TAG_MENSAJE)) {
+			if (TAG_MENSAJE.equals(qName)) {
 				resp.addMensaje(mensaje);
 				mensaje = null;
 			}

@@ -10,7 +10,7 @@ public interface TblUrlMensajePremiumManager {
 	 * @param mensajeId
 	 * @return TblUrlMensajePremium
 	 */
-	public TblUrlMensajePremium getUrlByMensaje(Long mensajeId);
+	TblUrlMensajePremium getUrlByMensaje(Long mensajeId);
 
 	
 	/**
@@ -18,13 +18,13 @@ public interface TblUrlMensajePremiumManager {
 	 * 
 	 * @param tbl
 	*/
-	public void update(TblUrlMensajePremium tbl);
+	void update(TblUrlMensajePremium tbl);
 	
 	/**
 	 * inserta el registro
 	 * 
 	 * @param tbl
 	*/
-	public void insert(TblUrlMensajePremium tbl);
+	void insert(TblUrlMensajePremium tbl);
 	
 }

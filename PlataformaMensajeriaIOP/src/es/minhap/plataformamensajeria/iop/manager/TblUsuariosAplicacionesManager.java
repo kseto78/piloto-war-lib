@@ -13,7 +13,7 @@ public interface TblUsuariosAplicacionesManager {
 	 * @param query
 	 * @return
 	 */
-	public List<TblUsuariosAplicaciones> getUsuariosAplicacionesByQuery(TblUsuariosAplicacionesQuery query);
+	List<TblUsuariosAplicaciones> getUsuariosAplicacionesByQuery(TblUsuariosAplicacionesQuery query);
 
 	/**
 	 * Obtiene el usuarios aplicaciones by Id
@@ -21,7 +21,7 @@ public interface TblUsuariosAplicacionesManager {
 	 * @param usuarioAplicacionId
 	 * @return TblUsuariosAplicaciones
 	 */
-	public TblUsuariosAplicaciones getUsuariosAplicacionesById(Long usuarioAplicacionId);
+	TblUsuariosAplicaciones getUsuariosAplicacionesById(Long usuarioAplicacionId);
 
 	/**
 	 * inserta un nuevo TblUsuariosAplicaciones
@@ -33,7 +33,7 @@ public interface TblUsuariosAplicacionesManager {
 	 * @param descripcion
 	 * @return id
 	 */
-	public Long insert(TblUsuariosAplicaciones usuarioAplicacionTO, String source, String accion, Long accionId,
+	Long insert(TblUsuariosAplicaciones usuarioAplicacionTO, String source, String accion, Long accionId,
 			String descripcion);
 
 	/**
@@ -46,7 +46,7 @@ public interface TblUsuariosAplicacionesManager {
 	 * @param descripcion
 	 * @return id
 	 */
-	public void delete(TblUsuariosAplicaciones usuarioAplicacionTO, String source, String accion, Long accionId,
+	void delete(TblUsuariosAplicaciones usuarioAplicacionTO, String source, String accion, Long accionId,
 			String descripcion);
 
 	

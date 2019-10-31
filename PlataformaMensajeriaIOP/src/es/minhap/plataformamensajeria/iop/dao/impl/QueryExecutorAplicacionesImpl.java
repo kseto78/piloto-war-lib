@@ -49,9 +49,10 @@ public class QueryExecutorAplicacionesImpl extends HibernateDaoSupport implement
 			}
 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
-					.createSQLQuery("select APP.APLICACIONID from  TBL_APLICACIONES APP, TBL_SERVICIOS SERV, TBL_LOTESENVIOS LOT, TBL_MENSAJES MEN WHERE MEN.mensajeID = "
-							+ mensajeId
-							+ " and LOT.loteenvioid = MEN.loteenvioid and serv.SERVICIOID = LOT.servicioid AND APP.APLICACIONID = SERV.APLICACIONID");
+					.createSQLQuery("select APP.APLICACIONID from  TBL_APLICACIONES APP, TBL_SERVICIOS SERV, TBL_LOTESENVIOS LOT, TBL_MENSAJES MEN WHERE MEN.mensajeID = "							
+							+ "? and LOT.loteenvioid = MEN.loteenvioid and serv.SERVICIOID = LOT.servicioid AND APP.APLICACIONID = SERV.APLICACIONID");
+			
+			query.setLong(1, mensajeId);
 
 			res = ((BigDecimal) query.uniqueResult()).longValue();
 									

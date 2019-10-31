@@ -10,6 +10,6 @@ public interface ViewMensajesDetalladaManager {
 	 * @param ViewMensajesDetalladaQuery
 	 * @return Integer
 	 */
-	public Integer countViewMensajeDetallada(ViewMensajesDetalladaQuery query);
+	Integer countViewMensajeDetallada(ViewMensajesDetalladaQuery query);
 
 }

@@ -35,6 +35,26 @@ import es.minhap.sim.model.TblServicios;
 @Service("recepcionMensajesImpl")                 
 public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 	
+	protected static final String R_CONST_1 = "plataformaErrores.recepcionSMS.TAG_ERROR_NO_SERVICIO";
+
+	protected static final String R_CONST_2 = "plataformaErrores.generales.STATUS_OK";
+
+	protected static final String R_CONST_3 = "plataformaErrores.generales.STATUSTEXT_OK";
+
+	protected static final String R_CONST_4 = "plataformaErrores.generales.DETAILS_OK";
+
+	protected static final String R_CONST_5 = "plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_GENERAL";
+
+	protected static final String R_CONST_6 = "constantes.errores.devolucion.error1";
+
+	protected static final String R_CONST_7 = "plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_NO_SERVICIO";
+
+	protected static final String R_CONST_8 = "constantes.errores.devolucion.error4";
+
+	protected static final String R_CONST_9 = "constantes.errores.devolucion.error5";
+
+	protected static final String R_CONST_10 = "constantes.errores.devolucion.error2";
+
 	private static final  Logger LOG = LoggerFactory.getLogger(RecepcionMensajesServiceImpl.class);
 	
 	@Resource
@@ -95,14 +115,14 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         try {
         	
         	boolean peticionCorrecta = evaluarPeticion(recibirSMSRequest);
-        	if (null != recibirSMSRequest.getSMSText() && recibirSMSRequest.getSMSText().length() > 0){
+        	if (null != recibirSMSRequest.getSMSText() && !recibirSMSRequest.getSMSText().isEmpty()){
         		String cuerpo = recibirSMSRequest.getSMSText();
-        		if(cuerpo.indexOf(" ")!=-1) {
-        			prefijoSMS = cuerpo.substring(0, cuerpo.indexOf(" "));
+        		if(cuerpo.indexOf(' ')!=-1) {
+        			prefijoSMS = cuerpo.substring(0, cuerpo.indexOf(' '));
         		} else {
-        			retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_NO_SERVICIO",null));
+        			retorno.getStatus().setStatusCode(ps.getMessage(R_CONST_1,null));
         			retorno.getStatus().setStatusText(statusTextKO);
-        			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_NO_SERVICIO",null));
+        			retorno.getStatus().setDetails(ps.getMessage(R_CONST_7,null));
         			return retorno;
         		}
         	}else{
@@ -113,10 +133,10 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         		
         		envioSMS = lotesManager.buscarInfoLote(recibirSMSRequest.getRecipient(), recibirSMSRequest.getUser(), recibirSMSRequest.getPassword(), prefijoSMS);
             	//Se valida que se haya recuperado correctamente la informacion de base de datos
-        		if (!ps.getMessage("constantes.errores.devolucion.error1",null).equals(envioSMS.getServicio()) &&
-        			!ps.getMessage("constantes.errores.devolucion.error2",null).equals(envioSMS.getServicio()) &&
-        			!ps.getMessage("constantes.errores.devolucion.error4",null).equals(envioSMS.getServicio()) &&
-        			!ps.getMessage("constantes.errores.devolucion.error5",null).equals(envioSMS.getServicio())){
+        		if (!ps.getMessage(R_CONST_6,null).equals(envioSMS.getServicio()) &&
+        			!ps.getMessage(R_CONST_10,null).equals(envioSMS.getServicio()) &&
+        			!ps.getMessage(R_CONST_8,null).equals(envioSMS.getServicio()) &&
+        			!ps.getMessage(R_CONST_9,null).equals(envioSMS.getServicio())){
         		
             		idLote = lotesManager.insertarLote(Long.parseLong(envioSMS.getServicio()), envioSMS.getNombreLote(), envioSMS.getUserAplicacion(), envioSMS.getPasswordAplicacion(), envioSMS.getCodOrganismo());
         			retorno.setIdLote(idLote);
@@ -175,9 +195,9 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
         						recibirSMSRequest.getSender(), recibirSMSRequest.getMessageId(), envioSMS.getUserAplicacion());
         				Long estadoId = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null)).getEstadoid();
         				historicosManager.creaHistorico(idMensaje.longValue(), desMensaje, estadoId, null, null, null, envioSMS.getUserAplicacion());
-        				retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK",null));
-            			retorno.getStatus().setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK",null));
-            			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.generales.DETAILS_OK",null));
+        				retorno.getStatus().setStatusCode(ps.getMessage(R_CONST_2,null));
+            			retorno.getStatus().setStatusText(ps.getMessage(R_CONST_3,null));
+            			retorno.getStatus().setDetails(ps.getMessage(R_CONST_4,null));
             			
             			MensajeJMS mensajeJms = new MensajeJMS();
 						mensajeJms.setIdMensaje(idMensaje.toString());
@@ -201,19 +221,19 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 						
         			}
     	        	
-            	} else if(ps.getMessage("constantes.errores.devolucion.error1",null).equals(envioSMS.getServicio())) {
-            		retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_NO_SERVICIO",null));
+            	} else if(ps.getMessage(R_CONST_6,null).equals(envioSMS.getServicio())) {
+            		retorno.getStatus().setStatusCode(ps.getMessage(R_CONST_1,null));
         			retorno.getStatus().setStatusText(statusTextKO);
-        			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_NO_SERVICIO",null));
-            	} else if(ps.getMessage("constantes.errores.devolucion.error2",null).equals(envioSMS.getServicio())){
+        			retorno.getStatus().setDetails(ps.getMessage(R_CONST_7,null));
+            	} else if(ps.getMessage(R_CONST_10,null).equals(envioSMS.getServicio())){
             		retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_SERVICIO_DUPLICADO",null));
         			retorno.getStatus().setStatusText(statusTextKO);
         			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_SERVICIO_DUPLICADO",null));
-            	} else if(ps.getMessage("constantes.errores.devolucion.error4",null).equals(envioSMS.getServicio())){
+            	} else if(ps.getMessage(R_CONST_8,null).equals(envioSMS.getServicio())){
             		retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_VALIDACION_USER_PASSWORD",null));
             		retorno.getStatus().setStatusText(statusTextKO);
         			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_VALIDACION_USER_PASSWORD",null));
-            	} else if(ps.getMessage("constantes.errores.devolucion.error5",null).equals(envioSMS.getServicio())){
+            	} else if(ps.getMessage(R_CONST_9,null).equals(envioSMS.getServicio())){
             		retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.recepcionSMS.TAG_ERROR_VALIDACION_USER_PASSWORD_VARIOS_SERVIDORES",null));
             		retorno.getStatus().setStatusText(statusTextKO);
         			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_VALIDACION_USER_PASSWORD_VARIOS_SERVIDORES",null));
@@ -235,25 +255,28 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
 							false, null, null, envioSMS.getUserAplicacion(), null);
 				retorno.getStatus().setStatusCode(errorRecMensaje);
 				retorno.getStatus().setStatusText(statusTextKO);
-				retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_GENERAL",null));
+				retorno.getStatus().setDetails(ps.getMessage(R_CONST_5,null));
 			}else{
-				retorno.getStatus().setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK",null));
-				retorno.getStatus().setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK",null));
-				retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.generales.DETAILS_OK",null));	
+				retorno.getStatus().setStatusCode(ps.getMessage(R_CONST_2,null));
+				retorno.getStatus().setStatusText(ps.getMessage(R_CONST_3,null));
+				retorno.getStatus().setDetails(ps.getMessage(R_CONST_4,null));	
 			}
 			
 		}catch (Exception e) {
 			LOG.error("IRecepcionMensajesServiceImpl.recibirSMS", e);
 			retorno.getStatus().setStatusCode(errorRecMensaje);
 			retorno.getStatus().setStatusText(statusTextKO);
-			retorno.getStatus().setDetails(ps.getMessage("plataformaErrores.recepcionSMS.TAG_MENSAJE_KO_GENERAL",null));
+			retorno.getStatus().setDetails(ps.getMessage(R_CONST_5,null));
 		}finally{
 //			Comprobamos que si ya se ha actualizado la tabla de errores
 			LOG.debug("Estamos en RecepcionMensajesServiceImpl-recibirSMS");					
-			if (activeMQ == 0){
+			switch (activeMQ) {
+			case 0:
 				erroresManager.comprobarActiveMqActivo(false);
-			}else if (activeMQ == 1){
+				break;
+			case 1:
 				erroresManager.comprobarActiveMqActivo(true);
+				break;
 			}
 		}
 		return retorno;
@@ -294,10 +317,7 @@ public class RecepcionMensajesServiceImpl implements IRecepcionMensajesService {
     
     private boolean evaluarParametro(String parametro){
     	
-    	if(null!=parametro && !parametro.isEmpty()){
-    		return true;
-    	} 
-    	return false;
+    	return null!=parametro && !parametro.isEmpty();
   	
     }
 

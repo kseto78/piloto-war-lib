@@ -13,6 +13,6 @@ public interface ViewGestionEnviosDetalladaManager {
 	 * @param ViewGestionEnviosDetalladaQuery
 	 * @return List
 	 */
-	public List<ViewGestionenviosDetallada> getEstadosFiltroMensaje(ViewGestionenviosDetalladaQuery query);
+	List<ViewGestionenviosDetallada> getEstadosFiltroMensaje(ViewGestionenviosDetalladaQuery query);
 
 }

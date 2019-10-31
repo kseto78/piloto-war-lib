@@ -12,7 +12,7 @@ public interface ViewUsuariosAplicacionesManager {
 	 * @param ViewUsuariosPushQuery
 	 * @return List
 	 */
-	public List<ViewUsuariosAplicaciones> getViewUsuariosAplicacionesBy(Long usuarioId, Long aplicacionId);
+	List<ViewUsuariosAplicaciones> getViewUsuariosAplicacionesBy(Long usuarioId, Long aplicacionId);
 
 	
 	

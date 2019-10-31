@@ -54,6 +54,8 @@ import es.minhap.sim.query.TblHistoricosQuery;
 @Service("TblHistoricosManagerImpl")
 public class TblHistoricosManagerImpl implements TblHistoricosManager {
 
+	protected static final String R_CONST_1 = ";";
+
 	@Resource 
 	private TblHistoricosDAO historicosDAO; 
 	
@@ -199,10 +201,11 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		historicoBean.setDestinatariosmensajes(destinatariosMensajesId);
 		if (null == servidorId && estadosManager.getEstadoById(estadoId).getNombre().equals(estadoEnviando)){
 			historicoBean.setServidorid(servidorId);
-		}else if (null == servidorId)
+		}else if (null == servidorId) {
 			historicoBean.setServidorid(queryExecutorHistoricos.getServidorByMensaje(mensajeId));
-		else	
+		} else {
 			historicoBean.setServidorid(servidorId);
+		}
 		historicoBean.setFecha(new Date());
 		historicoBean.setSubestadoid((null != subestado)? Long.parseLong(subestado) : null);
 		if (null != subestado){
@@ -272,7 +275,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		queryEstados.setEstadoid(estado);
 		query.setTblEstados(queryEstados);
 		List<Long> historicosEnviados = historicosDAO.searchId(query).getResults();
-		return (null != historicosEnviados && !historicosEnviados.isEmpty())? true : false;
+		return null != historicosEnviados && !historicosEnviados.isEmpty();
 	}
 	
 	
@@ -294,10 +297,12 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		res.setMensajeid(a.getMensajeid());
 		res.setServidorid(a.getServidorid());
 		res.setSubestadoid(a.getSubestadoid());
-		if (null != a.getEstadoId())
+		if (null != a.getEstadoId()) {
 			res.setTblEstados(estadosManager.getEstadoById(a.getEstadoId()));
-		if (null != a.getPlanificacionId())
+		}
+		if (null != a.getPlanificacionId()) {
 			res.setTblPlanificaciones(null);
+		}
 					
 		return res;
 	}
@@ -331,10 +336,11 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		TblGestionEnvios ge;
 		ge = new TblGestionEnvios();
 		String codigoExterno;
-		if (null != dest)
+		if (null != dest) {
 			codigoExterno = destinatariosMensajesManager.getDestinatarioMensaje(dest).getCodigoexterno();
-		else
+		} else {
 			codigoExterno = tblMensajes.getCodigoexterno();
+		}
 		
 		TblAplicaciones aplicacion = servicio.getTblAplicaciones();
 				
@@ -406,7 +412,7 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		
 		String numMaxDestinatariosProp = ps.getMessage("num.max.destinatarios",null);
 		int numMaxDestinatarios = 0;
-		if((numMaxDestinatariosProp != null) && (numMaxDestinatariosProp != "")){
+		if(numMaxDestinatariosProp != null && numMaxDestinatariosProp != ""){
 			 numMaxDestinatarios  = Integer.parseInt(numMaxDestinatariosProp);
 		}
 		LOG.debug("numMaxDestinatarios" + numMaxDestinatarios);
@@ -414,23 +420,23 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 		switch (canal.getCanalid().intValue()) {
 		case 1:
 			List<String> listaDestinatarios = destinatariosManager.getDestinatarios(Long.parseLong(mensajeId));
-			if (null != listaDestinatarios && listaDestinatarios.size() > 0 && listaDestinatarios.size() <= numMaxDestinatarios){
+			if (null != listaDestinatarios && !listaDestinatarios.isEmpty() && listaDestinatarios.size() <= numMaxDestinatarios){
 				for (String d : listaDestinatarios) {
-					res.append(d + ";");
+					res.append(d + R_CONST_1);
 				}
 				break;
-			} else if (null != listaDestinatarios && listaDestinatarios.size() > 0 && listaDestinatarios.size() >= numMaxDestinatarios) {
+			} else if (null != listaDestinatarios && !listaDestinatarios.isEmpty() && listaDestinatarios.size() >= numMaxDestinatarios) {
 				for (int i = 0; i < numMaxDestinatarios; i++) {
-					res.append(listaDestinatarios.get(i) + ";");
+					res.append(listaDestinatarios.get(i) + R_CONST_1);
 				}
 				break;
 			}
 			break;
 		case 4:
 			List<String> listaDestinatariosPush = usuariosPushManager.getNombresUsuariosMensaje(Long.parseLong(mensajeId));
-			if (null != listaDestinatariosPush && listaDestinatariosPush.size() > 0){
+			if (null != listaDestinatariosPush && !listaDestinatariosPush.isEmpty()){
 				for (String d : listaDestinatariosPush) {
-					res.append(d + ";");
+					res.append(d + R_CONST_1);
 				}
 				break;
 			}
@@ -439,14 +445,14 @@ public class TblHistoricosManagerImpl implements TblHistoricosManager {
 			List<String> listaDestinatariosWebPush = usuariosWebPushManager.getUsuarioIdMensaje(Long.parseLong(mensajeId));
 			if (null != listaDestinatariosWebPush && !listaDestinatariosWebPush.isEmpty()){
 				for (String d : listaDestinatariosWebPush) {
-					res.append(d + ";");
+					res.append(d + R_CONST_1);
 				}
 				break;
 			}
 			break;
 		default:
 			for (TblDestinatariosMensajes dm : destinatariosMensajesManager.getDestinatarioMensajes(Long.parseLong(mensajeId))) {
-				res.append(dm.getDestinatario() + ";");
+				res.append(dm.getDestinatario() + R_CONST_1);
 			}
 			break;
 		}

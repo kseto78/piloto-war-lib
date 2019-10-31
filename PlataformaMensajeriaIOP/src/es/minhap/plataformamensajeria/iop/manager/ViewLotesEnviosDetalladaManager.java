@@ -11,7 +11,7 @@ public interface ViewLotesEnviosDetalladaManager {
 	 * @param ViewLotesEnviosDetalladaQuery
 	 * @return Integer
 	 */
-	public Integer countViewLoteDetallado(ViewLotesEnviosDetalladaQuery query);
+	Integer countViewLoteDetallado(ViewLotesEnviosDetalladaQuery query);
 	
 	/**
 	 * Obtiene ViewLotesEnviosDetallada
@@ -19,6 +19,6 @@ public interface ViewLotesEnviosDetalladaManager {
 	 * @param ViewLotesEnviosDetalladaQuery
 	 * @return ViewLotesEnviosDetallada
 	 */
-	public ViewLotesEnviosDetallada getViewLoteDetallado(ViewLotesEnviosDetalladaQuery query);
+	ViewLotesEnviosDetallada getViewLoteDetallado(ViewLotesEnviosDetalladaQuery query);
 
 }

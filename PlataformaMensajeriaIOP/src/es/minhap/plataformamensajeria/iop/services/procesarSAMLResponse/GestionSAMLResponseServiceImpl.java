@@ -26,6 +26,10 @@ import es.minhap.sim.model.TblUsuariosPush;
 @Service("gestionSAMLResponseImpl")
 public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseService {
 	
+	protected static final String R_CONST_1 = "plataformaErrores.gestionSAMLRequestService.COD_ERROR_DATOS_NO_ACTUALIZADOS";
+
+	protected static final String R_CONST_2 = "plataformaErrores.gestionSAMLRequestService.DETAILS_DISPOSITIVO_NO_ACTUALIZADO";
+
 	private static final Logger LOG = LoggerFactory.getLogger(GestionSAMLResponseServiceImpl.class);
 	
 	@Resource
@@ -63,6 +67,7 @@ public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseServi
 			try {
 				timeSession = Integer.parseInt(stringTimeSession);
 			} catch (NumberFormatException e) {
+				// TODO logger.warn(e.getMessage(), e);
 				timeSession = null;
 			}
 			
@@ -150,14 +155,15 @@ public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseServi
 		String codOK = ps.getMessage(statusOK, null);
 		String detailsCodOK = ps.getMessage(detailsOK, null);
 		String statusTextKO = ps.getMessage(textoKO, null);
-		String codKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_DATOS_NO_ACTUALIZADOS", null);
-		String detailsCodKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_DISPOSITIVO_NO_ACTUALIZADO", null);
+		String codKO = ps.getMessage(R_CONST_1, null);
+		String detailsCodKO = ps.getMessage(R_CONST_2, null);
 		RespuestaSAMLResponse respuesta;
-		if (usuariosPushManager.insertUsuario(usuario))
+		if (usuariosPushManager.insertUsuario(usuario)) {
 			respuesta = generarRespuesta(nif, nombre, apellido1, apellido2, statusTextOK, codOK, detailsCodOK);
-		else
+		} else {
 			respuesta = generarRespuesta(null, null, null, null, statusTextKO, codKO,
 					detailsCodKO);
+		}
 		return respuesta;
 	}
 
@@ -185,56 +191,57 @@ public class GestionSAMLResponseServiceImpl implements IGestionSAMLResponseServi
 		String codOK = ps.getMessage(statusOK, null);
 		String detailsCodOK = ps.getMessage(detailsOK, null);
 		String statusTextKO = ps.getMessage(textoKO, null);
-		String codKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_DATOS_NO_ACTUALIZADOS", null);
-		String detailsCodKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_DISPOSITIVO_NO_ACTUALIZADO", null);
+		String codKO = ps.getMessage(R_CONST_1, null);
+		String detailsCodKO = ps.getMessage(R_CONST_2, null);
 		RespuestaSAMLResponse respuesta;
-		if (usuariosPushManager.updateUsuario(usuario))
+		if (usuariosPushManager.updateUsuario(usuario)) {
 			respuesta = generarRespuesta(nif, nombre, apellido1, apellido2, statusTextOK, codOK,
 					detailsCodOK);
-		else
-			// error no se pudo actualizar el usuario
+		} else {
 			respuesta = generarRespuesta(null, null, null, null, statusTextKO, codKO,
 					detailsCodKO);
+		}
 		return respuesta;
 	}
 
 	private boolean datosNoValidos(String servicio, String plataforma, String dispositivoId, String nombre, String nif) {
 		boolean res = false;
 
-		if (null == servicio || servicio.length() <= 0 
+		return null == servicio || servicio.isEmpty() 
 				|| checkDispositivoPlataforma(dispositivoId, plataforma) 
-				|| checkNombreNIF(nombre, nif))
-			return true;
-
-		return res;
+				|| checkNombreNIF(nombre, nif) || res;
 	}
 	
 	private boolean checkNombreNIF(String nombre, String nif) {
-		return (checkNombre(nombre) || null == nif || nif.length() <= 0)?true : false;
+		return checkNombre(nombre) || null == nif || nif.isEmpty();
 	}
 	private boolean checkNombre(String nombre) {
-		return (null == nombre || nombre.length() <= 0)?true : false;
+		return null == nombre || nombre.isEmpty();
 	}
 	
 	private boolean checkDispositivoPlataforma(String dispositivo, String palataforma) {
-		return (checkDispositivo(dispositivo) || null == palataforma || palataforma.length() <= 0)?true : false;
+		return checkDispositivo(dispositivo) || null == palataforma || palataforma.isEmpty();
 	}
 	private boolean checkDispositivo(String dispositivo) {
-		return (null == dispositivo || dispositivo.length() <= 0)?true : false;
+		return null == dispositivo || dispositivo.isEmpty();
 	}
 
 	private RespuestaSAMLResponse generarRespuesta(String nif, String nombre, String apellido1, String apellido2, String statustext, String codigo, String details) {
 		RespuestaSAMLResponse res = new RespuestaSAMLResponse();
 		ResponseSAMLStatusType status = new ResponseSAMLStatusType();
 
-		if (null != apellido1 && apellido1.length() > 0)
+		if (null != apellido1 && !apellido1.isEmpty()) {
 			res.setApellido1(apellido1);
-		if (null != apellido2 && apellido2.length() > 0)
+		}
+		if (null != apellido2 && !apellido2.isEmpty()) {
 			res.setApellido2(apellido2);
-		if (null != nif && nif.length() > 0)
+		}
+		if (null != nif && !nif.isEmpty()) {
 			res.setNif(nif);
-		if (null != nombre && nombre.length() > 0)
+		}
+		if (null != nombre && !nombre.isEmpty()) {
 			res.setNombre(nombre);
+		}
 
 		status.setDetails(details);
 		status.setStatusCode(codigo);

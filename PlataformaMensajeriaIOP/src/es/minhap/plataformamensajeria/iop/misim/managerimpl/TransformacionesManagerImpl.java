@@ -37,9 +37,7 @@ public class TransformacionesManagerImpl implements TransformacionesManager {
 	@Override
 	@Transactional
 	public List<Transformacion> getTransformaciones(TransformacionQuery query) {
-		List<Transformacion> transformaciones = getTransformacionDAO().search(query).getResults();
-		
-		return transformaciones;
+		return getTransformacionDAO().search(query).getResults();
 	}
 	
 	@Transactional

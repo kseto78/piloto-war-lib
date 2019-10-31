@@ -24,6 +24,8 @@ import es.minhap.sim.model.TblUsuariosPush;
 @Service("getAuthServiceImpl")
 public class GetAuthServiceImpl implements IGetAuthService {
 	
+	protected static final String R_CONST_1 = "plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO";
+
 	private static final Logger LOG = LoggerFactory.getLogger(GetAuthServiceImpl.class);
 
 	@Resource
@@ -38,7 +40,7 @@ public class GetAuthServiceImpl implements IGetAuthService {
 	@Override
 	public String getDatosUsuario(PeticionClaveAuthRequest peticion) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_1, null);
 		String codErrorPeticion = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_PETICION", null);
 		String detailsErrorPeticion = ps.getMessage(
 				"plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_PETICION", null);
@@ -94,14 +96,12 @@ public class GetAuthServiceImpl implements IGetAuthService {
 
 	private RespuestaSAMLResponse respuestaIncorrecta(PropertiesServices ps) {
 		RespuestaSAMLResponse res;
-		String statusTextKO = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_1, null);
 		String codError = ps.getMessage("plataformaErrores.gestionSAMLRequestService.COD_ERROR_USUARIO_DISPOSITIVO", null);
 		String detailsError = ps.getMessage(
 				"plataformaErrores.gestionSAMLRequestService.DETAILS_ERROR_USUARIO_DISPOSITIVO", null);
 		
-		//error que no se encuentra
-		res = generarRespuesta(null, null,null, null,statusTextKO, codError, detailsError);
-		return res;
+		return generarRespuesta(null, null,null, null,statusTextKO, codError, detailsError);
 	}
 
 	private RespuestaSAMLResponse respuestaCorrecta(TblUsuariosPush usuario, PropertiesServices ps) {
@@ -110,41 +110,40 @@ public class GetAuthServiceImpl implements IGetAuthService {
 		String cod = ps.getMessage("plataformaErrores.gestionSAMLRequestService.STATUS_OK", null);
 		String details = ps.getMessage("plataformaErrores.gestionSAMLRequestService.DETAILS_OK", null);
 		
-		//si son diferentes lo doy por valido. Se supone que el nombre de usuario ser�a el DNI
-		res = generarRespuesta(usuario.getNombreusuario(), usuario.getNombre(), 
+		return generarRespuesta(usuario.getNombreusuario(), usuario.getNombre(), 
 				usuario.getApellido1(), usuario.getApellido2(),statusText, cod, details);
-		return res;
 	}
 
 	private boolean datosNoValidos(String servicio, String plataforma, String dispositivoId) {
 		boolean res = false;
 
-		if (null == servicio || servicio.length() <= 0 || checkDispositivoPlataforma(dispositivoId, plataforma))
-			return true;
-
-		return res;
+		return null == servicio || servicio.isEmpty() || checkDispositivoPlataforma(dispositivoId, plataforma) || res;
 	}
 	
 	private boolean checkDispositivoPlataforma(String dispositivo, String palataforma) {
-		return (checkDispositivo(dispositivo) || null == palataforma || palataforma.length() <= 0) ? true : false;
+		return checkDispositivo(dispositivo) || null == palataforma || palataforma.isEmpty();
 	}
 
 	private boolean checkDispositivo(String dispositivo) {
-		return (null == dispositivo || dispositivo.length() <= 0) ? true : false;
+		return null == dispositivo || dispositivo.isEmpty();
 	}
 
 	private RespuestaSAMLResponse generarRespuesta(String nif, String nombre, String apellido1, String apellido2, String statustext, String codigo, String details) {
 		RespuestaSAMLResponse res = new RespuestaSAMLResponse();
 		ResponseSAMLStatusType status = new ResponseSAMLStatusType();
 
-		if (null != apellido1 && apellido1.length() > 0)
+		if (null != apellido1 && !apellido1.isEmpty()) {
 			res.setApellido1(apellido1);
-		if (null != apellido2 && apellido2.length() > 0)
+		}
+		if (null != apellido2 && !apellido2.isEmpty()) {
 			res.setApellido2(apellido2);
-		if (null != nif && nif.length() > 0)
+		}
+		if (null != nif && !nif.isEmpty()) {
 			res.setNif(nif);
-		if (null != nombre && nombre.length() > 0)
+		}
+		if (null != nombre && !nombre.isEmpty()) {
 			res.setNombre(nombre);
+		}
 
 		status.setDetails(details);
 		status.setStatusCode(codigo);

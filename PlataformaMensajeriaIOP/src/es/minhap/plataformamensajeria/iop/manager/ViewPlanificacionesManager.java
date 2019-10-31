@@ -13,7 +13,7 @@ public interface ViewPlanificacionesManager {
 	 * @param servidorId
 	 * @return List
 	 */
-	public List<ViewPlanificaciones> getPlanificacionesServidor(Long servidorId);
+	List<ViewPlanificaciones> getPlanificacionesServidor(Long servidorId);
 
 	/**
 	 * Se obtienen todos las planificaicones paginadas
@@ -27,7 +27,7 @@ public interface ViewPlanificacionesManager {
 	 * @param count
 	 * @return List
 	 */
-	public List<ViewPlanificaciones> getPlanificacionesPaginadas(int start, int size, String order, String column,
+	List<ViewPlanificaciones> getPlanificacionesPaginadas(int start, int size, String order, String column,
 			String nombre, PlanificacionBean criterio, boolean count);
 
 	/**
@@ -36,7 +36,7 @@ public interface ViewPlanificacionesManager {
 	 * @param planificacionId
 	 * @return ViewPlanificaciones
 	 */
-	public ViewPlanificaciones getPlanificacionById(long planificacionId);
+	ViewPlanificaciones getPlanificacionById(long planificacionId);
 
 	
 }

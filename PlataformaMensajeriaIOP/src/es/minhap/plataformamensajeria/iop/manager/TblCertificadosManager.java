@@ -14,7 +14,7 @@ public interface TblCertificadosManager {
 	 * @return 
 	 */
 	
-	public TblCertificados getCertificadosByServicio(Long servicioId);
+	TblCertificados getCertificadosByServicio(Long servicioId);
 
 		
 }

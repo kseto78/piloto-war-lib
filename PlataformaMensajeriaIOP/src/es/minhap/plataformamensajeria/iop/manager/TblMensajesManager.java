@@ -36,7 +36,7 @@ public interface TblMensajesManager {
 	 * @param password
 	 * @return 
 	 */
-	public Mensaje insertarMensajeSMS(Long idLote, MensajeSMSXMLBean mensaje, String usuario, String password);
+	Mensaje insertarMensajeSMS(Long idLote, MensajeSMSXMLBean mensaje, String usuario, String password);
 
 	/**
 	 * Inserta un mensaje nuevo con los datos necesarios del envío
@@ -63,7 +63,7 @@ public interface TblMensajesManager {
 	 * @param passwordAplicacion
 	 * @return Mensaje
 	 */
-	public Integer insertarMensajeRecepcionSMS(Long idLote, String smsText, String messageId, String sender,
+	Integer insertarMensajeRecepcionSMS(Long idLote, String smsText, String messageId, String sender,
 			String userAplicacion, String passwordAplicacion);
 
 	/**
@@ -76,7 +76,7 @@ public interface TblMensajesManager {
 	 * @param usuarioId
 	 * @return Mensaje
 	 */
-	public Mensaje insertarMensajePush(Long idLote, MensajePeticionLotesPushXMLBean mensaje,
+	Mensaje insertarMensajePush(Long idLote, MensajePeticionLotesPushXMLBean mensaje,
 			EnvioPushXMLBean notificacion, DestinatarioPeticionLotesPushXMLBean destinatario, Integer usuarioId);
 
 	/**
@@ -91,7 +91,7 @@ public interface TblMensajesManager {
 	 * @return Mensaje
 	 * 
 	 */
-	public Mensaje insertarMensajeEmail(Long idLote, MensajesXMLBean mensaje, EnvioEmailXMLBean envio, String cc, String to, String bcc);
+	Mensaje insertarMensajeEmail(Long idLote, MensajesXMLBean mensaje, EnvioEmailXMLBean envio, String cc, String to, String bcc);
 	
 	/**
 	 * Obtiene un elemento TblMensajes
@@ -99,7 +99,7 @@ public interface TblMensajesManager {
 	 * @param idMensaje
 	 * @return
 	 */
-	public TblMensajes getMensaje(Long idMensaje);
+	TblMensajes getMensaje(Long idMensaje);
 	
 	/**
 	 * Inserta un nuemo mensaje para un mensaje de tipo GISS
@@ -114,7 +114,7 @@ public interface TblMensajesManager {
 	 * @param password
 	 * @return Integer
 	 */
-	public Integer insertarMensajeGISS(Integer idLote, String cuerpo, String docUsuario,
+	Integer insertarMensajeGISS(Integer idLote, String cuerpo, String docUsuario,
 			String codOrganismoPagadorSMS, String idExterno, String destinatario, String usuario,
 			String password);
 
@@ -125,7 +125,7 @@ public interface TblMensajesManager {
 	 * @param idLote
 	 * @return
 	 */
-	public List<TblMensajes> getMensajesByLote(Long idLote);
+	List<TblMensajes> getMensajesByLote(Long idLote);
 	
 	/**
 	 * Obtiene una Lista de  TblMensajes que pertenecen a un lote con límites
@@ -143,7 +143,7 @@ public interface TblMensajesManager {
 	 * 
 	 * @param mensaje
 	 */
-	public void update(TblMensajes mensaje);
+	void update(TblMensajes mensaje);
 	
 	
 	/**
@@ -152,7 +152,7 @@ public interface TblMensajesManager {
 	 * @param idMensaje
 	 * @return
 	 */
-	public Long getIdServicioByIdMensaje(Long idMensaje);
+	Long getIdServicioByIdMensaje(Long idMensaje);
 	
 	/**
 	 * Se obtiene el id de lote a partir del id mensaje
@@ -160,7 +160,7 @@ public interface TblMensajesManager {
 	 * @param idMensaje
 	 * @return
 	 */
-	public Long getIdLoteByIdMensaje(Long idMensaje);
+	Long getIdLoteByIdMensaje(Long idMensaje);
 	
 	
 	/**
@@ -172,7 +172,7 @@ public interface TblMensajesManager {
 	 * @param estadoFinal
 	 * @return 
 	 */
-	public Integer operacionMensaje(Long idMensaje, String usuario, String password, String estadoFinal);
+	Integer operacionMensaje(Long idMensaje, String usuario, String password, String estadoFinal);
 	
 	/**
 	 * Cambia el estado de un mensaje
@@ -187,7 +187,7 @@ public interface TblMensajesManager {
 	 * @param proveedorId
 	 * @return 
 	 */
-	public Integer setEstadoMensaje(Long idMensaje, String estado, String descripcion, Boolean controlReintentos, 
+	Integer setEstadoMensaje(Long idMensaje, String estado, String descripcion, Boolean controlReintentos, 
 			Long destinatarioMensajeId, String subEstadoCode, String usuario, Long proveedorId);
 
 	/**
@@ -196,7 +196,7 @@ public interface TblMensajesManager {
 	 * @param uim
 	 * @return 
 	 */
-	public TblMensajes getMensajeIDByUIM(String uim);
+	TblMensajes getMensajeIDByUIM(String uim);
 	
 	
 	/**
@@ -208,7 +208,7 @@ public interface TblMensajesManager {
 	 * @param usuarioPeticion
 	 * @return int
 	 */
-	public int updateMessagesUsers(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion);
+	int updateMessagesUsers(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion);
 	
 	/**
 	 * Actualiza solo el mensaje especifico de los usuarios push pasados como parametro
@@ -220,7 +220,7 @@ public interface TblMensajesManager {
 	 * @param mensajeId
 	 * @return int
 	 */
-	public int updateMessagesUser(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion, String mensajeId);
+	int updateMessagesUser(List<String> usersId, String estadoInicial, String estadoFinal, String usuarioPeticion, String mensajeId);
 
 	/**
 	 * Comprueba si un mensaje es de un usuario
@@ -229,7 +229,7 @@ public interface TblMensajesManager {
 	 * @param mensajeId
 	 * @return Boolean
 	 */
-	public Boolean isMessageUser(List<String> usersId, Long mensajeId);
+	Boolean isMessageUser(List<String> usersId, Long mensajeId);
 	
 	/**
 	 * Establece el estado indicado al a los usuarios del mensaje indicado
@@ -240,7 +240,7 @@ public interface TblMensajesManager {
 	 * @param usuarioPeticion
 	 * @return Integer
 	 */
-	public Integer setEstadoMensajeUsuarios(Map<Long, List<Long>> mapMensajesMult, String estadoInicial, String estadoFinal, String usuarioPeticion);
+	Integer setEstadoMensajeUsuarios(Map<Long, List<Long>> mapMensajesMult, String estadoInicial, String estadoFinal, String usuarioPeticion);
 	
 	/**
 	 * Obtiene todas los Avisos que ha recibido un usuario
@@ -254,7 +254,7 @@ public interface TblMensajesManager {
 	 * @param ps
 	 * @return List<Aviso>
 	 */
-	public List<Aviso> getAvisosUsuario(String idDispositivo, String idPlataforma, String idServicio, String idUsuario, String numPagina, String tamPagina,PropertiesServices ps);
+	List<Aviso> getAvisosUsuario(String idDispositivo, String idPlataforma, String idServicio, String idUsuario, String numPagina, String tamPagina,PropertiesServices ps);
 	
 	/**
 	 * Recupera la prioridad a partir del identificador de mensaje
@@ -262,7 +262,7 @@ public interface TblMensajesManager {
 	 * @param mensajeId
 	 * @return
 	 */
-	public Integer getPrioridadByIdMessage(Long mensajeId);
+	Integer getPrioridadByIdMessage(Long mensajeId);
 
 	/**
 	 * Obtiene el lote a partir de un mensaje
@@ -270,7 +270,7 @@ public interface TblMensajesManager {
 	 * @param mensajeId
 	 * @return Boolean
 	 */
-	public Boolean getMultidestinatarioByMensaje(Long mensajeId);
+	Boolean getMultidestinatarioByMensaje(Long mensajeId);
 	
 	/**
 	 * Obtiene Los mensajes a reenviar por estar pendientes
@@ -278,7 +278,7 @@ public interface TblMensajesManager {
 	 * @return
 	 */
 	
-	public Map<Long, List<MensajeJMS>> getMensajesReenviar(String serviciosExcluidos,
+	Map<Long, List<MensajeJMS>> getMensajesReenviar(String serviciosExcluidos,
 			Date fechaInicio, Date fechaFin, String serviciosIncluidos);
 
 	/**
@@ -286,7 +286,7 @@ public interface TblMensajesManager {
 	 * 
 	 * @param mensajeid
 	 */
-	public void delete(Long mensajeid);
+	void delete(Long mensajeid);
 
 
 	/**
@@ -295,7 +295,7 @@ public interface TblMensajesManager {
 	 * @param query
 	 * @return
 	 */
-	public List<TblMensajes> getMensajesByQuery(TblMensajesQuery query);
+	List<TblMensajes> getMensajesByQuery(TblMensajesQuery query);
 
 
 	/**
@@ -304,7 +304,7 @@ public interface TblMensajesManager {
 	 * @param mensajeId
 	 * @return TblServicios
 	 */
-	public TblServicios getServicioByMensaje(Long mensajeId);
+	TblServicios getServicioByMensaje(Long mensajeId);
 
 
 	
@@ -314,14 +314,14 @@ public interface TblMensajesManager {
 	 * @param query
 	 * @return Integer
 	 */
-	public Integer countMensajesByQuery(TblMensajesQuery query);
+	Integer countMensajesByQuery(TblMensajesQuery query);
 
-	public Integer setEstadoMensajeNoEnviados(Long idMensaje, String estado,
+	Integer setEstadoMensajeNoEnviados(Long idMensaje, String estado,
 			String descripcion, Boolean controlReintentos,
 			Long destinatarioMensajeId, String subEstadoCode, String usuario,
 			Long proveedorId);
 
-	public Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal);
+	Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal);
 
 	
 	

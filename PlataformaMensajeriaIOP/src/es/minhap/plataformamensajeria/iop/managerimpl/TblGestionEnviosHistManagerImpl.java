@@ -38,9 +38,7 @@ public class TblGestionEnviosHistManagerImpl implements TblGestionEnviosHistMana
 	public Integer insertarGestionEnvios(TblGestionEnviosHist ge) {
 		Integer res;
 
-		res = tblGestionEnviosHistDAO.insert(ge).intValue();
-
-		return res;
+		return tblGestionEnviosHistDAO.insert(ge).intValue();
 	}
 
 	@Override

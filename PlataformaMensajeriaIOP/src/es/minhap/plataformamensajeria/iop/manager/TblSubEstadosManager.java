@@ -18,7 +18,7 @@ public interface TblSubEstadosManager {
 	 * @param TblSubestadosQuery
 	 * @return
 	 */
-	public TblSubestados getSubEstadoByName(TblSubestadosQuery subEstadoQuery);
+	TblSubestados getSubEstadoByName(TblSubestadosQuery subEstadoQuery);
 	
 	/**
 	 * Recupera el sub estado a partir del id de sub estado
@@ -26,6 +26,6 @@ public interface TblSubEstadosManager {
 	 * @param idSubEstado
 	 * @return
 	 */
-	public TblSubestados getSubEstadoById(Long idSubEstado);
+	TblSubestados getSubEstadoById(Long idSubEstado);
 
 }

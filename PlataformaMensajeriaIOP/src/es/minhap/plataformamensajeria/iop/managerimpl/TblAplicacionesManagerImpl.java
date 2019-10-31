@@ -26,6 +26,8 @@ import es.minhap.sim.query.TblAplicacionesQuery;
 @Service("TblAplicacionesManagerImpl")
 public class TblAplicacionesManagerImpl implements TblAplicacionesManager {
 
+	protected static final String R_CONST_1 = "%";
+
 	@Resource 
 	private TblAplicacionesDAO aplicacionesDAO;
 	
@@ -63,7 +65,7 @@ public class TblAplicacionesManagerImpl implements TblAplicacionesManager {
 		query.setPasswordComparator(TextComparator.EQUALS);
 		List<TblAplicaciones> listaAplicaciones = getAplicaciones(query);
 		
-		return (null != listaAplicaciones && listaAplicaciones.size() == 1)? true : false;
+		return null != listaAplicaciones && listaAplicaciones.size() == 1;
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class TblAplicacionesManagerImpl implements TblAplicacionesManager {
 		OrderType ord = null;
 		
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")){
+		if (order == null || "1".equals(order)){
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -95,7 +97,7 @@ public class TblAplicacionesManagerImpl implements TblAplicacionesManager {
 		}
 		if (null != nombreAplicacion){
 			query.setNombreComparator(TextComparator.ILIKE);
-			query.setNombre("%" + nombreAplicacion + "%");
+			query.setNombre(R_CONST_1 + nombreAplicacion + R_CONST_1);
 		}
 		query.setMaxResults(Integer.valueOf(size));
 		query.addOrder(columnSort, ord);
@@ -109,7 +111,7 @@ public class TblAplicacionesManagerImpl implements TblAplicacionesManager {
 		TblAplicacionesQuery query = new TblAplicacionesQuery();
 		query.setUsuario(usuario);
 		List<TblAplicaciones> lista = aplicacionesDAO.search(query).getResults();
-		return (null != lista && !lista.isEmpty())? true : false;
+		return null != lista && !lista.isEmpty();
 	}
 	
 	

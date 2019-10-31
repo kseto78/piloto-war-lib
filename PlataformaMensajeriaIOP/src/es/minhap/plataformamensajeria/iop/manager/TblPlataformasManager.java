@@ -13,13 +13,13 @@ public interface TblPlataformasManager {
 	 * @param plataformaID
 	 * @return Boolean
 	 */
-	public Boolean existPlataforma(Long plataformaID );
+	Boolean existPlataforma(Long plataformaID );
 	
 	/**
 	 * Obtiene todas las plataformas activas
 	 * 
 	 * @return 
 	 */
-	public List<TblPlataformas> getPlataformasActivas();
+	List<TblPlataformas> getPlataformasActivas();
 
 }

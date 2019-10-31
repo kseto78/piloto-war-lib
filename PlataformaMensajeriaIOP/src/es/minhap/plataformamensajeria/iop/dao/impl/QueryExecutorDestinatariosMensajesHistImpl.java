@@ -28,6 +28,12 @@ import es.minhap.sim.model.TblDestinatariosMensajes;
 @Service("QueryExecutorDestinatariosMensajesHistImpl")
 public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupport implements QueryExecutorDestinatariosMensajesHist {
 
+	protected static final String R_CONST_1 = "lista";
+
+	protected static final String R_CONST_2 = "mensajeId";
+
+	protected static final String R_CONST_3 = "unchecked";
+
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorDestinatariosMensajesHistImpl.class);
 	
 	private static final String LOG_START = "search - start";
@@ -41,7 +47,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 	}
 
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	public List<TblDestinatariosMensHist> convertDestinatarioMensTODestinatarioMensHist(List<Long> subList, Integer max, Integer firstResult) {
 		try {
@@ -51,7 +57,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 			String sql = "select m from TblDestinatariosMensajes m where mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
-			query.setParameterList("lista", subList);
+			query.setParameterList(R_CONST_1, subList);
 			
 			return convertTOHistDestinatariosMens(query.list());
 			 			
@@ -70,7 +76,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 			String sql = "select count(m) from TblDestinatariosMensajes m where mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
-			query.setParameterList("lista", subList);
+			query.setParameterList(R_CONST_1, subList);
 			
 			return ((Long) query.uniqueResult()).intValue();
 			 			
@@ -80,7 +86,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	public List<Long> getIdDestinatariosMensajesCons(List<Long> listaMensajes) {
 		try {
@@ -90,11 +96,10 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 			}
 			String sql = "select dm.destinatariosmensajes from TblDestinatariosMensHist dm where dm.mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setParameterList("lista", listaMensajes);
+			query.setParameterList(R_CONST_1, listaMensajes);
 			res = query.list();
 			if (null == res){
-				res = new ArrayList<>();
-				return res;
+				return new ArrayList<>();
 			}else{
 				return res;
 			}
@@ -113,7 +118,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 			}
 			String sql = "select count(dm.destinatariosmensajes) from TBL_DESTINATARIOS_MENS_HIST dm  where dm.mensajeid = :mensajeId ";
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-			query.setLong("mensajeId", idMensaje);
+			query.setLong(R_CONST_2, idMensaje);
 			
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			 			
@@ -124,7 +129,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 	}
 	
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	public List<TblDestinatariosMensHist> getDestinatarioMensHist(Long idMensaje, int size, int start) {
 		try {
@@ -133,7 +138,7 @@ public class QueryExecutorDestinatariosMensajesHistImpl extends HibernateDaoSupp
 			}
 			String sql = "from TblDestinatariosMensHist dm where dm.mensajeid = :mensajeId ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setLong("mensajeId", idMensaje);
+			query.setLong(R_CONST_2, idMensaje);
 			query.setFirstResult(start);
 			query.setMaxResults(size);
 			return query.list();

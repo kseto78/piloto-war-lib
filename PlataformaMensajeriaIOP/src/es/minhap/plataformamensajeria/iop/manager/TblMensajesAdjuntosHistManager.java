@@ -15,7 +15,7 @@ public interface TblMensajesAdjuntosHistManager {
 	 * @param adjuntoHist
 	 * @return TblMensajesHist
 	 */
-	public List<TblMensajesAdjuntosHist> convertMensajeTOMensajeHist(Long idMensaje, TblMensajesHist mensajeHist);
+	List<TblMensajesAdjuntosHist> convertMensajeTOMensajeHist(Long idMensaje, TblMensajesHist mensajeHist);
 
 	/**
 	 * Inserta el mensaje historicos
@@ -23,7 +23,7 @@ public interface TblMensajesAdjuntosHistManager {
 	 * @param m
 	 * @return Long
 	 */
-	public Long insert(TblMensajesAdjuntosHist m);
+	Long insert(TblMensajesAdjuntosHist m);
 
 	
 	/**
@@ -40,7 +40,7 @@ public interface TblMensajesAdjuntosHistManager {
 	 * @param menAd
 	 * @return id
 	 */
-	public Long insertarMensajesAdjuntos(TblMensajesAdjuntosHist menAd);
+	Long insertarMensajesAdjuntos(TblMensajesAdjuntosHist menAd);
 
 	/**
 	 * obtiene el listado de los idAdjuntos de un mensaje
@@ -48,7 +48,7 @@ public interface TblMensajesAdjuntosHistManager {
 	 * @param mensajeId
 	 * @return List<TblMensajesAdjuntosHist>
 	 */
-	public List<TblMensajesAdjuntosHist> listaAdjuntosByMensaje(Long mensajeId);
+	List<TblMensajesAdjuntosHist> listaAdjuntosByMensaje(Long mensajeId);
 
 	/**
 	 * obtiene el listado de los idAdjuntos de un mensaje
@@ -56,5 +56,5 @@ public interface TblMensajesAdjuntosHistManager {
 	 * @param mensajeId
 	 * @return Integer
 	 */
-	public Integer countAdjuntosByMensaje(Long mensajeId);
+	Integer countAdjuntosByMensaje(Long mensajeId);
 }

@@ -13,14 +13,14 @@ public interface TblAltaNumMovilManager {
 	 * @param query
 	 * @return TblAltaNumMovil
 	 */
-	public TblAltaNumMovil getTblAltaNumMovilByQuery(TblAltaNumMovilQuery query);
+	TblAltaNumMovil getTblAltaNumMovilByQuery(TblAltaNumMovilQuery query);
 
 	/**
 	 * ACtualiza el registro
 	 * 
 	 * @param tblAltaNumMovil
 	 */
-	public void actualizar(TblAltaNumMovil tblAltaNumMovil);
+	void actualizar(TblAltaNumMovil tblAltaNumMovil);
 
 	/**
 	 * Inserta el registro
@@ -28,14 +28,14 @@ public interface TblAltaNumMovilManager {
 	 * @param tblAltaNumMovil
 	 * @return
 	 */
-	public Long insertar(TblAltaNumMovil alta);
+	Long insertar(TblAltaNumMovil alta);
 
 	/**
 	 * Elimina el registro
 	 * 
 	 * @param idAltaNumMovil
 	 */
-	public void eliminar(Long idAltaNumMovil);
+	void eliminar(Long idAltaNumMovil);
 
 	/**
 	 * Listado entradas que cumples la caracteristica
@@ -43,7 +43,7 @@ public interface TblAltaNumMovilManager {
 	 * @param query
 	 * @return
 	 */
-	public List<Long> getListaIdTblAltaNumMovilByQuery(TblAltaNumMovilQuery query);
+	List<Long> getListaIdTblAltaNumMovilByQuery(TblAltaNumMovilQuery query);
 	
 	
 

@@ -13,7 +13,7 @@ public interface TransformacionesManager {
 	 * @param TransformacionQuery
 	 * @return
 	 */
-	public List<Transformacion> getTransformaciones(TransformacionQuery transformacion);
+	List<Transformacion> getTransformaciones(TransformacionQuery transformacion);
 
 	List<Transformacion> getTransformacionesOrdenados();
 
@@ -26,7 +26,7 @@ public interface TransformacionesManager {
 	 * @param accionId
 	 * @return
 	 */
-	public Long insert(Transformacion transformacion, String source, String accion, Long accionId);
+	Long insert(Transformacion transformacion, String source, String accion, Long accionId);
 
 	/**
 	 * Actualizamos la transformacion

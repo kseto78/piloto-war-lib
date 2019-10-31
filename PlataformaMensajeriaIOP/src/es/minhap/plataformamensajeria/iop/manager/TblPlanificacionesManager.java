@@ -12,7 +12,7 @@ public interface TblPlanificacionesManager {
 	 *
 	 * @return List<Long>
 	 */
-	public List<Long> getServiciosPlanificacion();
+	List<Long> getServiciosPlanificacion();
 	
 	
 	/**
@@ -20,7 +20,7 @@ public interface TblPlanificacionesManager {
 	 * @param servidorId
 	 * @return List<Long>
 	 */
-	public List<TblPlanificaciones> getPlanificacionesByServidor(Long servidorId);
+	List<TblPlanificaciones> getPlanificacionesByServidor(Long servidorId);
 
 	
 	/**
@@ -32,7 +32,7 @@ public interface TblPlanificacionesManager {
 	 * @param accionId
 	 * @param descripcion
 	 */
-	public void updatePlanificacion(TblPlanificaciones p, String source, String accion, Long accionId, String descripcion);
+	void updatePlanificacion(TblPlanificaciones p, String source, String accion, Long accionId, String descripcion);
 
 
 	/**
@@ -40,7 +40,7 @@ public interface TblPlanificacionesManager {
 	 * @param planificacionId
 	 * @return
 	 */
-	public TblPlanificaciones getPlanificacionById(Long planificacionId);
+	TblPlanificaciones getPlanificacionById(Long planificacionId);
 
 
 	/**
@@ -52,19 +52,19 @@ public interface TblPlanificacionesManager {
 	 * @param descripcion
 	 * @return
 	 */
-	public Long insert(TblPlanificaciones planificacion, String source, String accion, Long accionId, String descripcion);
+	Long insert(TblPlanificaciones planificacion, String source, String accion, Long accionId, String descripcion);
 
 	/**
 	 * Obtiene la lista de planificaciones a partir del criterio
 	 * @param query
 	 * @return
 	 */
-	public List<TblPlanificaciones> getPlanificacionesByQuery(TblPlanificacionesQuery query);
+	List<TblPlanificaciones> getPlanificacionesByQuery(TblPlanificacionesQuery query);
 
 	/**
 	 * recupera la lista con las planificaciones por servidor
 	 * @param servidorId
 	 * @return List<Long>
 	 */
-	public List<TblPlanificaciones> getPlanificacionesByServicio(Long servicioId);
+	List<TblPlanificaciones> getPlanificacionesByServicio(Long servicioId);
 }

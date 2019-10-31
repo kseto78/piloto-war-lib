@@ -14,7 +14,7 @@ public interface TblServidoresManager {
 	 * @param servidorId
 	 * @return TblServidores
 	 */
-	public TblServidores getServidorById(Long servidorId);
+	TblServidores getServidorById(Long servidorId);
 	
 	/**
 	 * recupera el servidor según datos pasados
@@ -22,7 +22,7 @@ public interface TblServidoresManager {
 	 * @param TblServidoresQuery
 	 * @return TblServidores
 	 */
-	public TblServidores getServidor(TblServidoresQuery query);
+	TblServidores getServidor(TblServidoresQuery query);
 	
 	/**
 	 * recupera el servidor según datos pasados
@@ -30,7 +30,7 @@ public interface TblServidoresManager {
 	 * @param TblServidoresQuery
 	 * @return Integer
 	 */
-	public Integer countServidor(TblServidoresQuery query);
+	Integer countServidor(TblServidoresQuery query);
 
 	
 	/**
@@ -45,7 +45,7 @@ public interface TblServidoresManager {
 	 * @param count
 	 * @return List<TblServidores>
 	 */
-	public List<TblServidores> getServidoresPaginado(int start, int size, String order, String columnSort, String nombreServidor,
+	List<TblServidores> getServidoresPaginado(int start, int size, String order, String columnSort, String nombreServidor,
 			int tipoServidor, boolean count);
 
 	
@@ -57,7 +57,7 @@ public interface TblServidoresManager {
 	 * @param accion
 	 * @param accionId
 	 */
-	public void update(TblServidores servidor, String source, String accion, Long accionId);
+	void update(TblServidores servidor, String source, String accion, Long accionId);
 
 	
 	/**
@@ -69,7 +69,7 @@ public interface TblServidoresManager {
 	 * @param accionId
 	 * @return
 	 */
-	public Long insert(TblServidores servidor, String source, String accion, Long accionId);
+	Long insert(TblServidores servidor, String source, String accion, Long accionId);
 	
 	
 	/**
@@ -78,6 +78,6 @@ public interface TblServidoresManager {
 	 * @param query
 	 * @return
 	 */
-	public List<TblServidores> getServidoresByQuery(TblServidoresQuery query);
+	List<TblServidores> getServidoresByQuery(TblServidoresQuery query);
 
 }

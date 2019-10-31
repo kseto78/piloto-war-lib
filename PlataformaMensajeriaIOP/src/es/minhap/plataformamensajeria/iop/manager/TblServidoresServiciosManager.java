@@ -16,21 +16,21 @@ public interface TblServidoresServiciosManager {
 	 * @param TblServidoresServiciosQuery
 	 * @return Integer
 	 */
-	public Integer countServidoresServicios(TblServidoresServiciosQuery query);
+	Integer countServidoresServicios(TblServidoresServiciosQuery query);
 
 	/**
 	 * 
 	 * @param servicioid
 	 * @return
 	 */
-	public TblServidoresServicios getServidoresServicio(TblServicios servicio);
+	TblServidoresServicios getServidoresServicio(TblServicios servicio);
 	
 	/**
 	 * 
 	 * @param servicioId
 	 * @return
 	 */
-	public List<Long> getServidoresFromServidoresServiciosByServicio(Long servicioId);
+	List<Long> getServidoresFromServidoresServiciosByServicio(Long servicioId);
 
 	
 	/**
@@ -39,7 +39,7 @@ public interface TblServidoresServiciosManager {
 	 * @param query
 	 * @return lista de servidoresServiciosBean
 	 */
-	public List<TblServidoresServiciosBean> getServidoresServicioByQuery(TblServidoresServiciosQuery query);
+	List<TblServidoresServiciosBean> getServidoresServicioByQuery(TblServidoresServiciosQuery query);
 
 	
 	/**
@@ -51,7 +51,7 @@ public interface TblServidoresServiciosManager {
 	 * @param descricpion
 	 * @return 
 	 */
-	public void insert(TblServidoresServicios servidorServicio, String source, String accion, Long accionId,
+	void insert(TblServidoresServicios servidorServicio, String source, String accion, Long accionId,
 			String descripcion);
 
 
@@ -63,5 +63,5 @@ public interface TblServidoresServiciosManager {
 	 * @param accionId
 	 * @param descripcion
 	 */
-	public void delete(Long servidorServicioId, String source, String accion, Long accionId, String descripcion);
+	void delete(Long servidorServicioId, String source, String accion, Long accionId, String descripcion);
 }

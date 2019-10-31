@@ -43,7 +43,9 @@ import es.minhap.sim.query.TblUsuariosPushQuery;
 @Service("TblUsuariosPushManagerImpl")
 public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(TblUsuariosPushManagerImpl.class);
+	protected static final String R_CONST_1 = "usuarioid";
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TblUsuariosPushManagerImpl.class);
 	
 	@Resource
 	private QueryExecutorUsuariosPush queryExecutor;
@@ -76,7 +78,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 	@Resource(name = "reloadableResourceBundleMessageSource")
 	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 	
-	private static final Integer timeSessionDefault = 60;
+	private static final Integer TIMESESSIONDEFAULT = 60;
 	
 	/**
 	 * @see es.minhap.TblUsuariosPushManager.getDispositivosUsuario
@@ -133,7 +135,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		}		
 		
 		}catch(Exception e){
-			logger.error("[TblUsuariosPushManagerImpl.eliminarUsuario] Eliminando Usuario", e);
+			LOGGER.error("[TblUsuariosPushManagerImpl.eliminarUsuario] Eliminando Usuario", e);
 			return false;
 		}
 		
@@ -148,12 +150,13 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		query.setDispositivoidComparator(TextComparator.EQUALS);
 		query.setServicioid(Long.parseLong(idServicio));
 		query.setPlataformaid(Long.parseLong(idPlataforma));
-		if (null != nombreUsuario)
+		if (null != nombreUsuario) {
 			query.setNombreusuario(nombreUsuario);
-		query.addOrder("usuarioid", OrderType.DESC);
+		}
+		query.addOrder(R_CONST_1, OrderType.DESC);
 		List<TblUsuariosPush> listaUsuarios = usuariosPushDAO.search(query).getResults();
 				
-		return (null != listaUsuarios && !listaUsuarios.isEmpty())? true : false;
+		return null != listaUsuarios && !listaUsuarios.isEmpty();
 	}
 	
 
@@ -172,10 +175,11 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		
 			//por si queremos filtrar por que el nombreUsuario sea igual o no
 			//Iequals se define en TblUsuariosPushQuery
-			if (filtroEqualNombreUsuario)
+			if (filtroEqualNombreUsuario) {
 				query.setNombreusuarioComparator(TextComparator.EQUALS);
-			else
+			} else {
 				query.setNombreusuarioComparator(TextComparator.IEQUALS);
+			}
 		}
 		return usuariosPushDAO.searchUnique(query);
 	}
@@ -187,7 +191,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		try{
 			usuariosPushDAO.update(usuario);
 		}catch(Exception e){
-			logger.error("[TblUsuariosPushManagerImpl.updateUsuario] Actualizando Usuario Push", e);
+			LOGGER.error("[TblUsuariosPushManagerImpl.updateUsuario] Actualizando Usuario Push", e);
 			return false;
 		}
 		return res;
@@ -209,7 +213,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 	@Override
 	@Transactional
 	public boolean insertUsuario(TblUsuariosPush usuario) {
-		return (usuariosPushDAO.insert(usuario)>0)? true : false;
+		return usuariosPushDAO.insert(usuario)>0;
 	}
 	
 	@Override
@@ -235,10 +239,12 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		//comprobamos Aplicacion
 		res = comprobarAplicacion(usuario, password, servicioId, operacion, ps);
 		
-		if (res >= 0)
+		if (res >= 0) {
 			res = comprobarServicioAplicacion(servicioId, res, usuario, password, operacion, ps );
-		if (res >= 0)
+		}
+		if (res >= 0) {
 			res = comprobarServicioActivo(servicioId, usuario, password, operacion, ps);
+		}
 		
 		if (res >= 0){
 			TblUsuariosPush up = new TblUsuariosPush();
@@ -270,7 +276,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 			AuditoriaBean auditoria = new AuditoriaBean(operacion, new Date(), null, null, Long.parseLong(servicioId), null,
 					usuario, password, codError.longValue(), error);
 			auditoriaManager.insertarAuditoria(auditoria);
-			logger.error("[TblUsuariosPushManagerImpl.insertarUsuario] Insertando Usuario Push", e);
+			LOGGER.error("[TblUsuariosPushManagerImpl.insertarUsuario] Insertando Usuario Push", e);
 			return codError;
 		}
 			
@@ -295,7 +301,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 	public boolean comprobarDispositivoRepetido(String codigo) {
 		TblUsuariosPushQuery query = new TblUsuariosPushQuery();
 		query.setDispositivoid(codigo);
-		return (usuariosPushDAO.count(query) <= 0)? true : false;
+		return usuariosPushDAO.count(query) <= 0;
 	}
 	
 	@Override
@@ -306,7 +312,7 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		query.setUiddispositivoComparator(TextComparator.EQUALS);
 		query.setServicioid(servicioId);
 		//query.setNombreIsNull(true);
-		query.addOrder("usuarioid", OrderType.ASC);
+		query.addOrder(R_CONST_1, OrderType.ASC);
 		return (null != usuariosPushDAO.search(query) && !usuariosPushDAO.search(query).getResults().isEmpty())? 
 				usuariosPushDAO.search(query).getResults().get(0) : null;
 	}
@@ -321,22 +327,23 @@ public class TblUsuariosPushManagerImpl implements TblUsuariosPushManager {
 		query.setTokensession(tokenSession);
 		query.setTokensessionComparator(TextComparator.EQUALS);
 		//query.setNombreIsNull(true);
-		query.addOrder("usuarioid", OrderType.ASC);
+		query.addOrder(R_CONST_1, OrderType.ASC);
 		TblUsuariosPush usuario = (null != usuariosPushDAO.search(query) && !usuariosPushDAO.search(query).getResults().isEmpty())? 
 				usuariosPushDAO.search(query).getResults().get(0) : null;
 		
-		if (null == usuario || null == usuario.getFechacaducidad())
+		if (null == usuario || null == usuario.getFechacaducidad()) {
 			return false;
+		}
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(usuario.getFechacaducidad());
 		if (null != timeSession){
 			calendar.add(Calendar.MINUTE, timeSession);
 		}else{
-			calendar.add(Calendar.MINUTE, timeSessionDefault);
+			calendar.add(Calendar.MINUTE, TIMESESSIONDEFAULT);
 		}
 		
-		return (calendar.after(Calendar.getInstance())? true : false);
+		return calendar.after(Calendar.getInstance());
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ public interface TblServidoresOrganismosManager {
 	 * @param query
 	 * @return lista de TblServidoresOrganismos
 	 */
-	public List<TblServidoresOrganismos> getServidoresOrganismosByQuery(TblServidoresOrganismosQuery query);
+	List<TblServidoresOrganismos> getServidoresOrganismosByQuery(TblServidoresOrganismosQuery query);
 
 	/**
 	 * Obtiene el servidor organismo por Id
@@ -21,7 +21,7 @@ public interface TblServidoresOrganismosManager {
 	 * @param servidorOrganismoId
 	 * @return TblServidoresOrganismos
 	 */
-	public TblServidoresOrganismos getServidoresOrganismosById(Long servidorOrganismoId);
+	TblServidoresOrganismos getServidoresOrganismosById(Long servidorOrganismoId);
 
 	/**
 	 * Insertamos un nuevo servicio
@@ -33,7 +33,7 @@ public interface TblServidoresOrganismosManager {
 	 * @param descripcion
 	 * @return Long
 	 */
-	public Long insert(TblServidoresOrganismos soTO, String source, String accion, Long accionId, String descripcion);
+	Long insert(TblServidoresOrganismos soTO, String source, String accion, Long accionId, String descripcion);
 
 	/**
 	 * Insertamos un nuevo servicio
@@ -44,7 +44,7 @@ public interface TblServidoresOrganismosManager {
 	 * @param accionId
 	 * @param descripcion
 	 */
-	public void delete(Long servidorOrganismoId, String source, String accion, Long accionId, String descripcion);
+	void delete(Long servidorOrganismoId, String source, String accion, Long accionId, String descripcion);
 
 	
 }

@@ -11,7 +11,7 @@ public interface ViewEnviosPendientesPorCanalManager {
 	 * 
 	 * @return List
 	 */
-	public List<ViewEnviosPendientesPorCanal> getAll();
+	List<ViewEnviosPendientesPorCanal> getAll();
 
 	
 }

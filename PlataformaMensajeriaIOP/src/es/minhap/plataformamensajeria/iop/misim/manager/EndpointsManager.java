@@ -13,7 +13,7 @@ public interface EndpointsManager {
 	 * @param TblAplicacionesQuery
 	 * @return
 	 */
-	public List<Endpoint> getEndpoints(EndpointQuery endpoint);
+	List<Endpoint> getEndpoints(EndpointQuery endpoint);
 
 	List<Endpoint> getEndpointsOrdenados();
 
@@ -26,7 +26,7 @@ public interface EndpointsManager {
 	 * @param accionId
 	 * @return
 	 */
-	public Long insert(Endpoint endpoint, String source, String accion, Long accionId);
+	Long insert(Endpoint endpoint, String source, String accion, Long accionId);
 
 	/**
 	 * Actualizamos el endpoint

@@ -46,11 +46,7 @@ public class ErroresManagerImpl implements ErroresManager {
 	public boolean getEstadoMq() {
 		Errores error = getErroresDAO().get(1L);
 		
-		if (error != null && error.getEstado() != null) {
-			return error.getEstado();
-		} 
-		
-		return false;
+		return error != null && error.getEstado() != null && error.getEstado();
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class ErroresManagerImpl implements ErroresManager {
 		Errores error = getErroresDAO().get(1L);
 		boolean actualizado = false;
 		//Comprobamos que coincida con el estado pasado por parametro
-		if (!(estado == error.getEstado())) {
+		if (estado != error.getEstado()) {
 			actualizarEstado(estado, error);
 			actualizado = true;
 		}

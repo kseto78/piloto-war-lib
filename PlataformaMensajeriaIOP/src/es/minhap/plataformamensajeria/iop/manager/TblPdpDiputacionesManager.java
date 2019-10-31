@@ -16,7 +16,7 @@ public interface TblPdpDiputacionesManager {
 	 * @param query
 	 * @return 
 	 */
-	public List<TblPdpDiputaciones> getPdpDiputacionesByQuery(TblPdpDiputacionesQuery query);
+	List<TblPdpDiputaciones> getPdpDiputacionesByQuery(TblPdpDiputacionesQuery query);
 
 	/**
 	 * Obtiene el organismo
@@ -24,14 +24,14 @@ public interface TblPdpDiputacionesManager {
 	 * @param organismoId
 	 * @return TblOrganismos
 	 */
-	public TblPdpDiputaciones getPdpDiputacionesById(Long organismoId);
+	TblPdpDiputaciones getPdpDiputacionesById(Long organismoId);
 
 	/**
 	 * Actualiza el organismo
 	 * 
 	 * @param organismoTO
 	 */
-	public void update(TblPdpDiputaciones organismoTO, String source, String accion, Long accionId);
+	void update(TblPdpDiputaciones organismoTO, String source, String accion, Long accionId);
 
 	/**
 	 * Inserta el organismo según datos pasados
@@ -42,7 +42,7 @@ public interface TblPdpDiputacionesManager {
 	 * @param accionId
 	 * @return Long
 	 */
-	public Long insert(TblPdpDiputaciones organismo, String source, String accion, Long accionId);
+	Long insert(TblPdpDiputaciones organismo, String source, String accion, Long accionId);
 
 	
 }

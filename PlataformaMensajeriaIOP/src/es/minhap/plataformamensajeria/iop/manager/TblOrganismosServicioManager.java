@@ -14,7 +14,7 @@ public interface TblOrganismosServicioManager {
 	 * @param query
 	 * @return lista de organismosServiciosBean
 	 */
-	public List<OrganismosServicioBean> getOrganismosServicioByQuery(TblOrganismosServicioQuery query);
+	List<OrganismosServicioBean> getOrganismosServicioByQuery(TblOrganismosServicioQuery query);
 
 	/**
 	 * inserta un nuevo ServicioOrganismo
@@ -26,7 +26,7 @@ public interface TblOrganismosServicioManager {
 	 * @param descripcion
 	 * @return id
 	 */
-	public Long insert(TblOrganismosServicio servicioOrganismosTO, String source, String accion, Long accionId, String descripcion);
+	Long insert(TblOrganismosServicio servicioOrganismosTO, String source, String accion, Long accionId, String descripcion);
 
 	/**
 	 * obtiene el organismoServicio por Id
@@ -34,14 +34,14 @@ public interface TblOrganismosServicioManager {
 	 * @param servicioOrganismoId
 	 * @return TblOrganismosServicio
 	 */
-	public OrganismosServicioBean getOrganismoServicioById(Integer servicioOrganismoId);
+	OrganismosServicioBean getOrganismoServicioById(Integer servicioOrganismoId);
 
 	/**
 	 * Elimina el organismoServicio por Id
 	 * 
 	 * @param servicioOrganismoId
 	 */
-	public void delete(Integer servicioOrganismoId, String source, String accion, Long accionId, String descripcion);
+	void delete(Integer servicioOrganismoId, String source, String accion, Long accionId, String descripcion);
 
 
 	

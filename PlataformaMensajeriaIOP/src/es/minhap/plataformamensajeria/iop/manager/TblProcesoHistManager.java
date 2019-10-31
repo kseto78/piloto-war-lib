@@ -10,7 +10,7 @@ public interface TblProcesoHistManager {
 	 * @param procesoHist
 	* @return id
 	 */
-	public Long insertar(TblProcesoHist procesoHist);
+	Long insertar(TblProcesoHist procesoHist);
 	
 	
 

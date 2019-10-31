@@ -47,9 +47,7 @@ public class TblMensajesAdjuntosHistManagerImpl implements TblMensajesAdjuntosHi
 	public Long insertarMensajesAdjuntos(TblMensajesAdjuntosHist menAd) {
 		Long res;
 
-		res = getMensajesAdjuntosHistDAO().insert(menAd);
-
-		return res;
+		return getMensajesAdjuntosHistDAO().insert(menAd);
 	}
 	
 	

@@ -31,9 +31,7 @@ public class TblGestionEnviosManagerImpl implements TblGestionEnviosManager {
 	public Integer insertarGestionEnvios(TblGestionEnvios ge) {
 		Integer res;
 
-		res = getGestionDAO().insert(ge).intValue();
-
-		return res;
+		return getGestionDAO().insert(ge).intValue();
 	}
 
 	@Override
@@ -66,9 +64,7 @@ public class TblGestionEnviosManagerImpl implements TblGestionEnviosManager {
 		TblGestionEnviosQuery query = new TblGestionEnviosQuery();
 		query.setLoteenvioid(Long.parseLong(idLote));
 
-		List<TblGestionEnvios> lista = gestionDAO.search(query).getResults();
-		
-		return lista;
+		return gestionDAO.search(query).getResults();
 	}
 
 	@Override

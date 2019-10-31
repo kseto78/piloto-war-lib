@@ -192,11 +192,13 @@ public class TblDestinatariosMensajesManagerImpl implements TblDestinatariosMens
 	public List<TblDestinatariosMensajes> getDestinatarioMensajesUsuarios(Long mensajeId, List<String> listaUsuarios,
 			String estadoInicial) {
 		TblDestinatariosMensajesQuery query = new TblDestinatariosMensajesQuery();
-		for(String s : listaUsuarios) 
+		for(String s : listaUsuarios) {
 			query.addDestinatarioIn(s);
+		}
 		query.setMensajeid(mensajeId);
-		if (null != estadoInicial)
+		if (null != estadoInicial) {
 			query.setEstado(estadoInicial);
+		}
 		return destinatariosMensajesDAO.search(query).getResults(); //ver que pasa si no hay
 	}
 

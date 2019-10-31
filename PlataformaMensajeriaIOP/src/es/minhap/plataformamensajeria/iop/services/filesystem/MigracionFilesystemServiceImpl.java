@@ -36,12 +36,14 @@ import es.minhap.sim.model.TblServicios;
 @Service("MigracionFilesystemServiceImpl")
 public class MigracionFilesystemServiceImpl implements IMigracionFilesystemService {
 
+	protected static final String R_CONST_1 = "TblServiciosManagerImpl";
+
 	private static final Logger LOG = LoggerFactory.getLogger(MigracionFilesystemServiceImpl.class);
 
 	@Resource(name = "MigracionFilesystemManagerImpl")
 	private MigracionFilesystemManager filesystemManager;
 
-	@Resource(name = "TblServiciosManagerImpl")
+	@Resource(name = R_CONST_1)
 	private TblServiciosManager tblServiciosManager;
 
 	@Resource(name = "TblMensajesManagerImpl")
@@ -62,7 +64,7 @@ public class MigracionFilesystemServiceImpl implements IMigracionFilesystemServi
 	@Resource(name = "TblAdjuntosHistManagerImpl")
 	private TblAdjuntosHistManager tblAdjuntosHistManager;
 	
-	@Resource(name = "TblServiciosManagerImpl")
+	@Resource(name = R_CONST_1)
 	private TblServiciosManager serviciosManager;
 
 	@Resource(name = "reloadableResourceBundleMessageSource")
@@ -91,7 +93,7 @@ public class MigracionFilesystemServiceImpl implements IMigracionFilesystemServi
 						tratarObjeto(tipoMensajeEmail, maxLimitCaracterer, o);
 					}
 					LOG.info(
-							"[MigracionFilesystemServiceImpl.modificarMensajes] Migrandos " + (indice)*MAX +" Mensajes de " + count);
+							"[MigracionFilesystemServiceImpl.modificarMensajes] Migrandos " + indice*MAX +" Mensajes de " + count);
 				}
 			}
 			LOG.info(

@@ -51,6 +51,22 @@ import es.minhap.sim.query.ViewHistoricoQuery;
 @Service("seguimientoMensajesImpl")
 public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 
+	protected static final String R_CONST_1 = "plataformaErrores.seguimientoMensajes.STATUSCODE_KO";
+
+	protected static final String R_CONST_2 = "[ConsultarHistorial] Generando XML de respuesta";
+
+	protected static final String R_CONST_3 = ", MensajeID ";
+
+	protected static final String R_CONST_4 = "[ConsultarEstado] Generando XML de respuesta";
+
+	protected static final String R_CONST_5 = "[ConsultarEstado] Antes de consultarEstado";
+
+	protected static final String R_CONST_6 = "[ConsultarEstado] Despues de consultarEstado";
+
+	protected static final String R_CONST_7 = "fecha";
+
+	protected static final String R_CONST_8 = "plataformaErrores.seguimientoMensajes.STATUSTEXT_KO";
+
 	private static final Logger LOG = LoggerFactory.getLogger(SeguimientoMensajesImpl.class);
 
 	@Resource
@@ -76,7 +92,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 			Integer idMensaje, String idExterno, Integer estadoId, String fechaDesde, String fechaHasta,
 			String usuario, String password) {
 
-		LOG.debug("[ConsultarEstado] Consultando estado de ServicioID " + servicioId + ", MensajeID " + idMensaje);
+		LOG.debug("[ConsultarEstado] Consultando estado de ServicioID " + servicioId + R_CONST_3 + idMensaje);
 		String xmlResultado = "";
 		List<ViewGestionenviosDetallada> listado;
 		ArrayList<SeguimientoMensaje> listaResultados;
@@ -90,6 +106,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				fDesde = sdf.parse(fechaDesde);
 			}
 		} catch (ParseException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			fDesde = null;
 		}
 		try {
@@ -97,21 +114,22 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				fHasta = sdf.parse(fechaHasta);
 			}
 		} catch (ParseException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			fHasta = null;
 		}
 		try {
-			LOG.debug("[ConsultarEstado] Antes de consultarEstado");
+			LOG.debug(R_CONST_5);
 			listado = viewGestionEnviosDetalladaManager.getEstadosFiltroMensaje(getFiltro(servicioId, canalId,
 					aplicacionId, loteId, idMensaje, idExterno, estadoId, fDesde, fHasta, usuario, password));
 			listaResultados = getListaResultados(listado);
-			LOG.debug("[ConsultarEstado] Despues de consultarEstado");
+			LOG.debug(R_CONST_6);
 			Respuesta respuesta = new Respuesta();
 
 			xmlResultado = respuesta.toXMLEstado(listaResultados);
 			LOG.trace(xmlResultado);
 			LOG.debug("[ConsultarEstado] XML de respuesta generado");
 		} catch (PlataformaBusinessException pbe) {
-			LOG.error("[ConsultarEstado] Generando XML de respuesta", pbe);
+			LOG.error(R_CONST_4, pbe);
 		}
 
 		return xmlResultado;
@@ -183,6 +201,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				idServicio = Integer.parseInt(consultaEstado.getIdServicio());
 			}
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			idServicio = 0;
 		}
 		try {
@@ -190,6 +209,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				idCanal = Integer.parseInt(consultaEstado.getCanal());
 			}
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			idCanal = 0;
 		}
 		try {
@@ -197,6 +217,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				idAplicacion = Integer.parseInt(consultaEstado.getIdAplicacion());
 			}
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			idAplicacion = 0;
 		}
 		try {
@@ -204,6 +225,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				idLote = Integer.parseInt(consultaEstado.getLote());
 			}
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			idLote = 0;
 		}
 		try {
@@ -211,6 +233,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				idMensaje = Integer.parseInt(consultaEstado.getIdMensaje());
 			}
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			idMensaje = 0;
 		}
 		try {
@@ -218,15 +241,16 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 				idEstado = Integer.parseInt(consultaEstado.getEstado());
 			}
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			idEstado = 0;
 		}
 
-		LOG.debug("[ConsultarEstado] Antes de consultarEstado");
+		LOG.debug(R_CONST_5);
 
 		xmlResultado = this.consultarEstado(idServicio, idCanal, idAplicacion, idLote, idMensaje,
 				consultaEstado.getIdExterno(), idEstado, consultaEstado.getFechaDesde(),
 				consultaEstado.getFechaHasta(), consultaEstado.getUsuario(), consultaEstado.getPassword());
-		LOG.debug("[ConsultarEstado] Despues de consultarEstado");
+		LOG.debug(R_CONST_6);
 
 		return xmlResultado;
 	}
@@ -251,12 +275,13 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 			LOG.debug("[ConsultarHistorial] Despues de consultarHistorial");
 			xmlResultado = respuesta.toXMLHistorial(listaResultados);
 
-			LOG.debug("[ConsultarHistorial] Generando XML de respuesta");
+			LOG.debug(R_CONST_2);
 
 			LOG.trace(xmlResultado);
 			LOG.debug("[ConsultarHistorial] XML de respuesta generado");
 		} catch (PlataformaBusinessException e) {
-			LOG.error("[ConsultarHistorial] Generando XML de respuesta");
+			// TODO logger.warn(e.getMessage(), e);
+			LOG.error(R_CONST_2);
 		}
 
 		return xmlResultado;
@@ -306,7 +331,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 		query.setCodigoexterno(idExterno);
 		query.setUsuario(usuario);
 		query.setPassword(Utils.encode64(password));
-		query.addOrder("fecha", OrderType.DESC);
+		query.addOrder(R_CONST_7, OrderType.DESC);
 		return query;
 	}
 
@@ -318,7 +343,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 		query.setCodigoexterno(idExterno);
 		query.setUsuario(usuario);
 		query.setPassword(Utils.encode64(password));
-		query.addOrder("fecha", OrderType.DESC);
+		query.addOrder(R_CONST_7, OrderType.DESC);
 		return query;
 	}
 
@@ -329,8 +354,8 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 		try {
 		if (!comprobarPeticionConsultaEstado(consultaEstado.getUsuario(), consultaEstado.getPassword(), consultaEstado.getFiltro())) {
 			Respuesta respuesta = new Respuesta();
-			String statusCode = ps.getMessage("plataformaErrores.seguimientoMensajes.STATUSCODE_KO", null);
-			String statusText = ps.getMessage("plataformaErrores.seguimientoMensajes.STATUSTEXT_KO", null);
+			String statusCode = ps.getMessage(R_CONST_1, null);
+			String statusText = ps.getMessage(R_CONST_8, null);
 			String detailsUsuario = ps.getMessage("plataformaErrores.seguimientoMensajes.DETAILSUSUARIOFILTRO", null);
 			ResponseStatusType status = new ResponseStatusType();
 			status.setDetails(detailsUsuario);
@@ -343,56 +368,56 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 		} else {
 			Integer idServicio = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getIdServicio() != null
-					&& !("").equals(consultaEstado.getFiltro().getIdServicio())) {
+					&& !"".equals(consultaEstado.getFiltro().getIdServicio())) {
 				idServicio = Integer.parseInt(consultaEstado.getFiltro().getIdServicio());
 			}
 
 			Integer idCanal = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getIdCanal() != null
-					&& !("").equals(consultaEstado.getFiltro().getIdCanal())) {
+					&& !"".equals(consultaEstado.getFiltro().getIdCanal())) {
 				idCanal = Integer.parseInt(consultaEstado.getFiltro().getIdCanal());
 			}
 
 			Integer idAplicacion = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getIdAplicacion() != null
-					&& !("").equals(consultaEstado.getFiltro().getIdAplicacion())) {
+					&& !"".equals(consultaEstado.getFiltro().getIdAplicacion())) {
 				idAplicacion = Integer.parseInt(consultaEstado.getFiltro().getIdAplicacion());
 			}
 
 			Integer idLote = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getIdLote() != null
-					&& !("").equals(consultaEstado.getFiltro().getIdLote())) {
+					&& !"".equals(consultaEstado.getFiltro().getIdLote())) {
 				idLote = Integer.parseInt(consultaEstado.getFiltro().getIdLote());
 			}
 
 			Integer idEstado = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getIdEstado() != null
-					&& !("").equals(consultaEstado.getFiltro().getIdEstado())) {
+					&& !"".equals(consultaEstado.getFiltro().getIdEstado())) {
 				idEstado = Integer.parseInt(consultaEstado.getFiltro().getIdEstado());
 			}
 
 			Integer idMensaje = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getMensaje() != null
 					&& consultaEstado.getFiltro().getMensaje().getIdMensaje() != null
-					&& !("").equals(consultaEstado.getFiltro().getMensaje().getIdMensaje())) {
+					&& !"".equals(consultaEstado.getFiltro().getMensaje().getIdMensaje())) {
 				idMensaje = Integer.parseInt(consultaEstado.getFiltro().getMensaje().getIdMensaje());
 			}
 
 			String idExterno = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getMensaje() != null
-					&& !("").equals(consultaEstado.getFiltro().getMensaje().getIdExterno())) {
+					&& !"".equals(consultaEstado.getFiltro().getMensaje().getIdExterno())) {
 				idExterno = consultaEstado.getFiltro().getMensaje().getIdExterno();
 			}
 
 			String fechaDesde = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getFechaDesde() != null
-					&& !("").equals(consultaEstado.getFiltro().getFechaDesde())) {
+					&& !"".equals(consultaEstado.getFiltro().getFechaDesde())) {
 				fechaDesde = consultaEstado.getFiltro().getFechaDesde();
 			}
 
 			String fechaHasta = null;
 			if (consultaEstado.getFiltro() != null && consultaEstado.getFiltro().getFechaHasta() != null
-					&& !("").equals(consultaEstado.getFiltro().getFechaHasta())) {
+					&& !"".equals(consultaEstado.getFiltro().getFechaHasta())) {
 				fechaHasta = consultaEstado.getFiltro().getFechaHasta();
 			}
 
@@ -400,7 +425,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 					fechaDesde, fechaHasta, consultaEstado.getUsuario(), consultaEstado.getPassword());
 		}
 		} catch (PlataformaBusinessException pbe) {
-			LOG.error("[ConsultarEstado] Generando XML de respuesta", pbe);
+			LOG.error(R_CONST_4, pbe);
 		}
 		return xmlResultado;
 	}
@@ -413,8 +438,8 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 			if (!comprobarPeticionConsultaHistorial(consultaHistorico.getUsuario(), consultaHistorico.getPassword(),
 					consultaHistorico.getMensaje())) {
 				Respuesta respuesta = new Respuesta();
-				String statusCode = ps.getMessage("plataformaErrores.seguimientoMensajes.STATUSCODE_KO", null);
-				String statusText = ps.getMessage("plataformaErrores.seguimientoMensajes.STATUSTEXT_KO", null);
+				String statusCode = ps.getMessage(R_CONST_1, null);
+				String statusText = ps.getMessage(R_CONST_8, null);
 				String detailsUsuario = ps.getMessage("plataformaErrores.seguimientoMensajes.DETAILSUSUARIO", null);
 				ResponseStatusType status = new ResponseStatusType();
 				status.setDetails(detailsUsuario);
@@ -428,13 +453,13 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 
 				Integer idMensaje = null;
 				if (consultaHistorico.getMensaje() != null && consultaHistorico.getMensaje().getIdMensaje() != null
-						&& !("").equals(consultaHistorico.getMensaje().getIdMensaje())) {
+						&& !"".equals(consultaHistorico.getMensaje().getIdMensaje())) {
 					idMensaje = Integer.parseInt(consultaHistorico.getMensaje().getIdMensaje());
 				}
 
 				String idExterno = null;
 				if (consultaHistorico.getMensaje() != null && consultaHistorico.getMensaje().getIdExterno() != null
-						&& !("").equals(consultaHistorico.getMensaje().getIdExterno())) {
+						&& !"".equals(consultaHistorico.getMensaje().getIdExterno())) {
 					idExterno = consultaHistorico.getMensaje().getIdExterno();
 				}
 
@@ -442,7 +467,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 						consultaHistorico.getPassword());
 			}
 		} catch (PlataformaBusinessException pbe) {
-			LOG.error("[ConsultarEstado] Generando XML de respuesta", pbe);
+			LOG.error(R_CONST_4, pbe);
 		}
 		return xmlResultado;
 
@@ -451,7 +476,7 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 	@Override
 	public String consultarEstadoAEAT(Integer servicioId, Integer idMensaje, String idExterno, String usuario,
 			String password, String sender, String recipient, String statusText) {
-		LOG.debug("[consultarEstadoAEAT] Consultando estado de ServicioID " + servicioId + ", MensajeID " + idMensaje);
+		LOG.debug("[consultarEstadoAEAT] Consultando estado de ServicioID " + servicioId + R_CONST_3 + idMensaje);
 		String xmlResultado = "";
 
 		List<ViewGestionenviosDetallada> listado;
@@ -493,12 +518,12 @@ public class SeguimientoMensajesImpl implements ISeguimientoMensajesService {
 	
 	private boolean comprobarPeticionConsultaEstado(String usuario, String password, Filtro filtro) {
 		
-		return ((null == usuario || usuario.length() < 1 || null == password || password.length() < 1 || null == filtro))? false : true;
+		return null != usuario && !usuario.isEmpty() && null != password && !password.isEmpty() && null != filtro;
 			
 	}
 	
 	private boolean comprobarPeticionConsultaHistorial(String usuario, String password, ConsultaHistoricoXMLBean.Mensaje mensaje) {
-		return ((null == usuario || usuario.length() < 1) || (null == password || password.length() < 1) || (null == mensaje))? false : true;
+		return null != usuario && !usuario.isEmpty() && null != password && !password.isEmpty() && null != mensaje;
 	}
 
 	/**

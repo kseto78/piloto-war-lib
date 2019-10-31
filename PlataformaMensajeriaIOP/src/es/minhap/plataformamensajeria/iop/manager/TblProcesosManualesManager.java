@@ -15,7 +15,7 @@ public interface TblProcesosManualesManager {
 	 * @param TblProcesosManualesQuery
 	 * @return
 	 */
-	public List<TblProcesosManuales> getProcesosManualesByQuery(TblProcesosManualesQuery procesos);
+	List<TblProcesosManuales> getProcesosManualesByQuery(TblProcesosManualesQuery procesos);
 	
 	/**
 	 * Obtiene el proceso manual
@@ -23,7 +23,7 @@ public interface TblProcesosManualesManager {
 	 * @param procesoManualId
 	 * @return TblProcesosManuales
 	 */
-	public TblProcesosManuales getProcesoManualById(Long procesoManualId);
+	TblProcesosManuales getProcesoManualById(Long procesoManualId);
 	
 		/**
 	 * Actualizamos el proceso manual
@@ -34,8 +34,8 @@ public interface TblProcesosManualesManager {
 	 * @param accionId
 	 * @return
 	 */
-	public void update(TblProcesosManuales procesoManual, String source, String accion, Long accionId);
+	void update(TblProcesosManuales procesoManual, String source, String accion, Long accionId);
 
-	public Long insert(TblProcesosManuales procesoManual, String source, String accion, Long accionId);
+	Long insert(TblProcesosManuales procesoManual, String source, String accion, Long accionId);
 
 }

@@ -33,6 +33,8 @@ import es.minhap.sim.query.TblUsuariosWebPushQuery;
  */
 @Service("tblUsuariosWebPushManagerImpl")
 public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager {
+	protected static final String R_CONST_1 = "TblUsuariosWebPushManager.eliminarUsuario";
+
 	static Logger logger = LoggerFactory.getLogger(TblUsuariosWebPushManagerImpl.class);
 	
 	@Resource
@@ -53,7 +55,8 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 			tblUsuariosWebPushDAO.delete(usuario.getUsuariowebpushid());
 			res = true;
 		}catch(Exception e){
-			logger.error("TblUsuariosWebPushManager.eliminarUsuario");
+			// TODO logger.warn(e.getMessage(), e);
+			logger.error(R_CONST_1);
 		}
 		return res;
 	}
@@ -66,7 +69,8 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 			tblUsuariosWebPushDAO.insert(usuario);
 			res = true;
 		}catch(Exception e){
-			logger.error("TblUsuariosWebPushManager.eliminarUsuario");
+			// TODO logger.warn(e.getMessage(), e);
+			logger.error(R_CONST_1);
 		}
 		return res;
 	}
@@ -86,7 +90,7 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 	public boolean comprobarDispositivoRepetido(String codigo) {
 		TblUsuariosWebPushQuery query = new TblUsuariosWebPushQuery();
 		query.setUsuarioid(codigo);
-		return (tblUsuariosWebPushDAO.count(query) <= 0)? true : false;
+		return tblUsuariosWebPushDAO.count(query) <= 0;
 	}
 	
 	@Override
@@ -162,7 +166,7 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 	OrderType ord = null;
 		
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")){
+		if (order == null || "1".equals(order)){
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -176,7 +180,7 @@ public class TblUsuariosWebPushManagerImpl implements TblUsuariosWebPushManager 
 			if(criterio.getUsuarioId() != null && criterio.getUsuarioId() != 0){
 				query.setUsuariowebpushid(Long.parseLong(criterio.getUsuarioId().toString()));
 			}
-			if(criterio.getNombreUsuario() != null && criterio.getNombreUsuario().length() > 0){
+			if(criterio.getNombreUsuario() != null && !criterio.getNombreUsuario().isEmpty()){
 				query.setUsuarioid(criterio.getNombreUsuario());
 			}
 			if(criterio.getFechaDesde() != null){

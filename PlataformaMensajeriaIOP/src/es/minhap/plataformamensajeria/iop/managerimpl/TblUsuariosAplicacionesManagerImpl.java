@@ -24,6 +24,8 @@ import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 @Service("TblUsuariosAplicacionesManagerImpl")
 public class TblUsuariosAplicacionesManagerImpl implements TblUsuariosAplicacionesManager {
 
+	protected static final String R_CONST_1 = " ";
+
 	@Resource
 	private TblUsuariosAplicacionesDAO usuariosAplicacionesDAO;
 	
@@ -56,7 +58,7 @@ public class TblUsuariosAplicacionesManagerImpl implements TblUsuariosAplicacion
 		log.setAdtusuario(usuarioAplicacionTO.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + usuarioAplicacionTO.getTblUsuarios().getUsuarioid());
+		log.setSourcedescription(descripcion + R_CONST_1 + usuarioAplicacionTO.getTblUsuarios().getUsuarioid());
 		log.setSourceid(usuarioAplicacionTO.getTblUsuarios().getUsuarioid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
@@ -75,7 +77,7 @@ public class TblUsuariosAplicacionesManagerImpl implements TblUsuariosAplicacion
 //		log.setSourcedescription(descripcion + " " + usuarioAplicacionTO.getTblUsuarios().getUsuarioid());
 //		log.setSourceid(usuarioAplicacionTO.getTblUsuarios().getUsuarioid());
 		//Incidencia al borrar la aplicacion en Usuarios
-		log.setSourcedescription(descripcion + " " + usuarioAplicacionTO.getUsuarioaplicacionid());
+		log.setSourcedescription(descripcion + R_CONST_1 + usuarioAplicacionTO.getUsuarioaplicacionid());
 		log.setSourceid(usuarioAplicacionTO.getUsuarioaplicacionid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);

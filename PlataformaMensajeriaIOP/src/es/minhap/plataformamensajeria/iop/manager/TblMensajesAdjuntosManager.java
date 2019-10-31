@@ -12,7 +12,7 @@ public interface TblMensajesAdjuntosManager {
 	 * @param TblMensajesAdjuntos
 	 * @return id
 	 */
-	public Long insertarMensajesAdjuntos(TblMensajesAdjuntos menAd);
+	Long insertarMensajesAdjuntos(TblMensajesAdjuntos menAd);
 	
 	/**
 	 * obtiene el listado de los idAdjuntos de un mensaje
@@ -20,7 +20,7 @@ public interface TblMensajesAdjuntosManager {
 	 * @param mensajeId
 	 * @return List<TblMensajesAdjuntos>
 	 */
-	public List<TblMensajesAdjuntos> listaAdjuntosByMensaje(Long mensajeId);
+	List<TblMensajesAdjuntos> listaAdjuntosByMensaje(Long mensajeId);
 
 
 	/**
@@ -29,7 +29,7 @@ public interface TblMensajesAdjuntosManager {
 	 * @param TblMensajesAdjuntos
 	 * @return id
 	 */
-	public void delete(Long idMensajeAdjunto);
+	void delete(Long idMensajeAdjunto);
 
 	/**
 	 * obtiene el listado de los idAdjuntos de un mensaje
@@ -37,7 +37,7 @@ public interface TblMensajesAdjuntosManager {
 	 * @param mensajeId
 	 * @return Integer
 	 */
-	public Integer countAdjuntosByMensaje(Long mensajeId);
+	Integer countAdjuntosByMensaje(Long mensajeId);
 	
 
 }

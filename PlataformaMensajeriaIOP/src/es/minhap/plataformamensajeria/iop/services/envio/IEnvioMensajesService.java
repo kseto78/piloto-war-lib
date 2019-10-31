@@ -37,7 +37,7 @@ public interface IEnvioMensajesService {
     
     String enviarNotificacion(EnvioPushXMLBean notificacionPush);
 
-	boolean asociadoAlOrganismo(String servicio, String OrganismoPagador);
+	boolean asociadoAlOrganismo(String servicio, String organismoPagador);
 
 	boolean esMultiorganismo(String servicio);
 

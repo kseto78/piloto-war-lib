@@ -12,6 +12,6 @@ import es.minhap.plataformamensajeria.iop.beans.PeticionClaveAuthResponse;
 @WebService
 public interface IGestionSAMLResponseService {
 
-	String insertarDatosUsuario(PeticionClaveAuthResponse peticion, String nombre, String NIF, String apellido1, String apellido2);
+	String insertarDatosUsuario(PeticionClaveAuthResponse peticion, String nombre, String nif, String apellido1, String apellido2);
 
 }

@@ -23,13 +23,13 @@ public interface ISeguimientoMensajesService {
 	 * @param idExterno
 	 * @param estadoId
 	 * @param fechaDesde
-	 * @param FechaHasta
+	 * @param fechaHasta
 	 * @param usuario
 	 * @param password
 	 * @return Devuelve un xml con los resultados
 	 */
 	//idservicio, idcanal, idaplicacion, idLote, idmensaje, idexterno, idestado, FechaDesde, FechaHasta, usuario, password
-    String consultarEstado(Integer servicioId, Integer canalId,Integer aplicacionId, Integer loteId, Integer idMensaje, String idExterno, Integer estadoId, String fechaDesde, String FechaHasta, String usuario, String password);
+    String consultarEstado(Integer servicioId, Integer canalId,Integer aplicacionId, Integer loteId, Integer idMensaje, String idExterno, Integer estadoId, String fechaDesde, String fechaHasta, String usuario, String password);
 	
 	String consultarEstado(ConsultaEstadoBean consultaEstado);
 	

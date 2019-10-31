@@ -200,8 +200,7 @@ public class TblAdjuntosManagerImpl implements TblAdjuntosManager {
 		query.setUsuario(usuario);
 		query.setPassword(Utils.encode64(password));
 
-		count = getViewMensajeAdjuntosDetalladaDAO().countViewMensajeAdjuntosDetallada(query);
-		return count;
+		return getViewMensajeAdjuntosDetalladaDAO().countViewMensajeAdjuntosDetallada(query);
 	}
 
 	/**

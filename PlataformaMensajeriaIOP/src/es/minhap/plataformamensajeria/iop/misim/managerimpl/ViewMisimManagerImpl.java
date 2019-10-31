@@ -41,9 +41,7 @@ public class ViewMisimManagerImpl implements ViewMisimManager {
 		query.setMaxResultados(size);
 		query.addOrder("idPeticion", OrderType.DESC);
 		
-		List<ViewMisim> intercambios = getViewMisimDAO().search(query).getResults();
-		
-		return intercambios;
+		return getViewMisimDAO().search(query).getResults();
 	}
 	
 	/**

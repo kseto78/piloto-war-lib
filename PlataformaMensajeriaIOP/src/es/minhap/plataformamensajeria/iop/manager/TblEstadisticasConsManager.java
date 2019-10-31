@@ -10,7 +10,7 @@ public interface TblEstadisticasConsManager {
 	 * @param estadisticasCons
 	* @return id
 	 */
-	public Long insertar(TblEstadistitcasCons estadisticasCons);
+	Long insertar(TblEstadistitcasCons estadisticasCons);
 	
 	
 

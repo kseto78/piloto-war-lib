@@ -75,7 +75,7 @@ public class TblUsuariosServiciosMovilesManagerImpl implements TblUsuariosServic
 		us.setEstadosuscripcion(1);
 		us.setTblUsuariosPush(usuariosPushManager.getUsuarioPush(Long.parseLong(idUsuario)));
 		us.setServiciosmovilesid(Long.parseLong(idServicioMovil));
-		return (null != usuariosServiciosMovilesDAO.insert(us)) ? true : false;
+		return null != usuariosServiciosMovilesDAO.insert(us);
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public class TblUsuariosServiciosMovilesManagerImpl implements TblUsuariosServic
 		query.setEstadosuscripcion(1);
 		upQuery.setUsuarioid(Long.valueOf(usuario));
 		query.setTblUsuariosPush(upQuery);
-		return (null != usuariosServiciosMovilesDAO.search(query) && !usuariosServiciosMovilesDAO.search(query).getResults().isEmpty())? true : false;
+		return null != usuariosServiciosMovilesDAO.search(query) && !usuariosServiciosMovilesDAO.search(query).getResults().isEmpty();
 	}
 
 	/**

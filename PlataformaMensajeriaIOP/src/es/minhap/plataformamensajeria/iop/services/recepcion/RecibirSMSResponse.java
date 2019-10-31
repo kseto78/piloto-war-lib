@@ -40,14 +40,16 @@ import es.minhap.plataformamensajeria.iop.services.exceptions.PlataformaBusiness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "status","idLote"
+    "status",RecibirSMSResponse.R_CONST_1
 })
 @XmlRootElement(name = "Respuesta")
 public class RecibirSMSResponse {
 
-    @XmlElement(name = "Status", required = true)
+    protected static final String R_CONST_1 = "idLote";
+	protected static final String R_CONST_2 = "soap";
+	@XmlElement(name = "Status", required = true)
     protected ResponseStatusType status;
-    @XmlElement(name = "idLote", required = true)
+    @XmlElement(name = R_CONST_1, required = true)
     protected Integer idLote;
     
     /**
@@ -96,16 +98,14 @@ public class RecibirSMSResponse {
 			marshaller.marshal(this, document);
 			SOAPMessage soapMessage = MessageFactory.newInstance().createMessage();
 			soapMessage.getSOAPPart().getEnvelope().removeNamespaceDeclaration("SOAP-ENV");
-			soapMessage.getSOAPPart().getEnvelope().addNamespaceDeclaration("soap", "http://www.w3.org/2001/12/soap-envelope");
-			soapMessage.getSOAPPart().getEnvelope().setPrefix("soap");
-			soapMessage.getSOAPHeader().setPrefix("soap");
-			soapMessage.getSOAPBody().setPrefix("soap");
+			soapMessage.getSOAPPart().getEnvelope().addNamespaceDeclaration(R_CONST_2, "http://www.w3.org/2001/12/soap-envelope");
+			soapMessage.getSOAPPart().getEnvelope().setPrefix(R_CONST_2);
+			soapMessage.getSOAPHeader().setPrefix(R_CONST_2);
+			soapMessage.getSOAPBody().setPrefix(R_CONST_2);
 			soapMessage.getSOAPBody().addDocument(document);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			soapMessage.writeTo(outputStream);
-			String output = new String(outputStream.toByteArray());
-		
-			return output;
+			return new String(outputStream.toByteArray());
 		} catch (Exception e) {
 			throw new PlataformaBusinessException(
 					"Error generando el XML.\nCausa: " + e.getCause()

@@ -50,7 +50,22 @@ import es.minhap.sim.model.TblUrlMensajePremium;
 
 public class EnvioPremiumImpl implements IEnvioPremiumService {
 
-	public final static Logger LOG = LoggerFactory.getLogger(IEnvioPremiumService.class);
+	protected static final String R_CONST_1 = "constantes.ENVIO_ACTIVEMQ";
+	protected static final String R_CONST_2 = "plataformaErrores.envioPremiumAEAT.COD_0008_GENERAL";
+	protected static final String R_CONST_3 = "constantes.ESTADO_ANULADO";
+	protected static final String R_CONST_4 = "plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ";
+	protected static final String R_CONST_5 = "3";
+	protected static final String R_CONST_6 = "plataformaErrores.envioPremiumAEAT.DETAILS_OK";
+	protected static final String R_CONST_7 = "plataformaErrores.envioPremiumAEAT.COD_2006_GENERAL";
+	protected static final String R_CONST_8 = "plataformaErrores.envioPremiumAEAT.DESC_0008_GENERAL";
+	protected static final String R_CONST_9 = "S";
+	protected static final String R_CONST_10 = "constantes.ESTADO_PENDIENTE_OPERADORA";
+	protected static final String R_CONST_11 = "plataformaErrores.envioPremiumAEAT.COD_ERROR_GENERAL";
+	protected static final String R_CONST_12 = "plataformaErrores.envioPremiumAEAT.DESC_2006_GENERAL";
+	protected static final String R_CONST_13 = "constantes.ID_ESTADO_PENDIENTE";
+	protected static final String R_CONST_14 = "plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT";
+	protected static final String R_CONST_15 = "[EnvioPremiumImpl.cambiarEstadoSMSPremium] Cambiando Estado Mensaje AEAT";
+	public static final Logger LOG = LoggerFactory.getLogger(IEnvioPremiumService.class);
 	private static String getStatusTextKo = "plataformaErrores.envioPremiumAEAT.STATUSTEXT_KO";
 
 	private static String getStatusTextOk = "plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK";
@@ -129,7 +144,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		statusTextKO = ps.getMessage(getStatusTextKo, null);
 
-		Integer idMensaje = new Integer(0);
+		Integer idMensaje = Integer.valueOf(0);
 		String respuestaFinal = null;
 
 		try {
@@ -161,10 +176,10 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		statusTextOK = ps.getMessage(getStatusTextOk, null);
 		codOK = ps.getMessage(getCodOk, null);
 		statusTextKO = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUS_KO", null);
-		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_OK", null);
-		String codKO = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_GENERAL", null);
+		String detailsOK = ps.getMessage(R_CONST_6, null);
+		String codKO = ps.getMessage(R_CONST_11, null);
 		String detailsKO = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_GENERAL", null);
-		String estadoPendienteOperadora = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA", null);
+		String estadoPendienteOperadora = ps.getMessage(R_CONST_10, null);
 		String usuario = ps.getMessage("aeat.usuario.sms", null);
 		String estadoIncidencia = ps.getMessage("constantes.ESTADO_INCIDENCIA", null);
 		Respuesta resp = new Respuesta();
@@ -183,12 +198,12 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 			}
 			respuesta = resp.toXMLSMS(resp);
 		} catch (Exception e) {
-			LOG.error("[EnvioPremiumImpl.cambiarEstadoSMSPremium] Cambiando Estado Mensaje AEAT", e);
+			LOG.error(R_CONST_15, e);
 			resp = codificarRespuesta(codKO, detailsKO, statusTextKO, idExterno, idMensaje);
 			try {
 				respuesta = resp.toXMLSMS(resp);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error("[EnvioPremiumImpl.cambiarEstadoSMSPremium] Cambiando Estado Mensaje AEAT", e1);
+				LOG.error(R_CONST_15, e1);
 			}
 		}
 		return respuesta;
@@ -214,7 +229,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		String detailsErrorCredito = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_CREDITO", null);
 		String codErrorAuth = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_AUTENTICACION", null);
 		String detailsErrorAuth = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_ERROR_AUTENTICACION", null);
-		String codErrorGeneral = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_ERROR_GENERAL", null);
+		String codErrorGeneral = ps.getMessage(R_CONST_11, null);
 
 		if (statusText.contains("credit")) {
 			resp = codificarRespuesta(codErrorCredito, detailsErrorCredito, statusTextKO, idExterno, idMensaje);
@@ -235,10 +250,11 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		res.setStatusCode(codError);
 		res.setStatusText(statusError);
 		res.setIdExterno(idExterno);
-		if (null == idMensaje)
+		if (null == idMensaje) {
 			res.setIdMensaje("");
-		else
+		} else {
 			res.setIdMensaje(idMensaje.toString());
+		}
 		return res;
 	}
 
@@ -249,8 +265,9 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta res;
 
 		res = comprobarOrganismoYCuerpo(codOrganismoPagador, cuerpo, idExterno, organismoActivo, ps);
-		if (null == res)
+		if (null == res) {
 			res = comprobarIdExternoYDestinatario(idExterno, destinatario, deliveryUrl, ps);
+		}
 
 		return res;
 	}
@@ -299,16 +316,16 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
 		String respuesta = null;
 		String errorActiveMq = ps.getMessage("conexion.ERRORACTIVEMQ", null, "[ERROR-ACTIVEMQ]");
-		String estadoPendienteOperadora = ps.getMessage("constantes.ESTADO_PENDIENTE_OPERADORA", null);
-		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
-		Long estadoPendienteId = Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null, "3"));
+		String estadoPendienteOperadora = ps.getMessage(R_CONST_10, null);
+		String estadoAnulado = ps.getMessage(R_CONST_3, null);
+		Long estadoPendienteId = Long.parseLong(ps.getMessage(R_CONST_13, null, R_CONST_5));
 		statusTextOK = ps.getMessage(getStatusTextOk, null);
 		codOK = ps.getMessage(getCodOk, null);
-		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.DETAILS_OK", null);
-		String cod2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2006_GENERAL", null);
-		String des2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2006_GENERAL", null);
-		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
-		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
+		String detailsOK = ps.getMessage(R_CONST_6, null);
+		String cod2006 = ps.getMessage(R_CONST_7, null);
+		String des2006 = ps.getMessage(R_CONST_12, null);
+		String descripcionErrorActiveMq = ps.getMessage(R_CONST_4, null);
+		String utilizarActiveMq = ps.getMessage(R_CONST_1, null,R_CONST_9);
 		
 		int activeMQ = 2;
 		
@@ -329,7 +346,7 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 							destinatario.getDestinatariosmensajes(), estadoPendienteId, username);
 //					mensajesManager.setEstadoMensaje(idMensaje.longValue(), estadoPendiente, null, false, destinatario.getDestinatariosmensajes(),
 //							null, username, null);
-					if ("S".equals(utilizarActiveMq)){
+					if (R_CONST_9.equals(utilizarActiveMq)){
 						encolarMensaje(envio, username, servicio, ps, mensajesManager.getIdLoteByIdMensaje(mensaje.getMensajeid()).intValue(), idMensaje, destinatario);
 					}
 				}
@@ -351,10 +368,13 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		}finally{
 //			Comprobamos que si ya se ha actualizado la tabla de errores
 			LOG.debug("Estamos en EnvioPremiumImpl-reenviarMensaje");					
-			if (activeMQ == 0){
+			switch (activeMQ) {
+			case 0:
 				erroresManager.comprobarActiveMqActivo(false);
-			}else if (activeMQ == 1){
+				break;
+			case 1:
 				erroresManager.comprobarActiveMqActivo(true);
+				break;
 			}
 		}
 		return respuesta;
@@ -363,17 +383,17 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 
 	private String crearMensaje(EnvioAEATXMLBean envio, String username, String password, Integer servicio,
 			PropertiesServices ps) throws PlataformaBusinessException {
-		String nombreLote = ps.getMessage("plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT", null);
+		String nombreLote = ps.getMessage(R_CONST_14, null);
 		String cod0014 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0014_GENERAL", null);
 		String des0014 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0014_GENERAL", null);
-		String cod2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_2006_GENERAL", null);
-		String des2006 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_2006_GENERAL", null);
+		String cod2006 = ps.getMessage(R_CONST_7, null);
+		String des2006 = ps.getMessage(R_CONST_12, null);
 		String codigoOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUS_OK", null);
-		String detailsOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.NOMBRE_LOTE_AEAT", null);
+		String detailsOK = ps.getMessage(R_CONST_14, null);
 		String statusOK = ps.getMessage("plataformaErrores.envioPremiumAEAT.STATUSTEXT_OK", null);
-		String estadoAnulado = ps.getMessage("constantes.ESTADO_ANULADO", null);
-		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
-		String utilizarActiveMq = ps.getMessage("constantes.ENVIO_ACTIVEMQ", null,"S");
+		String estadoAnulado = ps.getMessage(R_CONST_3, null);
+		String descripcionErrorActiveMq = ps.getMessage(R_CONST_4, null);
+		String utilizarActiveMq = ps.getMessage(R_CONST_1, null,R_CONST_9);
 		
 		Integer idLote;
 		Integer idMensaje = null;
@@ -403,13 +423,13 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 				resp = codificarRespuesta(cod2006, des2006, statusTextKO, envio.getIdExterno(), null);
 				return resp.toXMLSMS(resp);
 			} else {
-				estadoId = Long.parseLong(ps.getMessage("constantes.ID_ESTADO_PENDIENTE", null, "3"));
+				estadoId = Long.parseLong(ps.getMessage(R_CONST_13, null, R_CONST_5));
 				insertarUrlPremium(envio.getDeliveryReportURL(), idMensaje);
 				for (TblDestinatariosMensajes destinatario : destinatariosMensajesManager
 						.getDestinatarioMensajes(idMensaje.longValue())) {
 					hitoricosManager.creaHistoricoPremium(idMensaje.longValue(),
 							destinatario.getDestinatariosmensajes(), estadoId, username);
-					if ("S".equals(utilizarActiveMq)){
+					if (R_CONST_9.equals(utilizarActiveMq)){
 						encolarMensaje(envio, username, servicio, ps, idLote, idMensaje, destinatario);
 					}
 				}
@@ -462,28 +482,32 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 		respuestaFinal = comprobarOrganismoActivoEnServicio(envio, servicio, ps);
 
 		// Comprobamos el servicio
-		if (respuestaFinal == null)
+		if (respuestaFinal == null) {
 			respuestaFinal = comprobarServicio(envio, servicio, ps);
+		}
 
 		// Comprobamos usuario y password
-		if (respuestaFinal == null)
+		if (respuestaFinal == null) {
 			respuestaFinal = comprobarUsuarioPassword(envio, username, password, ps);
+		}
 
 		// Comprobamos telefono
-		if (respuestaFinal == null)
+		if (respuestaFinal == null) {
 			respuestaFinal = comprobarTelefono(envio, ps);
+		}
 
 		// Comprobamos que la aplicaci�n est� activa
-		if (respuestaFinal == null)
+		if (respuestaFinal == null) {
 			respuestaFinal = comprobarAplicacionActiva(envio, servicio, ps);
+		}
 
 		return respuestaFinal;
 	}
 
 	private String comprobarAplicacionActiva(EnvioAEATXMLBean envio, Integer servicio, PropertiesServices ps)
 			throws PlataformaBusinessException {
-		String cod0008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0008_GENERAL", null);
-		String des0008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0008_GENERAL", null);
+		String cod0008 = ps.getMessage(R_CONST_2, null);
+		String des0008 = ps.getMessage(R_CONST_8, null);
 		String apNoActiva = ps.getMessage("plataformaErrores.envioPremiumAEAT.APLICACION_NOACTIVA", null);
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
 
@@ -510,8 +534,8 @@ public class EnvioPremiumImpl implements IEnvioPremiumService {
 	private String comprobarUsuarioPassword(EnvioAEATXMLBean envio, String username, String password,
 			PropertiesServices ps) throws PlataformaBusinessException {
 		es.minhap.plataformamensaferia.iop.beans.envioPremium.Respuesta resp;
-		String cod2008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.COD_0008_GENERAL", null);
-		String des2008 = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_0008_GENERAL", null);
+		String cod2008 = ps.getMessage(R_CONST_2, null);
+		String des2008 = ps.getMessage(R_CONST_8, null);
 		if (null == username || null == password) {
 			resp = codificarRespuesta(cod2008, des2008, statusTextKO, envio.getIdExterno(), null);
 			return resp.toXMLSMS(resp);

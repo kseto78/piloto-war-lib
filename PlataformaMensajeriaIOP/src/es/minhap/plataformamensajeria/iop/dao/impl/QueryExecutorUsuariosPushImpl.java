@@ -28,6 +28,14 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorUsuariosPush;
 @Transactional
 public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implements QueryExecutorUsuariosPush {
 
+	protected static final String R_CONST_1 = "[QueryExecutorUsuariosPushImpl.getIdUsersFromUserName] Se ha producido un error ";
+
+	protected static final String R_CONST_2 = "'";
+
+	protected static final String R_CONST_3 = "unchecked";
+
+	protected static final String R_CONST_4 = "[QueryExecutorUsuariosPushImpl.getNextDispositivo] Se ha producido un error ";
+
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorUsuariosPushImpl.class);
 	
 	private static final String LOG_END= "search - end";
@@ -42,7 +50,7 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 		super.setSessionFactory(sessionFactory);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	@Transactional
 	public List<Long> listaUsuariosDispositivosPush(String identificadorUsuario, Integer servicioId) {
@@ -54,14 +62,16 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 				LOG.debug(LOG_START);
 			}
 
+			
 			SQLQuery query = getHibernateTemplate()
 					.getSessionFactory()
 					.getCurrentSession()
 					.createSQLQuery(
-							"select USUARIOID from TBL_USUARIOS_PUSH where NOMBREUSUARIO = '" + identificadorUsuario
-									+ "' and SERVICIOID = " + servicioId
+							"select USUARIOID from TBL_USUARIOS_PUSH where NOMBREUSUARIO = ?"
+									+ " and SERVICIOID = ?"
 									+ " AND (ELIMINADO != 'S' OR ELIMINADO IS NULL)");
-
+			query.setString(0, identificadorUsuario);
+			query.setInteger(1, servicioId);
 			if (query.list() != null) {
 				result = query.list();
 			}
@@ -96,12 +106,13 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			queryBuilder.append(" from tbl_usuarios_Serviciosmoviles t1 ");
 			queryBuilder.append(" inner join tbl_usuarios_push t2 on t1.usuariosid = t2.usuarioid");
 			queryBuilder.append(" inner join tbl_plataformas t3 on t2.plataformaid = t3.plataformaid");
-			queryBuilder.append(" where serviciosmovilesid= " + servicioMovilId +""); 
+			queryBuilder.append(" where serviciosmovilesid= ?"); 
 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
 					.createSQLQuery(queryBuilder.toString());
+			query.setLong(0, servicioMovilId);
 			
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(R_CONST_3)
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 				UsuariosPushBean usupush = new UsuariosPushBean();
@@ -141,21 +152,22 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 
 			BigDecimal next = (BigDecimal) query.uniqueResult();
 
-			if (null != next)
+			if (null != next) {
 				res = next.intValue();
+			}
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error("[QueryExecutorUsuariosPushImpl.getNextDispositivo] Se ha producido un error ", e);
+			LOG.error(R_CONST_4, e);
 			throw new ApplicationException(e);
 		}
 		return res;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	@Transactional
 	public List<String> getIdUsersFromDispositivo(String idDispositivo, String nombreUsuario) {
@@ -165,12 +177,17 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_START);
 			}
+			StringBuilder queryString = new StringBuilder();
 
-			String sql = "SELECT USUARIOID FROM TBL_USUARIOS_PUSH WHERE DISPOSITIVOID = '" + idDispositivo + "'";
-			if (null != nombreUsuario)
-				sql = sql + " AND NOMBREUSUARIO = '" + nombreUsuario + "'";
-			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
-
+			queryString.append("SELECT USUARIOID FROM TBL_USUARIOS_PUSH WHERE DISPOSITIVOID = ");
+			queryString.append("?");
+			queryString.append(R_CONST_2);
+			if (null != nombreUsuario) {
+				queryString.append(queryString.toString() + " AND NOMBREUSUARIO = '" + nombreUsuario + R_CONST_2);
+			}
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+			query.setString(0, idDispositivo);
+			
 			result = query.list();
 			for (BigDecimal bigDecimal : result) {
 				listaIdUsuarios.add(bigDecimal.toString());
@@ -180,13 +197,13 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			}
 
 		} catch (Exception e) {
-			LOG.error("[QueryExecutorUsuariosPushImpl.getIdUsersFromUserName] Se ha producido un error ", e);
+			LOG.error(R_CONST_1, e);
 			throw new ApplicationException(e);
 		}
 		return listaIdUsuarios;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	@Transactional
 	public List<BigDecimal> getUsuarioConsultaServiciosDisponibles(String idDispositivo, String idServicioMovil) {
@@ -198,16 +215,17 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 
 			String sql = "SELECT UP.USUARIOID as ID from TBL_USUARIOS_PUSH UP, TBL_USUARIOS_SERVICIOSMOVILES US, "
 					+ "TBL_SERVICIOSMOVILES SERV where UP.USUARIOID = US.USUARIOSID AND up.USUARIOID "
-					+ "IN (SELECT  DISTINCT USUARIOID FROM TBL_USUARIOS_PUSH WHERE DISPOSITIVOID='" + idDispositivo
-					+ "') AND US.SERVICIOSMOVILESID = SERV.SERVICIOSMOVILESID "
-					+ "AND US.ESTADOSUSCRIPCION= 1 AND SERV.SERVICIOSMOVILESID = " + idServicioMovil;
+					+ "IN (SELECT  DISTINCT USUARIOID FROM TBL_USUARIOS_PUSH WHERE DISPOSITIVOID= ?" 
+					+ ") AND US.SERVICIOSMOVILESID = SERV.SERVICIOSMOVILESID "
+					+ "AND US.ESTADOSUSCRIPCION= 1 AND SERV.SERVICIOSMOVILESID = ?";
 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
-
+			query.setString(0, idDispositivo);
+			query.setString(1, idServicioMovil);
 			return query.list();
 
 		} catch (Exception e) {
-			LOG.error("[QueryExecutorUsuariosPushImpl.getIdUsersFromUserName] Se ha producido un error ", e);
+			LOG.error(R_CONST_1, e);
 			throw new ApplicationException(e);
 		}
 
@@ -225,8 +243,8 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 					.getSessionFactory()
 					.getCurrentSession()
 					.createSQLQuery(
-							"SELECT PLATAFORMAID from TBL_USUARIOS_PUSH pu INNER JOIN TBL_MENSAJES m on m.USUARIOID = pu.USUARIOID  WHERE m.MENSAJEID = "
-									+ mensajeId);
+							"SELECT PLATAFORMAID from TBL_USUARIOS_PUSH pu INNER JOIN TBL_MENSAJES m on m.USUARIOID = pu.USUARIOID  WHERE m.MENSAJEID = ?");
+			query.setLong(0, mensajeId);
 
 			res = (Integer) query.uniqueResult();
 			if (LOG.isDebugEnabled()) {
@@ -234,13 +252,13 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			}
 
 		} catch (Exception e) {
-			LOG.error("[QueryExecutorUsuariosPushImpl.getNextDispositivo] Se ha producido un error ", e);
+			LOG.error(R_CONST_4, e);
 			throw new ApplicationException(e);
 		}
 		return res;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	@Transactional
 	public List<UsuariosServiciosMovilesBean> getUsuarioPorServicio(Integer servicioID) {
@@ -251,11 +269,11 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			}
 
 			String sql = "SELECT US.USUARIOSID, UP.NOMBREUSUARIO FROM TBL_USUARIOS_SERVICIOSMOVILES US , "
-					+ "TBL_USUARIOS_PUSH UP  WHERE  US.SERVICIOSMOVILESID = "+servicioID+" AND UP.USUARIOID = US.USUARIOSID AND US.ESTADOSUSCRIPCION=1 AND "
+					+ "TBL_USUARIOS_PUSH UP  WHERE  US.SERVICIOSMOVILESID = ? AND UP.USUARIOID = US.USUARIOSID AND US.ESTADOSUSCRIPCION=1 AND "
 							+ "(UP.ELIMINADO != 'S' or UP.ELIMINADO IS NULL)";
 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
-
+			query.setInteger(0, servicioID);
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 				UsuariosServiciosMovilesBean us = new UsuariosServiciosMovilesBean();
@@ -265,13 +283,13 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			}
 
 		} catch (Exception e) {
-			LOG.error("[QueryExecutorUsuariosPushImpl.getIdUsersFromUserName] Se ha producido un error ", e);
+			LOG.error(R_CONST_1, e);
 			throw new ApplicationException(e);
 		}
 		return res;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_3)
 	@Override
 	@Transactional
 	public ArrayList<Integer> getDispositivosUsuarioServicioMovil(String identificadorUsuario, Integer servicioID, Integer idServicioMovil) {
@@ -283,11 +301,13 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 			}
 
 			String sql = "select us.USUARIOSID FROM TBL_USUARIOS_SERVICIOSMOVILES us inner join TBL_USUARIOS_PUSH up on us.USUARIOSID = up.USUARIOID"
-					+ " WHERE UP.NOMBREUSUARIO = '" + identificadorUsuario +"'  and UP.SERVICIOID = " + servicioID + " AND US.SERVICIOSMOVILESID = " + idServicioMovil
-					+ " AND (UP.ELIMINADO != 'S' OR UP.ELIMINADO IS NULL)";
+					+ " WHERE UP.NOMBREUSUARIO = ? and UP.SERVICIOID = ? AND US.SERVICIOSMOVILESID = ? AND (UP.ELIMINADO != 'S' OR UP.ELIMINADO IS NULL)";
 			
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
-
+			query.setString(0, identificadorUsuario);
+			query.setInteger(1, servicioID);
+			query.setInteger(2, idServicioMovil);
+			
 				if (query.list() != null) {
 					result = query.list();
 				}
@@ -297,7 +317,7 @@ public class QueryExecutorUsuariosPushImpl extends HibernateDaoSupport implement
 				}
 
 		} catch (Exception e) {
-			LOG.error("[QueryExecutorUsuariosPushImpl.getIdUsersFromUserName] Se ha producido un error ", e);
+			LOG.error(R_CONST_1, e);
 			throw new ApplicationException(e);
 		}
 		return res;

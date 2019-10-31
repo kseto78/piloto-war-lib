@@ -114,9 +114,9 @@ public class TblPlanificacionesManagerImpl implements TblPlanificacionesManager 
 			servidor.setModificadopor(p.getCreadopor());
 			servidor.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidor, null, null, null);
-		}	
-		else
+		} else {
 			log.setSourceid(p.getTblServicios().getServicioid());
+		}
 		log.setSourcename(source);
 		
 		tblLogManager.insertLog(log);
@@ -150,9 +150,9 @@ public class TblPlanificacionesManagerImpl implements TblPlanificacionesManager 
 			servidor.setModificadopor(planificacion.getCreadopor());
 			servidor.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidor, null, null, null);
-		}
-		else
+		} else {
 			log.setSourceid(planificacion.getTblServicios().getServicioid());
+		}
 		log.setSourcename(source);
 		
 		tblLogManager.insertLog(log);

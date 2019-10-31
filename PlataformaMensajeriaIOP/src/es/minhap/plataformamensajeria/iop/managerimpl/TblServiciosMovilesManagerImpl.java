@@ -33,6 +33,10 @@ import es.minhap.sim.query.TblServiciosMovilesQuery;
 @Service("tblServiciosMovilesManagerImpl")
 public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManager {
 
+	protected static final String R_CONST_1 = "1";
+
+	protected static final String R_CONST_2 = "%";
+
 	@Resource
 	private TblServiciosMovilesDAO serviciosMovilesDAO;
 	
@@ -47,7 +51,7 @@ public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManage
 	 */
 	@Override
 	public Boolean checkMobileServie(String idServicioMovil) {
-		return (null != getServiciosMovilesDAO().get(Long.parseLong(idServicioMovil))) ? true : false;
+		return null != getServiciosMovilesDAO().get(Long.parseLong(idServicioMovil));
 	}
 
 	
@@ -76,7 +80,7 @@ public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManage
 				for (String key : keys) {
 					ServicioMovil servMovil = serviciosMovilesUsuario.get(key);
 					List<BigDecimal> lista = getQueryExecutorUsuariosPush().getUsuarioConsultaServiciosDisponibles(idDispositivo, servMovil.getIdService());
-					servMovil.setEstado((null != lista && !lista.isEmpty()) ? "1" : "0");
+					servMovil.setEstado((null != lista && !lista.isEmpty()) ? R_CONST_1 : "0");
 					serviciosMovilesUsuario.put(key, servMovil);
 				}
 				Collection<ServicioMovil> servMovilCollection = serviciosMovilesUsuario.values();
@@ -156,7 +160,7 @@ public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManage
 		
 		OrderType ord = null;
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")) {
+		if (order == null || R_CONST_1.equals(order)) {
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -165,7 +169,7 @@ public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManage
 
 		if (null != nombreServicioMovil) {
 			query.setNombreComparator(TextComparator.ILIKE);
-			query.setNombre("%"+nombreServicioMovil+"%");
+			query.setNombre(R_CONST_2+nombreServicioMovil+R_CONST_2);
 		}
 		
 		query.addOrder(columnSort, ord);
@@ -187,7 +191,7 @@ public class TblServiciosMovilesManagerImpl implements TblServiciosMovilesManage
 		TblServiciosMovilesQuery query = new TblServiciosMovilesQuery();
 		query.setEstado(1);
 		query.setServiciosmovilesid(Long.parseLong(idServicioMovil));
-		return (null != serviciosMovilesDAO.search(query) && !serviciosMovilesDAO.search(query).getResults().isEmpty())? true : false;
+		return null != serviciosMovilesDAO.search(query) && !serviciosMovilesDAO.search(query).getResults().isEmpty();
 	}
 	
 	@Override

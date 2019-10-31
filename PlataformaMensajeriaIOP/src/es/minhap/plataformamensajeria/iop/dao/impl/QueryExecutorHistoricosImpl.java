@@ -24,7 +24,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorHistoricos;
 @Service
 public class QueryExecutorHistoricosImpl extends HibernateDaoSupport implements QueryExecutorHistoricos {
 
-	private static final Logger log = LoggerFactory.getLogger(QueryExecutorHistoricosImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorHistoricosImpl.class);
 
 	private static final String LOG_END= "search - end";
 	
@@ -41,27 +41,28 @@ public class QueryExecutorHistoricosImpl extends HibernateDaoSupport implements 
 	public Long getServidorByMensaje(Long mensajeId) {
 		Long res = null;
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
 
 			SQLQuery query = getHibernateTemplate()
 					.getSessionFactory()
 					.getCurrentSession()
 					.createSQLQuery(
-							"SELECT servidorid FROM tbl_historicos " + "WHERE mensajeid = " + mensajeId + " AND "
+							"SELECT servidorid FROM tbl_historicos " + "WHERE mensajeid = ? AND "
 									+ "servidorid IS NOT NULL AND ROWNUM = 1 ORDER BY fecha DESC ");
-
+			query.setLong(0, mensajeId);
 			BigDecimal servidor = (BigDecimal) query.uniqueResult();
 
-			if (null != servidor)
+			if (null != servidor) {
 				return servidor.longValue();
+			}
 
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_END);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_END);
 			}
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;

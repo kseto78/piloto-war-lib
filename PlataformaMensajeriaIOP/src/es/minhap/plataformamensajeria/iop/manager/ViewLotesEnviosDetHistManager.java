@@ -12,6 +12,6 @@ public interface ViewLotesEnviosDetHistManager {
 	 * @param query
 	 * @return ViewLotesEnviosDetHist
 	 */
-	public ViewLotesEnviosDetHist getViewLoteDetallado(ViewLotesEnviosDetHistQuery query);
+	ViewLotesEnviosDetHist getViewLoteDetallado(ViewLotesEnviosDetHistQuery query);
 
 }

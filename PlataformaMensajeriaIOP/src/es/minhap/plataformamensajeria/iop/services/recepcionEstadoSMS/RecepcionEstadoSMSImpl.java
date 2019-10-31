@@ -30,6 +30,12 @@ import es.minhap.sim.model.TblUrlMensajePremium;
 @Service("recepcionEstadoSMSImpl")
 public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 
+	protected static final String R_CONST_1 = "UIM ";
+
+	protected static final String R_CONST_2 = "[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM";
+
+	protected static final String R_CONST_3 = ",";
+
 	private static final Logger LOG = LoggerFactory.getLogger(RecepcionEstadoSMSImpl.class);
 
 	@Resource
@@ -86,7 +92,7 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 				urlPremium = getUrlPremium(mensajeID);
 			}
 		} catch (Exception e) {
-			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);
+			LOG.error(R_CONST_2, e);
 		}
 
 		if (null == mensajeID) {
@@ -99,9 +105,9 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 
 		try {
 
-			cod = new Long(estado);
+			cod = Long.valueOf(estado);
 		} catch (Exception e) {
-			LOG.error("[RespuestaEstadoSMSXMLBean] Error recuperando mensaje por UIM", e);
+			LOG.error(R_CONST_2, e);
 			return getRespuestaNoEstado(statusCodeOK, errorEstadoMensaje, statusTextOK, urlPremium);
 		}
 
@@ -128,10 +134,11 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 			}
 
 			ResponseStatusType status;
-			if (null == ultimoEstadoHistorico || ultimoEstadoHistorico <= 0)
+			if (null == ultimoEstadoHistorico || ultimoEstadoHistorico <= 0) {
 				status = getStatus(statusCodeOK, statusTextOK, statusDetailsKO, urlPremium);
-			else
+			} else {
 				status = getStatus(statusCodeOK, statusTextOK, statusDetailsOK, urlPremium);
+			}
 
 			res.setStatus(status);
 		} catch (Exception e) {
@@ -148,10 +155,11 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		ResponseStatusType res = new ResponseStatusType();
 		res.setStatusCode(statusCode);
 		res.setStatusText(statusText);
-		if (urlPremium.length() > 0)
-			res.setDetails(statusDetails + "," + urlPremium);
-		else
+		if (!urlPremium.isEmpty()) {
+			res.setDetails(statusDetails + R_CONST_3 + urlPremium);
+		} else {
 			res.setDetails(statusDetails);
+		}
 		return res;
 	}
 
@@ -160,10 +168,11 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		RespuestaEstadoSMSXMLBean res = new RespuestaEstadoSMSXMLBean();
 		ResponseStatusType status = new ResponseStatusType();
 		status.setStatusCode(statusCodeOK);
-		if (urlPremium.length() > 0)
-			status.setDetails(errorEstadoMensaje + "," + urlPremium);
-		else
+		if (!urlPremium.isEmpty()) {
+			status.setDetails(errorEstadoMensaje + R_CONST_3 + urlPremium);
+		} else {
 			status.setDetails(errorEstadoMensaje);
+		}
 		status.setStatusText(statusTextOK);
 		res.setStatus(status);
 		return res;
@@ -175,10 +184,11 @@ public class RecepcionEstadoSMSImpl implements IRecepcionEstadoSMSService {
 		ResponseStatusType status = new ResponseStatusType();
 		status.setStatusCode(statusCodeOK);
 		status.setStatusText(statusDetailsOK);
-		if (urlPremium.length() > 0)
-			status.setDetails("UIM " + recepcionEstadoSMS.getMensajeId() + " NOT FOUND," + urlPremium);
-		else
-			status.setDetails("UIM " + recepcionEstadoSMS.getMensajeId() + " NOT FOUND");
+		if (!urlPremium.isEmpty()) {
+			status.setDetails(R_CONST_1 + recepcionEstadoSMS.getMensajeId() + " NOT FOUND," + urlPremium);
+		} else {
+			status.setDetails(R_CONST_1 + recepcionEstadoSMS.getMensajeId() + " NOT FOUND");
+		}
 		res.setStatus(status);
 		return res;
 	}

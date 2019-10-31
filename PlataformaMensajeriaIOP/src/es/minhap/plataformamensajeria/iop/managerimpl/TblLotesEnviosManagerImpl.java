@@ -59,6 +59,22 @@ import es.minhap.sim.query.ViewLotesEnviosDetalladaQuery;
 @Service("TblLotesEnviosManagerImpl")
 public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 
+	protected static final String R_CONST_1 = "mensajesAuditoria.lotes.OPERACION_LOTE_CREAR";
+
+	protected static final String R_CONST_2 = "mensajesAuditoria.lotes.OPERACION_LOTE_CORRECTO";
+
+	protected static final String R_CONST_3 = "constantes.errores.devolucion.error10";
+
+	protected static final String R_CONST_4 = "auditoria.errores.COD_ERROR_USUARIO_APLICACION";
+
+	protected static final String R_CONST_5 = "auditoria.errores.ERROR_USUARIO_APLICACION";
+
+	protected static final String R_CONST_6 = "constantes.CANAL_RECEPCION_SMS";
+
+	protected static final String R_CONST_7 = "auditoria.errores.ERROR_GENERAL";
+
+	protected static final String R_CONST_8 = "constantes.servicio.numMaxReenvios";
+
 	private static final Logger LOG = LoggerFactory.getLogger(TblLotesEnviosManagerImpl.class);
 
 	private static final boolean GESTION_MULTIDESTINATARIOS = true;
@@ -121,10 +137,10 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	public Integer insertarLote(Long servicioId, String nombreLote, String usuario, String password, String codOrganismo) {
 		Integer res;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String operacionCrearLote = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CREAR", null);
-		String operacionLoteCorrecto = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CORRECTO", null);
-		String errorUsuarioAplicacion = ps.getMessage("auditoria.errores.ERROR_USUARIO_APLICACION", null);
-		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_USUARIO_APLICACION",
+		String operacionCrearLote = ps.getMessage(R_CONST_1, null);
+		String operacionLoteCorrecto = ps.getMessage(R_CONST_2, null);
+		String errorUsuarioAplicacion = ps.getMessage(R_CONST_5, null);
+		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage(R_CONST_4,
 				null));
 
 		List<TblAplicaciones> listaAplicaciones = getAplicaciones(usuario, password);
@@ -208,8 +224,8 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	public Integer insertarLotePremium(TblServicios servicio, String nombreLote, String usuario, String password) {
 		Integer res;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String operacionCrearLote = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CREAR", null);
-		String operacionLoteCorrecto = ps.getMessage("mensajesAuditoria.lotes.OPERACION_LOTE_CORRECTO", null);
+		String operacionCrearLote = ps.getMessage(R_CONST_1, null);
+		String operacionLoteCorrecto = ps.getMessage(R_CONST_2, null);
 
 		TblLotesEnvios lote = crearLote(servicio, nombreLote, usuario, GESTION_MULTIDESTINATARIOS);
 		res = lotesDAO.insert(lote).intValue();
@@ -245,6 +261,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		try {
 			s = Long.parseLong(res.getServicio());
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			return res;
 		}
 		TblServicios serv = serviciosManager.getServicio(s);
@@ -273,10 +290,11 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		query.setActivo(true);
 		query.setUsuario(usuario);
 		query.setPassword(password);
-		query.setTipo(Integer.parseInt(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null)));
+		query.setTipo(Integer.parseInt(ps.getMessage(R_CONST_6, null)));
 		Integer count = tblServidoresManager.countServidor(query);
-		if (count != 1)
+		if (count != 1) {
 			res.setServicio(MensajesAuditoria.ERROR_MAS_DE_UN_SERVIDOR);
+		}
 
 		query.setTipo(null);
 
@@ -291,8 +309,9 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		
 		count = tblServidoresServiciosManager.countServidoresServicios(ssq);
 
-		if (count != 1)
+		if (count != 1) {
 			res.setServicio(MensajesAuditoria.ERROR_NO_EXISTE_RELACION_SERVIDOR_SERVICIO);
+		}
 	}
 
 	
@@ -300,7 +319,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		List<Long> lista = queryExecutorServicios.comprobarServicioUnico(recipient,
-				Long.parseLong(ps.getMessage("constantes.CANAL_RECEPCION_SMS", null)), prefijoSMS);
+				Long.parseLong(ps.getMessage(R_CONST_6, null)), prefijoSMS);
 		switch (lista.size()) {
 		case 0:
 			res.setServicio(MensajesAuditoria.COMPROBAR_SERVICIO_SERVICIO_INCORRECTO);
@@ -343,8 +362,8 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 	@Override
 	public Boolean isMultidestinatario(Long mensajeId) {
 		TblMensajes mensaje = mensajeManager.getMensaje(mensajeId);
-		return (null != mensaje.getTblLotesEnvios().getMultidestinatario()) ? mensaje.getTblLotesEnvios()
-				.getMultidestinatario() : false;
+		return null != mensaje.getTblLotesEnvios().getMultidestinatario() && mensaje.getTblLotesEnvios()
+				.getMultidestinatario();
 	}
 
 	@Override
@@ -363,8 +382,8 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		String errorLoteIncorrecto = ps.getMessage("mensajesAuditoria.mensajes.OPERACION_LOTE_INCORRECTO", null);
 		Long codErrorLoteIncorrecto = Long.parseLong(ps.getMessage(
 				"auditoria.errores.COD_ERROR_LOTE_INCORRECTO", null));
-		String errorUsuarioAplicacion = ps.getMessage("auditoria.errores.ERROR_USUARIO_APLICACION", null);
-		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_USUARIO_APLICACION",
+		String errorUsuarioAplicacion = ps.getMessage(R_CONST_5, null);
+		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage(R_CONST_4,
 				null));
 		String errorServicioIncorrecto = ps.getMessage(
 				"auditoria.errores.ERROR_SERVICIO_INCORRECTO_OPERACIONES", null);
@@ -434,8 +453,8 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 				return codErrorBBDD.intValue();
 			}
 		} catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_7, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_3, null));
 		}
 
 	}
@@ -446,8 +465,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 		q.setPassword(Utils.encode64(password));
 		q.setActivo(true);
 
-		List<TblAplicaciones> listaAplicaciones = aplicacionesManager.getAplicaciones(q);
-		return listaAplicaciones;
+		return aplicacionesManager.getAplicaciones(q);
 	}
 
 	/**
@@ -516,21 +534,24 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 					mensajeManager.setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, false, null,
 							null, usuario, null);
 				}
-				return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+				return Integer.parseInt(ps.getMessage(R_CONST_3, null));
 			}else{
 				return res;
 			}
 			
 		}catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_7, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_3, null));
 		}finally{
 //			Comprobamos que si ya se ha actualizado la tabla de errores
 			LOG.debug("Estamos en TblLotesEnviosManagerImpl-setEstadoLote");					
-			if (activeMQ == 0){
+			switch (activeMQ) {
+			case 0:
 				erroresManager.comprobarActiveMqActivo(false);
-			}else if (activeMQ == 1){
+				break;
+			case 1:
 				erroresManager.comprobarActiveMqActivo(true);
+				break;
 			}
 		}
 		return res;
@@ -567,7 +588,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
-				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+				maxRetries = Long.parseLong(ps.getMessage(R_CONST_8, null));
 			}
 			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		} else {
@@ -589,7 +610,7 @@ public class TblLotesEnviosManagerImpl implements TblLotesEnviosManager {
 			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
-				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+				maxRetries = Long.parseLong(ps.getMessage(R_CONST_8, null));
 			}
 			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		}

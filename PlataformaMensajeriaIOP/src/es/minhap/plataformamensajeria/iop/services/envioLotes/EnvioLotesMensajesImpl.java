@@ -41,6 +41,8 @@ import es.minhap.plataformamensajeria.iop.services.envio.IEnvioMensajesService;
 
 @Service("envioLotesMensajesImpl")
 public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
+	protected static final String R_CONST_1 = "/";
+
 	private static Logger LOG = LoggerFactory.getLogger(EnvioLotesMensajesImpl.class);
 
 	private static final String ERROR_GENERACION_PASSBOOK = "Se ha producido un error en la generacion del fichero passbook";
@@ -67,7 +69,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				if (mensajePeticionLotes.getDestinatariosMail()!=null && mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail()!=null && !mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail().isEmpty()){
 					MensajesXMLBean mensaje = new MensajesXMLBean();
 					attachedFilesProcess(mensajePeticionLotes, mensaje);
-					for (int i = 0; i< mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail().size(); i++){
+					for (int i = 0, s = mensajePeticionLotes.getDestinatariosMail().getDestinatarioMail().size(); i< s; i++){
 						setGenericAttributes(peticionXML, mensajePeticionLotes, mensaje);
 						
 						try {
@@ -114,9 +116,9 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 					.getAdjuntos().getAdjunto()) {
 				AdjuntosXMLBean adjunto1 = new AdjuntosXMLBean();
 				if (null != adjunto.getNombre()
-						&& adjunto.getNombre().length() > 0
+						&& !adjunto.getNombre().isEmpty()
 						&& null != adjunto.getContenido()
-						&& adjunto.getContenido().length() > 0) {
+						&& !adjunto.getContenido().isEmpty()) {
 					adjunto1.setNombre(adjunto.getNombre());
 					String contenido = adjunto.getContenido();
 					try {
@@ -132,62 +134,60 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 	
 	private void attachedPassbookProcess(MensajePeticionLotesEmailXMLBean mensajePeticionLotes, MensajesXMLBean mensaje, String servicio, PropertiesServices ps) throws Exception {
 		
-		if (mensajePeticionLotes.getPassbook() != null) {
-			if (mensaje.getListaAdjuntos() != null) {
-				PassbookXMLBean  passbook = mensajePeticionLotes.getPassbook();
-				
-				String url = passbook.getURL();
-				String logoText= passbook.getLogoText();
-				String description=passbook.getDescription();
-				
-				String serialNumber = String.valueOf(System.currentTimeMillis());
-				String autheticationToken = Base64.encodeBase64String(serialNumber.getBytes());
-				
-				String teamIdentifier = ps.getMessage("passbook.teamIdentifier", null, null, null);
-				String organizationName = ps.getMessage("passbook.organizationName", null, null, null);
-				String passTypeIdentifier = ps.getMessage("passbook.passTypeIdentifier", null, null, null);
-				
+		if (mensajePeticionLotes.getPassbook() != null && mensaje.getListaAdjuntos() != null) {
+			PassbookXMLBean  passbook = mensajePeticionLotes.getPassbook();
+			
+			String url = passbook.getURL();
+			String logoText= passbook.getLogoText();
+			String description=passbook.getDescription();
+			
+			String serialNumber = String.valueOf(System.currentTimeMillis());
+			String autheticationToken = Base64.encodeBase64String(serialNumber.getBytes());
+			
+			String teamIdentifier = ps.getMessage("passbook.teamIdentifier", null, null, null);
+			String organizationName = ps.getMessage("passbook.organizationName", null, null, null);
+			String passTypeIdentifier = ps.getMessage("passbook.passTypeIdentifier", null, null, null);
+			
 //				String templatePath = ps.getMessage("passbook.templatePath", null, null, null);
 //				String tempPath = ps.getMessage("passbook.tempPath", null, null, null);
-				
-				String templatePath = getTemplatePath(mensaje, servicio, ps);
-				String tempPath = getTempPath(mensaje, servicio, ps);
-				
-				String appleWWDRCA = ps.getMessage("passbook.appleWWDRCA", null, null, null);
-				String keyStorePath = ps.getMessage("passbook.keyStorePath", null, null, null);
-				String keyStorePassword = ps.getMessage("passbook.keyStorePassword", null, null, null);
-				
-				String foregroundColor=ps.getMessage("passbook.foregroundColor", null, null, null);
-				String backgroundColor=ps.getMessage("passbook.backgroundColor", null, null, null);
-				String labelColor=ps.getMessage("passbook.labelColor", null, null, null);
-				
-				String nombrePassbook=ps.getMessage("passbook.nombreAdjunto", null, null, null);
-				
-				LOG.info("Passbook - Team identifier " + teamIdentifier);
-				LOG.info("Passbook - Organization name " +organizationName);
-				LOG.info("Passbook - PassTypeIdentifier " +passTypeIdentifier);
-				LOG.info("Passbook - Template path " +templatePath);
-				LOG.info("Passbook - Tmp path " +tempPath);
-				LOG.info("Passbook - Apple WWDRCA " +appleWWDRCA);
-				LOG.info("Passbook - KeyStore " +keyStorePath);
+			
+			String templatePath = getTemplatePath(mensaje, servicio, ps);
+			String tempPath = getTempPath(mensaje, servicio, ps);
+			
+			String appleWWDRCA = ps.getMessage("passbook.appleWWDRCA", null, null, null);
+			String keyStorePath = ps.getMessage("passbook.keyStorePath", null, null, null);
+			String keyStorePassword = ps.getMessage("passbook.keyStorePassword", null, null, null);
+			
+			String foregroundColor=ps.getMessage("passbook.foregroundColor", null, null, null);
+			String backgroundColor=ps.getMessage("passbook.backgroundColor", null, null, null);
+			String labelColor=ps.getMessage("passbook.labelColor", null, null, null);
+			
+			String nombrePassbook=ps.getMessage("passbook.nombreAdjunto", null, null, null);
+			
+			LOG.info("Passbook - Team identifier " + teamIdentifier);
+			LOG.info("Passbook - Organization name " +organizationName);
+			LOG.info("Passbook - PassTypeIdentifier " +passTypeIdentifier);
+			LOG.info("Passbook - Template path " +templatePath);
+			LOG.info("Passbook - Tmp path " +tempPath);
+			LOG.info("Passbook - Apple WWDRCA " +appleWWDRCA);
+			LOG.info("Passbook - KeyStore " +keyStorePath);
 
-				List<PKField> camposPrincipales = getPkFieldsListAlign((passbook.getCamposPrincipales() != null)  ?passbook.getCamposPrincipales().getPkFieldsList() : new ArrayList<PkFieldsXMLBean>());
-				List<PKField> camposSecundarios = getPkFieldsListAlign((passbook.getCamposSecundarios()!= null) ? passbook.getCamposSecundarios().getPkFields(): new ArrayList<PkFieldsXMLBean>());
-				List<PKField> camposAuxiliares = getPkFieldsListAlign((passbook.getCamposAuxiliares()!= null) ? passbook.getCamposAuxiliares().getPkFields(): new ArrayList<PkFieldsXMLBean>());
-				List<PKField> camposCabecera = getPkFieldsList((passbook.getCamposCabecera() != null) ? passbook.getCamposCabecera().getPkFields(): new ArrayList<PkFieldsXMLBean>() );
-				List<PKField> camposDetalleTrasera = getPkFieldsList((passbook.getCamposDetalleTrasero()!= null) ? passbook.getCamposDetalleTrasero().getPkFields(): new ArrayList<PkFieldsXMLBean>());
-				String pkpassFile = null;
-				pkpassFile = PassbookGenerator.generate(camposPrincipales, camposSecundarios, camposAuxiliares, camposCabecera, 
-						camposDetalleTrasera, url, logoText, description, backgroundColor, foregroundColor, labelColor,passTypeIdentifier, 
-						serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);				
-				AdjuntosXMLBean adjunto = new AdjuntosXMLBean();
-				adjunto.setNombre(nombrePassbook);
-				File fichero = new File(pkpassFile);
-				adjunto.setContenido(getBytesFromFile(fichero));
-				mensaje.addAdjunto(adjunto);
-				if (fichero != null) {
-					fichero.delete();
-				}
+			List<PKField> camposPrincipales = getPkFieldsListAlign((passbook.getCamposPrincipales() != null)  ?passbook.getCamposPrincipales().getPkFieldsList() : new ArrayList<PkFieldsXMLBean>());
+			List<PKField> camposSecundarios = getPkFieldsListAlign((passbook.getCamposSecundarios()!= null) ? passbook.getCamposSecundarios().getPkFields(): new ArrayList<PkFieldsXMLBean>());
+			List<PKField> camposAuxiliares = getPkFieldsListAlign((passbook.getCamposAuxiliares()!= null) ? passbook.getCamposAuxiliares().getPkFields(): new ArrayList<PkFieldsXMLBean>());
+			List<PKField> camposCabecera = getPkFieldsList((passbook.getCamposCabecera() != null) ? passbook.getCamposCabecera().getPkFields(): new ArrayList<PkFieldsXMLBean>() );
+			List<PKField> camposDetalleTrasera = getPkFieldsList((passbook.getCamposDetalleTrasero()!= null) ? passbook.getCamposDetalleTrasero().getPkFields(): new ArrayList<PkFieldsXMLBean>());
+			String pkpassFile = null;
+			pkpassFile = PassbookGenerator.generate(camposPrincipales, camposSecundarios, camposAuxiliares, camposCabecera, 
+					camposDetalleTrasera, url, logoText, description, backgroundColor, foregroundColor, labelColor,passTypeIdentifier, 
+					serialNumber, autheticationToken, teamIdentifier, organizationName, templatePath,appleWWDRCA,keyStorePath,keyStorePassword, tempPath);				
+			AdjuntosXMLBean adjunto = new AdjuntosXMLBean();
+			adjunto.setNombre(nombrePassbook);
+			File fichero = new File(pkpassFile);
+			adjunto.setContenido(getBytesFromFile(fichero));
+			mensaje.addAdjunto(adjunto);
+			if (fichero != null) {
+				fichero.delete();
 			}
 		}
 	}
@@ -197,18 +197,18 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 		Path ruta;
 		String rutaBase = ps.getMessage("passbook.tempBasePath", null, null, null);
 		
-		String temp = rutaBase+"/"+servicio;
+		String temp = rutaBase+R_CONST_1+servicio;
 		ruta = Paths.get(temp);
 		
 		//comprobamos si existe ruta con el servicio
 		if (Files.exists(ruta)){
 			//comprobamos si existe ruta con el organismo
-			temp = temp + "/" + mensaje.getCodOrganismo();
+			temp = temp + R_CONST_1 + mensaje.getCodOrganismo();
 			ruta = Paths.get(temp);
 			if (Files.exists(ruta)){
 				return temp;
 			}else{//no existe que tome la general del servicio
-				return rutaBase+"/"+servicio;
+				return rutaBase+R_CONST_1+servicio;
 			}
 		}else{//no existe, que tome la general de properties
 			return rutaBase;
@@ -220,22 +220,22 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 		Path ruta;
 		String rutaBase = ps.getMessage("passbook.templateBasePath", null, null, null);
 		
-		String temp = rutaBase+"/"+servicio;
+		String temp = rutaBase+R_CONST_1+servicio;
 		ruta = Paths.get(temp);
 		
 		//comprobamos si existe ruta con el servicio
 		if (Files.exists(ruta)){
 			//comprobamos si existe ruta con el organismo
-			temp = temp + "/" + mensaje.getCodOrganismo();
+			temp = temp + R_CONST_1 + mensaje.getCodOrganismo();
 			ruta = Paths.get(temp);
 			if (Files.exists(ruta)){
 				return temp;
 			}else{//no existe que tome la general del servicio
-				String rutaServicioLogo = rutaBase+"/"+servicio + "/logo.png";
-				String rutaServicioBack = rutaBase+"/"+servicio + "/background.png";
-				String rutaServicioIcon = rutaBase+"/"+servicio + "/icon.png";
+				String rutaServicioLogo = rutaBase+R_CONST_1+servicio + "/logo.png";
+				String rutaServicioBack = rutaBase+R_CONST_1+servicio + "/background.png";
+				String rutaServicioIcon = rutaBase+R_CONST_1+servicio + "/icon.png";
 				if (Files.exists(Paths.get(rutaServicioLogo)) && Files.exists(Paths.get(rutaServicioBack))  && Files.exists(Paths.get(rutaServicioIcon))){
-						return rutaBase+"/"+servicio;
+						return rutaBase+R_CONST_1+servicio;
 					}else{//no existe la imagen del logo en el servicio tomamos las de por defecto
 						return rutaBase;
 					}	
@@ -261,7 +261,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 	}
 
 	private List<PKField> getPkFieldsList(List<PkFieldsXMLBean> pkFieldsList) {
-		List<PKField> camposPrincipales = new ArrayList<PKField>();
+		List<PKField> camposPrincipales = new ArrayList<>();
 		for (PkFieldsXMLBean pkFieldXMLField : pkFieldsList) {
 			PKField field = new PKField();
 			field.setKey(pkFieldXMLField.getKey());
@@ -273,8 +273,8 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 	}
 	
 	private List<PKField> getPkFieldsListAlign(List<PkFieldsXMLBean> pkFieldsList) {
-        List<PKField> camposPrincipales = new ArrayList<PKField>();
-        for (int i=0; i<pkFieldsList.size();i++) {
+        List<PKField> camposPrincipales = new ArrayList<>();
+        for (int i=0, s = pkFieldsList.size(); i<s;i++) {
             
             PkFieldsXMLBean pkFieldXMLField = pkFieldsList.get(i);
             
@@ -316,7 +316,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 				if (mensajePeticionLotes.getDestinatariosSMS()!=null && mensajePeticionLotes.getDestinatariosSMS().getDestinatarioSMS()!=null && !mensajePeticionLotes.getDestinatariosSMS().getDestinatarioSMS().isEmpty()){
 					mensaje.setCuerpo(mensajePeticionLotes.getCuerpo());
 					
-					for (int i = 0; i< mensajePeticionLotes.getDestinatariosSMS().getDestinatarioSMS().size(); i++){
+					for (int i = 0, s = mensajePeticionLotes.getDestinatariosSMS().getDestinatarioSMS().size(); i< s; i++){
 						DestinatarioPeticionLotesSMSXMLBean dest =mensajePeticionLotes.getDestinatariosSMS().getDestinatarioSMS().get(i);
 						
 						mensaje.addDestinatario(dest);
@@ -341,7 +341,7 @@ public class EnvioLotesMensajesImpl implements IEnvioLotesMensajesService {
 			
 			envioPush.setUsuario(peticionXML.getUsuario());
 			envioPush.setServicio(peticionXML.getServicio());
-			envioPush.setPassword(peticionXML.getPassword());
+			envioPush.setPass(peticionXML.getPassword());
 			envioPush.setNombreLote(peticionXML.getNombreLote());
 			envioPush.setCodSIA(peticionXML.getCodSia());
 			envioPush.setCodOrganismo(peticionXML.getCodOrganismo());

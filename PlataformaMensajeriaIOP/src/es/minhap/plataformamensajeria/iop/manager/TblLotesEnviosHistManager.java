@@ -13,7 +13,7 @@ public interface TblLotesEnviosHistManager {
 	 * @param idLote
 	 * @return TblLotesEnviosHist
 	 */
-	public TblLotesEnviosHist convertLoteEnvioTOLoteEnvioHist(Long idLote);
+	TblLotesEnviosHist convertLoteEnvioTOLoteEnvioHist(Long idLote);
 
 	/**
 	 * Inserta el lote historicos
@@ -21,7 +21,7 @@ public interface TblLotesEnviosHistManager {
 	 * @param loteHistorico
 	 * @return Long
 	 */
-	public Long insert(TblLotesEnviosHist v);
+	Long insert(TblLotesEnviosHist v);
 
 	
 	/**
@@ -30,14 +30,14 @@ public interface TblLotesEnviosHistManager {
 	 * @param query
 	 * @return List<Long>
 	 */
-	public List<Long> getIdByQuery(TblLotesEnviosHistQuery query);
+	List<Long> getIdByQuery(TblLotesEnviosHistQuery query);
 
 	/**
 	 * Elimina el lote historicos
 	 * 
 	 * @param loteenvioid
 	 */
-	public void eliminar(Long loteenvioid);
+	void eliminar(Long loteenvioid);
 
 	/**
 	 * Obtiene si para el mensaje si es de tipo multidestinatario
@@ -45,7 +45,7 @@ public interface TblLotesEnviosHistManager {
 	 * @param mensajeId
 	 * @return
 	 */
-	public boolean isMultidestinatario(Long mensajeId);
+	boolean isMultidestinatario(Long mensajeId);
 
 	/**
 	 * Obtiene un Lote historico por Id
@@ -53,7 +53,7 @@ public interface TblLotesEnviosHistManager {
 	 * @param loteEnvioHistId
 	 * @return TblAdjuntosHist
 	 */
-	public TblLotesEnviosHist getLoteHistoricoById(Long loteEnvioHistId);
+	TblLotesEnviosHist getLoteHistoricoById(Long loteEnvioHistId);
 	
 	
 }

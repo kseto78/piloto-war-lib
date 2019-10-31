@@ -14,9 +14,9 @@ public interface ViewUsuariosPushManager {
 	 * @param ViewUsuariosPushQuery
 	 * @return Integer
 	 */
-	public Integer countViewUsuariosPush(ViewUsuariosPushQuery query);
+	Integer countViewUsuariosPush(ViewUsuariosPushQuery query);
 
-	public List<ViewUsuariosPush> getUsuariosPushPaginado(int start, int size, String order, String column,
+	List<ViewUsuariosPush> getUsuariosPushPaginado(int start, int size, String order, String column,
 			UsuariosPushBean criterio, boolean b);
 
 }

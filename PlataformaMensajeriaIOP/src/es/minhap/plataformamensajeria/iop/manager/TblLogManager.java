@@ -11,7 +11,7 @@ public interface TblLogManager {
 	 * 
 	 * @param log
 	 */
-	public void insertLog(TblLog log);
+	void insertLog(TblLog log);
 
 	/**
 	 * Se obtienen todos las auditorias paginadas
@@ -26,7 +26,7 @@ public interface TblLogManager {
 	 * @param recursosFiltro
 	 * @return List
 	 */
-	public List<TblLog> getAuditoriasPaginadas(int start, int size, String order, String column, String nombre,
+	List<TblLog> getAuditoriasPaginadas(int start, int size, String order, String column, String nombre,
 			es.minhap.plataformamensajeria.iop.beans.AuditoriaPlataformaBean criterio, boolean b, String recursosFiltro);
 
 	

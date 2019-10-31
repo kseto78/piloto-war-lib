@@ -22,6 +22,7 @@ import es.minhap.sim.query.TblLogQuery;
 @Service("tblLogManagerImpl")
 public class TblLogManagerImpl implements TblLogManager {
 
+	protected static final String R_CONST_1 = "%";
 	@Resource
 	private TblLogDAO tblLogDAO;
 	
@@ -38,7 +39,7 @@ public class TblLogManagerImpl implements TblLogManager {
 		// Orden ascendente o descendente
 		if (order == null) {
 			ord = OrderType.DESC;
-		} else if (order.equals("1")){
+		} else if ("1".equals(order)){
 			ord = OrderType.ASC;
 		}else{
 			ord = OrderType.DESC;
@@ -46,7 +47,7 @@ public class TblLogManagerImpl implements TblLogManager {
 		
 		TblLogQuery query = new TblLogQuery();
 		
-		if (null != criterio && null != criterio.getSourceName() && criterio.getSourceName().length()>0){
+		if (null != criterio && null != criterio.getSourceName() && !criterio.getSourceName().isEmpty()){
 			query.setSourcename(criterio.getSourceName());
 			query.setSourcenameComparator(TextComparator.EQUALS);
 		}else{
@@ -54,12 +55,12 @@ public class TblLogManagerImpl implements TblLogManager {
 				query.addSourcenameIn(a);
 			}
 		}
-		if (null != criterio && null != criterio.getSourceDescription() && criterio.getSourceDescription().length()>0){
+		if (null != criterio && null != criterio.getSourceDescription() && !criterio.getSourceDescription().isEmpty()){
 			query.setSourcedescriptionComparator(TextComparator.ILIKE);
-			query.setSourcedescription("%" + criterio.getSourceDescription() + "%");
+			query.setSourcedescription(R_CONST_1 + criterio.getSourceDescription() + R_CONST_1);
 		}
 		
-		if (null != criterio && null != criterio.getAdtUsuario() && criterio.getAdtUsuario().length()>0){
+		if (null != criterio && null != criterio.getAdtUsuario() && !criterio.getAdtUsuario().isEmpty()){
 			query.setAdtusuario(criterio.getAdtUsuario());
 		}
 		

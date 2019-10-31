@@ -23,7 +23,13 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServidoresOrganismos;
 @Transactional
 public class QueryExecutorServidoresOrganismosImpl extends HibernateDaoSupport implements QueryExecutorServidoresOrganismos {
 
-	private static final Logger log = LoggerFactory.getLogger(QueryExecutorServidoresOrganismosImpl.class);
+	protected static final String R_CONST_1 = "on so.ORGANISMOID = o.ORGANISMOID where so.SERVIDORID =";
+
+	protected static final String R_CONST_2 = "  AND o.DIR3 = '";
+
+	protected static final String R_CONST_3 = "'";
+
+	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorServidoresOrganismosImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -42,21 +48,31 @@ public class QueryExecutorServidoresOrganismosImpl extends HibernateDaoSupport i
 	public String getUsuario(String codigoOrganismo, Integer proveedorId) {
 		String res = null;
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
-			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-					"select PROVEEDORUSUARIOSMS from TBL_SERVIDORES_ORGANISMOS so inner join TBL_ORGANISMOS o "
-							+ "on so.ORGANISMOID = o.ORGANISMOID where so.SERVIDORID ="+ proveedorId+"  AND o.DIR3 = '"+codigoOrganismo+"'");
-			res = (String) query.uniqueResult();
-			if(null != res)
-				return res;
+			StringBuilder queryString = new StringBuilder();
+			queryString.append("select PROVEEDORUSUARIOSMS from TBL_SERVIDORES_ORGANISMOS so inner join TBL_ORGANISMOS o ");
+			queryString.append(R_CONST_1);
+			queryString.append("?");
+			queryString.append(R_CONST_2);
+			queryString.append("?");
+			queryString.append(R_CONST_3);
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
 			
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_END);
+			query.setInteger(0, proveedorId);
+			query.setString(1, codigoOrganismo);
+			
+			res = (String) query.uniqueResult();
+			if(null != res) {
+				return res;
+			}
+			
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_END);
 			}
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;
@@ -67,22 +83,31 @@ public class QueryExecutorServidoresOrganismosImpl extends HibernateDaoSupport i
 	public String getPassword(String codigoOrganismo, Integer proveedorId) {
 		String res = null;
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
-			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-					"select PROVEEDORPASSWORDSMS from TBL_SERVIDORES_ORGANISMOS so inner join TBL_ORGANISMOS o "
-							+ "on so.ORGANISMOID = o.ORGANISMOID where so.SERVIDORID =" + proveedorId
-							+ "  AND o.DIR3 = '" + codigoOrganismo + "'");
+			StringBuilder queryString = new StringBuilder();
+			queryString.append("select PROVEEDORPASSWORDSMS from TBL_SERVIDORES_ORGANISMOS so inner join TBL_ORGANISMOS o ");
+			queryString.append(R_CONST_1);
+			queryString.append("?");
+			queryString.append(R_CONST_2);
+			queryString.append("?");
+			queryString.append(R_CONST_3);
+			
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+			query.setInteger(0, proveedorId);
+			query.setString(1, codigoOrganismo);
+			
 			res = (String) query.uniqueResult();
-			if (null != res)
+			if (null != res) {
 				return res;
+			}
 
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_END);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_END);
 			}
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;

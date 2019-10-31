@@ -17,7 +17,7 @@ public interface TblDestinatariosManager {
 	 * @param usuario
 	 * @return ArrayList<Long>
 	 */
-	public  List<Long> setDestinatarios(Long mensajeId, String to, String cc, String bcc, String usuario);
+	List<Long> setDestinatarios(Long mensajeId, String to, String cc, String bcc, String usuario);
 	
 
 	/**
@@ -26,14 +26,14 @@ public interface TblDestinatariosManager {
 	 * @param mensajeId
 	 * @return ArrayList<String>
 	 */
-	public List<String> getDestinatarios(Long mensajeId);
+	List<String> getDestinatarios(Long mensajeId);
 
 	/**
 	 * Elimina los destinatarios de un email
 	 * 
 	 * @param destinatarioid
 	 */
-	public void delete(Long destinatarioid);
+	void delete(Long destinatarioid);
 
 
 	/**
@@ -42,5 +42,5 @@ public interface TblDestinatariosManager {
 	 * @param destinatarioId
 	 * @return
 	 */
-	public TblDestinatarios getDestinatario(Long destinatarioId);
+	TblDestinatarios getDestinatario(Long destinatarioId);
 }

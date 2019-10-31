@@ -10,7 +10,7 @@ import es.minhap.sim.model.TblErrorMensajeLog;
  */
 public interface TblErrorMensajeLogManager {
 
-	public Long insertarLogError(TblErrorMensajeLog tblErrorMensajeLog);
+	Long insertarLogError(TblErrorMensajeLog tblErrorMensajeLog);
 
 	
 

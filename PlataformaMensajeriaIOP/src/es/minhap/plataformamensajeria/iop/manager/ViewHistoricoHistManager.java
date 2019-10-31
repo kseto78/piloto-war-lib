@@ -15,7 +15,7 @@ public interface ViewHistoricoHistManager {
 	 * @param ViewHistoricoQuery
 	 * @return List
 	 */
-	public List<ViewHistoricoHistMultidest> getHistoricoMultidest(ViewHistoricoHistMultidestQuery query);
+	List<ViewHistoricoHistMultidest> getHistoricoMultidest(ViewHistoricoHistMultidestQuery query);
 
 	/**
 	 * Se obtiene historico del mensaje NO multidestinatario
@@ -23,7 +23,7 @@ public interface ViewHistoricoHistManager {
 	 * @param query
 	 * @return List
 	 */
-	public List<ViewHistoricoHist> getHistorico(ViewHistoricoHistQuery query);
+	List<ViewHistoricoHist> getHistorico(ViewHistoricoHistQuery query);
 	
 
 }

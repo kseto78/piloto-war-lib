@@ -12,7 +12,7 @@ public interface TblDestinatariosHistManager {
 	 * @param idMensaje
 	 * @return TblMensajesHist
 	 */
-	public List<TblDestinatariosHist> convertDestinatarioTODestinatarioHist(Long idMensaje);
+	List<TblDestinatariosHist> convertDestinatarioTODestinatarioHist(Long idMensaje);
 
 	/**
 	 * Inserta el destinatario historicos
@@ -20,7 +20,7 @@ public interface TblDestinatariosHistManager {
 	 * @param m
 	 * @return Long
 	 */
-	public Long insert(TblDestinatariosHist d);
+	Long insert(TblDestinatariosHist d);
 
 	/**
 	 * Elimina el destinatario historicos
@@ -35,7 +35,7 @@ public interface TblDestinatariosHistManager {
 	 * @param destinatarioId
 	 * @return TblDestinatariosHist
 	 */
-	public TblDestinatariosHist getDestinatario(Long destinatarioId);
+	TblDestinatariosHist getDestinatario(Long destinatarioId);
 
 	/**
 	 * obtiene los destinatarios de un email
@@ -43,7 +43,7 @@ public interface TblDestinatariosHistManager {
 	 * @param mensajeId
 	 * @return ArrayList<String>
 	 */
-	public List<String> getDestinatarios(Long mensajeid);
+	List<String> getDestinatarios(Long mensajeid);
 	
 
 }

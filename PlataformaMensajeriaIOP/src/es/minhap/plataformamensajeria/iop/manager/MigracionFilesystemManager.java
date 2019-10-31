@@ -16,7 +16,7 @@ public interface MigracionFilesystemManager {
 	 * @param indice
 	 * @return List<Object>
 	 */
-	public List<Object> obtenerMensajesMigracion(Long mensajeId, Date fechaInicio, Date fechaFin, Boolean historico, Integer max, Integer indice);
+	List<Object> obtenerMensajesMigracion(Long mensajeId, Date fechaInicio, Date fechaFin, Boolean historico, Integer max, Integer indice);
 
 	
 	/**
@@ -28,7 +28,7 @@ public interface MigracionFilesystemManager {
 	 * @param historico
 	 * @return Integer
 	 */
-	public Integer countMensajesMigracion(Long idMensaje, Date fechaInicio, Date fechaFin, Boolean historicos);
+	Integer countMensajesMigracion(Long idMensaje, Date fechaInicio, Date fechaFin, Boolean historicos);
 	
 	
 }

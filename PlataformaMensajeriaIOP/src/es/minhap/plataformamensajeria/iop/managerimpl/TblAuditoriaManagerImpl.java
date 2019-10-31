@@ -31,9 +31,7 @@ public class TblAuditoriaManagerImpl implements TblAuditoriaManager {
 	public Integer insertarAuditoria(AuditoriaBean auditoria) {
 		Integer res;
 		TblAuditoria a = createAuditoria(auditoria);
-		res = getAuditoriaDAO().insert(a).intValue();
-
-		return res;
+		return getAuditoriaDAO().insert(a).intValue();
 	}
 
 	private TblAuditoria createAuditoria(AuditoriaBean a) {

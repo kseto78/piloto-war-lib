@@ -24,6 +24,8 @@ import es.minhap.sim.model.TblLog;
 @Service("ParametrosProveedorManagerImpl")
 public class ParametrosProveedorManagerImpl implements ParametrosProveedorManager {
 
+	protected static final String R_CONST_1 = " ";
+
 	@Resource 
 	private ParametrosProveedorDAO parametrosProveedorDAO;
 	
@@ -59,7 +61,7 @@ public class ParametrosProveedorManagerImpl implements ParametrosProveedorManage
 		log.setAdtfecha(new Date());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + parametroProveedor.getParametro());
+		log.setSourcedescription(descripcion + R_CONST_1 + parametroProveedor.getParametro());
 		log.setSourceid(id);
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
@@ -76,7 +78,7 @@ public class ParametrosProveedorManagerImpl implements ParametrosProveedorManage
 		log.setAdtfecha(new Date());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + pp.getIdParametrosProveedor());
+		log.setSourcedescription(descripcion + R_CONST_1 + pp.getIdParametrosProveedor());
 		log.setSourceid(pp.getIdProveedor());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);		

@@ -13,7 +13,7 @@ public interface ComunicacionesManager {
 	 * @param TblAplicacionesQuery
 	 * @return
 	 */
-	public List<Comunicacion> getComunicaciones(ComunicacionQuery comunicacion);
+	List<Comunicacion> getComunicaciones(ComunicacionQuery comunicacion);
 
 	List<Comunicacion> getComunicacionesOrdenados();
 

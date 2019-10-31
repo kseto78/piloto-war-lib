@@ -13,7 +13,7 @@ public interface TblHistoricosHistManager {
 	 * @param idMensaje
 	 * @return TblMensajesHist
 	 */
-	public List<TblHistoricosHist> convertHistoricoTOHistoricoHist(Long idMensaje);
+	List<TblHistoricosHist> convertHistoricoTOHistoricoHist(Long idMensaje);
 
 	/**
 	 * Inserta el  historicos
@@ -21,7 +21,7 @@ public interface TblHistoricosHistManager {
 	 * @param m
 	 * @return Long
 	 */
-	public Long insert(TblHistoricosHist d);
+	Long insert(TblHistoricosHist d);
 
 	/**
 	 * Elimina el  historicos
@@ -36,7 +36,7 @@ public interface TblHistoricosHistManager {
 	 * @param idMensaje
 	 * @return 
 	 */
-	TblHistoricosHist getHistoricosHistById(Long HISTORICOID);
+	TblHistoricosHist getHistoricosHistById(Long historicoid);
 	
 
 }

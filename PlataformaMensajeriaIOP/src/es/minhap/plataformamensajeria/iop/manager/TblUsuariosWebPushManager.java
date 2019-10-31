@@ -14,7 +14,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param query
 	* @return boolean
 	 */
-	public boolean eliminarUsuario(TblUsuariosWebPushQuery query);
+	boolean eliminarUsuario(TblUsuariosWebPushQuery query);
 	
 	
 
@@ -25,7 +25,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param usuario
 	 * @return Long
 	 */
-	public boolean insertUsuario(TblUsuariosWebPush usuario);
+	boolean insertUsuario(TblUsuariosWebPush usuario);
 
 
 
@@ -35,7 +35,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param query
 	 * @return TblUsuariosPush
 	 */
-	public TblUsuariosWebPush getUsuarioPushByQuery(TblUsuariosWebPushQuery query);
+	TblUsuariosWebPush getUsuarioPushByQuery(TblUsuariosWebPushQuery query);
 
 
 
@@ -53,7 +53,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param codigo
 	 * @return 
 	 */
-	public boolean comprobarDispositivoRepetido(String codigo);
+	boolean comprobarDispositivoRepetido(String codigo);
 	
 	/**
 	 * Obtiene lista de id de usuarios por servicio
@@ -61,7 +61,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param servicio
 	 * @return 
 	 */
-	public List<Long> getUsuariosPorServicio(String servicio);
+	List<Long> getUsuariosPorServicio(String servicio);
 
 
 
@@ -72,7 +72,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param identificadorUsuario
 	 * @return 
 	 */
-	public List<Long> getDispositivosUsuarioServicio(String identificadorUsuario, String servicio);
+	List<Long> getDispositivosUsuarioServicio(String identificadorUsuario, String servicio);
 
 
 
@@ -81,7 +81,7 @@ public interface TblUsuariosWebPushManager {
 	 * 
 	 * @param query
 	 */
-	public void establecerUsuarioEliminado(TblUsuariosWebPushQuery query);
+	void establecerUsuarioEliminado(TblUsuariosWebPushQuery query);
 
 
 
@@ -91,7 +91,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param mensajeId
 	* @return List<String>
 	 */
-	public void updateUsuario(TblUsuariosWebPush uwp);
+	void updateUsuario(TblUsuariosWebPush uwp);
 
 
 
@@ -101,7 +101,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param mensajeId
 	* @return List<String>
 	 */
-	public List<String> getUsuarioIdMensaje(long mensajeId);
+	List<String> getUsuarioIdMensaje(long mensajeId);
 
 
 	/**
@@ -115,7 +115,7 @@ public interface TblUsuariosWebPushManager {
 	 * @param b
 	 * @return
 	 */
-	public List<TblUsuariosWebPush> getUsuariosWebPushPaginado(int start, int size, String order, String column,
+	List<TblUsuariosWebPush> getUsuariosWebPushPaginado(int start, int size, String order, String column,
 			es.minhap.plataformamensajeria.iop.beans.UsuariosWebPushBean upb, boolean b);
 
 }

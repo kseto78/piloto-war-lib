@@ -75,8 +75,8 @@ public class TblHistoricosHistManagerImpl implements TblHistoricosHistManager {
 
 	@Override
 	@Transactional
-	public TblHistoricosHist getHistoricosHistById(Long HISTORICOID) {
-		return historicosHistDAO.get(HISTORICOID);
+	public TblHistoricosHist getHistoricosHistById(Long historicoid) {
+		return historicosHistDAO.get(historicoid);
 	}
 	
 }

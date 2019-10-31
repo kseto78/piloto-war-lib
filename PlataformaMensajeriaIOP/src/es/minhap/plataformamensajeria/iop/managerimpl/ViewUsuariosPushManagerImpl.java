@@ -40,7 +40,7 @@ public class ViewUsuariosPushManagerImpl implements ViewUsuariosPushManager {
 		OrderType ord = null;
 		
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")){
+		if (order == null || "1".equals(order)){
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -74,7 +74,7 @@ public class ViewUsuariosPushManagerImpl implements ViewUsuariosPushManager {
 			if(criterio.getFechaHasta() != null){
 				query.setFechaMax(criterio.getFechaHasta());
 			}
-			if(null != criterio.getPlataforma() && criterio.getPlataforma().length() > 0){
+			if(null != criterio.getPlataforma() && !criterio.getPlataforma().isEmpty()){
 				query.setPlataforma(criterio.getPlataforma());
 				
 			}

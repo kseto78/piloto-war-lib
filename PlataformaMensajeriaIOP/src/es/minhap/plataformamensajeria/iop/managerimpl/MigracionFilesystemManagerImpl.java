@@ -67,16 +67,19 @@ public class MigracionFilesystemManagerImpl implements MigracionFilesystemManage
 	private TblMensajesQuery createQueryMensaje(Long mensajeId, Date fechaInicio, Date fechaFin, Integer max, Integer contador) {
 		TblMensajesQuery query = new TblMensajesQuery();
 		
-		if (null != mensajeId)
+		if (null != mensajeId) {
 			query.setMensajeid(mensajeId);
+		}
 		if (null != fechaInicio){
 			query.setFechacreacionMin(fechaInicio);
 			query.setFechacreacionMax((null != fechaFin)? fechaFin : new Date()) ;
 		}
-		if (null != max)
+		if (null != max) {
 			query.setMaxResults(max);
-		if (contador != null)
+		}
+		if (contador != null) {
 			query.setFirstResult(contador*max);
+		}
 		
 		query.setCuerpofileIsNull(true);
 		query.setCuerpoIsNull(true);
@@ -88,8 +91,9 @@ public class MigracionFilesystemManagerImpl implements MigracionFilesystemManage
 	private TblMensajesHistQuery createQueryMensajeHistorico(Long mensajeId, Date fechaInicio, Date fechaFin, Integer max, Integer contador) {
 		TblMensajesHistQuery query = new TblMensajesHistQuery();
 		
-		if (null != mensajeId)
+		if (null != mensajeId) {
 			query.setMensajeid(mensajeId);
+		}
 		if (null != fechaInicio){
 			query.setFechacreacionMin(fechaInicio);
 			query.setFechacreacionMax((null != fechaFin)? fechaFin : new Date()) ;

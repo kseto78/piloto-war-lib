@@ -26,6 +26,8 @@ import es.minhap.sim.model.TblLog;
 @Service("ProveedoresMisimManagerImpl")
 public class ProveedoresMisimManagerImpl implements ProveedoresMisimManager {
 
+	protected static final String R_CONST_1 = "%";
+
 	@Resource 
 	private ProveedorDAO proveedorDAO;
 	
@@ -42,7 +44,7 @@ public class ProveedoresMisimManagerImpl implements ProveedoresMisimManager {
 		
 		OrderType ord = null;
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")) {
+		if (order == null || "1".equals(order)) {
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -51,7 +53,7 @@ public class ProveedoresMisimManagerImpl implements ProveedoresMisimManager {
 
 		if (null != criterio.getNombre()) {
 			query.setNombreComparator(TextComparator.ILIKE);
-			query.setNombre("%"+criterio.getNombre()+"%");
+			query.setNombre(R_CONST_1+criterio.getNombre()+R_CONST_1);
 		}
 		
 		query.addOrder(columnSort, ord);

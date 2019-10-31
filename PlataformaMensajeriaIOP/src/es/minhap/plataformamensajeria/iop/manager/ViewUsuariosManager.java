@@ -12,7 +12,7 @@ public interface ViewUsuariosManager {
 	 * @param query
 	 * @return List
 	 */
-	public List<TblUsuarios> getViewUsuariosPaginado(int start, int size, String order, String column, String nombre,
+	List<TblUsuarios> getViewUsuariosPaginado(int start, int size, String order, String column, String nombre,
 	Long aplicacionId, Integer rolId, boolean count);
 
 	

@@ -24,7 +24,35 @@ import es.minhap.plataformamensajeria.iop.util.WSPlataformaErrors;
  */
 @Service("operacionesMensajesImpl")
 public class OperacionesMensajesImpl implements IOperacionesMensajesService {
-	private final static Logger LOG = LoggerFactory.getLogger(OperacionesMensajesImpl.class);
+	protected static final String R_CONST_1 = "[anularLote] Error anulando lote";
+
+	protected static final String R_CONST_2 = "[reenviarMensaje] Generando XML de respuesta";
+
+	protected static final String R_CONST_3 = "[reenviarLote] Error reenviando lote";
+
+	protected static final String R_CONST_4 = "plataformaErrores.generales.STATUSTEXT_KO";
+
+	protected static final String R_CONST_5 = "plataformaErrores.operacionesMensajes.TAG_ERROR_GENERANDO_RESPUESTA_XML";
+
+	protected static final String R_CONST_6 = "plataformaErrores.operacionesMensajes.TAG_MENSAJE_OK";
+
+	protected static final String R_CONST_7 = "plataformaErrores.generales.STATUS_OK";
+
+	protected static final String R_CONST_8 = "plataformaErrores.generales.STATUSTEXT_OK";
+
+	protected static final String R_CONST_9 = "constantes.ESTADO_ANULADO";
+
+	protected static final String R_CONST_10 = "plataformaErrores.operacionesMensajes.STATUSCODE_KO";
+
+	protected static final String R_CONST_11 = "plataformaErrores.operacionesMensajes.STATUSTEXT_KO";
+
+	protected static final String R_CONST_12 = "plataformaErrores.operacionesMensajes.DETAILSUSUARIO";
+
+	protected static final String R_CONST_13 = "constantes.ESTADO_PENDIENTE";
+
+	protected static final String R_CONST_14 = "[reenviarMensaje] Error reenviando mensaje";
+
+	private static final Logger LOG = LoggerFactory.getLogger(OperacionesMensajesImpl.class);
 
 	@Resource
 	private TblMensajesManager mensajesManager;
@@ -48,7 +76,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 		try {
 
 			LOG.debug("[reenviarMensaje] Antes de reenviarMensaje" + idMensaje);
-			String estado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
+			String estado = estadosManager.getEstadoByName(ps.getMessage(R_CONST_13, null))
 					.getNombre();
 			Integer confirmacion = mensajesManager.operacionMensajeReenviar(idMensaje.longValue(), usuario, password, estado);
 			LOG.debug("[reenviarMensaje] Despues de reenviarMensaje reenviarMensaje");
@@ -57,21 +85,21 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			String error;
 			if (confirmacion.intValue() < 0) {
 				error = WSPlataformaErrors.getErrorReenviarMensaje(confirmacion);
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_11, null));
 				status.setDetails(error);
 			} else {
-				status.setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK", null));
-				status.setDetails(ps.getMessage("plataformaErrores.operacionesMensajes.TAG_MENSAJE_OK", null));
+				status.setStatusCode(ps.getMessage(R_CONST_7, null));
+				status.setStatusText(ps.getMessage(R_CONST_8, null));
+				status.setDetails(ps.getMessage(R_CONST_6, null));
 			}
 			respuestaOpracion.setStatus(status);
-			LOG.debug("[reenviarMensaje] Generando XML de respuesta");
+			LOG.debug(R_CONST_2);
 
 			resultadoXML = respuestaOpracion.toXML();
 		} catch (Exception e) {
-			LOG.error("[reenviarMensaje] Error reenviando mensaje", e);
-			resultadoXML = ps.getMessage("plataformaErrores.operacionesMensajes.TAG_ERROR_GENERANDO_RESPUESTA_XML",
+			LOG.error(R_CONST_14, e);
+			resultadoXML = ps.getMessage(R_CONST_5,
 					null);
 		}
 		return Utils.convertToUTF8(resultadoXML);
@@ -85,7 +113,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 
 		try {
 			LOG.debug("[anularMensaje] Antes de anularMensaje");
-			String estado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null))
+			String estado = estadosManager.getEstadoByName(ps.getMessage(R_CONST_9, null))
 					.getNombre();
 			Integer confirmacion = mensajesManager.operacionMensaje(idMensaje.longValue(), usuario, password, estado);
 			LOG.debug("[anularMensaje] Despues de anularMensaje");
@@ -94,21 +122,21 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			String error;
 			if (confirmacion.intValue() < 0) {
 				error = WSPlataformaErrors.getErrorAnularMensaje(confirmacion);
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_11, null));
 				status.setDetails(error);
 			} else {
-				status.setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK", null));
-				status.setDetails(ps.getMessage("plataformaErrores.operacionesMensajes.TAG_MENSAJE_OK", null));
+				status.setStatusCode(ps.getMessage(R_CONST_7, null));
+				status.setStatusText(ps.getMessage(R_CONST_8, null));
+				status.setDetails(ps.getMessage(R_CONST_6, null));
 			}
 			respuestaOpracion.setStatus(status);
-			LOG.debug("[reenviarMensaje] Generando XML de respuesta");
+			LOG.debug(R_CONST_2);
 
 			resultadoXML = respuestaOpracion.toXML();
 		} catch (Exception e) {
 			LOG.error("[anularMensaje] Error reenviando mensaje", e);
-			resultadoXML = ps.getMessage("plataformaErrores.operacionesMensajes.TAG_ERROR_GENERANDO_RESPUESTA_XML",
+			resultadoXML = ps.getMessage(R_CONST_5,
 					null);
 		}
 		return Utils.convertToUTF8(resultadoXML);
@@ -121,7 +149,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 		String resultadoXML = "";
 		try {
 			LOG.debug("[reenviarLote] Iniciando transaccion");
-			String estado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_PENDIENTE", null))
+			String estado = estadosManager.getEstadoByName(ps.getMessage(R_CONST_13, null))
 					.getNombre();
 			LOG.debug("[reenviarLote] Antes de reenviarLote");
 			Integer confirmacion = lotesEnviosManager.operacionesLotes(idLote.longValue(), usuario, password, estado);
@@ -131,21 +159,21 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			String error;
 			if (confirmacion.intValue() < 0) {
 				error = WSPlataformaErrors.getErrorReenviarLote(confirmacion);
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_11, null));
 				status.setDetails(error);
 			} else {
-				status.setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK", null));
-				status.setDetails(ps.getMessage("plataformaErrores.operacionesMensajes.TAG_MENSAJE_OK", null));
+				status.setStatusCode(ps.getMessage(R_CONST_7, null));
+				status.setStatusText(ps.getMessage(R_CONST_8, null));
+				status.setDetails(ps.getMessage(R_CONST_6, null));
 			}
 			respuestaOpracion.setStatus(status);
 			LOG.debug("[reenviarLote] Generando XML de respuesta");
 
 			resultadoXML = respuestaOpracion.toXML();
 		} catch (Exception e) {
-			LOG.error("[reenviarLote] Error reenviando lote", e);
-			resultadoXML = ps.getMessage("plataformaErrores.operacionesMensajes.TAG_ERROR_GENERANDO_RESPUESTA_XML",
+			LOG.error(R_CONST_3, e);
+			resultadoXML = ps.getMessage(R_CONST_5,
 					null);
 		}
 		return Utils.convertToUTF8(resultadoXML);
@@ -159,7 +187,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 
 		try {
 			LOG.debug("[anularLote] Iniciando transaccion");
-			String estado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null))
+			String estado = estadosManager.getEstadoByName(ps.getMessage(R_CONST_9, null))
 					.getNombre();
 			LOG.debug("[anularLote] Antes de anular lote");
 			Integer confirmacion = lotesEnviosManager.operacionesLotes(idLote.longValue(), usuario, password, estado);
@@ -169,21 +197,21 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			String error;
 			if (confirmacion.intValue() < 0) {
 				error = WSPlataformaErrors.getErrorAnularLote(confirmacion);
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_11, null));
 				status.setDetails(error);
 			} else {
-				status.setStatusCode(ps.getMessage("plataformaErrores.generales.STATUS_OK", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK", null));
-				status.setDetails(ps.getMessage("plataformaErrores.operacionesMensajes.TAG_MENSAJE_OK", null));
+				status.setStatusCode(ps.getMessage(R_CONST_7, null));
+				status.setStatusText(ps.getMessage(R_CONST_8, null));
+				status.setDetails(ps.getMessage(R_CONST_6, null));
 			}
 			respuestaOpracion.setStatus(status);
 			LOG.debug("[anularLote] Generando XML de respuesta");
 
 			resultadoXML = respuestaOpracion.toXML();
 		} catch (Exception e) {
-			LOG.error("[anularLote] Error anulando lote", e);
-			resultadoXML = ps.getMessage("plataformaErrores.operacionesMensajes.TAG_ERROR_GENERANDO_RESPUESTA_XML",
+			LOG.error(R_CONST_1, e);
+			resultadoXML = ps.getMessage(R_CONST_5,
 					null);
 		}
 
@@ -197,9 +225,9 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 
 		if (!validarOperacionMensaje(operacionesMensajes.getUsuario(), operacionesMensajes.getPassword())) {
 			RespuestaOperacionesMensajes respuestaOperacion = new RespuestaOperacionesMensajes();
-			String statusCode = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null);
-			String statusText = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null);
-			String detailsUsuario = ps.getMessage("plataformaErrores.operacionesMensajes.DETAILSUSUARIO", null);
+			String statusCode = ps.getMessage(R_CONST_10, null);
+			String statusText = ps.getMessage(R_CONST_11, null);
+			String detailsUsuario = ps.getMessage(R_CONST_12, null);
 			es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
 			status.setDetails(detailsUsuario);
 			status.setStatusCode(statusCode);
@@ -209,7 +237,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			try {
 				return respuestaOperacion.toXML();
 			} catch (PlataformaBusinessException e) {
-				LOG.error("[anularLote] Error anulando lote", e);
+				LOG.error(R_CONST_1, e);
 				return null;
 			}
 		} else {
@@ -222,15 +250,15 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			if (null == mensajeid || mensajeid <= 0) {
 				String error = WSPlataformaErrors.getErrorIdMensajeIncorrecto();
 				es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_4, null));
 				status.setDetails(error);
 				RespuestaOperacionesMensajes respuestaOpracion = new RespuestaOperacionesMensajes();
 				respuestaOpracion.setStatus(status);
 				try {
 					return respuestaOpracion.toXML();
 				} catch (PlataformaBusinessException e) {
-					LOG.error("[reenviarMensaje] Error reenviando mensaje", e);
+					LOG.error(R_CONST_14, e);
 					return null;
 				}
 			}
@@ -246,9 +274,9 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 		Integer mensajeid = null;
 		if (!validarOperacionMensaje(operacionesMensajes.getUsuario(), operacionesMensajes.getPassword())) {
 			RespuestaOperacionesMensajes respuestaOperacion = new RespuestaOperacionesMensajes();
-			String statusCode = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null);
-			String statusText = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null);
-			String detailsUsuario = ps.getMessage("plataformaErrores.operacionesMensajes.DETAILSUSUARIO", null);
+			String statusCode = ps.getMessage(R_CONST_10, null);
+			String statusText = ps.getMessage(R_CONST_11, null);
+			String detailsUsuario = ps.getMessage(R_CONST_12, null);
 			es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
 			status.setDetails(detailsUsuario);
 			status.setStatusCode(statusCode);
@@ -258,7 +286,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			try {
 				return respuestaOperacion.toXML();
 			} catch (PlataformaBusinessException e) {
-				LOG.error("[anularLote] Error anulando lote", e);
+				LOG.error(R_CONST_1, e);
 				return null;
 			}
 		} else {
@@ -270,8 +298,8 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			if (null == mensajeid || mensajeid <= 0) {
 				String error = WSPlataformaErrors.getErrorIdMensajeIncorrecto();
 				es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_4, null));
 				status.setDetails(error);
 				RespuestaOperacionesMensajes respuestaOpracion = new RespuestaOperacionesMensajes();
 				respuestaOpracion.setStatus(status);
@@ -294,9 +322,9 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 
 		if (!validarOperacionLote(operacionesLotesMensajes.getUsuario(), operacionesLotesMensajes.getPassword())) {
 			RespuestaOperacionesMensajes respuestaOperacion = new RespuestaOperacionesMensajes();
-			String statusCode = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null);
-			String statusText = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null);
-			String detailsUsuario = ps.getMessage("plataformaErrores.operacionesMensajes.DETAILSUSUARIO", null);
+			String statusCode = ps.getMessage(R_CONST_10, null);
+			String statusText = ps.getMessage(R_CONST_11, null);
+			String detailsUsuario = ps.getMessage(R_CONST_12, null);
 			es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
 			status.setDetails(detailsUsuario);
 			status.setStatusCode(statusCode);
@@ -306,7 +334,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			try {
 				return respuestaOperacion.toXML();
 			} catch (PlataformaBusinessException e) {
-				LOG.error("[anularLote] Error anulando lote", e);
+				LOG.error(R_CONST_1, e);
 				return null;
 			}
 		} else {
@@ -318,15 +346,15 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			if (null == idlote || idlote <= 0) {
 				String error = WSPlataformaErrors.getErrorIdLoteIncorrecto();
 				es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_4, null));
 				status.setDetails(error);
 				RespuestaOperacionesMensajes respuestaOperacion = new RespuestaOperacionesMensajes();
 				respuestaOperacion.setStatus(status);
 				try {
 					return respuestaOperacion.toXML();
 				} catch (PlataformaBusinessException e) {
-					LOG.error("[reenviarLote] Error reenviando lote", e);
+					LOG.error(R_CONST_3, e);
 					return null;
 				}
 			}
@@ -343,9 +371,9 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 
 		if (!validarOperacionLote(operacionesLotesMensajes.getUsuario(), operacionesLotesMensajes.getPassword())) {
 			RespuestaOperacionesMensajes respuestaOperacion = new RespuestaOperacionesMensajes();
-			String statusCode = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null);
-			String statusText = ps.getMessage("plataformaErrores.operacionesMensajes.STATUSTEXT_KO", null);
-			String detailsUsuario = ps.getMessage("plataformaErrores.operacionesMensajes.DETAILSUSUARIO", null);
+			String statusCode = ps.getMessage(R_CONST_10, null);
+			String statusText = ps.getMessage(R_CONST_11, null);
+			String detailsUsuario = ps.getMessage(R_CONST_12, null);
 			es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
 			status.setDetails(detailsUsuario);
 			status.setStatusCode(statusCode);
@@ -355,7 +383,7 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			try {
 				return respuestaOperacion.toXML();
 			} catch (PlataformaBusinessException e) {
-				LOG.error("[anularLote] Error anulando lote", e);
+				LOG.error(R_CONST_1, e);
 				return null;
 			}
 		} else {
@@ -367,15 +395,15 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 			if (null == idlote || idlote <= 0) {
 				String error = WSPlataformaErrors.getErrorIdLoteIncorrecto();
 				es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType status = new es.minhap.plataformamensajeria.iop.services.operaciones.ResponseStatusType();
-				status.setStatusCode(ps.getMessage("plataformaErrores.operacionesMensajes.STATUSCODE_KO", null));
-				status.setStatusText(ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null));
+				status.setStatusCode(ps.getMessage(R_CONST_10, null));
+				status.setStatusText(ps.getMessage(R_CONST_4, null));
 				status.setDetails(error);
 				RespuestaOperacionesMensajes respuestaOperacion = new RespuestaOperacionesMensajes();
 				respuestaOperacion.setStatus(status);
 				try {
 					return respuestaOperacion.toXML();
 				} catch (PlataformaBusinessException e) {
-					LOG.error("[anularLote] Error anulando lote", e);
+					LOG.error(R_CONST_1, e);
 					return null;
 				}
 			}
@@ -386,13 +414,11 @@ public class OperacionesMensajesImpl implements IOperacionesMensajesService {
 	}
 
 	private boolean validarOperacionMensaje(String usuario, String password) {
-		return ((null == usuario || usuario.length() < 1) || (null == password || password.length() < 1)) ? false
-				: true;
+		return null != usuario && !usuario.isEmpty() && null != password && !password.isEmpty();
 	}
 
 	private boolean validarOperacionLote(String usuario, String password) {
-		return ((null == usuario || usuario.length() < 1) || (null == password || password.length() < 1)) ? false
-				: true;
+		return null != usuario && !usuario.isEmpty() && null != password && !password.isEmpty();
 	}
 
 	/**

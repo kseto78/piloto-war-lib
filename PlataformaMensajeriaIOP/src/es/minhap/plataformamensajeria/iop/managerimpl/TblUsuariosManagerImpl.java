@@ -23,7 +23,7 @@ import es.minhap.sim.query.TblUsuariosQuery;
 @Service("tblUsuariosManagerImpl")
 public class TblUsuariosManagerImpl implements TblUsuariosManager {
 
-	private static final Logger logger = Logger.getLogger(TblUsuariosManagerImpl.class);
+	private static final Logger LOGGER = Logger.getLogger(TblUsuariosManagerImpl.class);
 	
 	@Resource
 	private TblUsuariosDAO tblUsuariosDAO;

@@ -70,8 +70,9 @@ public class TblDestinatariosHistManagerImpl implements TblDestinatariosHistMana
 		query.setMensajeid(mensajeid);
 		
 		for (TblDestinatariosHist d : destinatariosHistDAO.search(query).getResults()) {
-			if (!res.contains(d.getEmail()))
+			if (!res.contains(d.getEmail())) {
 				res.add(d.getEmail());
+			}
 		}
 		
 		return res;

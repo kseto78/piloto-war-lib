@@ -28,7 +28,11 @@ import es.minhap.sim.model.TblPdpDiputaciones;
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
 public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implements QueryExecutorPdpDiputaciones {
 
-	private static final Logger log = LoggerFactory.getLogger(QueryExecutorPdpDiputacionesImpl.class);
+	protected static final String R_CONST_1 = "%')";
+
+	protected static final String R_CONST_2 = "unchecked";
+
+	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorPdpDiputacionesImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -43,12 +47,12 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 	}
 
 				
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<TblPdpDiputaciones> getPdpDiputacionesPaginado(int start, int size, String order, String column, PdpDiputacionesBean ob) {
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
 			String sql = " from TblPdpDiputaciones o where (o.eliminado is null or o.eliminado != 'S')  ";
 			String slqWhere = createWhere(ob, order, column);
@@ -62,7 +66,7 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 			return  query.list();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -70,8 +74,8 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 	@Override
 	public Integer countPdpDiputacionesPaginado(PdpDiputacionesBean ob) {
 		try {
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
 			String sql = "select count(o.pdpdiputacionesid) from TblPdpDiputaciones o where (o.eliminado is null or o.eliminado != 'S')  ";
 			String slqWhere = createWhere(ob, null, null);
@@ -81,23 +85,30 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 			return  ((Long)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<String> getListAutocomplete(String term) {
 		try {
 			List<String> res = new ArrayList<>();
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
-			String sql = "select o.dir3, o.nombre from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') and activo = 1 and "
-					+ " (o.dir3 like '%" + term + "%' or o.nombre like '%" + term + "%')";
+			StringBuilder queryString = new StringBuilder();
+			queryString.append("select o.dir3, o.nombre from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S') and activo = 1 and ");
+			queryString.append(" (o.dir3 like '%");
+			queryString.append(term);
+			queryString.append("%' or o.nombre like '%");
+			queryString.append(term);
+			queryString.append(R_CONST_1);
 			
-			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+			
+			Query query = getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			
 			List<Object[]> rows = query.list();
 			
 			for (Object[] row : rows) {
@@ -106,19 +117,19 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 			}
 			return res;
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
 	
 		
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(R_CONST_2)
 	@Override
 	public List<String> getOrganismosHijos(String dir3) {
 		try {
 			List<String> res;
-			if (log.isDebugEnabled()) {
-				log.debug(LOG_START);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(LOG_START);
 			}
 			String sql = "select o.dir3 from TblOrganismos o where codUnidadSuperior = :dir3";
 			
@@ -126,13 +137,12 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 			query.setString("dir3", dir3);
 			res = query.list();
 			if (null == res){
-				res = new ArrayList<>();
-				return res;
+				return new ArrayList<>();
 			}else{
 				return res;
 			}
 		} catch (Exception e) {
-			log.error(HAS_ERROR, e);
+			LOG.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -140,8 +150,8 @@ public class QueryExecutorPdpDiputacionesImpl extends HibernateDaoSupport implem
 	private String createWhere(PdpDiputacionesBean ob, String order, String column) {
 		StringBuilder sb = new StringBuilder();
 	
-		if (null != ob.getNombre() && ob.getNombre().length() > 0) {
-			sb.append(" and Upper(o.nombre) like UPPER('%" + ob.getNombre() + "%')");
+		if (null != ob.getNombre() && !ob.getNombre().isEmpty()) {
+			sb.append(" and Upper(o.nombre) like UPPER('%" + ob.getNombre() + R_CONST_1);
 		}
 		
 		if (null != column) {

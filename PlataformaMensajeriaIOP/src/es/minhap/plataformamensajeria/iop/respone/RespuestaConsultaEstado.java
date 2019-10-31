@@ -36,6 +36,8 @@ import es.minhap.plataformamensajeria.iop.util.Utils;
  *
  */
 public class RespuestaConsultaEstado {
+	protected static final String R_CONST_1 = "\\nMensaje: ";
+	protected static final String R_CONST_2 = "Se ha producido un error creando el XML de respuesta.\\nCausa: ";
 	static final String TAG_SOAP_ENV = "soapenv:Envelope";
 	static final String TAG_SOAP_BODY = "soapenv:Body";
 	static final String TAG_FILTRO_RESPUESTA="RESPUESTA";
@@ -50,7 +52,7 @@ public class RespuestaConsultaEstado {
 	static final String TAG_FILTRO_FECHADESDE="FECHADESDE";
 	static final String TAG_FILTRO_FECHAHASTA="FECHAHASTA";
 	static final String TAG_FILTRO_USUARIO="USUARIO";
-	static final String TAG_FILTRO_PASSWORD="PASSWORD";
+	static final String TAG_FILTRO_PASS="PASSWORD";
 	static final String TAG_RESULTADOS="RESULTADOS";
 	static final String TAG_ITEM="ITEM";
 	static final String TAG_ITEM_IDSERVICIO="IDSERVICIO";
@@ -77,7 +79,8 @@ public class RespuestaConsultaEstado {
 	private String filtroFechaHasta;
 	private String filtroUsuario;
 	private String filtroPassword;
-	private ArrayList<ConsultaEstadoBean> resultados = new ArrayList<ConsultaEstadoBean>();
+	private ArrayList<ConsultaEstadoBean> resultados = new ArrayList<>();
+	private String xmlRespuesta;
 	
 	public void addConsultaEstadoBean(ConsultaEstadoBean consultaEstado){
 		if(resultados!=null){
@@ -199,13 +202,11 @@ public class RespuestaConsultaEstado {
 	 * @return ArrayList de tipos <b>ConsultaEstadoBean</b>Devuelve el Servicio que se ha enviado en la consulta
 	 */
 	public ArrayList<ConsultaEstadoBean> getResultados() {
-		return new ArrayList<ConsultaEstadoBean>(resultados);
+		return new ArrayList<>(resultados);
 	}
 	protected void setResultados(ArrayList<ConsultaEstadoBean> resultados) {
-		this.resultados = new ArrayList<ConsultaEstadoBean>(resultados);
+		this.resultados = new ArrayList<>(resultados);
 	}
-	private String xmlRespuesta;
-	
 	/**
 	 * Parsea la respuesta
 	 * @param responseXML
@@ -242,12 +243,9 @@ public class RespuestaConsultaEstado {
 	        	 filtroUsuario = responseXMLObject.getResp().getFiltroUsuario();
 	        	 filtroPassword = responseXMLObject.getResp().getFiltroPassword();
 	        	 resultados = responseXMLObject.getResp().getResultados(); 	            
-	        }catch(ParserConfigurationException e){
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-	        }catch(SAXException e2){
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
-	        } catch (IOException e3) {
-	        	throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
+	        }catch (ParserConfigurationException | SAXException | IOException e3) {
+	        	// TODO logger.warn(e3.getMessage(), e3);
+				throw new PlataformaBusinessException("Se ha producido un error procesando el XML: \n " + xmlRespuesta);
 	        }
 	       
 	}
@@ -277,9 +275,11 @@ public class RespuestaConsultaEstado {
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			try {
 				throw new ParserConfigurationException("Error creando documento DOM XML");
 			} catch (ParserConfigurationException e1) {
+				// TODO logger.warn(e1.getMessage(), e1);
 				return "<ERROR></ERROR>";
 			}
 		}
@@ -340,7 +340,7 @@ public class RespuestaConsultaEstado {
 		usuario.appendChild(doc.createTextNode(getValidValue(filtroUsuario)));
 		filtro.appendChild(usuario);
 		//Password
-		Element password = doc.createElement(TAG_FILTRO_PASSWORD);
+		Element password = doc.createElement(TAG_FILTRO_PASS);
 		password.appendChild(doc.createTextNode(getValidValue(filtroPassword)));
 		filtro.appendChild(password);
 		respuesta.appendChild(filtro);
@@ -408,7 +408,7 @@ public class RespuestaConsultaEstado {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			throw new PlataformaBusinessException("Se ha producido un error creando el XML de respuesta.\nCausa: " + e.getCause()+"\nMensaje: "+ e.getMessage());
+			throw new PlataformaBusinessException(R_CONST_2 + e.getCause()+R_CONST_1+ e.getMessage());
 		}
 		DOMSource source = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -416,7 +416,7 @@ public class RespuestaConsultaEstado {
  		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
-			throw new PlataformaBusinessException("Se ha producido un error creando el XML de respuesta.\nCausa: " + e.getCause()+"\nMensaje: "+ e.getMessage());
+			throw new PlataformaBusinessException(R_CONST_2 + e.getCause()+R_CONST_1+ e.getMessage());
 		}
 		return Utils.convertToUTF8(writer.toString());
 		
@@ -458,7 +458,7 @@ public class ConsultarHistoricoReader extends DefaultHandler {
 	 * 
 	 */
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-			if(qName.equals(TAG_ITEM)){
+			if(TAG_ITEM.equals(qName)){
 				consultaEstadoBean = new ConsultaEstadoBean();
 				swHistoricoBean=true;
 			}
@@ -482,76 +482,76 @@ public class ConsultarHistoricoReader extends DefaultHandler {
      * @param qName
      */
     public void endElement(String uri, String localName, String qName) {
-   	   if(qName.equals(TAG_FILTRO_SERVICIO)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_SERVICIO.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroServicio(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_CANAL)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_CANAL.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroCanal(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_APLICACION)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_APLICACION.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroAplicacion(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_FILTRO_LOTE)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_LOTE.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroLote(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_FILTRO_MENSAJE)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_MENSAJE.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroMensaje(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_IDEXTERNO)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_IDEXTERNO.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroIdExterno(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_ESTADO)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_ESTADO.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroEstado(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_FILTRO_FECHADESDE)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_FECHADESDE.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroFechaDesde(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_FECHAHASTA)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_FECHAHASTA.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroFechaHasta(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_USUARIO)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_USUARIO.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroUsuario(contenido);
    	   }
-   	   if(qName.equals(TAG_FILTRO_PASSWORD)&&!swHistoricoBean){
+   	   if(TAG_FILTRO_PASS.equals(qName)&&!swHistoricoBean){
    		   resp.setFiltroPassword(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_IDSERVICIO)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDSERVICIO.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setIdServicio(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_SERVICIO)&&swHistoricoBean){
+   	   if(TAG_ITEM_SERVICIO.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setServicio(contenido);
    	   }   	   
-   	   if(qName.equals(TAG_ITEM_IDCANAL)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDCANAL.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setIdCanal(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_CANAL)&&swHistoricoBean){
+   	   if(TAG_ITEM_CANAL.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setCanal(contenido);
    	   }   	      	   
-   	   if(qName.equals(TAG_ITEM_IDAPLICACION)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDAPLICACION.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setIdAplicacion(contenido);
    	   }
-   	   if(qName.equals(TAG_ITEM_APLICACION)&&swHistoricoBean){
+   	   if(TAG_ITEM_APLICACION.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setAplicacion(contenido);
    	   }   	      	      	   
-   	   if(qName.equals(TAG_ITEM_IDLOTE)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDLOTE.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setLote(contenido);
    	   }   	 
-   	   if(qName.equals(TAG_ITEM_IDMENSAJE)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDMENSAJE.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setIdMensaje(contenido);
    	   }   	      	      	   
-   	   if(qName.equals(TAG_ITEM_IDEXTERNO)&&swHistoricoBean){
+   	   if(TAG_ITEM_IDEXTERNO.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setIdExterno(contenido);
    	   }   	      	      	   
-   	   if(qName.equals(TAG_ITEM_ESTADO)&&swHistoricoBean){
+   	   if(TAG_ITEM_ESTADO.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setEstado(contenido);
    	   }   	      	      	   
    	   /*if(qName.equals(TAG_ITEM_NUMEROREINTENTOS)&&swHistoricoBean){
    		   consultaEstadoBean.setNumeroReintentos(contenido);
    	   } */  	      	      	   
-   	   if(qName.equals(TAG_ITEM_FECHA)&&swHistoricoBean){
+   	   if(TAG_ITEM_FECHA.equals(qName)&&swHistoricoBean){
    		   consultaEstadoBean.setFecha(contenido);
    	   }   	      
-   	   if(qName.equals(TAG_ITEM)&&swHistoricoBean){
+   	   if(TAG_ITEM.equals(qName)&&swHistoricoBean){
    		   resp.addConsultaEstadoBean(consultaEstadoBean);
    		   consultaEstadoBean=null;
    		   swHistoricoBean=false;

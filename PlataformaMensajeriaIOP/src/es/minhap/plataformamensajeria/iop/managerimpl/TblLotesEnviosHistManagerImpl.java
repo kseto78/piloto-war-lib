@@ -67,8 +67,8 @@ public class TblLotesEnviosHistManagerImpl implements TblLotesEnviosHistManager 
 	@Transactional
 	public boolean isMultidestinatario(Long mensajeId) {
 		TblMensajesHist mensaje = mensajeHistManager.getMensaje(mensajeId);
-		return (null != mensaje.getTblLotesEnviosHist().getMultidestinatario()) ? mensaje.getTblLotesEnviosHist()
-				.getMultidestinatario() : false;
+		return null != mensaje.getTblLotesEnviosHist().getMultidestinatario() && mensaje.getTblLotesEnviosHist()
+				.getMultidestinatario();
 	}
 	
 		@Override

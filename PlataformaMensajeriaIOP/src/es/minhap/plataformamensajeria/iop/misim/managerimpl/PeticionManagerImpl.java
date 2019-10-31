@@ -25,8 +25,7 @@ public class PeticionManagerImpl implements PeticionManager {
 	@Override
 	@Transactional
 	public Peticion getPeticionByQuery(PeticionQuery query) {
-		Peticion peticion = getPeticionDAO().searchUnique(query);
-		return peticion;
+		return getPeticionDAO().searchUnique(query);
 	}
 	
 	/**

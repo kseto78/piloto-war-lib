@@ -26,6 +26,8 @@ import es.minhap.sim.query.ViewUsuariosQuery;
 @Service("ViewUsuariosManagerImpl")
 public class ViewUsuariosManagerImpl implements ViewUsuariosManager {
 
+	protected static final String R_CONST_1 = "%";
+
 	@Resource
 	private ViewUsuariosDAO viewUsuariosDAO;
 	
@@ -42,7 +44,7 @@ public class ViewUsuariosManagerImpl implements ViewUsuariosManager {
 		List<TblUsuarios> res = new ArrayList<>();
 		
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")){
+		if (order == null || "1".equals(order)){
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -51,7 +53,7 @@ public class ViewUsuariosManagerImpl implements ViewUsuariosManager {
 	
 		if (null != nombre){
 			query.setNombreComparator(TextComparator.ILIKE);
-			query.setNombre("%" +nombre+ "%");
+			query.setNombre(R_CONST_1 +nombre+ R_CONST_1);
 		}
 		
 		if (null != aplicacionId && aplicacionId > 0){

@@ -25,6 +25,9 @@ import es.minhap.sim.query.TblOrganismosServicioQuery;
 @Service("tblOrganismosServicioManagerImpl")
 public class TblOrganismosServicioManagerImpl implements TblOrganismosServicioManager {
 
+	protected static final String R_CONST_1 = " ";
+
+
 	@Resource
 	private TblOrganismosServicioDAO tblOrganismosServicioDAO;
 	
@@ -53,7 +56,7 @@ public class TblOrganismosServicioManagerImpl implements TblOrganismosServicioMa
 		log.setAdtusuario(servicioOrganismosTO.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + servicioOrganismosTO.getTblOrganismos().getOrganismoid());
+		log.setSourcedescription(descripcion + R_CONST_1 + servicioOrganismosTO.getTblOrganismos().getOrganismoid());
 		log.setSourceid(servicioOrganismosTO.getTblServicios().getServicioid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);
@@ -78,7 +81,7 @@ public class TblOrganismosServicioManagerImpl implements TblOrganismosServicioMa
 		log.setAdtusuario(os.getCreadopor());
 		log.setLogaccion(accionId);
 		log.setLogdescripcion(accion);
-		log.setSourcedescription(descripcion + " " + os.getTblOrganismos().getOrganismoid());
+		log.setSourcedescription(descripcion + R_CONST_1 + os.getTblOrganismos().getOrganismoid());
 		log.setSourceid(os.getTblServicios().getServicioid());
 		log.setSourcename(source);
 		tblLogManager.insertLog(log);		

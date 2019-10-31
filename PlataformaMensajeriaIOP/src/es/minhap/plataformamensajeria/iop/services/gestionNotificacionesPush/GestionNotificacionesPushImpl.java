@@ -32,7 +32,19 @@ import es.minhap.sim.model.TblMensajes;
  */
 @Service("gestionNotificacionesPushImpl")
 public class GestionNotificacionesPushImpl implements IGestionNotificacionesPushService {
-	private final static Logger LOG = LoggerFactory.getLogger(GestionNotificacionesPushImpl.class);
+	protected static final String R_CONST_1 = "constantes.ESTADO_ENVIADO";
+
+	protected static final String R_CONST_2 = "constantes.ESTADO_LEIDO";
+
+	protected static final String R_CONST_3 = "[GestionNotificacionesPushImpl.getAvisosUsuarioPush] Obteniendo avisos Usuario";
+
+	protected static final String R_CONST_4 = "constantes.tiempoSessionPush";
+
+	protected static final String R_CONST_5 = "constantes.ESTADO_RECIBIDO";
+
+	protected static final String R_CONST_6 = "plataformaErrores.appMovil.COD_ERROR_TOKEN";
+
+	private static final Logger LOG = LoggerFactory.getLogger(GestionNotificacionesPushImpl.class);
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
@@ -59,17 +71,18 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 	public String notificacionCambioEstado(NotificacionesPushXMLBean notificacionesPushXMLBean) {
 		LOG.debug("[GestionNotificacionesPush] Notificacion cambio de estado de un mensaje");
 		PropertiesServices ps = new PropertiesServices(getReloadableResourceBundleMessageSource());
-		estadoEnviado = ps.getMessage("constantes.ESTADO_ENVIADO", null);
-		estadoRecibido = ps.getMessage("constantes.ESTADO_RECIBIDO", null);
-		estadoLeido = ps.getMessage("constantes.ESTADO_LEIDO", null);
+		estadoEnviado = ps.getMessage(R_CONST_1, null);
+		estadoRecibido = ps.getMessage(R_CONST_5, null);
+		estadoLeido = ps.getMessage(R_CONST_2, null);
 		codeLeido = ps.getMessage("plataformaErrores.gestionNotificacionesPush.CODE_LEIDO", null);
 		codeRecibido = ps.getMessage("plataformaErrores.gestionNotificacionesPush.CODE_RECIBIDO", null);
 		String notificacion = ps.getMessage("constantes.TIPO_MENSAJE_PUSH", null);
-		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		String stringTimeSession = ps.getMessage(R_CONST_4, null);
 		Integer timeSession = null;
 		try{
 			timeSession = Integer.parseInt(stringTimeSession);
 		}catch(NumberFormatException e){
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = null;
 		}
 		String xmlResultado = "";
@@ -80,11 +93,9 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 				return respuesta.peticionIncorrectaXML(ps);
 			}
 			
-			if(null != notificacionesPushXMLBean.getUidDispositivo() && null != notificacionesPushXMLBean.getTokenSession()){
-				if (!comprobarTokeSessionCorrecto(notificacionesPushXMLBean.getUidDispositivo(), notificacionesPushXMLBean.getTokenSession(), timeSession)){
-					return respuesta.tokenIncorrecto(ps);
-					
-				}
+			if(null != notificacionesPushXMLBean.getUidDispositivo() && null != notificacionesPushXMLBean.getTokenSession() && !comprobarTokeSessionCorrecto(notificacionesPushXMLBean.getUidDispositivo(), notificacionesPushXMLBean.getTokenSession(), timeSession)) {
+				return respuesta.tokenIncorrecto(ps);
+				
 			}
 			
 			Boolean existeUsuario = getAplicacionesManager().existeAplicacion(notificacionesPushXMLBean.getUsuario(), notificacionesPushXMLBean.getPassword());
@@ -137,7 +148,7 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		String codErrorGeneral = ps.getMessage("plataformaErrores.gestionNotificacionesPush.COD_ERROR_GENERAL", null);
 		String detailsErrorGeneral = ps.getMessage("plataformaErrores.gestionNotificacionesPush.DETAILS_ERROR_GENERAL",
 				null);
-		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
+		String codeKO = ps.getMessage(R_CONST_6, null);
 		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
 		
 		String res = "";
@@ -166,12 +177,12 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 			}
 			res = respuesta.toXMLSMS(respuesta);
 		} catch (Exception e) {
-			LOG.error("[GestionNotificacionesPushImpl.getAvisosUsuarioPush] Obteniendo avisos Usuario", e);
+			LOG.error(R_CONST_3, e);
 			respuesta = generarRespuesta(statusTextKO, codErrorGeneral, detailsErrorGeneral, null);
 			try {
 				return respuesta.toXMLSMS(respuesta);
 			} catch (PlataformaBusinessException e1) {
-				LOG.error("[GestionNotificacionesPushImpl.getAvisosUsuarioPush] Obteniendo avisos Usuario", e1);
+				LOG.error(R_CONST_3, e1);
 			}
 		} 
 		return res;
@@ -190,8 +201,9 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 					peticion.getIdPlataforma(), peticion.getIdServicio(), peticion.getIdUsuario(),
 					peticion.getNumPagina(), peticion.getTamPagina(), ps);
 			respuesta = generarRespuesta(statusTextOK, statusCodeOK, detailsOK, listaAvisos);
-		} else
+		} else {
 			respuesta = generarRespuesta(statusTextKO, codErrorDispositivo, detailsErrorDispositivo, null);
+		}
 		return respuesta;
 	}
 
@@ -202,13 +214,13 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		String statusMessage;
 		TblMensajes mensaje = getMensajesManager().getMensaje(mensajeId);
 		
-		if (getMensajesManager().getMultidestinatarioByMensaje(mensajeId))
+		if (getMensajesManager().getMultidestinatarioByMensaje(mensajeId)) {
 			statusMessage = getQueryExecutorEstados().getEstadoByMensajeIdUsuarioPush(mensajeId, usersId);
-		else{
+		} else{
 			statusMessage = mensaje.getEstadoactual();
 		}
 		LOG.debug("[GestionNotificacionesPush] Generando XML de respuesta");
-		boolean pushNotification = notificacion.equalsIgnoreCase(getMensajesManager().getMensaje(mensajeId).getTipomensaje()) ? true : false;
+		boolean pushNotification = notificacion.equalsIgnoreCase(getMensajesManager().getMensaje(mensajeId).getTipomensaje());
 		
 		if (pushNotification) {
 			if (getMensajesManager().isMessageUser(usersId, mensajeId)) {
@@ -227,8 +239,8 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 			RespuestaNotificacionesPush respuesta, List<String> usersId, String statusMessage)
 			throws PlataformaBusinessException {
 		String xmlResultado;
-		if ((estadoEnviado.equals(statusMessage) && (codeRecibido.equals(notificacionesPushXMLBean.getStatus())))
-				|| (estadoRecibido.equals(statusMessage) && (codeLeido.equals(notificacionesPushXMLBean.getStatus())))) {
+		if ((estadoEnviado.equals(statusMessage) && codeRecibido.equals(notificacionesPushXMLBean.getStatus()))
+				|| (estadoRecibido.equals(statusMessage) && codeLeido.equals(notificacionesPushXMLBean.getStatus()))) {
 		String estadoInicial = getEstadoInicial(notificacionesPushXMLBean, ps);
 		String estadoFinal = getEstadoFinal(notificacionesPushXMLBean, ps);
 		int resultado = getMensajesManager().updateMessagesUser(usersId, estadoInicial, estadoFinal, notificacionesPushXMLBean.getUsuario(), notificacionesPushXMLBean.getNotificacionId());
@@ -245,13 +257,13 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		int valor = Integer.parseInt(notificacionesPushXMLBean.getStatus());
 		switch (valor) {
 		case 1:
-			res = ps.getMessage("constantes.ESTADO_RECIBIDO", null);
+			res = ps.getMessage(R_CONST_5, null);
 			break;
 		case 2:
-			res = ps.getMessage("constantes.ESTADO_LEIDO", null);
+			res = ps.getMessage(R_CONST_2, null);
 			break;
 		default:
-			res = ps.getMessage("constantes.ESTADO_ENVIADO", null);
+			res = ps.getMessage(R_CONST_1, null);
 			break;
 		}
 		return res;
@@ -261,10 +273,10 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		int valor = Integer.parseInt(notificacionesPushXMLBean.getStatus());
 		switch (valor) {
 		case 1:
-			res = ps.getMessage("constantes.ESTADO_ENVIADO", null);
+			res = ps.getMessage(R_CONST_1, null);
 			break;
 		case 2:
-			res = ps.getMessage("constantes.ESTADO_RECIBIDO", null);
+			res = ps.getMessage(R_CONST_5, null);
 			break;
 		default:
 			res = null;
@@ -287,18 +299,15 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 //		if (resultado > 0) {
 			int resultado = getMensajesManager().updateMessagesUsers(usersId, estadoInicial, estadoFinal,
 					notificacionesPushXMLBean.getUsuario());
-			xmlResultado = respuesta.actualizarTodosMensajes(resultado,ps);
+			
 //		} else
 //			xmlResultado = respuesta.actualizarTodosMensajes(resultado,ps);
-		return xmlResultado;
+		return respuesta.actualizarTodosMensajes(resultado,ps);
 	}
 
 	private boolean datosNoValidos(NotificacionesPushXMLBean np) {
 		boolean res = false;
-		if (null != np.getNotificacionId() && null == np.getStatus()) {
-				return true;
-		}
-		return res;
+		return (null != np.getNotificacionId() && null == np.getStatus()) || res;
 	}
 
 	
@@ -314,12 +323,13 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 				.getMessage("plataformaErrores.gestionNotificacionesPush.numeroPaginaDefecto", null);
 		String errorNumPagina = ps.getMessage("plataformaErrores.gestionNotificacionesPush.ERROR_NUMPAG", null);
 		String errorNoNumerico = ps.getMessage("plataformaErrores.gestionNotificacionesPush.ERROR_NO_NUMERICO", null);
-		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
-		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
+		String codeKO = ps.getMessage(R_CONST_6, null);
+		String stringTimeSession = ps.getMessage(R_CONST_4, null);
 		Integer timeSession = null;
 		try{
 			timeSession = Integer.parseInt(stringTimeSession);
 		}catch(NumberFormatException e){
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = null;
 		}
 		if (!comprobarTokeSessionCorrecto(peticion.getUidDispositivo(), peticion.getTokenSession(), timeSession)){
@@ -327,9 +337,10 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		}
 		
 		if (checkUsuarioPassword(peticion.getUsuario(), peticion.getPassword()) || null == peticion.getIdServicio()
-				|| peticion.getIdServicio().length() <= 0
-				|| checkDispositivoPlataforma(peticion.getIdDispositivo(), peticion.getIdPlataforma()))
+				|| peticion.getIdServicio().isEmpty()
+				|| checkDispositivoPlataforma(peticion.getIdDispositivo(), peticion.getIdPlataforma())) {
 			return errorDatosObligatorios;
+		}
 		try {
 			if (null != peticion.getNumPagina()) {
 				int num = Integer.parseInt(peticion.getNumPagina());
@@ -340,6 +351,7 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 			}
 
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			return errorNoNumerico;
 		}
 		return res;
@@ -350,15 +362,17 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 		if (num > 0) {
 			if (null != peticion.getTamPagina()) {
 				int tam = Integer.parseInt(peticion.getTamPagina());
-				if (tam == 0)
+				if (tam == 0) {
 					peticion.setTamPagina(tamanoPaginaDefecto);
-				else if (tam < 0)
+				} else if (tam < 0) {
 					return errorTamPagina;
-			} else
+				}
+			} else {
 				peticion.setTamPagina(tamanoPaginaDefecto);
-		} else if (num < 0)
+			}
+		} else if (num < 0) {
 			return errorNumPagina;
-		else {
+		} else {
 			peticion.setNumPagina(numPaginaDefecto);
 			peticion.setTamPagina(tamanoPaginaDefecto);
 		}
@@ -366,19 +380,19 @@ public class GestionNotificacionesPushImpl implements IGestionNotificacionesPush
 	}
 
 	private boolean checkUsuarioPassword(String usuario, String password) {
-		return (checkUsuario(usuario) || null == password || password.length() <= 0) ? true : false;
+		return checkUsuario(usuario) || null == password || password.isEmpty();
 	}
 
 	private boolean checkUsuario(String usuario) {
-		return (null == usuario || usuario.length() <= 0) ? true : false;
+		return null == usuario || usuario.isEmpty();
 	}
 
 	private boolean checkDispositivoPlataforma(String dispositivo, String palataforma) {
-		return (checkDispositivo(dispositivo) || null == palataforma || palataforma.length() <= 0) ? true : false;
+		return checkDispositivo(dispositivo) || null == palataforma || palataforma.isEmpty();
 	}
 
 	private boolean checkDispositivo(String dispositivo) {
-		return (null == dispositivo || dispositivo.length() <= 0) ? true : false;
+		return null == dispositivo || dispositivo.isEmpty();
 	}
 
 	private RespuestaGetAvisosUsuario generarRespuesta(String statustext, String codigo, String details,

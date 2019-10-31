@@ -39,6 +39,24 @@ import es.minhap.sim.query.TblUsuariosPushQuery;
  */
 @Service("registroMovilServiceImpl")
 public class RegistroMovilServiceImpl implements IRegistroMovilService {
+	protected static final String R_CONST_1 = "plataformaErrores.generales.DETAILS_ERROR_TOKEN";
+
+	protected static final String R_CONST_2 = "[RegistroMovilServiceImpl] solicitudRegistroMovil";
+
+	protected static final String R_CONST_3 = "plataformaErrores.gestionServicioPush.STATUSLOGIN_KO";
+
+	protected static final String R_CONST_4 = "plataformaErrores.generales.STATUSTEXT_KO";
+
+	protected static final String R_CONST_5 = "[RegistroMovilServiceImpl] confirmarAltaUsuario";
+
+	protected static final String R_CONST_6 = "plataformaErrores.appMovil.COD_ERROR_TOKEN";
+
+	protected static final String R_CONST_7 = "plataformaErrores.gestionServicioPush.STATUSLOGINCODE_KO";
+
+	protected static final String R_CONST_8 = "constantes.tiempoSessionPush";
+
+	protected static final String R_CONST_9 = "constantes.tiempoRegistroMovilActivo";
+
 	private static final Logger LOG = LoggerFactory.getLogger(RegistroMovilServiceImpl.class);
 
 	@Resource
@@ -63,20 +81,21 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 
 	@Override
 	public String solicitudRegistroMovil(PeticionSolicitudRegistroMovil peticionBean) {
-		LOG.debug("[RegistroMovilServiceImpl] solicitudRegistroMovil");
+		LOG.debug(R_CONST_2);
 		String xmlResultado = "";
 		RespuestaRegistroMovil respuesta;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
-		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
-		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
-		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
-		String loginCodeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSLOGINCODE_KO", null);
-		String longinDetailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSLOGIN_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_4, null);
+		String codeKO = ps.getMessage(R_CONST_6, null);
+		String detailsKO = ps.getMessage(R_CONST_1, null);
+		String stringTimeSession = ps.getMessage(R_CONST_8, null);
+		String loginCodeKO = ps.getMessage(R_CONST_7, null);
+		String longinDetailsKO = ps.getMessage(R_CONST_3, null);
 		Integer timeSession = null;
 		try {
 			timeSession = Integer.parseInt(stringTimeSession);
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = null;
 		}
 		try {
@@ -102,7 +121,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 			
 			xmlResultado = respuesta.toXML(respuesta);
 		} catch (PlataformaBusinessException e) {
-			LOG.error("[RegistroMovilServiceImpl] solicitudRegistroMovil", e);
+			LOG.error(R_CONST_2, e);
 		}
 		return xmlResultado;
 
@@ -110,20 +129,21 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 	
 	@Override
 	public String confirmarAltaUsuario(PeticionConfirmarAltaUsuario peticionBean) {
-		LOG.debug("[RegistroMovilServiceImpl] confirmarAltaUsuario");
+		LOG.debug(R_CONST_5);
 		String xmlResultado = "";
 		RespuestaConfirmarAltaUsuario respuesta;
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
-		String codeKO = ps.getMessage("plataformaErrores.appMovil.COD_ERROR_TOKEN", null);
-		String detailsKO = ps.getMessage("plataformaErrores.generales.DETAILS_ERROR_TOKEN", null);
-		String stringTimeSession = ps.getMessage("constantes.tiempoSessionPush", null);
-		String loginCodeKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSLOGINCODE_KO", null);
-		String longinDetailsKO = ps.getMessage("plataformaErrores.gestionServicioPush.STATUSLOGIN_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_4, null);
+		String codeKO = ps.getMessage(R_CONST_6, null);
+		String detailsKO = ps.getMessage(R_CONST_1, null);
+		String stringTimeSession = ps.getMessage(R_CONST_8, null);
+		String loginCodeKO = ps.getMessage(R_CONST_7, null);
+		String longinDetailsKO = ps.getMessage(R_CONST_3, null);
 		Integer timeSession = null;
 		try {
 			timeSession = Integer.parseInt(stringTimeSession);
 		} catch (NumberFormatException e) {
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = null;
 		}
 		try {
@@ -142,7 +162,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 			
 			xmlResultado = respuesta.toXML(respuesta);
 		} catch (PlataformaBusinessException e) {
-			LOG.error("[RegistroMovilServiceImpl] confirmarAltaUsuario", e);
+			LOG.error(R_CONST_5, e);
 		}
 		return xmlResultado;
 	}
@@ -165,9 +185,9 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 	}
 
 	private RespuestaConfirmarAltaUsuario confirmarAlta(PeticionConfirmarAltaUsuario peticionBean, PropertiesServices ps) throws PlataformaBusinessException{
-		String stringTimeSession = ps.getMessage("constantes.tiempoRegistroMovilActivo", null, TIMECODIGOACTIVO);
+		String stringTimeSession = ps.getMessage(R_CONST_9, null, TIMECODIGOACTIVO);
 		String statusTextOK = ps.getMessage("plataformaErrores.generales.STATUSTEXT_OK", null);
-		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_4, null);
 		String codeTimeKO = ps.getMessage("plataformaErrores.confirmarAltaUsuario.COD_ERROR_CODIGO_CADUCADO", null);
 		String detailsTimeKO = ps.getMessage("plataformaErrores.confirmarAltaUsuario.DETAILS_ERROR_CODIGO_CADUCADO", null);
 		String codeInsertKO = ps.getMessage("plataformaErrores.confirmarAltaUsuario.COD_ERROR_INSERTAR_USUARIO", null);
@@ -182,6 +202,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		try{
 			timeSession = Integer.parseInt(stringTimeSession);
 		}catch(NumberFormatException e){
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = Integer.parseInt(TIMECODIGOACTIVO);
 		}
 				
@@ -232,7 +253,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		String detailsReintentosKO = ps.getMessage("plataformaErrores.confirmarAltaUsuario.DETAILS_ERROR_REINTENTOS", null);
 		String codeUsuarioKO = ps.getMessage("plataformaErrores.confirmarAltaUsuario.COD_ERROR_USUARIO", null);
 		String detailsUsuarioKO = ps.getMessage("plataformaErrores.confirmarAltaUsuario.DETAILS_ERROR_USUARIO", null);
-		String statusTextKO = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
+		String statusTextKO = ps.getMessage(R_CONST_4, null);
 		
 		//buscamos el uid y el servicio para aumentar los reintentos 
 		TblAltaNumMovil tblAltaNumMovil = tblAltaNumMovilManager.getTblAltaNumMovilByQuery(createQueryBusqueda(idServicioMovil, uidDispositivo, null, null));
@@ -301,7 +322,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 	}
 
 	private RespuestaRegistroMovil registrarMovil(PeticionSolicitudRegistroMovil peticionBean, PropertiesServices ps) {
-		String stringTimeSession = ps.getMessage("constantes.tiempoRegistroMovilActivo", null, TIMECODIGOACTIVO);
+		String stringTimeSession = ps.getMessage(R_CONST_9, null, TIMECODIGOACTIVO);
 		String statusTextOK = ps.getMessage("plataformaErrores.registroMovil.TAG_OK", null);
 		String statusCodeOK = ps.getMessage("plataformaErrores.registroMovil.TAG_STATUSCODE_OK", null);
 		String statusDetailsOK = ps.getMessage("plataformaErrores.registroMovil.TAG_MENSAJE_OK", null);
@@ -322,6 +343,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		try{
 			timeSession = Integer.parseInt(stringTimeSession);
 		}catch(NumberFormatException e){
+			// TODO logger.warn(e.getMessage(), e);
 			timeSession = Integer.parseInt(TIMECODIGOACTIVO);
 		}
 		try{
@@ -373,7 +395,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		}catch(Exception e){
 			LOG.error("[RegistroMovilService] validaciones Servicio incorrecto" , e);
 			String statusCode =ps.getMessage("plataformaErrores.registroMovil.COD_SERVICIO_INCORRECTO", null);
-			String statusText = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
+			String statusText = ps.getMessage(R_CONST_4, null);
 			String statusDetails = ps.getMessage("plataformaErrores.registroMovil.DETAILS_SERVICIO_INCORRECTO", null);
 			return generarRespuesta(null, statusText, statusCode, statusDetails);
 		}
@@ -383,7 +405,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		
 		if (valido != 0){
 			String statusCode =ps.getMessage("plataformaErrores.registroMovil.COD_TELEFONO_INCORRECTO", null);
-			String statusText = ps.getMessage("plataformaErrores.generales.STATUSTEXT_KO", null);
+			String statusText = ps.getMessage(R_CONST_4, null);
 			String statusDetails = ps.getMessage("plataformaErrores.registroMovil.DETAILS_TELEFONO_INCORRECTO", null);
 			return generarRespuesta(null, statusText, statusCode, statusDetails);
 		}
@@ -398,7 +420,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		calendar.setTime(fechaCreacion);
 		calendar.add(Calendar.MINUTE, timeSession);
 		
-		return calendar.after(Calendar.getInstance())? false : true;
+		return !calendar.after(Calendar.getInstance());
 	}
 
 	private TblAltaNumMovilQuery createQueryBusqueda(Long idServicioMovil, String uidDispositivo, String numMovil, String codConfirmacion) {
@@ -428,7 +450,7 @@ public class RegistroMovilServiceImpl implements IRegistroMovilService {
 		RespuestaRegistroMovil res = new RespuestaRegistroMovil();
 		ResponseStatusTypeRegistroMovil status = new ResponseStatusTypeRegistroMovil();
 
-		if (null != codConfirmacion && codConfirmacion.length() > 0){
+		if (null != codConfirmacion && !codConfirmacion.isEmpty()){
 			res.setCodConfirmacion(codConfirmacion);
 		}
 

@@ -25,6 +25,8 @@ import es.minhap.sim.query.TblServidoresQuery;
 @Service("TblServidoresManagerImpl")
 public class TblServidoresManagerImpl implements TblServidoresManager {
 
+	protected static final String R_CONST_1 = "%";
+
 	@Resource 
 	private TblServidoresDAO servidoresDAO;
 	
@@ -68,7 +70,7 @@ public class TblServidoresManagerImpl implements TblServidoresManager {
 		OrderType ord = null;
 		
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")){
+		if (order == null || "1".equals(order)){
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -78,7 +80,7 @@ public class TblServidoresManagerImpl implements TblServidoresManager {
 
 		if (null != nombreServidor){
 			query.setNombreComparator(TextComparator.ILIKE);
-			query.setNombre("%" + nombreServidor + "%");
+			query.setNombre(R_CONST_1 + nombreServidor + R_CONST_1);
 		}
 		query.addOrder(columnSort, ord);
 		query.setEliminadoIsNull(true);

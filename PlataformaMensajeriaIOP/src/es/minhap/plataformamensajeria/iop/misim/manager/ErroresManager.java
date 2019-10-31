@@ -9,7 +9,7 @@ public interface ErroresManager {
 	 * @param TblAplicacionesQuery
 	 * @return
 	 */
-	public boolean getEstadoMq();
-	public void updateErrorMq(boolean estado);
-	public boolean comprobarActiveMqActivo(boolean estado);
+	boolean getEstadoMq();
+	void updateErrorMq(boolean estado);
+	boolean comprobarActiveMqActivo(boolean estado);
 }

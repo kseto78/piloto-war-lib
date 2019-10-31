@@ -13,7 +13,7 @@ public interface ProductosManager {
 	 * @param ProductoQuery
 	 * @return
 	 */
-	public List<Producto> getProductos(ProductoQuery producto);
+	List<Producto> getProductos(ProductoQuery producto);
 
 
 
@@ -36,7 +36,7 @@ public interface ProductosManager {
 	 * @param accionId
 	 * @return
 	 */
-	public Long insert(Producto producto, String source, String accion, Long accionId);
+	Long insert(Producto producto, String source, String accion, Long accionId);
 
 	/**
 	 * Actualizamos el producto

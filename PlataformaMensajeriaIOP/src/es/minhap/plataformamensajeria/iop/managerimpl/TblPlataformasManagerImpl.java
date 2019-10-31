@@ -30,7 +30,7 @@ public class TblPlataformasManagerImpl implements TblPlataformasManager {
 	@Override
 	@Transactional
 	public Boolean existPlataforma(Long plataformaID) {
-		return (null == getPlataformasDAO().get(plataformaID))? false : true;		
+		return null != getPlataformasDAO().get(plataformaID);		
 	}
 	
 	@Override

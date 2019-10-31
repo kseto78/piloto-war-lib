@@ -78,6 +78,82 @@ import es.minhap.sim.query.ViewUsuariosPushQuery;
 @Service("TblMensajesManagerImpl")
 public class TblMensajesManagerImpl implements TblMensajesManager {
 
+	protected static final String R_CONST_1 = "auditoria.errores.ERROR_MENSAJE_INCORRECTO";
+
+	protected static final String R_CONST_2 = "auditoria.errores.COD_ERROR_MENSAJE_INCORRECTO";
+
+	protected static final String R_CONST_3 = "[TblMensajesManagerImpl.updateMessagesUsers]";
+
+	protected static final String R_CONST_4 = "constantes.ESTADO_ANULADO";
+
+	protected static final String R_CONST_5 = "constantes.CANAL_EMAIL";
+
+	protected static final String R_CONST_6 = "auditoria.errores.ERROR_USUARIO_APLICACION";
+
+	protected static final String R_CONST_7 = "auditoria.errores.ERROR_MENSAJE_APLICACION";
+
+	protected static final String R_CONST_8 = "'";
+
+	protected static final String R_CONST_9 = "auditoria.errores.ERROR_GENERAL";
+
+	protected static final String R_CONST_10 = "conexion.ERRORACTIVEMQ";
+
+	protected static final String R_CONST_11 = "Estamos en TblMensajesManagerImpl-operacionMensaje";
+
+	protected static final String R_CONST_12 = "plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ";
+
+	protected static final String R_CONST_13 = "mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE_CORRECTO";
+
+	protected static final String R_CONST_14 = ";";
+
+	protected static final String R_CONST_15 = "auditoria.errores.COD_ERROR_MENSAJE_APLICACION";
+
+	protected static final String R_CONST_16 = "mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE";
+
+	protected static final String R_CONST_17 = "auditoria.errores.COD_ERROR_BBDD";
+
+	protected static final String R_CONST_18 = " TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--";
+
+	protected static final String R_CONST_19 = "auditoria.errores.COD_ERROR_MENSAJE_YA_ENVIADO";
+
+	protected static final String R_CONST_20 = "constantes.ESTADO_ENVIADO";
+
+	protected static final String R_CONST_21 = "constantes.email.modo";
+
+	protected static final String R_CONST_22 = "[ERROR-ACTIVEMQ]";
+
+	protected static final String R_CONST_23 = "constantes.errores.devolucion.error10";
+
+	protected static final String R_CONST_24 = "[";
+
+	protected static final String R_CONST_25 = "OK";
+
+	protected static final String R_CONST_26 = "auditoria.errores.COD_ERROR_USUARIO_APLICACION";
+
+	protected static final String R_CONST_27 = "constantes.ESTADO_INCIDENCIA";
+
+	protected static final String R_CONST_28 = "]";
+
+	protected static final String R_CONST_29 = "auditoria.errores.COD_CORRECTO";
+
+	protected static final String R_CONST_30 = "auditoria.errores.ERROR_MENSAJE_YA_ENVIADO";
+
+	protected static final String R_CONST_31 = "','";
+
+	protected static final String R_CONST_32 = "filesystem.maxTamMensajeBBDD";
+
+	protected static final String R_CONST_33 = "constantes.servicio.numMaxReenvios";
+
+	protected static final String R_CONST_34 = "auditoria.errores.ERROR_BBDD";
+
+	protected static final String R_CONST_35 = ", ";
+
+	protected static final String R_CONST_36 = "|";
+
+	protected static final String R_CONST_37 = "Inicio Actualizacion de estados notificaciones de ";
+
+	protected static final String R_CONST_38 = " a ";
+
 	private static final Logger LOG = LoggerFactory.getLogger(TblMensajesManagerImpl.class);
 
 	@Autowired
@@ -368,7 +444,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		}
 
 		// COMPROBAR EL CANAL SI ES CORRECTO
-		count = comprobarCanal(idLote, Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null)));
+		count = comprobarCanal(idLote, Long.parseLong(ps.getMessage(R_CONST_5, null)));
 
 		// Auditamos con error -2
 		if (count <= 0) {
@@ -443,7 +519,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		List<String> lista;
 		// analizamos destinatarios TO
 		if (null != to) {
-			lista = Arrays.asList(to.split(";"));
+			lista = Arrays.asList(to.split(R_CONST_14));
 			for (String email : lista) {
 				if (!Utils.validarEmail(email.trim())) {
 					return MensajesAuditoria.ERROR_DESTINATARIOS_EMAIL_TO;
@@ -453,7 +529,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		// analizamos destinatarios CC
 		if (null != cc) {
-			lista = Arrays.asList(cc.split(";"));
+			lista = Arrays.asList(cc.split(R_CONST_14));
 			for (String email : lista) {
 				if (!Utils.validarEmail(email.trim())) {
 					return MensajesAuditoria.ERROR_DESTINATARIOS_EMAIL_CC;
@@ -463,7 +539,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		// analizamos destinatarios BCC
 		if (null != bcc) {
-			lista = Arrays.asList(bcc.split(";"));
+			lista = Arrays.asList(bcc.split(R_CONST_14));
 			for (String email : lista) {
 				if (!Utils.validarEmail(email.trim())) {
 					return MensajesAuditoria.ERROR_DESTINATARIOS_EMAIL_BCC;
@@ -486,11 +562,11 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		// Se comprueba si EXISTE LOTE PARA EL USUARIO/PASSWORD
-		Integer count = comprobarLote(idLote, notificacion.getUsuario(), notificacion.getPassword());
+		Integer count = comprobarLote(idLote, notificacion.getUsuario(), notificacion.getPass());
 
 		// Auditamos con error -1
 		if (count <= 0) {
-			auditarMensaje(idLote, null, notificacion.getUsuario(), notificacion.getPassword(),
+			auditarMensaje(idLote, null, notificacion.getUsuario(), notificacion.getPass(),
 					MensajesAuditoria.ERROR_LOTE_APLICACION, MensajesAuditoria.OPERACION_MENSAJE_SMS_CREAR,
 					MensajesAuditoria.COD_ERROR_LOTE_APLICACION);
 			return generarRespuesta(PlataformaErrores.COD_0001_GENERAL, PlataformaErrores.STATUSTEXT_KO,
@@ -502,7 +578,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		// Auditamos con error -2
 		if (count <= 0) {
-			auditarMensaje(idLote, null, notificacion.getUsuario(), notificacion.getPassword(),
+			auditarMensaje(idLote, null, notificacion.getUsuario(), notificacion.getPass(),
 					MensajesAuditoria.ERROR_CANAL_MENSAJE, MensajesAuditoria.OPERACION_MENSAJE_SMS_CREAR,
 					MensajesAuditoria.COD_ERROR_CANAL_MENSAJE);
 			return generarRespuesta(PlataformaErrores.COD_0018_GENERAL, PlataformaErrores.STATUSTEXT_KO,
@@ -515,7 +591,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 		// Auditamos con error -3
 		if (null == count || count < 0) {
-			auditarErrorUsuarioNoExiste(idLote, notificacion.getUsuario(), notificacion.getPassword());
+			auditarErrorUsuarioNoExiste(idLote, notificacion.getUsuario(), notificacion.getPass());
 			return generarRespuesta(PlataformaErrores.COD_0018_GENERAL, PlataformaErrores.STATUSTEXT_KO,
 					MensajesAuditoria.ERROR_USUARIO_PUSH_NO_EXISTE, destinatario.getIdExterno(), null);
 
@@ -524,7 +600,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		TblMensajes mens = crearMensaje(idLote, mensaje.getCuerpo(), notificacion.getDocUsuario(),
 				notificacion.getCodSIA(), notificacion.getCodOrganismo(), null, destinatario.getIdExterno(),
 				notificacion.getUsuario(), ps.getMessage("constantes.TIPO_MENSAJE_PUSH", null), mensaje.getTitulo(),
-				(mensaje.getNotificacionesSilenciosas() != null && mensaje.getNotificacionesSilenciosas()?true:false));
+				mensaje.getNotificacionesSilenciosas() != null && mensaje.getNotificacionesSilenciosas());
 
 		mens.setMensajeid(tblMensajesDAO.insert(mens));
 
@@ -539,14 +615,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		if (null != mens.getMensajeid()) {
 
 			// auditoria mensaje correcto
-			auditarMensaje(idLote, mens.getMensajeid(), notificacion.getUsuario(), notificacion.getPassword(),
+			auditarMensaje(idLote, mens.getMensajeid(), notificacion.getUsuario(), notificacion.getPass(),
 					MensajesAuditoria.MENSAJE_PUSH_CORRECTO, MensajesAuditoria.OPERACION_MENSAJE_PUSH_CREAR,
 					mens.getMensajeid());
 
 		} else {
 
 			// auditoria mensaje incorrecto
-			auditarMensaje(idLote, null, notificacion.getUsuario(), notificacion.getPassword(),
+			auditarMensaje(idLote, null, notificacion.getUsuario(), notificacion.getPass(),
 					MensajesAuditoria.ERROR_BBDD, MensajesAuditoria.OPERACION_MENSAJE_PUSH_CREAR,
 					MensajesAuditoria.COD_ERROR_BBDD);
 			return generarRespuesta(MensajesAuditoria.COD_ERROR_BBDD.toString(), PlataformaErrores.STATUSTEXT_KO,
@@ -620,12 +696,13 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	private Mensaje generarRespuesta(String codigo, String statusText, String error, String idExterno, Long mensajeId) {
 		Mensaje res = new Mensaje();
 		res.setIdExterno(idExterno);
-		if (null == mensajeId)
+		if (null == mensajeId) {
 			res.setIdMensaje("");
-		else
+		} else {
 			res.setIdMensaje(mensajeId.toString());
+		}
 
-		if (null != statusText && !statusText.equals(PlataformaErrores.STATUS_OK)) {
+		if (null != statusText && !PlataformaErrores.STATUS_OK.equals(statusText)) {
 			ResponseStatusType status = new ResponseStatusType();
 			status.setStatusCode(codigo);
 			status.setStatusText(statusText);
@@ -639,7 +716,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	private TblMensajes crearMensaje(Long idLote, String cuerpo, String docUsuario, String codSIA, String codOrganismo,
 			String codOrganismoPagador, String idExterno, String usuario, String tipoMensaje, String cabecera, Boolean notificacionSilenciosa) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		Integer maxTamMensajeBBDD = Integer.parseInt(ps.getMessage("filesystem.maxTamMensajeBBDD", null));
+		Integer maxTamMensajeBBDD = Integer.parseInt(ps.getMessage(R_CONST_32, null));
 
 		TblMensajes res = new TblMensajes();
 		res.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(idLote));
@@ -671,7 +748,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 	private TblMensajes crearMensajeEmail(Long idLote, MensajesXMLBean mensaje, EnvioEmailXMLBean envio) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		Integer maxTamMensajeBBDD = Integer.parseInt(ps.getMessage("filesystem.maxTamMensajeBBDD", null));
+		Integer maxTamMensajeBBDD = Integer.parseInt(ps.getMessage(R_CONST_32, null));
 
 		TblMensajes res = new TblMensajes();
 		res.setTblLotesEnvios(lotesEnviosManager.getLoteEnvioById(idLote));
@@ -702,20 +779,21 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	}
 
 	private boolean checkCuerpo(String cuerpo, Integer maxTamMensajeBBDD) {
-		return cuerpo.length() > maxTamMensajeBBDD ? true : false;
+		return cuerpo.length() > maxTamMensajeBBDD;
 	}
 
 	private Integer getModo(String modo) {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		try {
-			if (null == modo)
-				return Integer.parseInt(ps.getMessage("constantes.email.modo", null));
-			else {
+			if (null == modo) {
+				return Integer.parseInt(ps.getMessage(R_CONST_21, null));
+			} else {
 				return Integer.parseInt(modo);
 			}
 		} catch (NumberFormatException e) {
-			return Integer.parseInt(ps.getMessage("constantes.email.modo", null));
+			// TODO logger.warn(e.getMessage(), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_21, null));
 		}
 
 	}
@@ -764,7 +842,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 					ps.getMessage("mensajesAuditoria.mensajes.SMS_CREAR", null), mensaje.getMensajeid());
 		} catch (Exception e) {
 			LOG.error("Se ha producido un error", e);
-			mensajeId = new Long(-10);
+			mensajeId = Long.valueOf(-10);
 		}
 		return mensajeId.intValue();
 	}
@@ -817,29 +895,29 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	public Integer operacionMensaje(Long idMensaje, String usuario, String password, String estadoFinal) {
 
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String errorActiveMq = ps.getMessage("conexion.ERRORACTIVEMQ", null, "[ERROR-ACTIVEMQ]");
-		String operacionReenviar = ps.getMessage("mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE", null);
+		String errorActiveMq = ps.getMessage(R_CONST_10, null, R_CONST_22);
+		String operacionReenviar = ps.getMessage(R_CONST_16, null);
 		String operacionReenviarCorrecto = ps.getMessage(
-				"mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE_CORRECTO", null);
-		String errorMensajeIncorrecto = ps.getMessage("auditoria.errores.ERROR_MENSAJE_INCORRECTO", null);
-		Long codErrorMensajeIncorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_INCORRECTO",
+				R_CONST_13, null);
+		String errorMensajeIncorrecto = ps.getMessage(R_CONST_1, null);
+		Long codErrorMensajeIncorrecto = Long.parseLong(ps.getMessage(R_CONST_2,
 				null));
-		String errorUsuarioAplicacion = ps.getMessage("auditoria.errores.ERROR_USUARIO_APLICACION", null);
-		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_USUARIO_APLICACION",
+		String errorUsuarioAplicacion = ps.getMessage(R_CONST_6, null);
+		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage(R_CONST_26,
 				null));
-		String errorMensajeYaEnviado = ps.getMessage("auditoria.errores.ERROR_MENSAJE_YA_ENVIADO", null);
-		Long codErrorMensajeYaEnviado = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_YA_ENVIADO",
+		String errorMensajeYaEnviado = ps.getMessage(R_CONST_30, null);
+		Long codErrorMensajeYaEnviado = Long.parseLong(ps.getMessage(R_CONST_19,
 				null));
-		String errorMensajeAplicacion = ps.getMessage("auditoria.errores.ERROR_MENSAJE_APLICACION", null);
-		Long codErrorMensajeAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_APLICACION",
+		String errorMensajeAplicacion = ps.getMessage(R_CONST_7, null);
+		Long codErrorMensajeAplicacion = Long.parseLong(ps.getMessage(R_CONST_15,
 				null));
-		String errorBBDD = ps.getMessage("auditoria.errores.ERROR_BBDD", null);
-		Long codErrorBBDD = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_BBDD", null));
-		Long codCorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_CORRECTO", null));
-		String estadoEnviado = ps.getMessage("constantes.ESTADO_ENVIADO", null);
-		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null))
+		String errorBBDD = ps.getMessage(R_CONST_34, null);
+		Long codErrorBBDD = Long.parseLong(ps.getMessage(R_CONST_17, null));
+		Long codCorrecto = Long.parseLong(ps.getMessage(R_CONST_29, null));
+		String estadoEnviado = ps.getMessage(R_CONST_20, null);
+		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage(R_CONST_4, null))
 				.getNombre();
-		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+		String descripcionErrorActiveMq = ps.getMessage(R_CONST_12, null);
 		TblMensajes tblMensaje = null;
 		
 		int activeMQ = 2;
@@ -900,8 +978,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				if (!estadoFinal.equalsIgnoreCase(estadoAnulado)) {
 					List<TblDestinatariosMensajes> destinatarios = destinatariosMensajesManager
 							.getDestinatarioMensajes(idMensaje);
-					Long canal = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
-					Integer modo = Integer.parseInt(ps.getMessage("constantes.email.modo", null));
+					Long canal = Long.parseLong(ps.getMessage(R_CONST_5, null));
+					Integer modo = Integer.parseInt(ps.getMessage(R_CONST_21, null));
 					if (tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().equals(canal)) {
 						checkEmailMode(idMensaje, tblMensaje, destinatarios, modo);
 					} else {
@@ -920,7 +998,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}
 		} catch (CannotCreateTransactionException e) {
 			//Comprobamos que si ya se ha actualizado la tabla de errores a false
-			LOG.error(errorActiveMq+" TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
+			LOG.error(errorActiveMq+R_CONST_18, e);
 			activeMQ = 0;//false
 			
 
@@ -929,21 +1007,24 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			if (servicio.getPremium() != null && servicio.getPremium()) { //Es premium revolvemos KO y anulamos
 				setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, false, null, null,
 						usuario, null);
-				return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+				return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 			} else {// no es premium devolvemos OK
 				return codCorrecto.intValue();
 			}
 
 		} catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_9, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 		}finally{
 //			Comprobamos que si ya se ha actualizado la tabla de errores
-			LOG.debug("Estamos en TblMensajesManagerImpl-operacionMensaje");					
-			if (activeMQ == 0){
+			LOG.debug(R_CONST_11);					
+			switch (activeMQ) {
+			case 0:
 				erroresManager.comprobarActiveMqActivo(false);
-			}else if (activeMQ == 1){
+				break;
+			case 1:
 				erroresManager.comprobarActiveMqActivo(true);
+				break;
 			}
 		}
 	}
@@ -952,29 +1033,29 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	public Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal) {
 
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		String errorActiveMq = ps.getMessage("conexion.ERRORACTIVEMQ", null, "[ERROR-ACTIVEMQ]");
-		String operacionReenviar = ps.getMessage("mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE", null);
+		String errorActiveMq = ps.getMessage(R_CONST_10, null, R_CONST_22);
+		String operacionReenviar = ps.getMessage(R_CONST_16, null);
 		String operacionReenviarCorrecto = ps.getMessage(
-				"mensajesAuditoria.mensajes.OPERACION_REENVIO_MENSAJE_CORRECTO", null);
-		String errorMensajeIncorrecto = ps.getMessage("auditoria.errores.ERROR_MENSAJE_INCORRECTO", null);
-		Long codErrorMensajeIncorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_INCORRECTO",
+				R_CONST_13, null);
+		String errorMensajeIncorrecto = ps.getMessage(R_CONST_1, null);
+		Long codErrorMensajeIncorrecto = Long.parseLong(ps.getMessage(R_CONST_2,
 				null));
-		String errorUsuarioAplicacion = ps.getMessage("auditoria.errores.ERROR_USUARIO_APLICACION", null);
-		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_USUARIO_APLICACION",
+		String errorUsuarioAplicacion = ps.getMessage(R_CONST_6, null);
+		Long codErrorUsuarioAplicacion = Long.parseLong(ps.getMessage(R_CONST_26,
 				null));
-		String errorMensajeYaEnviado = ps.getMessage("auditoria.errores.ERROR_MENSAJE_YA_ENVIADO", null);
-		Long codErrorMensajeYaEnviado = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_YA_ENVIADO",
+		String errorMensajeYaEnviado = ps.getMessage(R_CONST_30, null);
+		Long codErrorMensajeYaEnviado = Long.parseLong(ps.getMessage(R_CONST_19,
 				null));
-		String errorMensajeAplicacion = ps.getMessage("auditoria.errores.ERROR_MENSAJE_APLICACION", null);
-		Long codErrorMensajeAplicacion = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_MENSAJE_APLICACION",
+		String errorMensajeAplicacion = ps.getMessage(R_CONST_7, null);
+		Long codErrorMensajeAplicacion = Long.parseLong(ps.getMessage(R_CONST_15,
 				null));
-		String errorBBDD = ps.getMessage("auditoria.errores.ERROR_BBDD", null);
-		Long codErrorBBDD = Long.parseLong(ps.getMessage("auditoria.errores.COD_ERROR_BBDD", null));
-		Long codCorrecto = Long.parseLong(ps.getMessage("auditoria.errores.COD_CORRECTO", null));
-		String estadoEnviado = ps.getMessage("constantes.ESTADO_ENVIADO", null);
-		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage("constantes.ESTADO_ANULADO", null))
+		String errorBBDD = ps.getMessage(R_CONST_34, null);
+		Long codErrorBBDD = Long.parseLong(ps.getMessage(R_CONST_17, null));
+		Long codCorrecto = Long.parseLong(ps.getMessage(R_CONST_29, null));
+		String estadoEnviado = ps.getMessage(R_CONST_20, null);
+		String estadoAnulado = estadosManager.getEstadoByName(ps.getMessage(R_CONST_4, null))
 				.getNombre();
-		String descripcionErrorActiveMq = ps.getMessage("plataformaErrores.envioPremiumAEAT.DESC_ERROR_ACTIVEMQ", null);
+		String descripcionErrorActiveMq = ps.getMessage(R_CONST_12, null);
 		TblMensajes tblMensaje = null;
 		
 		int activeMQ = 2;
@@ -1035,8 +1116,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 				if (!estadoFinal.equalsIgnoreCase(estadoAnulado)) {
 					List<TblDestinatariosMensajes> destinatarios = destinatariosMensajesManager
 							.getDestinatarioMensajesNoEnviado(idMensaje);
-					Long canal = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
-					Integer modo = Integer.parseInt(ps.getMessage("constantes.email.modo", null));
+					Long canal = Long.parseLong(ps.getMessage(R_CONST_5, null));
+					Integer modo = Integer.parseInt(ps.getMessage(R_CONST_21, null));
 					if (tblMensaje.getTblLotesEnvios().getTblServicios().getTblCanales().getCanalid().equals(canal)) {
 						checkEmailMode(idMensaje, tblMensaje, destinatarios, modo);
 					} else {
@@ -1055,7 +1136,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}
 		} catch (CannotCreateTransactionException e) {
 			//Comprobamos que si ya se ha actualizado la tabla de errores a false
-			LOG.error(errorActiveMq+" TblMensajesManagerImpl.operacionMensaje --Error ActiveMq--", e);
+			LOG.error(errorActiveMq+R_CONST_18, e);
 			activeMQ = 0;//false
 			
 
@@ -1064,21 +1145,24 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			if (servicio.getPremium() != null && servicio.getPremium()) { //Es premium revolvemos KO y anulamos
 				setEstadoMensaje(tblMensaje.getMensajeid(), estadoAnulado, descripcionErrorActiveMq, false, null, null,
 						usuario, null);
-				return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+				return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 			} else {// no es premium devolvemos OK
 				return codCorrecto.intValue();
 			}
 
 		} catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_9, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 		}finally{
 //			Comprobamos que si ya se ha actualizado la tabla de errores
-			LOG.debug("Estamos en TblMensajesManagerImpl-operacionMensaje");					
-			if (activeMQ == 0){
+			LOG.debug(R_CONST_11);					
+			switch (activeMQ) {
+			case 0:
 				erroresManager.comprobarActiveMqActivo(false);
-			}else if (activeMQ == 1){
+				break;
+			case 1:
 				erroresManager.comprobarActiveMqActivo(true);
+				break;
 			}
 		}
 	}
@@ -1088,7 +1172,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		if (tblMensaje.getModo().equals(modo)) {
 			StringBuilder destBuilder = new StringBuilder();
 			for (TblDestinatariosMensajes destinatario : destinatarios) {
-				destBuilder.append(destinatario.getDestinatariosmensajes() + ";");
+				destBuilder.append(destinatario.getDestinatariosmensajes() + R_CONST_14);
 			}
 			MensajeJMS mensajeJms = new MensajeJMS();
 			mensajeJms.setIdMensaje(idMensaje.toString());
@@ -1103,7 +1187,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
-				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+				maxRetries = Long.parseLong(ps.getMessage(R_CONST_33, null));
 			}
 			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		} else {
@@ -1127,7 +1211,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			if (servicio.getNumeroMaxReenvios() != null && servicio.getNumeroMaxReenvios() >= 0) {
 				maxRetries = servicio.getNumeroMaxReenvios().longValue();
 			} else {
-				maxRetries = Long.parseLong(ps.getMessage("constantes.servicio.numMaxReenvios", null));
+				maxRetries = Long.parseLong(ps.getMessage(R_CONST_33, null));
 			}
 			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		}
@@ -1145,23 +1229,25 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		try {
-			if (null == proveedorId)
+			if (null == proveedorId) {
 				servidorId = queryExecutorServidores.obtenerServidorByIdMensaje(idMensaje);
-			else
+			} else {
 				servidorId = proveedorId;
+			}
 
 			// Actualizamos la tabla mensaje
 
 			TblMensajes mensaje = tblMensajesDAO.get(idMensaje);
 
 			if (mensaje != null && ps.getMessage(TIPOMENSAJESMS, null).equals(mensaje.getTipomensaje()) && null != descripcion
-					&& descripcion.contains("|") && descripcion.contains("OK"))
-				uim = descripcion.substring(descripcion.indexOf("|") + 1).trim();
+					&& descripcion.contains(R_CONST_36) && descripcion.contains(R_CONST_25)) {
+				uim = descripcion.substring(descripcion.indexOf('|') + 1).trim();
+			}
 
 			// aumentamos el numero de envios para todos los mensajes GISS y los
 			// demas cuando el estado siguiente es
 			// INCIDENCIA
-			if (ps.getMessage("constantes.ESTADO_INCIDENCIA", null).equals(estado)) {
+			if (ps.getMessage(R_CONST_27, null).equals(estado)) {
 				mensaje.setNumeroenvios(mensaje.getNumeroenvios() + 1);
 			} else if (ps.getMessage(ESTADOPENDIENTE, null).equals(estado)) {
 				mensaje.setNumeroenvios(0);
@@ -1205,8 +1291,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}
 
 		} catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_9, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 		}
 		return res;
 	}
@@ -1223,23 +1309,25 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 
 		try {
-			if (null == proveedorId)
+			if (null == proveedorId) {
 				servidorId = queryExecutorServidores.obtenerServidorByIdMensaje(idMensaje);
-			else
+			} else {
 				servidorId = proveedorId;
+			}
 
 			// Actualizamos la tabla mensaje
 
 			TblMensajes mensaje = tblMensajesDAO.get(idMensaje);
 
 			if (mensaje != null && ps.getMessage(TIPOMENSAJESMS, null).equals(mensaje.getTipomensaje()) && null != descripcion
-					&& descripcion.contains("|") && descripcion.contains("OK"))
-				uim = descripcion.substring(descripcion.indexOf("|") + 1).trim();
+					&& descripcion.contains(R_CONST_36) && descripcion.contains(R_CONST_25)) {
+				uim = descripcion.substring(descripcion.indexOf('|') + 1).trim();
+			}
 
 			// aumentamos el numero de envios para todos los mensajes GISS y los
 			// demas cuando el estado siguiente es
 			// INCIDENCIA
-			if (ps.getMessage("constantes.ESTADO_INCIDENCIA", null).equals(estado)) {
+			if (ps.getMessage(R_CONST_27, null).equals(estado)) {
 				mensaje.setNumeroenvios(mensaje.getNumeroenvios() + 1);
 			} else if (ps.getMessage(ESTADOPENDIENTE, null).equals(estado)) {
 				mensaje.setNumeroenvios(0);
@@ -1283,8 +1371,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			}
 
 		} catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_9, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 		}
 		return res;
 	}
@@ -1317,10 +1405,10 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		int res = 1;
 		Map<Long,List<Long>> mapMensajesMult;
 		
-		LOG.info("Inicio Actualizacion de estados notificaciones de "+estadoInicial+" a "+estadoFinal);
+		LOG.info(R_CONST_37+estadoInicial+R_CONST_38+estadoFinal);
 		try{
-			String usuarios = usersId.toString().replace("[", "'").replace("]", "'")
-		            .replace(", ", "','");
+			String usuarios = usersId.toString().replace(R_CONST_24, R_CONST_8).replace(R_CONST_28, R_CONST_8)
+		            .replace(R_CONST_35, R_CONST_31);
 			
 			//recuperamos los mensajes multides
 			mapMensajesMult = queryExecutorMensajes.getMensajesPorUsuariosPushYEstadoMultidest(usuarios, estadoInicial);
@@ -1343,7 +1431,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 //				
 //			}
 		}catch(Exception e){
-			LOG.error("[TblMensajesManagerImpl.updateMessagesUsers]", e);
+			LOG.error(R_CONST_3, e);
 			res = -1;
 		}
 		
@@ -1356,10 +1444,10 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		int res = 1;
 		Map<Long,List<Long>> mapMensajesMult;
 		
-		LOG.info("Inicio Actualizacion de estados notificaciones de "+estadoInicial+" a "+estadoFinal);
+		LOG.info(R_CONST_37+estadoInicial+R_CONST_38+estadoFinal);
 		try{
-			String usuarios = usersId.toString().replace("[", "'").replace("]", "'")
-		            .replace(", ", "','");
+			String usuarios = usersId.toString().replace(R_CONST_24, R_CONST_8).replace(R_CONST_28, R_CONST_8)
+		            .replace(R_CONST_35, R_CONST_31);
 			
 			//recuperamos los mensajes multides
 			mapMensajesMult = queryExecutorMensajes.getMensajesPorUsuariosPushYEstadoYMensajeMultidest(usuarios, estadoInicial, Long.valueOf(mensajeId));
@@ -1382,7 +1470,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 //				
 //			}
 		}catch(Exception e){
-			LOG.error("[TblMensajesManagerImpl.updateMessagesUsers]", e);
+			LOG.error(R_CONST_3, e);
 			res = -1;
 		}
 		
@@ -1392,14 +1480,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 	@Override
 	public Boolean isMessageUser(List<String> usersId, Long mensajeId) {
 		if (tblMensajesDAO.get(mensajeId).getTblLotesEnvios().getMultidestinatario()) {
-			return (!destinatariosMensajesManager.getDestinatarioMensajesUsuarios(mensajeId, usersId, null).isEmpty()) ? true
-					: false;
+			return !destinatariosMensajesManager.getDestinatarioMensajesUsuarios(mensajeId, usersId, null).isEmpty();
 		} else {
 			TblMensajesQuery queryM = new TblMensajesQuery();
 			queryM.setMensajeid(mensajeId);
-			for (String s : usersId)
+			for (String s : usersId) {
 				queryM.addUsuarioidIn(Long.parseLong(s));
-			return (!tblMensajesDAO.search(queryM).getResults().isEmpty()) ? true : false;
+			}
+			return !tblMensajesDAO.search(queryM).getResults().isEmpty();
 		}
 	}
 
@@ -1410,9 +1498,10 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
 		try {
 
-			for (Long mensajeId : mapMensajesMult.keySet()) {
+			for (Map.Entry<Long, List<Long>> entry : mapMensajesMult.entrySet()) {
+				Long mensajeId = entry.getKey();
 				Long servidorId = queryExecutorServidores.obtenerServidorByIdMensaje(mensajeId);
-				List<Long> listaDestinatarios = mapMensajesMult.get(mensajeId);
+				List<Long> listaDestinatarios = entry.getValue();
 				for (Long dest : listaDestinatarios) {
 					TblDestinatariosMensajes destinatarioMensaje = destinatariosMensajesManager
 							.getDestinatarioMensaje(dest);
@@ -1433,8 +1522,8 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 
 			res = 1;
 		} catch (Exception e) {
-			LOG.error(ps.getMessage("auditoria.errores.ERROR_GENERAL", null), e);
-			return Integer.parseInt(ps.getMessage("constantes.errores.devolucion.error10", null));
+			LOG.error(ps.getMessage(R_CONST_9, null), e);
+			return Integer.parseInt(ps.getMessage(R_CONST_23, null));
 		}
 		return res;
 	}
@@ -1444,13 +1533,14 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			String numPagina, String tamPagina, PropertiesServices ps) {
 		List<Long> listaUsuarios = new ArrayList<>();
 
-		if (null != idUsuario)
+		if (null != idUsuario) {
 			listaUsuarios.add(usuariosPushManager.getDatosUsuario(idServicio, idPlataforma, idDispositivo, idUsuario,
 					true).getUsuarioid());
-		else
+		} else {
 			listaUsuarios = usuariosPushManager.getDatosUsuario(idServicio, idPlataforma, idDispositivo);
+		}
 
-		String usuarios = listaUsuarios.toString().replace("[", "'").replace("]", "'").replace(", ", "','");
+		String usuarios = listaUsuarios.toString().replace(R_CONST_24, R_CONST_8).replace(R_CONST_28, R_CONST_8).replace(R_CONST_35, R_CONST_31);
 
 		return queryExecutorMensajes.getAvisosMensajeUsuario(usuarios, numPagina, tamPagina, ps);
 	}
@@ -1467,7 +1557,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		String estadoPend = ps.getMessage(ESTADOPENDIENTE, null);
 				
 		List<Long> listaMensajes = queryExecutorMensajes.getMensajesPendientes(fechaInicio,fechaFin,serviciosExcluidos,serviciosIncluidos);
-		Long canalMail = Long.parseLong(ps.getMessage("constantes.CANAL_EMAIL", null));
+		Long canalMail = Long.parseLong(ps.getMessage(R_CONST_5, null));
 		Map<Long, List<MensajeJMS>> map = new HashMap<>();
 
 		for (Long mensajeId : listaMensajes) {
@@ -1521,7 +1611,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		StringBuilder mensajes = new StringBuilder();
 		String idExterno = "";
 		for (TblDestinatariosMensajes dm : listaDestinatarios) {
-			mensajes.append(dm.getDestinatariosmensajes() + ";");
+			mensajes.append(dm.getDestinatariosmensajes() + R_CONST_14);
 			idExterno = dm.getCodigoexterno();
 		}
 		if (map.containsKey(servicio.getServicioid())) {
@@ -1578,8 +1668,7 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 		TblMensajesQuery q = new TblMensajesQuery();
 		q.setUim(uim);
 		q.setUimComparator(TextComparator.EQUALS);
-		mensaje = tblMensajesDAO.searchUnique(q);
-		return mensaje;
+		return tblMensajesDAO.searchUnique(q);
 	}
 
 	/**

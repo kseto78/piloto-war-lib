@@ -21,6 +21,12 @@ import es.minhap.sim.query.ViewPlanificacionesQuery;
 @Service("viewPlanificacionesManagerImpl")
 public class ViewPlanificacionesManagerImpl implements ViewPlanificacionesManager {
 
+	protected static final String R_CONST_1 = "00:00";
+
+	protected static final String R_CONST_2 = "S";
+
+	protected static final String R_CONST_3 = "23:59";
+
 	@Resource
 	private ViewPlanificacionesDAO viewPlanificacionesDAO;
 	
@@ -42,7 +48,7 @@ public class ViewPlanificacionesManagerImpl implements ViewPlanificacionesManage
 			String nombre, PlanificacionBean criterio, boolean count) {
 		OrderType ord = null;
 		// Orden ascendente o descendente
-		if (order == null || order.equals("1")) {
+		if (order == null || "1".equals(order)) {
 			ord = OrderType.ASC;
 		} else {
 			ord = OrderType.DESC;
@@ -55,51 +61,51 @@ public class ViewPlanificacionesManagerImpl implements ViewPlanificacionesManage
 		if(criterio!=null&&criterio.getServicioId()!=null&&criterio.getServicioId().intValue()!=0){
 			query.setServicioId(criterio.getServicioId().longValue());
 		}
-		if(criterio!=null&&criterio.getLunes()!=null&&criterio.getLunes().equals(VERDADERO)){
-			query.setLunes("S");
+		if(criterio!=null&&criterio.getLunes()!=null&&VERDADERO.equals(criterio.getLunes())){
+			query.setLunes(R_CONST_2);
 		}
-		if(criterio!=null&&criterio.getMartes()!=null&&criterio.getMartes().equals(VERDADERO)){
-			query.setMartes("S");
+		if(criterio!=null&&criterio.getMartes()!=null&&VERDADERO.equals(criterio.getMartes())){
+			query.setMartes(R_CONST_2);
 		}
-		if(criterio!=null&&criterio.getMiercoles()!=null&&criterio.getMiercoles().equals(VERDADERO)){
-			query.setMiercoles("S");
+		if(criterio!=null&&criterio.getMiercoles()!=null&&VERDADERO.equals(criterio.getMiercoles())){
+			query.setMiercoles(R_CONST_2);
 		}
-		if(criterio!=null&&criterio.getJueves()!=null&&criterio.getJueves().equals(VERDADERO)){
-			query.setJueves("S");
+		if(criterio!=null&&criterio.getJueves()!=null&&VERDADERO.equals(criterio.getJueves())){
+			query.setJueves(R_CONST_2);
 		}
-		if(criterio!=null&&criterio.getViernes()!=null&&criterio.getViernes().equals(VERDADERO)){
-			query.setViernes("S");
+		if(criterio!=null&&criterio.getViernes()!=null&&VERDADERO.equals(criterio.getViernes())){
+			query.setViernes(R_CONST_2);
 		}
-		if(criterio!=null&&criterio.getSabado()!=null&&criterio.getSabado().equals(VERDADERO)){
-			query.setSabado("S");
+		if(criterio!=null&&criterio.getSabado()!=null&&VERDADERO.equals(criterio.getSabado())){
+			query.setSabado(R_CONST_2);
 		}
-		if(criterio!=null&&criterio.getDomingo()!=null&&criterio.getDomingo().equals(VERDADERO)){
-			query.setDomingo("S");
+		if(criterio!=null&&criterio.getDomingo()!=null&&VERDADERO.equals(criterio.getDomingo())){
+			query.setDomingo(R_CONST_2);
 		}
-		if(criterio!=null&&(!isEmpty(criterio.getHoraDesde()) || (!isEmpty(criterio.getHoraHasta())))){
+		if(criterio!=null&&(!isEmpty(criterio.getHoraDesde()) || !isEmpty(criterio.getHoraHasta()))){
 			if(criterio!=null&&!isEmpty(criterio.getHoraDesde())){
 				query.setHoraDesdeIni(criterio.getHoraDesde());
 				if (!isEmpty(criterio.getHoraHasta())){
 					query.setHoraDesdeFin(criterio.getHoraHasta());
 				}else{
-					query.setHoraDesdeFin("23:59");
+					query.setHoraDesdeFin(R_CONST_3);
 				}
 			}else{
-				query.setHoraDesdeIni("00:00");
+				query.setHoraDesdeIni(R_CONST_1);
 				query.setHoraDesdeFin(criterio.getHoraHasta());
 			}
 		}
 		
-		if(criterio!=null&&(!isEmpty(criterio.getHoraDesdeFin()) || (!isEmpty(criterio.getHoraHastaFin())))){
+		if(criterio!=null&&(!isEmpty(criterio.getHoraDesdeFin()) || !isEmpty(criterio.getHoraHastaFin()))){
 			if(criterio!=null&&!isEmpty(criterio.getHoraDesdeFin())){
 				query.setHoraHastaIni(criterio.getHoraDesdeFin());
 				if (!isEmpty(criterio.getHoraHastaFin())){
 					query.setHoraHastaFin(criterio.getHoraHastaFin());
 				}else{
-					query.setHoraHastaFin("23:59");
+					query.setHoraHastaFin(R_CONST_3);
 				}
 			}else{
-				query.setHoraHastaIni("00:00");
+				query.setHoraHastaIni(R_CONST_1);
 				query.setHoraHastaFin(criterio.getHoraHastaFin());
 			}
 		}
@@ -140,11 +146,7 @@ public class ViewPlanificacionesManagerImpl implements ViewPlanificacionesManage
 	 * @return
 	 */
 	public static boolean isEmpty(String value){
-		if(value==null||(value!=null&&value.equals(""))){
-			return true;
-		}else{
-			return false;
-		}
+		return value==null||"".equals(value);
 	}
 
 

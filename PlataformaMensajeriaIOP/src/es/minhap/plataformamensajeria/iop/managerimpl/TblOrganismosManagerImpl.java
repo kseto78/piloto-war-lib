@@ -37,7 +37,7 @@ public class TblOrganismosManagerImpl implements TblOrganismosManager {
 	public boolean existeOrganismo(String codOrganismoPagadorSMS) {
 		TblOrganismosQuery query =  crearFiltro(codOrganismoPagadorSMS);
 		TblOrganismos organismo = getOrganismosDAO().searchUnique(query);
-		return (null != organismo)? true : false;
+		return null != organismo;
 	}
 
 	/**

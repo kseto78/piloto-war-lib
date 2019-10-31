@@ -18,14 +18,14 @@ import es.minhap.sim.query.TblMonitorDIR3Query;
 @Service("tblMonitorDIR3Manager")
 public class TblMonitorDIR3ManagerImpl implements TblMonitorDIR3Manager{
 
-	private static final Logger logger = Logger.getLogger(TblMonitorDIR3ManagerImpl.class);
+	private static final Logger LOGGER = Logger.getLogger(TblMonitorDIR3ManagerImpl.class);
 	
 	@Resource
 	TblMonitorDIR3DAO tblMonitorDIR3DAO;
 	
 	@Override
 	public Long guardarDir3MonitorWS(TblMonitorDIR3 tblMonitorDIR3){
-		logger.info("guardarDir3MonitorWS - start");
+		LOGGER.info("guardarDir3MonitorWS - start");
 		return tblMonitorDIR3DAO.insert(tblMonitorDIR3);
 	}
 	
@@ -44,7 +44,7 @@ public class TblMonitorDIR3ManagerImpl implements TblMonitorDIR3Manager{
 				dir3MonitorWs = result.get(0);
 			}
 		}catch(Exception e){
-			logger.error("[Dir3MonitorManagerImpl] - obtenerUltimoDir3MonitorWS - Error: ", e);
+			LOGGER.error("[Dir3MonitorManagerImpl] - obtenerUltimoDir3MonitorWS - Error: ", e);
 			dir3MonitorWs = null;
 		}
 		return dir3MonitorWs;

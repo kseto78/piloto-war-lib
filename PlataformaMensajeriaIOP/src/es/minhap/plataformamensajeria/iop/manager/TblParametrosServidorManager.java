@@ -16,7 +16,7 @@ public interface TblParametrosServidorManager {
 	 * 
 	 * @return List<TblParametrosServidor>
 	 */
-	public List<TblParametrosServidor> getAll();
+	List<TblParametrosServidor> getAll();
 	
 	/**
 	 * Inserta en la tabla parametrosServidor
@@ -27,7 +27,7 @@ public interface TblParametrosServidorManager {
 	 * @param descricpion
 	 * @return 
 	 */
-	public Long insert(TblParametrosServidor parametroServidor, String source, String accion, Long accionId, String descripcion);
+	Long insert(TblParametrosServidor parametroServidor, String source, String accion, Long accionId, String descripcion);
 	
 	/**
 	 * borra en la tabla parametrosServidor
@@ -37,7 +37,7 @@ public interface TblParametrosServidorManager {
 	 * @param accionId
 	 * @param descripcion
 	 */
-	public void delete(Long parametroServidorId, String source, String accion, Long accionId, String descripcion);
+	void delete(Long parametroServidorId, String source, String accion, Long accionId, String descripcion);
 	
 	/**
 	 * obtiene el valor de la tabla por criterios
@@ -45,7 +45,7 @@ public interface TblParametrosServidorManager {
 	 * @param tipoParametroId
 	 * @return List<TblParametrosServidor>
 	 */
-	public List<TblParametrosServidor> getParametrosPorServidor(Long servidorId, Long tipoParametroId);
+	List<TblParametrosServidor> getParametrosPorServidor(Long servidorId, Long tipoParametroId);
 	
 	/**
 	 * comprueba si existe el valor con el tipo de parametro
@@ -53,7 +53,7 @@ public interface TblParametrosServidorManager {
 	 * @param ps
 	 * @return RespuestaActualizarPasswordCorreo 
 	 */
-	public RespuestaActualizarPasswordCorreo checkActualizarPassword(PeticionActualizarPasswordCorreo peticion,
+	RespuestaActualizarPasswordCorreo checkActualizarPassword(PeticionActualizarPasswordCorreo peticion,
 			PropertiesServices ps);
 	
 	/**
@@ -61,5 +61,5 @@ public interface TblParametrosServidorManager {
 	 * @param query
 	 * @return List<TblParametrosServidor>
 	 */
-	public List<TblParametrosServidor> getByQuery(TblParametrosServidorQuery query);
+	List<TblParametrosServidor> getByQuery(TblParametrosServidorQuery query);
 }

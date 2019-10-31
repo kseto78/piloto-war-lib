@@ -16,7 +16,7 @@ public interface TblProcesosManager {
 	 * @param TblProcesosQuery
 	 * @return
 	 */
-	public List<TblProcesos> getProcesosByQuery(TblProcesosQuery procesos);
+	List<TblProcesos> getProcesosByQuery(TblProcesosQuery procesos);
 	
 	/**
 	 * Obtiene el proceso
@@ -24,7 +24,7 @@ public interface TblProcesosManager {
 	 * @param procesoId
 	 * @return TblProcesos
 	 */
-	public TblProcesos getProcesoById(Long procesosId);
+	TblProcesos getProcesoById(Long procesosId);
 	
 		/**
 	 * Actualizamos el procesos
@@ -35,7 +35,7 @@ public interface TblProcesosManager {
 	 * @param accionId
 	 * @return
 	 */
-	public void update(TblProcesos proceso, String source, String accion, Long accionId);
+	void update(TblProcesos proceso, String source, String accion, Long accionId);
 
 	
 

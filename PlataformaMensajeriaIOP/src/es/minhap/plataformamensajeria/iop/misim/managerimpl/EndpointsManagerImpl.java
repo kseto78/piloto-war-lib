@@ -37,9 +37,7 @@ public class EndpointsManagerImpl implements EndpointsManager {
 	@Override
 	@Transactional
 	public List<Endpoint> getEndpoints(EndpointQuery query) {
-		List<Endpoint> endpoints = getEndpointDAO().search(query).getResults();
-		
-		return endpoints;
+		return getEndpointDAO().search(query).getResults();
 	}
 	
 	@Transactional

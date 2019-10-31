@@ -11,7 +11,7 @@ public interface TblEstadosManager {
 	 * @param TblEstadosQuery
 	 * @return TblEstados
 	 */
-	public TblEstados getEstadoByName(String nombre);
+	TblEstados getEstadoByName(String nombre);
 	
 	
 	/**
@@ -20,7 +20,7 @@ public interface TblEstadosManager {
 	 * @param TblEstadosQuery
 	 * @return TblEstados
 	 */
-	public TblEstados getEstadoById(Long idEstado);
+	TblEstados getEstadoById(Long idEstado);
 
 
 	SearchResult<TblEstados> getEstados();
