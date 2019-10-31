@@ -164,6 +164,9 @@ public class TblServicios implements java.io.Serializable {
 	@Column(name = "EXCLUSIVO", precision = 1, scale = 0)
 	private Boolean exclusivo;
 	
+	@Column(name = "SMSEXTRANJEROS", precision = 1, scale = 0)
+	private Boolean smsExtranjeros;
+
 	@Column(name = "NMAXREENVIOS", precision = 22, scale = 0)
 	private Integer numeroMaxReenvios;
 
@@ -921,6 +924,14 @@ public class TblServicios implements java.io.Serializable {
 	 */
 	public void setExclusivo(Boolean exclusivo) {
 		this.exclusivo = exclusivo;
+	}
+	
+	public Boolean getSmsExtranjeros() {
+		return smsExtranjeros;
+	}
+
+	public void setSmsExtranjeros(Boolean smsExtranjeros) {
+		this.smsExtranjeros = smsExtranjeros;
 	}
 	
 }
