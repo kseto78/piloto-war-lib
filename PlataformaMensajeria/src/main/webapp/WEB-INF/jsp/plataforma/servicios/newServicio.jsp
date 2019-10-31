@@ -249,7 +249,14 @@
 						<s:checkbox theme="simple" name="newExclusivo" id="newExclusivo"
 						value="%{newExclusivo}" />						
 					</p>
-				</label>	
+				</label>
+				<label id="extranjeroLabel"  style="display:none">
+					<p class="criteria">
+							<label class="fieldText" style="width: 120px;">SMS Extranjeros</label>
+							<s:checkbox theme="simple" id="newExtranjero"
+								name="newExtranjero" value="%{newExtranjero}"/>
+					</p>
+				</label>		
 								<!-- Inicio parte WEB push -->
 				<p class="criteria">
 					 <span>

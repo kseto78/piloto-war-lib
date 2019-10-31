@@ -1997,8 +1997,8 @@
 				}
 			if (document.getElementById("servicio.isPremium") != null){
 				document.getElementById("servicio.isExclusivo").disabled = false;
-			}			
-
+			}
+			extranjeroLabel.style.display="none";
 		}
 		if(combo.value=="2"){//SMS
 			if (auna!=null)
@@ -2182,14 +2182,14 @@
 			botonClaves.style.visibility="hidden";
 			botonClaves.style.display="none";
 
-			exclusivoLabel.style.display="";
-			
+			exclusivoLabel.style.display="";			
 			if (document.getElementById("servicio.isPremium") != null){
 				document.getElementById("servicio.isPremium").disabled = false;
 				}
 			if (document.getElementById("servicio.isPremium") != null){
 				document.getElementById("servicio.isExclusivo").disabled = false;
-			}			
+			}
+			extranjeroLabel.style.display="";			
 		}
 		if(combo.value=="3"){//Recepcion SMS
 			if (auna!=null)
@@ -2382,7 +2382,7 @@
 			if (document.getElementById("servicio.isPremium") != null){
 				document.getElementById("servicio.isExclusivo").disabled = true;
 			}
-			
+			extranjeroLabel.style.display="none";
 		}
 		if(combo.value=="4"){//Notificaciones Push
 
@@ -2559,7 +2559,8 @@
 				}
 			if (document.getElementById("servicio.isPremium") != null){
 				document.getElementById("servicio.isExclusivo").disabled = true;
-			}			
+			}
+			extranjeroLabel.style.display="none";
 
 		}
 		if(combo.value=="5"){//web push
@@ -2745,7 +2746,8 @@
 				}
 			if (document.getElementById("servicio.isPremium") != null){
 				document.getElementById("servicio.isExclusivo").disabled = true;
-			}			
+			}
+			extranjeroLabel.style.display="none";
 		}
 	}
 	function chkViewValue(boton){

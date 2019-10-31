@@ -179,6 +179,13 @@
 						<s:checkbox theme="simple" id="servicio.isExclusivo"
 							name="servicio.isExclusivo" value="%{servicio.exclusivo}" onclick="selectOnlyThis(this.id)"/>
 					</p>
+				</span>
+				<span id="extranjeroLabel"  style="display:none">
+					<p class="criteria">
+							<label class="fieldText" style="width: 120px;">SMS Extranjeros</label>
+							<s:checkbox theme="simple" id="servicio.isSmsExtranjeros"
+								name="servicio.isSmsExtranjeros" value="%{servicio.smsExtranjeros}"/>
+					</p>
 				</span>	
 				
 				
@@ -1148,15 +1155,6 @@
 </div>
 
 <script>
-	const serviciosAEATGiss = "${serviciosAEATGiss}"; 
-	var res = serviciosAEATGiss.split(",");
-
-	res.forEach(function(idServActual) {
-		  if (idServActual == idServicio.idServicio.value){
-			  document.getElementById("servicio.isPremium").disabled = true;
-			  document.getElementById("servicio.isExclusivo").disabled = true;			  
-			  }
-		});
 
 	function cargarNuevaAplicacion() {              
         document.frmEditServicio.action="aplicacionSelectEditEvent.action";
