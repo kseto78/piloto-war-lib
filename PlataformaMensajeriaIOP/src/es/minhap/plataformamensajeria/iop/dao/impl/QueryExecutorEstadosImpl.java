@@ -28,11 +28,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorEstados;
 @Service
 public class QueryExecutorEstadosImpl extends HibernateDaoSupport implements QueryExecutorEstados {
 
-	protected static final String R_CONST_1 = "'";
-
-	protected static final String R_CONST_2 = "unchecked";
-
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorEstadosImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorEstadosImpl.class);
 
 	private static final String LOG_END= "search - end";
 	
@@ -48,14 +44,14 @@ public class QueryExecutorEstadosImpl extends HibernateDaoSupport implements Que
 
 	
 
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public EstadosBean getEstadoByLoteId(Long loteId) {
 		EstadosBean res = null;
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 
 			//obtenemos estado por prioridad
@@ -65,9 +61,8 @@ public class QueryExecutorEstadosImpl extends HibernateDaoSupport implements Que
 							+ "st.prioridad from TBL_MENSAJES m inner join TBL_ESTADOS st "
 							+ "on (st.nombre = case when m.ESTADOACTUAL = 'PENDIENTE' "
 							+ "then 'PENDIENTE DE ENVIO' else m.estadoactual end)"
-							+ " where m.LOTEENVIOID = ? order by st.PRIORIDAD asc) "
+							+ " where m.LOTEENVIOID = "+loteId+" order by st.PRIORIDAD asc) "
 							+ "where rownum < 2");
-			query.setLong(0, loteId);
 			
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
@@ -76,29 +71,28 @@ public class QueryExecutorEstadosImpl extends HibernateDaoSupport implements Que
 			    res.setEstadoId(((BigDecimal) row[1]).longValue());
 			    
 			}
-			if(null != res) {
+			if(null != res)
 				return res;
-			}
 			
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	
 	}
 
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public EstadosBean getEstadoByMensajeId(Long mensajeId) {
 		EstadosBean res = null;
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 			
 			//obtiene el estado por prioridad
@@ -108,10 +102,9 @@ public class QueryExecutorEstadosImpl extends HibernateDaoSupport implements Que
 							+ "st.prioridad from TBL_ESTADOS st  "
 							+ "inner join TBL_DESTINATARIOS_MENSAJES dm on "
 							+ "(st.nombre = case when dm.estado = 'PENDIENTE' then 'PENDIENTE DE ENVIO' "
-							+ "else dm.estado end) where dm.MENSAJEID = ? order by "
+							+ "else dm.estado end) where dm.MENSAJEID = "+mensajeId+" order by "
 							+ "st.PRIORIDAD asc) where rownum < 2");
-			query.setLong(0, mensajeId);
-			
+
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 			    res = new EstadosBean();
@@ -119,61 +112,56 @@ public class QueryExecutorEstadosImpl extends HibernateDaoSupport implements Que
 			    res.setEstadoId(((BigDecimal) row[1]).longValue());
 			    
 			}
-			if(null != res) {
+			if(null != res)
 				return res;
-			}
 			
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	
 	}
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public String getEstadoByMensajeIdUsuarioPush(Long mensajeId, List<String> listaUsuarios) {
 		String res;
 		Map<String, BigDecimal> map = new HashMap<>();
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
-			String usuarios = listaUsuarios.toString().replace("[", R_CONST_1).replace("]", R_CONST_1)
+			String usuarios = listaUsuarios.toString().replace("[", "'").replace("]", "'")
 		            .replace(", ", "','");
 			//obtiene el estado del mensaje y usuario Push
 			SQLQuery query = getSessionFactory().getCurrentSession()
 					.createSQLQuery("SELECT ESTADO, count(*) as TOTAL from TBL_DESTINATARIOS_MENSAJES where "
-					+ "MENSAJEID = ? and DESTINATARIO in ("+usuarios+") group by ESTADO");
-			query.setLong(0, mensajeId);
-			query.setString(1, usuarios);
-			
+					+ "MENSAJEID = "+mensajeId+" and DESTINATARIO in ("+usuarios+") group by ESTADO");
+
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 				BigDecimal total = (BigDecimal) row[1];
 				String key = (String) row[0];
 				map.put(key, total);
 			}
-			if (map.size()==1) {
+			if (map.size()==1)
 				res = map.entrySet().iterator().next().getKey();
-			} else {
+			else
 				res = "INCIDENCIA";
-			}
-			if(null != res) {
+			if(null != res)
 				return res;
-			}
 			
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	

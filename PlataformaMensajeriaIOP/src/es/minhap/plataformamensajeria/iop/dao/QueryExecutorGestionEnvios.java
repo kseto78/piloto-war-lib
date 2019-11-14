@@ -20,7 +20,7 @@ public interface QueryExecutorGestionEnvios {
 	 * 
 	 * @return
 	 */
-	List<ViewEstadoLotesEnvios> getUltimosEstadoEnviosLotes();
+	public List<ViewEstadoLotesEnvios> getUltimosEstadoEnviosLotes();
 	
 	/**
 	 * Obtiene el listado según parametros
@@ -31,7 +31,7 @@ public interface QueryExecutorGestionEnvios {
 	 * @param columna
 	 * @return
 	 */
-	List<TblGestionEnvios> getInformesServiciosBy(Long servicioId, Integer year, Integer month, String columna);
+	public List<TblGestionEnvios> getInformesServiciosBy(Long servicioId, Integer year, Integer month, String columna);
 
 	/**
 	 * Obtiene el total según eg
@@ -39,7 +39,7 @@ public interface QueryExecutorGestionEnvios {
 	 * @param servicioId
 	 * @return
 	 */
-	Integer countGestionEnviosLotes(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg);
+	public Integer countGestionEnviosLotes(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg);
 	
 	/**
 	 * Obtiene el listado según parametros
@@ -51,7 +51,7 @@ public interface QueryExecutorGestionEnvios {
 	 * @param criterio
 	 * @return
 	 */
-	List<TblGestionEnvios> getGestionEnvioLotesPaginado(Integer inicio, Integer pagesize, String order, String column,
+	public List<TblGestionEnvios> getGestionEnvioLotesPaginado(Integer inicio, Integer pagesize, String order, String column,
 			es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean criterio);
 
 	/**
@@ -60,7 +60,7 @@ public interface QueryExecutorGestionEnvios {
 	 * @param eg
 	 * @return
 	 */
-	Integer countGestionEnviosMensajes(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg);
+	public Integer countGestionEnviosMensajes(es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean eg);
 
 	/**
 	 * Obtiene el listado según parametros
@@ -72,7 +72,7 @@ public interface QueryExecutorGestionEnvios {
 	 * @param criterio
 	 * @return
 	 */
-	List<TblGestionEnvios> getGestionEnvioMensajesPaginado(int inicio, Integer pagesize, String order,
+	public List<TblGestionEnvios> getGestionEnvioMensajesPaginado(int inicio, Integer pagesize, String order,
 			String column, es.minhap.plataformamensajeria.iop.beans.GestionEnvioBean criterio);
 
 	

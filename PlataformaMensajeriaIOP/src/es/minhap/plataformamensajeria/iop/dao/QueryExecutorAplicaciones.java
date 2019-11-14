@@ -13,6 +13,6 @@ public interface QueryExecutorAplicaciones {
 	 * @param mensajeId
 	 * @return
 	 */
-	Long  findAplicacionByMessageId(Long mensajeId);
+	public Long  findAplicacionByMessageId(Long mensajeId);
 
 }

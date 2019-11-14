@@ -34,7 +34,7 @@ import es.minhap.sim.model.ViewProcesosManuales;
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
 public class QueryExecutorProcesosManualesImpl extends HibernateDaoSupport implements QueryExecutorProcesosManuales {
 
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorProcesosManualesImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorProcesosManualesImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -53,8 +53,8 @@ public class QueryExecutorProcesosManualesImpl extends HibernateDaoSupport imple
 	@Override
 	public List<ViewProcesosManuales> getProcesosManualesPaginado(int inicio, int size, String order, String column, ProcesosManualesBean ob) {
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 			String sql = " from ViewProcesosManuales o";
 			String slqWhere = createWhere(ob, order, column);
@@ -68,7 +68,7 @@ public class QueryExecutorProcesosManualesImpl extends HibernateDaoSupport imple
 			return  query.list();
 			
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -76,8 +76,8 @@ public class QueryExecutorProcesosManualesImpl extends HibernateDaoSupport imple
 	@Override
 	public Integer countProcesosManualesPaginado(ProcesosManualesBean ob) {
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 			String sql = "select count(o.procesosManualesId) from ViewProcesosManuales o ";
 			String slqWhere = createWhere(ob, null, null);
@@ -87,7 +87,7 @@ public class QueryExecutorProcesosManualesImpl extends HibernateDaoSupport imple
 			return  ((Long)query.uniqueResult()).intValue();
 			
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -97,7 +97,7 @@ public class QueryExecutorProcesosManualesImpl extends HibernateDaoSupport imple
 	private String createWhere(ProcesosManualesBean ob, String order, String column) {
 		StringBuilder sb = new StringBuilder();
 	
-		if (null != ob.getNombre() && !ob.getNombre().isEmpty()) {
+		if (null != ob.getNombre() && ob.getNombre().length() > 0) {
 			sb.append(" and Upper(o.nombre) like UPPER('%" + ob.getNombre() + "%')");
 		}
 		

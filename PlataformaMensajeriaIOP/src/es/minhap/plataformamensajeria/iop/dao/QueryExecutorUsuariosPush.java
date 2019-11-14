@@ -15,13 +15,13 @@ public interface QueryExecutorUsuariosPush {
 	 * @param servicio
 	 * @return list<Long>
 	 */
-	List<Long> listaUsuariosDispositivosPush(String identificadorUsuario, Integer servicioId);
+	public List<Long> listaUsuariosDispositivosPush(String identificadorUsuario, Integer servicioId);
 	
 	/**
 	 * Obtiene el siguiente numero en la secuencia de dispositivo
 	 * @return Integer
 	 */
-	Integer getNextDispositivo();
+	public Integer getNextDispositivo();
 
 	
 	/**
@@ -30,7 +30,7 @@ public interface QueryExecutorUsuariosPush {
 	 * @param nombreUsuario
 	 * @return list<String>
 	 */
-	List<String> getIdUsersFromDispositivo(String idDispositivo, String nombreUsuario);
+	public List<String> getIdUsersFromDispositivo(String idDispositivo, String nombreUsuario);
 
 	/**
 	 * Obtiene la lista de usuarios
@@ -38,7 +38,7 @@ public interface QueryExecutorUsuariosPush {
 	 * @param idServicio
 	 * @return list<BigDecimal>
 	 */
-	List<BigDecimal> getUsuarioConsultaServiciosDisponibles(String idDispositivo, String idServicioMovil);
+	public List<BigDecimal> getUsuarioConsultaServiciosDisponibles(String idDispositivo, String idServicioMovil);
 
 	/**
 	 * Recupera la plataforma a partird el mensajeId
@@ -46,7 +46,7 @@ public interface QueryExecutorUsuariosPush {
 	 * @param mensajeId
 	 * @return
 	 */
-	Integer getPlataformaUsuario(Long mensajeId);
+	public Integer getPlataformaUsuario(Long mensajeId);
 
 	
 	/**
@@ -55,7 +55,7 @@ public interface QueryExecutorUsuariosPush {
 	 * @param servicioID
 	 * @return
 	 */
-	List<UsuariosServiciosMovilesBean> getUsuarioPorServicio(Integer servicioID);
+	public List<UsuariosServiciosMovilesBean> getUsuarioPorServicio(Integer servicioID);
 
 	/**
 	 * Recupera los usuarios por servicios según el servicioId
@@ -65,7 +65,7 @@ public interface QueryExecutorUsuariosPush {
 	 * @param idServicioMovil
 	 * @return
 	 */
-	ArrayList<Integer> getDispositivosUsuarioServicioMovil(String identificadorUsuario, Integer servicioID,
+	public ArrayList<Integer> getDispositivosUsuarioServicioMovil(String identificadorUsuario, Integer servicioID,
 			Integer idServicioMovil);
 
 	

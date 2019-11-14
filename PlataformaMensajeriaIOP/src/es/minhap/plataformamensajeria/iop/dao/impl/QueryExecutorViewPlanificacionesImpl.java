@@ -25,22 +25,6 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorViewPlanificaciones;
 @Transactional
 public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport implements QueryExecutorViewPlanificaciones {
 
-	protected static final String R_CONST_1 = "','24:00','23:59','";
-	protected static final String R_CONST_2 = "and ";
-	protected static final String R_CONST_3 = "') AND horahasta >= trim('";
-	protected static final String R_CONST_4 = "') AND horadesde <= trim('";
-	protected static final String R_CONST_5 = "Se ha producido un error ";
-	protected static final String R_CONST_6 = " and horadesde <= trim('";
-	protected static final String R_CONST_7 = "horadesde <= trim('";
-	protected static final String R_CONST_8 = " and ";
-	protected static final String R_CONST_9 = "is not null";
-	protected static final String R_CONST_10 = " and planificacionId  ";
-	protected static final String R_CONST_11 = " != ";
-	protected static final String R_CONST_12 = "= 'S'";
-	protected static final String R_CONST_13 = " and (eliminado is null or eliminado = 'N') and activo = 1 and ";
-	protected static final String R_CONST_14 = "')";
-	protected static final String R_CONST_15 = "select count(*) from view_planificaciones where servicioid = ";
-	protected static final String R_CONST_16 = "') ";
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorViewPlanificacionesImpl.class);
 	
 	
@@ -58,9 +42,8 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 			if (null != servicioId){
 				resultado = comprobarSolapaPlanificacionServicio(planificacionId, dia, paramHoraHasta,
 						paramHoraDesde, servicioId);
-				if (resultado>0) {
+				if (resultado>0)
 					return 2;
-				}
 			}
 			
 			if (null != servidorId){
@@ -78,7 +61,7 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 			return comprobarServidorPorDefecto(tipo, dia, paramHoraHasta, paramHoraDesde);
 			
 		} catch (Exception e) {
-			LOG.error(R_CONST_5, e);
+			LOG.error("Se ha producido un error ", e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -97,7 +80,7 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 			}
 						
 		} catch (Exception e) {
-			LOG.error(R_CONST_5, e);
+			LOG.error("Se ha producido un error ", e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -112,9 +95,8 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 			if (null != servicioId && servicioId > 0){
 				resultado = comprobarSolapaPlanificacionOrganismo(planificacionId, dia, paramHoraHasta,
 						paramHoraDesde, servicioId, organismoId);
-				if (resultado==2) {
+				if (resultado==2)
 					return resultado;
-				}
 			}
 			
 			if (null != servidorId && servidorId > 0){
@@ -132,7 +114,7 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 			return comprobarServidorPorDefecto(tipo, dia, paramHoraHasta, paramHoraDesde);
 			
 		} catch (Exception e) {
-			LOG.error(R_CONST_5, e);
+			LOG.error("Se ha producido un error ", e);
 			throw new ApplicationException(e);
 		}
 	}
@@ -141,35 +123,15 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 
 	private Integer comprobarSolapaPlanificacionOrganismo(Long planificacionId, String dia, String paramHoraHasta,
 			String paramHoraDesde, Integer servicioId, Integer organismoId) {
-		String sqlDia = dia + R_CONST_12; 
-		String sqlPlanificacion = (null == planificacionId)? R_CONST_9 : R_CONST_11 +planificacionId;
-		StringBuilder queryString = new StringBuilder();
-		queryString.append(R_CONST_15);
-		queryString.append("?");
-		queryString.append(" and organismoid = ");
-		queryString.append("?");
-		queryString.append(R_CONST_8);
-		queryString.append(sqlDia);
-		queryString.append(" and planificacionId ");
-		queryString.append(sqlPlanificacion);
-		queryString.append(" and (eliminado is null or eliminado = 'N') and activo = 1 ");
-		queryString.append("and (to_date(horadesde, 'HH24:mi') < to_date(decode('");
-		queryString.append(paramHoraHasta);
-		queryString.append(R_CONST_1);
-		queryString.append(paramHoraHasta);
-		queryString.append("'), 'HH24:mi') ");
-		queryString.append("and to_date(decode(horahasta,'24:00','23:59',horahasta), 'HH24:mi') > to_date(decode('");
-		queryString.append(paramHoraDesde);
-		queryString.append(R_CONST_1);
-		queryString.append(paramHoraDesde);
-		queryString.append("'),");
-		queryString.append(" 'HH24:mi'))");
+		String sqlDia = dia + "= 'S'"; 
+		String sqlPlanificacion = (null == planificacionId)? "is not null" : " != " +planificacionId.toString();
 		
-		String sql = queryString.toString();
+		String sql = "select count(*) from view_planificaciones where servicioid = "+servicioId+" and organismoid = "+organismoId+" and "
+				+ sqlDia +" and planificacionId " + sqlPlanificacion +" and (eliminado is null or eliminado = 'N') and activo = 1 "
+				+ "and (to_date(horadesde, 'HH24:mi') < to_date(decode('"+paramHoraHasta+"','24:00','23:59','"+paramHoraHasta+"'), 'HH24:mi') "
+				+ "and to_date(decode(horahasta,'24:00','23:59',horahasta), 'HH24:mi') > to_date(decode('"+paramHoraDesde+"','24:00','23:59','"+paramHoraDesde+"'),"
+				+ " 'HH24:mi'))";
 		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-		query.setInteger(0, servicioId);
-		query.setInteger(1, organismoId);
-		
 		Integer resultado = ((BigDecimal) query.uniqueResult()).intValue();
 		return (resultado > 0)? 2 : 0;
 	}
@@ -183,20 +145,16 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 	 * @param paramHoraDesde
 	 */
 	private Integer comprobarServidorPorDefecto(Integer tipo, String dia, String paramHoraHasta, String paramHoraDesde) {
-		String sql = "select count(*) from TBL_SERVIDORES where tipo = ? and pordefecto = 1";
+		String sql = "select count(*) from TBL_SERVIDORES where tipo = "+tipo+" and pordefecto = 1";
 		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-		query.setInteger(0, tipo);
 		Integer res = ((BigDecimal) query.uniqueResult()).intValue();
 		if (res > 0){
-			
-			String sqlDia = dia + R_CONST_12; 
-			StringBuilder queryString = new StringBuilder();
-			queryString.append("select count(*) from TBL_PLANIFICACIONES where servidorid in (select servidorid from TBL_SERVIDORES where tipo = " + tipo + R_CONST_8
-					+ "pordefecto = 1) and (eliminado is null or eliminado = 'N') and activo = 1 and " + sqlDia + R_CONST_2
-					+ R_CONST_7+paramHoraDesde+R_CONST_3+paramHoraDesde+R_CONST_4+paramHoraHasta+R_CONST_16
-							+ "AND horahasta >= trim('"+paramHoraHasta+R_CONST_14);
-			
-			query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+			String sqlDia = dia + "= 'S'"; 
+			sql = "select count(*) from TBL_PLANIFICACIONES where servidorid in (select servidorid from TBL_SERVIDORES where tipo = " + tipo + " and "
+			+ "pordefecto = 1) and (eliminado is null or eliminado = 'N') and activo = 1 and " + sqlDia + "and "
+			+ "horadesde <= trim('"+paramHoraDesde+"') AND horahasta >= trim('"+paramHoraDesde+"') AND horadesde <= trim('"+paramHoraHasta+"') "
+					+ "AND horahasta >= trim('"+paramHoraHasta+"')";
+			query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 			res = ((BigDecimal) query.uniqueResult()).intValue();
 			return (res == 0)? 0 : 1;
 		}
@@ -212,19 +170,17 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 	private Integer comprobarServicioTieneServidor(String dia, String paramHoraHasta, String paramHoraDesde,
 			Integer servicioId) {
 		
-		String sql = " select count(servicioId) from TBL_SERVIDORES_SERVICIOS where servicioid = ?";
+		String sql = " select count(servicioId) from TBL_SERVIDORES_SERVICIOS where servicioid = " + servicioId;
 		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-		query.setInteger(0, servicioId);
 		Integer res = ((BigDecimal) query.uniqueResult()).intValue();
 		if (res > 0){
-			String sqlDia = dia + R_CONST_12; 
-			StringBuilder queryString = new StringBuilder();
-			queryString.append("select count(*) from TBL_PLANIFICACIONES where servidorid in (select servidorId "
-					+ "from tbl_servidores_servicios where servicioid = "+servicioId+") and (eliminado is null or eliminado = 'N') and activo = 1 "
-					+ R_CONST_2 + sqlDia +R_CONST_6+paramHoraDesde+R_CONST_3+paramHoraDesde+"') AND "
-					+ R_CONST_7+paramHoraHasta+R_CONST_3+paramHoraHasta+R_CONST_14);
+			String sqlDia = dia + "= 'S'"; 
 			
-			query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+			sql = "select count(*) from TBL_PLANIFICACIONES where servidorid in (select servidorId "
+			+ "from tbl_servidores_servicios where servicioid = "+servicioId+") and (eliminado is null or eliminado = 'N') and activo = 1 "
+			+ "and " + sqlDia +" and horadesde <= trim('"+paramHoraDesde+"') AND horahasta >= trim('"+paramHoraDesde+"') AND "
+			+ "horadesde <= trim('"+paramHoraHasta+"') AND horahasta >= trim('"+paramHoraHasta+"')";
+			query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 			res = ((BigDecimal) query.uniqueResult()).intValue();
 			if (res == 0){
 				return 0;
@@ -245,13 +201,12 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 	 */
 	private Integer servidorPropioAsignadoServicio(String dia, Integer servidorId, String paramHoraHasta,
 			String paramHoraDesde) {
-		String sqlDia = dia + R_CONST_12; 
-		StringBuilder queryString = new StringBuilder();
-		queryString.append("select count(*) from TBL_PLANIFICACIONES where servidorid = "+ servidorId +" and servicioid is null"
-				+ R_CONST_13 + sqlDia + R_CONST_6+paramHoraDesde+R_CONST_16
-				+ " AND horahasta >= trim('"+paramHoraDesde+R_CONST_4+paramHoraHasta+R_CONST_3+paramHoraHasta+R_CONST_14);
+		String sqlDia = dia + "= 'S'"; 
 		
-		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		String sql = "select count(*) from TBL_PLANIFICACIONES where servidorid = "+ servidorId +" and servicioid is null"
+		+ " and (eliminado is null or eliminado = 'N') and activo = 1 and " + sqlDia + " and horadesde <= trim('"+paramHoraDesde+"') "
+		+ " AND horahasta >= trim('"+paramHoraDesde+"') AND horadesde <= trim('"+paramHoraHasta+"') AND horahasta >= trim('"+paramHoraHasta+"')";
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 		Integer resultado = ((BigDecimal) query.uniqueResult()).intValue();
 		return (resultado == 0)? 0 : 1;
 	}
@@ -266,16 +221,15 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 	 */
 	private Integer comprobarSolapaPlanificacionServicio(Long planificacionId, String dia, String paramHoraHasta,
 			String paramHoraDesde, Integer servicioId) {
-		String sqlDia = dia + R_CONST_12; 
-		String sqlPlanificacion = (null == planificacionId)? R_CONST_9 : R_CONST_11+planificacionId;
-		StringBuilder queryString = new StringBuilder();
-		queryString.append(R_CONST_15 + servicioId + R_CONST_8
-				+ sqlDia + R_CONST_10 + sqlPlanificacion + " and organismoid is null and (eliminado is null or eliminado = 'N') and activo = 1"
-				+ " and ( to_date(horadesde, 'HH24:mi') < to_date(decode('"+paramHoraHasta+R_CONST_1+paramHoraHasta+"'), 'HH24:mi')"
-				+ " and to_date(decode(horahasta,'24:00','23:59',horahasta), 'HH24:mi') > to_date(decode('"+paramHoraDesde+R_CONST_1
-				+paramHoraDesde+"'), 'HH24:mi'))");
+		String sqlDia = dia + "= 'S'"; 
+		String sqlPlanificacion = (null == planificacionId)? "is not null" : " != "+planificacionId.toString();
 		
-		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		String sql = "select count(*) from view_planificaciones where servicioid = " + servicioId + " and "
+				+ sqlDia + " and planificacionId  " + sqlPlanificacion + " and organismoid is null and (eliminado is null or eliminado = 'N') and activo = 1"
+				+ " and ( to_date(horadesde, 'HH24:mi') < to_date(decode('"+paramHoraHasta+"','24:00','23:59','"+paramHoraHasta+"'), 'HH24:mi')"
+				+ " and to_date(decode(horahasta,'24:00','23:59',horahasta), 'HH24:mi') > to_date(decode('"+paramHoraDesde+"','24:00','23:59','"
+				+paramHoraDesde+"'), 'HH24:mi'))";
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 		Integer resultado = ((BigDecimal) query.uniqueResult()).intValue();
 		return (resultado > 0)? 2 : 0;
 	}
@@ -290,16 +244,16 @@ public class QueryExecutorViewPlanificacionesImpl extends HibernateDaoSupport im
 	 */
 	private Integer comprobarSolapaPlanificacionServidor(Long planificacionId, String dia, String paramHoraHasta,
 			String paramHoraDesde, Integer servidorId) {
-		String sqlDia = dia + R_CONST_12; 
-		String sqlPlanificacion = (null == planificacionId)? R_CONST_9 : R_CONST_11 + planificacionId;
-		StringBuilder queryString = new StringBuilder();
-		queryString.append("select count(*) from view_planificaciones where servidorid = " + servidorId + " and servicioid is null "
-				+ R_CONST_2 + sqlDia + R_CONST_10 + sqlPlanificacion + R_CONST_13
-				+ " to_date(horadesde, 'HH24:mi') < to_date(decode('"+paramHoraHasta+R_CONST_1+paramHoraHasta+"'), 'HH24:mi') and "
-				+ "to_date(decode(horahasta,'24:00','23:59',horahasta), 'HH24:mi') > to_date(decode('"+paramHoraDesde+R_CONST_1+paramHoraDesde+"'), "
-				+ "'HH24:mi')");
-						
-		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		String sqlDia = dia + "= 'S'"; 
+		String sqlPlanificacion = (null == planificacionId)? "is not null" : " != " + planificacionId.toString();
+		
+		String sql = "select count(*) from view_planificaciones where servidorid = " + servidorId + " and servicioid is null "
+				+ "and " + sqlDia + " and planificacionId  " + sqlPlanificacion + " and (eliminado is null or eliminado = 'N') and activo = 1 and "
+				+ " to_date(horadesde, 'HH24:mi') < to_date(decode('"+paramHoraHasta+"','24:00','23:59','"+paramHoraHasta+"'), 'HH24:mi') and "
+				+ "to_date(decode(horahasta,'24:00','23:59',horahasta), 'HH24:mi') > to_date(decode('"+paramHoraDesde+"','24:00','23:59','"+paramHoraDesde+"'), "
+				+ "'HH24:mi')";
+				
+		SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
 		Integer resultado = ((BigDecimal) query.uniqueResult()).intValue();
 		return (resultado > 0)? 0 : 1;
 	}

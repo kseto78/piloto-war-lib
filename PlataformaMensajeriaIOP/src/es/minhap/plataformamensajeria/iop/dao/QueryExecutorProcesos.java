@@ -28,7 +28,7 @@ public interface QueryExecutorProcesos {
 	 * @param criterio
 	 * @return
 	 */
-	List<TblProcesos> getProcesosPaginado(int size, String order, String column,
+	public List<TblProcesos> getProcesosPaginado(int size, String order, String column,
 			es.minhap.plataformamensajeria.iop.beans.ProcesosBean ob);
 	
 	/**
@@ -37,7 +37,7 @@ public interface QueryExecutorProcesos {
 	 * @param ob
 	 * @return
 	 */
-	Integer countProcesosPaginado(es.minhap.plataformamensajeria.iop.beans.ProcesosBean ob);
+	public Integer countProcesosPaginado(es.minhap.plataformamensajeria.iop.beans.ProcesosBean ob);
 	
 	/**
 	 * Obtiene el listado
@@ -45,7 +45,7 @@ public interface QueryExecutorProcesos {
 	 * @param term
 	 * @return List<String>
 	 */
-	List<String> getListAutocomplete(String term);
+	public List<String> getListAutocomplete(String term);
 
 
 	

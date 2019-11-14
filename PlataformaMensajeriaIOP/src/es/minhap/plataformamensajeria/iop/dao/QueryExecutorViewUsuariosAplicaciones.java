@@ -18,6 +18,6 @@ public interface QueryExecutorViewUsuariosAplicaciones {
 	 * @param aplicacionId
 	 * @return
 	 */
-	List<ViewUsuariosAplicaciones>  findViewUsuarioAplicacion(Long usuarioId, Long aplicacionId);
+	public List<ViewUsuariosAplicaciones>  findViewUsuarioAplicacion(Long usuarioId, Long aplicacionId);
 
 }

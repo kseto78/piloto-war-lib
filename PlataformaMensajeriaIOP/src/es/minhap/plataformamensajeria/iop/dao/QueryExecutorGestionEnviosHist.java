@@ -23,21 +23,21 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param columna
 	 * @return
 	 */
-	List<TblGestionEnviosHist> getInformesServiciosBy(Long servicioId, Integer year, Integer month, String columna);
+	public List<TblGestionEnviosHist> getInformesServiciosBy(Long servicioId, Integer year, Integer month, String columna);
 	
 	/**
 	 * Obtiene lista de TblGestionEnviosHist a partir de la lista de mensajes en TblGestionEnvios
 	 * @param subList
 	 * @return 
 	 */
-	List<TblGestionEnviosHist> convertGestionEnviosTOGestionEnviosHist(List<Long> subList);
+	public List<TblGestionEnviosHist> convertGestionEnviosTOGestionEnviosHist(List<Long> subList);
 
 	/**
 	 * Obtiene lista de TblGestionEnviosHist a partir de la lista de mensajes
 	 * @param listaMensajes
 	 * @return 
 	 */
-	List<TblGestionEnviosHist> getTodosGestionEnviosCons(List<Long> listaMensajes);
+	public List<TblGestionEnviosHist> getTodosGestionEnviosCons(List<Long> listaMensajes);
 
 	/**
 	 * Obtiene el total según eg
@@ -45,7 +45,7 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param servicioId
 	 * @return
 	 */
-	Integer countGestionEnviosHistoricoLotes(
+	public Integer countGestionEnviosHistoricoLotes(
 			es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
 
 	/**
@@ -54,7 +54,7 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param eg
 	 * @return
 	 */
-	Integer countGestionEnviosHistorico(es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
+	public Integer countGestionEnviosHistorico(es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
 
 	/**
 	 * Obtiene el listado según parametros
@@ -66,7 +66,7 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param criterio
 	 * @return
 	 */
-	List<TblGestionEnviosHist> getGestionEnvioLotesPaginado(int inicio, Integer pagesize, String order,
+	public List<TblGestionEnviosHist> getGestionEnvioLotesPaginado(int inicio, Integer pagesize, String order,
 			String column, es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
 
 	/**
@@ -79,7 +79,7 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param criterio
 	 * @return
 	 */
-	List<TblGestionEnviosHist> getGestionEnvioMensajesPaginado(int inicio, Integer pagesize, String order,
+	public List<TblGestionEnviosHist> getGestionEnvioMensajesPaginado(int inicio, Integer pagesize, String order,
 			String column, es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
 
 	/**
@@ -88,7 +88,7 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param eg
 	 * @return
 	 */
-	Integer countGestionEnviosHistDestinatarios(
+	public Integer countGestionEnviosHistDestinatarios(
 			es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
 
 	/**
@@ -101,6 +101,6 @@ public interface QueryExecutorGestionEnviosHist {
 	 * @param criterio
 	 * @return
 	 */
-	List<ViewGestionEnviosDestHistId> getGestionEnvioDestinatariosHistPaginado(int inicio, Integer pagesize,
+	public List<ViewGestionEnviosDestHistId> getGestionEnvioDestinatariosHistPaginado(int inicio, Integer pagesize,
 			String order, String column, es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg);
 }

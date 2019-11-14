@@ -30,7 +30,7 @@ public interface QueryExecutorMensajes {
 	 * @param string
 	 * @return
 	 */
-	List<Long> getMensajesParaAnular(Long servicio, Integer reintentos);
+	public List<Long> getMensajesParaAnular(Long servicio, Integer reintentos);
 	
 	/**
 	 * Se obtiene los detalles a nivel de destinatarios mensajes y mensajes para un 
@@ -39,7 +39,7 @@ public interface QueryExecutorMensajes {
 	 * @param idMensaje
 	 * @return
 	 */
-	DetallesMensajesBean getDetallesMensaje(Long idMensaje);
+	public DetallesMensajesBean getDetallesMensaje(Long idMensaje);
 	
 	/**
 	 * Obtiene los datos del servicio a partir del id mensaje
@@ -47,7 +47,7 @@ public interface QueryExecutorMensajes {
 	 * @param idMensaje
 	 * @return
 	 */
-	DatosServicio getDatosServicios(Long idMensaje);
+	public DatosServicio getDatosServicios(Long idMensaje);
 	
 	
 	/**
@@ -57,7 +57,7 @@ public interface QueryExecutorMensajes {
 	 * @param stado
 	 * @return
 	 */
-	List<Long> getMensajesPorLoteYEstado(Long idLote, String estado);
+	public List<Long> getMensajesPorLoteYEstado(Long idLote, String estado);
 
 	
 	/**
@@ -67,7 +67,7 @@ public interface QueryExecutorMensajes {
 	 * @param estado
 	 * @return Map<Integer,List<Long>>
 	 */
-	Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoMultidest(String usersId, String estado);
+	public Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoMultidest(String usersId, String estado);
 	
 	/**
 	 * Obtiene los mensajes por mensaje id y estado Multidestinatario
@@ -76,7 +76,7 @@ public interface QueryExecutorMensajes {
 	 * @param estado
 	 * @return Map<Integer,List<Long>>
 	 */
-	Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoYMensajeMultidest(String usersId, String estado, Long mensajeId);
+	public Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoYMensajeMultidest(String usersId, String estado, Long mensajeId);
 
 	/**
 	 * Obtiene los mensajes por lote y estado
@@ -85,7 +85,7 @@ public interface QueryExecutorMensajes {
 	 * @param estado
 	 * @return List<Long>
 	 */
-	List<Long> getMensajesPorUsuariosPushYEstado(String usersId, String estado);
+	public List<Long> getMensajesPorUsuariosPushYEstado(String usersId, String estado);
 
 	/**
 	 * Obtiene los Avisos del usuario paginados
@@ -96,7 +96,7 @@ public interface QueryExecutorMensajes {
 	 * @param ps
 	 * @return List<Aviso>
 	 */
-	List<Aviso> getAvisosMensajeUsuario(String usuarios, String numPagina, String tamPagina, PropertiesServices ps);
+	public List<Aviso> getAvisosMensajeUsuario(String usuarios, String numPagina, String tamPagina, PropertiesServices ps);
 
 
 	/**
@@ -105,7 +105,7 @@ public interface QueryExecutorMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	DatosServicio getDataFromServices(Long mensajeId);
+	public DatosServicio getDataFromServices(Long mensajeId);
 	
 	/**
 	 * Se recupera un listado con los detalles de los multi destinatarios
@@ -113,7 +113,7 @@ public interface QueryExecutorMensajes {
 	 * @param mmensajeId
 	 * @return
 	 */
-	MailData getDetailsMultidestinatario(Long mensajeId);
+	public MailData getDetailsMultidestinatario(Long mensajeId);
 	
 
 	/**
@@ -122,7 +122,7 @@ public interface QueryExecutorMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	MailData getDetails(Long mensajeId);
+	public MailData getDetails(Long mensajeId);
 
 	/**
 	 * Se recupera un listado de los servidores push a partir del mensaje id y los datos del servicio para multidestinatarios
@@ -132,7 +132,7 @@ public interface QueryExecutorMensajes {
 	 * @param smsServiceData
 	 * @return
 	 */
-	NotificacionPushData getDetailsServidorPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId, DatosServicio smsServiceData);
+	public NotificacionPushData getDetailsServidorPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId, DatosServicio smsServiceData);
 	
 	/**
 	 * Se recupera un listado de los servidores push a partir del mensaje id y los datos del servicio para multidestinatarios
@@ -142,7 +142,7 @@ public interface QueryExecutorMensajes {
 	 * @param smsServiceData
 	 * @return
 	 */
-	NotificacionWebPushData getDetailsServidorWebPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId);
+	public NotificacionWebPushData getDetailsServidorWebPushMultidestinatario(Long mensajeId, Long destinatarioMensajeId);
 	
 	/**
 	 * Se recupera un listado de los servidores push a partir del mensaje id y los datos del servicio
@@ -151,7 +151,7 @@ public interface QueryExecutorMensajes {
 	 * @param serviceData
 	 * @return
 	 */
-	NotificacionPushData getDetailsServidorPush(Long mensajeId, DatosServicio serviceData);
+	public NotificacionPushData getDetailsServidorPush(Long mensajeId, DatosServicio serviceData);
 	
 	/**
 	 * Se recupera el listado de SMS receptores para un mensajeId y los datos del servicio receptor para multidestinatarios
@@ -161,7 +161,7 @@ public interface QueryExecutorMensajes {
 	 * @param receptorSMSData
 	 * @return
 	 */
-	ReceptorSMSData getDetailsReceptorSMSMultidestinatario(Long mensajeId, Long destinatarioMensajeId, ReceptorSMSData receptorSMSData);
+	public ReceptorSMSData getDetailsReceptorSMSMultidestinatario(Long mensajeId, Long destinatarioMensajeId, ReceptorSMSData receptorSMSData);
 	
 	/**
 	 * Se recupera los datos del receptor de SMS para un mensajeId y los datos del servicio receptor
@@ -170,7 +170,7 @@ public interface QueryExecutorMensajes {
 	 * @param receptorSMSData
 	 * @return
 	 */
-	ReceptorSMSData getDetailsReceptorSMS(Long mensajeId, ReceptorSMSData receptorSMSData);
+	public ReceptorSMSData getDetailsReceptorSMS(Long mensajeId, ReceptorSMSData receptorSMSData);
 	
 	/***
 	 * Recupera una lista de servidores SMS a partir de un mensajeId y los datos del servidor SMS
@@ -180,7 +180,7 @@ public interface QueryExecutorMensajes {
 	 * @param smsDataComun
 	 * @return
 	 */
-	SMSData getDetailsSMSMultidestinatario(Long mensajeId, Long destinatarioMensajeId, SMSData smsDataComun);
+	public SMSData getDetailsSMSMultidestinatario(Long mensajeId, Long destinatarioMensajeId, SMSData smsDataComun);
 
 	/***
 	 * Recupera una lista con los mensajes que tienen algún destinatrario pendiente de envío
@@ -188,7 +188,7 @@ public interface QueryExecutorMensajes {
 	 * 
 	 * @return
 	 */
-	List<Long> getMensajesPendientes(Date fechaInicio, Date fechaFinal, String serviciosExcluidos, String serviciosIncluidos);
+	public List<Long> getMensajesPendientes(Date fechaInicio, Date fechaFinal, String serviciosExcluidos, String serviciosIncluidos);
 	
 	/***
 	 * Numero de mensajes enviados/anulados por lote y fecha 
@@ -197,7 +197,7 @@ public interface QueryExecutorMensajes {
 	 * @param fecha
 	 * @return
 	 */
-	Integer countMensajesHistorificacion(Long loteId, Date fecha);
+	public Integer countMensajesHistorificacion(Long loteId, Date fecha);
 
 
 	/***
@@ -214,7 +214,7 @@ public interface QueryExecutorMensajes {
 	 * @param loteId
 	 * @return
 	 */
-	Integer countMensajesByLote(Long loteId);
+	public Integer countMensajesByLote(Long loteId);
 
 	/***
 	 * Obtenemos la aplicacion desde el mensaje
@@ -222,7 +222,7 @@ public interface QueryExecutorMensajes {
 	 * @param mensajeId
 	 * @return
 	 */
-	TblAplicaciones getAplicacionFromMensaje(Long mensajeId);
+	public TblAplicaciones getAplicacionFromMensaje(Long mensajeId);
 
 	/***
 	 * Obtenemos la  aplicacion desde el lote
@@ -230,7 +230,7 @@ public interface QueryExecutorMensajes {
 	 * @param loteId
 	 * @return
 	 */
-	TblAplicaciones getAplicacionFromLote(Integer idLote);
+	public TblAplicaciones getAplicacionFromLote(Integer idLote);
 
 
 }

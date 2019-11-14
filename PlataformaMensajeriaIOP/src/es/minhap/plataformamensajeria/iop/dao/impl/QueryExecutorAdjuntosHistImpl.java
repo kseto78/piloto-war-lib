@@ -25,8 +25,6 @@ import es.minhap.sim.model.TblAdjuntosHist;
 @Service("QueryExecutorAdjuntosHistImpl")
 public class QueryExecutorAdjuntosHistImpl extends HibernateDaoSupport implements QueryExecutorAdjuntosHist {
 
-	protected static final String R_CONST_1 = "unchecked";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorAdjuntosHistImpl.class);
 	
 	private static final String LOG_START = "search - start";
@@ -40,7 +38,7 @@ public class QueryExecutorAdjuntosHistImpl extends HibernateDaoSupport implement
 	}
 
 	
-	@SuppressWarnings(R_CONST_1)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> getIdAdjuntosCons(List<Long> listaMensajes) {
 		try {
@@ -53,7 +51,8 @@ public class QueryExecutorAdjuntosHistImpl extends HibernateDaoSupport implement
 			query.setParameterList("lista", listaMensajes);
 			res = query.list();
 			if (null == res){
-				return new ArrayList<>();
+				res = new ArrayList<>();
+				return res;
 			}else{
 				return res;
 			}
@@ -65,7 +64,7 @@ public class QueryExecutorAdjuntosHistImpl extends HibernateDaoSupport implement
 	}
 
 
-	@SuppressWarnings(R_CONST_1)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TblAdjuntosHist> getAdjuntosByMensaje(Long mensajeId) {
 		try {
@@ -78,7 +77,8 @@ public class QueryExecutorAdjuntosHistImpl extends HibernateDaoSupport implement
 			query.setLong("mensajeId", mensajeId);
 			res = query.list();
 			if (null == res){
-				return new ArrayList<>();
+				res = new ArrayList<>();
+				return res;
 			}else{
 				return res;
 			}

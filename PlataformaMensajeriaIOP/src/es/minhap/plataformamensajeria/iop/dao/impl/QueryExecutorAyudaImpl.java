@@ -22,7 +22,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorAyuda;
 @Service
 public class QueryExecutorAyudaImpl extends HibernateDaoSupport implements QueryExecutorAyuda {
 
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorAyudaImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorAyudaImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -42,8 +42,8 @@ public class QueryExecutorAyudaImpl extends HibernateDaoSupport implements Query
 	public String getAyuda() {
 		String res = null;
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
@@ -51,12 +51,12 @@ public class QueryExecutorAyudaImpl extends HibernateDaoSupport implements Query
 
 			res = (String) query.uniqueResult();
 									
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	

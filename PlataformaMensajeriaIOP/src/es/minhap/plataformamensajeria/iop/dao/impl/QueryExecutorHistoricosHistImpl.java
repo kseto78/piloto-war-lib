@@ -26,10 +26,6 @@ import es.minhap.sim.model.TblHistoricosHist;
 @Service("QueryExecutorHistoricosHistImpl")
 public class QueryExecutorHistoricosHistImpl extends HibernateDaoSupport implements QueryExecutorHistoricosHist {
 
-	protected static final String R_CONST_1 = "lista";
-
-	protected static final String R_CONST_2 = "unchecked";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorHistoricosHistImpl.class);
 	
 	private static final String LOG_START = "search - start";
@@ -43,7 +39,7 @@ public class QueryExecutorHistoricosHistImpl extends HibernateDaoSupport impleme
 	}
 
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TblHistoricosHist> convertHistoricoTOHistoricoHist(List<Long> subList, Integer max, Integer firstResult) {
 		try {
@@ -53,7 +49,7 @@ public class QueryExecutorHistoricosHistImpl extends HibernateDaoSupport impleme
 			String sql = "select m from TblHistoricos m where mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
-			query.setParameterList(R_CONST_1, subList);
+			query.setParameterList("lista", subList);
 			query.setMaxResults(max);
 			query.setFirstResult(firstResult);
 			return convertTOHistHistoricos(query.list());
@@ -74,7 +70,7 @@ public class QueryExecutorHistoricosHistImpl extends HibernateDaoSupport impleme
 			String sql = "select count(m) from TblHistoricos m where mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 
-			query.setParameterList(R_CONST_1, subList);
+			query.setParameterList("lista", subList);
 			return ((Long) query.uniqueResult()).intValue();
 
 		} catch (Exception e) {
@@ -83,7 +79,7 @@ public class QueryExecutorHistoricosHistImpl extends HibernateDaoSupport impleme
 		}
 	}
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> getIdHistoricosCons(List<Long> listaMensajesHistoricosCons) {
 		try {
@@ -93,10 +89,11 @@ public class QueryExecutorHistoricosHistImpl extends HibernateDaoSupport impleme
 			}
 			String sql = "select h.historicoid from TblHistoricosHist h where h.mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setParameterList(R_CONST_1, listaMensajesHistoricosCons);
+			query.setParameterList("lista", listaMensajesHistoricosCons);
 			res = query.list();
 			if (null == res){
-				return new ArrayList<>();
+				res = new ArrayList<>();
+				return res;
 			}else{
 				return res;
 			}

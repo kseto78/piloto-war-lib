@@ -18,14 +18,16 @@ public interface QueryExecutorOrganismos {
 	 * @param organismoPagador
 	 * @return
 	 */
-	@Transactional boolean organismoActivoEnServicio(Integer servicioId,String organismoPagador);
+	@Transactional
+	public boolean organismoActivoEnServicio(Integer servicioId,String organismoPagador);
 	
 	/**
 	 * Comprueba si para ese servicio esta activa la aplicacion
 	 * @param servicioId
 	 * @return
 	 */
-	@Transactional Integer checkActiveApplication(Integer servicioId);
+	@Transactional
+	public Integer checkActiveApplication(Integer servicioId);
 
 	/**
 	 * Obtiene si el organismo esta asociado al servicio
@@ -45,7 +47,7 @@ public interface QueryExecutorOrganismos {
 	 * @param criterio
 	 * @return
 	 */
-	List<TblOrganismos> getOrganismosPaginado(int start, int size, String order, String column,
+	public List<TblOrganismos> getOrganismosPaginado(int start, int size, String order, String column,
 			es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob);
 	
 	/**
@@ -54,7 +56,7 @@ public interface QueryExecutorOrganismos {
 	 * @param ob
 	 * @return
 	 */
-	Integer countOrganismosPaginado(es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob);
+	public Integer countOrganismosPaginado(es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob);
 	
 	/**
 	 * Obtiene el listado
@@ -62,7 +64,7 @@ public interface QueryExecutorOrganismos {
 	 * @param term
 	 * @return List<String>
 	 */
-	List<String> getListAutocomplete(String term);
+	public List<String> getListAutocomplete(String term);
 
 	/**
 	 * Obtiene id
@@ -70,12 +72,12 @@ public interface QueryExecutorOrganismos {
 	 * @param search
 	 * @return Integer
 	 */
-	Integer getOrganismoIdByDir3(String search);
+	public Integer getOrganismoIdByDir3(String search);
 
-	List<TblOrganismos> getOrganismosHijos(String idOrganismo);
+	public List<TblOrganismos> getOrganismosHijos(String idOrganismo);
 
-	Integer getOrganismoIdByDir3SoloEliminado(String search);
+	public Integer getOrganismoIdByDir3SoloEliminado(String search);
 
-	List<TblOrganismos> getOrganismosByPdp(long idPdpDiputaciones);
+	public List<TblOrganismos> getOrganismosByPdp(long idPdpDiputaciones);
 
 }

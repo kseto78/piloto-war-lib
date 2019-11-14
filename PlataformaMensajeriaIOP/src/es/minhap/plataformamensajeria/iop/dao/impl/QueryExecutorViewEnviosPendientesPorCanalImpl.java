@@ -29,7 +29,7 @@ import es.minhap.sim.model.ViewEnviosPendientesPorCanal;
 public class QueryExecutorViewEnviosPendientesPorCanalImpl extends HibernateDaoSupport implements
 QueryExecutorViewEnviosPendientesPorCanal {
 
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorViewEnviosPendientesPorCanalImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorViewEnviosPendientesPorCanalImpl.class);
 	
 	private static final String LOG_END= "search - end";
 	
@@ -49,8 +49,8 @@ QueryExecutorViewEnviosPendientesPorCanal {
 		List<ViewEnviosPendientesPorCanal> res = new ArrayList<>();
 		try {
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 
 			Query query = getHibernateTemplate().getSessionFactory().getCurrentSession()
@@ -58,11 +58,11 @@ QueryExecutorViewEnviosPendientesPorCanal {
 
 			res = query.list();
 									
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
 			}
 	} catch (Exception e) {
-		LOG.error(HAS_ERROR, e);
+		log.error(HAS_ERROR, e);
 		throw new ApplicationException(e);
 	}
 		return res;

@@ -28,7 +28,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorSubEstados;
 @Transactional
 public class QueryExecutorSubEstadosImpl extends HibernateDaoSupport implements QueryExecutorSubEstados {
 
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorSubEstadosImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorSubEstadosImpl.class);
 
 	private static final String LOG_END= "search - end";
 	
@@ -47,8 +47,8 @@ public class QueryExecutorSubEstadosImpl extends HibernateDaoSupport implements 
 	public EstadosBean getEstadoByCode(String code) {
 		EstadosBean res = null;
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_START);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
 			}
 
 			SQLQuery query = getHibernateTemplate()
@@ -57,9 +57,8 @@ public class QueryExecutorSubEstadosImpl extends HibernateDaoSupport implements 
 					.createSQLQuery(
 							"  SELECT estadoid, descripcion" + " FROM tbl_subestados"
 									+ " WHERE subestadoid = (SELECT subestadoid" + " FROM tbl_subestado_mensaje"
-									+ "  WHERE codigo = ? )");
-			query.setString(0, code);
-			
+									+ "  WHERE codigo = '" + code + "')");
+
 			@SuppressWarnings("unchecked")
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
@@ -68,16 +67,15 @@ public class QueryExecutorSubEstadosImpl extends HibernateDaoSupport implements 
 				res.setDescripcion((String) row[1]);
 
 			}
-			if (null != res) {
+			if (null != res)
 				return res;
-			}
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(LOG_END);
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;

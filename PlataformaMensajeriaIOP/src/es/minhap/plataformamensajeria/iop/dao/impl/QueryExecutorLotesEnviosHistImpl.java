@@ -27,10 +27,6 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorLotesEnviosHist;
 @Service("QueryExecutorLotesEnviosHistImpl")
 public class QueryExecutorLotesEnviosHistImpl extends HibernateDaoSupport implements QueryExecutorLotesEnviosHist {
 
-	protected static final String R_CONST_1 = "fecha";
-
-	protected static final String R_CONST_2 = "servicio";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorLotesEnviosHistImpl.class);
 	
 	private static final String LOG_START = "search - start";
@@ -53,8 +49,8 @@ public class QueryExecutorLotesEnviosHistImpl extends HibernateDaoSupport implem
 			String sql = "select count(le.loteenvioid) from TBL_LOTESENVIOS_HIST le inner join TBL_SERVICIOS s on s.servicioid = le.servicioid "
 					+ "where s.servicioid = :servicio and le.fechamodificacion <= :fecha order by le.loteenvioid asc";
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-			query.setLong(R_CONST_2, servicioId);
-			query.setDate(R_CONST_1, fecha);
+			query.setLong("servicio", servicioId);
+			query.setDate("fecha", fecha);
 
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			 			
@@ -73,8 +69,8 @@ public class QueryExecutorLotesEnviosHistImpl extends HibernateDaoSupport implem
 			}
 			String sql = "select le.loteenvioid from TblLotesEnviosHist le where le.tblServicios.servicioid = :servicio and le.fechamodificacion <= :fecha";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setLong(R_CONST_2, servicioId);
-			query.setDate(R_CONST_1, fecha);
+			query.setLong("servicio", servicioId);
+			query.setDate("fecha", fecha);
 			query.setMaxResults(max);
 			query.setFirstResult(firstResult);
 			

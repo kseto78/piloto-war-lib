@@ -31,19 +31,7 @@ import es.minhap.plataformamensajeria.sm.modelo.ParametrosReceptor;
 @Transactional
 public class QueryExecutorViewReceptoresPrioridadImpl extends HibernateDaoSupport implements QueryExecutorViewReceptoresPrioridad {
 
-	protected static final String R_CONST_1 = "      OR servicioId IS NULL)";
-
-	protected static final String R_CONST_2 = "\t\t\t\t            WHERE mensajeid = ";
-
-	protected static final String R_CONST_3 = ")";
-
-	protected static final String R_CONST_4 = "      order by Prioridad";
-
-	protected static final String R_CONST_5 = "      WHERE (servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid";
-
-	protected static final String R_CONST_6 = "      AND url is not null";
-
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorViewReceptoresPrioridadImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorViewReceptoresPrioridadImpl.class);
 	
 	@Resource
 	private TblMensajesManager mensajesManager;
@@ -64,32 +52,27 @@ public class QueryExecutorViewReceptoresPrioridadImpl extends HibernateDaoSuppor
 			// Obtenemos primero la prioridad del mensaje
 			Integer prioridad = getMensajesManager().getPrioridadByIdMessage(mensajeId);
 			SQLQuery query;
-			StringBuilder queryString = new StringBuilder();
 			if (null != prioridad && prioridad.intValue() == 1) {
-				queryString.append("SELECT receptorid,url,id,telefono,texto,uim,servicioid,prioridad FROM view_receptores_prioridad");
-				queryString.append(R_CONST_5);
-				queryString.append(R_CONST_2);
-				queryString.append("?");
-				queryString.append(R_CONST_3);
-				queryString.append(R_CONST_1);
-				queryString.append(R_CONST_6);
-				queryString.append(R_CONST_4);
-				query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
-				query.setLong(0, mensajeId);
-
+				query = getSessionFactory().getCurrentSession()
+						.createSQLQuery("SELECT receptorid,url,id,telefono,texto,uim,servicioid,prioridad FROM view_receptores_prioridad"
+								+ "      WHERE (servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid"
+								+ "				            WHERE mensajeid = "
+								+ mensajeId
+								+ ")"
+								+ "      OR servicioId IS NULL)"
+								+ "      AND url is not null"
+								+ "      order by Prioridad");
 
 			} else {
-				queryString.append("SELECT receptorid,url,id,telefono,texto,uim,servicioid,prioridad FROM VIEW_SERV_RECEPTOR_SMS");
-				queryString.append(R_CONST_5);
-				queryString.append(R_CONST_2);
-				queryString.append("?");
-				queryString.append(R_CONST_3);
-				queryString.append(R_CONST_1);
-				queryString.append(R_CONST_6);
-				queryString.append(R_CONST_4);
-				query = getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
-				query.setLong(0, mensajeId);
-
+				query = getSessionFactory().getCurrentSession()
+						.createSQLQuery("SELECT receptorid,url,id,telefono,texto,uim,servicioid,prioridad FROM VIEW_SERV_RECEPTOR_SMS"
+								+ "      WHERE (servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid"
+								+ "				            WHERE mensajeid = "
+								+ mensajeId
+								+ ")"
+								+ "      OR servicioId IS NULL)"
+								+ "      AND url is not null"
+								+ "      order by Prioridad");
 			}
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
@@ -101,12 +84,12 @@ public class QueryExecutorViewReceptoresPrioridadImpl extends HibernateDaoSuppor
 				ps.setTexto((String) row[4]);
 				pss.add(ps);
 			}
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("search - end");
+			if (log.isDebugEnabled()) {
+				log.debug("search - end");
 			}
 			
 		} catch (Exception e) {
-			LOG.error("Se ha producido un error ", e);
+			log.error("Se ha producido un error ", e);
 			throw new ApplicationException(e);
 		} 
 		return pss;

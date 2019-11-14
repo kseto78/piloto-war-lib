@@ -15,7 +15,7 @@ public interface QueryExecutorSubEstados {
 	 * @param code
 	 * @return
 	 */
-	EstadosBean getEstadoByCode(String code);
+	public EstadosBean getEstadoByCode(String code);
 
 	
 }

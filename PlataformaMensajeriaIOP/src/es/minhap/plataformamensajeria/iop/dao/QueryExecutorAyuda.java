@@ -11,6 +11,6 @@ public interface QueryExecutorAyuda {
 	 * Obtiene la ayuda de la aplicacion
 	 * @return String
 	 */
-	String getAyuda();
+	public String getAyuda();
 
 }

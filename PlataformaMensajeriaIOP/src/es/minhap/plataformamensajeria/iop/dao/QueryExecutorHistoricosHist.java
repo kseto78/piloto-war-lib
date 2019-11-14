@@ -18,14 +18,14 @@ public interface QueryExecutorHistoricosHist {
 	 * @param max 
 	 * @return 
 	 */
-	List<TblHistoricosHist> convertHistoricoTOHistoricoHist(List<Long> subList, Integer max, Integer firstResult);
+	public List<TblHistoricosHist> convertHistoricoTOHistoricoHist(List<Long> subList, Integer max, Integer firstResult);
 
 	/**
 	 * Obtiene lista de TblHistoricost a partir de la lista de mensajes
 	 * @param listaMensajesHistoricosCons
 	 * @return 
 	 */
-	List<Long> getIdHistoricosCons(List<Long> listaMensajesHistoricosCons);
+	public List<Long> getIdHistoricosCons(List<Long> listaMensajesHistoricosCons);
 
 	/**
 	 * Obtiene total TblHistoricosHist a partir de la lista de mensajes en TblHistoricos
@@ -34,6 +34,6 @@ public interface QueryExecutorHistoricosHist {
 	 * @param max 
 	 * @return 
 	 */
-	Integer countConvertHistoricoTOHistoricoHist(List<Long> subList);
+	public Integer countConvertHistoricoTOHistoricoHist(List<Long> subList);
 
 }

@@ -31,12 +31,6 @@ import es.minhap.plataformamensajeria.sm.modelo.ParametrosServidor;
 @Transactional
 public class QueryExecutorViewServidoresPrioridadImpl extends HibernateDaoSupport implements QueryExecutorViewServidoresPrioridad {
 
-	protected static final String R_CONST_1 = ")";
-
-	protected static final String R_CONST_2 = "      order by Prioridad";
-
-	protected static final String R_CONST_3 = "      WHERE (servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid";
-
 	private static final Logger log = LoggerFactory.getLogger(QueryExecutorViewServidoresPrioridadImpl.class);
 	
 	@Resource
@@ -57,35 +51,29 @@ public class QueryExecutorViewServidoresPrioridadImpl extends HibernateDaoSuppor
 			// Obtenemos primero la prioridad del mensaje
 			Integer prioridad = getMensajesManager().getPrioridadByIdMessage(mensajeId);
 			SQLQuery query;
-			StringBuilder queryString = new StringBuilder();
 			if (prioridad.intValue() == 1) {
-				queryString.append("  SELECT servidorid,ip,usuario,contrasena,conexion,puerto,autentificacion,servicioid,prioridad,tiempoespera");
-				queryString.append("      FROM view_servidores_prioridad");
-				queryString.append(R_CONST_3);
-				queryString.append("             WHERE mensajeid = ");
-				queryString.append("?");
-				queryString.append(R_CONST_1);
-				queryString.append("      OR servicioId IS NULL)");
-				queryString.append("      AND ip is not null");
-				queryString.append("R_CONST_2");
-				
 				query = getSessionFactory().getCurrentSession()
-						.createSQLQuery(queryString.toString());
-				query.setLong(0, mensajeId);
+						.createSQLQuery("  SELECT servidorid,ip,usuario,contrasena,conexion,puerto,autentificacion,servicioid,prioridad,tiempoespera"
+								+ "      FROM view_servidores_prioridad"
+								+ "      WHERE (servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid"
+								+ "             WHERE mensajeid = "
+								+ mensajeId
+								+ ")"
+								+ "      OR servicioId IS NULL)"
+								+ "      AND ip is not null"
+								+ "      order by Prioridad");
 
 			} else {
-				queryString.append("SELECT servidorid,ip,usuario,contrasena,conexion,puerto,autentificacion,servicioid,prioridad,tiempoespera");
-				queryString.append("      FROM VIEW_SERV_EMAIL");
-				queryString.append(R_CONST_3);
-				queryString.append("		        WHERE mensajeid = ");
-				queryString.append("?");
-				queryString.append(R_CONST_1);
-				queryString.append("		 OR servicioId IS NULL)");
-				queryString.append("   	 AND ip is not null");
-				queryString.append(R_CONST_2);
 				query = getSessionFactory().getCurrentSession()
-						.createSQLQuery(queryString.toString());
-				query.setLong(0, mensajeId);
+						.createSQLQuery("SELECT servidorid,ip,usuario,contrasena,conexion,puerto,autentificacion,servicioid,prioridad,tiempoespera"
+								+ "      FROM VIEW_SERV_EMAIL"
+								+ "      WHERE (servicioId = (SELECT servicioid FROM tbl_mensajes m inner join tbl_lotesenvios l on m.loteenvioid = l.loteenvioid"
+								+ "		        WHERE mensajeid = "
+								+ mensajeId
+								+ ")"
+								+ "		 OR servicioId IS NULL)"
+								+ "   	 AND ip is not null"
+								+ "      order by Prioridad");
 			}
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {

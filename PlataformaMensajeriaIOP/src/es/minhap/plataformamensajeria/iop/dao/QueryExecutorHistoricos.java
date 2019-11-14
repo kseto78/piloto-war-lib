@@ -13,6 +13,6 @@ public interface QueryExecutorHistoricos {
 	 * @param mensajeId
 	 * @return
 	 */
-	Long getServidorByMensaje(Long mensajeId);
+	public Long getServidorByMensaje(Long mensajeId);
 
 }

@@ -27,9 +27,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorPlanificaciones;
 @Transactional
 public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implements QueryExecutorPlanificaciones {
 
-	protected static final String R_CONST_1 = "unchecked";
-
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorPlanificacionesImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorPlanificacionesImpl.class);
 	
 	private static final String ERROR = "Se ha producido un error";
 	private static final String INICIOBUSQUEDA = "search - start";
@@ -41,15 +39,15 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 		super.setSessionFactory(sessionFactory);
 	}
 
-	@SuppressWarnings(R_CONST_1)
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public List<Long> obtenerServiciosPlanificacion() {
 		List<Long> res = new ArrayList<>();
 
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(INICIOBUSQUEDA);
+			if (log.isDebugEnabled()) {
+				log.debug(INICIOBUSQUEDA);
 			}
 
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
@@ -72,26 +70,26 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 				res.add(((BigDecimal) row).longValue());
 			}
 					
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(FINALBUSQUEDA);
+			if (log.isDebugEnabled()) {
+				log.debug(FINALBUSQUEDA);
 			}
 
 		} catch (Exception e) {
-			LOG.error(ERROR, e);
+			log.error(ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;
 	}
 
-	@SuppressWarnings(R_CONST_1)
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public List<Long> obtenerServiciosSinPlanificacion() {
 		List<Long> res = new ArrayList<>();
 
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(INICIOBUSQUEDA);
+			if (log.isDebugEnabled()) {
+				log.debug(INICIOBUSQUEDA);
 			}
 			List<Long> listaServiciosAIncluir = getServicioSinPlanificacion();
 			if (!listaServiciosAIncluir.isEmpty()){
@@ -117,12 +115,12 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 					res.add(((BigDecimal) row).longValue());
 				}
 			}	
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(FINALBUSQUEDA);
+			if (log.isDebugEnabled()) {
+				log.debug(FINALBUSQUEDA);
 			}
 
 		} catch (Exception e) {
-			LOG.error(ERROR, e);
+			log.error(ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;
@@ -139,14 +137,14 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 		return res.toString().substring(0, res.length()-1);
 	}
 
-	@SuppressWarnings(R_CONST_1)
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Long> getServicioSinPlanificacion() {
 		List<Long> res = new ArrayList<>();
 
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(INICIOBUSQUEDA);
+			if (log.isDebugEnabled()) {
+				log.debug(INICIOBUSQUEDA);
 			}
 
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(
@@ -158,12 +156,12 @@ public class QueryExecutorPlanificacionesImpl extends HibernateDaoSupport implem
 				res.add(((BigDecimal) row).longValue());
 			}
 					
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(FINALBUSQUEDA);
+			if (log.isDebugEnabled()) {
+				log.debug(FINALBUSQUEDA);
 			}
 
 		} catch (Exception e) {
-			LOG.error(ERROR, e);
+			log.error(ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;

@@ -34,10 +34,6 @@ import es.minhap.plataformamensajeria.sm.modelo.Recipients;
 @Service
 public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport implements QueryExecutorDestinatariosMensajes {
 
-	protected static final String R_CONST_1 = " from TBL_DESTINATARIOS_MENSAJES dm inner join TBL_DESTINATARIOS d on  dm.DESTINATARIO = d.DESTINATARIOID ";
-
-	protected static final String R_CONST_2 = "unchecked";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorDestinatariosMensajesImpl.class);
 	
 	private static final String LOG_END= "search - end";
@@ -66,15 +62,13 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 	@Transactional
 	public Integer checkIdExternoExists(String idExterno, Boolean sended) {
 //		PropertiesServices ps = new PropertiesServices(reloadableResourceBundleMessageSource);
-		BigDecimal mensajeId = BigDecimal.ZERO;
+		BigDecimal mensajeId = new BigDecimal(0);
 		try {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_START);
 			}
 			SQLQuery query	= getSessionFactory().getCurrentSession().createSQLQuery(
-					"SELECT MENSAJEID FROM TBL_DESTINATARIOS_MENSAJES WHERE CODIGOEXTERNO= ?");
-			query.setString(0, idExterno);
-			
+					"SELECT MENSAJEID FROM TBL_DESTINATARIOS_MENSAJES WHERE CODIGOEXTERNO= '"	+ idExterno+"'");
 			mensajeId = (BigDecimal) query.uniqueResult();
 //			if (sended && null != mensajeId && mensajeId.intValue() > 0) {
 //				query	= getSessionFactory().getCurrentSession().createSQLQuery(
@@ -100,15 +94,13 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 	@Override
 	@Transactional
 	public Integer countDistinctStatus(Long mensajeId) {
-		BigDecimal countStatus = BigDecimal.ZERO;
+		BigDecimal countStatus = new BigDecimal(0);
 		try {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_START);
 			}
 			SQLQuery query	= getSessionFactory().getCurrentSession().createSQLQuery(
-					" SELECT count(DISTINCT dm.estado) FROM TBL_DESTINATARIOS_MENSAJES dm WHERE dm.MENSAJEID= ?");
-			query.setLong(0, mensajeId);
-			
+					" SELECT count(DISTINCT dm.estado) FROM TBL_DESTINATARIOS_MENSAJES dm WHERE dm.MENSAJEID="	+ mensajeId);
 			countStatus = (BigDecimal) query.uniqueResult();
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_END);
@@ -142,7 +134,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
 					.createSQLQuery(queryBuilder.toString());
 			
-			@SuppressWarnings(R_CONST_2)
+			@SuppressWarnings("unchecked")
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 			    res = new DestinatariosMensajesBean();
@@ -152,9 +144,8 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 			    res.setEstadoFinalMensajeId(((BigDecimal) row[3]).longValue());
 			    
 			}
-			if(null != res) {
+			if(null != res)
 				return res;
-			}
 			
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_END);
@@ -185,7 +176,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
 					.createSQLQuery(queryBuilder.toString());
 			
-			@SuppressWarnings(R_CONST_2)
+			@SuppressWarnings("unchecked")
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 				EnvioGISSXMLBean envioGISS = new EnvioGISSXMLBean();
@@ -210,7 +201,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 		return peticiones;	
 	}
 
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public Recipients getRecipientsMultidestinatarioModo1(Long mensajeId, Long destinatarioMensajeId) {
 		Recipients res = new Recipients();
@@ -220,7 +211,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 			}
 			StringBuilder queryBuilder = new StringBuilder();
 			queryBuilder.append(" SELECT dm.DESTINATARIOSMENSAJES,  d.EMAIL, d.TIPODESTINATARIO");
-			queryBuilder.append(R_CONST_1);
+			queryBuilder.append(" from TBL_DESTINATARIOS_MENSAJES dm inner join TBL_DESTINATARIOS d on  dm.DESTINATARIO = d.DESTINATARIOID ");
 			queryBuilder.append(" where dm.DESTINATARIOSMENSAJES = " + destinatarioMensajeId + " and dm.MENSAJEID = "	+ mensajeId);
 			queryBuilder.append(" AND (ESTADO NOT LIKE 'ENVIADO' OR ESTADO NOT LIKE 'CANCELADO')");
 			
@@ -249,25 +240,24 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 	private void asingnacinDestinatarios(Recipients res, DestinatarioDMensaje dm, String email,
 			String tipoDestinatario, Integer idDestinatariosMensajes) {
 		String destinatario = null;
-		if (tipoDestinatario != null) {
+		if (tipoDestinatario != null) 
 			destinatario = tipoDestinatario.toUpperCase();
-		}
-		if (TO.equals(destinatario)) {
+		if (destinatario != null && destinatario.equals(TO)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = idDestinatariosMensajes;
 			res.To.add(dm);
-		} else if (CC.equals(destinatario)) {
+		} else if (destinatario != null && destinatario.equals(CC)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = idDestinatariosMensajes;
 			res.Cc.add(dm);
-		} else if (BCC.equals(destinatario)) {
+		} else if (destinatario != null && destinatario.equals(BCC)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = idDestinatariosMensajes;
 			res.Bcc.add(dm);
 		}
 	}
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public Recipients getRecipientsMultidestinatario(Long mensajeId) {
 		Recipients recipients = new Recipients();
@@ -279,7 +269,7 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 			}
 			StringBuilder queryBuilder = new StringBuilder();
 			queryBuilder.append("SELECT dm.DESTINATARIOSMENSAJES AS DESTINATARIOSMENSAJES,  d.EMAIL AS EMAIL, d.TIPODESTINATARIO AS TIPODESTINATARIO");
-			queryBuilder.append(R_CONST_1);
+			queryBuilder.append(" from TBL_DESTINATARIOS_MENSAJES dm inner join TBL_DESTINATARIOS d on  dm.DESTINATARIO = d.DESTINATARIOID ");
 			queryBuilder.append("where dm.MENSAJEID = "	+ mensajeId);
 			queryBuilder.append("AND (ESTADO NOT LIKE 'ENVIADO' OR ESTADO NOT LIKE 'CANCELADO')");
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
@@ -310,25 +300,24 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 	private void asignarDestinatario(Recipients recipients, DestinatarioDMensaje dm, String email,
 			String tipoDestinatario, Integer idDestinatariosMensajes) {
 		String destinatario= null;
-		if (tipoDestinatario != null) {
+		if (tipoDestinatario != null)
 			destinatario = tipoDestinatario.toUpperCase();
-		}
-		if (TO.equals(destinatario)) {
+		if (destinatario != null && destinatario.equals(TO)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = idDestinatariosMensajes;
 			recipients.To.add(dm);
-		} else if (CC.equals(destinatario)) {
+		} else if (destinatario != null && destinatario.equals(CC)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = idDestinatariosMensajes;
 			recipients.Cc.add(dm);
-		} else if (BCC.equals(destinatario)) {
+		} else if (destinatario != null && destinatario.equals(BCC)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = idDestinatariosMensajes;
 			recipients.Bcc.add(dm);
 		}
 	}
 
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public Recipients getRecipients(Long mensajeId) {
 		Recipients recipients = new Recipients();
@@ -375,18 +364,17 @@ public class QueryExecutorDestinatariosMensajesImpl extends HibernateDaoSupport 
 	private void asignarDestinatario(Recipients recipients, DestinatarioDMensaje dm, String email,
 			String tipoDestinatario) {
 		String destinatario= null;
-		if (tipoDestinatario != null) {
+		if (tipoDestinatario != null)
 			destinatario = tipoDestinatario.toUpperCase();
-		}
-		if (TO.equals(destinatario)) {
+		if (destinatario != null && destinatario.equals(TO)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = null;
 			recipients.To.add(dm);
-		} else if (CC.equals(destinatario)) {
+		} else if (destinatario != null && destinatario.equals(CC)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = null;
 			recipients.Cc.add(dm);
-		} else if (BCC.equals(destinatario)) {
+		} else if (destinatario != null && destinatario.equals(BCC)) {
 			dm.email = email;
 			dm.idDestinatarioMensaje = null;
 			recipients.Bcc.add(dm);

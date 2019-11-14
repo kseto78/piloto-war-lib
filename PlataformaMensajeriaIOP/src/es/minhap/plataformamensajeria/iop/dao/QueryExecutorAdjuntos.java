@@ -16,6 +16,6 @@ public interface QueryExecutorAdjuntos {
 	 * @param mensajeId
 	 * @return 
 	 */
-	List<TblAdjuntos> getAdjuntosByMensaje(Long mensajeId);
+	public List<TblAdjuntos> getAdjuntosByMensaje(Long mensajeId);
 
 }

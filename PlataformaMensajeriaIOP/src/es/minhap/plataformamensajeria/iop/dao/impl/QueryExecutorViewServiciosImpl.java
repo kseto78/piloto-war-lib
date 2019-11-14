@@ -29,7 +29,7 @@ import es.minhap.sim.model.ViewServicios;
 @Transactional
 public class QueryExecutorViewServiciosImpl extends HibernateDaoSupport implements QueryExecutorViewServicios {
 
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorViewServiciosImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorViewServiciosImpl.class);
 	
 	@Autowired
 	@Qualifier(value = "sessionFactorySIMApp")

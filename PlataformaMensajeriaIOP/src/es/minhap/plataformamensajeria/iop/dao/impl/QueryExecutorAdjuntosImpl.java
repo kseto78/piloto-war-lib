@@ -53,7 +53,8 @@ public class QueryExecutorAdjuntosImpl extends HibernateDaoSupport implements Qu
 			query.setLong("mensajeId", mensajeId);
 			res = query.list();
 			if (null == res){
-				return new ArrayList<>();
+				res = new ArrayList<>();
+				return res;
 			}else{
 				return res;
 			}

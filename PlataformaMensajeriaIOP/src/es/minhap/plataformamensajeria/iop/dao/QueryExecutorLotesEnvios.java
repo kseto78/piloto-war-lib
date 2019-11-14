@@ -15,7 +15,7 @@ public interface QueryExecutorLotesEnvios {
 	 * @param idMensaje
 	 * @return
 	 */
-	Integer updateStatusLoteByIdMensaje(String estado, Long idMensaje);
+	public Integer updateStatusLoteByIdMensaje(String estado, Long idMensaje);
 	
 	/**
 	 * Comprueba si para un identificador de mensaje es multidestinatario
@@ -23,7 +23,7 @@ public interface QueryExecutorLotesEnvios {
 	 * @param mensajeId
 	 * @return
 	 */
-	Boolean esMultidestinatario(Long mensajeId);
+	public Boolean esMultidestinatario(Long mensajeId);
 	
 	/**
 	 * Se recupera el id lote a partir del mensaje
@@ -31,5 +31,5 @@ public interface QueryExecutorLotesEnvios {
 	 * @param idMensaje
 	 * @return
 	 */
-	Long getIdLoteByIdMensaje(Long idMensaje);
+	public Long getIdLoteByIdMensaje(Long idMensaje);
 }

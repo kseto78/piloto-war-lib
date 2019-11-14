@@ -29,7 +29,7 @@ public interface QueryExecutorProcesosManuales {
 	 * @param criterio
 	 * @return
 	 */
-	List<ViewProcesosManuales> getProcesosManualesPaginado(int inicio, int size, String order, String column,
+	public List<ViewProcesosManuales> getProcesosManualesPaginado(int inicio, int size, String order, String column,
 			es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean ob);
 	
 	/**
@@ -38,7 +38,7 @@ public interface QueryExecutorProcesosManuales {
 	 * @param ob
 	 * @return
 	 */
-	Integer countProcesosManualesPaginado(es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean ob);
+	public Integer countProcesosManualesPaginado(es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean ob);
 	
 	
 

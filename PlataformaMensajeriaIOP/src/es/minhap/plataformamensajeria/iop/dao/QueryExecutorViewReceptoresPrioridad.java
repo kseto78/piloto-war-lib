@@ -12,6 +12,6 @@ import es.minhap.plataformamensajeria.sm.modelo.ParametrosReceptor;
  */
 public interface QueryExecutorViewReceptoresPrioridad {
 	
-	List<ParametrosReceptor> getReceptores(Long mensajeId);
+	public List<ParametrosReceptor> getReceptores(Long mensajeId);
 
 }

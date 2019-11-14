@@ -19,7 +19,7 @@ public interface QueryExecutorServidores {
 	 * @param canalId
 	 * @return Integer
 	 */
-	Long obtenerServidorByIdMensaje(Long idMensaje);
+	public Long obtenerServidorByIdMensaje(Long idMensaje);
 	
 	/**
 	 * Obtiene un listado de proveedores multiorganismo a partir del id de mensaje
@@ -27,7 +27,7 @@ public interface QueryExecutorServidores {
 	 * @param idMensaje
 	 * @return
 	 */
-	List<ParametrosProveedor> getProveedoresMultiorganismo(Long idMensaje);
+	public List<ParametrosProveedor> getProveedoresMultiorganismo(Long idMensaje);
 	
 	/**
 	 * Obtiene un listado de proveedores  a partir del id de mensaje
@@ -35,7 +35,7 @@ public interface QueryExecutorServidores {
 	 * @param idMensaje
 	 * @return
 	 */
-	List<ParametrosProveedor> getProveedores(Long idMensaje); 
+	public List<ParametrosProveedor> getProveedores(Long idMensaje); 
 
 	
 	/**
@@ -44,7 +44,7 @@ public interface QueryExecutorServidores {
 	 * @param idMensaje
 	 * @return
 	 */
-	Long getIdServicioByIdMensaje(Long idMensaje);
+	public Long getIdServicioByIdMensaje(Long idMensaje);
 
 
 	/**
@@ -53,7 +53,7 @@ public interface QueryExecutorServidores {
 	 * @param idMensaje
 	 * @return
 	 */
-	Long getIdLoteByIdMensaje(Long idMensaje);
+	public Long getIdLoteByIdMensaje(Long idMensaje);
 
 	/**
 	 * Se recupera el id servidor a partir del mensaje
@@ -61,7 +61,7 @@ public interface QueryExecutorServidores {
 	 * @param idMensaje
 	 * @return
 	 */
-	Long getIdServicioByIdMensajeHist(Long idMensaje);
+	public Long getIdServicioByIdMensajeHist(Long idMensaje);
 
 	/**
 	 * Se recupera el uso de cada servidor
@@ -70,7 +70,7 @@ public interface QueryExecutorServidores {
 	 * @param mesActual
 	 * @return
 	 */
-	List<UsoServidoresBean> getUsoServidores(String anoActual, String mesActual);
+	public List<UsoServidoresBean> getUsoServidores(String anoActual, String mesActual);
 	
 
 	

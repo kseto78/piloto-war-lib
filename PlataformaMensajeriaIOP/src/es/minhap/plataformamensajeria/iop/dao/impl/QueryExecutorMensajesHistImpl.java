@@ -31,10 +31,6 @@ import es.minhap.sim.model.TblMensajesHist;
 @Service("QueryExecutorMensajesHistImpl")
 public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implements QueryExecutorMensajesHist {
 
-	protected static final String R_CONST_1 = "lote";
-
-	protected static final String R_CONST_2 = "unchecked";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorMensajesHistImpl.class);
 	
 	private static final String LOG_START = "search - start";
@@ -59,7 +55,7 @@ public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implement
 					sql = sql + "and ge.ultimoenvio <= :fecha";
 			}
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-			query.setLong(R_CONST_1, loteId);
+			query.setLong("lote", loteId);
 			if (null != fecha){
 				query.setDate("fecha", fecha);
 			}
@@ -73,7 +69,7 @@ public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implement
 		
 	}
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> getIdMensajesByLote(Long loteEnvioID, Integer maxResult, Integer firstResult) {
 		try {
@@ -82,7 +78,7 @@ public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implement
 			}
 			String sql = "select m.mensajeid from TblMensajesHist m where m.tblLotesEnviosHist.loteenvioid = :lote ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setLong(R_CONST_1, loteEnvioID);
+			query.setLong("lote", loteEnvioID);
 			query.setMaxResults(maxResult);
 			query.setFirstResult(firstResult);
 			
@@ -94,7 +90,7 @@ public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implement
 		}
 	}
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	public List<TblMensajesHist> convertMensajeTOMensajeHist(List<Long> subList, TblLotesEnviosHist loteHistorico) {
 		try {
 			if (LOG.isDebugEnabled()) {
@@ -102,7 +98,7 @@ public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implement
 			}
 			String sql = "select m from TblMensajes m where m.tblLotesEnvios.loteenvioid = :lote and mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setLong(R_CONST_1, loteHistorico.getLoteenvioid());
+			query.setLong("lote", loteHistorico.getLoteenvioid());
 			query.setParameterList("lista", subList);
 			
 			return convertTOHist(query.list(), loteHistorico);
@@ -123,7 +119,7 @@ public class QueryExecutorMensajesHistImpl extends HibernateDaoSupport implement
 			}
 			String sql = "select count(m.mensajeid) from TBL_MENSAJES_HIST m  where m.loteenvioid = :lote ";
 			SQLQuery query = getSessionFactory().getCurrentSession().createSQLQuery(sql);
-			query.setLong(R_CONST_1, loteId);
+			query.setLong("lote", loteId);
 			
 			return ((BigDecimal)query.uniqueResult()).intValue();
 			 			

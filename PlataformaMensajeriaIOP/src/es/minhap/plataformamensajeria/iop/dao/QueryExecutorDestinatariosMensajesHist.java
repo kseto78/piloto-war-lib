@@ -18,14 +18,14 @@ public interface QueryExecutorDestinatariosMensajesHist {
 	 * @param max 
 	 * @return 
 	 */
-	List<TblDestinatariosMensHist> convertDestinatarioMensTODestinatarioMensHist(List<Long> subList, Integer max, Integer firstResult);
+	public List<TblDestinatariosMensHist> convertDestinatarioMensTODestinatarioMensHist(List<Long> subList, Integer max, Integer firstResult);
 
 	/**
 	 * Obtiene lista de TblDestinatariosMensHist a partir de la lista de mensajes
 	 * @param listaMensajes
 	 * @return 
 	 */
-	List<Long> getIdDestinatariosMensajesCons(List<Long> listaMensajes);
+	public List<Long> getIdDestinatariosMensajesCons(List<Long> listaMensajes);
 
 	
 	/**
@@ -33,7 +33,7 @@ public interface QueryExecutorDestinatariosMensajesHist {
 	 * @param subList
 	 * @return 
 	 */
-	Integer countConvertDestinatarioMensTODestinatarioMensHist(List<Long> subList);
+	public Integer countConvertDestinatarioMensTODestinatarioMensHist(List<Long> subList);
 
 	/**
 	 * Cuenta los destinatarios a partir del identificador de mensaje
@@ -41,7 +41,7 @@ public interface QueryExecutorDestinatariosMensajesHist {
 	 * @param mensajeId
 	 * @return
 	 */
-	Integer countDestinatariosByMensaje(Long idMensaje);
+	public Integer countDestinatariosByMensaje(Long idMensaje);
 
 
 	/**
@@ -52,6 +52,6 @@ public interface QueryExecutorDestinatariosMensajesHist {
 	 * @param start
 	 * @return
 	 */
-	List<TblDestinatariosMensHist> getDestinatarioMensHist(Long idMensaje, int size, int start);
+	public List<TblDestinatariosMensHist> getDestinatarioMensHist(Long idMensaje, int size, int start);
 
 }

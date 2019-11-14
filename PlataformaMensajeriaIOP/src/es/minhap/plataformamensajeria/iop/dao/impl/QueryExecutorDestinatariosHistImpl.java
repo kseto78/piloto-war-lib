@@ -26,10 +26,6 @@ import es.minhap.sim.model.TblDestinatariosHist;
 @Service("QueryExecutorDestinatariosHistImpl")
 public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport implements QueryExecutorDestinatariosHist {
 
-	protected static final String R_CONST_1 = "lista";
-
-	protected static final String R_CONST_2 = "unchecked";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorDestinatariosHistImpl.class);
 	
 	private static final String LOG_START = "search - start";
@@ -42,7 +38,7 @@ public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport impl
 		super.setSessionFactory(sessionFactory);
 	}
 
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TblDestinatariosHist> convertDestinatarioTODestinatarioHist(List<Long> subList, Integer max, Integer firstResult) {
 		try {
@@ -52,7 +48,7 @@ public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport impl
 			String sql = "select m from TblDestinatarios m where mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
-			query.setParameterList(R_CONST_1, subList);
+			query.setParameterList("lista", subList);
 			query.setMaxResults(max);
 			query.setFirstResult(firstResult);
 			return convertTOHistDestinatarios(query.list());
@@ -72,7 +68,7 @@ public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport impl
 			String sql = "select count(m) from TblDestinatarios m where mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 			
-			query.setParameterList(R_CONST_1, subList);
+			query.setParameterList("lista", subList);
 			
 			return ((Long)query.uniqueResult()).intValue();
 			 			
@@ -83,7 +79,7 @@ public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport impl
 	}
 
 	
-	@SuppressWarnings(R_CONST_2)
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> getIdDestinatariosCons(List<Long> listaMensajes) {
 		try {
@@ -93,10 +89,11 @@ public class QueryExecutorDestinatariosHistImpl extends HibernateDaoSupport impl
 			}
 			String sql = "select d.destinatarioid from TblDestinatariosHist d where d.mensajeid in (:lista) ";
 			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-			query.setParameterList(R_CONST_1, listaMensajes);
+			query.setParameterList("lista", listaMensajes);
 			res = query.list();
 			if (null == res){
-				return new ArrayList<>();
+				res = new ArrayList<>();
+				return res;
 			}else{
 				return res;
 			}

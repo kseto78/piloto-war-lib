@@ -24,7 +24,7 @@ import es.minhap.plataformamensajeria.iop.dao.QueryExecutorLotesEnvios;
 @Service
 public class QueryExecutorLotesEnviosImpl extends HibernateDaoSupport implements QueryExecutorLotesEnvios {
 
-	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorLotesEnviosImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryExecutorLotesEnviosImpl.class);
 	
 	private static final String UPDATE_END= "search - end";
 	
@@ -43,23 +43,22 @@ public class QueryExecutorLotesEnviosImpl extends HibernateDaoSupport implements
 		Integer res = null;
 
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(UPDATE_START);
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_START);
 			}
 
 			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
-					"UPDATE TBL_LOTESENVIOS SET ESTADOENVIOID=(SELECT ESTADOID FROM TBL_ESTADOS WHERE NOMBRE = ? ) where "
-							+ "LOTEENVIOID = (SELECT LOTEENVIOID FROM TBL_MENSAJES WHERE MENSAJEID = ?)");
-			query.setString(0, estado);
-			query.setLong(1, idMensaje);
+					"UPDATE TBL_LOTESENVIOS SET ESTADOENVIOID=(SELECT ESTADOID FROM TBL_ESTADOS WHERE NOMBRE = '"+estado+"') where "
+							+ "LOTEENVIOID = (SELECT LOTEENVIOID FROM TBL_MENSAJES WHERE MENSAJEID = "+idMensaje+")");
+
 			res = (Integer) query.executeUpdate();
 			
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(UPDATE_END);
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res;	
@@ -71,9 +70,10 @@ public class QueryExecutorLotesEnviosImpl extends HibernateDaoSupport implements
 		
 		SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(
 				"SELECT lt.MULTIDESTINATARIO FROM TBL_LOTESENVIOS lt inner join "
-						+ "TBL_MENSAJES m on m.LOTEENVIOID = lt.LOTEENVIOID where m.MENSAJEID = ? AND lt.MULTIDESTINATARIO = 1");
-		query.setLong(0, mensajeId);
-		return !query.list().isEmpty();
+						+ "TBL_MENSAJES m on m.LOTEENVIOID = lt.LOTEENVIOID where m.MENSAJEID = "
+						+ mensajeId + " AND lt.MULTIDESTINATARIO = 1");
+		multidestinatario =  !query.list().isEmpty();
+		return multidestinatario;
 	}
 	
 	@Override
@@ -81,20 +81,21 @@ public class QueryExecutorLotesEnviosImpl extends HibernateDaoSupport implements
 	public Long getIdLoteByIdMensaje(Long idMensaje) {
 		BigDecimal res = null;
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(UPDATE_START);
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_START);
 			}
 			SQLQuery query = getSessionFactory().getCurrentSession()
 					.createSQLQuery("SELECT loteenvioid "
 							+ "FROM tbl_mensajes "
-							+ "WHERE mensajeid = ?");
+							+ "WHERE mensajeid = "
+							+ idMensaje);
 			res = (BigDecimal) query.uniqueResult();
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(UPDATE_END);
+			if (log.isDebugEnabled()) {
+				log.debug(UPDATE_END);
 			}
 
 		} catch (Exception e) {
-			LOG.error(HAS_ERROR, e);
+			log.error(HAS_ERROR, e);
 			throw new ApplicationException(e);
 		}
 		return res.longValue();	

@@ -27,8 +27,6 @@ import es.minhap.sim.model.ViewUsuariosAplicaciones;
 @Service("QueryExecutorViewUsuariosAplicacionesImpl")
 public class QueryExecutorViewUsuariosAplicacionesImpl extends HibernateDaoSupport implements QueryExecutorViewUsuariosAplicaciones {
 
-	protected static final String R_CONST_1 = "where usuarioid = ";
-
 	private static final Logger LOG = LoggerFactory.getLogger(QueryExecutorViewUsuariosAplicacionesImpl.class);
 	
 	private static final String LOG_END= "search - end";
@@ -53,39 +51,18 @@ public class QueryExecutorViewUsuariosAplicacionesImpl extends HibernateDaoSuppo
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(LOG_START);
 			}
-			
-			StringBuilder queryString = new StringBuilder();
-			SQLQuery query;
-			if (null != usuarioId && null != aplicacionId){				
-				queryString.append("select * from  VIEW_USUARIOS_APLICACIONES ");
-				queryString.append(R_CONST_1);
-				queryString.append("?");
-				queryString.append(" and aplicacionid = ");
-				queryString.append("?");
-				query = getHibernateTemplate().getSessionFactory().getCurrentSession()
-						.createSQLQuery(queryString.toString());
-				query.setLong(0, usuarioId);
-				query.setLong(1, aplicacionId);
+			String sqlUsuario="";
+			if (null != usuarioId && null != aplicacionId){
+				sqlUsuario = "where usuarioid = "+ usuarioId + " and aplicacionid = " + aplicacionId;
 			}else if (null != usuarioId){
-				queryString.append("select * from  VIEW_USUARIOS_APLICACIONES ");
-				queryString.append(R_CONST_1);
-				queryString.append("?");
-				query = getHibernateTemplate().getSessionFactory().getCurrentSession()
-						.createSQLQuery(queryString.toString());
-				query.setLong(0, usuarioId);
+				sqlUsuario = "where usuarioid = " + usuarioId;
 			}else if (null != aplicacionId){
-				queryString.append("select * from  VIEW_USUARIOS_APLICACIONES ");
-				queryString.append("where aplicacionid = ");
-				queryString.append("?");
-				query = getHibernateTemplate().getSessionFactory().getCurrentSession()
-						.createSQLQuery(queryString.toString());
-				query.setLong(0, aplicacionId);				
-			}else {
-				query = getHibernateTemplate().getSessionFactory().getCurrentSession()
-				.createSQLQuery("select * from  VIEW_USUARIOS_APLICACIONES ");
+				sqlUsuario = "where aplicacionid = " + aplicacionId;
 			}
 			
-			
+			SQLQuery query = getHibernateTemplate().getSessionFactory().getCurrentSession()
+					.createSQLQuery("select * from  VIEW_USUARIOS_APLICACIONES " + sqlUsuario);
+
 			List<Object[]> rows = query.list();
 			for (Object[] row : rows) {
 				ViewUsuariosAplicaciones ua = new ViewUsuariosAplicaciones();
