@@ -232,5 +232,7 @@ public interface QueryExecutorMensajes {
 	 */
 	public TblAplicaciones getAplicacionFromLote(Integer idLote);
 
+	public List<Long> getAnularMensajes(String listaServicios, Date fecha, Date fechaFin);
+
 
 }

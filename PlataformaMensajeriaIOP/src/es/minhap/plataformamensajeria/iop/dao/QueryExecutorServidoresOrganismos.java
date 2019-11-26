@@ -1,5 +1,7 @@
 package es.minhap.plataformamensajeria.iop.dao;
 
+import java.util.List;
+
 /**
  * 
  * 
@@ -26,6 +28,8 @@ public interface QueryExecutorServidoresOrganismos {
 	 * @return
 	 */
 	public String getPassword(String codigoOrganismo, Integer proveedorId);
+
+	public List<Long> obtenerOrganismosNoActivos(Long idProveedorSMS);
 	
 	
 }
