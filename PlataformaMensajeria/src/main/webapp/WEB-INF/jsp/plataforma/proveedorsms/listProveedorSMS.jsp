@@ -20,6 +20,9 @@
 	<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp" %>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp" %>
 	<%@include file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp" %>	
+	<sj:dialog  id="dialogOrganismosProveedores" title="LISTA ORGANISMOS PROVEEDORES" 	href="viewOrganismosProveedores.action" 
+				cssStyle="display:none" autoOpen="false" modal="true"
+				width="950"></sj:dialog>
             <div class="criteria">
 		<s:form id="frmBuscarProveedorSMS" method="POST" action="buscarProveedorSMS"
 		validate="false" theme="css_xhtml">            	
@@ -120,7 +123,7 @@
 					headerClass="TH50 separator center" class="center" />
 				<%-- acciones --%>
 				<display:column property="proveedorSMSAction"  
-					headerClass="TH45 separator center" class="" media="html" />
+					headerClass="TH80 separator center" class="" media="html" />
 			</display:table>
 			<table>
 			<tfoot>
@@ -139,3 +142,77 @@
                </tfoot>
                    </table>
             </s:form>
+ <script>
+ function loadOrganismo(idProveedorSMS){
+
+	 var auxHTML = $('div#ajaxloader_ajax_'+idProveedorSMS).html();
+		$('div#ajaxloader_ajax_'+idProveedorSMS).html("<p><img src=\"/sim/img/ajax-loader.gif\" width=\"auto\" height=\"auto\"/></p>");
+
+		var url = "viewOrganismosProveedores.action?idProveedorSMS=" + idProveedorSMS;
+	 	var dialogOrganismosProveedores = $('#dialogOrganismosProveedores');
+	 	dialogOrganismosProveedores.load(
+	    		url,
+	    		{
+		    			autoOpen: true,
+		    			width: 510,
+		    			modal: true,
+		    			show: 'blind',
+		    			hide: 'blind'
+		    		},
+	            function(responseText, textStatus, XMLHttpRequest) {
+		    			dialogOrganismosProveedores.dialog({
+		           	 			autoOpen: true,
+		           				width: 950,
+		           				modal: true,
+		           				show: 'blind',
+		           				hide: 'blind',
+		           			});
+		    			$('div#ajaxloader_ajax_'+idProveedorSMS).html(auxHTML);        	    		
+	            }
+
+	    );
+	    return false;	
+	 }
+ function verMensajesPaginar(url){
+		document.getElementById('loading').style.visibility="";
+		$('td').find('a').each(function(){
+			 $(this).addClass('disabled-link');
+			});
+
+			$('.disabled-link').on('click', false);
+		var dialogOrganismosProveedores = $('#dialogOrganismosProveedores');
+		dialogOrganismosProveedores.load(
+	    		url,
+	    		{
+		    			
+		    		},
+	            function(responseText, textStatus, XMLHttpRequest) {
+		    			dialogOrganismosProveedores.dialog({
+		           	 			autoOpen: true,
+		           				width: 950,
+		           				modal: true,
+		           				show: 'blind',
+		           				hide: 'blind',
+		           			});	    			       	    		
+	            }
+
+	    );
+	    return false;	
+	}
+ function makeExcellP(enlace){
+	 	var elms = document.querySelectorAll("[id='exportOptions']");
+	 
+		var div = elms[1];
+
+		var en = div.getElementsByTagName('a')[0].getAttribute('href');
+		var split = div.getElementsByTagName('a')[0].getAttribute('href').split('"');
+		div.getElementsByTagName('a')[0].setAttribute('href',split[1]);		
+		
+		var elms = div.getElementsByTagName("a");
+		var maxI=0;
+		for(var i = 0, maxI = elms.length; i < maxI; ++i) {
+			var a = elms[i];
+			enlace.href=a.href;
+		}
+	}
+ </script>

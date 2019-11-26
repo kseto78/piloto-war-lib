@@ -1786,6 +1786,8 @@
 		var apnsRutaCertificadoLabel= document.getElementById("apnsrutacertificadoLabel");
 		var apnsPasswordCertificado= document.getElementById("servicio.apnspasswordcertificado");
 		var apnsPasswordCertificadoLabel= document.getElementById("apnspasswordcertificadoLabel");
+		var caducidadCertificado = document.getElementById("servicio.caducidadCertificado");
+		var caducidadCertificadoLabel = document.getElementById("caducidadCertificadoLabel");
 
 		var agrupacionCodOrg= document.getElementById("servicio.agrupacioncodorg");
 		var agrupacionCodOrgLabel= document.getElementById("agrupacioncodorg");
@@ -1928,6 +1930,16 @@
 			apnsPasswordCertificadoLabel.disabled="disabled";
 			apnsPasswordCertificadoLabel.style.visibility="hidden";
 			apnsPasswordCertificadoLabel.style.display="none";
+
+			caducidadCertificadoLabel.value="";
+			caducidadCertificadoLabel.disabled="disabled";
+			caducidadCertificadoLabel.style.visibility="hidden";
+			caducidadCertificadoLabel.style.display="none";
+
+			caducidadCertificado.value="";
+			caducidadCertificado.disabled="disabled";
+			caducidadCertificado.style.visibility="hidden";
+			caducidadCertificado.style.display="none";
 			
 			nleBck=nombreLoteEnvio.value;
 			nombreLoteEnvio.value="";
@@ -2153,6 +2165,16 @@
 			apnsPasswordCertificadoLabel.style.visibility="hidden";
 			apnsPasswordCertificadoLabel.style.display="none";
 
+			caducidadCertificado.value="";
+			caducidadCertificado.disabled="disabled";
+			caducidadCertificado.style.visibility="hidden";
+			caducidadCertificado.style.display="none";
+
+			caducidadCertificadoLabel.value="";
+			caducidadCertificadoLabel.disabled="disabled";
+			caducidadCertificadoLabel.style.visibility="hidden";
+			caducidadCertificadoLabel.style.display="none";
+
 			agrupacionCodOrgLabel.style.visibility="";
 			agrupacionCodSiaLabel.style.visibility="";
 			agrupacionCodOrgPagadorLabel.style.visibility="";
@@ -2346,6 +2368,16 @@
 			apnsPasswordCertificadoLabel.style.visibility="hidden";
 			apnsPasswordCertificadoLabel.style.display="none";
 
+			caducidadCertificado.value="";
+			caducidadCertificado.disabled="disabled";
+			caducidadCertificado.style.visibility="hidden";
+			caducidadCertificado.style.display="none";
+
+			caducidadCertificadoLabel.value="";
+			caducidadCertificadoLabel.disabled="disabled";
+			caducidadCertificadoLabel.style.visibility="hidden";
+			caducidadCertificadoLabel.style.display="none";
+
 			agrupacionCodOrgLabel.style.visibility="";
 			agrupacionCodSiaLabel.style.visibility="";
 			agrupacionCodOrgPagadorLabel.style.visibility="hidden";
@@ -2438,6 +2470,14 @@
 			apnsPasswordCertificadoLabel.disabled="";
 			apnsPasswordCertificadoLabel.style.visibility="visible";
 			apnsPasswordCertificadoLabel.style.display="block";
+
+			caducidadCertificadoLabel.disabled="";
+			caducidadCertificadoLabel.style.visibility="visible";
+			caducidadCertificadoLabel.style.display="block";
+
+			caducidadCertificado.disabled="";
+			caducidadCertificado.style.visibility="visible";
+			caducidadCertificado.style.display="block";
 
 			
 			if (headerSMS != null){
@@ -2677,6 +2717,16 @@
 			apnsPasswordCertificadoLabel.disabled="disabled";
 			apnsPasswordCertificadoLabel.style.visibility="hidden";
 			apnsPasswordCertificadoLabel.style.display="none";
+
+			caducidadCertificado.value="";
+			caducidadCertificado.disabled="disabled";
+			caducidadCertificado.style.visibility="hidden";
+			caducidadCertificado.style.display="none";
+
+			caducidadCertificadoLabel.value="";
+			caducidadCertificadoLabel.disabled="disabled";
+			caducidadCertificadoLabel.style.visibility="hidden";
+			caducidadCertificadoLabel.style.display="none";
 			
 			nleBck=nombreLoteEnvio.value;
 			nombreLoteEnvio.value="";

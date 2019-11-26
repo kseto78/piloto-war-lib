@@ -229,6 +229,20 @@
 							cssStyle="visibility:hidden;display:none;" labelposition="left" size="24"
 							maxlength="255" cssClass="" showPassword="true"/>
 					</p>
+					<p class="criteria">
+					<label id="caducidadCertificadoLabel"
+						style="width: 179px; visibility: hidden; display: none;" class="fieldText">Caducidad Certificado:</label>					
+						<s:textfield
+ 								name="servicio.caducidadCertificado" value="%{servicio.caducidadCertificado}" id="servicio.caducidadCertificado"
+ 								theme="simple" size="24" maxlength="55"
+								cssClass="datepicker"
+								cssStyle="visibility:hidden;display:none;width:200px !important;" labelposition="left"
+								autocomplete="off"> 
+								<s:param name="value">
+    								<s:date name="servicio.caducidadCertificado" format="dd/MM/yyyy HH:mm"/>
+    							</s:param>
+						</s:textfield>    								
+					</p>
                     
                     <p class="criteria">
                         <label style="width: 150px;" class="fieldText"><i>(*) Campos obligatorios</i></label>

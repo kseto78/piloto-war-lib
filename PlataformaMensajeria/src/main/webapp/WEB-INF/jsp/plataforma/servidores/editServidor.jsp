@@ -103,6 +103,16 @@
                         <s:checkbox theme="simple" id="servidor.isActivo" name="servidor.isActivo" value="%{servidor.activado}" />
                     </p>
                     <p class="criteria">
+                        <label style="width: 120px;" class="fieldText">Cuota Diaria:</label>
+                        <s:textfield
+							name="servidor.cuotadiaria" value="%{servidor.cuotadiaria}" id="servidor.cuotadiaria"
+							theme="simple" 
+							title="Cuota Diaria"
+							labelposition="left"
+							 size="5" maxlength="100"
+							cssClass="" onkeypress="return numbersonly(this, event)"/>          
+                    </p>
+                    <p class="criteria">
                         <label style="width: 150px;" class="fieldText"><i>(*) Campos obligatorios</i></label>
                        
                     </p>   

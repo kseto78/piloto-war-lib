@@ -716,6 +716,12 @@
 			<result name="noUser" type="tiles">pages.nouser</result>
 		
 		</action>
+		
+		<action name="viewOrganismosProveedores" class="proveedorSMSAction" method="loadOrganismosProveedores">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.proveedorSMS.viewMensajes
+			</result>
+		</action>
 		<!-- ************************************* -->
 		<!--FIN PLATAFORMA MENSAJERIA - PROVEEDORSMS -->
 		<!-- ************************************* -->
@@ -1788,7 +1794,52 @@
 			<result name="success" type="tiles">pages.planificacion.loadComboTipoPlanificacion
 			</result>
 		</action>
-
+		<!-- ************************************* -->
+		<!-- PLATAFORMA MENSAJERIA - CONTACTOS -->
+		<!-- ************************************* -->
+		
+		<action name="listarContactos" class="contactosAction" method="search">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.contactos</result>
+		</action>
+		<action name="nuevoContacto" class="contactosAction" >
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.contactos.create</result>
+		</action>
+		<action name="saveContacto" class="contactosAction" method="newContacto">
+			<result name="error" type="tiles">pages.contactos.create</result>
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">listarContactos</param>
+				<param name="parse">true</param>
+				<param name="idContacto">${idContacto}</param>
+			</result>
+		</action>
+		<action name="updateContactos" class="contactosAction" method="update">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editContactos</param>
+				<param name="parse">true</param>
+				<param name="idContacto">${contacto.contactoId}</param>
+			</result>
+		</action>
+		<action name="editContactos" class="contactosAction" method="load">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success" type="tiles">pages.contactos.edit</result>
+		</action>
+		<action name="deleteContactos" class="contactosAction" method="delete">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">listarContactos</param>
+			</result>
+		</action>
+		<action name="deleteContactosSeleccionados" class="contactosAction"
+			method="deleteSelected">
+			<result name="noUser" type="tiles">pages.nouser</result>
+			<result name="success"  type="redirectAction">
+				<param name="actionName">listarContactos</param>
+			</result>
+		</action>
 
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - USUARIOS -->

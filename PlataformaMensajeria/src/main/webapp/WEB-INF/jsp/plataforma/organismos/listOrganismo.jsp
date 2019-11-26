@@ -44,6 +44,17 @@
 							size="60" maxlength="255"
 							cssClass="input_tablas_registro" />
                 </p>
+                 <p class="criteria">
+                       <label style="width: 100px;" class="fieldText">Proveedor SMS:</label>
+                       <s:select 
+						id="organismo.idProveedorSMS" name="organismo.idProveedorSMS" 
+						emptyOption="false" theme="simple" 
+						labelposition="left"
+						list="comboProveedoresSMS" listKey="codigo" headerKey="" headerValue="Todos"
+						listValue="descripcion" cssClass="W240" 
+						
+						value="%{organismo.idProveedorSMS}" disabled="false" />
+           	     </p>
                 
                 <p class="criteria">
                 	<span>

@@ -266,7 +266,8 @@
 		</put-list-attribute>
 	</definition>	
 	
-	
+	<definition name="pages.proveedorSMS.viewMensajes" template="/WEB-INF/jsp/plataforma/proveedorsms/viewListaOrganismosServidor.jsp">
+	</definition>
 	<!--
 		******************************************************************
 	-->
@@ -838,7 +839,43 @@
 			<add-attribute value="panel.configuracion.seguridad|home.action" />
 			<add-attribute value="panel.configuracion.seguridad.usuarios|buscarUsuarios.action" />
 		</put-list-attribute>
-	</definition>		
+	</definition>	
+	<!--
+		******************************************************************
+	-->
+	<!--
+		Contactos
+	-->
+	<!--
+		******************************************************************
+	-->
+
+	<definition name="pages.contactos" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.listContacto.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/contactos/listContactos.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.contactos|home.action" />
+			
+		</put-list-attribute>
+	</definition>
+
+	<definition name="pages.contactos.create" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.createContactos.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/contactos/newContacto.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.contactos|home.action" />
+			<add-attribute value="panel.contactos.usuarios|listarContactos.action" />
+		</put-list-attribute>
+	</definition>	
+
+	<definition name="pages.contactos.edit" extends="site.mainLayout">
+		<put-attribute name="title" value="pages.editContactos.title" />
+		<put-attribute name="body" value="/WEB-INF/jsp/plataforma/contactos/editContacto.jsp" />
+		<put-list-attribute name="crumbs">
+			<add-attribute value="panel.contactos|home.action" />
+			<add-attribute value="panel.contactos.usuarios.edit|listarContactos.action" />
+		</put-list-attribute>
+	</definition>	
 	<!--
 		******************************************************************
 	-->

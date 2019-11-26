@@ -100,6 +100,28 @@
 							</s:textfield>
 	           	      	</span>                                  
                     </s:if> 
+                    <s:if test="%{jobBean.nombreJob == 'ANULACION MENSAJES' }">
+           	      		<span>
+	                     	<label style="width: 100px;" class="fieldText">Fecha Fin:</label>
+	                      	<s:textfield
+									name="jobBean.fechaFin" value="%{jobBean.fechaFin}" id="jobBean.fechaFin"
+									theme="simple"  style="width:60px;"
+									size="10" maxlength="10"
+									cssClass="datepickerEstadisticas" autocomplete="off">
+									<s:param name="value">
+	    								<s:date name="jobBean.fechaFin" format="dd/MM/yyyy"/>
+	  								</s:param>
+							</s:textfield>
+	           	      	</span> 
+	           	      	<p class="criteria">                    
+	                    	<span>	                    		
+	                    		<label class="fieldTextNoHeight" style="background: none">Busqueda de mensajes en los siguientes servicios: ${propertyServiciosAnularMensajes}</label><strong><s:label
+										theme="simple" /></strong>
+	                    	</span>
+	                    	
+							
+						</p>							
+           	      	</s:if>
            	      	<div class="footerCriteria">
 	                    <span class="leftSide"></span>
 	                    <span class="rightSide">
@@ -107,7 +129,6 @@
 	                    </span>
              		</div>
            	      	</s:if>
-           	      	                   
            	      </p>
   			 </s:form> 	 
             <s:if test="%{jobBean.nombreJob == 'REENVIO' }">              	           	      	

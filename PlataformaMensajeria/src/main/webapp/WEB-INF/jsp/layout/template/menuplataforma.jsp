@@ -79,7 +79,7 @@
 						id="desplegable202" class="Usuarios">Altas masivas</a></li>
 					<li id="desplegable204" style="display: none"><a
 						style="margin-left: 26px; width: 110px;"
-						href="listarPdpDiputaciones.action" class="Usuarios"
+						href="buscarPdpDiputaciones.action" class="Usuarios"
 						id="desplegable203">PdP-diputaciones</a></li>
 					<!--<li><a href="../../Seguridad/Roles/Creacion.html" class="Roles">Roles</a></li>-->
 				</ul>
@@ -100,6 +100,11 @@
 			<h3 id="desplegable5">
 				<a href="decodHome.action">Decodificador</a>
 			</h3>
+			<s:if test="#session.ROL_USUARIO_PLATAFORMA == 'ROL_ADMINISTRADOR'">
+				<h3 id="desplegable52">
+					<a href="listarContactos.action">Contactos</a>
+				</h3>
+			</s:if>
 		</div>
 
 	</plataforma:securityadmin>
@@ -234,7 +239,8 @@
 			elem1.style.backgroundColor = "#003366";
 			menu1 = 4;
 		} else if (url.endsWith('buscarServidores.action')
-				|| (url.includes('Servidor.action'))) {
+				|| (url.includes('Servidor.action')) 
+				|| (url.includes('buscarServidores.action')) ) {
 			elem1 = document.getElementById('desplegable11');
 			elem1.style.backgroundColor = "#003366";
 			elem1.style.color = "white";
@@ -245,7 +251,8 @@
 			elem1.style.color = "white";
 			menu1 = 1;
 		} else if (url.endsWith('buscarProveedoresMisim.action')
-				|| (url.includes('ProveedorMisim.action'))) {
+				|| (url.includes('ProveedorMisim.action'))
+				|| (url.includes('buscarProveedoresMisim.action'))) {
 			elem1 = document.getElementById('desplegable13');
 			elem1.style.backgroundColor = "#003366";
 			elem1.style.color = "white";
@@ -267,20 +274,23 @@
 			menu1 = 1;
 		} else if (url.endsWith('buscarAplicaciones.action')
 				|| url.includes('editAplicacion.action')
-				|| url.includes('nuevaAplicacion.action')) {
+				|| url.includes('nuevaAplicacion.action')
+				|| url.includes('buscarAplicaciones.action')) {
 			elem1 = document.getElementById('desplegable21');
 			elem1.style.backgroundColor = "#003366";
 			elem1.style.color = "white";
 			menu1 = 2;
 		} else if (url.endsWith('buscarServicios.action')
 				|| url.includes('Servicio.action')
-				|| url.includes('aplicacionSelectEvent.action')) {
+				|| url.includes('aplicacionSelectEvent.action')
+				|| url.includes('buscarServicios.action')) {
 			elem1 = document.getElementById('desplegable22');
 			elem1.style.backgroundColor = "#003366";
 			elem1.style.color = "white";
 			menu1 = 2;
 		} else if (url.endsWith('buscarPlanificaciones.action')
-				|| url.includes('Planificacion.action')) {
+				|| url.includes('Planificacion.action')
+				|| url.includes('buscarPlanificaciones.action')) {
 			elem1 = document.getElementById('desplegable23');
 			elem1.style.backgroundColor = "#003366";
 			elem1.style.color = "white";
@@ -311,7 +321,8 @@
 			elem1.style.color = "white";
 			menu1 = 2;
 		} else if (url.endsWith('buscarUsuarios.action')
-				|| url.includes('Usuario.action')) {
+				|| url.includes('Usuario.action')
+				|| url.includes('buscarUsuarios.action')) {
 			elem1 = document.getElementById('desplegable31');
 			elem1.style.backgroundColor = "#003366";
 			elem1.style.color = "white";
@@ -327,6 +338,12 @@
 		} else if (url.endsWith('decodHome.action')
 				|| url.includes('decodificador.action')) {
 			elem1 = document.getElementById('desplegable5');
+			elem1.style.backgroundColor = "#003366";
+			menu1 = 4;
+		}else if (url.endsWith('Contacto.action')
+				|| url.includes('Contacto.action') 
+				|| url.includes('Contactos.action') || url.endsWith('Contactos.action')) {
+			elem1 = document.getElementById('desplegable52');
 			elem1.style.backgroundColor = "#003366";
 			menu1 = 4;
 		} else if (url.includes('GestionEnvios.action')) {
