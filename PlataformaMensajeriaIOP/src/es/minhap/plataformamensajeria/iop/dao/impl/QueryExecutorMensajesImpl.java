@@ -275,6 +275,50 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
+	public List<Long> getAnularMensajes(String listaServicios, Date fecha,
+			Date fechaFin) {
+		List<Long> idMensajes = new ArrayList<Long>();
+		
+		List<String> serviciosAeatGiss = new ArrayList<>();
+		StringBuilder serviciosSql = new StringBuilder();
+		if(!listaServicios.equals("")){			
+			serviciosAeatGiss = new ArrayList<>(Arrays.asList(listaServicios.split(",")));
+			serviciosSql.append("AND (l.servicioid = "+serviciosAeatGiss.get(0));
+			serviciosAeatGiss.remove(0);
+			for(String idServ : serviciosAeatGiss){
+				serviciosSql.append(" OR l.servicioid = "+idServ);
+			}
+			serviciosSql.append(")");
+		}
+		
+	
+		StringBuilder stringQuery = new StringBuilder();
+		stringQuery.append("select DISTINCT h.mensajeid from Tbl_Historicos H");
+		stringQuery.append(" inner join Tbl_Destinatarios_Mensajes dm on dm.DESTINATARIOSMENSAJES = h.DESTINATARIOSMENSAJES");
+		stringQuery.append(" INNER JOIN Tbl_Mensajes m ON M.mensajeid = H.mensajeid");
+		stringQuery.append(" inner join Tbl_LotesEnvios l on m.loteenvioid = l.loteenvioid");
+		stringQuery.append(" inner join Tbl_GestionEnvios g on m.mensajeid = g.mensajeid");
+		stringQuery.append(" where H.ESTADOID= 3 and  dm.estado = 'PENDIENTE DE ENVIO'");
+		stringQuery.append(" and H.FECHA between :fechaInicio and :fechaFin ");
+		stringQuery.append(serviciosSql.toString());				
+		
+		SQLQuery query; 
+		query = getSessionFactory().getCurrentSession().createSQLQuery(stringQuery.toString());
+		query.setTimestamp("fechaInicio", fecha);		
+		query.setTimestamp("fechaFin", fechaFin);		 
+
+		List<Object> rows = query.list();
+		for (Object row : rows) {
+			idMensajes.add( ((BigDecimal) row).longValue() );
+		}
+
+		return idMensajes;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
 	public Map<Long, List<Long>> getMensajesPorUsuariosPushYEstadoYMensajeMultidest(String usersId, String estado, Long mensajeId) {
 		Map<Long, List<Long>> res = new HashMap<>();
 		SQLQuery query = null;
