@@ -7,6 +7,7 @@ import com.map.j2ee.pagination.PaginatedList;
 
 import es.minhap.sim.model.TblOrganismos;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
+import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
 
 /**
  * <p>Interface que define los m&eacute;todos para la gesti&oacute;n de aplicacion</p>.
@@ -125,6 +126,11 @@ public interface ServicioOrganismo {
 	Boolean existeOrganismoServicio(Long idOrganismo, Long idServicio);
 
 	void deleteOrganismoPdp(TblOrganismos organismos, String source, String accion, Long accionId) throws BusinessException;
+
+	PaginatedList<OrganismoBean> getOrganismosProveedoresSMS(int start,
+			int size, String order, String columnSort,
+			ProveedorSMSBean criterio, int tipoServidor)
+			throws BusinessException;
 	
 }
 

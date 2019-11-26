@@ -48,4 +48,6 @@ public interface ServicioMensajesAdjuntosHistoricos {
 	 */
 	void delete(Long idMensajeAdjunto);
 
+	TblMensajesAdjuntosHist getMensajesAdjuntosHistById(Long mensajeadjuntoid);
+
 }
