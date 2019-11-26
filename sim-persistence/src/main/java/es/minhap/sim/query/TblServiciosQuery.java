@@ -98,6 +98,8 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public static final String CADUCIDADWEBPUSH = "caducidadWebPush";
     public static final String VAPIDPUBLICKEY = "vapidPublicKey";
     public static final String VAPIDPRIVATEKEY = "vapidPrivateKey";
+    public static final String CADUCIDADCERTIFICADO = "caducidadCertificado";
+    
     /**
      * Valor de busqueda de campo servicioid
      */
@@ -1206,6 +1208,28 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
      * Indica si en la consulta se hace un left join con el padre tblCanales
      */
     private boolean leftJoinTblCanales = false;
+    
+    
+    /**
+     * Valor inferior de rango de busqueda de caducidad certificado
+     */
+    private Date caducidadCertificadoMin;
+
+    /**
+     * Valor superior de rango de busqueda de caducidad certificado
+     */
+    private Date caducidadCertificadoMax;
+
+    /**
+     * Permite buscar cuando campo caducidad certificado es NULL
+     */
+    private boolean caducidadCertificadoIsNull = false;
+
+    /**
+     * Permite buscar cuando campo caducidad certificado es NOT NULL
+     */
+    private boolean caducidadCertificadoIsNotNull = false;
+    
 
     /**
      * Constructor default
@@ -5007,6 +5031,76 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
     public void setLeftJoinTblCanales(boolean leftJoinTblCanales) {
         this.leftJoinTblCanales = leftJoinTblCanales;
     }
+    
+    /**
+     * Valor inferior de rango de busqueda de caducidad certificado
+     * @return ${field.getName()}Min.
+     */
+    public Date getCaducidadCertificadoMin() {
+        if (caducidadCertificadoMin != null) {
+            return DateUtil.toDayBegin(caducidadCertificadoMin);
+        }
+        return caducidadCertificadoMin;
+    }
+
+    /**
+     * Valor inferior de rango de busqueda de caducidad certificado
+     * @param caducidadCertificadoMin Valor de seteo.
+     */
+    public void setCaducidadCertificadoMin(Date caducidadCertificadoMin) {
+        this.caducidadCertificadoMin = caducidadCertificadoMin;
+    }
+
+    /**
+     * Valor superior de rango de busqueda de caducidad certificado
+     * @return caducidadCertificadoMax.
+     */
+    public Date getCaducidadCertificadoMax() {
+        if (caducidadCertificadoMax != null) {
+            return DateUtil.toDayEnd(caducidadCertificadoMax);
+        }
+        return caducidadCertificadoMax;
+    }
+
+    /**
+     * Valor superior de rango de busqueda de caducidad certificado
+     * @param caducidadCertificadoMax Valor de seteo.
+     */
+    public void setCaducidadCertificadoMax(Date caducidadCertificadoMax) {
+        this.caducidadCertificadoMax = caducidadCertificadoMax;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad certificado es NULL
+     * @return boolean.
+     */
+    public boolean isCaducidadCertificadoIsNull() {
+        return caducidadCertificadoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad certificado es NULL
+     * @param caducidadCertificadoIsNull Valor de seteo.
+     */
+    public void setCaducidadCertificadoIsNull(boolean caducidadCertificadoIsNull) {
+        this.caducidadCertificadoIsNull = caducidadCertificadoIsNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidad certificado es NOT NULL
+     * @return boolean.
+     */
+    public boolean isCaducidadCertificadoIsNotNull() {
+        return caducidadCertificadoIsNotNull;
+    }
+
+    /**
+     * Permite buscar cuando campo caducidaCertificado es NOT NULL
+     * @param caducidadCertificadoIsNotNull Valor de seteo.
+     */
+    public void setCaducidadCertificadoIsNotNull(boolean caducidadCertificadoIsNotNull) {
+        this.caducidadCertificadoIsNotNull = caducidadCertificadoIsNotNull;
+    }
 
     /**
      * Agrega recursivamente criterios al Criteria de Hibernate para la utilizacion en busquedas
@@ -6067,6 +6161,22 @@ public class TblServiciosQuery extends AbstractHibernateQueryEntity<TblServicios
         //Aplica ordenamiento solo si corresponde. En count y searchUnique no se utiliza.
         if (useOrder) {
             applyOrder(criteria);
+        }
+        
+        if (getCaducidadCertificadoMin() != null) {
+            criteria.add(Restrictions.ge(CADUCIDADCERTIFICADO, getCaducidadCertificadoMin()));
+        }
+
+        if (getCaducidadCertificadoMax() != null) {
+            criteria.add(Restrictions.le(CADUCIDADCERTIFICADO, getCaducidadCertificadoMax()));
+        }
+
+        if (isCaducidadCertificadoIsNull()) {
+            criteria.add(Restrictions.isNull(CADUCIDADCERTIFICADO));
+        }
+
+        if (isCaducidadCertificadoIsNotNull()) {
+            criteria.add(Restrictions.isNotNull(CADUCIDADCERTIFICADO));
         }
     }
     

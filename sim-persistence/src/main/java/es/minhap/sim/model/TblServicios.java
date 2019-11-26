@@ -185,6 +185,8 @@ public class TblServicios implements java.io.Serializable {
 	@Column(name = "VAPIDPRIVATEKEY", length = 200)
 	private String vapidPrivateKey;
 
+	@Column(name = "CADUCIDADCERTIFICADO", length = 7)
+	private Date caducidadCertificado;
 
 	public TblServicios() {
 	}
@@ -924,6 +926,14 @@ public class TblServicios implements java.io.Serializable {
 	 */
 	public void setExclusivo(Boolean exclusivo) {
 		this.exclusivo = exclusivo;
+	}
+
+	public Date getCaducidadCertificado() {
+		return caducidadCertificado;
+	}
+
+	public void setCaducidadCertificado(Date caducidadCertificado) {
+		this.caducidadCertificado = caducidadCertificado;
 	}
 	
 	public Boolean getSmsExtranjeros() {

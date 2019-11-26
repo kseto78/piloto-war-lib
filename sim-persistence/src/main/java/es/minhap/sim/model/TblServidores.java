@@ -80,6 +80,9 @@ public class TblServidores implements java.io.Serializable {
 
 	@Column(name = "METODOCONSULTA", precision = 1, scale = 0)
 	private Boolean metodoconsulta;
+	
+	@Column(name = "CUOTADIARIA", length = 100)
+	private String cuotadiaria;
 
 	public TblServidores() {
 	}
@@ -348,5 +351,14 @@ public class TblServidores implements java.io.Serializable {
 	public Integer getPlataforma() {
 		return plataforma;
 	}
+
+	public String getCuotadiaria() {
+		return cuotadiaria;
+	}
+
+	public void setCuotadiaria(String cuotadiaria) {
+		this.cuotadiaria = cuotadiaria;
+	}
+
 
 }
