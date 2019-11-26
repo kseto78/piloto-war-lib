@@ -88,6 +88,7 @@ public class OrganismoBean implements Audit, Serializable {
 		this.manual = null;
 		this.fechaActivo = null;
 		this.idPdpDiputaciones = null;
+		this.idProveedorSMS = null;
 		
 	}
 
@@ -294,6 +295,9 @@ public class OrganismoBean implements Audit, Serializable {
 	
 	/**  id organismo pdp. */
 	protected Long idPdpDiputaciones;
+	
+	/**  id proveedor sms. */
+	protected Long idProveedorSMS;
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
@@ -1568,6 +1572,14 @@ public class OrganismoBean implements Audit, Serializable {
 	 */
 	public void setIdPdpDiputaciones(Long idPdpDiputaciones) {
 		this.idPdpDiputaciones = idPdpDiputaciones;
+	}
+
+	public Long getIdProveedorSMS() {
+		return idProveedorSMS;
+	}
+
+	public void setIdProveedorSMS(Long idProveedorSMS) {
+		this.idProveedorSMS = idProveedorSMS;
 	}
 
 }

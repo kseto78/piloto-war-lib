@@ -76,6 +76,7 @@ public class ServicioBean implements Audit, Serializable {
 		this.caducidadWebPush = null;
 		this.vapidPublicKey = null;
 		this.vapidPrivateKey = null;
+		this.caducidadCertificado = null;
 	}
 
 	/**  servicio id. */
@@ -266,6 +267,9 @@ public class ServicioBean implements Audit, Serializable {
 	
 	/**  vapid private key. */
 	protected String vapidPrivateKey = null;
+	
+	/**  caducidad certificado. */
+	protected Date caducidadCertificado = null;
 	
 	/**
 	 * Modificar activado.
@@ -1698,6 +1702,14 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public void setVapidPrivateKey(String vapidPrivateKey) {
 		this.vapidPrivateKey = vapidPrivateKey;
+	}
+
+	public Date getCaducidadCertificado() {
+		return caducidadCertificado;
+	}
+
+	public void setCaducidadCertificado(Date caducidadCertificado) {
+		this.caducidadCertificado = caducidadCertificado;
 	}
 
 }

@@ -37,6 +37,7 @@ public class ServidorBean implements Audit, Serializable {
 		this.usuario = null;
 		this.password = null;
 		this.metodoconsulta = null;
+		this.cuotadiaria = null;
 	}
 
 	/**  servidorid. */
@@ -98,6 +99,9 @@ public class ServidorBean implements Audit, Serializable {
 	
 	/**  is defecto. */
 	protected String isDefecto = null;
+	
+	/**  cuota diaria. */
+	protected String cuotadiaria;
 
 	/**
 	 * Modificar defecto.
@@ -558,6 +562,14 @@ public class ServidorBean implements Audit, Serializable {
 	 */
 	public void setMetodoconsulta(Boolean metodoconsulta) {
 		this.metodoconsulta = metodoconsulta;
+	}
+
+	public String getCuotadiaria() {
+		return cuotadiaria;
+	}
+
+	public void setCuotadiaria(String cuotadiaria) {
+		this.cuotadiaria = cuotadiaria;
 	}
 
 }
