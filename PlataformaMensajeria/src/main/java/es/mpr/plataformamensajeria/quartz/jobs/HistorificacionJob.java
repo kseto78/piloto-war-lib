@@ -134,7 +134,7 @@ public class HistorificacionJob implements Job {
 
 		ProcesoHistBean procesoHistBean = new ProcesoHistBean();
 		procesoHistBean.setFechaInicio(new Date());
-
+		String infoEjecucion = "";
 		try{
 
 			String auxS = new String();
@@ -172,6 +172,8 @@ public class HistorificacionJob implements Job {
 							calendar.setTime(jobBean.getFecha());
 							auxS = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
 							logger.info("Consulta Lotes envios: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
+							infoEjecucion = "Ejecución Manual realizada con busqueda de lotes hasta la fecha de: "+ new SimpleDateFormat("dd/MM/yyyy").format(jobBean.getFecha());
+							
 						}else{
 							//Calculamos la fecha a partir de la cual se realiza el historico de mensajes
 							Integer historificacion = servicio.getHistorificacion();
@@ -205,6 +207,8 @@ public class HistorificacionJob implements Job {
 								/*Se comprueba para cada lote que los mensajes cuya fecha de 'ultimoenvio' es igual o mayor a la definida en el servicio
 								y que ademas TODOS los mensajes del lote se encuentren en estado final (ENVIADO o ANULADO).
 								Si es asi, se historifican los mensajes del lote. */
+								listaLotesEnvios = new ArrayList<>();
+							
 								for(Long idLote : listaLotesEnvios){ 
 									long startTime = System.currentTimeMillis();
 																								
@@ -385,6 +389,9 @@ public class HistorificacionJob implements Job {
 		finally{
 				//Se envia un correo informando del resultado de la ejecucion del JOB
 				SendMailService sendMailService = new SendMailService();
+				if(!infoEjecucion.equals("")){
+					descripcionEstado.append(CARACTER_SEPARADOR_LINEAS + infoEjecucion);
+				}
 				try {
 					sendMailService.initJob(NOMBRE_JOB, procesoHistBean.getCodigoEstado(), descripcionEstado.toString(), properties, tblParametrosServidorManager);
 				} catch (ServletException e) {

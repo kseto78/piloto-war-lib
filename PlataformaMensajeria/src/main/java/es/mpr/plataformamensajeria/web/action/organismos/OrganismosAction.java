@@ -33,6 +33,7 @@ import es.mpr.plataformamensajeria.beans.DetalleAplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleServicioBean;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
 import es.mpr.plataformamensajeria.beans.PlanificacionBean;
+import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServicioOrganismosBean;
 import es.mpr.plataformamensajeria.beans.ServidorBean;
@@ -43,6 +44,7 @@ import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPdpDiputaciones;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicio;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServidor;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
@@ -97,6 +99,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	@Resource(name = "plataformaMensajeriaProperties")
 	private transient PlataformaMensajeriaProperties properties;
 	
+	/**  servicio proveedor SMS. */
+	@Resource(name = "servicioProveedorSMSImpl")
+	private transient ServicioProveedorSMS servicioProveedorSMS;
 	
 	/**  organismo. */
 	private OrganismoBean organismo; 
@@ -157,6 +162,10 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	/**  combo organismos pdp. */
 	transient List<KeyValueObject> comboOrganismosPdp = new ArrayList<>();
+
+	/**  combo proveedores SMS */
+	transient List<KeyValueObject> comboProveedoresSMS = new ArrayList<>();
+			
 	
 	/**  check del list. */
 	private String[] checkDelList;
@@ -1598,7 +1607,6 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		}
 	}
 	
-	
 	/**
 	 * Modificar servidor.
 	 *
@@ -2359,5 +2367,30 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 
+	public void setComboProveedoresSMS(List<KeyValueObject> comboProveedoresSMS) {
+		this.comboProveedoresSMS = comboProveedoresSMS;
+	}
+
+	public List<KeyValueObject> getComboProveedoresSMS() {
+		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+
+		KeyValueObject option;
+
+		ArrayList<ProveedorSMSBean> keys = null;
+		try {
+			keys = (ArrayList<ProveedorSMSBean>) servicioProveedorSMS.getProveedoresSMS(1);
+		} catch (BusinessException e) {
+			logger.error("OrganismosAction - cargarComboProveedoresSMS:" + e);
+		}
+
+		if (keys != null && !keys.isEmpty())
+			for (ProveedorSMSBean key : keys) {
+				option = new KeyValueObject();
+				option.setCodigo(key.getProveedorSMSId().toString());
+				option.setDescripcion(key.getNombre());
+				result.add(option);
+			}
+		return result;
+	}
 	
 }

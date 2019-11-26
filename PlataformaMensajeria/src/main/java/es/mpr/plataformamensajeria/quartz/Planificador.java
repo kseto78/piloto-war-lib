@@ -69,8 +69,9 @@ public class Planificador {
     	logger.info("run - end");
 	}
 	
-	public void planificarUnProceso(String nombreProceso) throws BusinessException{
+	public boolean planificarUnProceso(String nombreProceso) throws BusinessException{
 		
+		boolean planificado = false;
 		logger.info("run - Procesos planificados");
 		List<ProcesosBean> listaProcesos = servicioProcesos.getAllProcesos();
 		logger.info("run - Tam size:" + listaProcesos.size());
@@ -78,11 +79,11 @@ public class Planificador {
 		for (ProcesosBean proceso : listaProcesos){
 			if (proceso!=null && proceso.getNombreClase().equals(nombreProceso) ){
 				logger.info("run - Planificando proceso:" + proceso.getNombre());
-				this.planificarProcesos(proceso);				
-			}
-			
-			
+				this.planificarProcesos(proceso);			
+				planificado = true;
+			}			
 		}
+		return planificado; 
 	}
 	/**
 	 * Planificar jobs.

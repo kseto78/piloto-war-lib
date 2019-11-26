@@ -1,7 +1,6 @@
 package es.mpr.plataformamensajeria.servlet;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -9,20 +8,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
-import org.quartz.TriggerKey;
-import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.map.j2ee.exceptions.BusinessException;
-
 import es.mpr.plataformamensajeria.quartz.Planificador;
+import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 
 /**
  * Servlet implementation class ServletEjecutarProceso
@@ -33,6 +25,8 @@ public class ServletSetEstadoProceso extends HttpServlet {
      
 	private static final Logger logger = LoggerFactory.getLogger(ServletSetEstadoProceso.class);
 	
+	/**  properties. */
+	private PlataformaMensajeriaProperties properties;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -56,11 +50,29 @@ public class ServletSetEstadoProceso extends HttpServlet {
 		}
 		 ApplicationContext applicationContext =
 				 WebApplicationContextUtils.getWebApplicationContext(getServletContext());
-		try {
-			Planificador p = new Planificador(applicationContext);
-			p.planificarUnProceso(proceso);
+		 properties = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
+		 String nodoPrincipal = properties.getProperty("jobNodoActivos.activacion", null);
+		 
+		 try {
 			
-			respuesta = "Planificacion automatica del proceso " + proceso + " correcta.";
+			if(!nodoPrincipal.equals("S")){
+				 respuesta = "Nodo no principal, no se planifica ningun job.";
+				 stream = response.getOutputStream();
+				 stream.write(respuesta.getBytes());
+			     stream.flush();
+				 stream.close();
+				 return;
+			 }
+			
+			Planificador p = new Planificador(applicationContext);
+			boolean planificado = p.planificarUnProceso(proceso);
+			
+			if(planificado){
+				respuesta = "Planificacion automatica del proceso " + proceso + " correcta.";
+			}
+			else{
+				respuesta="No se ha planificado ningun proceso";
+			}
 			stream = response.getOutputStream();
 			stream.write(respuesta.getBytes());
 			stream.flush();

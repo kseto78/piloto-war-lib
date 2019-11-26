@@ -965,7 +965,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			} else {
 				servicio.setConservacion(conservacion);
 			}
-						
+				
 			ServicioBean servicioBean = servicioServicio.createServicioBean(servicio);
 
 			boolean validServicio = false;
@@ -977,6 +977,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 				validServicio = false;
 				addActionErrorSession(this.getText("plataforma.servicio.field.planificacion.faltaError"));
 			}			
+			if(servicio.getCaducidadCertificado() != null){
+				servicioBean.setCaducidadCertificado(servicio.getCaducidadCertificado());
+			}
 			
 			if (!validServicio) {
 				return ERROR;
@@ -1266,7 +1269,9 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 			if (servicio != null) {
 				validServicio = validServicio(servicioBean);
 			}
-
+			if(servicio.getCaducidadCertificado() != null){
+				servicioBean.setCaducidadCertificado(servicio.getCaducidadCertificado());
+			}
 			if (!validServicio) {
 				return ERROR;
 			} else {
@@ -1509,6 +1514,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					}
 					if ("true".equals(servicio.getIsIosPlataforma())) {
 						servicio.setIosplataforma(true);
+						servicioBBDD.setCaducidadCertificado(servicio.getCaducidadCertificado());
 						servicioBBDD.setApnsrutacertificado(servicio.getApnsrutacertificado());
 						if (null != servicio.getApnspasswordcertificado()
 								&& !servicio.getApnspasswordcertificado().isEmpty()) {
@@ -1520,6 +1526,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 						servicio.setIosplataforma(false);
 						servicioBBDD.setApnsrutacertificado(null);
 						servicioBBDD.setApnspasswordcertificado(null);
+						servicioBBDD.setCaducidadCertificado(null);
 					}
 					servicioBBDD.setIsAndroidPlataforma(servicio.getIsAndroidPlataforma());
 					servicioBBDD.setIsIosPlataforma(servicio.getIsIosPlataforma());
@@ -1742,7 +1749,8 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 					}
 					if (servicio.getIsIosPlataforma().equals("true")) {
 						servicio.setIosplataforma(true);
-						servicioBBDD.setApnsrutacertificado(servicio.getApnsrutacertificado());
+						servicioBBDD.setCaducidadCertificado(servicio.getCaducidadCertificado());
+						servicioBBDD.setApnsrutacertificado(servicio.getApnsrutacertificado());						
 						if (null != servicio.getApnspasswordcertificado()
 								&& !servicio.getApnspasswordcertificado().isEmpty()) {
 							servicioBBDD.setApnspasswordcertificado(servicio.getApnspasswordcertificado().trim()); // Eliminamos
@@ -1753,6 +1761,7 @@ public class ServicioAction extends PlataformaPaginationAction implements Servle
 						servicio.setIosplataforma(false);
 						servicioBBDD.setApnsrutacertificado(null);
 						servicioBBDD.setApnspasswordcertificado(null);
+						servicioBBDD.setCaducidadCertificado(null);
 					}
 					servicioBBDD.setIsAndroidPlataforma(servicio.getIsAndroidPlataforma());
 					servicioBBDD.setIsIosPlataforma(servicio.getIsIosPlataforma());

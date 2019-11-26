@@ -65,10 +65,16 @@ public class QuartzInicializarJobs extends HttpServlet  {
 	private static final String INFORMES_SERVICIOS_TRIGGER_NAME = "INFORMES_SERVICIOS_TRIGGER";
 
 	/** Constante DIR3_JOB_NAME. */
-	private static final String DIR3_JOB_NAME = "DIR3";
-	
+	private static final String DIR3_JOB_NAME = "DIR3";	
+
 	/** Constante DIR3_TRIGGER_NAME. */
 	private static final String DIR3_TRIGGER_NAME = "DIR3_TRIGGER";
+	
+	/** Constante ANULAR_MENSAJES_JOB_NAME. */
+	private static final String ANULAR_MENSAJES_JOB_NAME = "ANULAR_MENSAJES";
+	
+	/** Constante ANULAR_MENSAJES_TRIGGER_NAME. */
+	private static final String ANULAR_MENSAJES_TRIGGER_NAME = "ANULAR_MENSAJES_TRIGGER";
 	
 	private static final String TRIGGER = "_TRIGGER";
 	
@@ -112,6 +118,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 				String activarJobCons = configProp.getProperty("jobCons.activacion", null);
 				String activarJobInformesServicios = configProp.getProperty("jobInformesServicios.activacion", null);
 				String activarJobDIR3 = configProp.getProperty("jobDIR3.activacion", null);
+				String anularMensajes = configProp.getProperty("jobAnularMensajes.activacion", null);
 				
 				if((activarJobHist!=null && activarJobHist.equals("S")) ||
 						(activarJobCons!=null && activarJobCons.equals("S")) ||
@@ -136,6 +143,9 @@ public class QuartzInicializarJobs extends HttpServlet  {
 					if(activarJobDIR3!= null && "S".equals(activarJobDIR3)){
 						this.planificarJobDIR3(scheduler);
 					}
+					if(anularMensajes!= null && "S".equals(anularMensajes)){
+						this.planificarAnularMensajes(scheduler);
+					}					
 					scheduler.start();
 				}
 			}catch (SchedulerException se){
@@ -293,6 +303,39 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		}catch (SchedulerException | ParseException | ClassNotFoundException se){
 			logger.error("[QuartzInicializarJobs - planificarJobCons] ",se);
 			logger.debug("planificarJobDIR3 - Error: " + se.getMessage());
+		}
+	}
+	
+	private void planificarAnularMensajes(Scheduler scheduler){
+		try{
+			// Creación del job
+			logger.debug("planificarAnularMensajes - Definimos la tarea");
+	        // Definimos la tarea (nombre de la tarea, nombre del grupo de tareas, Clase que implementa la tarea)
+			JobDetailImpl job = new JobDetailImpl();
+			job.setName(ANULAR_MENSAJES_JOB_NAME);
+			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			@SuppressWarnings("unchecked")
+			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.AnularMensajesJob");
+			job.setJobClass(clase);
+			String cronExpression = configProp.getProperty("cron.jobAnularMensajes.expression", null);
+			logger.debug("planificarAnularMensajes - La cronExpression es: " + cronExpression);
+			CronExpression cronExp = new CronExpression(cronExpression);
+			// Creación del trigger
+	        logger.debug("planificarAnularMensajes - Configuramos el trigger que avisara al planificador");
+	        // Configuramos el Trigger que avisará al planificador de cuando debe ejecutar la tarea 
+			CronTriggerImpl trigger = new CronTriggerImpl();
+			trigger.setCronExpression(cronExp);
+			trigger.setDescription(ANULAR_MENSAJES_TRIGGER_NAME);
+			trigger.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
+			trigger.setName(ANULAR_MENSAJES_TRIGGER_NAME);
+			// Creación del planificador con el job y trigger creados anteriormente y arranque
+			// La tarea definida en JobDetail será ejecutada en los instantes especificados por el Trigger.
+			logger.debug("planificarAnularMensajes - Iniciamos la tarea");
+			scheduler.scheduleJob(job, trigger);
+			
+		}catch (SchedulerException | ParseException | ClassNotFoundException se){
+			logger.error("[QuartzInicializarJobs - planificarAnularMensajes] ",se);
+			logger.debug("planificarAnularMensajes - Error: " + se.getMessage());
 		}
 	}
 }

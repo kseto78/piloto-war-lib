@@ -476,6 +476,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			sTO.setVapidPrivateKey(servicio.getVapidPrivateKey());
 			sTO.setVapidPublicKey(servicio.getVapidPublicKey());
 			sTO.setCaducidadWebPush(servicio.getCaducidadWebPush());
+			sTO.setCaducidadCertificado(servicio.getCaducidadCertificado());
 
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServicioJPA:" + e);
@@ -628,6 +629,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			servicio.setVapidPrivateKey(serv.getVapidPrivateKey());
 			servicio.setVapidPublicKey(serv.getVapidPublicKey());
 			servicio.setCaducidadWebPush(serv.getCaducidadWebPush());
+			servicio.setCaducidadCertificado(serv.getCaducidadCertificado());
 			
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServicioBean:" + e);

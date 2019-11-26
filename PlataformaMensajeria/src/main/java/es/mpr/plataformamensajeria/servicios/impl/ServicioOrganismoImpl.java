@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,8 @@ import es.minhap.plataformamensajeria.iop.manager.TblAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblOrganismosServicioManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServidoresOrganismosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.sim.model.TblAplicaciones;
 import es.minhap.sim.model.TblOrganismos;
@@ -41,9 +44,11 @@ import es.minhap.sim.query.TblAplicacionesQuery;
 import es.minhap.sim.query.TblOrganismosQuery;
 import es.minhap.sim.query.TblOrganismosServicioQuery;
 import es.minhap.sim.query.TblServiciosQuery;
+import es.minhap.sim.query.TblServidoresOrganismosQuery;
 import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 import es.minhap.sim.query.TblUsuariosQuery;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
+import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
@@ -87,6 +92,15 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 	/**  query executor organismos impl. */
 	@Resource(name = "queryExecutorOrganismosImpl")
 	private QueryExecutorOrganismos queryExecutorOrganismosImpl;
+	
+	/**  tbl organismos servicio manager. */
+	@Resource(name = "TblServidoresManagerImpl")
+	private TblServidoresManager tblServidoresManager;	
+
+	/**  tbl servidores organismos manager. */
+	@Resource(name = "tblServidoresOrganismosManagerImpl")
+	private TblServidoresOrganismosManager tblServidoreOrganismosManager;
+	
 
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#getOrganismos()
@@ -219,6 +233,78 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			throw new BusinessException(e,
 					ServicioOrganismoImpl.ERRORS_ORGANISMO_GET_ORGANISMOS);
 
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS#getProveedoresSMS(int, int, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.ProveedorSMSBean, int)
+	 */
+	////MIGRADO
+	@Override
+	public PaginatedList<OrganismoBean> getOrganismosProveedoresSMS(int start, int size,
+			String order, String columnSort, ProveedorSMSBean criterio, int tipoServidor)
+			throws BusinessException {
+		String nombre = null;
+		try {
+			//Columna para ordenar
+			Hashtable<String, String> columns = new Hashtable<String,String>();
+			columns.put("2","nombre");
+			if (columnSort==null)
+				columnSort = "2"; //Id
+			
+			String column = columns.get(columnSort);
+			if (column==null)
+				column = "nombre";
+			
+			TblServidoresOrganismosQuery queryServOrg = new TblServidoresOrganismosQuery();
+			queryServOrg.setServidorid(criterio.getProveedorSMSId());
+
+			List<Long> listaServOrganismos = tblServidoreOrganismosManager.getOrganismosServidorActivos(criterio.getProveedorSMSId());
+			if(listaServOrganismos.isEmpty()){
+				PaginatedList<OrganismoBean> result = new PaginatedList<OrganismoBean>();
+				result.setTotalList(0);
+				List<OrganismoBean> pageList = new ArrayList<OrganismoBean>();
+				result.setPageList(pageList);
+				return result;
+			}
+			TblOrganismosQuery queryOrg = new TblOrganismosQuery();
+
+			for(Long servOrg: listaServOrganismos){
+				queryOrg.addOrganismoidIn(servOrg);
+			}
+			
+			queryOrg.setEliminadoIsNull(true);
+			
+			if(size!=-1){
+				queryOrg.setMaxResults(size);
+			}
+			OrderType ord = null;
+			if (order == null || order.equals("1")){
+				ord = OrderType.ASC;
+			} else {
+				ord = OrderType.DESC;
+			}
+				
+			queryOrg.addOrder(column, ord);			
+			queryOrg.setPrimerResultado(start);			
+
+			List<TblOrganismos> lista = tblOrganismosManager.getOrganismosByQuery(queryOrg);
+			List<OrganismoBean> pageList = getListOrganismoBean(lista);
+			
+			// Total de organismos
+
+			Integer rowcount = queryExecutorOrganismosImpl.countServidoresPaginadoOrganismos(queryOrg);
+			
+			PaginatedList<OrganismoBean> result = new PaginatedList<OrganismoBean>();
+			result.setPageList(pageList);
+			result.setTotalList(rowcount);
+			
+			return result;
+		}
+		catch (Exception e){
+			logger.error("ServicioProveedorSMS - getProveedoresSMS:" + e);
+			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			
 		}
 	}
 

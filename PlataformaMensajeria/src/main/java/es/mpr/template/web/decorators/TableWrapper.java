@@ -13,6 +13,7 @@ import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
+import es.mpr.plataformamensajeria.beans.ContactoBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesBean;
 import es.mpr.plataformamensajeria.beans.DestinatariosMensajesHistoricosBean;
 import es.mpr.plataformamensajeria.beans.GestionEnvioBean;
@@ -221,7 +222,7 @@ public String getServidorAction() {
 		ProveedorSMSBean proveedorSMS = (ProveedorSMSBean) getCurrentRowObject();
 		String idProveedorSMS = proveedorSMS.getId().toString();
 
-		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + proveedorSMS.getNombre() + "');\" href=\"deleteProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a>";
+		return "<div id=\"ajaxloader_ajax_"+idProveedorSMS+"\" style=\"float:left\"> <span  class=\"btnTree\" title=\"Lista de Organismos\" onclick=\"return loadOrganismo('"+ idProveedorSMS +"');\"></span></div> <a  class=\"btnEdit\" title=\"Editar\" href=\"editProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return loadOrganismos('" + idProveedorSMS + "');\" href=\"deleteProveedorSMS.action?idProveedorSMS=" + idProveedorSMS + "\"></a>";
 	}
 	
 	/**
@@ -326,6 +327,18 @@ public String getServidorAction() {
 		String idUsuario = usuario.getUsuarioId().toString();
 
 		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editUsuario.action?idUsuario=" + idUsuario + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + usuario.getNombre() + "');\" href=\"deleteUsuario.action?idUsuario=" + idUsuario + "\"></a>";
+	}
+	
+	/**
+	 * Obtener contactos action.
+	 *
+	 * @return contactos action
+	 */
+	public String getContactosAction() {
+
+		ContactoBean contacto = (ContactoBean) getCurrentRowObject();
+		String idContacto = contacto.getContactoId().toString();
+		return "<a  class=\"btnEdit\" title=\"Editar\" href=\"editContactos.action?idContacto=" + idContacto + "\"></a> <a class=\"btnDelete\" title=\"Eliminar\" onclick=\"return confirmDelete('" + contacto.getNombre() + "');\" href=\"deleteContactos.action?idContacto=" + idContacto + "\"></a>";
 	}
 
 	/**

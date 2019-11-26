@@ -329,6 +329,7 @@ public String newSearch() throws BaseException {
 				servidorBBDD.setDescripcion(servidor.getDescripcion());
 				servidorBBDD.setActivo(servidor.getActivo());
 				servidorBBDD.setPordefecto(servidor.getPordefecto());
+				servidorBBDD.setCuotadiaria(servidor.getCuotadiaria());
 			}
 			if (validaServidor(servidorBBDD)) {
 				

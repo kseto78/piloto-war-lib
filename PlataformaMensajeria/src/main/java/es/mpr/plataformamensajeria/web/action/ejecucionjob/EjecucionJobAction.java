@@ -46,6 +46,7 @@ import es.mpr.plataformamensajeria.beans.JobBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.quartz.Planificador;
+import es.mpr.plataformamensajeria.quartz.jobs.AnularMensajesJob;
 import es.mpr.plataformamensajeria.quartz.jobs.EstadisticasConsolidadasJob;
 import es.mpr.plataformamensajeria.quartz.jobs.HistorificacionJob;
 import es.mpr.plataformamensajeria.quartz.jobs.InformesServiciosJob;
@@ -102,6 +103,10 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	/**  historificacion job. */
 	@Resource(name = "reenviarMensajesPendientesJob")
 	private transient ReenviarMensajesPendientesJob reenviarMensajesPendientesJob;
+	
+	/**  informes servicios job. */
+	@Resource(name = "anularMensajesJob")
+	private transient AnularMensajesJob anularMensajesJob;
 	
 	/**  informes servicios job. */
 	@Resource(name = "informesServiciosJob")
@@ -200,6 +205,9 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	/** Constante PROC_INFORMES. */
 	private static final String PROC_INFORMES = "INFORMES_SERVICIOS";
 	
+	/** Constante PROC_ANULACION_MENSAJES. */
+	private static final String PROC_ANULACION_MENSAJES = "ANULACION MENSAJES";
+	
 	/** Constante PROC_DIR3. */
 	private static final String PROC_DIR3 = "DIR3";
 	
@@ -236,6 +244,8 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	private static final String EJECUCIONJOB_UPDATE_OK = "plataforma.ejecucionjob.update.ok";
 	
 	private static final String PROCESOMANUAL_UPDATE_OK = "plataforma.procesomanual.update.ok";
+	
+	private String propertyServiciosAnularMensajes;
 		
 
 	/**
@@ -275,7 +285,11 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				}else if (jobBean.getNombreJob().equals(PROC_INFORMES)){
 					informesServiciosJob.lanzarJob(servletContext, jobBean);
 	//				pushServiceImpl.sendPush(null, null);
-				}else{
+				}else if (jobBean.getNombreJob().equals(PROC_ANULACION_MENSAJES)){
+					anularMensajesJob.lanzarJob(servletContext, jobBean);
+				}				
+				else{
+				
 					recuperarInforDIRJob.lanzarJob(servletContext, jobBean);
 				}
 			}
@@ -285,7 +299,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 			addActionErrorSession("Ha ocurrido un error en la ejecucion del job, pongase en contacto con el administrador");
 		}		
 		if(jobBean != null){
-			addActionMessageSession("Job ejecutandose en segundo plano");
+			addActionMessageSession("Job ejecutado correctamente");
 		}
 		return SUCCESS;
 	}
@@ -344,7 +358,9 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				comboServicios = getComboServicios();
 			}else if(jobBean.getNombreJob().equals(PROC_CONS)){
 				comboServicios = getComboServiciosConservacion();
-			} else if(jobBean.getNombreJob().equals(PROC_REENVIO)){
+			} else if(jobBean.getNombreJob().equals(PROC_ANULACION_MENSAJES)){
+				propertyServiciosAnularMensajes = getPropertyServiciosAnularMensajes();
+			}else if(jobBean.getNombreJob().equals(PROC_REENVIO)){
 				PaginatedList<ProcesosBean> result;
 				
 				PaginatedList<ProcesosManualesBean> resultProcesosManuales;
@@ -843,10 +859,14 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 						res = connectionHTTP(urlProceso.toString());	
 						if(res.contains("correcta")){
 							addActionMessageSession(this.getText(EJECUCIONJOB_UPDATE_OK));
-						}else{
+						}else if(res.contains("Nodo no principal, no se planifica ningun job.")){
 							servicioProcesos.updateProceso(procesoBBDDcopia, source, accion, accionId);
-							addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error.planificarNodo"));
+							addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error.planificarNodoPrincipal"));
 						}
+							else{
+								servicioProcesos.updateProceso(procesoBBDDcopia, source, accion, accionId);
+								addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error.planificarNodo"));
+							}
 					} catch (IOException e) {						
 						e.printStackTrace();				
 						servicioProcesos.updateProceso(procesoBBDDcopia, source, accion, accionId);
@@ -1024,6 +1044,10 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		option = new KeyValueObject();
 		option.setCodigo(PROC_REENVIO);
 		option.setDescripcion(PROC_REENVIO);
+		result.add(option);
+		option = new KeyValueObject();
+		option.setCodigo(PROC_ANULACION_MENSAJES);
+		option.setDescripcion(PROC_ANULACION_MENSAJES);
 		result.add(option);
 
 		return result;
@@ -1388,6 +1412,25 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 
 		public void setTieneServiciosAutomatica(String tieneServiciosAutomatica) {
 			this.tieneServiciosAutomatica = tieneServiciosAutomatica;
+		}
+
+		public String getPropertyServiciosAnularMensajes() throws BusinessException {
+			String idServ = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null);
+			ArrayList<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(idServ.split(",")));
+			propertyServiciosAnularMensajes ="";
+			for(String serv:serviciosAeatGiss){
+				ServicioBean servicio = new ServicioBean();
+				servicio.setServicioId(Integer.valueOf(serv));
+				servicio = servicioServicio.loadServicio(servicio);
+				propertyServiciosAnularMensajes += servicio.getNombre()+",";
+			}
+			
+			return propertyServiciosAnularMensajes.substring(0, propertyServiciosAnularMensajes.length() - 1);
+		}
+
+		public void setPropertyServiciosAnularMensajes(
+				String propertyServiciosAnularMensajes) {
+			this.propertyServiciosAnularMensajes = propertyServiciosAnularMensajes;
 		}
 
 		

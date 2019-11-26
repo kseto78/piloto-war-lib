@@ -1764,7 +1764,7 @@ public class ServicioGestionEnviosImpl implements ServicioGestionEnvios {
 //					dato = respuesta.getStatus().getDetails()+" El Id Lote es: "+respuesta.getLote().getIdLote();
 //				}
 //			}
-
+//
 		} catch (Exception e) {
 			logger.error("ServicioGestionEnviosImpl - enviarPeticion:" + e);
 		}

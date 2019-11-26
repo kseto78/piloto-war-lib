@@ -87,6 +87,10 @@ public class ServicioMensajesAdjuntosHistoricosImpl implements ServicioMensajesA
 
 	}
 	
+	public TblMensajesAdjuntosHist getMensajesAdjuntosHistById(Long idMensajeAdjuntoHistId){
+		return tblMensajesAdjuntosHistManager.getMensajesAdjuntosHistById(idMensajeAdjuntoHistId);
+	}
+	
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesAdjuntosHistoricos#insert(es.minhap.sim.model.TblMensajesAdjuntosHist)
 	 */

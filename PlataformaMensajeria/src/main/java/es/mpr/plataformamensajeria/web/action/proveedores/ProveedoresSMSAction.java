@@ -19,11 +19,13 @@ import com.map.j2ee.util.KeyValueObject;
 import com.map.j2ee.util.StringUtil;
 import com.opensymphony.xwork2.Preparable;
 
+import es.mpr.plataformamensajeria.beans.OrganismoBean;
 import es.mpr.plataformamensajeria.beans.ParametroServidorBean;
 import es.mpr.plataformamensajeria.beans.PlanificacionBean;
 import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
 import es.mpr.plataformamensajeria.beans.TipoParametroBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioParametroServidor;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPlanificacion;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProveedorSMS;
@@ -57,9 +59,15 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 
 	/** Constante TABLE_ID. */
 	private static final String TABLE_ID = "tableId";
+	
+	/** Constante TABLE_ORGANISMOS ID. */
+	private static final String TABLE_ORGANISMOS_ID = "tableOrganismosId";
 
 	/** Constante NO_USER. */
 	private static final String NO_USER = "noUser";
+	
+	/** Constante ORGANISMOS */
+	private static final String ORGANISMOS = "Organismos";
 
 	/** Constante INFO_USER. */
 	private static final String INFO_USER = "infoUser";
@@ -73,6 +81,10 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	/**  servicio proveedor SMS. */
 	@Resource(name = "servicioProveedorSMSImpl")
 	private transient ServicioProveedorSMS servicioProveedorSMS;
+	
+	/**  servicio proveedor SMS. */
+	@Resource(name = "servicioOrganismoImpl")
+	private transient ServicioOrganismo servicioOrganismos;
 
 	/**  servicio tipo parametro. */
 	@Resource(name = "servicioTipoParametroImpl")
@@ -105,6 +117,9 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	/**  lista proveedores SMS. */
 	private transient List<ProveedorSMSBean> listaProveedoresSMS = null;
 	
+	/**  lista proveedores SMS. */
+	private transient List<OrganismoBean> listaOrganismos = null;
+	
 	/**  lista parametros servidor. */
 	private List<ParametroServidorBean> listaParametrosServidor = null;
 	
@@ -131,6 +146,9 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	
 	/**  result count. */
 	private String resultCount;
+	
+	/**  result count organismos. */
+	private String resultCountOrganismos;
 
 	/**
 	 * New search.
@@ -191,6 +209,58 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 			}
 		}
 
+		return SUCCESS;
+	}
+	
+	public String loadOrganismosProveedores() throws BusinessException{
+		PaginatedList<OrganismoBean> result = new PaginatedList<OrganismoBean>();		
+		Integer totalSize;	
+		
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+			return ProveedoresSMSAction.NO_USER;
+
+		// Carga Destinatarios_mensajes		
+		int page = getPage(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); // Pagina a mostrar
+		int inicio = (page - 1) * 20;
+		String order = getOrder(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); // Ordenar de modo ascendente o
+		// descendente
+		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); // Columna usada para
+		// ordenar
+		ProveedorSMSBean proveedorSMSBean = new ProveedorSMSBean();
+		
+		
+		if (null == idProveedorSMS || idProveedorSMS.equals("")) {			
+			return SUCCESS;			
+		}
+		
+		proveedorSMSBean.setProveedorSMSId(Long.valueOf(idProveedorSMS));
+		
+		
+		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
+		
+		result = servicioOrganismos.getOrganismosProveedoresSMS(inicio,
+				(export) ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20")), order,
+				columnSort, proveedorSMSBean, Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_TIPO_SERVIDOR_SMS,null)));
+		
+				
+		
+		totalSize = result.getTotalList();
+		listaOrganismos = result.getPageList();
+		
+		resultCountOrganismos = (totalSize != null) ? totalSize.toString() : "0";
+		
+		if (!export) {
+				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null)+ORGANISMOS, totalSize);
+				getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null)+ORGANISMOS,
+				20);
+		} else {
+			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null)+ORGANISMOS, totalSize);
+			getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null)+ORGANISMOS,
+					totalSize);
+		}
+		
+	
+		
 		return SUCCESS;
 	}
 	
@@ -1159,4 +1229,23 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	public void setServicioPlanificacion(ServicioPlanificacion servicioPlanificacion) {
 		this.servicioPlanificacion = servicioPlanificacion;
 	}
+
+	
+
+	public String getResultCountOrganismos() {
+		return resultCountOrganismos;
+	}
+
+	public void setResultCountOrganismos(String resultCountOrganismos) {
+		this.resultCountOrganismos = resultCountOrganismos;
+	}
+
+	public List<OrganismoBean> getListaOrganismos() {
+		return listaOrganismos;
+	}
+
+	public void setListaOrganismos(List<OrganismoBean> listaOrganismos) {
+		this.listaOrganismos = listaOrganismos;
+	}
+
 }

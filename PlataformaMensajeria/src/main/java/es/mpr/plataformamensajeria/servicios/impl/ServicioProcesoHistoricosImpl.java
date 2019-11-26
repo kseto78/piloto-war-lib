@@ -416,18 +416,23 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	 *
 	 * @param fecha the fecha
 	 * @param procesoHistorificacionBean the proceso historificacion bean
+	 * @throws BusinessException 
 	 */
 	///MIGRADO
-	private void historificaMensajesAdjuntosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
+	private void historificaMensajesAdjuntosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) throws BusinessException {
 		for (List<TblMensajesAdjuntosHist> l :procesoHistorificacionBean.getListasMensajesAdjuntosHist()){
 			for (TblMensajesAdjuntosHist mah : l) {
 				mah.getTblAdjuntosHist().setFechahistorificacion(fecha);
 				servicioAdjuntoEmailHist.insert(mah.getTblAdjuntosHist());
 			}
 			sessionFactorySIMApp.getCurrentSession().flush();
-			for (TblMensajesAdjuntosHist mah : l) {
-				mah.setFechahistorificacion(fecha);
-				servicioMensajesAdjuntosHist.insert(mah);
+		
+			for (TblMensajesAdjuntosHist mah : l) {				
+				if(null == servicioMensajesAdjuntosHist.getMensajesAdjuntosHistById(mah.getMensajeadjuntoid())){
+					mah.setFechahistorificacion(fecha);
+					servicioMensajesAdjuntosHist.insert(mah);
+				}
+				
 			}
 		}
 	}
