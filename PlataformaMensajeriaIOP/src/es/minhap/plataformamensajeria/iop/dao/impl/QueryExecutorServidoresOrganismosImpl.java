@@ -98,7 +98,7 @@ public class QueryExecutorServidoresOrganismosImpl extends HibernateDaoSupport i
 	@Override
 	@Transactional
 	public List<Long> obtenerOrganismosNoActivos(Long idProveedorSMS) {
-		List<Long> res = new ArrayList<Long>();
+		List<Long> res = new ArrayList<>();
 
 		try {
 			if (log.isDebugEnabled()) {

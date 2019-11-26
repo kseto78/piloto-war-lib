@@ -275,8 +275,7 @@ public class QueryExecutorMensajesImpl extends HibernateDaoSupport implements Qu
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
-	public List<Long> getAnularMensajes(String listaServicios, Date fecha,
-			Date fechaFin) {
+	public List<Long> getAnularMensajes(String listaServicios, Date fecha,Date fechaFin) {
 		List<Long> idMensajes = new ArrayList<Long>();
 		
 		List<String> serviciosAeatGiss = new ArrayList<>();
