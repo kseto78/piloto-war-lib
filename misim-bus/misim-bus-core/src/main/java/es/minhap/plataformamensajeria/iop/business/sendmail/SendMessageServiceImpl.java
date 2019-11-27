@@ -75,6 +75,7 @@ import es.minhap.plataformamensajeria.iop.manager.TblErrorMensajeLogManager;
 import es.minhap.plataformamensajeria.iop.manager.TblMensajesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresManager;
+import es.minhap.plataformamensajeria.iop.manager.TblServidoresServiciosManager;
 import es.minhap.plataformamensajeria.sm.modelo.Adjunto;
 import es.minhap.plataformamensajeria.sm.modelo.DestinatarioDMensaje;
 import es.minhap.plataformamensajeria.sm.modelo.MailData;
@@ -116,6 +117,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
 
 	@Resource
 	private TblAplicacionesManager aplicacionesManager;
+	
+	@Resource
+	private TblServidoresServiciosManager servidoresServiciosManager;
 
 	@Autowired
 	private QueryExecutorMensajes queryExecutorMensajes;
@@ -493,9 +497,21 @@ public class SendMessageServiceImpl implements ISendMessageService {
 						} catch (Exception e) {
 							sendOK = false;
 							errorMessage.append(e.getMessage());
-							//Exception ex = e;
-							LOG.error("Excepcion :" + errorMessage + " (postMail)", e);
-
+							
+							Long apl = queryExecutorAplicaciones.findAplicacionByMessageId(mensajeId);
+							String nombreAplicacion = aplicacionesManager.getAplicacion(apl).getNombre();
+							List<String> servicioMensaje = queryExecutorServicios.findServicioByMessageId(mensajeId);
+							
+							String[] idServicio = servicioMensaje.get(0).split("~");
+							TblServicios servicio = serviciosManager.getServicio(Long.valueOf(idServicio[0]));
+							
+							List<Long> idServidor = servidoresServiciosManager.getServidoresFromServidoresServiciosByServicio(Long.valueOf(idServicio[0]));							
+							TblServidores servidor = servidoresManager.getServidorById(idServidor.get(0));							
+							errorMessage.append(" Aplicación: " + nombreAplicacion + ", Servicio: "+ servicio.getNombre() + ", Servidor SMTP: "+ servidor.getNombre() );
+							
+							//Exception ex = e;							
+							LOG.error("Excepcion :" + errorMessage.toString() +" (postMail)", e );							
+							
 							TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 							tblErrorMensajeLog.setCodigoerror(new Long("0"));
 							tblErrorMensajeLog.setDescripcionerror("MAIL_ID: " + mensajeId + ". Error: ("
@@ -559,7 +575,19 @@ public class SendMessageServiceImpl implements ISendMessageService {
 											+ sfex.getCause());
 								}
 							}
-							LOG.error("Excepcion :" + errorMessage.toString() + " (postMail)", e);
+							
+							Long apl = queryExecutorAplicaciones.findAplicacionByMessageId(mensajeId);
+							String nombreAplicacion = aplicacionesManager.getAplicacion(apl).getNombre();
+							List<String> servicioMensaje = queryExecutorServicios.findServicioByMessageId(mensajeId);
+							
+							String[] idServicio = servicioMensaje.get(0).split("~");
+							TblServicios servicio = serviciosManager.getServicio(Long.valueOf(idServicio[0]));
+							
+							List<Long> idServidor = servidoresServiciosManager.getServidoresFromServidoresServiciosByServicio(Long.valueOf(idServicio[0]));							
+							TblServidores servidor = servidoresManager.getServidorById(idServidor.get(0));
+							errorMessage.append(" Aplicación: " + nombreAplicacion + ", Servicio: "+ servicio.getNombre() + ", Servidor SMTP: "+ servidor.getNombre() );
+							
+							LOG.error("Excepcion :" + errorMessage.toString() +" (postMail)", e );
 
 							TblErrorMensajeLog tblErrorMensajeLog = new TblErrorMensajeLog();
 							tblErrorMensajeLog.setCodigoerror(new Long("0"));
