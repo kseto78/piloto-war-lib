@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import es.minhap.plataformamensajeria.iop.dao.QueryExecutorServidoresOrganismos;
 import es.minhap.plataformamensajeria.iop.manager.TblLogManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServidoresOrganismosManager;
 import es.minhap.sim.dao.TblServidoresOrganismosDAO;
@@ -29,6 +30,9 @@ public class TblServidoresOrganismosManagerImpl implements TblServidoresOrganism
 	
 	@Resource 
 	private TblLogManager tblLogManager;
+	
+	@Resource
+	private QueryExecutorServidoresOrganismos queryExecutorServidoresOrganismos;
 
 	@Override
 	public List<TblServidoresOrganismos> getServidoresOrganismosByQuery(TblServidoresOrganismosQuery query) {
@@ -38,6 +42,11 @@ public class TblServidoresOrganismosManagerImpl implements TblServidoresOrganism
 	@Override
 	public TblServidoresOrganismos getServidoresOrganismosById(Long servidorOrganismoId) {
 		return tblServidoresOrganismosDAO.get(servidorOrganismoId);
+	}
+	
+	@Override
+	public List<Long> getOrganismosServidorActivos(Long idProveedorSms) {
+		return queryExecutorServidoresOrganismos.obtenerOrganismosNoActivos(idProveedorSms);
 	}
 
 	@Override

@@ -1216,6 +1216,12 @@ public class TblMensajesManagerImpl implements TblMensajesManager {
 			sender.send(mensajeJms, maxRetries, servicio.getServicioid().toString(), false);
 		}
 	}
+	
+	@Override
+	public List<Long> getMensajesAnular(String listaServicios, Date fecha,
+			Date fechaFin) {
+			return queryExecutorMensajes.getAnularMensajes(listaServicios,fecha,fechaFin);		
+	}
 
 	@Override
 	@Transactional

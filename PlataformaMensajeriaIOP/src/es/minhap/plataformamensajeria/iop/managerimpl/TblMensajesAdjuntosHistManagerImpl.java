@@ -138,6 +138,11 @@ public class TblMensajesAdjuntosHistManagerImpl implements TblMensajesAdjuntosHi
 		}
 		return a;
 	}
+	
+	@Override
+	public TblMensajesAdjuntosHist getMensajesAdjuntosHistById(Long idMensajeAdjuntoHistId) {
+		return mensajesAdjuntosHistDAO.get(idMensajeAdjuntoHistId);
+	}
 
 /**
 	 * @return the mensajesAdjuntosHistDAO
