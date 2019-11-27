@@ -17,7 +17,7 @@ public interface QueryExecutorEstadisticas {
 	 * 
 	 * @return
 	 */
-	public List<Object[]> getEstadisticas(EstadisticasBean estadistica, StringBuffer aplicaciones);
+	List<Object[]> getEstadisticas(EstadisticasBean estadistica, StringBuffer aplicaciones);
 	
 	
 }

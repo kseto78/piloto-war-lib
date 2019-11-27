@@ -10,8 +10,8 @@ import es.minhap.plataformamensajeria.sm.modelo.Adjunto;
 public interface QueryExecutorMensajeAdjuntos {
 	
 
-	public List<Adjunto> getAttachment(Long mensajeId);
+	List<Adjunto> getAttachment(Long mensajeId);
 	
-	public List<Adjunto> getImage(Long mensajeId);
+	List<Adjunto> getImage(Long mensajeId);
 
 }

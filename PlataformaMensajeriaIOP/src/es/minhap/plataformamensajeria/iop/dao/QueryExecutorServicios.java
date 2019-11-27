@@ -14,7 +14,7 @@ public interface QueryExecutorServicios {
 	 * @param prefijoSMS 
 	 * @return List<Long>
 	 */
-	public List<Long> comprobarServicioUnico(String recipient, Long canalId, String prefijoSMS);
+	List<Long> comprobarServicioUnico(String recipient, Long canalId, String prefijoSMS);
 	
 	/**
 	 * Obtiene el servicio a partir del organismo pagador y del canal
@@ -23,7 +23,7 @@ public interface QueryExecutorServicios {
 	 * @param canal
 	 * @return
 	 */
-	public Integer obtenerServicio(String codOrganismoPagadorSMS, String canal);
+	Integer obtenerServicio(String codOrganismoPagadorSMS, String canal);
 	
 	
 	/**
@@ -33,7 +33,7 @@ public interface QueryExecutorServicios {
 	 * @param idMensaje
 	 * @return
 	 */
-	public List<String> findServicioByMessageId(Long idMensaje);
+	List<String> findServicioByMessageId(Long idMensaje);
 
 	/**
 	 * Obtiene un mapa con identificador del servicio y el detalle del mismo a partir del id de mensaje
@@ -43,7 +43,7 @@ public interface QueryExecutorServicios {
 	 * @param idMensaje
 	 * @return
 	 */
-	public Map<Integer, Servicio> findServicioMultiorganismo(Long idServicio, Long idMensaje);
+	Map<Integer, Servicio> findServicioMultiorganismo(Long idServicio, Long idMensaje);
 	
 	/**
 	 * Obtiene un mapa con identificador del servicio y el detalle del mismo a partir del id de mensaje
@@ -52,5 +52,5 @@ public interface QueryExecutorServicios {
 	 * @param idServicio
 	 * @return
 	 */
-	public Map<Integer, Servicio> findServicio(Long idServicio);
+	Map<Integer, Servicio> findServicio(Long idServicio);
 }

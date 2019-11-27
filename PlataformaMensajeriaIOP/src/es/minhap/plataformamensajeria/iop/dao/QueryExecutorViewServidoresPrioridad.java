@@ -18,7 +18,7 @@ public interface QueryExecutorViewServidoresPrioridad {
 	 * @param mensajeId
 	 * @return
 	 */
-	public List<ParametrosServidor> getServidores(Long mensajeId);
+	List<ParametrosServidor> getServidores(Long mensajeId);
 	
 	
 }

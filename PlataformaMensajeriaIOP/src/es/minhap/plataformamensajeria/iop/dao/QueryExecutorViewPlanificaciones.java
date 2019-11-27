@@ -20,7 +20,7 @@ public interface QueryExecutorViewPlanificaciones {
 	 * @param servicioId
 	 * @return
 	 */
-	public Integer validaPlanificacionServicio(Long planificacionId, Integer tipo, String dia, Integer servidorId,
+	Integer validaPlanificacionServicio(Long planificacionId, Integer tipo, String dia, Integer servidorId,
 			String paramHoraHasta, String paramHoraDesde, Integer servicioId);
 	
 	/**
@@ -33,7 +33,7 @@ public interface QueryExecutorViewPlanificaciones {
 	 * @param paramHoraDesde
 	 * @return
 	 */
-	public Integer validaPlanificacionServidor(Long planificacionId, String dia, Integer servidorId,
+	Integer validaPlanificacionServidor(Long planificacionId, String dia, Integer servidorId,
 			String paramHoraHasta, String paramHoraDesde);
 	
 
@@ -49,7 +49,7 @@ public interface QueryExecutorViewPlanificaciones {
 	 * @param servidorId
 	 * @return
 	 */
-	public Integer countPlanificacionPorHorasOrganismo(Integer organismoId, String dia, Long planificacionId,
+	Integer countPlanificacionPorHorasOrganismo(Integer organismoId, String dia, Long planificacionId,
 			String paramHoraHasta, String paramHoraDesde, Integer servicioId, Integer servidorId, Integer tipo);
 
 }

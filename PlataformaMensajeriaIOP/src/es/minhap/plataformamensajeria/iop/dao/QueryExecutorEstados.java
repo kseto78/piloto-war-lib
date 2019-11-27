@@ -17,7 +17,7 @@ public interface QueryExecutorEstados {
 	 * @param loteId
 	 * @return
 	 */
-	public EstadosBean getEstadoByLoteId(Long loteId);
+	EstadosBean getEstadoByLoteId(Long loteId);
 	
 	/**
 	 * Obtiene el estado para un mensaje
@@ -25,7 +25,7 @@ public interface QueryExecutorEstados {
 	 * @param mensajeId
 	 * @return
 	 */
-	public EstadosBean getEstadoByMensajeId(Long mensajeId);
+	EstadosBean getEstadoByMensajeId(Long mensajeId);
 	
 	/**
 	 * Obtiene el estado para un mensaje
@@ -34,5 +34,5 @@ public interface QueryExecutorEstados {
 	 * @param listaUsuarios
 	 * @return String
 	 */
-	public String getEstadoByMensajeIdUsuarioPush(Long mensajeId, List<String> listaUsuarios);
+	String getEstadoByMensajeIdUsuarioPush(Long mensajeId, List<String> listaUsuarios);
 }
