@@ -46,5 +46,7 @@ public interface TblServidoresOrganismosManager {
 	 */
 	void delete(Long servidorOrganismoId, String source, String accion, Long accionId, String descripcion);
 
+	List<Long> getOrganismosServidorActivos(Long idProveedorSms);
+
 	
 }

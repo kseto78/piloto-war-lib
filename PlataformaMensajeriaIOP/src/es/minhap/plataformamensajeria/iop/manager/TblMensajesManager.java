@@ -323,6 +323,8 @@ public interface TblMensajesManager {
 
 	Integer operacionMensajeReenviar(Long idMensaje, String usuario, String password, String estadoFinal);
 
+	public List<Long> getMensajesAnular(String listaServicios, Date fecha,
+			Date fechaFin);
 	
 	
 }

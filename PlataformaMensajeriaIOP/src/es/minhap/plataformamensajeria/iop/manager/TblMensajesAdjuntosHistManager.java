@@ -57,4 +57,6 @@ public interface TblMensajesAdjuntosHistManager {
 	 * @return Integer
 	 */
 	Integer countAdjuntosByMensaje(Long mensajeId);
+
+	TblMensajesAdjuntosHist getMensajesAdjuntosHistById(Long idMensajeAdjuntoHistId);
 }
