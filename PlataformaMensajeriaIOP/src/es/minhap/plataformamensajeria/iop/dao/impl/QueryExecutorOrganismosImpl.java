@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
@@ -22,6 +23,7 @@ import es.minhap.common.exception.ApplicationException;
 import es.minhap.plataformamensajeria.iop.beans.OrganismoBean;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorOrganismos;
 import es.minhap.sim.model.TblOrganismos;
+import es.minhap.sim.query.TblOrganismosQuery;
 
 /**
  * 
@@ -179,6 +181,31 @@ public class QueryExecutorOrganismosImpl extends HibernateDaoSupport implements 
 		}
 	}
 	
+	@Override
+	public Integer countServidoresPaginadoOrganismos(TblOrganismosQuery queryOrg) {
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug(LOG_START);
+			}
+			String sql = "select count(o.organismoid) from TblOrganismos o where (o.eliminado is null or o.eliminado != 'S')  ";
+			
+			List<Long> idOrganismos = queryOrg.getOrganismoidIn();
+			String sqlWhere = "";
+			if(!idOrganismos.isEmpty()){
+				sqlWhere = " AND o.organismoid  IN ("+StringUtils.join(idOrganismos, ',')+")"; 
+			}
+			sql = ""+ sql + sqlWhere;
+			
+			Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+						
+			return  ((Long)query.uniqueResult()).intValue();
+			
+		} catch (Exception e) {
+			log.error(HAS_ERROR, e);
+			throw new ApplicationException(e);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getListAutocomplete(String term) {
@@ -311,7 +338,11 @@ public class QueryExecutorOrganismosImpl extends HibernateDaoSupport implements 
 		} else {
 			sb.append(" and  o.organismoid not in (select tblOrganismos.organismoid from TblOrganismosServicio)");
 		}
-
+		
+		if (null != ob.getIdProveedorSMS() && ob.getIdProveedorSMS() >0){
+			sb.append("and o.organismoid in (select organismoid from TblServidoresOrganismos where servidorid ="+ob.getIdProveedorSMS()+" )");
+		}
+		
 		if (null != column) {
 			getOrder(order, column, sb);
 		}
