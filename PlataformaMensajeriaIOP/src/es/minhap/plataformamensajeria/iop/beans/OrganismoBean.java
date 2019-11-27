@@ -71,6 +71,7 @@ public class OrganismoBean {
 	private Boolean asociadosServicio;
 	private Date fechaEstado;
 	private Date fechaActivo;
+	private Long idProveedorSMS;
 
 	public OrganismoBean() {
 		super();
@@ -138,6 +139,7 @@ public class OrganismoBean {
 		this.asociadosServicio = null;
 		this.fechaEstado = null;
 		this.fechaActivo = null;
+		this.idProveedorSMS = null;
 
 	}
 
@@ -1088,6 +1090,14 @@ public class OrganismoBean {
 	 */
 	public void setFechaActivo(Date fechaActivo) {
 		this.fechaActivo = fechaActivo;
+	}
+
+	public Long getIdProveedorSMS() {
+		return idProveedorSMS;
+	}
+
+	public void setIdProveedorSMS(Long idProveedorSMS) {
+		this.idProveedorSMS = idProveedorSMS;
 	}
 	
 	
