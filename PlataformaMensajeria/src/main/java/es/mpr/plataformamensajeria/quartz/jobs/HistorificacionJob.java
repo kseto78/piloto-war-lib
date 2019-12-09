@@ -250,8 +250,6 @@ public class HistorificacionJob implements Job {
 								/*Se comprueba para cada lote que los mensajes cuya fecha de 'ultimoenvio' es igual o mayor a la definida en el servicio
 								y que ademas TODOS los mensajes del lote se encuentren en estado final (ENVIADO o ANULADO).
 								Si es asi, se historifican los mensajes del lote. */
-								listaLotesEnvios = new ArrayList<>();
-							
 								for(Long idLote : listaLotesEnvios){
  	
 									long startTime = System.currentTimeMillis();
