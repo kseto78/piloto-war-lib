@@ -472,3 +472,10 @@ tbody td.colorGray {
 .tdOculta {
 	display:none;
 }
+.description {
+    display:none;
+    position:absolute;
+    border:1px solid #000;
+    max-width:150px;
+    background:yellow;
+}

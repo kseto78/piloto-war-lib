@@ -13,6 +13,35 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class LotesEnviosBean implements Audit{
 
+	/**  lote envio id. */
+	private Integer loteEnvioId;
+
+	/**  nombre. */
+	private String nombre;
+
+	/**  descripcion. */
+	private String descripcion;
+
+	/**  servicio id. */
+	private Integer servicioId;
+
+	/**  estado envio id. */
+	private Integer estadoEnvioId;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  creador por. */
+	private String creadorPor;
+
+	/**  fecha modificacion. */
+	private Date fechaModificacion;
+
+	/**  modificado por. */
+	private String modificadoPor;
+
+
+
 	/**
 	 * Constructor de lotes envios bean.
 	 */
@@ -27,35 +56,6 @@ public class LotesEnviosBean implements Audit{
 		this.fechaModificacion=null;
 		this.modificadoPor=null;
 	}
-	
-	/**  lote envio id. */
-	private Integer loteEnvioId;
-	
-	/**  nombre. */
-	private String nombre;
-	
-	/**  descripcion. */
-	private String descripcion;
-	
-	/**  servicio id. */
-	private Integer servicioId;
-	
-	/**  estado envio id. */
-	private Integer estadoEnvioId;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  creador por. */
-	private String creadorPor;
-	
-	/**  fecha modificacion. */
-	private Date fechaModificacion;
-	
-	/**  modificado por. */
-	private String modificadoPor;
-	
-	
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

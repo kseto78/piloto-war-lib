@@ -54,6 +54,64 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class PlanificacionAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String PLANIFICACIONAC = "PlanificacionAction - loadComboBusquedaServidores:";
+
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String NO_SE_HA_ACTUAL = "No se ha actualizado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes";
+
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servidores.planificacion.horaDesde.menor.error";
+
+	protected static final String PLANIFICACIONAC0 = "PlanificacionAction - getComboConfiguracion:";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String R_CONST_REF = "1";
+
+	protected static final String R_CONST_0 = "2";
+
+	protected static final String R_CONST_1 = "3";
+
+	protected static final String R_CONST_2 = "4";
+
+	protected static final String R_CONST_3 = ":";
+
+	protected static final String R_CONST_4 = "20";
+
+	protected static final String ACTIVO = "activo";
+
+	protected static final String PLATAFORMADOTPL = "plataforma.planificacion.delete.ok";
+
+	protected static final String NO_SE_HA_ACTUAL0 = "No se ha actualizado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones";
+
+	protected static final String PLATAFORMADOTPL0 = "plataforma.planificacion.create.ok";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String PLATAFORMADOTPL1 = "plataforma.planificacion.delete.error";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_INSERTAR";
+
+	protected static final String LOGDOTACCION_DE0 = "log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String LOGDOTACCION_IN = "log.ACCION_INSERTAR";
+
+	protected static final String PLATAFORMADOTPL2 = "plataforma.planificacion.create.error";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String LOGDOTSOURCE_PL = "log.SOURCE_PLANIFICACIONES";
+
+	protected static final String PLATAFORMADOTPL3 = "plataforma.planificacion.busquedas.formato.horadesdefin.error";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(PlanificacionAction.class);
 	
@@ -100,26 +158,26 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	private PlanificacionBean planificacion;
 	
 	/**  combo aplicaciones. */
-	private List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboAplicaciones = new ArrayList<>();
 	
 	/**  combo canales. */
-	private List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboCanales = new ArrayList<>();
 	
 	/**  combo servidores. */
 	@SuppressWarnings("unused")
-	private List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboServidores = new ArrayList<>();
 	
 	/**  combo busqueda servidores. */
-	private List<KeyValueObject> comboBusquedaServidores = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboBusquedaServidores = new ArrayList<>();
 	
 	/**  combo tipo planificaciones. */
-	private List<KeyValueObject> comboTipoPlanificaciones = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboTipoPlanificaciones = new ArrayList<>();
 	
 	/**  combo configuraciones. */
-	private List<KeyValueObject> comboConfiguraciones = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboConfiguraciones = new ArrayList<>();
 	
 	/**  combo servicios. */
-	private List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
+	private List<KeyValueObject> comboServicios = new ArrayList<>();
 	
 	/**  lista planificaciones. */
 	public List<PlanificacionBean> listaPlanificaciones = null;
@@ -191,17 +249,21 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
  */
 ////MIGRADO
 	public String search() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 		boolean doSearch = true;
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_4));
 		if (planificacion != null && !PlataformaMensajeriaUtil.isEmpty(planificacion.getHoraDesde())
 				&& !validoFormatoHora(planificacion.getHoraDesde())) {
 			addActionErrorSession(this.getText("plataforma.planificacion.busquedas.formato.horadesde.error"));
@@ -214,18 +276,18 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		}
 		if (planificacion != null && !PlataformaMensajeriaUtil.isEmpty(planificacion.getHoraDesdeFin())
 				&& !validoFormatoHora(planificacion.getHoraDesdeFin())) {
-			addActionErrorSession(this.getText("plataforma.planificacion.busquedas.formato.horadesdefin.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPL3));
 			doSearch = false;
 		}
 		if (planificacion != null && !PlataformaMensajeriaUtil.isEmpty(planificacion.getHoraHastaFin())
 				&& !validoFormatoHora(planificacion.getHoraHastaFin())) {
-			addActionErrorSession(this.getText("plataforma.planificacion.busquedas.formato.horadesdefin.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPL3));
 			doSearch = false;
 		}
 		if (doSearch) {
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-			PaginatedList<PlanificacionBean> result = servicioPlanificacion.getPlanificaciones(inicio, (export) ? -1
-					: Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, planificacion);
+			PaginatedList<PlanificacionBean> result = servicioPlanificacion.getPlanificaciones(inicio, export ? -1
+					: Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_4)), order, columnSort, planificacion);
 			Integer totalSize = result.getTotalList();
 
 			listaPlanificaciones = result.getPageList();
@@ -234,14 +296,14 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 
 			if (!export) {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-						Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+				getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), 
+						Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_4)));
 			} else {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+				getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 			}
 
 			if (listaPlanificaciones != null && !listaPlanificaciones.isEmpty()) {
-				for (int indice = 0; indice < listaPlanificaciones.size(); indice++) {
+				for (int indice = 0, s = listaPlanificaciones.size(); indice < s; indice++) {
 
 					PlanificacionBean planificacion = listaPlanificaciones.get(indice);
 					planificacion.setNombreServicio(StringEscapeUtils.escapeHtml(planificacion.getNombreServicio()));
@@ -261,15 +323,16 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
  */
 ////MIGRADO
 	public String createPlanificacionApp() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_PLANIFICACIONES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_IN, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PL, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE0, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (planificacion != null) {
 
-			if (planificacion.getIsActivo() != null && planificacion.getIsActivo().indexOf("activo") != -1) {
+			if (planificacion.getIsActivo() != null && planificacion.getIsActivo().indexOf(ACTIVO) != -1) {
 				planificacion.setActivo(true);
 			} else {
 				planificacion.setActivo(false);
@@ -282,23 +345,27 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 						planificacion.getDomingo(), planificacion.getHoraHasta(), planificacion.getHoraDesde());
 
 				// Si valido = 1 es correcto
-				if (valido == 1) {
+				switch (valido) {
+				case 1:
 					Integer id = servicioPlanificacion.newPlanificacion(planificacion, source, accion, accionId,
 							descripcion);
-
 					this.idPlanificacion = id.toString();
-					addActionMessageSession(this.getText("plataforma.planificacion.create.ok"));
-				} else if (valido == 2) {
+					addActionMessageSession(this.getText(PLATAFORMADOTPL0));
+					break;
+				case 2:
 					addActionErrorSession("No se ha guardado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
-				} else
+					break;
+				default:
 					addActionErrorSession("No se ha guardado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes");
+					break;
+				}
 
 			} else {
 				return ERROR;
 			}
 
 		} else {
-			addActionErrorSession(this.getText("plataforma.planificacion.create.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPL2));
 			return ERROR;
 		}
 		return SUCCESS;
@@ -313,15 +380,16 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String create() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_PLANIFICACIONES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);	
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_IN, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PL, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE0, null);	
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (planificacion != null) {
 			
-			if (planificacion.getIsActivo() != null && planificacion.getIsActivo().indexOf("activo") != -1) {
+			if (planificacion.getIsActivo() != null && planificacion.getIsActivo().indexOf(ACTIVO) != -1) {
 				planificacion.setActivo(true);
 			} else {
 				planificacion.setActivo(false);
@@ -329,14 +397,14 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			if (planificacionValida(planificacion)) {
 				Integer id = servicioPlanificacion.newPlanificacion(planificacion, source, accion, accionId, descripcion);
 				this.idPlanificacion = id.toString();
-				addActionMessageSession(this.getText("plataforma.planificacion.create.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTPL0));
 				
 			} else {
 				return ERROR;
 			}
 
 		} else {
-			addActionErrorSession(this.getText("plataforma.planificacion.create.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPL2));
 			return ERROR;
 		}
 		return SUCCESS;
@@ -352,8 +420,9 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String updatePlanificacionViewApp() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		modificaActivo = false;
 		int valido = servicioPlanificacion.validaPlanificacionOptima(idPlanificacion,
 				planificacion.getTipoPlanificacionId(), planificacion.getServidorId(), planificacion.getServicioId(), planificacion.getLunes(),
@@ -362,15 +431,15 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				planificacion.getHoraHasta(), planificacion.getHoraDesde());
 		
 		// Si valido = 1 es correcto
-		if (valido == 1) {
+		switch (valido) {
+		case 1:
 			update();
 			return SUCCESS;
-
-		} else if (valido == 2) {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
+		case 2:
+			addActionErrorSession(NO_SE_HA_ACTUAL0);
 			return ERROR;
-		} else {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes");
+		default:
+			addActionErrorSession(NO_SE_HA_ACTUAL);
 			return ERROR;
 		}
 	}
@@ -384,8 +453,9 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String updatePlanificacionServicio() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		modificaActivo = false;
 		int valido = servicioPlanificacion.validaPlanificacionOptima(idPlanificacion,
 				planificacion.getTipoPlanificacionId(), planificacion.getServidorId(), planificacion.getServicioId(), planificacion.getLunes(),
@@ -393,14 +463,15 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				planificacion.getViernes(), planificacion.getSabado(), planificacion.getDomingo(),
 				planificacion.getHoraHasta(), planificacion.getHoraDesde());
 
-		if (valido == 1) {
+		switch (valido) {
+		case 1:
 			update();
 			return SUCCESS;
-		} else if (valido == 2) {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
+		case 2:
+			addActionErrorSession(NO_SE_HA_ACTUAL0);
 			return ERROR;
-		} else {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes");
+		default:
+			addActionErrorSession(NO_SE_HA_ACTUAL);
 			return ERROR;
 		}
 	}
@@ -413,8 +484,9 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String updatePlanificacionOrganismo() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		modificaActivo = false;
 		int valido = servicioPlanificacion.validaPlanificacionOptimaOrganismo(idPlanificacion,
 				planificacion.getTipoPlanificacionId(), planificacion.getServidorId(), planificacion.getServicioId(), planificacion.getLunes(),
@@ -422,14 +494,15 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				planificacion.getViernes(), planificacion.getSabado(), planificacion.getDomingo(),
 				planificacion.getHoraHasta(), planificacion.getHoraDesde(), Integer.valueOf(idOrganismo));
 
-		if (valido == 1) {
+		switch (valido) {
+		case 1:
 			/* String retorno = */update();
 			return SUCCESS;
-		} else if (valido == 2) {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
+		case 2:
+			addActionErrorSession(NO_SE_HA_ACTUAL0);
 			return ERROR;
-		} else {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes");
+		default:
+			addActionErrorSession(NO_SE_HA_ACTUAL);
 			return ERROR;
 		}
 	}
@@ -442,8 +515,9 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String updatePlanificacionServer() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		modificaActivo = false;
 		int valido = servicioPlanificacion.validaPlanificacionServidor(idPlanificacion, planificacion.getServidorId(),
 				planificacion.getLunes(), planificacion.getMartes(), planificacion.getMiercoles(),
@@ -453,7 +527,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 		if (valido == 1) {
 			return update();
 		} else {
-			addActionErrorSession("No se ha actualizado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
+			addActionErrorSession(NO_SE_HA_ACTUAL0);
 			return ERROR;
 		}
 	}
@@ -468,10 +542,11 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	public String update() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PLANIFICACIONES", null);
+		String source = properties.getProperty(LOGDOTSOURCE_PL, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ACTUALIZAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		PlanificacionBean planificacionBBDD = null;
 		if (planificacion == null) {
 			addActionErrorSession(this.getText("plataforma.planificacion.update.error"));
@@ -533,10 +608,12 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		if (idPlanificacion == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		if (idPlanificacion == null) {
 			throw new BusinessException("EL idPlanificacion recibido es nulo");
+		}
 		try {
 			modificaActivo = true;
 			planificacion = new PlanificacionBean();
@@ -547,13 +624,13 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			}
 
 			if (planificacion.getTipoPlanificacionId() != null && planificacion.getTipoPlanificacionId() == 1) {
-				tipoPlanificacionId = "2";
+				tipoPlanificacionId = R_CONST_0;
 			} else if (planificacion.getTipoPlanificacionId() != null && planificacion.getTipoPlanificacionId() == 2) {
-				tipoPlanificacionId = "1";
+				tipoPlanificacionId = R_CONST_REF;
 			} else if (planificacion.getTipoPlanificacionId() != null && planificacion.getTipoPlanificacionId() == 3) {
-				tipoPlanificacionId = "3";
+				tipoPlanificacionId = R_CONST_1;
 			} else if (planificacion.getTipoPlanificacionId() != null && planificacion.getTipoPlanificacionId() == 4) {
-				tipoPlanificacionId = "4";
+				tipoPlanificacionId = R_CONST_2;
 			}
 
 			return SUCCESS;
@@ -574,24 +651,25 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String deletePlanificacionServicioViewApp() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
 		String source = properties.getProperty("log.SOURCE_SERVICIOS", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		boolean sw = true;
 		if (idPlanificacion == null) {
-			addActionErrorSession(this.getText("plataforma.planificacion.delete.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPL1));
 		} else {
 			planificacion = new PlanificacionBean();
 			planificacion.setPlanificacionId(Integer.valueOf(idPlanificacion));
 			sw = servicioPlanificacion.deletePlanificacion(planificacion, source, accion, accionId, descripcion);
 			if (!sw) {
-				addActionErrorSession(this.getText("plataforma.planificacion.delete.error"));
+				addActionErrorSession(this.getText(PLATAFORMADOTPL1));
 			} else {
 
-				addActionMessageSession(this.getText("plataforma.planificacion.delete.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTPL));
 			}
 		}
 		return SUCCESS;
@@ -606,23 +684,24 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String delete() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PLANIFICACIONES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PL, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		boolean sw = true;
 		if (idPlanificacion == null) {
-			addActionErrorSession(this.getText("plataforma.planificacion.delete.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPL1));
 		} else {
 			planificacion = new PlanificacionBean();
 			planificacion.setPlanificacionId(Integer.valueOf(idPlanificacion));
 			sw = servicioPlanificacion.deletePlanificacion(planificacion, source, accion, accionId, descripcion);
 			if (!sw) {
-				addActionErrorSession(this.getText("plataforma.planificacion.delete.error"));
+				addActionErrorSession(this.getText(PLATAFORMADOTPL1));
 			} else {
-				addActionMessageSession(this.getText("plataforma.planificacion.delete.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTPL));
 			}
 		}
 		return SUCCESS;
@@ -637,12 +716,13 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PLANIFICACIONES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PL, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		boolean sw = true;
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.planificacion.deleteSelected.error"));
@@ -653,12 +733,13 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				planificacion.setPlanificacionId(Integer.valueOf(id));
 				sw = servicioPlanificacion.deletePlanificacion(planificacion, source, accion, accionId, descripcion);
 				if (!sw) {
-					addActionErrorSession(this.getText("plataforma.planificacion.delete.error") + " [Identificador: "
+					addActionErrorSession(this.getText(PLATAFORMADOTPL1) + " [Identificador: "
 							+ planificacion.getPlanificacionId() + "]");
 				}
 			}
-			if (sw)
+			if (sw) {
 				addActionMessageSession(this.getText("plataforma.planificacion.deleteSelected.ok"));
+			}
 
 		}
 		return SUCCESS;
@@ -672,17 +753,16 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String loadServidoresByTipoPlan() {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		if (tipoPlanificacionId == null || (tipoPlanificacionId != null && "".equals(tipoPlanificacionId))) {
-			if (planificacion != null && planificacion.getTipoPlanificacionId() != null) {
-				tipoPlanificacionId = planificacion.getTipoPlanificacionId().toString();
-			}
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
 		}
-		if (tipoPlanificacionId != null && "1".equals(tipoPlanificacionId)) {
-			tipoPlanificacionId = "2";
-		} else if (tipoPlanificacionId != null && "2".equals(tipoPlanificacionId)) {
-			tipoPlanificacionId = "1";
+		if ((tipoPlanificacionId == null || "".equals(tipoPlanificacionId)) && planificacion != null && planificacion.getTipoPlanificacionId() != null) {
+			tipoPlanificacionId = planificacion.getTipoPlanificacionId().toString();
+		}
+		if (R_CONST_REF.equals(tipoPlanificacionId)) {
+			tipoPlanificacionId = R_CONST_0;
+		} else if (R_CONST_0.equals(tipoPlanificacionId)) {
+			tipoPlanificacionId = R_CONST_REF;
 		}
 		return SUCCESS;
 	}
@@ -717,9 +797,9 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 
 			ServicioBean servicio = servicioServicio.loadServicio(servicioBean);
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-			if ((rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)||PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario)) {
 				comboConfiguraciones = getComboConfiguracion(servicio.getCanalid());
-			} else if (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)) {
+			} else if (PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario)) {
 				comboConfiguraciones = getComboServidoresServicio(servicio.getServicioId());
 			}
 			if (planificacion == null) {
@@ -754,7 +834,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	private List<KeyValueObject> getComboConfiguracion(Integer idCanal) {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
 		ArrayList<ProveedorSMSBean> keysSMS = null;
@@ -766,10 +846,10 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				keysSMS = (ArrayList<ProveedorSMSBean>) servicioProveedorSMS.getProveedoresSMS(Integer
 						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMS", null)));
 			} catch (BusinessException e) {
-				logger.error("PlanificacionAction - getComboConfiguracion:" + e);
+				logger.error(PLANIFICACIONAC0 + e);
 			}
 
-			if (keysSMS != null && !keysSMS.isEmpty())
+			if (keysSMS != null && !keysSMS.isEmpty()) {
 				for (ProveedorSMSBean key : keysSMS) {
 
 					option = new KeyValueObject();
@@ -777,15 +857,16 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 					option.setDescripcion(key.getNombre());
 					result.add(option);
 				}
+			}
 		} else if (idCanal != null && idCanal.intValue() == Integer.parseInt(properties.getProperty("generales.CANAL_SMTP_ID", null))) {
 			try {
 				keysSMTP = (ArrayList<ServidorBean>) servicioServidor.getServidores(Integer.parseInt(properties
 						.getProperty("generales.TIPO_SERVIDOR_SMTP", null)));
 			} catch (BusinessException e) {
-				logger.error("PlanificacionAction - getComboConfiguracion:" + e);
+				logger.error(PLANIFICACIONAC0 + e);
 			}
 
-			if (keysSMTP != null && !keysSMTP.isEmpty())
+			if (keysSMTP != null && !keysSMTP.isEmpty()) {
 				for (ServidorBean key : keysSMTP) {
 
 					option = new KeyValueObject();
@@ -793,15 +874,16 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 					option.setDescripcion(key.getNombre());
 					result.add(option);
 				}
+			}
 		} else if (idCanal != null && idCanal.intValue() == Integer.parseInt(properties.getProperty("generales.CANAL_RECEPCION_SMS_ID", null))) {
 			try {
 				keysReceptorSMS = (ArrayList<ReceptorSMSBean>) servicioReceptorSMS.getReceptoresSMS(Integer
 						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_RECEPCION", null)));
 			} catch (BusinessException e) {
-				logger.error("PlanificacionAction - getComboConfiguracion:" + e);
+				logger.error(PLANIFICACIONAC0 + e);
 			}
 
-			if (keysReceptorSMS != null && !keysReceptorSMS.isEmpty())
+			if (keysReceptorSMS != null && !keysReceptorSMS.isEmpty()) {
 				for (ReceptorSMSBean key : keysReceptorSMS) {
 
 					option = new KeyValueObject();
@@ -809,15 +891,16 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 					option.setDescripcion(key.getNombre());
 					result.add(option);
 				}
+			}
 		} else if (idCanal != null && idCanal.intValue() == Integer.parseInt(properties.getProperty("generales.CANAL_SERVIDOR_PUSH_ID", null))) {
 			try {
 				keysServidorPush = (ArrayList<ServidorPushBean>) servicioServidorPush.getServidoresPush(Integer
 						.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_PUSH", null)));
 			} catch (BusinessException e) {
-				logger.error("PlanificacionAction - getComboConfiguracion:" + e);
+				logger.error(PLANIFICACIONAC0 + e);
 			}
 
-			if (keysServidorPush != null && !keysServidorPush.isEmpty())
+			if (keysServidorPush != null && !keysServidorPush.isEmpty()) {
 				for (ServidorPushBean key : keysServidorPush) {
 
 					option = new KeyValueObject();
@@ -825,6 +908,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 					option.setDescripcion(key.getNombre());
 					result.add(option);
 				}
+			}
 		}
 		return result;
 	}
@@ -880,7 +964,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			keys = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServicioBean key : keys) {
 
 				option = new KeyValueObject();
@@ -888,6 +972,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -907,10 +992,10 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion(tipoPlanificacionId);
 
 		} catch (BusinessException e) {
-			logger.error("PlanificacionAction - loadComboBusquedaServidores:" + e);
+			logger.error(PLANIFICACIONAC + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServidorBean key : keys) {
 
 				option = new KeyValueObject();
@@ -918,6 +1003,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -928,19 +1014,19 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	///MIGRADO
 	private List<KeyValueObject> loadComboServidores() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
-		ArrayList<ServidorBean> keys = null;;
+		ArrayList<ServidorBean> keys = null;
 		try {
 			if (planificacion != null && planificacion.getTipoPlanificacionId() != null
-					&& "1".equals(planificacion.getTipoPlanificacionId())) {
-				keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion("2");
+					&& R_CONST_REF.equals(planificacion.getTipoPlanificacionId())) {
+				keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion(R_CONST_0);
 			} else if (planificacion != null && planificacion.getTipoPlanificacionId() != null
-					&& "2".equals(planificacion.getTipoPlanificacionId())) {
-				keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion("1");
+					&& R_CONST_0.equals(planificacion.getTipoPlanificacionId())) {
+				keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion(R_CONST_REF);
 			} else if (planificacion != null && planificacion.getTipoPlanificacionId() != null
-					&& "3".equals(planificacion.getTipoPlanificacionId())) {
-				keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion("3");
+					&& R_CONST_1.equals(planificacion.getTipoPlanificacionId())) {
+				keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresByTipoPlanificacion(R_CONST_1);
 			}
 		} catch (BusinessException e) {
 			logger.error("PlanificacionAction - loadComboServidores:" + e);
@@ -965,13 +1051,13 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
  */
 ////MIGRADO
 	private List<KeyValueObject> loadComboBusquedaServidores() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
 		ArrayList<ServidorBean> keys = null;
 		try {
 			keys = (ArrayList<ServidorBean>) servicioServidor.getAllServidores();
 		} catch (BusinessException e) {
-			logger.error("PlanificacionAction - loadComboBusquedaServidores:" + e);
+			logger.error(PLANIFICACIONAC + e);
 		}
 
 		if (keys != null && !keys.isEmpty()) {
@@ -1002,7 +1088,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			logger.error("PlanificacionAction - loadComboCanales:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (CanalBean key : keys) {
 
 				option = new KeyValueObject();
@@ -1010,6 +1096,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1069,7 +1156,7 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
  */
 /////MIGRADO
 	private List<KeyValueObject> loadComboAplicaciones() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option = null;
 		ArrayList<AplicacionBean> keys = null;
 		try {
@@ -1078,13 +1165,14 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			logger.error("PlanificacionAction - loadComboAplicaciones:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (AplicacionBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getAplicacionId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1124,10 +1212,8 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 					addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaHasta.formato.error"));
 					sw = false;
 				}
-				if (sw) {
-					if (!validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
-						sw = false;
-					}
+				if (sw && !validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
+					sw = false;
 				}
 			}
 			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes())
@@ -1160,17 +1246,17 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
-		String[] horaDesdeArray = horaDesde.split(":");
-		String[] horaHastaArray = horaHasta.split(":");
-		int hDesde = Integer.valueOf(horaDesdeArray[0]);
-		int mDesde = Integer.valueOf(horaDesdeArray[1]);
-		int hHasta = Integer.valueOf(horaHastaArray[0]);
-		int mHasta = Integer.valueOf(horaHastaArray[1]);
+		String[] horaDesdeArray = horaDesde.split(R_CONST_3);
+		String[] horaHastaArray = horaHasta.split(R_CONST_3);
+		int hDesde = Integer.parseInt(horaDesdeArray[0]);
+		int mDesde = Integer.parseInt(horaDesdeArray[1]);
+		int hHasta = Integer.parseInt(horaHastaArray[0]);
+		int mHasta = Integer.parseInt(horaHastaArray[1]);
 		if (hDesde > hHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde > mHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde == mHasta) {
 			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.iguales.error"));
@@ -1188,10 +1274,8 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
-		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
-			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
-				sw = false;
-			}
+		if (!PlataformaMensajeriaUtil.isEmpty(hora) && !PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+			sw = false;
 		}
 		return sw;
 	}
@@ -1207,17 +1291,17 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 			return loadComboServidores(tipoPlanificacionId);
 		} else if (planificacion != null && planificacion.getTipoPlanificacionId() != null) {
 			String tipoPlanificacionId = planificacion.getTipoPlanificacionId().toString();
-			if (tipoPlanificacionId.equals("2")) {
-				tipoPlanificacionId = "1";
+			if (R_CONST_0.equals(tipoPlanificacionId)) {
+				tipoPlanificacionId = R_CONST_REF;
 			}
-			if (tipoPlanificacionId.equals("1")) {
-				tipoPlanificacionId = "2";
+			if (R_CONST_REF.equals(tipoPlanificacionId)) {
+				tipoPlanificacionId = R_CONST_0;
 			}
-			if (tipoPlanificacionId.equals("3")) {
-				tipoPlanificacionId = "3";
+			if (R_CONST_1.equals(tipoPlanificacionId)) {
+				tipoPlanificacionId = R_CONST_1;
 			}
-			if (tipoPlanificacionId.equals("4")) {
-				tipoPlanificacionId = "4";
+			if (R_CONST_2.equals(tipoPlanificacionId)) {
+				tipoPlanificacionId = R_CONST_2;
 			}
 
 			return loadComboServidores(tipoPlanificacionId);
@@ -1454,24 +1538,6 @@ public class PlanificacionAction extends PlataformaPaginationAction implements S
 	 */
 	public void setIdAplicacion(String idAplicacion) {
 		this.idAplicacion = idAplicacion;
-	}
-
-	/**
-	 * Obtener n action.
-	 *
-	 * @return n action
-	 */
-	public String getNAction() {
-		return nAction;
-	}
-
-	/**
-	 * Modificar n action.
-	 *
-	 * @param action new n action
-	 */
-	public void setNAction(String action) {
-		this.nAction = action;
 	}
 
 	/**

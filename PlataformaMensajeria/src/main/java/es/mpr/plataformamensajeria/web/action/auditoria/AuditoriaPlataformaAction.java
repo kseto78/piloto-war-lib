@@ -37,10 +37,37 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class AuditoriaPlataformaAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String SERVIDORES_WEB_REF = "SERVIDORES WEB PUSH";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String SERVIDORES_PUSH = "SERVIDORES PUSH";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String USUARIOS = "USUARIOS";
+
+	protected static final String R_CONST_REF = "0";
+
+	protected static final String ORGANISMOS = "ORGANISMOS";
+
+	protected static final String SERVICIOS = "SERVICIOS";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String APLICACIONES = "APLICACIONES";
+
+	protected static final String R_CONST_0 = "20";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-//	private static Logger logger = Logger.getLogger(AuditoriaPlataformaAction.class);
 	
 	/**  servicio auditoria plataforma. */
 @Resource(name="servicioAuditoriaPlataformaImpl")
@@ -58,10 +85,10 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 	
 	/**  combo entidad. */
 	//Combos
-	List<KeyValueObject> comboEntidad = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboEntidad = new ArrayList<>();
 	
 	/**  combo operacion. */
-	List<KeyValueObject> comboOperacion = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboOperacion = new ArrayList<>();
 
 	
     /**  result count. */
@@ -75,35 +102,40 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
      */
     ////MIGRADO
     public String newSearch() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-	   	int page = getPage("tableId"); //Pagina a mostrar
-    	String order = getOrder("tableId"); //Ordenar de modo ascendente o descendente
-    	String columnSort = getColumnSort("tableId"); //Columna usada para ordenar
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+	   	int page = getPage(TABLEID); 
+	   	//Pagina a mostrar
+    	String order = getOrder(TABLEID); 
+    	//Ordenar de modo ascendente o descendente
+    	String columnSort = getColumnSort(TABLEID); 
+    	//Columna usada para ordenar
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-    	int inicio = (page-1)* Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+    	int inicio = (page-1)* Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
     	if(auditoriaPlataforma==null){
     		auditoriaPlataforma = new AuditoriaPlataformaBean();
     		auditoriaPlataforma.setFechaDesde(DateUtil.toDayBegin(new Date()));
     		auditoriaPlataforma.setFechaHasta(DateUtil.toDayEnd(new Date()));
     	}
-    	PaginatedList<AuditoriaPlataformaBean> result = servicioAuditoriaPlataforma.getAuditoriasPlataforma(inicio,(export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"))
+    	PaginatedList<AuditoriaPlataformaBean> result = servicioAuditoriaPlataforma.getAuditoriasPlataforma(inicio,export?-1:Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0))
     			,order,columnSort,auditoriaPlataforma,export); 
     	Integer totalSize = result.getTotalList();
     	
     	listaAuditorias =  result.getPageList();
-    	resultCount = (totalSize!=null)?totalSize.toString():"0";
+    	resultCount = (totalSize!=null)?totalSize.toString():R_CONST_REF;
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-    				Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+    				Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
     	    	    	
-    	if (listaAuditorias!=null && !listaAuditorias.isEmpty())
-    	{    		
-    		for (int indice=0;indice<listaAuditorias.size();indice++) {
+    	if (listaAuditorias!=null && !listaAuditorias.isEmpty()) {
+    			
+    		for (int indice=0, s = listaAuditorias.size();indice<s;indice++) {
     			
     			AuditoriaPlataformaBean auditoriaPlataforma = listaAuditorias.get(indice);
     			auditoriaPlataforma.setAdtUsuario(StringEscapeUtils.escapeHtml(auditoriaPlataforma.getAdtUsuario()));
@@ -125,30 +157,35 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
      */
     ////MIGRADO
 	public String search() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-	   	int page = getPage("tableId"); //Pagina a mostrar
-    	String order = getOrder("tableId"); //Ordenar de modo ascendente o descendente
-    	String columnSort = getColumnSort("tableId"); //Columna usada para ordenar
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+	   	int page = getPage(TABLEID); 
+	   	//Pagina a mostrar
+    	String order = getOrder(TABLEID); 
+    	//Ordenar de modo ascendente o descendente
+    	String columnSort = getColumnSort(TABLEID); 
+    	//Columna usada para ordenar
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-    	int inicio = (page-1)* Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
-    	PaginatedList<AuditoriaPlataformaBean> result = servicioAuditoriaPlataforma.getAuditoriasPlataforma(inicio,(export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"))
+    	int inicio = (page-1)* Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
+    	PaginatedList<AuditoriaPlataformaBean> result = servicioAuditoriaPlataforma.getAuditoriasPlataforma(inicio,export?-1:Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0))
     			,order,columnSort,auditoriaPlataforma,export); 
     	Integer totalSize = result.getTotalList();
     	
     	listaAuditorias =  result.getPageList();
-    	resultCount = (totalSize!=null)?totalSize.toString():"0";
+    	resultCount = (totalSize!=null)?totalSize.toString():R_CONST_REF;
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-    				Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), 
+    				Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
     	    	    	
-    	if (listaAuditorias!=null && !listaAuditorias.isEmpty())
-    	{    		
-    		for (int indice=0;indice<listaAuditorias.size();indice++) {
+    	if (listaAuditorias!=null && !listaAuditorias.isEmpty()) {
+    			
+    		for (int indice=0, s = listaAuditorias.size();indice<s;indice++) {
     			
     			AuditoriaPlataformaBean auditoriaPlataforma = listaAuditorias.get(indice);
     			auditoriaPlataforma.setAdtUsuario(StringEscapeUtils.escapeHtml(auditoriaPlataforma.getAdtUsuario()));
@@ -172,8 +209,8 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
         List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option;
         option = new KeyValueObject();
-		option.setCodigo("APLICACIONES");
-		option.setDescripcion("APLICACIONES");
+		option.setCodigo(APLICACIONES);
+		option.setDescripcion(APLICACIONES);
 		result.add(option);		
 		
 		option = new KeyValueObject();
@@ -182,13 +219,13 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 		result.add(option);
 		
 		option = new KeyValueObject();
-		option.setCodigo("SERVICIOS");
-		option.setDescripcion("SERVICIOS");
+		option.setCodigo(SERVICIOS);
+		option.setDescripcion(SERVICIOS);
 		result.add(option);		
 		
 		option = new KeyValueObject();
-		option.setCodigo("ORGANISMOS");
-		option.setDescripcion("ORGANISMOS");
+		option.setCodigo(ORGANISMOS);
+		option.setDescripcion(ORGANISMOS);
 		result.add(option);
 		
 		option = new KeyValueObject();
@@ -197,8 +234,8 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 		result.add(option);
 		
 		option = new KeyValueObject();
-		option.setCodigo("USUARIOS");
-		option.setDescripcion("USUARIOS");
+		option.setCodigo(USUARIOS);
+		option.setDescripcion(USUARIOS);
 		result.add(option);	
 		
 		option = new KeyValueObject();
@@ -207,13 +244,13 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 		result.add(option);
 		
 		option = new KeyValueObject();
-		option.setCodigo("SERVIDORES PUSH");
-		option.setDescripcion("SERVIDORES PUSH");
+		option.setCodigo(SERVIDORES_PUSH);
+		option.setDescripcion(SERVIDORES_PUSH);
 		result.add(option);
 		
 		option = new KeyValueObject();
-		option.setCodigo("SERVIDORES WEB PUSH");
-		option.setDescripcion("SERVIDORES WEB PUSH");
+		option.setCodigo(SERVIDORES_WEB_REF);
+		option.setDescripcion(SERVIDORES_WEB_REF);
 		result.add(option);
 		
 		
@@ -255,6 +292,7 @@ public class AuditoriaPlataformaAction extends PlataformaPaginationAction implem
 	 */
 	@Override
 	public void prepare() throws Exception {
+		// This method has to be empty.
 	}
 
 	/**

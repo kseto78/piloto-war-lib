@@ -16,6 +16,16 @@ public class AdjuntoEmailBean implements Audit, Serializable{
 
 
 	private static final long serialVersionUID = 1L;
+	private Long adjuntoId;
+	private String nombre;
+	private Long emailId;
+	private Date fechaCreacion;
+	private String creadoPor;
+	private Date fechaModificacion;
+	private String modificadoPor;
+	private byte[] contenido;
+	private Integer imagen;
+	private String contenidoFile;
 
 	/**
 	 * Contructor por defecto
@@ -31,17 +41,6 @@ public class AdjuntoEmailBean implements Audit, Serializable{
 		this.imagen = null;
 		this.contenidoFile = null;
 	}
-	private Long adjuntoId;
-	private String nombre;
-	private Long emailId;
-	private Date fechaCreacion;
-	private String creadoPor;
-	private Date fechaModificacion;
-	private String modificadoPor;
-	private byte[] contenido;
-	private Integer imagen;
-	private String contenidoFile;
-	
 	/**
 	 * Modifica el numero de imagen
 	 * @param imagen

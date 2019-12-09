@@ -23,6 +23,8 @@ import org.apache.commons.net.smtp.SMTPReply;
  */
 public class SMTPConnectionTest implements ConnectionListener, TransportListener {
 	
+	protected static final String FALSE = "false";
+
 	/**
 	 * Check connection classic.
 	 *
@@ -41,14 +43,13 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	     if(user!=null){
 	    	 props.put("mail.stmp.user", user);
 	     }	
-	     props.put("mail.smtp.auth", (reqAuth==null)?"false":reqAuth); 
-	     props.put("mail.smtp.starttls.enable", (secure==null)?"false":secure);
+	     props.put("mail.smtp.auth", (reqAuth==null)?FALSE:reqAuth); 
+	     props.put("mail.smtp.starttls.enable", (secure==null)?FALSE:secure);
 	     if(password!=null){
 	    	 props.put("mail.smtp.password",password);
 	     }
 	     props.put("mail.smtp.port", port);
 	     props.put("mail.smtp.timeout", 5000);
-	     //props.put("mail.smtp.connectiontimeout", 5000);
 	     Session session = Session.getInstance(props);
 	     
 	     	
@@ -56,17 +57,17 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	           Transport transport = session.getTransport("smtp");
 	           transport.addConnectionListener(this);
 	           transport.addTransportListener(this);
-	           transport.connect(ip,new Integer(port),user,password);
+	           transport.connect(ip,Integer.valueOf(port),user,password);
 	           
 	           if(transport.isConnected()){
 	        	  return null;
 	           }
 	         }catch(javax.mail.AuthenticationFailedException exc) {
-	        	   retorno = "Usuario o password incorrectos";
+				retorno = "Usuario o password incorrectos";
 	         }catch (NoSuchProviderException e) {
-	        	   retorno = "Proveedor invalido";
+				retorno = "Proveedor invalido";
 	         } catch (NumberFormatException e) {
-	        	   retorno = "Puerto introducido incorrecto";
+				retorno = "Puerto introducido incorrecto";
 	         } catch (MessagingException e) {
 	        	   retorno = "Mensaje del servidor: " + e.getMessage();
 			}
@@ -88,7 +89,7 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 		 try {
 		      int reply;
 		      
-		      client.setDefaultPort(new Integer(port));
+		      client.setDefaultPort(Integer.valueOf(port));
 		      
 		      client.connect(ip);
 		      
@@ -115,7 +116,6 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 		        }
 		      }
 		      System.err.println("Could not connect to server.");
-		      e.printStackTrace();
 		      System.exit(1);
 		    }
 		return false;
@@ -126,10 +126,7 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	 */
 	@Override
 	public void messageDelivered(TransportEvent arg0) {
-		@SuppressWarnings("unused")
-		String a = "";
-		String b = "";
-		a = b;
+		// This method has to be empty.
 	}
 	
 	/* (non-Javadoc)
@@ -137,10 +134,7 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	 */
 	@Override
 	public void messageNotDelivered(TransportEvent arg0) {
-		@SuppressWarnings("unused")
-		String a = "";
-		String b = "";
-		a = b;
+		// This method has to be empty.
 	}
 	
 	/* (non-Javadoc)
@@ -148,10 +142,7 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	 */
 	@Override
 	public void messagePartiallyDelivered(TransportEvent arg0) {
-		@SuppressWarnings("unused")
-		String a = "";
-		String b = "";
-		a = b;
+		// This method has to be empty.
 	}
 	
 	/* (non-Javadoc)
@@ -159,10 +150,7 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	 */
 	@Override
 	public void closed(ConnectionEvent arg0) {
-		@SuppressWarnings("unused")
-		String a = "";
-		String b = "";
-		a = b;
+		// This method has to be empty.
 	}
 	
 	/* (non-Javadoc)
@@ -170,10 +158,7 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	 */
 	@Override
 	public void disconnected(ConnectionEvent arg0) {
-		@SuppressWarnings("unused")
-		String a = "";
-		String b = "";
-		a = b;
+		// This method has to be empty.
 	}
 	
 	/* (non-Javadoc)
@@ -181,9 +166,6 @@ public class SMTPConnectionTest implements ConnectionListener, TransportListener
 	 */
 	@Override
 	public void opened(ConnectionEvent arg0) {
-		@SuppressWarnings("unused")
-		String a = "";
-		String b = "";
-		a = b;
+		// This method has to be empty.
 	}
 }

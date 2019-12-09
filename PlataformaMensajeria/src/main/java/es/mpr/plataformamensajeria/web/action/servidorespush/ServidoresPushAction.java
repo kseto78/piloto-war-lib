@@ -48,6 +48,34 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ServidoresPushAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servidores.planificacion.horaDesde.menor.error";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String SERVIDORESPUSHA = "ServidoresPushAction - getLoadPlanificacionesServidorPush:";
+
+	protected static final String SERVIDORESPUSHA0 = "ServidoresPushAction - getParametrosServidorPush:";
+
+	protected static final String R_CONST_REF = ":";
+
+	protected static final String R_CONST_0 = "20";
+
+	protected static final String LOGDOTSOURCE_SE = "log.SOURCE_SERVIDORES_PUSH";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
 	/** Constante GENERALES_REQUEST_ATTRIBUTE_PAGESIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
 
@@ -153,22 +181,26 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	// //MIGRADO
 	public String search() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 
-		if (servidorPush != null)
-			if (servidorPush.getNombre() != null && servidorPush.getNombre().length() <= 0)
-				servidorPush.setNombre(null);
+		if (servidorPush != null && servidorPush.getNombre() != null && servidorPush.getNombre().isEmpty()) {
+			servidorPush.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServidorPushBean> result = servicioServidorPush.getServidoresPush(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, R_CONST_0)), order,
 				columnSort, servidorPush,
 				Integer.parseInt(properties.getProperty(GENERALES_TIPO_SERVIDOR_PUSH, null)));
 		Integer totalSize = result.getTotalList();
@@ -176,17 +208,17 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		listaServidoresPush = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, R_CONST_0)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 
 		if (listaServidoresPush != null && !listaServidoresPush.isEmpty()) {
-			for (int indice = 0; indice < listaServidoresPush.size(); indice++) {
+			for (int indice = 0, s = listaServidoresPush.size(); indice < s; indice++) {
 
 				ServidorPushBean servidorPush = listaServidoresPush.get(indice);
 				servidorPush.setNombre(StringEscapeUtils.escapeHtml(servidorPush.getNombre()));
@@ -202,39 +234,43 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	// //MIGRADO
 	public String execute() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 
-		if (servidorPush != null)
-			if (servidorPush.getNombre() != null && servidorPush.getNombre().length() <= 0)
-				servidorPush.setNombre(null);
+		if (servidorPush != null && servidorPush.getNombre() != null && servidorPush.getNombre().isEmpty()) {
+			servidorPush.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServidorPushBean> result = servicioServidorPush.getServidoresPush(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, R_CONST_0)), order,
 				columnSort, servidorPush,
 				Integer.parseInt(properties.getProperty(GENERALES_TIPO_SERVIDOR_PUSH, null)));
 		Integer totalSize = result.getTotalList();
 
 		listaServidoresPush = result.getPageList();
 
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(GENERALES_PAGESIZE, R_CONST_0)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 
 		if (listaServidoresPush != null && !listaServidoresPush.isEmpty()) {
-			for (int indice = 0; indice < listaServidoresPush.size(); indice++) {
+			for (int indice = 0, s = listaServidoresPush.size(); indice < s; indice++) {
 
 				ServidorPushBean receptor = listaServidoresPush.get(indice);
 				receptor.setNombre(StringEscapeUtils.escapeHtml(receptor.getNombre()));
@@ -255,10 +291,11 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (servidorPush != null) {
 			if (servidorPush.getIsActivo() != null && servidorPush.getIsActivo().indexOf("'activo'") != -1) {
 				servidorPush.setActivo(true);
@@ -288,28 +325,28 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	///MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		ServidorPushBean servidorPushBBDD = null;
 		if (servidorPush == null) {
-			// throw new BusinessException("EL servidorPush recibido es nulo");
 			addActionErrorSession(this.getText("plataforma.servidorpush.update.error"));
 
 		} else {
 			
 			if (servidorPush.getServidorPushId() == null) {
 				if (idServidorPush != null) {
-					servidorPush.setServidorPushId(new Long(idServidorPush));
+					servidorPush.setServidorPushId(Long.valueOf(idServidorPush));
 					servidorPushBBDD = servicioServidorPush.loadServidorPush(servidorPush);
 				} else {
 					String idProvedorSMS = (String) request.getAttribute("idServidorPush");
 					
 					if (idProvedorSMS != null) {
-						servidorPush.setId(new Long(idProvedorSMS));
+						servidorPush.setId(Long.valueOf(idProvedorSMS));
 						servidorPushBBDD = servicioServidorPush.loadServidorPush(servidorPush);
 					}
 				}
@@ -345,21 +382,20 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	// //MIGRADO
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
-		if (idServidorPush == null)
+		}
+		if (idServidorPush == null) {
 			throw new BusinessException("EL idServidorPush recibido es nulo");
+		}
 		try {
 			servidorPush = new ServidorPushBean();
-			servidorPush.setServidorPushId(new Long(idServidorPush));
+			servidorPush.setServidorPushId(Long.valueOf(idServidorPush));
 			servidorPush = servicioServidorPush.loadServidorPush(servidorPush);
 			return SUCCESS;
-		} catch (NumberFormatException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { servidorPush
-					.getServidorPushId().toString() });
-			throw new BusinessException(mensg);
-		} catch (BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { servidorPush
+		} catch (NumberFormatException | BusinessException e) {
+			logger.error(e.getMessage(), e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { servidorPush
 					.getServidorPushId().toString() });
 			throw new BusinessException(mensg);
 		}
@@ -375,12 +411,13 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	////MIGRADO
 	public String deleteParametroServidorPush() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PARAMETRO", null);
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (parametroServidorId == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.parametro.delete.error"));
 		} else {
@@ -401,13 +438,14 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String deletePlanificacionServidorPush() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (planificacionId == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.planificacion.delete.error"));
 
@@ -428,20 +466,21 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	/////MIGRADO
 	public String delete() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (idServidorPush == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.delete.error"));
 		} else {
 			servidorPush = new ServidorPushBean();
-			servidorPush.setServidorPushId(new Long(idServidorPush));
+			servidorPush.setServidorPushId(Long.valueOf(idServidorPush));
 			servicioServidorPush.deleteServidorPush(servidorPush, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			addActionMessageSession(this.getText("plataforma.servidorpush.delete.ok"));
 
@@ -458,21 +497,22 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.servidorpush.deleteSelected.error"));
 		} else {
 			for (String idServidorPush : checkDelList) {
 				servidorPush = new ServidorPushBean();
-				servidorPush.setServidorPushId(new Long(idServidorPush));
+				servidorPush.setServidorPushId(Long.valueOf(idServidorPush));
 				servicioServidorPush.deleteServidorPush(servidorPush, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			}
 			addActionMessageSession(this.getText("plataforma.servidorpush.deleteSelected.ok"));
@@ -490,13 +530,14 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String addParametroServidorPush() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PARAMETRO", null);
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (parametroServidor != null) {
 			if (!validaParametro(parametroServidor)) {
 				return ERROR;
@@ -506,6 +547,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 							descripcion);
 					addActionMessageSession(this.getText("plataforma.servidorpush.parametro.add.ok"));
 				} catch (ConstraintViolationException e) {
+					logger.error(e.getMessage(), e);
 					addActionErrorSession(this.getText("plataforma.servidorpush.parametro.add.constraint.error"));
 				}
 			}
@@ -524,13 +566,14 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String addPlanificacionServidorPush() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES_PUSH", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return ServidoresPushAction.NO_USER;
+		}
 		if (planificacionServidor != null && PlataformaMensajeriaUtil.isEmpty(idServidorPush)) {
 			if (planificacionValida(planificacionServidor)) {
 				planificacionServidor.setActivo(true);
@@ -544,11 +587,13 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 						planificacionServidor.getSabado(), planificacionServidor.getDomingo(),
 						planificacionServidor.getHoraHasta(), planificacionServidor.getHoraDesde());
 
-				if (valido == 1) {
+				switch (valido) {
+				case 1:
 					servicioPlanificacion
 							.newPlanificacion(planificacionServidor, source, accion, accionId, descripcion);
 					addActionMessageSession(this.getText("plataforma.servidorpush.planificacion.add.ok"));
-				} else if (valido == 0) {
+					break;
+				case 0:
 					addActionErrorSession("No se ha a&ntilde;adido la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
 					return ERROR;
 				}
@@ -597,6 +642,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 			try {
 				Integer.parseInt(parametroServidor.getValor());
 			} catch (NumberFormatException e) {
+				logger.error(e.getMessage(), e);
 				addActionErrorSession(this.getText("plataforma.servidores.parametro.add.valor.error.integer"));
 				sw = false;
 			}
@@ -627,19 +673,17 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	// //MIGRADO
 	private List<PlanificacionBean> getLoadPlanificacionesServidorPush() {
 		List<PlanificacionBean> lista = null;
-		if (idServidorPush != null && idServidorPush.length() > 0) {
+		if (idServidorPush != null && !idServidorPush.isEmpty()) {
 			try {
 				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idServidorPush));
-			} catch (NumberFormatException e) {
-				logger.error("ServidoresPushAction - getLoadPlanificacionesServidorPush:" + e);
-			} catch (BusinessException e) {
-				logger.error("ServidoresPushAction - getLoadPlanificacionesServidorPush:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(SERVIDORESPUSHA + e);
 			}
 		} else if (servidorPush != null && servidorPush.getServidorPushId() != null) {
 			try {
 				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idServidorPush));
 			} catch (NumberFormatException | BusinessException e) {
-				logger.error("ServidoresPushAction - getLoadPlanificacionesServidorPush:" + e);
+				logger.error(SERVIDORESPUSHA + e);
 			} 
 		}
 		return lista;
@@ -653,20 +697,18 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	// //MIGRADO
 	private List<ParametroServidorBean> getParametrosServidorPush() {
 		List<ParametroServidorBean> lista = null;
-		if (idServidorPush != null && idServidorPush.length() > 0) {
+		if (idServidorPush != null && !idServidorPush.isEmpty()) {
 			try {
 				lista = servicioParametroServidor.getParametroServidorByServidorPushId(Integer.valueOf(idServidorPush));
-			} catch (NumberFormatException e) {
-				logger.error("ServidoresPushAction - getParametrosServidorPush:" + e);
-			} catch (BusinessException e) {
-				logger.error("ServidoresPushAction - getParametrosServidorPush:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(SERVIDORESPUSHA0 + e);
 			}
 		} else if (servidorPush != null && servidorPush.getServidorPushId() != null) {
 			try {
 				lista = servicioParametroServidor.getParametroServidorByServidorPushId(servidorPush.getServidorPushId()
 						.intValue());
 			} catch (NumberFormatException | BusinessException e) {
-				logger.error("ServidoresPushAction - getParametrosServidorPush:" + e);
+				logger.error(SERVIDORESPUSHA0 + e);
 			}
 		}
 		return lista;
@@ -679,7 +721,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	// //MIGRADO
 	private List<KeyValueObject> getComboValues() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option = null;
 
@@ -691,7 +733,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 			logger.error("ServidoresPushAction - getComboValues:" + e);
 		}
 
-		if (keys != null && keys.size() > 0)
+		if (keys != null && !keys.isEmpty()) {
 			for (TipoParametroBean key : keys) {
 
 				option = new KeyValueObject();
@@ -700,6 +742,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -710,7 +753,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	 */
 	// //MIGRADO
 	private List<KeyValueObject> getComboPlataformaValues() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option = null;
 		ArrayList<PlataformaBean> keys = null;
 
@@ -719,7 +762,7 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 		} catch (BusinessException e) {
 			logger.error("ServidoresPushAction - getComboPlataformaValues:" + e);
 		}
-		if (keys != null && keys.size() > 0) {
+		if (keys != null && !keys.isEmpty()) {
 			for (PlataformaBean key : keys) {
 
 				option = new KeyValueObject();
@@ -767,10 +810,8 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 					addFieldErrorSession(this.getText("plataforma.servidorpush.planificacion.horaHasta.formato.error"));
 					sw = false;
 				}
-				if (sw) {
-					if (!validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
-						sw = false;
-					}
+				if (sw && !validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
+					sw = false;
 				}
 			}
 			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes())
@@ -798,17 +839,17 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	////MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
-		String[] horaDesdeArray = horaDesde.split(":");
-		String[] horaHastaArray = horaHasta.split(":");
-		int hDesde = Integer.valueOf(horaDesdeArray[0]);
-		int mDesde = Integer.valueOf(horaDesdeArray[1]);
-		int hHasta = Integer.valueOf(horaHastaArray[0]);
-		int mHasta = Integer.valueOf(horaHastaArray[1]);
+		String[] horaDesdeArray = horaDesde.split(R_CONST_REF);
+		String[] horaHastaArray = horaHasta.split(R_CONST_REF);
+		int hDesde = Integer.parseInt(horaDesdeArray[0]);
+		int mDesde = Integer.parseInt(horaDesdeArray[1]);
+		int hHasta = Integer.parseInt(horaHastaArray[0]);
+		int mHasta = Integer.parseInt(horaHastaArray[1]);
 		if (hDesde > hHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde > mHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde == mHasta) {
 			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.iguales.error"));
@@ -826,10 +867,8 @@ public class ServidoresPushAction extends PlataformaPaginationAction implements 
 	////MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
-		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
-			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
-				sw = false;
-			}
+		if (!PlataformaMensajeriaUtil.isEmpty(hora) && !PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+			sw = false;
 		}
 		return sw;
 	}

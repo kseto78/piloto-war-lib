@@ -46,10 +46,8 @@ public class ServicioCanalImpl implements ServicioCanal{
 		
 		try {
 			List<TblCanales> lista = tblCanalesManager.getCanalesOrdenados();
-			List<CanalBean> result = getListCanalBean(lista);					
-			return result;
-		} 
-		catch (Exception e){
+			return getListCanalBean(lista);
+		} catch (Exception e){
 			logger.error("ServicioCanalImpl - getCanales:" + e);
 			throw new BusinessException(e,"errors.organismo.getOrganismos");	
 		}
@@ -63,13 +61,12 @@ public class ServicioCanalImpl implements ServicioCanal{
 	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
-	protected List<CanalBean> getListCanalBean(List<TblCanales> lista) throws BusinessException
-	{	
+	protected List<CanalBean> getListCanalBean(List<TblCanales> lista) throws BusinessException {
+	
 		List<CanalBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
-			result = new ArrayList<CanalBean>();
+		if (lista!=null && !lista.isEmpty()) {
+			result = new ArrayList<>();
 		
 			for (TblCanales c : lista) {
 				
@@ -81,9 +78,7 @@ public class ServicioCanalImpl implements ServicioCanal{
 					ConvertUtils.register (converter, java.util.Date.class);
 					BeanUtils.copyProperties(canal, c);
 					canal.setCanalId(c.getCanalid().intValue());
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			

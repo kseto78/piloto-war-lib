@@ -16,7 +16,9 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
  */
 public class PlataformaSecurityTag extends BodyTagSupport {
 	 
- 	/** Constante serialVersionUID. */
+ 	protected static final String TRUE = "true";
+
+	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 	/**  servicio usuario. */
@@ -46,15 +48,15 @@ public class PlataformaSecurityTag extends BodyTagSupport {
     	 //Verificar tipo de comprobación
     	 // 	* Usuario Logueado
     	 //		* Usuario pasado por parámetro
-    	   Integer rolUsuarioId = new Integer(-1);
-    	 if(usuarioLogueado!=null&&usuarioLogueado.equals("true")){
+    	   Integer rolUsuarioId = Integer.valueOf(-1);
+    	 if(usuarioLogueado!=null&&TRUE.equals(usuarioLogueado)){
     		 String  rolUsuario = (String)pageContext.getSession().getAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA);
     		 if(rolUsuario==null){
     			 return Tag.SKIP_BODY;
     		 }
     		 rolUsuarioId = PlataformaMensajeriaUtil.ROLES.get(rolUsuario);
 
-    	 }else if(usuarioNombre!=null&&usuarioNombre.length()>0){
+    	 }else if(usuarioNombre!=null&&!usuarioNombre.isEmpty()){
     		 ServletContext servletContext = pageContext.getServletContext();
         	 WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         	 servicioUsuario = (ServicioUsuario)context.getBean("servicioUsuarioImpl");
@@ -63,17 +65,19 @@ public class PlataformaSecurityTag extends BodyTagSupport {
     	 }
          if(rolUsuarioId!=null&&(rolUsuarioId==1||rolUsuarioId==3)){
         	 //Tiene permisos de administrador, por lo que hay que comprobar si en el tag se indica que se muestre o no
-        	 if(showIfGranted!=null&&"false".equals(showIfGranted)){
+        	 if("false".equals(showIfGranted)){
         		 skipBody=true;
         	 }else{
-        		 skipBody=false; //por de fecto se muestra siempre a no ser que se indique lo contrario
+        		 skipBody=false; 
+        		 //por de fecto se muestra siempre a no ser que se indique lo contrario
         	 }
          }else{
         	//No tiene permisos de administrador, por lo que hay que comprobar si en el tag se indica que se muestre o no
-        	 if(showIfNotGranted!=null&&"true".equals(showIfNotGranted)){
+        	 if(TRUE.equals(showIfNotGranted)){
         		 skipBody=false;
         	 }else{
-        		 skipBody=true; // Si no tiene permisos siempre se oculta el contenido a no ser que se indique lo contrario
+        		 skipBody=true; 
+        		 // Si no tiene permisos siempre se oculta el contenido a no ser que se indique lo contrario
         	 }
          }
          if(skipBody){

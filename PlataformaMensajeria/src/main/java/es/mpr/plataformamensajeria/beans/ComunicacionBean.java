@@ -12,6 +12,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class ComunicacionBean implements Audit {
 
 	
+	protected Long idComunicacion = null;
+	protected String nombre = null;
+
 	/**
 	 * Constructor por defecto
 	 */
@@ -20,9 +23,6 @@ public class ComunicacionBean implements Audit {
 		this.idComunicacion = null;
 		this.nombre = null;
 	}
-
-	protected Long idComunicacion = null;
-	protected String nombre = null;
 
 	/**
 	 * Obtener idComunicacion

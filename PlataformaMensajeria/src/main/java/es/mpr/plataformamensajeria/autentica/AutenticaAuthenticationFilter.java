@@ -23,6 +23,8 @@ import es.mpr.plataformamensajeria.util.MapUser;
  */
 public class AutenticaAuthenticationFilter extends GenericFilterBean {
 	
+	protected static final String INFOUSER = "infoUser";
+
 	/**
 	 * Metodo de autenticacion del login
 	 */
@@ -37,25 +39,20 @@ public class AutenticaAuthenticationFilter extends GenericFilterBean {
         	logger.debug("AutenticaAuthenticationFilter - Method: " + request.getMethod());
         }
         
-        if(null!=request.getSession().getAttribute("infoUser")){
-//        	if(null==SecurityContextHolder.getContext() || null==SecurityContextHolder.getContext().getAuthentication()
-//            		|| null==SecurityContextHolder.getContext().getAuthentication().getPrincipal()){
+        if(null!=request.getSession().getAttribute(INFOUSER)){
     			
-    			MapUser springUser = (MapUser) request.getSession().getAttribute("infoUser");
+    			MapUser springUser = (MapUser) request.getSession().getAttribute(INFOUSER);
     			
 				 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(springUser, null, springUser.getAuthorities(),
 						 springUser.getNombre(), springUser.getApellido1(), springUser.getApellido2(), springUser.getEmail(), springUser.getNif()));
-//    		} 
         }
         
-        if(!request.getRequestURI().equals("/sim/logout")){
+        if(!"/sim/logout".equals(request.getRequestURI())){
         	filterChain.doFilter(request, response);    
         }else{
             request.getSession().invalidate();
             response.sendRedirect(response.encodeRedirectURL("/sim/logon.jsp"));
         }
-        
-        return;
 			
     }
    

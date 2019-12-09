@@ -172,7 +172,7 @@ public interface ServicioServicio {
 	 * @return servicio TO
 	 * @throws BusinessException the business exception
 	 */
-	public TblServicios getServicioTO(ServicioBean servicioBean) throws BusinessException;
+	TblServicios getServicioTO(ServicioBean servicioBean) throws BusinessException;
 	
 	/**
 	 * Creates the servicio bean.
@@ -181,7 +181,7 @@ public interface ServicioServicio {
 	 * @return the servicio bean
 	 * @throws BusinessException the business exception
 	 */
-	public ServicioBean createServicioBean(ServicioBean servicioBean) throws BusinessException;
+	ServicioBean createServicioBean(ServicioBean servicioBean) throws BusinessException;
 	
 	/**
 	 * Obtener servicios.
@@ -246,7 +246,7 @@ public interface ServicioServicio {
 	 * @return list servicio bean
 	 * @throws BusinessException the business exception
 	 */
-	public List<ServicioBean> getListServicioBean(List<TblServicios> lista) throws BusinessException;
+	List<ServicioBean> getListServicioBean(List<TblServicios> lista) throws BusinessException;
 
 	/**
 	 * Obtener list canal bean.

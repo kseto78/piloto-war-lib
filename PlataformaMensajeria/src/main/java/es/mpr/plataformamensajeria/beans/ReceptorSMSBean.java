@@ -12,6 +12,56 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class ReceptorSMSBean implements Audit {
 
+	protected static final String SPAN_CLASSINACT = "<span class='inactivo'></span>";
+
+	protected static final String TRUE = "true";
+
+	protected static final String FALSE = "false";
+
+	protected static final String SPAN_CLASSACTIV = "<span class='activo'></span>";
+
+	/**  receptor SMS id. */
+	protected Long receptorSMSId;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  descripcion. */
+	protected String descripcion = null;
+
+	/**  pordefecto. */
+	protected Boolean pordefecto = null;
+
+	/**  activo. */
+	protected Boolean activo = null;
+
+	/**  fechacreacion. */
+	protected Date fechacreacion = null;
+
+	/**  creadopor. */
+	protected String creadopor = null;
+
+	/**  fechamodificacion. */
+	protected Date fechamodificacion = null;
+
+	/**  modificadopor. */
+	protected String modificadopor = null;
+
+	/**  tipo. */
+	protected Integer tipo = null;
+
+	/**  externalid. */
+	protected String externalid = null;
+
+	/**  usuario. */
+	protected String usuario = null;
+
+	/**  password. */
+	protected String password = null;
+
+	/**  re password. */
+	protected String rePassword = null;
+
 	/**
 	 * Constructor de receptor SMS bean.
 	 */
@@ -33,55 +83,13 @@ public class ReceptorSMSBean implements Audit {
 		this.rePassword = null;
 	}
 
-	/**  receptor SMS id. */
-	protected Long receptorSMSId;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  descripcion. */
-	protected String descripcion = null;
-	
-	/**  pordefecto. */
-	protected Boolean pordefecto = null;
-	
-	/**  activo. */
-	protected Boolean activo = null;
-	
-	/**  fechacreacion. */
-	protected Date fechacreacion = null;
-	
-	/**  creadopor. */
-	protected String creadopor = null;
-	
-	/**  fechamodificacion. */
-	protected Date fechamodificacion = null;
-	
-	/**  modificadopor. */
-	protected String modificadopor = null;
-	
-	/**  tipo. */
-	protected Integer tipo = null;
-	
-	/**  externalid. */
-	protected String externalid = null;
-	
-	/**  usuario. */
-	protected String usuario = null;
-	
-	/**  password. */
-	protected String password = null;
-	
-	/**  re password. */
-	protected String rePassword = null;
-
 	/**
 	 * Modificar defecto.
 	 *
 	 * @param defecto new defecto
 	 */
 	public void setDefecto(String defecto) {
-		if (defecto != null && defecto.equals("true")) {
+		if (defecto != null && TRUE.equals(defecto)) {
 			this.pordefecto = true;
 		} else {
 			this.pordefecto = false;
@@ -95,9 +103,9 @@ public class ReceptorSMSBean implements Audit {
 	 */
 	public String getDefecto() {
 		if (pordefecto != null && pordefecto) {
-			return "true";
+			return TRUE;
 		} else if (pordefecto != null && !pordefecto) {
-			return "false";
+			return FALSE;
 		} else {
 			return null;
 		}
@@ -109,7 +117,7 @@ public class ReceptorSMSBean implements Audit {
 	 * @param activado new activado
 	 */
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (activado != null && TRUE.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -123,9 +131,9 @@ public class ReceptorSMSBean implements Audit {
 	 */
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return TRUE;
 		} else if (activo != null && !activo) {
-			return "false";
+			return FALSE;
 		} else {
 			return null;
 		}
@@ -139,9 +147,9 @@ public class ReceptorSMSBean implements Audit {
 	 */
 	public String getIsDefecto() {
 		if (pordefecto != null && pordefecto) {
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		} else if (pordefecto != null && !pordefecto) {
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		} else {
 			return null;
 		}
@@ -154,7 +162,7 @@ public class ReceptorSMSBean implements Audit {
 	 * @param isDefecto new checks if is defecto
 	 */
 	public void setIsDefecto(String isDefecto) {
-		if (isDefecto != null && isDefecto.equals("true")) {
+		if (isDefecto != null && TRUE.equals(isDefecto)) {
 			this.pordefecto = true;
 		} else {
 			this.pordefecto = false;
@@ -169,9 +177,9 @@ public class ReceptorSMSBean implements Audit {
 	 */
 	public String getIsActivo() {
 		if (activo != null && activo) {
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		} else if (activo != null && !activo) {
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		} else {
 			return null;
 		}
@@ -184,7 +192,7 @@ public class ReceptorSMSBean implements Audit {
 	 * @param isActivo new checks if is activo
 	 */
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (isActivo != null && TRUE.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;

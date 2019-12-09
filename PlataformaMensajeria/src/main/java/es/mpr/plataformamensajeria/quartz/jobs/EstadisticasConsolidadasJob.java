@@ -47,6 +47,44 @@ import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 @Service("estadisticasConsolidadasJob")
 public class EstadisticasConsolidadasJob implements Job {
 
+	protected static final String DDMMYYYY__HHMMS = "dd/MM/yyyy  HH:mm:ss.SSS";
+
+	protected static final String BLANK = " (";
+
+	protected static final String BLANK0 = "): ";
+
+	protected static final String BLANKLOTES_REF = " lotes (";
+
+	protected static final String LOTES_PROCESADO = "Lotes procesados Sin Mensajes:";
+
+	protected static final String CONSOLIDACION_D = "Consolidacion de estadisticas del servicio ";
+
+	protected static final String BLANKMENSAJESDOT = " mensajes).";
+
+	protected static final String DOT = ".";
+
+	protected static final String LOTES_PROCESADO0 = "Lotes procesados Incorrectamente:";
+
+	protected static final String BLANKMENSAJESDOT0 = " mensajes.";
+
+	protected static final String NO_SE_HAN_CONSE = "NO Se han conservado correctamente:";
+
+	protected static final String NO_COINCIDE_LA_REF = "No coincide la suma de registros en los lotes: ";
+
+	protected static final String SE_HAN_PROCESAD = "Se han procesado Incorrectamente:  ";
+
+	protected static final String SE_HAN_PROCESAD0 = "Se han procesado Correctamente:  ";
+
+	protected static final String LOTES_PROCESADO1 = "Lotes procesados Correctamente:";
+
+	protected static final String SE_HAN_CONSERVA = "Se han conservado correctamente:";
+
+	protected static final String DDMMYYYY = "dd/MM/yyyy";
+
+	protected static final String BLANKMENSAJESDOT1 = " mensajes). ";
+
+	protected static final String BLANKCON_FECHA_REF = " con fecha anterior o igual a ";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(EstadisticasConsolidadasJob.class);
 
@@ -96,10 +134,12 @@ public class EstadisticasConsolidadasJob implements Job {
 	private static String ESTADO_PROCESO_KO = "KO";
 	
 	/**  caracter separador lineas. */
-	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; // El salto de linea esta preparado para el correo en formato HTML
+	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; 
+	// El salto de linea esta preparado para el correo en formato HTML
 	
 	/**  caracter tab. */
-	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; // El tab esta preparado para el correo en formato HTML
+	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; 
+	// El tab esta preparado para el correo en formato HTML
 	
 	/**  job bean. */
 	private JobBean jobBean = null;
@@ -149,7 +189,7 @@ public class EstadisticasConsolidadasJob implements Job {
 	private void ejecutar() {
 		logger.info("execute - INICIO Estadisticas consolidadas");
 		Calendar fechaIni = Calendar.getInstance();
-		logger.info("execute - Fecha comienzo: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(fechaIni.getTime()));
+		logger.info("execute - Fecha comienzo: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(fechaIni.getTime()));
 		long tiempo1 = fechaIni.getTimeInMillis();
 		StringBuilder descripcionEstado = new StringBuilder();
 
@@ -180,9 +220,6 @@ public class EstadisticasConsolidadasJob implements Job {
 
 			if (null != listaServicios) {
 				 for(ServicioBean servicio : listaServicios){
-//					 if (servicio.getServicioId() != 522){
-//						 continue;
-//					 }
  				    List<List<Long>> listasLotesEnviosHistoricos = new ArrayList<>();
 					lotesCorrectos = new ArrayList<>();
 					lotesIncorrectos = new ArrayList<>();
@@ -201,14 +238,15 @@ public class EstadisticasConsolidadasJob implements Job {
 					}else{
 						// Calculamos la fecha a partir de la cual se realiza el historico de mensajes
 						Integer conservacion = servicio.getConservacion();
-						calendar.add(Calendar.YEAR, -conservacion); // Le restamos a la fecha actual los anios marcados en el atributo de conservacion del servicio
+						calendar.add(Calendar.YEAR, -conservacion); 
+						// Le restamos a la fecha actual los anios marcados en el atributo de conservacion del servicio
 					}
-					logger.info("Consolidamos hasta fecha: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+					logger.info("Consolidamos hasta fecha: " + new SimpleDateFormat(DDMMYYYY).format(calendar.getTime()));
 
 					if (null != servicio && null != servicio.getConservacion() && null != servicio.getServicioId()) {
-						String auxS = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
+						String auxS = new SimpleDateFormat(DDMMYYYY).format(calendar.getTime());
 
-						logger.info("Consulta Lotes envios: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
+						logger.info("Consulta Lotes envios: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(new Date()));
 
 						// Se realiza la busqueda de aquellos lotes de envio historicos cuya fecha de modificacion es igual o mayor a la definida en el servicio
 						listasLotesEnviosHistoricos = servicioLotesEnviosHistoricos.getListasLotesEnviosHistoricos(servicio.getServicioId(), calendar.getTime());
@@ -219,18 +257,19 @@ public class EstadisticasConsolidadasJob implements Job {
 							 * la busqueda se realiza en la tabla gestionenvios que seguro no tiene filas null
 							 */
 							int a = listasLotesEnviosHistoricos.size()-1;
-							Integer total = ((a * 1000) 
-									+ (listasLotesEnviosHistoricos.get(listasLotesEnviosHistoricos.size()-1).size()));
-							logger.info("CONSOLIDACION DE----> :" + ((a * 1000) 
-									+ (listasLotesEnviosHistoricos.get(listasLotesEnviosHistoricos.size()-1).size())) + " lotes, del SERVICIO ->" + servicio.getServicioId());
-							for (List<Long> listaLotes : listasLotesEnviosHistoricos){//por si hay más de MAX lotes a historificar del servicio
+							Integer total = a * 1000 
+									+ listasLotesEnviosHistoricos.get(listasLotesEnviosHistoricos.size()-1).size();
+							logger.info("CONSOLIDACION DE----> :" + (a * 1000 
+									+ listasLotesEnviosHistoricos.get(listasLotesEnviosHistoricos.size()-1).size()) + " lotes, del SERVICIO ->" + servicio.getServicioId());
+							for (List<Long> listaLotes : listasLotesEnviosHistoricos){
+								//por si hay más de MAX lotes a historificar del servicio
 								int contador = 0;
 								for (Long idLote : listaLotes) {
 									try{
 										contador++;
 										logger.info("CONSOLIDANDO lote ---> " + contador + " de " + total);
 										logger.info("ANALIZANDO LOTE:" + idLote);
-										logger.info("Consulta Mensajes: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
+										logger.info("Consulta Mensajes: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(new Date()));
 										
 										// Se obtienen todos los mensajes historicos del lote
 										List<List<Long>> listasMensajesHistoricos = servicioMensajesHistoricos.getTodosMensajesLoteHistorificar(idLote, calendar.getTime());
@@ -238,10 +277,12 @@ public class EstadisticasConsolidadasJob implements Job {
 										for (List<Long> listaMensajesHistoricosCons : listasMensajesHistoricos) {
 											boolean consolidamosLote=false;
 											if (null != listaMensajesHistoricosCons && !listaMensajesHistoricosCons.isEmpty()){
-												logger.info("TOTAL: "+(MAX*(listasMensajesHistoricos.size()-1) + listasMensajesHistoricos.get(listasMensajesHistoricos.size()-1).size())+" Mensajes.");
+												logger.info("TOTAL: "+
+													(MAX*(listasMensajesHistoricos.size()-1) + listasMensajesHistoricos.get(listasMensajesHistoricos.size()-1).size())+" Mensajes.");
 												consolidamosLote = true;
-											}else{//Es un lote sin mensajes
-												logger.info("No existen mensajes en el lote de envio historico con ID " + idLote + " con fecha anterior o igual a " + auxS + ". ");
+											}else{
+												//Es un lote sin mensajes
+												logger.info("No existen mensajes en el lote de envio historico con ID " + idLote + BLANKCON_FECHA_REF + auxS + ". ");
 												servicioLotesEnviosHistoricos.deleteHist(idLote);
 											}
 											if(consolidamosLote){
@@ -256,7 +297,7 @@ public class EstadisticasConsolidadasJob implements Job {
 												// Se van calculando la informacion de las estadisticas consolidadas
 												if (null != listaGestionEnviosHist && !listaGestionEnviosHist.isEmpty()) {
 	
-													logger.info("Proceso generar estadisticas consolidadas: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
+													logger.info("Proceso generar estadisticas consolidadas: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(new Date()));
 	
 													/*
 													 * En el caso de que un lote disponga de mas de un mensaje y que estos tengas los mismos valores de servicio, servidor, estado, anio y mes, documento usuario, codigo SIA, codigo organismo y codigo organismo pagador, lo que hay que hacer
@@ -301,12 +342,14 @@ public class EstadisticasConsolidadasJob implements Job {
 													} else {
 														lotesNoCoincideSuma.add(idLote.intValue());
 														
-														logger.info("Consolidacion de estadisticas del servicio " + servicio.getServicioId() + ": y lote:" + idLote.intValue() + " se han producido fallos. El numero de registros de gestion de envios historicos no coincide con la suma del numero total de registros de las estadisticas consolidadas.");
+														logger.info(CONSOLIDACION_D + 
+															servicio.getServicioId() + ": y lote:" + idLote.intValue() + " se han producido fallos. El numero de registros de gestion de envios historicos no coincide con la suma del numero total de registros de las estadisticas consolidadas.");
 													}
 												}
 												
 											}
-										}//for de listaMensajesHistoricos
+										}
+										//for de listaMensajesHistoricos
 									
 										//eliminamos el lote porque ya está todo consolidado Para que no haya excepciones y continue se hace la comprobacion
 										if (null != servicioLotesEnviosHistoricos.getLoteEnvioHist(idLote)){
@@ -315,26 +358,32 @@ public class EstadisticasConsolidadasJob implements Job {
 									}catch(Exception e){
 										logger.error("Se ha producido un error en la historificacion del lote --->" +idLote, e);
 									}
-								}// for IDLOTE este es el for que vamos completando con las cosas a realizar
+								}
+								// for IDLOTE este es el for que vamos completando con las cosas a realizar
 							
-							} /// del for por si hay más de 1000 lotes a consolidar
+							} 
+							/// del for por si hay más de 1000 lotes a consolidar
 						} else {
-							logger.info("No existen lotes historicos en el servicio con ID " + servicio.getServicioId() + " con fecha anterior o igual a " + auxS + ".");
+							logger.info("No existen lotes historicos en el servicio con ID " + servicio.getServicioId() + BLANKCON_FECHA_REF + auxS + DOT);
 						}
 
-					} // del if servicio!=null...
+					} 
+					// del if servicio!=null...
 
-					logger.info("Datos Servicio " + servicio.getServicioId() + ".");
-					descripcionEstado.append(CARACTER_TAB).append("Consolidacion de estadisticas del servicio " + servicio.getNombre().toUpperCase() + " (" + servicio.getServicioId() + "): ")
-							.append("Se han procesado Correctamente:  " + lotesCorrectos.size() + " lotes (" + mensajesConservados + " mensajes). ").append("Se han procesado Incorrectamente:  " + lotesIncorrectos.size() + " lotes (" + mensajesNoConservados + " mensajes).")
+					logger.info("Datos Servicio " + servicio.getServicioId() + DOT);
+					descripcionEstado.append(CARACTER_TAB).append(CONSOLIDACION_D + 
+						servicio.getNombre().toUpperCase() + BLANK + servicio.getServicioId() + BLANK0)
+							.append(SE_HAN_PROCESAD0 + 
+								lotesCorrectos.size() + BLANKLOTES_REF + mensajesConservados + BLANKMENSAJESDOT1).append(SE_HAN_PROCESAD + 
+								lotesIncorrectos.size() + BLANKLOTES_REF + mensajesNoConservados + BLANKMENSAJESDOT)
 							.append(CARACTER_SEPARADOR_LINEAS);
 
-					logger.info("Lotes procesados Correctamente:" + lotesCorrectos.toString() + ".");
-					logger.info("Se han conservado correctamente:" + mensajesConservados + " mensajes.");
-					logger.info("Lotes procesados Incorrectamente:" + lotesIncorrectos.toString() + ".");
-					logger.info("NO Se han conservado correctamente:" + mensajesNoConservados + " mensajes.");
-					logger.info("Lotes procesados Sin Mensajes:" + lotesSinMensajes.toString() + ".");
-					logger.info("No coincide la suma de registros en los lotes: " + lotesNoCoincideSuma.toString() + ".");
+					logger.info(LOTES_PROCESADO1 + lotesCorrectos + DOT);
+					logger.info(SE_HAN_CONSERVA + mensajesConservados + BLANKMENSAJESDOT0);
+					logger.info(LOTES_PROCESADO0 + lotesIncorrectos + DOT);
+					logger.info(NO_SE_HAN_CONSE + mensajesNoConservados + BLANKMENSAJESDOT0);
+					logger.info(LOTES_PROCESADO + lotesSinMensajes + DOT);
+					logger.info(NO_COINCIDE_LA_REF + lotesNoCoincideSuma + DOT);
 
 					lotesCorrectos.clear();
 					lotesCorrectos = null;
@@ -347,8 +396,10 @@ public class EstadisticasConsolidadasJob implements Job {
 					mensajesConservados = 0;
 					mensajesNoConservados = 0;
 
-				}// del for de todos los servicios
-			} // del if null != listaServicios
+				}
+				// del for de todos los servicios
+			} 
+			// del if null != listaServicios
 		
 			descripcionEstado.append(CARACTER_SEPARADOR_LINEAS).append(CARACTER_TAB).append("Para mas informacion, consulte logs.").append(CARACTER_SEPARADOR_LINEAS).append(CARACTER_SEPARADOR_LINEAS).append(CARACTER_SEPARADOR_LINEAS);
 			procesoConsBean.setCodigoEstado(ESTADO_PROCESO_OK);
@@ -360,16 +411,19 @@ public class EstadisticasConsolidadasJob implements Job {
 			logger.info("execute - FIN  Recuperar Estadísticas consolidadas - exception");
 			procesoConsBean.setCodigoEstado(ESTADO_PROCESO_KO);
 
-			descripcionEstado.append(CARACTER_TAB).append("Consolidacion de estadisticas del servicio " + servicioAnalizado.toUpperCase() + " (" + idServicioAnalizado + "): ")
-					.append("Se han procesado Correctamente:  " + lotesCorrectos.size() + " lotes (" + mensajesConservados + " mensajes). ").append("Se han procesado Incorrectamente:  " + lotesIncorrectos.size() + " lotes (" + mensajesNoConservados + " mensajes).")
+			descripcionEstado.append(CARACTER_TAB).append(CONSOLIDACION_D + 
+				servicioAnalizado.toUpperCase() + BLANK + idServicioAnalizado + BLANK0)
+					.append(SE_HAN_PROCESAD0 + 
+						lotesCorrectos.size() + BLANKLOTES_REF + mensajesConservados + BLANKMENSAJESDOT1).append(SE_HAN_PROCESAD + 
+						lotesIncorrectos.size() + BLANKLOTES_REF + mensajesNoConservados + BLANKMENSAJESDOT)
 					.append(CARACTER_SEPARADOR_LINEAS);
 
-			logger.info("Lotes procesados Correctamente:" + lotesCorrectos.toString() + ".");
-			logger.info("Se han conservado correctamente:" + mensajesConservados + " mensajes.");
-			logger.info("Lotes procesados Incorrectamente:" + lotesIncorrectos.toString() + ".");
-			logger.info("NO Se han conservado correctamente:" + mensajesNoConservados + " mensajes.");
-			logger.info("Lotes procesados Sin Mensajes:" + lotesSinMensajes.toString() + ".");
-			logger.info("No coincide la suma de registros en los lotes: " + lotesNoCoincideSuma.toString() + ".");
+			logger.info(LOTES_PROCESADO1 + lotesCorrectos + DOT);
+			logger.info(SE_HAN_CONSERVA + mensajesConservados + BLANKMENSAJESDOT0);
+			logger.info(LOTES_PROCESADO0 + lotesIncorrectos + DOT);
+			logger.info(NO_SE_HAN_CONSE + mensajesNoConservados + BLANKMENSAJESDOT0);
+			logger.info(LOTES_PROCESADO + lotesSinMensajes + DOT);
+			logger.info(NO_COINCIDE_LA_REF + lotesNoCoincideSuma + DOT);
 
 			descripcionEstado.append(CARACTER_TAB).append("Se ha producido una excepcion. Para mas informacion, consulte logs. ").append(CARACTER_SEPARADOR_LINEAS);
 			procesoConsBean.setDescripcionEstado("Se han producido fallos en la consolidacion de estadisticas. Para mas informacion, consulte logs.");
@@ -383,7 +437,7 @@ public class EstadisticasConsolidadasJob implements Job {
 			// Se envia un correo informando del resultado de la ejecucion del JOB
 			SendMailService sendMailService = new SendMailService();
 			Calendar fechaFin = Calendar.getInstance();
-			logger.info("execute - Fecha fin: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(fechaFin.getTime()));
+			logger.info("execute - Fecha fin: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(fechaFin.getTime()));
 			long tiempo2 = fechaFin.getTimeInMillis();
 			long tiempo = tiempo2 - tiempo1;
 			logger.info("execute - Duracion del Proceso de Estadisticas consolidadas: " + tiempo + " milisegundos");
@@ -457,24 +511,32 @@ public class EstadisticasConsolidadasJob implements Job {
 			if (!agregado) {
 
 				for (TblGestionEnviosHist gehAux : listaGestionEnviosHist) {
-					if (!geh.getMensajeid().equals(gehAux.getMensajeid())) {
-						if (geh.getServicioid().equals(gehAux.getServicioid()) && geh.getEstadoid().equals(gehAux.getEstadoid()) && geh.getAnio().equals(gehAux.getAnio()) && geh.getMes().equals(gehAux.getMes()) && geh.getServidorid().equals(gehAux.getServidorid()) && ((null == geh
-								.getDocusuario() && null == gehAux.getDocusuario()) || (null != geh.getDocusuario() && null != gehAux.getDocusuario() && geh.getDocusuario().equals(gehAux.getDocusuario()))) && ((null == geh.getCodsia() && null == gehAux.getCodsia()) || (null != geh
-								.getCodsia() && null != gehAux.getCodsia() && geh.getCodsia().equals(gehAux.getCodsia()))) && ((null == geh.getCodorganismo() && null == gehAux.getCodorganismo()) || (null != geh.getCodorganismo() && null != gehAux.getCodorganismo() && geh
-								.getCodorganismo().equals(gehAux.getCodorganismo()))) && ((null == geh.getCodorganismopagador() && null == gehAux.getCodorganismopagador()) || (null != geh.getCodorganismopagador() && null != gehAux.getCodorganismopagador() && geh
-								.getCodorganismopagador().equals(gehAux.getCodorganismopagador())))) {
+					if (!geh.getMensajeid().equals(gehAux.getMensajeid()) && geh.getServicioid().equals(gehAux.getServicioid()) && 
+						geh.getEstadoid().equals(gehAux.getEstadoid()) && geh.getAnio().equals(gehAux.getAnio()) && geh.getMes().equals(gehAux.getMes()) && geh.getServidorid().equals(gehAux.getServidorid()) && ((null == 
+							geh
+							.getDocusuario() && null == 
+								gehAux.getDocusuario()) || (null != geh.getDocusuario() && null != gehAux.getDocusuario() && 
+								geh.getDocusuario().equals(gehAux.getDocusuario()))) && ((null == geh.getCodsia() && null == gehAux.getCodsia()) || 
+								(null != geh
+							.getCodsia() && null != 
+								gehAux.getCodsia() && geh.getCodsia().equals(gehAux.getCodsia()))) && ((null == geh.getCodorganismo() && 
+								null == gehAux.getCodorganismo()) || 
+								(null != geh.getCodorganismo() && null != gehAux.getCodorganismo() && geh
+							.getCodorganismo().equals(gehAux.getCodorganismo()))) && ((null == geh.getCodorganismopagador() && null == gehAux.getCodorganismopagador()) || 
+								(null != geh.getCodorganismopagador() && null != gehAux.getCodorganismopagador() && geh
+							.getCodorganismopagador().equals(gehAux.getCodorganismopagador())))) {
 
-							numTotal++;
-							listaGestionEnvioIdsAgregados.add(gehAux.getMensajeid());
-						}
-					}
+numTotal++;
+listaGestionEnvioIdsAgregados.add(gehAux.getMensajeid());
+}
 				}
 
 				estadisticasConsolidadas.setServidorid(geh.getServidorid());
 
 				// Agregamos al nuevo registro el nombre del servidor
 				for (ServidorBean servidor : listaServidores) {
-					if (null != geh.getServidorid() && null != servidor && null != servidor.getServidorid() && servidor.getServidorid().equals(Long.valueOf(geh.getServidorid()))) {
+					if (null != geh.getServidorid() && null != servidor && null != servidor.getServidorid() && 
+						servidor.getServidorid().equals(Long.valueOf(geh.getServidorid()))) {
 						estadisticasConsolidadas.setServidornombre(servidor.getNombre());
 						break;
 					}

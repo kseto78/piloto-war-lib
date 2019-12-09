@@ -12,6 +12,16 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class MensajesAdjuntosBean implements Audit{
 
+	/**  mensaje adjunto id. */
+	private Integer mensajeAdjuntoId;
+
+	/**  mensaje id. */
+	private Integer mensajeId;
+
+	/**  adjunto id. */
+	private Integer adjuntoId;
+
+
 	/**
 	 * Constructor de mensajes adjuntos bean.
 	 */
@@ -21,16 +31,6 @@ public class MensajesAdjuntosBean implements Audit{
 		this.adjuntoId=null;
 	}
 	
-	/**  mensaje adjunto id. */
-	private Integer mensajeAdjuntoId;
-	
-	/**  mensaje id. */
-	private Integer mensajeId;
-	
-	/**  adjunto id. */
-	private Integer adjuntoId;
-	
-
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */

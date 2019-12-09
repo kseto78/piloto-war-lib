@@ -36,6 +36,52 @@ import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 @Service("historificacionJob")
 public class HistorificacionJob implements Job {
 
+	protected static final String DDMMYYYY__HHMMS = "dd/MM/yyyy  HH:mm:ss.SSS";
+
+	protected static final String BLANK = " (";
+
+	protected static final String HISTORIFICACION = "HistorificacionJob.Execute ";
+
+	protected static final String BLANKREALIZADO_REF = " realizado correctamente. Se han procesado Correctamente ";
+
+	protected static final String HISTORICO_DEL_S = "Historico del servicio ";
+
+	protected static final String BLANKLOTES_REF = " lotes (";
+
+	protected static final String BLANKMENSAJESDOT = " mensajes).";
+
+	protected static final String DOT = ".";
+
+	protected static final String R_CONST_REF = "):";
+
+	protected static final String DOT_REF = ". ";
+
+	protected static final String LOTES_PROCESADO = "Lotes procesados Incorrectamente:";
+
+	protected static final String BLANKMENSAJESDOT0 = " mensajes.";
+
+	protected static final String SE_HA_PRODUCIDO = "Se ha producido un error al historificar el lote ";
+
+	protected static final String NO_SE_HAN_CONSE = "NO Se han conservado correctamente:";
+
+	protected static final String SE_HAN_PROCESAD = "Se han procesado Incorrectamente:  ";
+
+	protected static final String LOTES_PROCESADO0 = "Lotes procesados Correctamente:";
+
+	protected static final String SE_HAN_CONSERVA = "Se han conservado correctamente:";
+
+	protected static final String SE_HAN_PRODUCID = "Se han producido fallos en la historificacion. Para mas informacion, consulte logs.";
+
+	protected static final String CONSULTA_LOTES_REF = "Consulta Lotes envios: ";
+
+	protected static final String SERVICIO_ID_REF = "Servicio ID ";
+
+	protected static final String DDMMYYYY = "dd/MM/yyyy";
+
+	protected static final String BLANKMENSAJESDOT1 = " mensajes). ";
+
+	protected static final String BLANKCON_FECHA_REF = " con fecha anterior o igual a ";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(HistorificacionJob.class);
 
@@ -65,10 +111,12 @@ public class HistorificacionJob implements Job {
 	private static String ESTADO_PROCESO_KO = "KO";
 	
 	/**  caracter separador lineas. */
-	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; //El salto de linea esta preparado para el correo en formato HTML
+	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; 
+	//El salto de linea esta preparado para el correo en formato HTML
 	
 	/**  caracter tab. */
-	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; //El tab esta preparado para el correo en formato HTML
+	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; 
+	//El tab esta preparado para el correo en formato HTML
 
 	/**  job bean. */
 	private JobBean jobBean = null;
@@ -128,7 +176,7 @@ public class HistorificacionJob implements Job {
 		Integer mensajesNoConservados = 0;
 		logger.info("execute - INICIO Historificacion");
 		Calendar fechaIni = Calendar.getInstance();
-		logger.info("execute - Fecha comienzo: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(fechaIni.getTime()));
+		logger.info("execute - Fecha comienzo: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(fechaIni.getTime()));
 		long tiempo1 = fechaIni.getTimeInMillis();
 		StringBuilder descripcionEstado = new StringBuilder();
 
@@ -137,7 +185,7 @@ public class HistorificacionJob implements Job {
 		String infoEjecucion = "";
 		try{
 
-			String auxS = new String();
+			String auxS = "";
 			boolean exito = true;
 			List<ServicioBean> listaServicios;
 			
@@ -152,10 +200,6 @@ public class HistorificacionJob implements Job {
 			}
 			
 //			////esto es para borrar
-//			listaServicios = new ArrayList<>();
-//			ServicioBean se = new ServicioBean();
-//			se.setServicioId(283);
-//			listaServicios.add(servicioServicios.loadServicio(se));
 			
 			if(null != listaServicios){
 
@@ -168,21 +212,22 @@ public class HistorificacionJob implements Job {
 						
 						if (null != jobBean && null != jobBean.getFecha()){
 							//Indicamos la fecha introducida en la pantalla
-							logger.info("Servicio ID "+servicio.getServicioId());
+							logger.info(SERVICIO_ID_REF+servicio.getServicioId());
 							calendar.setTime(jobBean.getFecha());
-							auxS = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
-							logger.info("Consulta Lotes envios: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
-							infoEjecucion = "Ejecución Manual realizada con busqueda de lotes hasta la fecha de: "+ new SimpleDateFormat("dd/MM/yyyy").format(jobBean.getFecha());
+							auxS = new SimpleDateFormat(DDMMYYYY).format(calendar.getTime());
+							logger.info(CONSULTA_LOTES_REF + new SimpleDateFormat(DDMMYYYY__HHMMS).format(new Date()));
+							infoEjecucion = "Ejecución Manual realizada con busqueda de lotes hasta la fecha de: "+ new SimpleDateFormat(DDMMYYYY).format(jobBean.getFecha());
 							
 						}else{
 							//Calculamos la fecha a partir de la cual se realiza el historico de mensajes
 							Integer historificacion = servicio.getHistorificacion();
-							logger.info("Servicio ID "+servicio.getServicioId());
+							logger.info(SERVICIO_ID_REF+servicio.getServicioId());
 	
-							calendar.add(Calendar.DATE, -historificacion); //Le restamos a la fecha actual los dias marcados en el atributo de historico del servicio
-							auxS = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
+							calendar.add(Calendar.DATE, -historificacion); 
+							//Le restamos a la fecha actual los dias marcados en el atributo de historico del servicio
+							auxS = new SimpleDateFormat(DDMMYYYY).format(calendar.getTime());
 	
-							logger.info("Consulta Lotes envios: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
+							logger.info(CONSULTA_LOTES_REF + new SimpleDateFormat(DDMMYYYY__HHMMS).format(new Date()));
 						}
 						lotesCorrectos = new ArrayList<>();
 						lotesIncorrectos = new ArrayList<>();
@@ -195,12 +240,10 @@ public class HistorificacionJob implements Job {
 						List<Long> listaLotesEnvios = servicioLotesEnvios.getLotesEnviosTOHist(servicio.getServicioId(), calendar.getTime());
 	
 //					////esto es para borrar
-//							listaLotesEnvios = new ArrayList<>();
-//							listaLotesEnvios.add(32267L);
-//							Date leche = new Date("20/04/2016");
 							
 							if(null != listaLotesEnvios && !listaLotesEnvios.isEmpty()){
-								logger.info("Existen "+ listaLotesEnvios.size() +" lotes de envios del servicio con ID "+servicio.getServicioId()+" con fecha anterior o igual a "+auxS+". ");
+								logger.info("Existen "+ 
+									listaLotesEnvios.size() +" lotes de envios del servicio con ID "+servicio.getServicioId()+BLANKCON_FECHA_REF+auxS+DOT_REF);
 
 								int numLotesEnvioExito = 0;
 								int numLotesEnvioFallo = 0;
@@ -209,7 +252,8 @@ public class HistorificacionJob implements Job {
 								Si es asi, se historifican los mensajes del lote. */
 								listaLotesEnvios = new ArrayList<>();
 							
-								for(Long idLote : listaLotesEnvios){ 
+								for(Long idLote : listaLotesEnvios){
+ 	
 									long startTime = System.currentTimeMillis();
 																								
 									boolean exitoLE = false;
@@ -218,21 +262,23 @@ public class HistorificacionJob implements Job {
 										boolean historificamosLote=false;
 										
 										//Se obtienen todos los mensajes del lote actual
-										logger.info("Obtener mensajes del lote "+ idLote +" del servicio con ID "+servicio.getServicioId()+". ");
+										logger.info("Obtener mensajes del lote "+ idLote +" del servicio con ID "+servicio.getServicioId()+DOT_REF);
 										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote);
-//										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote, leche );
 
 										if(null != listaMensajesHist && !listaMensajesHist.isEmpty()){
 											logger.info("El lote de envio "+ idLote +" tiene "+listaMensajesHist.size()+" mensajes. ");
 											historificamosLote = true;
 
-										} else {///NO HAY MENSAJES A HISTORIFICAR Si el lote no tiene mensajes se historifica
+										} else {
+											///NO HAY MENSAJES A HISTORIFICAR Si el lote no tiene mensajes se historifica
 											if (!servicioMensajes.testLoteSinMensajes(idLote)){
 												historificamosLote=false;
 												lotesNoHistorificados.add(idLote.intValue());
-												logger.info("No existen mensajes en el lote de envios con ID "+idLote+" con fecha anterior o igual a "+auxS+". ");
+												logger.info("No existen mensajes en el lote de envios con ID "+idLote+BLANKCON_FECHA_REF+auxS+DOT_REF);
 											
-											}else{ 	//Estamos en un lote que no tiene mensajes
+											}else{
+	
+												//Estamos en un lote que no tiene mensajes
 												try{
 													
 													exitoLE = servicioProcesoHistoricos.procesoHistoricoLotesEnvio(idLote, listaMensajesHist);
@@ -245,26 +291,28 @@ public class HistorificacionJob implements Job {
 														numLotesEnvioFallo++;
 														lotesIncorrectos.add(idLote.intValue());
 														mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-														logger.info("Se ha producido un error al historificar el lote "+idLote+". ");
+														logger.info(SE_HA_PRODUCIDO+idLote+DOT_REF);
 													}
 
 												} catch (Exception e) {
 													numLotesEnvioFallo++;
 													lotesIncorrectos.add(idLote.intValue());
 													mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-													logger.info("Se ha producido un error al historificar el lote "+idLote+". ");
-													logger.error("Se ha producido un error al historificar el lote "+idLote+". ", e);
+													logger.info(SE_HA_PRODUCIDO+idLote+DOT_REF);
+													logger.error(SE_HA_PRODUCIDO+idLote+DOT_REF, e);
 												}
-											} //fin else lote sin mensajes
-										}//fin else no hay mensajes a historificar en el lote
+											} 
+											//fin else lote sin mensajes
+										}
+										//fin else no hay mensajes a historificar en el lote
 										
 										if(historificamosLote){
 											logger.info("Se van a historificar "+ listaMensajesHist.size() +" mensajes del servicio con ID "+servicio.getServicioId()+" "
-												+ "con fecha anterior o igual a "+auxS+".");
+												+ "con fecha anterior o igual a "+auxS+DOT);
 
 											
 
-												logger.info("Proceso extraer info lote envio: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
+												logger.info("Proceso extraer info lote envio: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(new Date()));
 
 											//Se realiza el historico por cada lote de envio
 												try{
@@ -282,14 +330,14 @@ public class HistorificacionJob implements Job {
 														numLotesEnvioFallo++;
 														lotesIncorrectos.add(idLote.intValue());
 														mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-														logger.info("Se ha producido un error al historificar el lote "+idLote+". ");
+														logger.info(SE_HA_PRODUCIDO+idLote+DOT_REF);
 													}
 
 												} catch (Exception e) {
 													numLotesEnvioFallo++;
 													lotesIncorrectos.add(idLote.intValue());
 													mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-													logger.error("Se ha producido un error al historificar el lote "+idLote+". ", e);
+													logger.error(SE_HA_PRODUCIDO+idLote+DOT_REF, e);
 												}
 										
 										}
@@ -300,23 +348,25 @@ public class HistorificacionJob implements Job {
 
 								if(numLotesEnvioFallo==0){
 									if(numLotesEnvioExito==0){
-										descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicio.getNombre().toUpperCase()+" ("+servicio.getServicioId()+"):"
+										descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+servicio.getNombre().toUpperCase()+BLANK+servicio.getServicioId()+R_CONST_REF
 												+ " No existen lotes para historificar. ").
 												append(CARACTER_SEPARADOR_LINEAS);
 									} else {
-										descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicio.getNombre().toUpperCase()+" ("+servicio.getServicioId()+"):"
-												+ " realizado correctamente. Se han procesado Correctamente "+lotesCorrectos.size()+" lotes (" + mensajesConservados + " mensajes). ")
+										descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+servicio.getNombre().toUpperCase()+BLANK+servicio.getServicioId()+R_CONST_REF
+												+ BLANKREALIZADO_REF+lotesCorrectos.size()+BLANKLOTES_REF + mensajesConservados + BLANKMENSAJESDOT1)
 												.append(CARACTER_SEPARADOR_LINEAS);
 									}
 									
 								} else {
 									exito = false;
 									if(numLotesEnvioExito==0){
-										descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicio.getNombre().toUpperCase()+" ("+servicio.getServicioId()+"): se han producido fallos."
+										descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+
+											servicio.getNombre().toUpperCase()+BLANK+servicio.getServicioId()+"): se han producido fallos."
 												+ "No existen lotes para historificar. Para mas informacion, consulte logs. ").append(CARACTER_SEPARADOR_LINEAS);
 									} else {
-										descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicio.getNombre().toUpperCase()+" ("+servicio.getServicioId()+"):"
-												+ " realizado correctamente. Se han procesado Correctamente "+lotesCorrectos.size()+" lotes (" + mensajesConservados + " mensajes). ").append("Se han procesado Incorrectamente:  " + lotesIncorrectos.size() + " lotes (" + mensajesNoConservados + " mensajes).")
+										descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+servicio.getNombre().toUpperCase()+BLANK+servicio.getServicioId()+R_CONST_REF
+												+ BLANKREALIZADO_REF+lotesCorrectos.size()+BLANKLOTES_REF + mensajesConservados + BLANKMENSAJESDOT1).append(SE_HAN_PROCESAD + 
+													lotesIncorrectos.size() + BLANKLOTES_REF + mensajesNoConservados + BLANKMENSAJESDOT)
 												.append(CARACTER_SEPARADOR_LINEAS);
 									}
 									
@@ -324,15 +374,16 @@ public class HistorificacionJob implements Job {
 
 								
 							} else {
-								descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicio.getNombre().toUpperCase()+" ("+servicio.getServicioId()+"): No existen lotes para historificar. ").append(CARACTER_SEPARADOR_LINEAS);
-								logger.info("No existen lotes en el servicio con ID "+servicio.getServicioId()+" con fecha anterior o igual a "+auxS+".");
+								descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+
+									servicio.getNombre().toUpperCase()+BLANK+servicio.getServicioId()+"): No existen lotes para historificar. ").append(CARACTER_SEPARADOR_LINEAS);
+								logger.info("No existen lotes en el servicio con ID "+servicio.getServicioId()+BLANKCON_FECHA_REF+auxS+DOT);
 							}
 							
-							logger.info("Lotes procesados Correctamente:" + lotesCorrectos.toString() + ".");
-							logger.info("Se han conservado correctamente:" + mensajesConservados + " mensajes.");
-							logger.info("Lotes procesados Incorrectamente:" + lotesIncorrectos.toString() + ".");
-							logger.info("Lotes NO HISTORIFICADOS:"+lotesNoHistorificados.size()+" :" + lotesNoHistorificados.toString() + ".");
-							logger.info("NO Se han conservado correctamente:" + mensajesNoConservados + " mensajes.");
+							logger.info(LOTES_PROCESADO0 + lotesCorrectos + DOT);
+							logger.info(SE_HAN_CONSERVA + mensajesConservados + BLANKMENSAJESDOT0);
+							logger.info(LOTES_PROCESADO + lotesIncorrectos + DOT);
+							logger.info("Lotes NO HISTORIFICADOS:"+lotesNoHistorificados.size()+" :" + lotesNoHistorificados + DOT);
+							logger.info(NO_SE_HAN_CONSE + mensajesNoConservados + BLANKMENSAJESDOT0);
 							
 							listaLotesEnvios.clear();
 							listaLotesEnvios=null;
@@ -349,19 +400,21 @@ public class HistorificacionJob implements Job {
 						
 					} else {
 						if(null != servicio){
-							descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicio.getNombre().toUpperCase()+" ("+servicio.getServicioId()+"): No existen servicios con historificacion programada. ").append(CARACTER_SEPARADOR_LINEAS);
+							descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+
+								servicio.getNombre().toUpperCase()+BLANK+servicio.getServicioId()+"): No existen servicios con historificacion programada. ").append(CARACTER_SEPARADOR_LINEAS);
 							logger.info("No existen servicios con historificacion programada.");
 						}
 					}
 
-				}///bucle for servicio
+				}
+				///bucle for servicio
 
 				if(exito){
 					procesoHistBean.setCodigoEstado(ESTADO_PROCESO_OK);
 					procesoHistBean.setDescripcionEstado("La historificacion se ha realizado correctamente.");
 				} else {
 					procesoHistBean.setCodigoEstado(ESTADO_PROCESO_KO);
-					procesoHistBean.setDescripcionEstado("Se han producido fallos en la historificacion. Para mas informacion, consulte logs.");
+					procesoHistBean.setDescripcionEstado(SE_HAN_PRODUCID);
 				}
 
 				procesoHistBean.setFechaFin(new Date());
@@ -371,35 +424,35 @@ public class HistorificacionJob implements Job {
 		}catch (Exception e) {
 			logger.info("execute - FIN  Recuperar Historificacion - exception");
 			procesoHistBean.setCodigoEstado(ESTADO_PROCESO_KO);
-			descripcionEstado.append(CARACTER_TAB).append("Historico del servicio "+servicioAnalizado+" ("+idServicioAnalizado+"):"
-					+ " realizado correctamente. Se han procesado Correctamente "+lotesCorrectos.size()+" lotes (" + mensajesConservados + " mensajes). ").append("Se han procesado Incorrectamente:  " + lotesIncorrectos.size() + " lotes (" + mensajesNoConservados + " mensajes).")
+			descripcionEstado.append(CARACTER_TAB).append(HISTORICO_DEL_S+servicioAnalizado+BLANK+idServicioAnalizado+R_CONST_REF
+					+ BLANKREALIZADO_REF+lotesCorrectos.size()+BLANKLOTES_REF + mensajesConservados + BLANKMENSAJESDOT1).append(SE_HAN_PROCESAD + 
+						lotesIncorrectos.size() + BLANKLOTES_REF + mensajesNoConservados + BLANKMENSAJESDOT)
 					.append(CARACTER_SEPARADOR_LINEAS);
 			
-			logger.info("Lotes procesados Correctamente:" + lotesCorrectos.toString() + ".");
-			logger.info("Se han conservado correctamente:" + mensajesConservados + " mensajes.");
-			logger.info("Lotes procesados Incorrectamente:" + lotesIncorrectos.toString() + ".");
-			logger.info("NO Se han conservado correctamente:" + mensajesNoConservados + " mensajes.");
+			logger.info(LOTES_PROCESADO0 + lotesCorrectos + DOT);
+			logger.info(SE_HAN_CONSERVA + mensajesConservados + BLANKMENSAJESDOT0);
+			logger.info(LOTES_PROCESADO + lotesIncorrectos + DOT);
+			logger.info(NO_SE_HAN_CONSE + mensajesNoConservados + BLANKMENSAJESDOT0);
 			
 			descripcionEstado.append(CARACTER_TAB).append("Se ha producido una excepcion. Para mas informacion, consulte logs. ").append(CARACTER_SEPARADOR_LINEAS);
-			procesoHistBean.setDescripcionEstado("Se han producido fallos en la historificacion. Para mas informacion, consulte logs.");
+			procesoHistBean.setDescripcionEstado(SE_HAN_PRODUCID);
 			procesoHistBean.setFechaFin(new Date());
 			servicioProcesoHistoricos.newServicioProcesoHistoricos(procesoHistBean);
-			logger.error("HistorificacionJob.Execute " , e);
-		}
-		finally{
+			logger.error(HISTORIFICACION , e);
+		} finally{
 				//Se envia un correo informando del resultado de la ejecucion del JOB
 				SendMailService sendMailService = new SendMailService();
-				if(!infoEjecucion.equals("")){
+				if(!"".equals(infoEjecucion)){
 					descripcionEstado.append(CARACTER_SEPARADOR_LINEAS + infoEjecucion);
 				}
 				try {
 					sendMailService.initJob(NOMBRE_JOB, procesoHistBean.getCodigoEstado(), descripcionEstado.toString(), properties, tblParametrosServidorManager);
 				} catch (ServletException e) {
-					logger.error("HistorificacionJob.Execute " , e);
+					logger.error(HISTORIFICACION , e);
 				}
 		
 				Calendar fechaFin = Calendar.getInstance();
-				logger.info("execute - Fecha fin: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(fechaFin.getTime()));
+				logger.info("execute - Fecha fin: " + new SimpleDateFormat(DDMMYYYY__HHMMS).format(fechaFin.getTime()));
 				long tiempo2 = fechaFin.getTimeInMillis();
 				long tiempo = tiempo2 - tiempo1;
 				logger.info("execute - Duracion del Proceso de historificacion: " + tiempo + " milisegundos");

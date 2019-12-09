@@ -44,6 +44,6 @@ public interface ServicioListadosHome {
 	 * @return
 	 * @throws BusinessException
 	 */
-	public PaginatedList<EstadoLotesEnviosBean> getEstadosLotesEnvios(int start, int size,String anyo, String mes) throws BusinessException;
+	PaginatedList<EstadoLotesEnviosBean> getEstadosLotesEnvios(int start, int size,String anyo, String mes) throws BusinessException;
 }
 

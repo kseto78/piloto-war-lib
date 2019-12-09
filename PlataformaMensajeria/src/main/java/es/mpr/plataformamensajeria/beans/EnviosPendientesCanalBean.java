@@ -21,6 +21,26 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class EnviosPendientesCanalBean implements Audit{
 
+	protected static final String DOT = "###,###.##";
+
+	/**  aplicacion id. */
+	protected Integer aplicacionId;
+
+	/**  aplicacion. */
+	protected String aplicacion;
+
+	/**  email. */
+	protected Integer email;
+
+	/**  sms. */
+	protected Integer sms;
+
+	/**  recepcion SMS. */
+	protected Integer recepcionSMS;
+
+	/**  push. */
+	protected Integer push;
+
 	/**
 	 * Constructor de envios pendientes canal bean.
 	 */
@@ -33,24 +53,6 @@ public class EnviosPendientesCanalBean implements Audit{
 		this.push = null;
 	}
 	
-	/**  aplicacion id. */
-	protected Integer aplicacionId;
-	
-	/**  aplicacion. */
-	protected String aplicacion;
-	
-	/**  email. */
-	protected Integer email;
-	
-	/**  sms. */
-	protected Integer sms;
-	
-	/**  recepcion SMS. */
-	protected Integer recepcionSMS;
-	
-	/**  push. */
-	protected Integer push;
-
 	/**
 	 * Obtener aplicacion id.
 	 *
@@ -197,7 +199,7 @@ public class EnviosPendientesCanalBean implements Audit{
 		if(aplicacion==null||aplicacion.isEmpty()){
 			return "";
 		}else{
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(sms);
 		}
 	}
@@ -211,7 +213,7 @@ public class EnviosPendientesCanalBean implements Audit{
 		if(aplicacion==null||aplicacion.isEmpty()){
 			return "";
 		}else{
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(recepcionSMS);
 		}
 	}
@@ -225,7 +227,7 @@ public class EnviosPendientesCanalBean implements Audit{
 		if(aplicacion==null||aplicacion.isEmpty()){
 			return "";
 		}else{
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(email);
 		}
 	}
@@ -239,7 +241,7 @@ public class EnviosPendientesCanalBean implements Audit{
 		if(aplicacion==null||aplicacion.isEmpty()){
 			return "";
 		}else{
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(push);
 		}
 	}

@@ -11,6 +11,54 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleUsuarioBean implements Audit{
 	
+		protected static final String TRUE = "true";
+
+		/**  usuario id. */
+		protected Long usuarioId;
+
+		/**  nombre. */
+		protected String nombre = null;
+
+		/**  activo. */
+		protected Integer activo = null;
+
+		/**  fecha creacion. */
+		protected Date fechaCreacion = null;
+
+		/**  creado por. */
+		protected String creadoPor = null;
+
+		/**  login. */
+		protected String login = null;
+
+		/**  email. */
+		protected String email = null;
+
+		/**  rol id. */
+		protected Integer rolId = null;
+
+		/**  rol usuario. */
+		protected String rolUsuario = null;
+
+		/**  nombre aplicacion. */
+		protected String nombreAplicacion = null;
+
+		/**  nombre usuario. */
+		protected String nombreUsuario = null;
+
+		/**  aplicacion id. */
+		protected Integer aplicacionId = null;
+
+		/**  fecha modificacion. */
+		protected Date fechaModificacion = null;
+
+		/**  modificado por. */
+		protected String modificadoPor = null;
+
+		/**  is activo. */
+		protected String isActivo = null;
+
+
 		/**
 		 * Constructor de detalle usuario bean.
 		 */
@@ -31,59 +79,13 @@ public class DetalleUsuarioBean implements Audit{
 		}
 
 		
-		/**  usuario id. */
-		protected Long usuarioId;
-		
-		/**  nombre. */
-		protected String nombre = null;
-		
-		/**  activo. */
-		protected Integer activo = null;	
-		
-		/**  fecha creacion. */
-		protected Date fechaCreacion = null;		
-		
-		/**  creado por. */
-		protected String creadoPor = null;		
-		
-		/**  login. */
-		protected String login = null;		
-		
-		/**  email. */
-		protected String email = null;		
-		
-		/**  rol id. */
-		protected Integer rolId = null;		
-		
-		/**  rol usuario. */
-		protected String rolUsuario = null;		
-		
-		/**  nombre aplicacion. */
-		protected String nombreAplicacion = null;				
-		
-		/**  nombre usuario. */
-		protected String nombreUsuario = null;		
-		
-		/**  aplicacion id. */
-		protected Integer aplicacionId = null;		
-		
-		/**  fecha modificacion. */
-		protected Date fechaModificacion = null;		
-		
-		/**  modificado por. */
-		protected String modificadoPor = null;
-		
-		/**  is activo. */
-		protected String isActivo = null;
-	
-
 		/**
 		 * Modificar activado.
 		 *
 		 * @param activado new activado
 		 */
 		public void setActivado(String activado){
-			if(activado!=null&&activado.equals("true")){
+			if(activado!=null&&TRUE.equals(activado)){
 				this.activo = Integer.valueOf(1);
 			}else{
 				this.activo = Integer.valueOf(0);
@@ -97,7 +99,7 @@ public class DetalleUsuarioBean implements Audit{
 		 */
 		public String getActivado(){
 			if(activo!=null&&activo.intValue()==1){
-				return "true";
+				return TRUE;
 			}else{
 				return "false";
 			}
@@ -125,10 +127,10 @@ public class DetalleUsuarioBean implements Audit{
 		 * @param isActivo new checks if is activo
 		 */
 		public void setIsActivo(String isActivo) {
-			if(isActivo!=null&&isActivo.equals("true")){
-				this.activo = new Integer(1);
+			if(isActivo!=null&&TRUE.equals(isActivo)){
+				this.activo = Integer.valueOf(1);
 			}else{
-				this.activo = new Integer(0);
+				this.activo = Integer.valueOf(0);
 			}
 			this.isActivo = isActivo;
 		}
@@ -429,24 +431,4 @@ public class DetalleUsuarioBean implements Audit{
 
 
                 
-                /*
-	 * Devuelve el objeto como un XML
-	 * 
-	 
-	public String obtenerXML() {
-		StringBuffer sb = new StringBuffer("<objeto>OrganimoJPA</objeto>");
-		if(id != null)
-			sb.append("<id>"  + id +"</id>" );
-		if(nombre != null)
-			sb.append("<nombre>"  + nombre +"</nombre>" );
-		if(rol != null)
-			sb.append("<rol>"  + rol +"</rol>" );
-		if(organismoPadre != null)
-			sb.append("<organismoPadre>"  + organismoPadre +"</organismoPadre>" );
-		if(sb.length()==0)
-			return null;
-		else
-			return sb.toString();
-	}
-*/
 }

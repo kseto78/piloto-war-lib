@@ -11,14 +11,12 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -38,6 +36,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class XMLUtils {
+
+	protected static final String YES = "yes";
+
 
 	/**
 	 * Convert a DOM Document into a soap message.
@@ -69,7 +70,7 @@ public class XMLUtils {
 
 		final Transformer transformer = TransformerFactory.newInstance()
 				.newTransformer();
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
 		final StringWriter writer = new StringWriter();
 		transformer
 				.transform(new DOMSource(document), new StreamResult(writer));
@@ -98,9 +99,7 @@ public class XMLUtils {
 				.createUnmarshaller();
 		final Document bodySOAP = soapMessage.getSOAPBody()
 				.extractContentAsDocument();
-		final T payload = mappedClass.cast(unmarshaller.unmarshal(bodySOAP));
-
-		return payload;
+		return mappedClass.cast(unmarshaller.unmarshal(bodySOAP));
 
 	}
 
@@ -179,10 +178,8 @@ public class XMLUtils {
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
 		final DocumentBuilder db = dbf.newDocumentBuilder();
-		final Document document = db.parse(new ByteArrayInputStream(xml
+		return db.parse(new ByteArrayInputStream(xml
 				.getBytes(encoding)));
-
-		return document;
 	}
 
 	/**
@@ -214,9 +211,7 @@ public class XMLUtils {
 
 			validator.validate(new DOMSource(xmlDOM));
 			
-		} catch (SAXException e) {
-			isValid = Boolean.FALSE;
-		} catch (IOException e){
+		} catch (SAXException | IOException e){
 			isValid = Boolean.FALSE;
 		}
 
@@ -240,7 +235,8 @@ public class XMLUtils {
 	public static Boolean isValid(final String xml, final String xmlEncoding,
 			final String xsd, final String xsdEncoding, final String xsdSystemID) {
 
-		Document xmlDOM, xsdDOM;
+		Document xmlDOM;
+		Document xsdDOM;
 		Boolean isValid = Boolean.FALSE;
 		try {
 			xmlDOM = XMLUtils.xml2doc(xml, Charset.forName(xmlEncoding));
@@ -313,8 +309,8 @@ public class XMLUtils {
 		StringWriter sw = new StringWriter();
 		
 		Transformer t = TransformerFactory.newInstance().newTransformer();
-		t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-		t.setOutputProperty(OutputKeys.INDENT, "yes");
+		t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
+		t.setOutputProperty(OutputKeys.INDENT, YES);
 		t.transform(new DOMSource(node), new StreamResult(sw));
 		
 		return sw.toString();

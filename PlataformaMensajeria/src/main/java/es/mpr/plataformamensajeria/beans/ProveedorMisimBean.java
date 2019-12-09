@@ -15,6 +15,85 @@ public class ProveedorMisimBean implements Audit, Serializable {
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  id proveedor. */
+	protected Long idProveedor = null;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  id producto. */
+	protected Long idProducto = null;
+
+	/**  id endpoint. */
+	protected Long idEndpoint = null;
+
+	/**  id transformacion. */
+	protected Long idTransformacion = null;
+
+	/**  usuario. */
+	protected String usuario = null;
+
+	/**  password. */
+	protected String password = null;
+
+	/**  company. */
+	protected String company = null;
+
+	/**  type. */
+	protected String type = null;
+
+	/**  encoding. */
+	/*DUDA proveedores*/
+	protected String encoding = null;
+
+	/**  basic autentication. */
+	protected String basicAutentication = null;
+
+	/**  method. */
+	protected String method = null;
+
+	/**  media type. */
+	protected String mediaType = null;
+
+	/**  anadir uim. */
+	protected String anadirUim = null;
+
+	/**  user autentication. */
+	protected String userAutentication = null;
+
+	/**  pass autentication. */
+	protected String passAutentication = null;
+
+	/**  certificado. */
+	protected String certificado = null;
+
+	/**  certificado pass. */
+	protected String certificadoPass = null;
+
+	/**  firma. */
+	protected String firma = null;
+
+	/**  cifrado. */
+	protected String cifrado = null;
+
+	/**  nodo cifrado. */
+	protected String nodoCifrado = null;
+
+	/**  esquema cifrado. */
+	protected String esquemaCifrado = null;
+
+	/**  tipo firma. */
+	protected String tipoFirma = null;
+
+	/**  endpoint. */
+	protected EndpointBean endpoint = null;
+
+	/**  producto. */
+	protected ProductoBean producto = null;
+
+	/**  transformacion. */
+	protected TransformacionBean transformacion = null;
+
 
 	
 	/**
@@ -53,86 +132,6 @@ public class ProveedorMisimBean implements Audit, Serializable {
 	}
 
 
-	/**  id proveedor. */
-	protected Long idProveedor = null;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  id producto. */
-	protected Long idProducto = null;
-	
-	/**  id endpoint. */
-	protected Long idEndpoint = null;
-	
-	/**  id transformacion. */
-	protected Long idTransformacion = null;	
-	
-	/**  usuario. */
-	protected String usuario = null;
-	
-	/**  password. */
-	protected String password = null;
-	
-	/**  company. */
-	protected String company = null;
-	
-	/**  type. */
-	protected String type = null;
-	
-	/**  encoding. */
-	/*DUDA proveedores*/
-	protected String encoding = null;
-	
-	/**  basic autentication. */
-	protected String basicAutentication = null;
-	
-	/**  method. */
-	protected String method = null;
-	
-	/**  media type. */
-	protected String mediaType = null;
-	
-	/**  anadir uim. */
-	protected String anadirUim = null;
-	
-	/**  user autentication. */
-	protected String userAutentication = null;
-	
-	/**  pass autentication. */
-	protected String passAutentication = null;
-	
-	/**  certificado. */
-	protected String certificado = null;
-	
-	/**  certificado pass. */
-	protected String certificadoPass = null;
-	
-	/**  firma. */
-	protected String firma = null;
-	
-	/**  cifrado. */
-	protected String cifrado = null;
-	
-	/**  nodo cifrado. */
-	protected String nodoCifrado = null;
-	
-	/**  esquema cifrado. */
-	protected String esquemaCifrado = null;
-	
-	/**  tipo firma. */
-	protected String tipoFirma = null;
-	
-	/**  endpoint. */
-	protected EndpointBean endpoint = null;
-	
-	/**  producto. */
-	protected ProductoBean producto = null;
-	
-	/**  transformacion. */
-	protected TransformacionBean transformacion = null;
-
-	
 	/**
 	 * Obtener id proveedor.
 	 *

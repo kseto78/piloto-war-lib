@@ -141,7 +141,7 @@ public interface ServicioServidor {
 	 * @return servidores Y proveedores
 	 * @throws BusinessException the business exception
 	 */
-	public List<ServidorBean> getServidoresYProveedores(String tipoServidor) throws BusinessException;
+	List<ServidorBean> getServidoresYProveedores(String tipoServidor) throws BusinessException;
 
 	/**
 	 * Obtener servidor organismo.
@@ -150,7 +150,7 @@ public interface ServicioServidor {
 	 * @return servidor organismo
 	 * @throws BusinessException the business exception
 	 */
-	public List<ServidoresOrganismosBean> getServidorOrganismo(String idOrganismo) throws BusinessException;
+	List<ServidoresOrganismosBean> getServidorOrganismo(String idOrganismo) throws BusinessException;
 
 	/**
 	 * Obtener servidor organismo.
@@ -159,7 +159,7 @@ public interface ServicioServidor {
 	 * @return servidor organismo
 	 * @throws BusinessException the business exception
 	 */
-	public List<ServidoresServiciosBean> getServidorOrganismo(List<Integer> listaOrganismos) throws BusinessException;
+	List<ServidoresServiciosBean> getServidorOrganismo(List<Integer> listaOrganismos) throws BusinessException;
 
 	/**
 	 * New servidores organismo.
@@ -171,7 +171,7 @@ public interface ServicioServidor {
 	 * @param descripcion the descripcion
 	 * @throws BusinessException the business exception
 	 */
-	public void newServidoresOrganismo(ServidoresOrganismosBean servidorOrganismo, String source, String accion, Long accionId, String descripcion) throws BusinessException;
+	void newServidoresOrganismo(ServidoresOrganismosBean servidorOrganismo, String source, String accion, Long accionId, String descripcion) throws BusinessException;
 
 	/**
 	 * Load servidor organismo bean.
@@ -180,7 +180,7 @@ public interface ServicioServidor {
 	 * @return the servidores organismos bean
 	 * @throws BusinessException the business exception
 	 */
-	public ServidoresOrganismosBean loadServidorOrganismoBean(ServidoresOrganismosBean servidorOrganismo) throws BusinessException;
+	ServidoresOrganismosBean loadServidorOrganismoBean(ServidoresOrganismosBean servidorOrganismo) throws BusinessException;
 	
 	/**
 	 * Delete servidor organismos.
@@ -192,5 +192,5 @@ public interface ServicioServidor {
 	 * @param descripcion the descripcion
 	 * @throws BusinessException the business exception
 	 */
-	public void deleteServidorOrganismos(ServidoresOrganismosBean servidorOrganismo, String source, String accion, Long accionId, String descripcion) throws BusinessException;
+	void deleteServidorOrganismos(ServidoresOrganismosBean servidorOrganismo, String source, String accion, Long accionId, String descripcion) throws BusinessException;
 }

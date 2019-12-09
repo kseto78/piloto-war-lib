@@ -47,6 +47,14 @@ import es.mpr.plataformamensajeria.util.Utiles;
 @Service("servicioProveedorMisimImpl")
 public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String SERVICIOPROVEED = "ServicioProveedorMisimImpl - loadProveedorMisim:";
+
+	protected static final String ERRORSDOTPROVEE = "errors.proveedorMisim.loadProveedorMisim";
+
+	protected static final String R_CONST_REF = "1";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProveedorMisimImpl.class);
 
@@ -79,13 +87,16 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "nombre");
-			if (columnSort == null)
-				columnSort = "1"; // Id
+			columns.put(R_CONST_REF, NOMBRE);
+			if (columnSort == null) {
+				columnSort = R_CONST_REF;
+			} 
+				// Id
 
 			String column = columns.get(columnSort);
-			if (column == null)
-				column = "nombre";
+			if (column == null) {
+				column = NOMBRE;
+			}
 
 			FiltroProveedorMisimBean filtro = new FiltroProveedorMisimBean();
 
@@ -143,7 +154,7 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 			Integer rowcount = proveedoresMisimManager.getProveedoresMisimPaginado(start, size, order, column, 
 					filtro, true).size();
 
-			PaginatedList<ProveedorMisimBean> result = new PaginatedList<ProveedorMisimBean>();
+			PaginatedList<ProveedorMisimBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
@@ -236,8 +247,7 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 			List<Producto> lista = productosManager.getProductosOrdenados();
 			return getListProductoBean(lista);					
 			
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorMisimImpl - getProductos:" + e);
 			throw new BusinessException(e,"errors.proveedorMisim.getProductos");	
 		}
@@ -253,8 +263,7 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 		try {
 			List<Endpoint> lista = endpointsManager.getEndpointsOrdenados();
 			return getListEndpointBean(lista);					
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorMisimImpl - getEndpoints:" + e);
 			throw new BusinessException(e,"errors.proveedorMisim.getEndpoints");	
 		}
@@ -271,8 +280,7 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 			List<Transformacion> lista = transformacionesManager.getTransformacionesOrdenados();
 			return getListTransformacionBean(lista);					
 			
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorMisimImpl - getTransformaciones:" + e);
 			throw new BusinessException(e,"errors.proveedorMisim.getTransformaciones");	
 		}
@@ -287,8 +295,7 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 		try {
 			List<Comunicacion> lista = comunicacionesManager.getComunicacionesOrdenados();
 			return getListComunicacionBean(lista);					
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorMisimImpl - getComunicaciones:" + e);
 			throw new BusinessException(e,"errors.proveedorMisim.getComunicaciones");	
 		}
@@ -303,12 +310,11 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 	 * @throws IllegalAccessException the illegal access exception
 	 * @throws InvocationTargetException the invocation target exception
 	 */
-	protected List<ProductoBean> getListProductoBean(List<Producto> lista) throws BusinessException, IllegalAccessException, InvocationTargetException
-	{	
+	protected List<ProductoBean> getListProductoBean(List<Producto> lista) throws BusinessException, IllegalAccessException, InvocationTargetException {
+	
 		List<ProductoBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 		
 			for (Producto p : lista) {
@@ -335,12 +341,11 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 	 * @throws IllegalAccessException the illegal access exception
 	 * @throws InvocationTargetException the invocation target exception
 	 */
-	protected List<EndpointBean> getListEndpointBean(List<Endpoint> lista) throws BusinessException, IllegalAccessException, InvocationTargetException
-	{	
+	protected List<EndpointBean> getListEndpointBean(List<Endpoint> lista) throws BusinessException, IllegalAccessException, InvocationTargetException {
+	
 		List<EndpointBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 		
 			for (Endpoint end : lista) {
@@ -367,12 +372,11 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 	 * @throws IllegalAccessException the illegal access exception
 	 * @throws InvocationTargetException the invocation target exception
 	 */
-	protected List<TransformacionBean> getListTransformacionBean(List<Transformacion> lista) throws BusinessException, IllegalAccessException, InvocationTargetException
-	{	
+	protected List<TransformacionBean> getListTransformacionBean(List<Transformacion> lista) throws BusinessException, IllegalAccessException, InvocationTargetException {
+	
 		List<TransformacionBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 		
 			for (Transformacion t : lista) {
@@ -399,12 +403,11 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 	 * @throws IllegalAccessException the illegal access exception
 	 * @throws InvocationTargetException the invocation target exception
 	 */
-	protected List<ComunicacionBean> getListComunicacionBean(List<Comunicacion> lista) throws BusinessException, IllegalAccessException, InvocationTargetException
-	{	
+	protected List<ComunicacionBean> getListComunicacionBean(List<Comunicacion> lista) throws BusinessException, IllegalAccessException, InvocationTargetException {
+	
 		List<ComunicacionBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 		
 			for (Comunicacion c : lista) {
@@ -748,13 +751,12 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 		try {
 			Proveedor proveedorTO = getProveedorTO(proveedorMisim);
 			
-			if(!(proveedorMisimNuevo.getProducto().getIdProducto().equals(proveedorMisim.getProducto().getIdProducto()))){
+			if(!proveedorMisimNuevo.getProducto().getIdProducto().equals(proveedorMisim.getProducto().getIdProducto())){
 				Producto producto = new Producto();
 				if(proveedorMisimNuevo.getProducto().getIdProducto()!=-2){
 					producto = productosManager.getProducto(proveedorMisimNuevo.getProducto().getIdProducto());
 					proveedorTO.setProducto(producto);
-				}
-				else {
+				} else {
 					Long idProducto = newProductoMisim(proveedorMisimNuevo.getProducto(), source, accion, accionId);
 					if(idProducto!=null) {
 						proveedorMisimNuevo.setIdProducto(idProducto);
@@ -764,13 +766,12 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 				}
 			}
 			
-			if(!(proveedorMisimNuevo.getEndpoint().getIdEndpoint().equals(proveedorMisim.getEndpoint().getIdEndpoint()))){
+			if(!proveedorMisimNuevo.getEndpoint().getIdEndpoint().equals(proveedorMisim.getEndpoint().getIdEndpoint())){
 				Endpoint endpoint = new Endpoint();
 				if(proveedorMisimNuevo.getEndpoint().getIdEndpoint()!=-2){
 					endpoint = endpointsManager.getEndpoint(proveedorMisimNuevo.getEndpoint().getIdEndpoint());
 					proveedorTO.setEndpoint(endpoint);
-				}
-				else {
+				} else {
 					Comunicacion comunicacion = comunicacionesManager.getComunicacion(proveedorMisimNuevo.getEndpoint().getComunicacion().getIdComunicacion());
 					
 					ComunicacionBean comunicacionBean = new ComunicacionBean();
@@ -790,13 +791,13 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 			
 			if (null == proveedorMisimNuevo.getTransformacion().getIdTransformacion()){
 				proveedorTO.setTransformacion(null);
-			}else if(null == proveedorMisim.getTransformacion().getIdTransformacion() || !(proveedorMisimNuevo.getTransformacion().getIdTransformacion().equals(proveedorMisim.getTransformacion().getIdTransformacion()))){
+			}else if(null == proveedorMisim.getTransformacion().getIdTransformacion() || 
+				!proveedorMisimNuevo.getTransformacion().getIdTransformacion().equals(proveedorMisim.getTransformacion().getIdTransformacion())){
 				Transformacion transformacion = new Transformacion();
 				if(proveedorMisimNuevo.getTransformacion().getIdTransformacion()!=-2){
 					transformacion = transformacionesManager.getTransformacion(proveedorMisimNuevo.getTransformacion().getIdTransformacion());
 					proveedorTO.setTransformacion(transformacion);
-				}
-				else {
+				} else {
 					Long idTransformacion = newTransformacionMisim(proveedorMisimNuevo.getTransformacion(), source, accion, accionId);
 					if(idTransformacion!=null) {
 						proveedorMisimNuevo.setIdTransformacion(idTransformacion);
@@ -825,8 +826,8 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 			Proveedor proveedorTO = proveedoresMisimManager.getProveedor(proveedorMisim.getIdProveedor());
 			return getProveedorMisimBean(proveedorTO);
 		} catch (Exception e) {
-			logger.error("ServicioProveedorMisimImpl - loadProveedorMisim:" + e);
-			throw new BusinessException(e, "errors.proveedorMisim.loadProveedorMisim");
+			logger.error(SERVICIOPROVEED + e);
+			throw new BusinessException(e, ERRORSDOTPROVEE);
 		}
 	}
 	
@@ -838,11 +839,10 @@ public class ServicioProveedorMisimImpl implements ServicioProveedorMisim {
 	public ProveedorMisimBean loadProveedorMisimUpdate(ProveedorMisimBean proveedorMisim) throws BusinessException {
 		try {
 			Proveedor proveedorTO = proveedoresMisimManager.getProveedor(proveedorMisim.getIdProveedor());
-			ProveedorMisimBean proveedorMisimBean = getProveedorMisimBean(proveedorTO);
-			return proveedorMisimBean;
+			return getProveedorMisimBean(proveedorTO);
 		} catch (Exception e) {
-			logger.error("ServicioProveedorMisimImpl - loadProveedorMisim:" + e);
-			throw new BusinessException(e, "errors.proveedorMisim.loadProveedorMisim");
+			logger.error(SERVICIOPROVEED + e);
+			throw new BusinessException(e, ERRORSDOTPROVEE);
 		}
 	}
 	

@@ -17,8 +17,101 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleEnvioBean implements Audit, Serializable{
 
+	protected static final String BLANK = ", <";
+
+	protected static final String R_CONST_REF = "<";
+
+	protected static final String R_CONST_0 = ">";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -3761280846672129939L;
+
+	/**  envio id. */
+	protected String envioId;
+
+	/**  mensaje id. */
+	private Long mensajeId;
+
+	/**  nombre aplicacion. */
+	private String nombreAplicacion;
+
+	/**  nombre servicio. */
+	private String nombreServicio;
+
+	/**  nombre lote envio. */
+	private String nombreLoteEnvio;
+
+	/**  origen. */
+	private String origen;
+
+	/**  destino. */
+	private String destino;
+
+	/**  bcc. */
+	private String bcc;
+
+	/**  cc. */
+	private String cc;
+
+	/**  asunto. */
+	private String asunto;
+
+	/**  cuerpo. */
+	private String cuerpo;
+
+	/**  id lote. */
+	private Long idLote;
+
+	/**  id externo. */
+	private String idExterno;
+
+	/**  listado adjuntos. */
+	private List<AdjuntoEmailBean> listadoAdjuntos = new ArrayList<>();
+
+	/**  listado imagenes. */
+	private List<AdjuntoEmailBean> listadoImagenes = new ArrayList<>();
+
+	/**  listado historico. */
+	private List<HistoricoBean> listadoHistorico = new ArrayList<>();
+
+	/**  descripcion. */
+	private String descripcion;
+
+	/**  telefono. */
+	private String telefono;
+
+	/**  tipo mensaje. */
+	private String tipoMensaje;
+
+	/**  codificacion. */
+	private String codificacion;
+
+	/**  prioridad. */
+	private Integer prioridad;
+
+	/**  tipo contenido. */
+	private String tipoContenido;
+
+	/**  doc usuario. */
+	private String docUsuario;
+
+	/**  cod SIA. */
+	private String codSIA;
+
+	/**  cod organismo. */
+	private String codOrganismo;
+
+	/**  cod organismo pagador. */
+	private String codOrganismoPagador;
+
+	/**  icono. */
+	private String icono;
+
+	/**  sonido. */
+	private String sonido;
+
+	/**  nombre usuario. */
+	private String nombreUsuario;
 
 	/**
 	 * Constructor de detalle envio bean.
@@ -47,93 +140,6 @@ public class DetalleEnvioBean implements Audit, Serializable{
 		this.nombreUsuario = null;
 	}
 
-	
-	/**  envio id. */
-	protected String envioId;
-	
-	/**  mensaje id. */
-	private Long mensajeId;
-	
-	/**  nombre aplicacion. */
-	private String nombreAplicacion;
-	
-	/**  nombre servicio. */
-	private String nombreServicio;
-	
-	/**  nombre lote envio. */
-	private String nombreLoteEnvio;
-	
-	/**  origen. */
-	private String origen;
-	
-	/**  destino. */
-	private String destino;
-	
-	/**  bcc. */
-	private String bcc;
-	
-	/**  cc. */
-	private String cc;
-	
-	/**  asunto. */
-	private String asunto;
-	
-	/**  cuerpo. */
-	private String cuerpo;
-	
-	/**  id lote. */
-	private Long idLote;
-	
-	/**  id externo. */
-	private String idExterno; 
-	
-	/**  listado adjuntos. */
-	private List<AdjuntoEmailBean> listadoAdjuntos = new ArrayList<>();
-	
-	/**  listado imagenes. */
-	private List<AdjuntoEmailBean> listadoImagenes = new ArrayList<>();
-	
-	/**  listado historico. */
-	private List<HistoricoBean> listadoHistorico = new ArrayList<>();
-	
-	/**  descripcion. */
-	private String descripcion;
-	
-	/**  telefono. */
-	private String telefono;
-	
-	/**  tipo mensaje. */
-	private String tipoMensaje;
-	
-	/**  codificacion. */
-	private String codificacion;
-	
-	/**  prioridad. */
-	private Integer prioridad;
-	
-	/**  tipo contenido. */
-	private String tipoContenido;
-	
-	/**  doc usuario. */
-	private String docUsuario;
-	
-	/**  cod SIA. */
-	private String codSIA;
-	
-	/**  cod organismo. */
-	private String codOrganismo;
-	
-	/**  cod organismo pagador. */
-	private String codOrganismoPagador;
-	
-	/**  icono. */
-	private String icono;
-	
-	/**  sonido. */
-	private String sonido;
-	
-	/**  nombre usuario. */
-	private String nombreUsuario;
 	
 	/**
 	 * Obtener telefono.
@@ -182,7 +188,7 @@ public class DetalleEnvioBean implements Audit, Serializable{
 	 */
 	public String getPrioridadHTML(){
 		if(prioridad!=null){
-			if(prioridad.equals("1")){
+			if("1".equals(prioridad)){
 				return "Urgente";
 				
 			}else{
@@ -344,10 +350,10 @@ public class DetalleEnvioBean implements Audit, Serializable{
 	 * @param cc the cc
 	 */
 	public void addCc(String cc){
-		if(this.cc!=null&&this.cc.length()>0){
-			this.cc+=", <"+cc+">";
+		if(this.cc!=null&&!this.cc.isEmpty()){
+			this.cc+=BLANK+cc+R_CONST_0;
 		}else{
-			this.cc="<"+cc+">";
+			this.cc=R_CONST_REF+cc+R_CONST_0;
 		}
 	}
 	
@@ -357,10 +363,10 @@ public class DetalleEnvioBean implements Audit, Serializable{
 	 * @param bcc the bcc
 	 */
 	public void addBcc(String bcc){
-		if(this.bcc!=null&&this.bcc.length()>0){
-			this.bcc+=", <"+bcc+">";
+		if(this.bcc!=null&&!this.bcc.isEmpty()){
+			this.bcc+=BLANK+bcc+R_CONST_0;
 		}else{
-			this.bcc="<"+bcc+">";
+			this.bcc=R_CONST_REF+bcc+R_CONST_0;
 		}
 	}
 	
@@ -370,10 +376,10 @@ public class DetalleEnvioBean implements Audit, Serializable{
 	 * @param to the to
 	 */
 	public void addDestino(String to){
-		if(destino!=null&&destino.length()>0){
-			destino+=", <"+to+">";
+		if(destino!=null&&!destino.isEmpty()){
+			destino+=BLANK+to+R_CONST_0;
 		}else{
-			destino="<"+to+">";
+			destino=R_CONST_REF+to+R_CONST_0;
 		}
 	}
 	

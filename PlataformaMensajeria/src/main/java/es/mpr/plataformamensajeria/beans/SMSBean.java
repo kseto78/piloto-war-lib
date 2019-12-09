@@ -14,6 +14,54 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class SMSBean implements Audit{
 
+	/**  nombre aplicacion. */
+	private String nombreAplicacion;
+
+	/**  nombre servicio. */
+	private String nombreServicio;
+
+	/**  destinatario. */
+	private String destinatario;
+
+	/**  texto SMS. */
+	private String textoSMS;
+
+	/**  aplicacion id. */
+	private Integer aplicacionId;
+
+	/**  servicio id. */
+	private Integer servicioId;
+
+	/**  id envios SMS. */
+	private Integer idEnviosSMS;
+
+	/**  lote envio. */
+	private String loteEnvio;
+
+	/**  lote envio id. */
+	private Integer loteEnvioId;
+
+	/**  servidor id. */
+	private Integer servidorId;
+
+	/**  nombre servidor. */
+	private String nombreServidor;
+
+	/**  ultimo envio. */
+	private Date ultimoEnvio;
+
+	/**  estado. */
+	private String estado;
+
+	/**  canal id. */
+	private Integer canalId;
+
+	/**  estado id. */
+	private Integer estadoId;
+
+	/**  id SMS. */
+	private String idSMS;
+
 	/**
 	 * Constructor de SMS bean.
 	 */
@@ -35,54 +83,6 @@ public class SMSBean implements Audit{
 		this.idSMS=null;
 	}
 	
-	/**  nombre aplicacion. */
-	private String nombreAplicacion;
-	
-	/**  nombre servicio. */
-	private String nombreServicio;
-	
-	/**  destinatario. */
-	private String destinatario;
-	
-	/**  texto SMS. */
-	private String textoSMS;
-	
-	/**  aplicacion id. */
-	private Integer aplicacionId;
-	
-	/**  servicio id. */
-	private Integer servicioId;
-	
-	/**  id envios SMS. */
-	private Integer idEnviosSMS;
-	
-	/**  lote envio. */
-	private String loteEnvio;
-	
-	/**  lote envio id. */
-	private Integer loteEnvioId;
-	
-	/**  servidor id. */
-	private Integer servidorId;
-	
-	/**  nombre servidor. */
-	private String nombreServidor;
-	
-	/**  ultimo envio. */
-	private Date ultimoEnvio;
-	
-	/**  estado. */
-	private String estado;
-	
-	/**  canal id. */
-	private Integer canalId;
-	
-	/**  estado id. */
-	private Integer estadoId;
-	
-	/**  id SMS. */
-	private String idSMS;
-
 	/**
 	 * Obtener nombre aplicacion.
 	 *

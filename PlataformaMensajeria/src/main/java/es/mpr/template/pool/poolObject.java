@@ -42,15 +42,7 @@ public class poolObject extends ActionSupport implements ServletRequestAware{
 		     obj=buil.toString();
 		     staticPool.getPool().returnObject(buil);
 		    this.request.setAttribute("pool", obj);
-		} catch (NoSuchElementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return SUCCESS;
 		

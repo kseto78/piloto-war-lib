@@ -28,6 +28,12 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 @Service("servicioAuditoriaPlataformaImpl")
 public class ServicioAuditoriaPlataformaImpl implements ServicioAuditoriaPlataforma {
 
+	protected static final String ADTFECHA = "adtfecha";
+
+
+	protected static final String R_CONST_REF = "5";
+
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioAuditoriaPlataformaImpl.class);
 
@@ -54,19 +60,20 @@ public class ServicioAuditoriaPlataformaImpl implements ServicioAuditoriaPlatafo
 
 		try {
 			// Columna para ordenar
-			Hashtable<String, String> columns = new Hashtable<String, String>();
+			Hashtable<String, String> columns = new Hashtable<>();
 			columns.put("0", "id");
 			columns.put("1", "logdescripcion");
 			columns.put("2", "sourcename");
 			columns.put("3", "sourceid");
-			columns.put("5", "adtfecha");
+			columns.put(R_CONST_REF, ADTFECHA);
 			columns.put("6", "adtusuario");
 			if (columnSort == null) {
-				columnSort = "5"; // Id
+				columnSort = R_CONST_REF; 
+				// Id
 			}
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "adtfecha";
+				column = ADTFECHA;
 			}
 
 			es.minhap.plataformamensajeria.iop.beans.AuditoriaPlataformaBean ap = new es.minhap.plataformamensajeria.iop.beans.AuditoriaPlataformaBean();

@@ -15,6 +15,34 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleEnvioSMSBean implements Audit{
 
+	/**  envio id. */
+	private String envioId;
+
+	/**  nombre aplicacion. */
+	private String nombreAplicacion;
+
+	/**  nombre servicio. */
+	private String nombreServicio;
+
+	/**  nombre lote envio. */
+	private String nombreLoteEnvio;
+
+	/**  movil. */
+	private String movil;
+
+	/**  mensaje. */
+	private String mensaje;
+
+	/**  id lote. */
+	private Integer idLote;
+
+	/**  sms id. */
+	private Integer smsId;
+
+	/**  listado historicos. */
+	private List<HistoricoBean> listadoHistoricos = new ArrayList<>();
+
+
 	/**
 	 * Constructor de detalle envio SMS bean.
 	 */
@@ -28,34 +56,6 @@ public class DetalleEnvioSMSBean implements Audit{
 		this.listadoHistoricos = null;
 	}
 	
-	/**  envio id. */
-	private String envioId;
-	
-	/**  nombre aplicacion. */
-	private String nombreAplicacion;
-	
-	/**  nombre servicio. */
-	private String nombreServicio;
-	
-	/**  nombre lote envio. */
-	private String nombreLoteEnvio;
-	
-	/**  movil. */
-	private String movil;
-	
-	/**  mensaje. */
-	private String mensaje;
-	
-	/**  id lote. */
-	private Integer idLote;
-	
-	/**  sms id. */
-	private Integer smsId;
-	
-	/**  listado historicos. */
-	private List<HistoricoBean> listadoHistoricos = new ArrayList<HistoricoBean>();
-	
-
 	/**
 	 * Obtener id lote.
 	 *

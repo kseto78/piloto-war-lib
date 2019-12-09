@@ -54,8 +54,7 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 	public UserVO getUser(Hashtable<String,String> attributes) throws UserException  {
 		
 		UserVO usuario = null;
-		if (attributes!=null && !attributes.isEmpty())
-		{
+		if (attributes!=null && !attributes.isEmpty()) {
 			String value = attributes.get(certAttribute);		
 			logger.debug("certAttribute value: " + value);
             UserVO aCriteria = new UserVO();
@@ -63,8 +62,7 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 			
             try {
 				usuario = (UserVO) manager.getObject(aCriteria);
-			} 
-            catch (BusinessException e) {
+			} catch (BusinessException e) {
 					throw new UserException(e);
 				}
                      
@@ -80,8 +78,7 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 	public UserVO getUser(X509Certificate cert) throws UserException  {
 		
 		UserVO usuario = null;
-		if (cert!=null && cert.getSubjectDN()!=null)
-		{
+		if (cert!=null && cert.getSubjectDN()!=null) {
 			String subjectDN = cert.getSubjectDN().getName();
 			
 			logger.debug("SubjectDN:  " + subjectDN);
@@ -92,8 +89,7 @@ public class CertificateUserServiceImpl implements ICertificateUserService{
 				aCriteria.setAttribute(attributeName,subjectDN);
 				usuario = (UserVO) manager.getObject(aCriteria);
                                        
-			} 
-			catch (BusinessException e) {
+			} catch (BusinessException e) {
 				throw new UserException(e);
 			}
 		}

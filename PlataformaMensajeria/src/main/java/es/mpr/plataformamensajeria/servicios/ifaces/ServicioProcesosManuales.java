@@ -1,14 +1,9 @@
 package es.mpr.plataformamensajeria.servicios.ifaces;
 
-import java.util.List;
-
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
-import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
-import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean;
-import es.mpr.plataformamensajeria.beans.OrganismoBean;
 
 /**
  * <p>Interface que define los m&eacute;todos para la gesti&oacute;n de aplicacion</p>.

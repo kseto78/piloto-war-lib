@@ -13,6 +13,24 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class ProcesoHistBean implements Audit{
 
+	/**  proceso hist id. */
+	private Long procesoHistId;
+
+	/**  codigo estado. */
+	private String codigoEstado;
+
+	/**  descripcion estado. */
+	private String descripcionEstado;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  fecha inicio. */
+	private Date fechaInicio;
+
+	/**  fecha fin. */
+	private Date fechaFin;
+
 	/**
 	 * Constructor de proceso hist bean.
 	 */
@@ -24,24 +42,6 @@ public class ProcesoHistBean implements Audit{
 		this.fechaInicio=null;
 		this.fechaFin=null;
 	}
-	
-	/**  proceso hist id. */
-	private Long procesoHistId;
-	
-	/**  codigo estado. */
-	private String codigoEstado;
-	
-	/**  descripcion estado. */
-	private String descripcionEstado;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  fecha inicio. */
-	private Date fechaInicio;
-	
-	/**  fecha fin. */
-	private Date fechaFin;
 	
 	/**
 	 * Obtener proceso hist id.

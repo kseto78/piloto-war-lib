@@ -325,7 +325,6 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	private void eliminaMensajesAdjuntos(ProcesoHistorificacionBean procesoHistorificacionBean) {
 		for (List<TblMensajesAdjuntosHist> l :procesoHistorificacionBean.getListasMensajesAdjuntosHist()){
 			for (TblMensajesAdjuntosHist mah : l) {
-			//	servicioAdjuntoEmailHist.delete(mah.getTblAdjuntosHist().getAdjuntoid());
 				servicioMensajesAdjuntosHist.delete(mah.getMensajeadjuntoid());
 				
 			}
@@ -399,7 +398,8 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 	 */
 	///MIGRADO
 	private void historificaDestinatariosHist(Date fecha, ProcesoHistorificacionBean procesoHistorificacionBean) {
-		for (List<TblDestinatariosHist> l :procesoHistorificacionBean.getListasDestinatariosHist()){			
+		for (List<TblDestinatariosHist> l :procesoHistorificacionBean.getListasDestinatariosHist()){
+				
 			for (TblDestinatariosHist dh : l) {
 				if ( tblDestinatariosHistManager.getDestinatario(dh.getDestinatarioid()) == null){
 					dh.setFechahistorificacion(fecha);
@@ -427,7 +427,8 @@ public class ServicioProcesoHistoricosImpl implements ServicioProcesoHistoricos 
 			}
 			sessionFactorySIMApp.getCurrentSession().flush();
 		
-			for (TblMensajesAdjuntosHist mah : l) {				
+			for (TblMensajesAdjuntosHist mah : l) {
+					
 				if(null == servicioMensajesAdjuntosHist.getMensajesAdjuntosHistById(mah.getMensajeadjuntoid())){
 					mah.setFechahistorificacion(fecha);
 					servicioMensajesAdjuntosHist.insert(mah);

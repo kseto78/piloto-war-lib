@@ -12,6 +12,14 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class ServicioMovilBean implements Audit{
 
 	
+	protected static final String SPAN_CLASSINACT = "<span class='inactivo'></span>";
+
+	protected static final String TRUE = "true";
+
+	protected static final String FALSE = "false";
+
+	protected static final String SPAN_CLASSACTIV = "<span class='activo'></span>";
+
 	/**  servicio movil id. */
 	protected Long servicioMovilId;
 	
@@ -365,10 +373,10 @@ public class ServicioMovilBean implements Audit{
 	 * @param activado new activado
 	 */
 	public void setActivado(String activado){
-		if(activado!=null&&activado.equals("true")){
-			this.estado = new Integer(1);
+		if(activado!=null&&TRUE.equals(activado)){
+			this.estado = Integer.valueOf(1);
 		}else{
-			this.estado = new Integer(0);
+			this.estado = Integer.valueOf(0);
 		}
 	}
 	
@@ -380,9 +388,9 @@ public class ServicioMovilBean implements Audit{
 	 */
 	public String getActivado(){
 		if(estado!=null&&estado.intValue()==1){
-			return "true";
+			return TRUE;
 		}else{
-			return "false";
+			return FALSE;
 		}
 	}	
 	
@@ -394,9 +402,9 @@ public class ServicioMovilBean implements Audit{
 	 */
 	public String getIsEstado() {
 		if(estado!=null&&estado.intValue()==1){
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		}else{
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		}
 		
 	}
@@ -408,10 +416,10 @@ public class ServicioMovilBean implements Audit{
 	 * @param isEstado new checks if is estado
 	 */
 	public void setIsEstado(String isEstado) {
-		if(isEstado!=null&&isEstado.equals("true")){
-			this.estado = new Integer(1);
+		if(isEstado!=null&&TRUE.equals(isEstado)){
+			this.estado = Integer.valueOf(1);
 		}else{
-			this.estado = new Integer(0);
+			this.estado = Integer.valueOf(0);
 		}
 		this.isEstado   = isEstado;
 	}
@@ -422,10 +430,10 @@ public class ServicioMovilBean implements Audit{
 	 * @param suscrito new suscrito
 	 */
 	public void setSuscrito(String suscrito){
-		if(suscrito != null && suscrito.equals("true")){
-			this.indSuscripcion = new Integer(1);
+		if(suscrito != null && TRUE.equals(suscrito)){
+			this.indSuscripcion = Integer.valueOf(1);
 		}else{
-			this.indSuscripcion = new Integer(0);
+			this.indSuscripcion = Integer.valueOf(0);
 		}
 	}
 	
@@ -437,9 +445,9 @@ public class ServicioMovilBean implements Audit{
 	 */
 	public String getSuscrito(){
 		if(indSuscripcion != null && indSuscripcion.intValue()==1){
-			return "true";
+			return TRUE;
 		}else{
-			return "false";
+			return FALSE;
 		}
 	}	
 	
@@ -451,9 +459,9 @@ public class ServicioMovilBean implements Audit{
 	 */
 	public String getIsIndSuscripcion() {
 		if(indSuscripcion != null && indSuscripcion.intValue()==1){
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		}else{
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		}
 		
 	}
@@ -465,10 +473,10 @@ public class ServicioMovilBean implements Audit{
 	 * @param isIndSuscripcion new checks if is ind suscripcion
 	 */
 	public void setIsIndSuscripcion(String isIndSuscripcion) {
-		if(isIndSuscripcion!=null && isIndSuscripcion.equals("true")){
-			this.indSuscripcion = new Integer(1);
+		if(isIndSuscripcion!=null && TRUE.equals(isIndSuscripcion)){
+			this.indSuscripcion = Integer.valueOf(1);
 		}else{
-			this.indSuscripcion = new Integer(0);
+			this.indSuscripcion = Integer.valueOf(0);
 		}
 		this.isIndSuscripcion   = isIndSuscripcion;
 	}

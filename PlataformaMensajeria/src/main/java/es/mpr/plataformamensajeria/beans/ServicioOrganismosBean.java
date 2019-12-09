@@ -11,6 +11,54 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class ServicioOrganismosBean implements Audit {
 
 	
+	/**  archivo excel */
+	protected File archivoExcel;
+
+	/**  servicio organismo id. */
+	protected Integer servicioOrganismoId;
+
+	/**  organismo id. */
+	protected Integer organismoId;
+
+	/**  servicio id. */
+	protected Integer servicioId;
+
+	/**  nombre servicio. */
+	protected String nombreServicio;
+
+	/**  nombre organismo. */
+	protected String nombreOrganismo;
+
+	/**  DIR 3 organismo. */
+	protected String DIR3Organismo;
+
+	/**  descripcion organismo. */
+	protected String descripcionOrganismo;
+
+	/**  descripcion servicio. */
+	protected String descripcionServicio;
+
+	/**  creado por. */
+	protected String creadoPor;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion;
+
+	/**  modificado por. */
+	protected String modificadoPor;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion;
+
+	/**  logo. */
+	protected String logo;
+
+	/**  background. */
+	protected String background;
+
+	/**  icon. */
+	protected String icon;
+
 	/**
 	 * Constructor de servicio organismos bean.
 	 */
@@ -33,54 +81,6 @@ public class ServicioOrganismosBean implements Audit {
 		this.icon = null;
 	}
 
-	/**  archivo excel */
-	protected File archivoExcel;
-	
-	/**  servicio organismo id. */
-	protected Integer servicioOrganismoId;
-	
-	/**  organismo id. */
-	protected Integer organismoId;
-	
-	/**  servicio id. */
-	protected Integer servicioId;
-	
-	/**  nombre servicio. */
-	protected String nombreServicio;
-	
-	/**  nombre organismo. */
-	protected String nombreOrganismo;
-	
-	/**  DIR 3 organismo. */
-	protected String DIR3Organismo;
-	
-	/**  descripcion organismo. */
-	protected String descripcionOrganismo;
-	
-	/**  descripcion servicio. */
-	protected String descripcionServicio;
-	
-	/**  creado por. */
-	protected String creadoPor;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion;
-	
-	/**  modificado por. */
-	protected String modificadoPor;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion;
-	
-	/**  logo. */
-	protected String logo;
-	
-	/**  background. */
-	protected String background;
-	
-	/**  icon. */
-	protected String icon;
-	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */

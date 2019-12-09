@@ -25,6 +25,54 @@ public class ServidoresServiciosBean implements Audit {
 
 
 
+	/**  servidor servicio id. */
+	protected Integer servidorServicioId;
+
+	/**  servidor id. */
+	protected Integer servidorId;
+
+	/**  servicio id. */
+	protected Integer servicioId;
+
+	/**  num intentos. */
+	protected Integer numIntentos = null;
+
+	/**  header SMS. */
+	protected String headerSMS = null;
+
+	/**  nombre servidor. */
+	protected String nombreServidor;
+
+	/**  nombre servicio. */
+	protected String nombreServicio;
+
+	/**  proveedor usuario SMS. */
+	protected String proveedorUsuarioSMS;
+
+	/**  proveedor password SMS. */
+	protected String proveedorPasswordSMS;
+
+	/**  organismo id. */
+	protected Integer organismoId;
+
+	/**  DIR 3 organismo. */
+	protected String DIR3Organismo;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion = null;
+
+	/**  creado por. */
+	protected String creadoPor = null;
+
+	/**  modificado por. */
+	protected String modificadoPor = null;
+
+	/**  prefijo SMS. */
+	protected String prefijoSMS = null;
+
 	/**
 	 * Constructor de servidores servicios bean.
 	 */
@@ -47,54 +95,6 @@ public class ServidoresServiciosBean implements Audit {
 		this.modificadoPor = null;
 		this.prefijoSMS = null;
 	}
-
-	/**  servidor servicio id. */
-	protected Integer servidorServicioId;
-	
-	/**  servidor id. */
-	protected Integer servidorId;
-	
-	/**  servicio id. */
-	protected Integer servicioId;
-	
-	/**  num intentos. */
-	protected Integer numIntentos = null;
-	
-	/**  header SMS. */
-	protected String headerSMS = null;
-	
-	/**  nombre servidor. */
-	protected String nombreServidor;
-	
-	/**  nombre servicio. */
-	protected String nombreServicio;
-	
-	/**  proveedor usuario SMS. */
-	protected String proveedorUsuarioSMS;
-	
-	/**  proveedor password SMS. */
-	protected String proveedorPasswordSMS;
-	
-	/**  organismo id. */
-	protected Integer organismoId;
-	
-	/**  DIR 3 organismo. */
-	protected String DIR3Organismo;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion = null;
-	
-	/**  creado por. */
-	protected String creadoPor = null;
-	
-	/**  modificado por. */
-	protected String modificadoPor = null;
-	
-	/**  prefijo SMS. */
-	protected String prefijoSMS = null;
 
 	/**
 	 * Obtener nombre servidor.

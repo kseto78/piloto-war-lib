@@ -55,6 +55,20 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class PdpDiputacionesAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String ORGANISMOSACTIO = "OrganismosAction - cargarComboServicioOrganismos:";
+
+	protected static final String ORGANISMOPDP = "organismoPdp";
+
+	protected static final String ORGANISMOSPDPAC = "OrganismosPdpAction - load:";
+
+	protected static final String R_CONST_REF = ",";
+
+	protected static final String ORGANISMOSACTIO0 = "OrganismosAction - load:";
+
+	protected static final String R_CONST_0 = "20";
+
+	protected static final String PLATAFORMADOTOR = "plataforma.organismopdp.delete.ok";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -246,7 +260,10 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	private static final String LOG_SOURCE_ORGANISMOSPDP = "log.SOURCE_ORGANISMOSPDP";
 	
 	/** Constante RECOVERY. */
-	private static final String RECOVERY = "recovery";
+	private static final String TXTRECOVERY = "recovery";
+
+	/**  detalle aplicacion. */
+	transient DetalleAplicacionBean detalleAplicacion;
 
 
 	/**
@@ -256,10 +273,11 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	 * @throws BaseException the base exception
 	 */
 	public String newSearch() {
-		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null) {
 			return PdpDiputacionesAction.NO_USER;
+		}
 		
-		organismo = (PdpDiputacionesBean) getRequest().getSession().getAttribute("organismoPdp");
+		organismo = (PdpDiputacionesBean) getRequest().getSession().getAttribute(ORGANISMOPDP);
 		
 		
 		Integer totalSize = 0;
@@ -279,21 +297,23 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("OrganismosAction - load:" + e);
+			logger.error(ORGANISMOSACTIO0 + e);
 			return PdpDiputacionesAction.NO_USER;
 		}
-		if (pdpDiputacionesId == null)
+		if (pdpDiputacionesId == null) {
 			throw new BusinessException("EL idOrganismo recibido es nulo");
-		try {		
+		}
+		try {
+			
 			organismo = new PdpDiputacionesBean();
-			organismo.setPdpDiputacionesId(new Integer(pdpDiputacionesId));
+			organismo.setPdpDiputacionesId(Integer.valueOf(pdpDiputacionesId));
 			organismo = servicioPdpDiputaciones.loadOrganismoPdp(organismo);
 			comboOrganismosHijos = cargarComboOrganismosHijosPdp();
 
 			return SUCCESS;
 		} catch (NumberFormatException e) {
 			String mensg = this.getText("errors.action.organismoPdp.loadOrganismo", new String[] { organismo.getPdpDiputacionesId().toString() });
-			logger.error("OrganismosAction - load:" + e);
+			logger.error(ORGANISMOSACTIO0 + e);
 			throw new BusinessException(mensg);
 		} 
 	}
@@ -307,16 +327,20 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	///MIGRADO
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null) {
 			return PdpDiputacionesAction.NO_USER;
+		}
 
-		int page = getPage(PdpDiputacionesAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(PdpDiputacionesAction.TABLE_ID); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort(PdpDiputacionesAction.TABLE_ID); // Columna usada para ordenar
+		int page = getPage(PdpDiputacionesAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(PdpDiputacionesAction.TABLE_ID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(PdpDiputacionesAction.TABLE_ID); 
+		// Columna usada para ordenar
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-		PaginatedList<PdpDiputacionesBean> result = servicioPdpDiputaciones.getOrganismosPdpDiputaciones(inicio, export ? -1 : Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, "20")), order, columnSort, organismo);
+		PaginatedList<PdpDiputacionesBean> result = servicioPdpDiputaciones.getOrganismosPdpDiputaciones(inicio, export ? -1 : Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, R_CONST_0)), order, columnSort, organismo);
 		Integer totalSize = result.getTotalList();
 
 		listaOrganismosPdp = result.getPageList();
@@ -325,14 +349,14 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		getRequest().setAttribute(properties.getProperty(PdpDiputacionesAction.GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE, null), totalSize);
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(PdpDiputacionesAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), 
-					Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, R_CONST_0)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(PdpDiputacionesAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), 
 					totalSize);
 		}
 
 		//guardamos el organismo para que al volver tengamos la ultima busqueda
-		getRequest().getSession().setAttribute("organismoPdp", organismo);
+		getRequest().getSession().setAttribute(ORGANISMOPDP, organismo);
 
 		return SUCCESS;
 	}
@@ -347,18 +371,23 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return PdpDiputacionesAction.NO_USER;
 		}
-		int page = getPage(PdpDiputacionesAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(PdpDiputacionesAction.TABLE_ID); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort(PdpDiputacionesAction.TABLE_ID); // Columna usada para ordenar
+		int page = getPage(PdpDiputacionesAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(PdpDiputacionesAction.TABLE_ID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(PdpDiputacionesAction.TABLE_ID); 
+		// Columna usada para ordenar
 
-		if (organismo != null && organismo.getNombre() != null && organismo.getNombre().length() <= 0)
-				organismo.setNombre(null);
+		if (organismo != null && organismo.getNombre() != null && organismo.getNombre().isEmpty()) {
+			organismo.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-		PaginatedList<PdpDiputacionesBean> result = servicioPdpDiputaciones.getOrganismosPdpDiputaciones(inicio, (export) ? -1 : Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, "20")), order, columnSort, organismo);
+		PaginatedList<PdpDiputacionesBean> result = servicioPdpDiputaciones.getOrganismosPdpDiputaciones(inicio, export ? -1 : Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, R_CONST_0)), order, columnSort, organismo);
 		Integer totalSize = result.getTotalList();
 
 		listaOrganismosPdp = result.getPageList();
@@ -367,12 +396,12 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(PdpDiputacionesAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(PdpDiputacionesAction.GENERALES_PAGESIZE, R_CONST_0)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(PdpDiputacionesAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaOrganismosPdp != null && !listaOrganismosPdp.isEmpty()) {
-			for (int indice = 0; indice < listaOrganismosPdp.size(); indice++) {
+			for (int indice = 0, s = listaOrganismosPdp.size(); indice < s; indice++) {
 
 				PdpDiputacionesBean organismoPdp = listaOrganismosPdp.get(indice);
 				organismoPdp.setNombre(StringEscapeUtils.escapeHtml(organismoPdp.getNombre()));
@@ -469,13 +498,13 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 			
 			if (organismo.getPdpDiputacionesId() == null) {
 				if (pdpDiputacionesId != null) {
-					organismo.setPdpDiputacionesId(new Integer(pdpDiputacionesId));
+					organismo.setPdpDiputacionesId(Integer.valueOf(pdpDiputacionesId));
 					organismoPdpBBDD = servicioPdpDiputaciones.loadOrganismoPdp(organismo);
 				} else {
 					String id = (String) request.getAttribute("idOrganismo");
 					
 					if (id != null) {
-						aplicacion.setId(new Long(id));
+						aplicacion.setId(Long.valueOf(id));
 						organismoPdpBBDD = servicioPdpDiputaciones.loadOrganismoPdp(organismo);
 					}
 				}
@@ -483,7 +512,8 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 				organismoPdpBBDD = servicioPdpDiputaciones.loadOrganismoPdp(organismo);
 
 			}
-			if (organismoPdpBBDD != null) {		
+			if (organismoPdpBBDD != null) {
+			
 				organismoPdpBBDD.setNombre(organismo.getNombre());
 				organismoPdpBBDD.setDescripcion(organismo.getDescripcion());
 				if(!organismo.getActivo() && organismoPdpBBDD.getActivo()){
@@ -507,11 +537,13 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 							return SUCCESS;
 						}
 					}
-					if(seleccionarHijosServicios){						
-						List<String> listaServiciosHijosSeleccionados = Arrays.asList(serviciosHijosSeleccionados.split(","));  
+					if(seleccionarHijosServicios){
+							
+						List<String> listaServiciosHijosSeleccionados = Arrays.asList(serviciosHijosSeleccionados.split(R_CONST_REF));  
 						if(!listaServiciosHijosSeleccionados.isEmpty()){
 							List<TblOrganismos> organismosHijos = new ArrayList<>(); 
-							for(String hijoSeleccionado:listaServiciosHijosSeleccionados){								 
+							for(String hijoSeleccionado:listaServiciosHijosSeleccionados){
+								 	
 								TblOrganismos orgHijo = new TblOrganismos();
 								orgHijo.setOrganismoid(Long.valueOf(hijoSeleccionado));
 								organismosHijos.add(orgHijo);
@@ -533,11 +565,13 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 						}
 						
 					}
-					if(seleccionarHijosServidores){						
-						List<String> listaServidorHijosSeleccionados = Arrays.asList(servidorHijosSeleccionados.split(","));  
+					if(seleccionarHijosServidores){
+							
+						List<String> listaServidorHijosSeleccionados = Arrays.asList(servidorHijosSeleccionados.split(R_CONST_REF));  
 						if(!listaServidorHijosSeleccionados.isEmpty()){
 							List<TblOrganismos> organismosHijos = new ArrayList<>(); 
-							for(String hijoSeleccionado:listaServidorHijosSeleccionados){								 
+							for(String hijoSeleccionado:listaServidorHijosSeleccionados){
+								 	
 								TblOrganismos orgHijo = new TblOrganismos();
 								orgHijo.setOrganismoid(Long.valueOf(hijoSeleccionado));
 								organismosHijos.add(orgHijo);
@@ -561,14 +595,15 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		String source = properties.getProperty(PdpDiputacionesAction.LOG_SOURCE_ORGANISMOSPDP, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVIDOR", null);
 		String[] infoServidor = null; 
-		infoServidor = datosServidor.split(",");
+		infoServidor = datosServidor.split(R_CONST_REF);
 		ServidoresOrganismosBean servidorOrg = new ServidoresOrganismosBean();			
 		servidorOrg.setServidorId(Long.valueOf(infoServidor[0]));
 		servidorOrg.setHeaderSMS(infoServidor[1]);
 		servidorOrg.setProveedorUsuarioSMS(infoServidor[2]);
 		servidorOrg.setProveedorPasswordSMS(infoServidor[3]);
 		
-		for(TblOrganismos orga:organismosHijos){			
+		for(TblOrganismos orga:organismosHijos){
+				
 			servidorOrg.setOrganismoId(orga.getOrganismoid());
 			List<ServidoresOrganismosBean> listaServidoresOrganismosHijo = servicioServidor.getServidorOrganismo(String.valueOf(orga.getOrganismoid()));
 			if(!listaServidoresOrganismosHijo.isEmpty()){
@@ -589,7 +624,7 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVICIO", null);
 				
-		String[] idServicios = datosServicios.split(",");
+		String[] idServicios = datosServicios.split(R_CONST_REF);
 		List<String> listaServicios = Arrays.asList(idServicios); 
 		
 		for(TblOrganismos orga:organismosHijos){
@@ -619,21 +654,22 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("OrganismosPdpAction - load:" + e);
+			logger.error(ORGANISMOSPDPAC + e);
 			return PdpDiputacionesAction.NO_USER;
 		}
-		if (pdpDiputacionesId == null)
+		if (pdpDiputacionesId == null) {
 			throw new BusinessException("EL idPdpDiputaciones recibido es nulo");
+		}
 		try {
 			organismo = new PdpDiputacionesBean();
-			organismo.setPdpDiputacionesId(new Integer(pdpDiputacionesId));
+			organismo.setPdpDiputacionesId(Integer.valueOf(pdpDiputacionesId));
 			organismo = servicioPdpDiputaciones.loadOrganismoPdp(organismo);
 			comboOrganismosHijos = cargarComboOrganismosHijosPdp();
 
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
 			String mensg = this.getText("errors.action.organismopdp.loadOrganismo", new String[] { organismo.getPdpDiputacionesId().toString() });
-			logger.error("OrganismosPdpAction - load:" + e);
+			logger.error(ORGANISMOSPDPAC + e);
 			throw new BusinessException(mensg);
 		} 
 
@@ -646,13 +682,15 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	 * @throws BaseException the base exception
 	 */
 	///MIGRADO
-	public String delete() throws BaseException {	
+	public String delete() throws BaseException {
+	
 		String accion = properties.getProperty(PdpDiputacionesAction.LOG_ACCION_ELIMINAR, null);
 		Long accionId = Long.parseLong(properties.getProperty(PdpDiputacionesAction.LOG_ACCIONID_ELIMINAR, null));
 		String source = properties.getProperty(PdpDiputacionesAction.LOG_SOURCE_ORGANISMOSPDP, null);
 				
-		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null) {
 			return PdpDiputacionesAction.NO_USER;
+		}
 		if (pdpDiputacionesId == null) {
 			addActionErrorSession(this.getText("plataforma.organismopdp.delete.error"));
 
@@ -661,13 +699,13 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 			List<TblOrganismos> listOrgHijos = servicioOrganismo.getOrganismosByPdp(Long.parseLong(pdpDiputacionesId));
 			if(listOrgHijos.isEmpty()){
 				servicioPdpDiputaciones.deleteOrganismoPdp(Long.parseLong(pdpDiputacionesId), source, accion, accionId);
-				addActionMessageSession(this.getText("plataforma.organismopdp.delete.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTOR));
 			}else{
 				for(TblOrganismos org:listOrgHijos){
 					servicioOrganismo.deleteOrganismoPdp(org, source, accion, accionId);
 				}
 				servicioPdpDiputaciones.deleteOrganismoPdp(Long.parseLong(pdpDiputacionesId), source, accion, accionId);
-				addActionMessageSession(this.getText("plataforma.organismopdp.delete.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTOR));
 			}
 			
 		}
@@ -681,19 +719,22 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	 * @throws BaseException the base exception
 	 */
 	///MIGRADO
-	public String deleteSelected() throws BaseException {		
+	public String deleteSelected() throws BaseException {
+	
 		String accion = properties.getProperty(PdpDiputacionesAction.LOG_ACCION_ELIMINAR, null);
 		Long accionId = Long.parseLong(properties.getProperty(PdpDiputacionesAction.LOG_ACCIONID_ELIMINAR, null));
 		String source = properties.getProperty(PdpDiputacionesAction.LOG_SOURCE_ORGANISMOSPDP, null);
 		StringBuilder listaOrg = new StringBuilder("");
 		
-		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(PdpDiputacionesAction.INFO_USER) == null) {
 			return PdpDiputacionesAction.NO_USER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.organimopdp.deleteSelected.error"));
 
 		} else {
-			for (String idOrganismoPdpCheck : checkDelList) {				
+			for (String idOrganismoPdpCheck : checkDelList) {
+					
 				//Metodo comprobacion si esta asignado a un organismo normal
 				List<TblOrganismos> listOrgHijos = servicioOrganismo.getOrganismosByPdp(Long.parseLong(idOrganismoPdpCheck));
 				if(listOrgHijos.isEmpty()){
@@ -705,7 +746,7 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 					listaOrg.append("[" + orgPdp.getNombre() + "]" + "\t");					
 				}				
 			}			
-			if(!listaOrg.toString().equals("")){
+			if(!"".equals(listaOrg.toString())){
 				addActionErrorSession(this.getText("plataforma.organismopdp.deleteSelectedHijosActivos.error") + " " + listaOrg);
 			}else{
 				addActionMessageSession(this.getText("plataforma.organismopdp.deleteSelected.ok"));
@@ -723,12 +764,14 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	@Override
 	public void prepare() throws Exception {
 		session = (Map) ActionContext.getContext().get("session");
-		recovery = (String) session.get(RECOVERY);
+		recovery = (String) session.get(TXTRECOVERY);
 	
 
-		if (pdpDiputacionesId != null) {			
-			if (organismo == null)
+		if (pdpDiputacionesId != null) {
+				
+			if (organismo == null) {
 				load();
+			}
 			comboServicioOrganismos = cargarComboServicioOrganismos();
 			comboServidoresOrganismos = cargarComboServidoresOrganismos();
 		}
@@ -745,15 +788,15 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 
 		KeyValueObject option;
 		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
-		List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(listaServ.split(",")));
+		List<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(listaServ.split(R_CONST_REF)));
 		ArrayList<ServicioBean> keys = null;
 		try {
 			keys = (ArrayList<ServicioBean>) servicioServicio.getServiciosMultiorganismo();
 		} catch (BusinessException e) {
-			logger.error("OrganismosAction - cargarComboServicioOrganismos:" + e);
+			logger.error(ORGANISMOSACTIO + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServicioBean key : keys) {
 				for(String idServ : serviciosAeatGiss){
 					if(idServ.equals(key.getServicioId().toString())){
@@ -764,6 +807,7 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 					}
 				}
 			}
+		}
 		return result;
 	}
 
@@ -782,16 +826,17 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		try {
 			keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresYProveedores(properties.getProperty("generales.TIPO_SERVIDOR_SMS", null));
 		} catch (BusinessException e) {
-			logger.error("OrganismosAction - cargarComboServicioOrganismos:" + e);
+			logger.error(ORGANISMOSACTIO + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServidorBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getServidorid().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -810,7 +855,7 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		ArrayList<TblOrganismos> keys = null;
 		keys = (ArrayList<TblOrganismos>) servicioOrganismo.getOrganismosByPdp(Long.valueOf(pdpDiputacionesId));
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (TblOrganismos key : keys) {
 				option = new KeyValueObjects();
 				option.setCodigo(key.getDir3());
@@ -818,6 +863,7 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 				option.setDescripcion(String.valueOf(key.getOrganismoid()));
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -849,10 +895,10 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		String volver = "listarPdpDiputaciones.action";
 		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
 			volver = from + "?" + var + "=" + idFrom;
-			session.put(RECOVERY, volver);
-		} else if (session.get(RECOVERY) != null) {
-			volver = (String) session.get(RECOVERY);
-			session.put(RECOVERY, null);
+			session.put(TXTRECOVERY, volver);
+		} else if (session.get(TXTRECOVERY) != null) {
+			volver = (String) session.get(TXTRECOVERY);
+			session.put(TXTRECOVERY, null);
 		}
 		return volver;
 	}
@@ -929,9 +975,6 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 	public void setServicioUsuarioAplicacion(ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		this.servicioUsuarioAplicacion = servicioUsuarioAplicacion;
 	}
-
-	/**  detalle aplicacion. */
-	transient DetalleAplicacionBean detalleAplicacion;
 
 	/**
 	 * Obtener detalle aplicacion.

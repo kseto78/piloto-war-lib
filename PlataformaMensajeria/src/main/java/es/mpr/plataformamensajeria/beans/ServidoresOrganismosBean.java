@@ -27,6 +27,48 @@ public class ServidoresOrganismosBean implements Audit, Serializable {
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 3312760048196008475L;
 
+	/**  servidor organismo id. */
+	protected Long servidorOrganismoId;
+
+	/**  servidor id. */
+	protected Long servidorId;
+
+	/**  organismo id. */
+	protected Long organismoId;
+
+	/**  num intentos. */
+	protected Integer numIntentos = null;
+
+	/**  header SMS. */
+	protected String headerSMS = null;
+
+	/**  nombre servidor. */
+	protected String nombreServidor;
+
+	/**  nombre organismo. */
+	protected String nombreOrganismo;
+
+	/**  proveedor usuario SMS. */
+	protected String proveedorUsuarioSMS;
+
+	/**  proveedor password SMS. */
+	protected String proveedorPasswordSMS;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  creado por. */
+	protected String creadoPor = null;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion = null;
+
+	/**  modificado por. */
+	protected String modificadoPor = null;
+
+	/**  tipo. */
+	protected Integer tipo = null;
+
 	/**
 	 * Constructor de servidores organismos bean.
 	 */
@@ -47,48 +89,6 @@ public class ServidoresOrganismosBean implements Audit, Serializable {
 		this.modificadoPor = null;
 		this.tipo = null;
 	}
-
-	/**  servidor organismo id. */
-	protected Long servidorOrganismoId;
-	
-	/**  servidor id. */
-	protected Long servidorId;
-	
-	/**  organismo id. */
-	protected Long organismoId;
-	
-	/**  num intentos. */
-	protected Integer numIntentos = null;
-	
-	/**  header SMS. */
-	protected String headerSMS = null;
-	
-	/**  nombre servidor. */
-	protected String nombreServidor;
-	
-	/**  nombre organismo. */
-	protected String nombreOrganismo;
-	
-	/**  proveedor usuario SMS. */
-	protected String proveedorUsuarioSMS;
-	
-	/**  proveedor password SMS. */
-	protected String proveedorPasswordSMS;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  creado por. */
-	protected String creadoPor = null;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion = null;
-	
-	/**  modificado por. */
-	protected String modificadoPor = null;
-	
-	/**  tipo. */
-	protected Integer tipo = null;
 
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

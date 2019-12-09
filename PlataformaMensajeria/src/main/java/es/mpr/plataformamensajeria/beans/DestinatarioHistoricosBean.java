@@ -13,6 +13,18 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DestinatarioHistoricosBean implements Audit{
 	
+	private Integer destinatarioId;
+	private String nombre;
+	private String email;
+	private String mensajeId;
+	private Date fechaCreacion;
+	private String creadoPor;
+	private Date fechaModificacion;
+	private String modificadoPor;
+	private String tipoDestinatario;
+	//TO, CC, BCC
+	private Date fechaHistorificacion;
+
 	/**
 	 * Constructor por defecto
 	 */
@@ -29,17 +41,6 @@ public class DestinatarioHistoricosBean implements Audit{
 		this.fechaHistorificacion=null;
 	}
 	
-	private Integer destinatarioId;
-	private String nombre;
-	private String email;
-	private String mensajeId;
-	private Date fechaCreacion;
-	private String creadoPor;
-	private Date fechaModificacion;
-	private String modificadoPor;
-	private String tipoDestinatario; //TO, CC, BCC
-	private Date fechaHistorificacion;
-
 	/**
 	 * Obtener destinatarioId
 	 * @return

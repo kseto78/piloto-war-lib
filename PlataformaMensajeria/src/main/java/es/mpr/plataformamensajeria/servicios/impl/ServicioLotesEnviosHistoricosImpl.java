@@ -22,7 +22,6 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnviosHistorico
  */
 @Service("servicioLotesEnviosHistoricosImpl")
 public class ServicioLotesEnviosHistoricosImpl implements ServicioLotesEnviosHistoricos{
-//	private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
 	
 	/**  tbl lotes envios hist manager. */
 @Resource(name = "TblLotesEnviosHistManagerImpl")

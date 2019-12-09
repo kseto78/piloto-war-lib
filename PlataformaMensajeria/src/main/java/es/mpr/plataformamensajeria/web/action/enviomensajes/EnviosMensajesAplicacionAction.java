@@ -3,8 +3,6 @@ package es.mpr.plataformamensajeria.web.action.enviomensajes;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -16,7 +14,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.util.KeyValueObject;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 
 import es.minhap.common.spring.ApplicationContextProvider;
@@ -41,6 +38,18 @@ import es.redsara.misim.misim_bus_webapp.respuesta.Respuesta;
 @Controller("envioMensajesAction")
 @Scope("prototype")
 public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
+
+	protected static final String BLANK = " ";
+
+	protected static final String PLATAFORMADOTEN = "plataforma.enviomensajes.field.mensaje.error";
+
+	protected static final String PLATAFORMADOTEN0 = "plataforma.enviomensajes.field.titulo.error";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String ENVIOMENSAJESAP = "EnvioMensajesAplicacionAction - enviarPeticion:";
+
+	protected static final String R_CONST_0 = ";";
 
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -76,16 +85,16 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	private EnvioMensajesAplicacionBean envioMensajesAplicacionBean;
 
 	/**  combo aplicaciones. */
-	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboAplicaciones = new ArrayList<>();
 	
 	/**  combo servicios. */
-	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServicios = new ArrayList<>();
 	
 	/**  combo canales. */
-	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboCanales = new ArrayList<>();
 	
 	/**  combo servicio organismos. */
-	List<KeyValueObject> comboServicioOrganismos = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServicioOrganismos = new ArrayList<>();
 
 	/**  id lote. */
 	private String idLote;
@@ -119,9 +128,11 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	 * @throws BusinessException the business exception
 	 */
 	public String load() throws BusinessException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute("infoUser") == null) {
 			return "noUser";
-		if (validUsuario()) {			
+		}
+		if (validUsuario()) {
+				
 			envioMensajesAplicacionBean = new EnvioMensajesAplicacionBean();			
 			return SUCCESS;
 		} else {
@@ -140,13 +151,9 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 		
 		Respuesta respuesta = null;
 
-		boolean validPeticion = false;
+		boolean validPeticion = envioMensajesAplicacionBean != null && validEnvioPeticion(envioMensajesAplicacionBean);
 				
-		if (envioMensajesAplicacionBean != null) {
-			validPeticion = validEnvioPeticion(envioMensajesAplicacionBean);
-		}
-		
-		if (null != envioMensajesAplicacionBean && search != null && search.length() > 0) {
+		if (null != envioMensajesAplicacionBean && search != null && !search.isEmpty()) {
 			if (-1 != search.indexOf('|')){
 				envioMensajesAplicacionBean.setOrganismo(search.substring(0,search.indexOf('|')).trim());
 			}else{
@@ -154,12 +161,10 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 			}
 		}
 		
-		if(envioMensajesAplicacionBean.getCanalId().equals("2")){ //Enviamos SMS y comprobados que tenemos intentos
-			if(!servicioAplicacion.validarSms(envioMensajesAplicacionBean.getAplicacionId().longValue())){
-				addActionErrorSession("Limite de envio de SMS diario superado");			
-				return SUCCESS;
-			}
-
+		//Enviamos SMS y comprobados que tenemos intentos
+		if(R_CONST_REF.equals(envioMensajesAplicacionBean.getCanalId()) && !servicioAplicacion.validarSms(envioMensajesAplicacionBean.getAplicacionId().longValue())) {
+			addActionErrorSession("Limite de envio de SMS diario superado");			
+			return SUCCESS;
 		}
 		
 		if (validPeticion) {
@@ -174,11 +179,12 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 				try{
 					respuesta = servicioGestionEnvios.enviarPeticion(context, envioMensajesAplicacionBean);
 					
-					if(!respuesta.getStatus().getStatusCode().equals("1000")){
+					if(!"1000".equals(respuesta.getStatus().getStatusCode())){
 						envioMensajesAplicacionBean = null;
-						resultado =  respuesta.getStatus().getStatusText()+" "+respuesta.getStatus().getDetails();					
-						if(respuesta.getMensajes() != null && respuesta.getMensajes().size() > 0){
-							resultado += " "+respuesta.getMensajes().get(0).getMensaje().getErrorMensaje().getStatusCode() +" - "+respuesta.getMensajes().get(0).getMensaje().getErrorMensaje().getDetails();
+						resultado =  respuesta.getStatus().getStatusText()+BLANK+respuesta.getStatus().getDetails();					
+						if(respuesta.getMensajes() != null && !respuesta.getMensajes().isEmpty()){
+							resultado += BLANK+
+								respuesta.getMensajes().get(0).getMensaje().getErrorMensaje().getStatusCode() +" - "+respuesta.getMensajes().get(0).getMensaje().getErrorMensaje().getDetails();
 							}
 						addActionErrorSession(resultado);						
 					}else{
@@ -196,12 +202,12 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 						
 					}
 				} catch (Exception e) {
-					logger.error("EnvioMensajesAplicacionAction - enviarPeticion:" + e);
+					logger.error(ENVIOMENSAJESAP + e);
 				}
 				
 			
 			}catch(Exception e){
-				logger.error("EnvioMensajesAplicacionAction - enviarPeticion:" + e);
+				logger.error(ENVIOMENSAJESAP + e);
 			}
 		}
 		return SUCCESS;
@@ -288,8 +294,6 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
 		ArrayList<ServicioOrganismosBean> keys = null;
-//		String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-//		Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
 		if (envioMensajesAplicacionBean != null && envioMensajesAplicacionBean.getServicioId() != null) {
 			keys = (ArrayList<ServicioOrganismosBean>) servicioServicio.getOrganismoServicio(envioMensajesAplicacionBean.getServicioId());
 		}
@@ -340,7 +344,7 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 			AplicacionBean aplicacion = new AplicacionBean();
 			aplicacion.setId(envioMensajesAplicacionBean.getAplicacionId());
 			try {
-				aplicacion = servicioAplicacion.loadAplicacion(aplicacion);
+				servicioAplicacion.loadAplicacion(aplicacion);;
 
 			} catch (BusinessException e) {
 				logger.error("EnviosMensajesAcyion - aplicacionSelectEvent:" + e);
@@ -379,51 +383,56 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 		
 		if (null != envioPeticion.getCanalId()){
 			
-			if(envioPeticion.getCanalId().equals("1")) {//email
+			if("1".equals(envioPeticion.getCanalId())) {
+				//email
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getAsunto())) {
 					addActionErrorSession(this.getText("plataforma.enviomensajes.field.asunto.error"));
 					sw = false;
 				}
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getMensaje())) {
-					addActionErrorSession(this.getText("plataforma.enviomensajes.field.mensaje.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTEN));
 					sw = false;
 				}
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getTo())) {
 					addActionErrorSession(this.getText("plataforma.enviomensajes.field.emailTo.error"));
 					sw = false;
 				}else{
-					String[] correos = envioPeticion.getTo().split(";");	
+					String[] correos = envioPeticion.getTo().split(R_CONST_0);	
 					for (String correo : correos) {
-						if (!PlataformaMensajeriaUtil.validateEmail(correo)) {	
+						if (!PlataformaMensajeriaUtil.validateEmail(correo)) {
+		
 						addActionErrorSession(this.getText("plataforma.enviomensajes.field.emailTo.email.error"));
 						sw = false;
 						break;
 						}
 					}	
 				}
-				if (envioPeticion.getCc() != null && !envioPeticion.getCc().equals("")) {
-					String[] correos = envioPeticion.getCc().split(";");	
+				if (envioPeticion.getCc() != null && !"".equals(envioPeticion.getCc())) {
+					String[] correos = envioPeticion.getCc().split(R_CONST_0);	
 					for (String correo : correos) {
-						if (!PlataformaMensajeriaUtil.validateEmail(correo)) {	
+						if (!PlataformaMensajeriaUtil.validateEmail(correo)) {
+		
 							addActionErrorSession(this.getText("plataforma.enviomensajes.field.emailCc.email.error"));
 							sw = false;
 							break;
 						}
 					}	
 				}
-				if (envioPeticion.getCco() != null && !envioPeticion.getCco().equals("")) {
-					String[] correos = envioPeticion.getCco().split(";");	
+				if (envioPeticion.getCco() != null && !"".equals(envioPeticion.getCco())) {
+					String[] correos = envioPeticion.getCco().split(R_CONST_0);	
 					for (String correo : correos) {
-						if (!PlataformaMensajeriaUtil.validateEmail(correo)) {	
+						if (!PlataformaMensajeriaUtil.validateEmail(correo)) {
+		
 							addActionErrorSession(this.getText("plataforma.enviomensajes.field.emailCco.email.error"));
 							sw = false;
 							break;
 						}
 					}	
 				}
-			}else if (envioPeticion.getCanalId().equals("2")) {//Sms
+			}else if (R_CONST_REF.equals(envioPeticion.getCanalId())) {
+				//Sms
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getMensaje())) {
-					addActionErrorSession(this.getText("plataforma.enviomensajes.field.mensaje.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTEN));
 					sw = false;
 				}			
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getMovil())) {
@@ -433,26 +442,24 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 					addActionErrorSession(this.getText("plataforma.enviomensajes.field.movil.numero.error"));
 					sw = false;
 				}
-			}else if (envioPeticion.getCanalId().equals("4")) {//Push
+			}else if ("4".equals(envioPeticion.getCanalId())) {
+				//Push
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getTitulo())) {
-					addActionErrorSession(this.getText("plataforma.enviomensajes.field.titulo.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTEN0));
 					sw = false;
 				}
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getMensaje())) {
-					addActionErrorSession(this.getText("plataforma.enviomensajes.field.mensaje.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTEN));
 					sw = false;
 				}
-//				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getIdExterno())) {
-//					addActionErrorSession(this.getText("plataforma.enviomensajes.field.idExterno.error"));
-//					sw = false;
-//				}
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getIdUsuario())) {
 					addActionErrorSession(this.getText("plataforma.enviomensajes.field.idUsuario.error"));
 					sw = false;
 				}
-			}else if (envioPeticion.getCanalId().equals("5")) {//WebPush
+			}else if ("5".equals(envioPeticion.getCanalId())) {
+				//WebPush
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getTitulo())) {
-					addActionErrorSession(this.getText("plataforma.enviomensajes.field.titulo.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTEN0));
 					sw = false;
 				}
 				if (PlataformaMensajeriaUtil.isEmpty(envioPeticion.getCuerpo())) {
@@ -490,7 +497,7 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	 * @param comboAplicaciones new combo aplicaciones
 	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
-		this.comboAplicaciones = new ArrayList<KeyValueObject>(comboAplicaciones);
+		this.comboAplicaciones = new ArrayList<>(comboAplicaciones);
 	}
 
 
@@ -537,7 +544,7 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	 * @param comboServicios new combo servicios
 	 */
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
-		this.comboServicios = new ArrayList<KeyValueObject>(comboServicios);
+		this.comboServicios = new ArrayList<>(comboServicios);
 	}
 
 	/**
@@ -546,7 +553,7 @@ public class EnviosMensajesAplicacionAction extends PlataformaPaginationAction i
 	 * @param comboCanales new combo canales
 	 */
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
-		this.comboCanales = new ArrayList<KeyValueObject>(comboCanales);
+		this.comboCanales = new ArrayList<>(comboCanales);
 	}
 
 	/**

@@ -69,6 +69,54 @@ import es.mpr.plataformamensajeria.util.UtilCreateFile;
 @Service("servicioGestionEnviosHistoricosImpl")
 public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnviosHistoricos {
 	
+	protected static final String ESTADO = "estado";
+
+	protected static final String MENSAJEID = "mensajeid";
+
+	protected static final String LOTEENVIOID = "loteenvioid";
+
+	protected static final String SERVICIOGESTION = "ServicioGestionEnviosImpl - getTotalLotesGestionEnvio:";
+
+	protected static final String UNCHECKED = "unchecked";
+
+	protected static final String APLICACION = "aplicacion";
+
+	protected static final String HISTORICOID = "historicoid";
+
+	protected static final String R_CONST_REF = ",";
+
+	protected static final String R_CONST_0 = "1";
+
+	protected static final String R_CONST_1 = "2";
+
+	protected static final String R_CONST_2 = "3";
+
+	protected static final String ULTIMOENVIO_DES = "ultimoenvio desc, loteenvioid ";
+
+	protected static final String R_CONST_3 = "4";
+
+	protected static final String R_CONST_4 = "5";
+
+	protected static final String ULTIMOENVIO = "ultimoenvio";
+
+	protected static final String R_CONST_5 = "6";
+
+	protected static final String R_CONST_6 = "7";
+
+	protected static final String SERVICIOGESTION0 = "ServicioGestionEnviosHistoricosImpl - getDestinatariosMensajes:";
+
+	protected static final String DDMMYYYY_HHMM = "dd/MM/yyyy HH:mm";
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String ULTIMOENVIO_DES0 = "ultimoenvio desc, mensajeid ";
+
+	protected static final String SLASH = "_";
+
+	protected static final String SERVICIO = "servicio";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
 	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioGestionEnviosHistoricosImpl.class);
 	
@@ -146,9 +194,6 @@ public class ServicioGestionEnviosHistoricosImpl implements ServicioGestionEnvio
 	
 	/** Constante VISTADESTINATARIO. */
 	private static final Integer VISTADESTINATARIO = 3;
-//	private static final Integer VISTALOTES = 2;
-//	private static final Integer VISTAMENSAJES= 1;
-//	private static final String OK = "OK";
 
 	
 	/**  map permisos usuario aplicacion. */
@@ -162,62 +207,66 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getGestionDeEnviosHistoricos(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioHistoricoBean, javax.servlet.http.HttpServletRequest, boolean)
 	 */
 	///MIGRADO
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public PaginatedList<GestionEnvioHistoricoBean> getGestionDeEnviosHistoricos(int inicio, Integer pagesize, String order, String columnSort, GestionEnvioHistoricoBean criterio, HttpServletRequest request, boolean porLotes) throws BusinessException {
 		// Columna para ordenar
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
 		rolUsuario = (String) request.getSession().getAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA);
-		Hashtable<String, String> columns = new Hashtable<String, String>();
+		Hashtable<String, String> columns = new Hashtable<>();
 		String column = null;
 		if (porLotes) {
-			columns.put("1", "aplicacion");
-			columns.put("2", "servicio");
-			columns.put("3", "nombre");
-			columns.put("4", "loteenvioid");
-			columns.put("5", "ultimoenvio");
-			columns.put("6", "estadolote");
-			if (null != columnSort && columnSort.equals("5")){
-				if (null != order && order.equals("2"))
-					column = "ultimoenvio desc, loteenvioid ";
-				else if (order.equals("1"))
+			columns.put(R_CONST_0, APLICACION);
+			columns.put(R_CONST_1, SERVICIO);
+			columns.put(R_CONST_2, NOMBRE);
+			columns.put(R_CONST_3, LOTEENVIOID);
+			columns.put(R_CONST_4, ULTIMOENVIO);
+			columns.put(R_CONST_5, "estadolote");
+			if (null != columnSort && R_CONST_4.equals(columnSort)){
+				if (null != order && R_CONST_1.equals(order)) {
+					column = ULTIMOENVIO_DES;
+				} else if (R_CONST_0.equals(order)) {
 					column = "ultimoenvio asc, loteenvioid ";
+				}
 			}else if (null != columnSort){
 				column = columns.get(columnSort);
-			}else
-				column = "ultimoenvio desc, loteenvioid ";
+			} else {
+				column = ULTIMOENVIO_DES;
+			}
 		} else {
-			columns.put("1", "aplicacion");
-			columns.put("2", "servicio");
-			columns.put("3", "nombre");
-			columns.put("4", "loteenvioid");
-			columns.put("5", "mensajeid");
-			columns.put("6", "ultimoenvio");
-			columns.put("7", "estado");
+			columns.put(R_CONST_0, APLICACION);
+			columns.put(R_CONST_1, SERVICIO);
+			columns.put(R_CONST_2, NOMBRE);
+			columns.put(R_CONST_3, LOTEENVIOID);
+			columns.put(R_CONST_4, MENSAJEID);
+			columns.put(R_CONST_5, ULTIMOENVIO);
+			columns.put(R_CONST_6, ESTADO);
 			
-			if (null != columnSort && columnSort.equals("6")){
-				if (null != order && order.equals("2"))
-					column = "ultimoenvio desc, mensajeid ";
-				else if (order.equals("1"))
+			if (null != columnSort && R_CONST_5.equals(columnSort)){
+				if (null != order && R_CONST_1.equals(order)) {
+					column = ULTIMOENVIO_DES0;
+				} else if (R_CONST_0.equals(order)) {
 					column = "ultimoenvio asc, mensajeid ";
+				}
 			}else if (null != columnSort){
 				column = columns.get(columnSort);
-			}else
-				column = "ultimoenvio desc, mensajeid ";
+			} else {
+				column = ULTIMOENVIO_DES0;
+			}
 		}
 		
 		if (column == null) {
 			column = "loteenvioid desc, ultimoenvio";
 		}
 		if (order == null) {
-			order = "2";
+			order = R_CONST_1;
 		}
 
 		es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg = new es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean();
 		eg = createGestionEnvioHistoricoBean(criterio,eg);
 		
 		Integer rowcount = 0;
-		List<TblGestionEnviosHist> lista = new ArrayList<TblGestionEnviosHist>();
+		List<TblGestionEnviosHist> lista = null;
 		
 		if (porLotes) {
 			rowcount = getTotalLotesGestionEnvio(eg, request);
@@ -240,27 +289,28 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioGestionEnviosHistoricos#getGestionDeEnviosDestinatariosHistoricos(int, java.lang.Integer, java.lang.String, java.lang.String, es.mpr.plataformamensajeria.beans.GestionEnvioHistoricoBean, javax.servlet.http.HttpServletRequest)
 	 */
 	///MIGRADO
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public PaginatedList<GestionEnvioHistoricoBean> getGestionDeEnviosDestinatariosHistoricos(int inicio, Integer pagesize, String order, String columnSort, GestionEnvioHistoricoBean criterio, HttpServletRequest request) throws BusinessException {
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>)request.getSession().
 				getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
 		rolUsuario = (String)request.getSession().getAttribute(PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA);
-		Hashtable<String, String> columns = new Hashtable<String,String>();	
-		columns.put("1","aplicacion");
-		columns.put("2", "servicio");
-		columns.put("3", "loteenvio");
-		columns.put("4", "loteenvioid");
-		columns.put("5", "mensajeid");
-		columns.put("6", "ultimoenvio");
-		columns.put("7", "estado");
+		Hashtable<String, String> columns = new Hashtable<>();	
+		columns.put(R_CONST_0,APLICACION);
+		columns.put(R_CONST_1, SERVICIO);
+		columns.put(R_CONST_2, "loteenvio");
+		columns.put(R_CONST_3, LOTEENVIOID);
+		columns.put(R_CONST_4, MENSAJEID);
+		columns.put(R_CONST_5, ULTIMOENVIO);
+		columns.put(R_CONST_6, ESTADO);
 		columns.put("8", "destinatario");
 		
 		if (columnSort==null){
-			columnSort = "6"; //FECHA
+			columnSort = R_CONST_5; 
+			//FECHA
 		}
 		if(order==null){
-			order = "2";
+			order = R_CONST_1;
 		}
 		String column = columns.get(columnSort) ;
 		
@@ -268,7 +318,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 		eg = createGestionEnvioHistoricoBean(criterio,eg);
 		
 		Integer rowcount = queryExecutorGestionEnviosHist.countGestionEnviosHistDestinatarios(eg);
-		List<ViewGestionEnviosDestHistId> lista = new ArrayList<>();
+		List<ViewGestionEnviosDestHistId> lista = null;
 		lista = queryExecutorGestionEnviosHist.getGestionEnvioDestinatariosHistPaginado(inicio, pagesize, order, column, eg);	
 			
 		List<GestionEnvioHistoricoBean> pageList = getListGestionEnvioHistBeanFromDestinatario(lista);
@@ -290,14 +340,16 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 	 * @return total gestion envio
 	 */
 	///MIGRADO
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(UNCHECKED)
 	public Integer getTotalGestionEnvio(es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg, HttpServletRequest request) {
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
 		
 		try{
 			StringBuffer sbf = new StringBuffer();
 			
-			if (mapPermisosUsuarioAplicacion != null && (!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && !rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (mapPermisosUsuarioAplicacion != null && 
+				!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && 
+					!PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)&&!PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario)) {
 	
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
@@ -307,7 +359,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 					Integer idAplicacion = itAplicaciones.next();
 	
 					if (!first) {
-						sbf.append(",");
+						sbf.append(R_CONST_REF);
 					}
 					sbf.append(idAplicacion);
 					first = false;
@@ -319,7 +371,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			return queryExecutorGestionEnviosHist.countGestionEnviosHistorico(eg);
 			
 		} catch (Exception e) {
-			logger.error("ServicioGestionEnviosImpl - getTotalLotesGestionEnvio:" + e);
+			logger.error(SERVICIOGESTION + e);
 			return 0;
 		}
 	}
@@ -332,7 +384,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 	 * @return total lotes gestion envio
 	 */
 	///MIGRADO
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(UNCHECKED)
 	public Integer getTotalLotesGestionEnvio(es.minhap.plataformamensajeria.iop.beans.GestionEnvioHistoricoBean eg, HttpServletRequest request) {
 		mapPermisosUsuarioAplicacion = (HashMap<Integer, Integer>) request.getSession().getAttribute(PlataformaMensajeriaUtil.MAP_PERMISOS_APLICACIONES);
 		
@@ -340,8 +392,8 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			StringBuilder sbf = new StringBuilder();
 			
 			if (mapPermisosUsuarioAplicacion != null && 
-					(!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && 
-					!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))){
+					!PlataformaMensajeriaUtil.isEmpty(rolUsuario) && 
+					!PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)&&!PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario)){
 				
 				Set<Integer> idAplicaciones = mapPermisosUsuarioAplicacion.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
@@ -349,10 +401,9 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 				boolean first = true;
 				while (itAplicaciones.hasNext()) {
 					Integer idAplicacion = itAplicaciones.next();
-					// System.out.println("@@@ ITERANDO IDS DE APLICACIONES "+ idAplicacion);
 
 					if (!first) {
-						sbf.append(",");
+						sbf.append(R_CONST_REF);
 					}
 					sbf.append(idAplicacion);
 					first = false;
@@ -364,7 +415,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			return queryExecutorGestionEnviosHist.countGestionEnviosHistoricoLotes(eg);
 			
 		} catch (Exception e) {
-			logger.error("ServicioGestionEnviosImpl - getTotalLotesGestionEnvio:" + e);
+			logger.error(SERVICIOGESTION + e);
 			return 0;
 		}
 	}
@@ -609,7 +660,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			return result;
 		} catch (Exception e) {
 			logger.error("ServicioGestionEnviosHistImpl - getMensajesLotes:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 
 		}
 	}
@@ -707,7 +758,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			return result;
 		} catch (Exception e) {
 			logger.error("ServicioGestionEnviosHistoricosImpl - getDestinatariosMensajesMultidestinatario:",e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 
 		}
 
@@ -786,8 +837,8 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioGestionEnviosHistoricosImpl - getDestinatariosMensajes:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOGESTION0 + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 
 		}
 	}
@@ -839,7 +890,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			res.setUltimoEnvio(dm.getUltimoenvio());
 			res.setFechaHistorificacion(dm.getFechahistorificacion());
 		}catch (Exception e) {
-			logger.error("ServicioGestionEnviosHistoricosImpl - getDestinatariosMensajes:" + e);
+			logger.error(SERVICIOGESTION0 + e);
 			throw new BusinessException(e);
 		}
 		return res;
@@ -889,13 +940,13 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 				ViewHistoricoHistMultidestQuery query = new ViewHistoricoHistMultidestQuery();
 				query.setMensajeid(Long.parseLong(idMensaje));
 				query.setDestinatariosmensajes(Long.parseLong(idDestinatariosMensajes));
-				query.addOrder("historicoid", OrderType.DESC);
+				query.addOrder(HISTORICOID, OrderType.DESC);
 				List<ViewHistoricoHistMultidest> listaHistoricos = viewHistoricoHistManager.getHistoricoMultidest(query);
 				result = getListHistoricoMultidestBean(listaHistoricos);
 			} else {
 				ViewHistoricoHistQuery query = new ViewHistoricoHistQuery();
 				query.setMensajeid(Long.parseLong(idMensaje));
-				query.addOrder("historicoid", OrderType.DESC);
+				query.addOrder(HISTORICOID, OrderType.DESC);
 				List<ViewHistoricoHist> listaHistoricos = viewHistoricoHistManager.getHistorico(query);
 				result = getListHistoricoBean(listaHistoricos);
 			}
@@ -903,7 +954,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 			return result;
 		} catch (Exception e) {
 			logger.error("ServicioGestionEnviosHistImpl - getHistoricosHistMensaje:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 
 		}
 	}
@@ -981,9 +1032,8 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 	private List<GestionEnvioHistoricoBean> getListGestionEnvioHistoricoBean(List<TblGestionEnviosHist> lista,
 			boolean porLote) {
 		List<GestionEnvioHistoricoBean> result = new ArrayList<>();
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		if (lista!=null && !lista.isEmpty())
-		{
+		SimpleDateFormat df = new SimpleDateFormat(DDMMYYYY_HHMM);
+		if (lista!=null && !lista.isEmpty()) {
 					
 			for (TblGestionEnviosHist ge : lista) {
 				GestionEnvioHistoricoBean gestionEnvio =  new GestionEnvioHistoricoBean();
@@ -996,7 +1046,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 				gestionEnvio.setUltimoEnvio(ge.getUltimoenvio());
 				if(!porLote){
 					gestionEnvio.setEstado(ge.getEstado());
-					gestionEnvio.setEnvioId(ge.getCanalid()+"_"+ge.getMensajeid());
+					gestionEnvio.setEnvioId(ge.getCanalid()+SLASH+ge.getMensajeid());
 					gestionEnvio.setCanalId((null != ge.getCanalid())? ge.getCanalid() : null);
 				}else{
 					gestionEnvio.setEstado(ge.getEstadolote());
@@ -1077,9 +1127,8 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 ////MIGRADO
 	private List<GestionEnvioHistoricoBean> getListGestionEnvioHistBeanFromDestinatario(List<ViewGestionEnviosDestHistId> lista) {
 		List<GestionEnvioHistoricoBean> result = new ArrayList<>();
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		if (lista!=null && !lista.isEmpty())
-		{
+		SimpleDateFormat df = new SimpleDateFormat(DDMMYYYY_HHMM);
+		if (lista!=null && !lista.isEmpty()) {
 					
 			for (ViewGestionEnviosDestHistId ge : lista) {
 				GestionEnvioHistoricoBean gestionEnvio = new GestionEnvioHistoricoBean();
@@ -1091,7 +1140,7 @@ static HashMap<Integer, Integer> mapPermisosUsuarioAplicacion = null;
 				gestionEnvio.setUltimoEnvio(ge.getUltimoenvio());
 
 				gestionEnvio.setEstado(ge.getEstado());
-				gestionEnvio.setEnvioId(ge.getCanalid() + "_" + ge.getMensajeid());
+				gestionEnvio.setEnvioId(ge.getCanalid() + SLASH + ge.getMensajeid());
 				gestionEnvio.setCanalId((null != ge.getCanalid()) ? ge.getCanalid() : null);
 				gestionEnvio.setDestinatario(ge.getDestinatario());
 				gestionEnvio.setUltimoEnvioStr((null != ge.getUltimoenvio()) ? df.format(ge.getUltimoenvio()) : "");

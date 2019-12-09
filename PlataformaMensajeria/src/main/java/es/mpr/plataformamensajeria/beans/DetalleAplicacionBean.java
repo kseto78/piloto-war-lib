@@ -15,6 +15,53 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleAplicacionBean implements Audit{
 
+	protected static final String TRUE = "true";
+
+	/** The aplicacion id. */
+	protected Long aplicacionId;
+
+	/** The nombre. */
+	protected String nombre = null;
+
+	/** The descripcion. */
+	protected String descripcion = null;
+
+	/** The usuario. */
+	protected String usuario = null;
+
+	/** The password. */
+	protected String password = null;
+
+	/** The re password. */
+	protected String rePassword = null;
+
+	/** The activo. */
+	protected Boolean activo = null;
+
+	/** The fechacreacion. */
+	protected Date fechacreacion = null;
+
+	/** The creadopor. */
+	protected String creadopor = null;
+
+	/** The fechamodificacion. */
+	protected Date fechamodificacion = null;
+
+	/** The modificadopor. */
+	protected String modificadopor = null;
+
+	/** The is activo. */
+	protected String isActivo = null;
+
+	/** The lista servicios. */
+	protected List<DetalleServicioBean> listaServicios;
+
+	/** The lista usuarios aplicacion. */
+	protected List<UsuarioAplicacionBean> listaUsuariosAplicacion;
+
+	/** The password unhashed. */
+	protected String passwordUnhashed;
+
 	/**
 	 * Constructor por defecto.
 	 */
@@ -33,51 +80,6 @@ public class DetalleAplicacionBean implements Audit{
 		this.isActivo = null;
 	}
 
-	/** The aplicacion id. */
-	protected Long aplicacionId;
-	
-	/** The nombre. */
-	protected String nombre = null;
-	
-	/** The descripcion. */
-	protected String descripcion = null;
-	
-	/** The usuario. */
-	protected String usuario = null;
-	
-	/** The password. */
-	protected String password = null;
-	
-	/** The re password. */
-	protected String rePassword = null;
-	
-	/** The activo. */
-	protected Boolean activo = null;
-	
-	/** The fechacreacion. */
-	protected Date fechacreacion = null;
-	
-	/** The creadopor. */
-	protected String creadopor = null;
-	
-	/** The fechamodificacion. */
-	protected Date fechamodificacion = null;
-	
-	/** The modificadopor. */
-	protected String modificadopor = null;
-	
-	/** The is activo. */
-	protected String isActivo = null; 
-	
-	/** The lista servicios. */
-	protected List<DetalleServicioBean> listaServicios;
-	
-	/** The lista usuarios aplicacion. */
-	protected List<UsuarioAplicacionBean> listaUsuariosAplicacion;
-	
-	/** The password unhashed. */
-	protected String passwordUnhashed;
-	
 	/**
 	 * Obtiene la password desencriptada.
 	 *
@@ -126,7 +128,7 @@ public class DetalleAplicacionBean implements Audit{
 	 */
 	public void addDetalleServicio(DetalleServicioBean servicioBean){
 		if(listaServicios==null){
-			listaServicios = new ArrayList<DetalleServicioBean>();
+			listaServicios = new ArrayList<>();
 		}
 		listaServicios.add(servicioBean);
 	}
@@ -158,7 +160,7 @@ public class DetalleAplicacionBean implements Audit{
 	 */
 	public void setActivado(String activado){
 		
-		if(activado!=null&&activado.equals("true")){
+		if(activado!=null&&TRUE.equals(activado)){
 			this.activo = true;
 		}else{
 			this.activo = false;
@@ -187,7 +189,7 @@ public class DetalleAplicacionBean implements Audit{
 	 * @param isActivo new checks if is activo
 	 */
 	public void setIsActivo(String isActivo) {
-		if(isActivo!=null&&isActivo.equals("true")){
+		if(isActivo!=null&&TRUE.equals(isActivo)){
 			this.activo = true;
 		}else{
 			this.activo = false;
@@ -202,7 +204,7 @@ public class DetalleAplicacionBean implements Audit{
 	 */
 	public String getActivado(){
 		if(activo!=null && activo){
-			return "true";
+			return TRUE;
 		}else{
 			return "false";
 		}

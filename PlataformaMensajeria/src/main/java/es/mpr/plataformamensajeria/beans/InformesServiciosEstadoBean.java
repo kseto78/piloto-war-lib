@@ -11,6 +11,21 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class InformesServiciosEstadoBean implements Audit{
 
+	/**  servicio id. */
+	private Integer servicioId;
+
+	/**  anno. */
+	private Integer anno;
+
+	/**  mes. */
+	private Integer mes;
+
+	/**  estado. */
+	private String estado;
+
+	/**  num total. */
+	private Integer numTotal;
+
 	/**
 	 * Constructor de informes servicios estado bean.
 	 */
@@ -21,21 +36,6 @@ public class InformesServiciosEstadoBean implements Audit{
 		this.estado=null;
 		this.numTotal=null;
 	}
-	
-	/**  servicio id. */
-	private Integer servicioId;
-	
-	/**  anno. */
-	private Integer anno;
-	
-	/**  mes. */
-	private Integer mes;
-	
-	/**  estado. */
-	private String estado;
-	
-	/**  num total. */
-	private Integer numTotal;
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

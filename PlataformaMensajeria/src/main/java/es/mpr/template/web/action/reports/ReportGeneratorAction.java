@@ -31,6 +31,10 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo;
 public class ReportGeneratorAction extends RunReportAction {
 
 		
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String NOUSER = "noUser";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -53,43 +57,25 @@ public class ReportGeneratorAction extends RunReportAction {
 	 * @throws ReportException the report exception
 	 */
 	public String generateReport() throws ReportException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		
 		logger.debug("generateReport(): Inicio");
 		
 		// Recogemos de la página el tipo de informe a generar
-//		String tipoInforme = form.getTipoInforme();
 //
 //		// Establecemos la plantilla desde la que generar el informe
-//		String reportDesign = "TemplateReportJPA.jasper";
 //
 //		// Recuperamos los datos a mostrar en el informe
 //		// O bien pasamos una query a ejecutar
-//		OrganismoBean criterio = new OrganismoBean();
-//		try {
-//			listaRegistrosOrganismo = servicioOrganismos.getOrganismos(criterio);
-//		} catch (BusinessException e) {
-//			String mensg = this.getText("errors.organismo.getOrganismos");
-//			throw new ReportException(mensg);
-//		}
 //
 //
-//		logger.debug("generateReport(): Establecidos parámetros de generación de informe...");
 //		
-//		try {
 //			// Invocamos la generacion
-//			doGenerateReport(reportDesign, listaRegistrosOrganismo, getRequest(), getResponse(), tipoInforme);
-//			//doGenerateReport(reportDesign, reportQuery, getRequest(), getResponse(), tipoInforme);
-//			//doGenerateReport(reportDesign, "", getRequest(), getResponse(), tipoInforme);
-//		} catch (Exception e) {
-//			String[] paramError = {reportDesign,tipoInforme};
-//			throw new ReportException("errors.reports.generar", paramError);
-//		}
 //
-//		logger.debug("generateReport(): Informe generado retornando...");
 //
 //		// No se retorna nada ya que el retorno es el propio informe
-//	    return NONE; 
 		return null;
 
 	}
@@ -100,7 +86,9 @@ public class ReportGeneratorAction extends RunReportAction {
 	 * @return the string
 	 */
 	public String nuevoInforme(){
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 
 		return SUCCESS;
 		

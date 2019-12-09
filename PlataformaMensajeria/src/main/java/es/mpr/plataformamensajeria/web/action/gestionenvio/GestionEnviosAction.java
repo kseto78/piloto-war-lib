@@ -74,6 +74,70 @@ import es.mpr.plataformamensajeria.util.XMLUtils;
 @Scope("prototype")
 public class GestionEnviosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String EL_IDPETICION_R = "EL idPeticion recibido es nulo";
+
+	protected static final String GESTIONENVIOSAC = "GestionEnviosAction - accionSeleccionados:";
+
+	protected static final String EL_IDMENSAJE_RE = "EL idMensaje recibido es nulo";
+
+	protected static final String R_CONST_REF = "50";
+
+	protected static final String R_CONST_0 = "10";
+
+	protected static final String BLANK = " ";
+
+	protected static final String ENVIOS_SELECCIO = "Envios seleccionados anulados correctamente";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String GESTIONENVIOSAC0 = "[GestionEnviosAction] Error al descifrar el XML: ";
+
+	protected static final String GESTIONENVIOSDOT = "gestionenvios.ayuda.reenvios";
+
+	protected static final String UTF_8 = "UTF-8";
+
+	protected static final String DECODEDOTKEYSTO = "decode.keystore.path";
+
+	protected static final String R_CONST_1 = "0";
+
+	protected static final String R_CONST_2 = "1";
+
+	protected static final String RD = "RD";
+
+	protected static final String ENVIOS_SELECCIO0 = "Envios seleccionados reenviados correctamente";
+
+	protected static final String EL_IDLOTE_RECIB = "EL idLote recibido es nulo";
+
+	protected static final String GESTIONENVIOSAC1 = "[GestionEnviosAction] - decode: XML a decodificar: ";
+
+	protected static final String R_CONST_3 = "20";
+
+	protected static final String HA_OCURRIDO_UN_REF = "Ha ocurrido un error reenviando los envios, pongase en contacto con el administrador";
+
+	protected static final String GESTIONENVIOSAC2 = "[GestionEnviosAction] - descargaFichero - inicio";
+
+	protected static final String DECODEDOTKEYSTO0 = "decode.keystore.alias.password.";
+
+	protected static final String OK = "OK";
+
+	protected static final String DECODEDOTKEYSTO1 = "decode.keystore.type";
+
+	protected static final String SLASH = "_";
+
+	protected static final String DECODEDOTKEYSTO2 = "decode.keystore.alias.defecto";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String DECODEDOTKEYSTO3 = "decode.keystore.password";
+
+	protected static final String PLATAFORMADOTDE = "plataforma.decodificador.decodeDescifrar.error";
+
+	protected static final String DECODEDOTKEYSTO4 = "decode.keystore.alias.";
+
+	protected static final String R_CONST_4 = "100";
+
+	protected static final String HA_OCURRIDO_UN_0 = "Ha ocurrido un error anulando los envios, pongase en contacto con el administrador";
+
 	/** Constante GENERALES_PAGESIZEM. */
 	private static final String GENERALES_PAGESIZEM = "generales.PAGESIZEM";
 
@@ -91,6 +155,9 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	
 	/** Constante ES_AEAT. */
 	public static final String ES_AEAT = "ES_AEAT";
+	
+	/** Constante ES_GISS. */
+	public static final String ES_GISS = "ES_GISS";
 
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -255,15 +322,16 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String newSearch() throws BusinessException {
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		if (validUsuario()) {
 		
 			gestionEnvioBean = new GestionEnvioBean();
-			vistaEnviosIdSelected = "1";
+			vistaEnviosIdSelected = R_CONST_2;
 			
 			Integer totalSize = 0;
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 			listaGestionEnvios =new ArrayList<>();
 			return SUCCESS;
 		} else {
@@ -279,15 +347,21 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
  */
 ////MIGRADO
 	public String search() throws BaseException {
+		String dir3AEAT = properties.getProperty("usuario.ayuda.organismo.aeat", null);
+		String dir3GISS = properties.getProperty("usuario.ayuda.organismo.giss", null);
 		PaginatedList<GestionEnvioBean> result;
 		Integer totalSize;
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		if (validUsuario()) {
-			int page = getPage(GestionEnviosAction.TABLE_ID); // Pagina a mostrar
-			String order = getOrder(GestionEnviosAction.TABLE_ID); // Ordenar de modo ascendente o
+			int page = getPage(GestionEnviosAction.TABLE_ID); 
+			// Pagina a mostrar
+			String order = getOrder(GestionEnviosAction.TABLE_ID); 
+			// Ordenar de modo ascendente o
 												// descendente
-			String columnSort = getColumnSort(GestionEnviosAction.TABLE_ID); // Columna usada para
+			String columnSort = getColumnSort(GestionEnviosAction.TABLE_ID); 
+			// Columna usada para
 															// ordenar
 			int inicio = (page - 1) * pageSize;
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
@@ -295,7 +369,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			if (gestionEnvioBean != null && gestionEnvioBean.getVistaEnviosId() != null) {
 				vistaEnviosIdSelected = gestionEnvioBean.getVistaEnviosId().toString();
 			} else {
-				vistaEnviosIdSelected = "1";
+				vistaEnviosIdSelected = R_CONST_2;
 			}
 			if (null != gestionEnvioBean){
 				//Recuperamos de sesion los organismos a los que está asociado en usuario
@@ -304,20 +378,19 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			
 				//Comprobamos si el usuario es propietario
 				String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-				
+		
 				//Comprobamos si el usuario es propietario AEAT
 				String esAeat = (String)request.getSession().getAttribute(GestionEnviosAction.ES_AEAT);
-				if(search != null && search.length() > 0) {
-					if (PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && "OK".equals(esAeat)){
-						if(!validOrganismoAeat(search, arrayOrganismos)){
-							gestionEnvioBean = new GestionEnvioBean();
-							vistaEnviosIdSelected = "1";
-							totalSize = 0;
-							getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
-							listaGestionEnvios =new ArrayList<>();
-							
-							return SUCCESS;
-						}	
+				String esGiss = (String)request.getSession().getAttribute(GestionEnviosAction.ES_GISS);
+				if(search != null && !search.isEmpty()) {
+					if (PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && ( OK.equals(esAeat) || OK.equals(esGiss)) && !validOrganismoAeat(search, arrayOrganismos) ) {
+						gestionEnvioBean = new GestionEnvioBean();
+						vistaEnviosIdSelected = R_CONST_2;
+						totalSize = 0;
+						getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
+						listaGestionEnvios =new ArrayList<>();
+						
+						return SUCCESS;
 					}
 			
 					if (-1 != search.indexOf('|')){
@@ -327,25 +400,29 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 					}
 				}else{
 					if(arrayOrganismos!=null && !arrayOrganismos.isEmpty() 
-							&& PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && "OK".equals(esAeat)){
+							&& PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && OK.equals(esAeat) && !arrayOrganismos.get(0).equals(dir3AEAT)){
+						gestionEnvioBean.setArrayOrganismos(arrayOrganismos);
+					}
+					if(arrayOrganismos!=null && !arrayOrganismos.isEmpty() 
+							&& PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario) && OK.equals(esGiss) && !arrayOrganismos.get(0).equals(dir3GISS)){
 						gestionEnvioBean.setArrayOrganismos(arrayOrganismos);
 					}
 				}
 			}
 
-			if ("1".equals(vistaEnviosIdSelected)) {
+			if (R_CONST_2.equals(vistaEnviosIdSelected)) {
 				result = servicioGestionEnvios.getGestionDeEnvios(inicio,
-						(export) ? -1 : pageSize, order,
+						export ? -1 : pageSize, order,
 						columnSort, gestionEnvioBean, request, false);
 				totalSize = result.getTotalList();
 			} else if ("3".equals(vistaEnviosIdSelected)) {
 				result = servicioGestionEnvios.getGestionDeEnviosDestinatarios(inicio,
-						(export) ? -1 : pageSize, order,
+						export ? -1 : pageSize, order,
 						columnSort, gestionEnvioBean, request);
 				totalSize = result.getTotalList();
 			} else {
 				result = servicioGestionEnvios.getGestionDeEnvios(inicio,
-						(export) ? -1 : pageSize, order,
+						export ? -1 : pageSize, order,
 						columnSort, gestionEnvioBean, request, true);
 				totalSize = result.getTotalList();
 			}
@@ -358,21 +435,14 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 				
 				//se quita esta comprobacion por la lentitud de los mensajes en GestionEnvios
 								
-//								geb.setBotonIntercambios(true);
 //								
-//								ViewMisimQuery query = new ViewMisimQuery();
-//								query.setIdLote(geb.getIdLote());
-//								List<ViewMisim> viewMisim = viewMisimManager.getIntercambiosMisimByQuery(query, 0, 20);
 //								
-//								if(viewMisim == null || viewMisim.isEmpty()){
-//									geb.setBotonIntercambios(false);
-//								}
 		   }
 
 			
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 			// Atributos de request
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 			gestionEnvioBean.setCodOrganismo(search);
 			if (!export) {
 				getRequest().setAttribute(properties.getProperty(GestionEnviosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
@@ -395,20 +465,21 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 */
 	// //MIGRADO
 	public String loadContenidoMensaje() throws BusinessException {
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		if (idEnvio == null) {
 			throw new BusinessException("EL idEnvio recibido es nulo");
 		}
 		try {
-			String[] arrayEnvioId = idEnvio.split("_");
+			String[] arrayEnvioId = idEnvio.split(SLASH);
 			idEmail = arrayEnvioId[1];
 			detalleEmail = servicioGestionEnvios.loadMensaje(idEmail);
 
 			return SUCCESS;
 		} catch (BusinessException e) {
 			logger.error("GestionEnviosAction - loadContenidoMensaje:" + e);
-			throw new BusinessException(this.getText("errors.action.organismo.loadOrganismo"));
+			throw new BusinessException(this.getText(ERRORSDOTACTION));
 		}
 	}
 
@@ -421,20 +492,21 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public String loadLote() throws BusinessException {
 		Integer totalSize;
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		if (idLote == null) {
-			throw new BusinessException("EL idLote recibido es nulo");
+			throw new BusinessException(EL_IDLOTE_RECIB);
 		}
 		try {
 			int page = getPage("tableLotesId");
-			int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20"));
+			int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, R_CONST_3));
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 			detalleLote = servicioGestionEnvios.loadLote(idLote);
 			PaginatedList<MensajeBean> result = servicioGestionEnvios.getMensajesLotes(inicio,
-					(export) ? -1 : Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20")), detalleLote.getIdLoteEnvio().longValue());
+					export ? -1 : Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, R_CONST_3)), detalleLote.getIdLoteEnvio().longValue());
 			totalSize = result.getTotalList();
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 			listaGestionEnviosMensajes = result.getPageList();
 
 			return SUCCESS;
@@ -454,12 +526,13 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public String loadHistoricoMsj() throws BusinessException {
 		destinatariosMensajes = null;
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
-		if (idMensaje == null) {
-			throw new BusinessException("EL idMensaje recibido es nulo");
 		}
-		if (idDestinatariosMensajes != null && !idDestinatariosMensajes.equals("null")
+		if (idMensaje == null) {
+			throw new BusinessException(EL_IDMENSAJE_RE);
+		}
+		if (idDestinatariosMensajes != null && !"null".equals(idDestinatariosMensajes)
 				&& Integer.parseInt(idDestinatariosMensajes) > 0) {
 			destinatariosMensajes = servicioGestionEnvios.getDestinatariosMensajes(idDestinatariosMensajes);
 		} else {
@@ -493,10 +566,11 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 */
 	public String loadMisim() throws BusinessException {
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute("infoUser") == null) {
 			return "noUser";
+		}
 		if (idLote == null) {
-			throw new BusinessException("EL idLote recibido es nulo");
+			throw new BusinessException(EL_IDLOTE_RECIB);
 		}
 		
 		if(idMensaje == null) {
@@ -515,10 +589,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			PaginatedList<ViewMisimBean> result = null;
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 			
-			result = servicioGestionEnvios.getIntercambiosMisim(inicio, (export) ? -1
-					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), Long.valueOf(idLote),idMensaje);
+			result = servicioGestionEnvios.getIntercambiosMisim(inicio, export ? -1
+					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", R_CONST_3)), Long.valueOf(idLote),idMensaje);
 			totalSize = result.getTotalList();
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 			listaIntercambiosMisim = result.getPageList();
 			
 			return SUCCESS;
@@ -536,11 +610,9 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 */
 	public void loadXmlPeticion() throws BusinessException {
 		
-//		if (getRequest().getSession().getAttribute("infoUser") == null)
-//			return "noUser";
 		
 		if (idPeticion == null) {
-			throw new BusinessException("EL idPeticion recibido es nulo");
+			throw new BusinessException(EL_IDPETICION_R);
 		}
 		
 		try {
@@ -551,13 +623,13 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		
 		decodeBean.setXmlCifrado(peticionBean.getMensajePeticion());
 		
-		if (decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())){
+		if (decodeBean.getXmlCifrado()!=null && !"".equals(decodeBean.getXmlCifrado())){
 				
 				String certificado;
 				if(decodeBean.getCertificado()!=null && !"".equals(decodeBean.getCertificado())){
 					certificado = decodeBean.getCertificado();
 				}else{
-					certificado = properties.getProperty("decode.keystore.alias.defecto",null);
+					certificado = properties.getProperty(DECODEDOTKEYSTO2,null);
 				}
 				
 				String xmlCifrado = decodeBean.getXmlCifrado();
@@ -565,15 +637,15 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 				final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				dbf.setNamespaceAware(true);
 				
-				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName("UTF-8"));
+				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName(UTF_8));
 				
-				logger.debug("[GestionEnviosAction] - decode: XML a decodificar: " + xmlCifrado);
+				logger.debug(GESTIONENVIOSAC1 + xmlCifrado);
 
-				String keystoreType = properties.getProperty("decode.keystore.type", null);
-				String keystore = properties.getProperty("decode.keystore.path", null);
-				String keystorePassword = properties.getProperty("decode.keystore.password", null);
-				String alias = properties.getProperty("decode.keystore.alias." + certificado, null);
-				String aliasPassword = properties.getProperty("decode.keystore.alias.password." + certificado, null);
+				String keystoreType = properties.getProperty(DECODEDOTKEYSTO1, null);
+				String keystore = properties.getProperty(DECODEDOTKEYSTO, null);
+				String keystorePassword = properties.getProperty(DECODEDOTKEYSTO3, null);
+				String alias = properties.getProperty(DECODEDOTKEYSTO4 + certificado, null);
+				String aliasPassword = properties.getProperty(DECODEDOTKEYSTO0 + certificado, null);
 				
 				// Desciframos el documento cifrado
 				Document docDescifrado = cifradoService.descifrarKey(
@@ -604,7 +676,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		
 		ViewMisim viewMisim = viewMisimManager.getViewMisim(query);
 		
-		logger.debug("[GestionEnviosAction] - descargaFichero - inicio");
+		logger.debug(GESTIONENVIOSAC2);
 		String fechaTitulo = null;
 		String horaTitulo = null;
 		String[] itemsTitulo = null;
@@ -615,7 +687,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		fechaTitulo = sdf.format(fechaCal.getTime());
 			
 		if(fechaTitulo!=null){
-			itemsTitulo = fechaTitulo.split(" ");
+			itemsTitulo = fechaTitulo.split(BLANK);
 		}
 		if(itemsTitulo!=null && itemsTitulo.length>0){
 			fechaTitulo = itemsTitulo[0];
@@ -625,23 +697,18 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		String contenido = peticionBean.getMensajePeticion();
 
 		StringBuilder titulo =new  StringBuilder();
-		titulo.append(fechaTitulo).append("_").append(horaTitulo).append("_").append(idPeticion).append("_Peticion");
+		titulo.append(fechaTitulo).append(SLASH).append(horaTitulo).append(SLASH).append(idPeticion).append("_Peticion");
 		
 		PlataformaMensajeriaUtil.descargaFicheroXml(response, titulo.toString(), contenido, TIPO_FICHERO);
 
-		}
-		
-		catch (BusinessException e) {
+		} catch (BusinessException e) {
 			logger.error("[GestionEnviosAction] - loadXmlPeticion:" + e);
 			throw new BusinessException(e);
-		}
-		
-		catch (Exception e){
-				logger.error("[GestionEnviosAction] Error al descifrar el XML: ",e);
-				addActionErrorSession(this.getText("plataforma.decodificador.decodeDescifrar.error"));
+		} catch (Exception e){
+				logger.error(GESTIONENVIOSAC0,e);
+				addActionErrorSession(this.getText(PLATAFORMADOTDE));
 			}
 		
-//		return SUCCESS;
 	}
 	
 	/**
@@ -651,11 +718,9 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 */
 	public void loadXmlRespuesta() throws BusinessException {
 		
-//			if (getRequest().getSession().getAttribute("infoUser") == null)
-//			return "noUser";
 	
 		if (idPeticion == null) {
-			throw new BusinessException("EL idPeticion recibido es nulo");
+			throw new BusinessException(EL_IDPETICION_R);
 		}
 		
 		try {
@@ -666,13 +731,13 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		
 		decodeBean.setXmlCifrado(peticionBean.getMensajeRespuesta());
 		
-		if (decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())){
+		if (decodeBean.getXmlCifrado()!=null && !"".equals(decodeBean.getXmlCifrado())){
 				
 				String certificado;
 				if(decodeBean.getCertificado()!=null && !"".equals(decodeBean.getCertificado())){
 					certificado = decodeBean.getCertificado();
 				}else{
-					certificado = properties.getProperty("decode.keystore.alias.defecto",null);
+					certificado = properties.getProperty(DECODEDOTKEYSTO2,null);
 				}
 				
 				String xmlCifrado = decodeBean.getXmlCifrado();
@@ -680,15 +745,15 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 				final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				dbf.setNamespaceAware(true);
 				
-				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName("UTF-8"));
+				final Document docOriginal = XMLUtils.xml2doc(xmlCifrado, Charset.forName(UTF_8));
 				
-				logger.debug("[GestionEnviosAction] - decode: XML a decodificar: " + xmlCifrado);
+				logger.debug(GESTIONENVIOSAC1 + xmlCifrado);
 	
-				String keystoreType = properties.getProperty("decode.keystore.type", null);
-				String keystore = properties.getProperty("decode.keystore.path", null);
-				String keystorePassword = properties.getProperty("decode.keystore.password", null);
-				String alias = properties.getProperty("decode.keystore.alias." + certificado, null);
-				String aliasPassword = properties.getProperty("decode.keystore.alias.password." + certificado, null);
+				String keystoreType = properties.getProperty(DECODEDOTKEYSTO1, null);
+				String keystore = properties.getProperty(DECODEDOTKEYSTO, null);
+				String keystorePassword = properties.getProperty(DECODEDOTKEYSTO3, null);
+				String alias = properties.getProperty(DECODEDOTKEYSTO4 + certificado, null);
+				String aliasPassword = properties.getProperty(DECODEDOTKEYSTO0 + certificado, null);
 				
 				// Desciframos el documento cifrado
 				Document docDescifrado = cifradoService.descifrarKey(
@@ -719,7 +784,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		
 		ViewMisim viewMisim = viewMisimManager.getViewMisim(query);
 		
-		logger.debug("[GestionEnviosAction] - descargaFichero - inicio");
+		logger.debug(GESTIONENVIOSAC2);
 		String fechaTitulo = null;
 		String horaTitulo = null;
 		String[] itemsTitulo = null;
@@ -730,7 +795,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		fechaTitulo = sdf.format(fechaCal.getTime());
 			
 		if(fechaTitulo!=null){
-			itemsTitulo = fechaTitulo.split(" ");
+			itemsTitulo = fechaTitulo.split(BLANK);
 		}
 		if(itemsTitulo!=null && itemsTitulo.length>0){
 			fechaTitulo = itemsTitulo[0];
@@ -740,23 +805,18 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		String contenido = peticionBean.getMensajeRespuesta();
 	
 		StringBuffer titulo =new  StringBuffer();
-		titulo.append(fechaTitulo).append("_").append(horaTitulo).append("_").append(idPeticion).append("_Respuesta");
+		titulo.append(fechaTitulo).append(SLASH).append(horaTitulo).append(SLASH).append(idPeticion).append("_Respuesta");
 		
 		PlataformaMensajeriaUtil.descargaFicheroXml(response, titulo.toString(), contenido, TIPO_FICHERO);
 	
-		}
-		
-		catch (BusinessException e) {
+		} catch (BusinessException e) {
 			logger.error("[GestionEnviosAction] - loadXmlRespuesta:" + e);
 			throw new BusinessException(e);
-		}
-		
-		catch (Exception e){
-				logger.error("[GestionEnviosAction] Error al descifrar el XML: ",e);
-				addActionErrorSession(this.getText("plataforma.decodificador.decodeDescifrar.error"));
+		} catch (Exception e){
+				logger.error(GESTIONENVIOSAC0,e);
+				addActionErrorSession(this.getText(PLATAFORMADOTDE));
 			}
 		
-	//	return SUCCESS;
 	}
 
 	/**
@@ -768,13 +828,14 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public String loadMensaje() throws BusinessException {
 
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		if (idMensaje == null) {
-			throw new BusinessException("EL idMensaje recibido es nulo");
+			throw new BusinessException(EL_IDMENSAJE_RE);
 		}
 		if (idLote == null) {
-			throw new BusinessException("EL idLote recibido es nulo");
+			throw new BusinessException(EL_IDLOTE_RECIB);
 		}
 		try {
 			idEmail = idMensaje;
@@ -789,24 +850,24 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 
 			if (servicioGestionEnvios.isMultidestinatario(detalleEmail.getMensajeId())) {
 				// sacar destinatarios de tabla destinatario_mensaje
-				result = servicioGestionEnvios.getDestinatariosMensajesMultidestinatario(inicio, (export) ? -1
-						: Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20")), detalleEmail.getMensajeId());
+				result = servicioGestionEnvios.getDestinatariosMensajesMultidestinatario(inicio, export ? -1
+						: Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, R_CONST_3)), detalleEmail.getMensajeId());
 				totalSize = result.getTotalList();
-				resultCount = (totalSize != null) ? totalSize.toString() : "0";
+				resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 				listaGestionEnviosDestinatariosMensaje = result.getPageList();
 			} else {
 				result = servicioGestionEnvios.getDestinatariosMensajes(inicio,
-						(export) ? -1 : Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, "20")), detalleEmail.getMensajeId());
+						export ? -1 : Integer.parseInt(properties.getProperty(GestionEnviosAction.GENERALES_PAGESIZEM, R_CONST_3)), detalleEmail.getMensajeId());
 				totalSize = result.getTotalList();
-				resultCount = (totalSize != null) ? totalSize.toString() : "0";
+				resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 				listaGestionEnviosDestinatariosMensaje = result.getPageList();
 			}
-			
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 			return SUCCESS;
 		} catch (BusinessException e) {
 			logger.error("GestionEnviosAction - loadMensaje:" + e);
-			throw new BusinessException(this.getText("errors.action.organismo.loadOrganismo"));
+			throw new BusinessException(this.getText(ERRORSDOTACTION));
 		}
 	}
 
@@ -818,10 +879,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String loadAdjunto() throws IOException {
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		// Comprobar primero si se ha cargado alguna vez el fichero
-		//AdjuntoEmailBean adjunto = servicioGestionEnvios.loadAdjuntoBean(idAdjunto, idEmail);
 		try {
 			AdjuntoEmailBean adjunto = servicioGestionEnvios.loadAdjunto(Long.parseLong(idAdjunto), Long.parseLong(idEmail));
 
@@ -845,14 +906,13 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public String accionSeleccionados() {
 		try{
-		List<TblGestionEnvios> listaEnvios = new ArrayList<>();
-		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null)
+		List<TblGestionEnvios> listaEnvios = null;
+		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
 			return GestionEnviosAction.NO_USER;
+		}
 		boolean sw = true;
 		boolean algunoEnviado = false;
 
-//		WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(getRequest().getSession().getServletContext());
-//		OperacionMensajesServicePortType operacionMensajesService = (OperacionMensajesServicePortType) applicationContext.getBean("operacionMensajesService");
 		ApplicationContext  applicationContext = WebApplicationContextUtils.getWebApplicationContext(getRequest().getSession().getServletContext());
 		
 		if (!ApplicationContextProvider.getInstance().isLoaded()) {
@@ -861,12 +921,13 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 		ApplicationContextProvider context = ApplicationContextProvider.getInstance();
 		
 		
-		checkDelList = new HashSet<String>(Arrays.asList(checkDelList)).toArray(new String[0]); //Borramos ids duplicados
+		checkDelList = new HashSet<String>(Arrays.asList(checkDelList)).toArray(new String[0]); 
+		//Borramos ids duplicados
 
 		
 		if (checkDelList != null) {
 			for (String id : checkDelList) {
-				String[] idArray = id.split("_");
+				String[] idArray = id.split(SLASH);
 				try {
 					if (idArray.length > 1) {
 						TblGestionEnvios env = servicioGestionEnvios.getEnvio(idArray[1]);
@@ -876,7 +937,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 						listaEnvios = servicioGestionEnvios.getEnviosLote(id);
 					}
 				} catch (BusinessException e) {
-					logger.error("GestionEnviosAction - accionSeleccionados:" + e);
+					logger.error(GESTIONENVIOSAC + e);
 				}
 				for (TblGestionEnvios envio : listaEnvios) {
 
@@ -884,57 +945,60 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 						Integer tipoPermiso = PlataformaMensajeriaUtil.getMapPermisosAplicaciones(
 								PlataformaMensajeriaUtil.getUsuarioLogueado().getUsername(), servicioUsuarioAplicacion).get(
 								envio.getAplicacionid().toString());
-						if (tipoPermiso != null
-								&& tipoPermiso == 2
-								|| PlataformaMensajeriaUtil.getRolFromSession(request).equals(
-										PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||(PlataformaMensajeriaUtil.getRolFromSession(request).equals(
-												PlataformaMensajeriaUtil.ROL_CAID))) {
+						if ((tipoPermiso != null
+								&& tipoPermiso == 2)
+								|| PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(PlataformaMensajeriaUtil.getRolFromSession(request))||PlataformaMensajeriaUtil.ROL_CAID.equals(PlataformaMensajeriaUtil.getRolFromSession(request))) {
 							// Tiene permisos lectura escritura sobre el envio
-							if (operacionMsg != null && operacionMsg.equals("A")) {
+							if (operacionMsg != null && "A".equals(operacionMsg)) {
 								boolean anulacionCorrecta = false;
-								if (envio != null && !envio.getEstado().equals("ENVIADO")) {
+								if (envio != null && !"ENVIADO".equals(envio.getEstado())) {
 									if (idArray.length > 1) {
-										anulacionCorrecta = servicioGestionEnvios.anulaEnvio(new Integer(idArray[1]),context);
+										anulacionCorrecta = servicioGestionEnvios.anulaEnvio(Integer.valueOf(idArray[1]),context);
 									} else {
-										anulacionCorrecta = servicioGestionEnvios.anulaEnvioLote(new Integer(idArray[0]),context);
+										anulacionCorrecta = servicioGestionEnvios.anulaEnvioLote(Integer.valueOf(idArray[0]),context);
 										if (anulacionCorrecta){
-											addActionMessageSession("Envios seleccionados anulados correctamente");
+											addActionMessageSession(ENVIOS_SELECCIO);
 										}else{
-											addActionErrorSession("Ha ocurrido un error anulando los envios, pongase en contacto con el administrador");
+											addActionErrorSession(HA_OCURRIDO_UN_0);
 										}
 										break;
 									}
 									if (anulacionCorrecta){
-										addActionMessageSession("Envios seleccionados anulados correctamente");
+										addActionMessageSession(ENVIOS_SELECCIO);
 									}else{
-										addActionErrorSession("Ha ocurrido un error anulando los envios, pongase en contacto con el administrador");
+										addActionErrorSession(HA_OCURRIDO_UN_0);
 									}
 								} else {
 									addActionErrorSession("No se puede anular un envio ya realizado");
 								}
 
-							} else if (operacionMsg != null && operacionMsg.equals("R")) {
+							} else if (operacionMsg != null && ("R".equals(operacionMsg) || RD.equals(operacionMsg)) ) {
 								Boolean reenvioCorrecto = false;
 								if (idArray.length > 1) {
-									reenvioCorrecto = servicioGestionEnvios.reenviarEnvio(new Integer(idArray[1]),context);
+									reenvioCorrecto = servicioGestionEnvios.reenviarEnvio(Integer.valueOf(idArray[1]),context);
 								} else {
-									reenvioCorrecto = servicioGestionEnvios.reenviarEnvioLote(new Integer(idArray[0]),context);
+									reenvioCorrecto = servicioGestionEnvios.reenviarEnvioLote(Integer.valueOf(idArray[0]),context);
 									if(reenvioCorrecto){
-										addActionMessageSession("Envios seleccionados reenviados correctamente");
+										addActionMessageSession(ENVIOS_SELECCIO0);
+										if(RD.equals(operacionMsg)){
+											addActionWarningMessageSession(properties.getProperty(GESTIONENVIOSDOT, null));
+										}								
 									}else{
-										addActionErrorSession("Ha ocurrido un error reenviando los envios, pongase en contacto con el administrador");
+										addActionErrorSession(HA_OCURRIDO_UN_REF);
 									}
 									break;
 								}
 								if(reenvioCorrecto!=null){
 									if(reenvioCorrecto){
-										addActionMessageSession("Envios seleccionados reenviados correctamente");
+										addActionMessageSession(ENVIOS_SELECCIO0);
+										if(RD.equals(operacionMsg)){
+											addActionWarningMessageSession(properties.getProperty(GESTIONENVIOSDOT, null));
+										}	
 									}else if(!reenvioCorrecto){
 										addActionErrorSession("El mensaje ya ha sido enviado y no se puede reenviar");
 									}
 								}else{
-									addActionErrorSession("Ha ocurrido un error reenviando los envios, pongase en contacto con el administrador");
-								}
+									addActionErrorSession(HA_OCURRIDO_UN_REF);								}
 							}
 							algunoEnviado = true;
 						} else {
@@ -947,7 +1011,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 					} else {
 						sw = false;
 					}
-				}// del for
+				}
+				// del for
 			}
 		}
 		if (!sw && algunoEnviado) {
@@ -956,7 +1021,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 			addActionErrorSession("No se ha realizado ninguna accion. Permiso denegado");
 		}
 		}catch(Exception e){
-			logger.error("GestionEnviosAction - accionSeleccionados:" + e);
+			logger.error(GESTIONENVIOSAC + e);
 		}
 		return SUCCESS;
 	}
@@ -993,7 +1058,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 				organismo = search;
 			}
 			
-			for(int i=0; i < arrayOrganismos.size(); i++){
+			for(int i=0, s = arrayOrganismos.size(); i < s; i++){
 				if(arrayOrganismos.get(i).equals(organismo)){
 					sw = true;
 					break;
@@ -1145,10 +1210,10 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	////MIGRADO
 	public List<KeyValueObject> getComboPageSize() throws BusinessException {
 		List<KeyValueObject> result = new ArrayList<>();
-		KeyValueObject option10 = new KeyValueObject("10", "10");
-		KeyValueObject option20 = new KeyValueObject("20", "20");
-		KeyValueObject option50 = new KeyValueObject("50", "50");
-		KeyValueObject option100 = new KeyValueObject("100", "100");
+		KeyValueObject option10 = new KeyValueObject(R_CONST_0, R_CONST_0);
+		KeyValueObject option20 = new KeyValueObject(R_CONST_3, R_CONST_3);
+		KeyValueObject option50 = new KeyValueObject(R_CONST_REF, R_CONST_REF);
+		KeyValueObject option100 = new KeyValueObject(R_CONST_4, R_CONST_4);
 		result.add(option10);
 		result.add(option20);
 		result.add(option50);
@@ -1166,7 +1231,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	public void prepare() throws Exception {
 		pageSize = (Integer) getRequest().getAttribute(properties.getProperty(GestionEnviosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null));
 		if (null == pageSize){
-			pageSize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+			pageSize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", R_CONST_3));
 		}
 	}
 	
@@ -1194,7 +1259,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 * @param comboAplicaciones new combo aplicaciones
 	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
-		this.comboAplicaciones = new ArrayList<KeyValueObject>(comboAplicaciones);
+		this.comboAplicaciones = new ArrayList<>(comboAplicaciones);
 	}
 
 	/**
@@ -1257,7 +1322,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 * @return lista gestion envios
 	 */
 	public List<GestionEnvioBean> getListaGestionEnvios() {
-		return new ArrayList<GestionEnvioBean>(listaGestionEnvios);
+		return new ArrayList<>(listaGestionEnvios);
 	}
 
 	/**
@@ -1266,7 +1331,7 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
 	 * @param listaGestionEnvios new lista gestion envios
 	 */
 	public void setListaGestionEnvios(List<GestionEnvioBean> listaGestionEnvios) {
-		this.listaGestionEnvios = new ArrayList<GestionEnvioBean>(listaGestionEnvios);
+		this.listaGestionEnvios = new ArrayList<>(listaGestionEnvios);
 	}
 
 	/**

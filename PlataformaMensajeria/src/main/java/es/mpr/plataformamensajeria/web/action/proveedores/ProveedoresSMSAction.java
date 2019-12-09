@@ -48,6 +48,34 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ProveedoresSMSAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	protected static final String LOGDOTSOURCE_PR = "log.SOURCE_PROVEEDORES";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servidores.planificacion.horaDesde.menor.error";
+
+	protected static final String PROVEEDORESSMSA = "ProveedoresSMSAction - getParametrosProveedorSMS:";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String PROVEEDORESSMSA0 = "ProveedoresSMSAction - getLoadPlanificacionesProveedorSMS:";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String PROVEEDORESSMSA1 = "ProveedoresSMSAction - getParametrosProveedorSMS: idProveedor no es numerico";
+
+	protected static final String R_CONST_REF = ":";
+
+	protected static final String R_CONST_0 = "20";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
 	/** Constante GENERALES_REQUEST_ATTRIBUTE_PAGESIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
 
@@ -168,40 +196,44 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	//////MIGRADO
 	public String search() throws BaseException {
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 
-		int page = getPage(ProveedoresSMSAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(ProveedoresSMSAction.TABLE_ID); // Ordenar de modo ascendente o
+		int page = getPage(ProveedoresSMSAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(ProveedoresSMSAction.TABLE_ID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ID); // Columna usada para
+		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ID); 
+		// Columna usada para
 														// ordenar
 
-		if (proveedorSMS != null)
-			if (proveedorSMS.getNombre() != null && proveedorSMS.getNombre().length() <= 0)
-				proveedorSMS.setNombre(null);
+		if (proveedorSMS != null && proveedorSMS.getNombre() != null && proveedorSMS.getNombre().isEmpty()) {
+			proveedorSMS.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ProveedorSMSBean> result = servicioProveedorSMS.getProveedoresSMS(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0)), order,
 				columnSort, proveedorSMS, Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_TIPO_SERVIDOR_SMS,null)));
 		Integer totalSize = result.getTotalList();
 
 		listaProveedoresSMS = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 
 		if (listaProveedoresSMS != null && !listaProveedoresSMS.isEmpty()) {
-			for (int indice = 0; indice < listaProveedoresSMS.size(); indice++) {
+			for (int indice = 0, s = listaProveedoresSMS.size(); indice < s; indice++) {
 
 				ProveedorSMSBean provSMS = listaProveedoresSMS.get(indice);
 				provSMS.setNombre(StringEscapeUtils.escapeHtml(provSMS.getNombre()));
@@ -213,23 +245,28 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	}
 	
 	public String loadOrganismosProveedores() throws BusinessException{
-		PaginatedList<OrganismoBean> result = new PaginatedList<OrganismoBean>();		
+		PaginatedList<OrganismoBean> result = null;		
 		Integer totalSize;	
 		
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 
 		// Carga Destinatarios_mensajes		
-		int page = getPage(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); // Pagina a mostrar
+		int page = getPage(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); 
+		// Pagina a mostrar
 		int inicio = (page - 1) * 20;
-		String order = getOrder(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); // Ordenar de modo ascendente o
+		String order = getOrder(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); 
+		// Ordenar de modo ascendente o
 		// descendente
-		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); // Columna usada para
+		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ORGANISMOS_ID); 
+		// Columna usada para
 		// ordenar
 		ProveedorSMSBean proveedorSMSBean = new ProveedorSMSBean();
 		
 		
-		if (null == idProveedorSMS || idProveedorSMS.equals("")) {			
+		if (null == idProveedorSMS || "".equals(idProveedorSMS)) {
+				
 			return SUCCESS;			
 		}
 		
@@ -239,7 +276,7 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		
 		result = servicioOrganismos.getOrganismosProveedoresSMS(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0)), order,
 				columnSort, proveedorSMSBean, Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_TIPO_SERVIDOR_SMS,null)));
 		
 				
@@ -250,11 +287,11 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 		resultCountOrganismos = (totalSize != null) ? totalSize.toString() : "0";
 		
 		if (!export) {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null)+ORGANISMOS, totalSize);
+				getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null)+ORGANISMOS, totalSize);
 				getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null)+ORGANISMOS,
 				20);
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null)+ORGANISMOS, totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null)+ORGANISMOS, totalSize);
 			getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null)+ORGANISMOS,
 					totalSize);
 		}
@@ -269,39 +306,43 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
  */
 /////MIGRADO
 	public String execute() throws BaseException {
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 
-		int page = getPage(ProveedoresSMSAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(ProveedoresSMSAction.TABLE_ID); // Ordenar de modo ascendente o
+		int page = getPage(ProveedoresSMSAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(ProveedoresSMSAction.TABLE_ID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ID); // Columna usada para
+		String columnSort = getColumnSort(ProveedoresSMSAction.TABLE_ID); 
+		// Columna usada para
 														// ordenar
 
-		if (proveedorSMS != null)
-			if (proveedorSMS.getNombre() != null && proveedorSMS.getNombre().length() <= 0)
-				proveedorSMS.setNombre(null);
+		if (proveedorSMS != null && proveedorSMS.getNombre() != null && proveedorSMS.getNombre().isEmpty()) {
+			proveedorSMS.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ProveedorSMSBean> result = servicioProveedorSMS.getProveedoresSMS(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0)), order,
 				columnSort, proveedorSMS, Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_TIPO_SERVIDOR_SMS,null)));
 		Integer totalSize = result.getTotalList();
 
 		listaProveedoresSMS = result.getPageList();
 
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(ProveedoresSMSAction.GENERALES_PAGESIZE, R_CONST_0)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(ProveedoresSMSAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 
 		if (listaProveedoresSMS != null && !listaProveedoresSMS.isEmpty()) {
-			for (int indice = 0; indice < listaProveedoresSMS.size(); indice++) {
+			for (int indice = 0, s = listaProveedoresSMS.size(); indice < s; indice++) {
 
 				ProveedorSMSBean proveedor = listaProveedoresSMS.get(indice);
 				proveedor.setNombre(StringEscapeUtils.escapeHtml(proveedor.getNombre()));
@@ -323,9 +364,10 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (proveedorSMS != null) {
 			if (proveedorSMS.getIsActivo() != null && proveedorSMS.getIsActivo().indexOf("'activo'") != -1) {
 				proveedorSMS.setActivo(true);
@@ -355,25 +397,25 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	///MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		ProveedorSMSBean proveedorSMSBBDD = null;
 		if (proveedorSMS == null) {
-			// throw new BusinessException("EL proveedorSMS recibido es nulo");
 			addActionErrorSession(this.getText("plataforma.proveedorsms.update.error"));
 
 		} else {
 			if (proveedorSMS.getProveedorSMSId() == null) {
 				if (idProveedorSMS != null) {
-					proveedorSMS.setProveedorSMSId(new Long(idProveedorSMS));
+					proveedorSMS.setProveedorSMSId(Long.valueOf(idProveedorSMS));
 					proveedorSMSBBDD = servicioProveedorSMS.loadProveedorSMS(proveedorSMS);
 				} else {
 					String idProvedorSMS = (String) request.getAttribute("idProveedorSMS");
 					if (idProvedorSMS != null) {
-						proveedorSMS.setId(new Long(idProvedorSMS));
+						proveedorSMS.setId(Long.valueOf(idProvedorSMS));
 						proveedorSMSBBDD = servicioProveedorSMS.loadProveedorSMS(proveedorSMS);
 					}
 				}
@@ -409,21 +451,20 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
-		if (idProveedorSMS == null)
+		}
+		if (idProveedorSMS == null) {
 			throw new BusinessException("EL idProveedorSMS recibido es nulo");
+		}
 		try {
 			proveedorSMS = new ProveedorSMSBean();
-			proveedorSMS.setProveedorSMSId(new Long(idProveedorSMS));
+			proveedorSMS.setProveedorSMSId(Long.valueOf(idProveedorSMS));
 			proveedorSMS = servicioProveedorSMS.loadProveedorSMS(proveedorSMS);
 			return SUCCESS;
-		} catch (NumberFormatException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { proveedorSMS
-					.getProveedorSMSId().toString() });
-			throw new BusinessException(mensg);
-		} catch (BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { proveedorSMS
+		} catch (NumberFormatException | BusinessException e) {
+			logger.error(e.getMessage(), e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { proveedorSMS
 					.getProveedorSMSId().toString() });
 			throw new BusinessException(mensg);
 		}
@@ -438,17 +479,18 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	///MIGRADO
 	public String deleteParametroProveedorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PARAMETRO", null);
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (parametroServidorId == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorsms.parametro.delete.error"));
 		} else {
 			parametroServidor = new ParametroServidorBean();
-			parametroServidor.setParametroservidorid(new Long(parametroServidorId));
+			parametroServidor.setParametroservidorid(Long.valueOf(parametroServidorId));
 			servicioParametroServidor.deleteParametroServidor(parametroServidor, source, accion, accionId, descripcion);
 			addActionMessageSession(this.getText("plataforma.proveedorsms.parametro.delete.ok"));
 
@@ -464,18 +506,19 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String deletePlanificacionProveedorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (planificacionId == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorsms.planificacion.delete.error"));
 
 		} else {
 			planificacionServidor = new PlanificacionBean();
-			planificacionServidor.setPlanificacionId(new Integer(planificacionId));
+			planificacionServidor.setPlanificacionId(Integer.valueOf(planificacionId));
 			servicioPlanificacion.deletePlanificacion(planificacionServidor, source, accion, accionId, descripcion);
 			addActionMessageSession(this.getText("plataforma.proveedorsms.planificacion.delete.ok"));
 		}
@@ -490,20 +533,21 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String delete() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (idProveedorSMS == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorsms.delete.error"));
 		} else {
 			proveedorSMS = new ProveedorSMSBean();
-			proveedorSMS.setProveedorSMSId(new Long(idProveedorSMS));
+			proveedorSMS.setProveedorSMSId(Long.valueOf(idProveedorSMS));
 			servicioProveedorSMS.deleteProveedorSMS(proveedorSMS, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			addActionMessageSession(this.getText("plataforma.proveedorsms.delete.ok"));
 
@@ -519,21 +563,22 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorsms.deleteSelected.error"));
 		} else {
 			for (String idProveedorSMS : checkDelList) {
 				proveedorSMS = new ProveedorSMSBean();
-				proveedorSMS.setProveedorSMSId(new Long(idProveedorSMS));
+				proveedorSMS.setProveedorSMSId(Long.valueOf(idProveedorSMS));
 				servicioProveedorSMS.deleteProveedorSMS(proveedorSMS, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			}
 			addActionMessageSession(this.getText("plataforma.proveedorsms.deleteSelected.ok"));
@@ -551,12 +596,13 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String addParametroProveedorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PARAMETRO", null);
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (parametroServidor != null) {
 			if (!validaParametro(parametroServidor)) {
 				return ERROR;
@@ -565,6 +611,7 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 					servicioParametroServidor.newParametroServidor(parametroServidor, source, accion, accionId, descripcion);
 					addActionMessageSession(this.getText("plataforma.proveedorsms.parametro.add.ok"));
 				} catch (ConstraintViolationException e) {
+					logger.error(e.getMessage(), e);
 					addActionErrorSession(this.getText("plataforma.proveedorsms.parametro.add.constraint.error"));
 				}
 			}
@@ -584,16 +631,17 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	 */
 	////MIGRADO
 	public String addPlanificacionProveedorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ProveedoresSMSAction.INFO_USER) == null) {
 			return ProveedoresSMSAction.NO_USER;
+		}
 		if (planificacionServidor != null && PlataformaMensajeriaUtil.isEmpty(idProveedorSMS)) {
 			if (planificacionValida(planificacionServidor)) {
 				planificacionServidor.setActivo(true);
-				planificacionServidor.setTipoPlanificacionId(new Integer(2));
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(2));
 
 				int valido = servicioPlanificacion.validaPlanificacionServidor(planificacionId,
 						planificacionServidor.getServidorId(), planificacionServidor.getLunes(),
@@ -602,10 +650,12 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 						planificacionServidor.getSabado(), planificacionServidor.getDomingo(),
 						planificacionServidor.getHoraHasta(), planificacionServidor.getHoraDesde());
 
-				if (valido == 1) {
+				switch (valido) {
+				case 1:
 					servicioPlanificacion.newPlanificacion(planificacionServidor, source, accion, accionId, descripcion);
 					addActionMessageSession(this.getText("plataforma.proveedorsms.planificacion.add.ok"));
-				} else if (valido == 0) {
+					break;
+				case 0:
 					addActionErrorSession("No se ha a&ntilde;adido la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
 					return ERROR;
 				}
@@ -690,21 +740,17 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 //////MIGRADO
 	private List<PlanificacionBean> getLoadPlanificacionesProveedorSMS() {
 		List<PlanificacionBean> lista = null;
-		if (idProveedorSMS != null && idProveedorSMS.length() > 0) {
+		if (idProveedorSMS != null && !idProveedorSMS.isEmpty()) {
 			try {
-				lista = servicioPlanificacion.getPlanificacionesByServidorId(new Integer(idProveedorSMS));
-			} catch (NumberFormatException e) {
-				logger.error("ProveedoresSMSAction - getLoadPlanificacionesProveedorSMS:" + e);
-			} catch (BusinessException e) {
-				logger.error("ProveedoresSMSAction - getLoadPlanificacionesProveedorSMS:" + e);
+				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idProveedorSMS));
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(PROVEEDORESSMSA0 + e);
 			}
 		} else if (proveedorSMS != null && proveedorSMS.getProveedorSMSId() != null) {
 			try {
-				lista = servicioPlanificacion.getPlanificacionesByServidorId(new Integer(idProveedorSMS));
-			} catch (NumberFormatException e) {
-				logger.error("ProveedoresSMSAction - getLoadPlanificacionesProveedorSMS:" + e);
-			} catch (BusinessException e) {
-				logger.error("ProveedoresSMSAction - getLoadPlanificacionesProveedorSMS:" + e);
+				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idProveedorSMS));
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(PROVEEDORESSMSA0 + e);
 			}
 		}
 		return lista;
@@ -718,22 +764,22 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 //////MIGRADO
 	private List<ParametroServidorBean> getParametrosProveedorSMS() {
 		List<ParametroServidorBean> lista = null;
-		if (idProveedorSMS != null && idProveedorSMS.length() > 0) {
+		if (idProveedorSMS != null && !idProveedorSMS.isEmpty()) {
 			try {
-				lista = servicioParametroServidor.getParametroServidorByProveedorSMSId(new Integer(idProveedorSMS));
+				lista = servicioParametroServidor.getParametroServidorByProveedorSMSId(Integer.valueOf(idProveedorSMS));
 			} catch (NumberFormatException e) {
-				logger.error("ProveedoresSMSAction - getParametrosProveedorSMS: idProveedor no es numerico" + e);
+				logger.error(PROVEEDORESSMSA1 + e);
 			} catch (BusinessException e) {
-				logger.error("ProveedoresSMSAction - getParametrosProveedorSMS:" + e);
+				logger.error(PROVEEDORESSMSA + e);
 			}
 		} else if (proveedorSMS != null && proveedorSMS.getProveedorSMSId() != null) {
 			try {
 				lista = servicioParametroServidor.getParametroServidorByProveedorSMSId(proveedorSMS.getProveedorSMSId()
 						.intValue());
 			} catch (NumberFormatException e) {
-				logger.error("ProveedoresSMSAction - getParametrosProveedorSMS: idProveedor no es numerico" + e);
+				logger.error(PROVEEDORESSMSA1 + e);
 			} catch (BusinessException e) {
-				logger.error("ProveedoresSMSAction - getParametrosProveedorSMS:" + e);
+				logger.error(PROVEEDORESSMSA + e);
 			}
 		}
 		return lista;
@@ -746,7 +792,7 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
  */
 //////MIGRADO
 	private List<KeyValueObject> getComboValues() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option = null;
 		ArrayList<TipoParametroBean> keys = null;
@@ -757,7 +803,7 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 			logger.error("ProveedoresSMSAction - getComboValues:" + e);
 		}
 
-		if (keys != null && keys.size() > 0)
+		if (keys != null && !keys.isEmpty()) {
 			for (TipoParametroBean key : keys) {
 
 				option = new KeyValueObject();
@@ -766,6 +812,7 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -805,10 +852,8 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 					addFieldErrorSession(this.getText("plataforma.proveedorsms.planificacion.horaHasta.formato.error"));
 					sw = false;
 				}
-				if (sw) {
-					if (!validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
-						sw = false;
-					}
+				if (sw && !validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
+					sw = false;
 				}
 			}
 			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes())
@@ -836,17 +881,17 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 	////MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
-		String[] horaDesdeArray = horaDesde.split(":");
-		String[] horaHastaArray = horaHasta.split(":");
-		int hDesde = new Integer(horaDesdeArray[0]);
-		int mDesde = new Integer(horaDesdeArray[1]);
-		int hHasta = new Integer(horaHastaArray[0]);
-		int mHasta = new Integer(horaHastaArray[1]);
+		String[] horaDesdeArray = horaDesde.split(R_CONST_REF);
+		String[] horaHastaArray = horaHasta.split(R_CONST_REF);
+		int hDesde = Integer.parseInt(horaDesdeArray[0]);
+		int mDesde = Integer.parseInt(horaDesdeArray[1]);
+		int hHasta = Integer.parseInt(horaHastaArray[0]);
+		int mHasta = Integer.parseInt(horaHastaArray[1]);
 		if (hDesde > hHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde > mHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde == mHasta) {
 			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.iguales.error"));
@@ -892,10 +937,8 @@ public class ProveedoresSMSAction extends PlataformaPaginationAction implements 
 ////MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
-		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
-			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
-				sw = false;
-			}
+		if (!PlataformaMensajeriaUtil.isEmpty(hora) && !PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+			sw = false;
 		}
 		return sw;
 	}

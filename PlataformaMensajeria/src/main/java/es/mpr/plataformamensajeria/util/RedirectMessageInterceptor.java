@@ -1,18 +1,5 @@
 package es.mpr.plataformamensajeria.util;
 
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 
 import java.util.Collection;
@@ -45,7 +32,11 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 public class RedirectMessageInterceptor extends MethodFilterInterceptor
 {
     
-    /** Constante serialVersionUID. */
+    protected static final String UNCHECKED = "unchecked";
+
+	protected static final String RAWTYPES = "rawtypes";
+
+	/** Constante serialVersionUID. */
     private static final long  serialVersionUID    = -1847557437429753540L;
 
     /** Constante FIELD_ERRORS_KEY. */
@@ -60,25 +51,22 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
     /**
      * Constructor de redirect message interceptor.
      */
-    public RedirectMessageInterceptor()
-    {
+    public RedirectMessageInterceptor() {
+		// This method has to be empty.
     }
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
      */
-    public String doIntercept(ActionInvocation invocation) throws Exception
-    {
+    public String doIntercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
-        if (action instanceof ValidationAware)
-        {
+        if (action instanceof ValidationAware) {
             before(invocation, (ValidationAware) action);
         }
 
         String result = invocation.invoke();
 
-        if (action instanceof ValidationAware)
-        {
+        if (action instanceof ValidationAware) {
             after(invocation, (ValidationAware) action);
         }
         return result;
@@ -94,41 +82,33 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
      */
     protected void before(ActionInvocation invocation,
                           ValidationAware validationAware)
-        throws Exception
-    {
+        throws Exception {
         Map<String, ?> session = invocation.getInvocationContext().getSession();
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({ UNCHECKED, RAWTYPES })
         Collection<String> actionErrors =
             (Collection) session.remove(ACTION_ERRORS_KEY);
-        if (actionErrors != null && actionErrors.size() > 0)
-        {
-            for (String error : actionErrors)
-            {
+        if (actionErrors != null && !actionErrors.isEmpty()) {
+            for (String error : actionErrors) {
                 validationAware.addActionError(error);
             }
         }
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({ UNCHECKED, RAWTYPES })
         Collection<String> actionMessages =
             (Collection) session.remove(ACTION_MESSAGES_KEY);
-        if (actionMessages != null && actionMessages.size() > 0)
-        {
-            for (String message : actionMessages)
-            {
+        if (actionMessages != null && !actionMessages.isEmpty()) {
+            for (String message : actionMessages) {
                 validationAware.addActionMessage(message);
             }
         }
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({ UNCHECKED, RAWTYPES })
         Map<String, List<String>> fieldErrors =
             (Map) session.remove(FIELD_ERRORS_KEY);
-        if (fieldErrors != null && fieldErrors.size() > 0)
-        {
-            for (Map.Entry<String, List<String>> fieldError : fieldErrors.entrySet())
-            {
-                for (String message : fieldError.getValue())
-                {
+        if (fieldErrors != null && !fieldErrors.isEmpty()) {
+            for (Map.Entry<String, List<String>> fieldError : fieldErrors.entrySet()) {
+                for (String message : fieldError.getValue()) {
                     validationAware.addFieldError(fieldError.getKey(), message);
                 }
             }
@@ -144,31 +124,26 @@ public class RedirectMessageInterceptor extends MethodFilterInterceptor
      */
     protected void after(ActionInvocation invocation,
                          ValidationAware validationAware)
-        throws Exception
-    {
+        throws Exception {
         Result result = invocation.getResult();
 
         if (result != null
             && (result instanceof ServletRedirectResult ||
-                result instanceof ServletActionRedirectResult))
-        {
+                result instanceof ServletActionRedirectResult)) {
             Map<String, Object> session = invocation.getInvocationContext().getSession();
 
             Collection<String> actionErrors = validationAware.getActionErrors();
-            if (actionErrors != null && actionErrors.size() > 0)
-            {
+            if (actionErrors != null && !actionErrors.isEmpty()) {
                 session.put(ACTION_ERRORS_KEY, actionErrors);
             }
 
             Collection<String> actionMessages = validationAware.getActionMessages();
-            if (actionMessages != null && actionMessages.size() > 0)
-            {
+            if (actionMessages != null && !actionMessages.isEmpty()) {
                 session.put(ACTION_MESSAGES_KEY, actionMessages);
             }
 
             Map<String, List<String>> fieldErrors = validationAware.getFieldErrors();
-            if (fieldErrors != null && fieldErrors.size() > 0)
-            {
+            if (fieldErrors != null && !fieldErrors.isEmpty()) {
                 session.put(FIELD_ERRORS_KEY, fieldErrors);
             }
         }

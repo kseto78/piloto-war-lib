@@ -39,6 +39,10 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioUsuarioImpl")
 public class ServicioUsuarioImpl implements ServicioUsuario{
 
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String R_CONST_REF = "2";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioUsuarioImpl.class);
 	
@@ -71,15 +75,16 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		try {
 			//Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("2","nombre");
+			columns.put(R_CONST_REF,NOMBRE);
 			columns.put("3","rolid");
 			
 			if (columnSort==null){
-				columnSort = "2"; //Id
+				columnSort = R_CONST_REF; 
+				//Id
 			}
 			String column = columns.get(columnSort);
 			if (column==null){
-				column = "nombre";
+				column = NOMBRE;
 			}
 		
 			if (null != criterio && null != criterio.getNombre()){
@@ -104,8 +109,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 			return result;
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioUsuarioImpl - getUsuarios:" + e);
 			throw new BusinessException(e,"errors.organismo.getOrganismos");
 			
@@ -175,7 +179,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		query.setLogin(loginUsuario);
 		query.setLoginComparator(TextComparator.EQUALS);
 		List<TblUsuarios> lista = tblUsuarios.getUsuariosAplicacionesByQuery(query);
-		return (null != lista && !lista.isEmpty())? true : false;
+		return null != lista && !lista.isEmpty();
 	}
 	
 	
@@ -194,7 +198,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 			query.setLoginComparator(TextComparator.EQUALS);
 			query.addUsuarioidNotIn(idUsuario.longValue());
 			List<TblUsuarios> lista = tblUsuarios.getUsuariosAplicacionesByQuery(query);
-			res = (null != lista && !lista.isEmpty())? true : false;
+			res = null != lista && !lista.isEmpty();
 		}
 		return res;
 	}
@@ -211,8 +215,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 				usuarioTO.setFechamodificacion(new Date());
 				usuarioTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 				tblUsuarios.update(usuarioTO, source, accion, accionId);
-			}
-			catch (Exception e){
+			} catch (Exception e){
 				logger.error("ServicioUsuarioImpl - updateUsuario:" + e);
 				throw new BusinessException(e,"errors.organismo.updateOrganismo");		
 			}	
@@ -228,8 +231,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		try {
 			TblUsuarios usuarioTO = tblUsuarios.getById(usuario.getUsuarioId());
 			return getUsuarioBean(usuarioTO);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioUsuarioImpl - loadUsuario:" + e);
 			throw new BusinessException(e,"errors.organismo.loadOrganismo");			
 		}	
@@ -244,7 +246,6 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 	public void deleteUsuario(UsuarioBean usuario, String source, String accion, Long accionId) throws BusinessException {
 		try {
 			tblUsuarios.delete(usuario.getUsuarioId(), source, accion, accionId);
-			return;
 		}catch (Exception e){
 			logger.error("ServicioUsuarioImpl - deleteUsuario:" + e);
 			throw new BusinessException(e,"errors.organismo.deleteOrganismo");			
@@ -280,6 +281,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		u.setModificadopor(usuario.getModificadoPor());
 		u.setNombre(usuario.getNombre());
 		u.setRolid(usuario.getRolId());
+		u.setTelefono(usuario.getTelefono());
+		u.setOrganismo(usuario.getOrganismo());
+		u.setIdcontacto(usuario.getIdcontacto());
 		u.setUsuarioid((null != usuario.getUsuarioId()) ? usuario.getUsuarioId() : null);
 
 		return u;
@@ -292,8 +296,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 	 * @return objeto UsuarioBean
 	 */
 	////MIGRADO
-	protected UsuarioBean getUsuarioBean(TblUsuarios usuario)
-	{
+	protected UsuarioBean getUsuarioBean(TblUsuarios usuario) {
 		 
 		UsuarioBean u = new UsuarioBean();
 		
@@ -306,7 +309,10 @@ public class ServicioUsuarioImpl implements ServicioUsuario{
 		u.setModificadoPor(usuario.getModificadopor());
 		u.setNombre(usuario.getNombre());
 		u.setRolId(usuario.getRolid());
+		u.setTelefono(usuario.getTelefono());
+		u.setOrganismo(usuario.getOrganismo());
 		u.setUsuarioId((null != usuario.getUsuarioid()) ? usuario.getUsuarioid() : null);
+		u.setIdcontacto((null != usuario.getIdcontacto()) ? usuario.getIdcontacto() : null);
 		return u;
 	}	
 	

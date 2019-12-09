@@ -14,6 +14,43 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class EmailBean implements Audit{
 
+	/**  email id. */
+	private Integer emailId;
+
+	/**  lote envio id. */
+	private Integer loteEnvioId;
+
+	/**  codigo externo. */
+	private String codigoExterno;
+
+	/**  cuerpo. */
+	private String cuerpo;
+
+	/**  asunto. */
+	private String asunto;
+
+	/**  estado actual. */
+	private String estadoActual;
+
+	/**  numero envios. */
+	private String numeroEnvios;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  creado por. */
+	private String creadoPor;
+
+	/**  fecha modificacion. */
+	private Date fechaModificacion;
+
+	/**  modificado por. */
+	private String modificadoPor;
+
+	/**  ultimo id historico. */
+	private Integer ultimoIdHistorico;
+
+
 	/**
 	 * Constructor de email bean.
 	 */
@@ -31,43 +68,6 @@ public class EmailBean implements Audit{
 		this.modificadoPor=null;
 		this.ultimoIdHistorico=null;	
 	}
-	
-	
-	/**  email id. */
-	private Integer emailId;
-	
-	/**  lote envio id. */
-	private Integer loteEnvioId;
-	
-	/**  codigo externo. */
-	private String codigoExterno;
-	
-	/**  cuerpo. */
-	private String cuerpo;
-	
-	/**  asunto. */
-	private String asunto;
-	
-	/**  estado actual. */
-	private String estadoActual;
-	
-	/**  numero envios. */
-	private String numeroEnvios;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  creado por. */
-	private String creadoPor;
-	
-	/**  fecha modificacion. */
-	private Date fechaModificacion;
-	
-	/**  modificado por. */
-	private String modificadoPor;
-	
-	/**  ultimo id historico. */
-	private Integer ultimoIdHistorico;
 	
 	
 	/**

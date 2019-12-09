@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -27,10 +24,6 @@ import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 import com.map.j2ee.util.beanutils.converters.DateConverter;
 
-import es.minhap.common.entity.OrderType;
-import es.minhap.common.entity.TextComparator;
-import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
-import es.minhap.plataformamensajeria.iop.beans.OrganismosServicioBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorPdpDiputaciones;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorProcesos;
@@ -40,19 +33,8 @@ import es.minhap.plataformamensajeria.iop.manager.TblOrganismosServicioManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblProcesosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
-import es.minhap.sim.model.TblAplicaciones;
-import es.minhap.sim.model.TblPdpDiputaciones;
 import es.minhap.sim.model.TblProcesos;
-import es.minhap.sim.model.TblServicios;
-import es.minhap.sim.model.TblUsuariosAplicaciones;
-import es.minhap.sim.query.TblAplicacionesQuery;
-import es.minhap.sim.query.TblPdpDiputacionesQuery;
-import es.minhap.sim.query.TblOrganismosServicioQuery;
 import es.minhap.sim.query.TblProcesosQuery;
-import es.minhap.sim.query.TblServiciosQuery;
-import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
-import es.minhap.sim.query.TblUsuariosQuery;
-import es.mpr.plataformamensajeria.servicios.ifaces.ServicioPdpDiputaciones;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesos;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 
@@ -65,6 +47,12 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
  */
 @Service("servicioProcesosImpl")
 public class ServicioProcesosImpl implements ServicioProcesos {
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String ERRORSDOTACTION = "errors.action.ejecucionjobs.loadProcesoServicio";
+
+	protected static final String SERVICIOPROCESO = "ServicioProcesosImpl - loadProceso:";
 
 	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
 	private static final String ERRORS_EJECUCIONJOBS_GET_PROCESOS = "errors.ejecucionjobs.getProcesos";
@@ -119,7 +107,7 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "nombre");
+			columns.put("1", NOMBRE);
 			columns.put("2", "inicioUltimaEjecucion");
 			columns.put("3", "finUltimaEjecucion");
 			columns.put("4", "estado");
@@ -129,7 +117,7 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "nombre";
+				column = NOMBRE;
 			}
 
 			es.minhap.plataformamensajeria.iop.beans.ProcesosBean ob = new es.minhap.plataformamensajeria.iop.beans.ProcesosBean();
@@ -137,16 +125,18 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 			List<TblProcesos> lista = queryExecutorProcesosImpl
 					.getProcesosPaginado(size, order, column, ob);
 			
-			for(TblProcesos proceso : lista){	
+			for(TblProcesos proceso : lista){
+		
 				if(proceso.getProximaEjecucion() != null ){
-					if(proceso.getActivo() == false) proceso.setProximaEjecucion("");
-						else{
+					if(!proceso.getActivo()) {
+						proceso.setProximaEjecucion("");
+					} else{
 							CronExpression cronExp = new CronExpression(proceso.getProximaEjecucion());
-							Calendar fecha_ejecucion = Calendar.getInstance();
-							Date fecha_siguiente_ejecucion = fecha_ejecucion.getTime();
-							cronExp.getNextValidTimeAfter(fecha_siguiente_ejecucion);
+							Calendar fechaEjecucion = Calendar.getInstance();
+							Date fechaSiguienteEjecucion = fechaEjecucion.getTime();
+							cronExp.getNextValidTimeAfter(fechaSiguienteEjecucion);
 							SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-							proceso.setProximaEjecucion(format.format(cronExp.getNextValidTimeAfter(fecha_siguiente_ejecucion)));
+							proceso.setProximaEjecucion(format.format(cronExp.getNextValidTimeAfter(fechaSiguienteEjecucion)));
 						}
 					
 				}
@@ -177,29 +167,11 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 //	@Override
 //	@Transactional
 //	public Integer newOrganismoPdpDiputacion(PdpDiputacionesBean organismoPdp, String source,
-//			String accion, Long accionId) throws BusinessException {
-//		try {
-//			TblPdpDiputaciones organismoTO = getOrganismoPdpTO(organismoPdp);
 //
-//			organismoTO.setFechacreacion(new Date());
 //			String modificador = PlataformaMensajeriaUtil.getUsuarioLogueado()
-//					.getNombreCompleto();
-//			organismoTO.setCreadopor(modificador);
 //
 //			Long idOrganismo = tblPdpDiputacionesManager.insert(organismoTO, source,
-//					accion, accionId);		
-//			organismoPdp.setFechacreacion(organismoTO.getFechacreacion());
-//			organismoPdp.setCreadopor(organismoTO.getCreadopor());
-//			organismoPdp.setPdpDiputacionesId(idOrganismo.intValue());
-//			return organismoPdp.getPdpDiputacionesId();
-//		} catch (Exception e) {
-//			logger.error("ServicioOrganismoImpl - newOrganismo:" + e);
 //			BusinessException exc = new BusinessException(e,
-//					"errors.organismo.newOrganismo");
-//			exc.mRechargeInput();
-//			throw exc;
-//		}
-//	}
 
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#updateOrganismo(es.mpr.plataformamensajeria.beans.OrganismoBean, java.lang.String, java.lang.String, java.lang.Long)
@@ -216,8 +188,7 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 			procesosTO.setModificadoPor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			tblProcesosManager.update(procesosTO, source, accion, accionId);
 			
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProcesosImpl - updateProceso:" + e);
 			throw new BusinessException(e,"errors.ejecucionjobs.updateProceso");		
 		} 
@@ -236,8 +207,8 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 			TblProcesos procesoTO = tblProcesosManager.getProcesoById(proceso.getProcesosId().longValue());
 			return getProcesosBean(procesoTO);
 		} catch (Exception e) {
-			logger.error("ServicioProcesosImpl - loadProceso:" + e);
-			throw new BusinessException(e, "errors.action.ejecucionjobs.loadProcesoServicio");
+			logger.error(SERVICIOPROCESO + e);
+			throw new BusinessException(e, ERRORSDOTACTION);
 		}
 	}
 	
@@ -255,8 +226,8 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 			List<TblProcesos> procesoTO = tblProcesosManager.getProcesosByQuery(query);
 			return getProcesosBean(procesoTO.get(0));
 		} catch (Exception e) {
-			logger.error("ServicioProcesosImpl - loadProceso:" + e);
-			throw new BusinessException(e, "errors.action.ejecucionjobs.loadProcesoServicio");
+			logger.error(SERVICIOPROCESO + e);
+			throw new BusinessException(e, ERRORSDOTACTION);
 		}
 	}
 	
@@ -328,8 +299,6 @@ public class ServicioProcesosImpl implements ServicioProcesos {
 	protected List<ProcesosBean> getListProcesosBean(List<TblProcesos> lista)
 			throws BusinessException {
 		List<ProcesosBean> result = null;
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
 		if (lista != null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 

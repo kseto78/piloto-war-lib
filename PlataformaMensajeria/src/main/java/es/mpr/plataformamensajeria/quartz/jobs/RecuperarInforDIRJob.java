@@ -50,6 +50,12 @@ import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
 @Service("recuperarInforDIRJob")
 public class RecuperarInforDIRJob implements Job {
 
+	protected static final String ERROR_CON_LA_CO = "Error con la conexion a DIR3";
+
+	protected static final String JOBDIR3 = "jobDIR3";
+
+	protected static final String LOGDOTSOURCE_OR = "log.SOURCE_ORGANISMOS";
+
 	/** Constante DIR3_ESTADO_PROCESO_DIR3_OK. */
 	private static final String DIR3_ESTADO_PROCESO_DIR3_OK = "DIR3.ESTADO_PROCESO_DIR3_OK";
 
@@ -183,8 +189,9 @@ public class RecuperarInforDIRJob implements Job {
 			ultimaMonitorizacion.setCodEstado(properties.getProperty("DIR3.ESTADO_PROCESO_DIR3_KO", null));
 			mensajeEstado = properties.getProperty("recuperar.info.dir.error.ud.organicas", null);
 			
-			if(descripcionEstado.toString().equals("Error con la conexion a DIR3")){
-				ultimaMonitorizacion.setDescEstado(descripcionEstado.toString()); //Descripcion estado en el log de la bbdd
+			if(ERROR_CON_LA_CO.equals(descripcionEstado.toString())){
+				ultimaMonitorizacion.setDescEstado(descripcionEstado.toString()); 
+				//Descripcion estado en el log de la bbdd
 				mensajeEstado = "";
 			}else{
 				ultimaMonitorizacion.setDescEstado(mensajeEstado);				
@@ -232,7 +239,7 @@ public class RecuperarInforDIRJob implements Job {
 			descripcionEstado.append(properties.getProperty("recuperar.info.dir.totalOrganismos2", null));
 			
 			// actualizamos los organismos
-			if ((listaOrganismos != null) && (!listaOrganismos.isEmpty())){
+			if (listaOrganismos != null && !listaOrganismos.isEmpty()){
 				actualizarOrganismos(listaOrganismos, descripcionEstado);
 			}
 			res = true;
@@ -240,7 +247,7 @@ public class RecuperarInforDIRJob implements Job {
 		} catch (WebServiceException e){
 			logger.info("execute - FIN - Recuperar informacion DIR - exception - Descargar Unidades Organicas");
 			logger.error("[RecuperarInfoDIRJob] - execute - Error: ", e);
-			descripcionEstado.append("Error con la conexion a DIR3");
+			descripcionEstado.append(ERROR_CON_LA_CO);
 			
 			throw new ExcepcionesDir3();
 		}
@@ -267,7 +274,7 @@ public class RecuperarInforDIRJob implements Job {
 				//actualizamos organismo
 				String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
 				Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-				String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+				String source = properties.getProperty(LOGDOTSOURCE_OR, null);
 				TblOrganismos organismoActualizar = listaTO.get(0);
 				completarOrganismo(ob, organismoActualizar, true);
 				tblOrganismosManager.update(organismoActualizar, source, accion, accionId);
@@ -277,7 +284,7 @@ public class RecuperarInforDIRJob implements Job {
 				//añadimos organismo
 				String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 				Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-				String source = properties.getProperty("log.SOURCE_ORGANISMOS", null);
+				String source = properties.getProperty(LOGDOTSOURCE_OR, null);
 				TblOrganismos o = new TblOrganismos();
 				completarOrganismo(ob,o, false);
 				tblOrganismosManager.insert(o, source, accion, accionId);
@@ -302,7 +309,8 @@ public class RecuperarInforDIRJob implements Job {
 	 * @param o the o
 	 * @param isActualizar the is actualizar
 	 */
-	private void completarOrganismo(OrganismoDir3Bean ob, TblOrganismos o, boolean isActualizar) {		
+	private void completarOrganismo(OrganismoDir3Bean ob, TblOrganismos o, boolean isActualizar) {
+	
 		SimpleDateFormat dateFormat = new SimpleDateFormat(ConstantesDir3.FORMATO_FECHA);
 
 		try{
@@ -337,7 +345,7 @@ public class RecuperarInforDIRJob implements Job {
 			o.setDisposicionLegal(ob.getDisposicionLegal());
 			o.setEsEdp(ob.getBitEdpPrincipal());
 			o.setEstado(ob.getCdEstado());			
-			if (("A".equals(ob.getCdEstado()) || "E".equals(ob.getCdEstado()))){
+			if ("A".equals(ob.getCdEstado()) || "E".equals(ob.getCdEstado())){
 				o.setEliminado("S");
 				o.setActivo(false);
 			}else{
@@ -349,10 +357,10 @@ public class RecuperarInforDIRJob implements Job {
 			o.setFechaBajaOficial((null != ob.getFechaBajaOficial())? dateFormat.parse(ob.getFechaBajaOficial()) : null);
 			o.setFechaExtincion((null != ob.getFechaExtincion()) ? dateFormat.parse(ob.getFechaExtincion()) : null);
 			if (isActualizar){
-				o.setModificadopor("jobDIR3");
+				o.setModificadopor(JOBDIR3);
 				o.setFechamodificacion(new Date());
 			}else{
-				o.setCreadopor("jobDIR3");
+				o.setCreadopor(JOBDIR3);
 				o.setFechacreacion(new Date());
 			}
 			o.setLocExtranjera(ob.getLocExtranjera());
@@ -398,7 +406,8 @@ public class RecuperarInforDIRJob implements Job {
 			fechaInicial.setTime(fecIni);
 
 			Calendar fechaFinal = Calendar.getInstance();
-			fechaFinal.setTime(fecFin); // Configuramos la fecha que se
+			fechaFinal.setTime(fecFin); 
+			// Configuramos la fecha que se
 										// recibe
 			fechaFinal.add(Calendar.HOUR, 23);
 			fechaFinal.add(Calendar.MINUTE, 59);

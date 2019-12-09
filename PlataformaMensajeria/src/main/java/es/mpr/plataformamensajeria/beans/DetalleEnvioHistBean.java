@@ -17,6 +17,102 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleEnvioHistBean implements Audit{
 
+	protected static final String BLANK = ", <";
+
+	protected static final String R_CONST_REF = "<";
+
+	protected static final String R_CONST_0 = ">";
+
+	/**  envio id. */
+	protected String envioId;
+
+	/**  mensaje id. */
+	private Long mensajeId;
+
+	/**  nombre aplicacion. */
+	private String nombreAplicacion;
+
+	/**  nombre servicio. */
+	private String nombreServicio;
+
+	/**  nombre lote envio. */
+	private String nombreLoteEnvio;
+
+	/**  origen. */
+	private String origen;
+
+	/**  destino. */
+	private String destino;
+
+	/**  bcc. */
+	private String bcc;
+
+	/**  cc. */
+	private String cc;
+
+	/**  asunto. */
+	private String asunto;
+
+	/**  cuerpo. */
+	private String cuerpo;
+
+	/**  id lote. */
+	private Long idLote;
+
+	/**  id externo. */
+	private String idExterno;
+
+	/**  listado adjuntos. */
+	private List<AdjuntoEmailHistoricosBean> listadoAdjuntos = new ArrayList<>();
+
+	/**  listado imagenes. */
+	private List<AdjuntoEmailHistoricosBean> listadoImagenes = new ArrayList<>();
+
+	/**  listado historico. */
+	private List<HistoricoHistBean> listadoHistorico = new ArrayList<>();
+
+	/**  descripcion. */
+	private String descripcion;
+
+	/**  telefono. */
+	private String telefono;
+
+	/**  tipo mensaje. */
+	private String tipoMensaje;
+
+	/**  codificacion. */
+	private String codificacion;
+
+	/**  prioridad. */
+	private Integer prioridad;
+
+	/**  tipo contenido. */
+	private String tipoContenido;
+
+	/**  fecha historificacion. */
+	private Date fechaHistorificacion;
+
+	/**  doc usuario. */
+	private String docUsuario;
+
+	/**  cod SIA. */
+	private String codSIA;
+
+	/**  cod organismo. */
+	private String codOrganismo;
+
+	/**  cod organismo pagador. */
+	private String codOrganismoPagador;
+
+	/**  nombre usuario. */
+	private String nombreUsuario;
+
+	/**  icono. */
+	private String icono;
+
+	/**  sonido. */
+	private String sonido;
+
 	/**
 	 * Constructor de detalle envio hist bean.
 	 */
@@ -31,9 +127,9 @@ public class DetalleEnvioHistBean implements Audit{
 		this.cc = null;
 		this.asunto = null;
 		this.cuerpo = null;
-		this.listadoAdjuntos = new ArrayList<AdjuntoEmailHistoricosBean>();
-		this.listadoImagenes = new ArrayList<AdjuntoEmailHistoricosBean>();
-		this.listadoHistorico = new ArrayList<HistoricoHistBean>();
+		this.listadoAdjuntos = new ArrayList<>();
+		this.listadoImagenes = new ArrayList<>();
+		this.listadoHistorico = new ArrayList<>();
 		this.descripcion = null;
 		this.fechaHistorificacion = null;
 		this.docUsuario = null;
@@ -45,96 +141,6 @@ public class DetalleEnvioHistBean implements Audit{
 		this.sonido = null;
 	}
 
-	
-	/**  envio id. */
-	protected String envioId;
-	
-	/**  mensaje id. */
-	private Long mensajeId;
-	
-	/**  nombre aplicacion. */
-	private String nombreAplicacion;
-	
-	/**  nombre servicio. */
-	private String nombreServicio;
-	
-	/**  nombre lote envio. */
-	private String nombreLoteEnvio;
-	
-	/**  origen. */
-	private String origen;
-	
-	/**  destino. */
-	private String destino;
-	
-	/**  bcc. */
-	private String bcc;
-	
-	/**  cc. */
-	private String cc;
-	
-	/**  asunto. */
-	private String asunto;
-	
-	/**  cuerpo. */
-	private String cuerpo;
-	
-	/**  id lote. */
-	private Long idLote;
-	
-	/**  id externo. */
-	private String idExterno;
-	
-	/**  listado adjuntos. */
-	private List<AdjuntoEmailHistoricosBean> listadoAdjuntos = new ArrayList<AdjuntoEmailHistoricosBean>();
-	
-	/**  listado imagenes. */
-	private List<AdjuntoEmailHistoricosBean> listadoImagenes = new ArrayList<AdjuntoEmailHistoricosBean>();
-	
-	/**  listado historico. */
-	private List<HistoricoHistBean> listadoHistorico = new ArrayList<HistoricoHistBean>();
-	
-	/**  descripcion. */
-	private String descripcion;
-	
-	/**  telefono. */
-	private String telefono;
-	
-	/**  tipo mensaje. */
-	private String tipoMensaje;
-	
-	/**  codificacion. */
-	private String codificacion;
-	
-	/**  prioridad. */
-	private Integer prioridad;
-	
-	/**  tipo contenido. */
-	private String tipoContenido;
-	
-	/**  fecha historificacion. */
-	private Date fechaHistorificacion;
-	
-	/**  doc usuario. */
-	private String docUsuario;
-	
-	/**  cod SIA. */
-	private String codSIA;
-	
-	/**  cod organismo. */
-	private String codOrganismo;
-	
-	/**  cod organismo pagador. */
-	private String codOrganismoPagador;
-	
-	/**  nombre usuario. */
-	private String nombreUsuario;
-	
-	/**  icono. */
-	private String icono;
-	
-	/**  sonido. */
-	private String sonido;
 	
 	/**
 	 * Obtener telefono.
@@ -183,7 +189,7 @@ public class DetalleEnvioHistBean implements Audit{
 	 */
 	public String getPrioridadHTML(){
 		if(prioridad!=null){
-			if(prioridad.equals("1")){
+			if("1".equals(prioridad)){
 				return "Urgente";
 				
 			}else{
@@ -345,10 +351,10 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @param cc the cc
 	 */
 	public void addCc(String cc){
-		if(this.cc!=null&&this.cc.length()>0){
-			this.cc+=", <"+cc+">";
+		if(this.cc!=null&&!this.cc.isEmpty()){
+			this.cc+=BLANK+cc+R_CONST_0;
 		}else{
-			this.cc="<"+cc+">";
+			this.cc=R_CONST_REF+cc+R_CONST_0;
 		}
 	}
 	
@@ -358,10 +364,10 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @param bcc the bcc
 	 */
 	public void addBcc(String bcc){
-		if(this.bcc!=null&&this.bcc.length()>0){
-			this.bcc+=", <"+bcc+">";
+		if(this.bcc!=null&&!this.bcc.isEmpty()){
+			this.bcc+=BLANK+bcc+R_CONST_0;
 		}else{
-			this.bcc="<"+bcc+">";
+			this.bcc=R_CONST_REF+bcc+R_CONST_0;
 		}
 	}
 	
@@ -371,10 +377,10 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @param to the to
 	 */
 	public void addDestino(String to){
-		if(destino!=null&&destino.length()>0){
-			destino+=", <"+to+">";
+		if(destino!=null&&!destino.isEmpty()){
+			destino+=BLANK+to+R_CONST_0;
 		}else{
-			destino="<"+to+">";
+			destino=R_CONST_REF+to+R_CONST_0;
 		}
 	}
 	
@@ -546,7 +552,7 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @return listado adjuntos
 	 */
 	public List<AdjuntoEmailHistoricosBean> getListadoAdjuntos() {
-		return new ArrayList<AdjuntoEmailHistoricosBean>(listadoAdjuntos);
+		return new ArrayList<>(listadoAdjuntos);
 	}
 	
 	/**
@@ -555,7 +561,7 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @param listadoAdjuntos new listado adjuntos
 	 */
 	public void setListadoAdjuntos(List<AdjuntoEmailHistoricosBean> listadoAdjuntos) {
-		this.listadoAdjuntos = new ArrayList<AdjuntoEmailHistoricosBean>(listadoAdjuntos);
+		this.listadoAdjuntos = new ArrayList<>(listadoAdjuntos);
 	}
 	
 	/**
@@ -564,7 +570,7 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @return listado historico
 	 */
 	public List<HistoricoHistBean> getListadoHistorico() {
-		return new ArrayList<HistoricoHistBean>(listadoHistorico);
+		return new ArrayList<>(listadoHistorico);
 	}
 	
 	/**
@@ -573,7 +579,7 @@ public class DetalleEnvioHistBean implements Audit{
 	 * @param listadoHistorico new listado historico
 	 */
 	public void setListadoHistorico(List<HistoricoHistBean> listadoHistorico) {
-		this.listadoHistorico = new ArrayList<HistoricoHistBean>(listadoHistorico);
+		this.listadoHistorico = new ArrayList<>(listadoHistorico);
 	}
 	
 	/**

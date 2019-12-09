@@ -12,6 +12,30 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class TipoPlanificacionBean implements Audit{
 	
 
+		/**  tipo planificacion id. */
+	protected Integer tipoPlanificacionId;
+
+		/**  nombre. */
+		protected String nombre;
+
+		/**  descripcion. */
+		protected String descripcion;
+
+		/**  activo. */
+		protected Integer activo = null;
+
+		/**  fecha creacion. */
+		protected Date fechaCreacion = null;
+
+		/**  creado por. */
+		protected String creadoPor = null;
+
+		/**  fecha modificacion. */
+		protected Date fechaModificacion = null;
+
+		/**  modificado por. */
+		protected String modificadoPor = null;
+
 		/**
 		 * Constructor de tipo planificacion bean.
 		 */
@@ -81,31 +105,6 @@ public class TipoPlanificacionBean implements Audit{
 			this.descripcion = descripcion;
 		}
 
-		/**  tipo planificacion id. */
-		protected Integer tipoPlanificacionId;
-		
-		/**  nombre. */
-		protected String nombre;
-		
-		/**  descripcion. */
-		protected String descripcion;
-		
-		
-		/**  activo. */
-		protected Integer activo = null;
-		
-		/**  fecha creacion. */
-		protected Date fechaCreacion = null;
-		
-		/**  creado por. */
-		protected String creadoPor = null;
-		
-		/**  fecha modificacion. */
-		protected Date fechaModificacion = null;
-		
-		/**  modificado por. */
-		protected String modificadoPor = null;
-		
 		/**
 		 * Obtener id.
 		 *
@@ -228,24 +227,4 @@ public class TipoPlanificacionBean implements Audit{
 		}
 
                 
-                /*
-	 * Devuelve el objeto como un XML
-	 * 
-	 
-	public String obtenerXML() {
-		StringBuffer sb = new StringBuffer("<objeto>OrganimoJPA</objeto>");
-		if(id != null)
-			sb.append("<id>"  + id +"</id>" );
-		if(nombre != null)
-			sb.append("<nombre>"  + nombre +"</nombre>" );
-		if(rol != null)
-			sb.append("<rol>"  + rol +"</rol>" );
-		if(organismoPadre != null)
-			sb.append("<organismoPadre>"  + organismoPadre +"</organismoPadre>" );
-		if(sb.length()==0)
-			return null;
-		else
-			return sb.toString();
-	}
-*/
 }

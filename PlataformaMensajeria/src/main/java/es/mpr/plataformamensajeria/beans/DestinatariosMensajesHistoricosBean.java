@@ -17,27 +17,6 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DestinatariosMensajesHistoricosBean implements Audit {
 	
-	/**
-	 * COnstructor por defecto
-	 */
-	public DestinatariosMensajesHistoricosBean() {
-		this.destinatariosMensajes = null;
-		this.mensajeId = null;
-		this.destinatario = null;
-		this.estado = null;
-		this.fechaCreacion = null;
-		this.creadoPor = null;
-		this.fechaModificacion = null;
-		this.modificadoPor = null;
-		this.codigoExterno = null;
-		this.uim = null;
-		this.nodo = null;
-		this.listaDestinatarios = null;
-		this.ultimoEnvio = null;
-		this.tipoMensaje = null;
-		this.fechaHistorificacion = null;
-	}
-
 	private Long destinatariosMensajes;
 
 	private Long mensajeId;
@@ -65,8 +44,29 @@ public class DestinatariosMensajesHistoricosBean implements Audit {
 	private ArrayList<DestinatarioBean> listaDestinatarios;
 
 	private String tipoMensaje;
-	
+
 	private Date fechaHistorificacion;
+
+	/**
+	 * COnstructor por defecto
+	 */
+	public DestinatariosMensajesHistoricosBean() {
+		this.destinatariosMensajes = null;
+		this.mensajeId = null;
+		this.destinatario = null;
+		this.estado = null;
+		this.fechaCreacion = null;
+		this.creadoPor = null;
+		this.fechaModificacion = null;
+		this.modificadoPor = null;
+		this.codigoExterno = null;
+		this.uim = null;
+		this.nodo = null;
+		this.listaDestinatarios = null;
+		this.ultimoEnvio = null;
+		this.tipoMensaje = null;
+		this.fechaHistorificacion = null;
+	}
 
 	/**
 	 * Obtener XML

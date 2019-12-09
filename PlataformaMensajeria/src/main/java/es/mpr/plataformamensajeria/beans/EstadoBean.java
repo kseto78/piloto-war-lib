@@ -22,6 +22,30 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class EstadoBean implements Audit{
 
 
+	/**  estado id. */
+	protected Integer estadoId;
+
+	/**  nombre. */
+	protected String nombre;
+
+	/**  descripcion. */
+	protected String descripcion;
+
+	/**  activo. */
+	protected Integer activo = null;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  creado por. */
+	protected String creadoPor = null;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion = null;
+
+	/**  modificado por. */
+	protected String modificadoPor = null;
+
 	/**
 	 * Constructor de estado bean.
 	 */
@@ -37,32 +61,6 @@ public class EstadoBean implements Audit{
 
 	}
 
-	
-	/**  estado id. */
-	protected Integer estadoId;
-
-	
-	/**  nombre. */
-	protected String nombre;
-	
-	/**  descripcion. */
-	protected String descripcion;
-	
-	/**  activo. */
-	protected Integer activo = null;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  creado por. */
-	protected String creadoPor = null;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion = null;
-	
-	
-	/**  modificado por. */
-	protected String modificadoPor = null;
 	
 	/**
 	 * Obtener id.

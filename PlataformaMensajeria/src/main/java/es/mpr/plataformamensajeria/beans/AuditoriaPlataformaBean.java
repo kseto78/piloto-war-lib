@@ -18,6 +18,25 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  *  @author Altran
  */
 public class AuditoriaPlataformaBean implements Audit{
+	protected Integer logId;
+
+	protected String sourceName;
+
+	protected Integer sourceId;
+
+	protected Integer logAccion = null;
+
+	protected String logDescripcion = null;
+
+	protected String adtUsuario = null;
+
+	protected Date adtFecha = null;
+
+	protected Date fechaDesde = null;
+
+	protected Date fechaHasta = null;
+
+	protected String sourceDescription = null;
 	/**
 	 * Constructor por defecto
 	 */
@@ -36,32 +55,12 @@ public class AuditoriaPlataformaBean implements Audit{
 	}
 	
 	
-	protected Integer logId;
-
-	
-	protected String sourceName;
-	
-	protected Integer sourceId;
-	
-	protected Integer logAccion = null;
-	
-	protected String logDescripcion = null;
-	
-	protected String adtUsuario = null;
-	
-	protected Date adtFecha = null;
-	
-	protected Date fechaDesde = null;
-	protected Date fechaHasta = null;
-	
-	protected String sourceDescription = null;
 	/**
 	 * Obtener operacionHTML
 	 * @return
 	 */
 	public String getOperacionHTML(){
-		String res = "<span title=\""+getOperacion()+"\"/>";
-		return res;
+		return "<span title=\""+getOperacion()+"\"/>";
 	}
 	/**
 	 * Obtener OperacionCSS

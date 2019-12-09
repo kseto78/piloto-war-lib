@@ -64,6 +64,7 @@ function makeRequest(){
 		<%@include file="/WEB-INF/jsp/plataforma/validation/errorForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/successForm.jsp" %>
 		<%@include file="/WEB-INF/jsp/plataforma/validation/fieldErrorForm.jsp" %>
+		<%@include file="/WEB-INF/jsp/plataforma/validation/warningForm.jsp"%>
 		
 <sj:dialog  id="dialogLotes" title="DETALLE LOTE" cssStyle="display:none" autoOpen="false"></sj:dialog>
 <sj:dialog  id="dialogEnviosEmail" title="DETALLE MENSAJE EMAIL" cssStyle="display:none" autoOpen="false"></sj:dialog>
@@ -462,6 +463,12 @@ function makeRequest(){
 	                        					return false;
 	                        				}
                         				}
+                        				if(document.getElementById('gestionEnvioBean.vistaEnviosId').value == 3){
+                    						var conf = confirm("El mensaje se reenviará a todos los destinatarios a los que no les ha llegado el mensaje aunque no estén seleccionados. ¿Desea continuar?");
+	                        				if(!conf){
+	                        					return false;
+    	                    				}                            			
+                    					}
                         			}
                         			return true;
                         		}
@@ -470,8 +477,18 @@ function makeRequest(){
                             	<input type="submit"  id="anularSeleccionados" onclick="return setOp('A');" disabled="true" value="Anular Seleccionados" class="button"/>
                             	&nbsp;
                             	
-                            	<input type="submit"  id="reenviar" name="revisar" onclick="return setOp('R');" disabled="true" value="Reenviar" class="button"/>
-                            	
+                            	<% String vistaEnv = (String)request.getAttribute("vistaEnviosIdSelected"); 
+				
+									if(vistaEnv.equals("3")){
+								%>
+                            		<input type="submit"  id="reenviar" name="revisar" onclick="return setOp('RD');" disabled="true" value="Reenviar" class="button"/>
+                            	<%
+									}else{
+								%>  
+									<input type="submit"  id="reenviar" name="revisar" onclick="return setOp('R');" disabled="true" value="Reenviar" class="button"/>
+								<%
+									}
+								%>
                             	<s:hidden name="operacionMsg" id="operacionMsg" value=""/>
                             </span>
 		                    <span class="rightSide">
@@ -507,5 +524,44 @@ function makeRequest(){
 					document.getElementById("indicator2").style.display="none";
 				}
 			</script>-->
+			<script>
+			function verMensajesPaginar(url){
+				document.getElementById('loading').style.visibility="";
+				$('td').find('a').each(function(){
+					 $(this).addClass('disabled-link');
+					});
+
+					$('.disabled-link').on('click', false);
+
+				var dialogoEnvios;
+				if($('#dialogEnviosEmail').dialog('isOpen')){
+					dialogoEnvios = $('#dialogEnviosEmail');
+					}
+				else if($('#dialogEnviosNotificacionPush').dialog('isOpen')){
+					dialogoEnvios = $('#dialogEnviosNotificacionPush');
+				}
+				else{
+					dialogoEnvios = $('#dialogEnviosSMS');
+					}
+				
+			    dialogoEnvios.load(
+			    		url,
+			    		{
+				    			
+				    		},
+			            function(responseText, textStatus, XMLHttpRequest) {
+				    			dialogoEnvios.dialog({
+				           	 			autoOpen: true,
+				           				width: 950,
+				           				modal: true,
+				           				show: 'blind',
+				           				hide: 'blind',
+				           			});	    			       	    		
+			            }
+
+			    );
+			    return false;	
+			}
+			</script>
 </div>
 

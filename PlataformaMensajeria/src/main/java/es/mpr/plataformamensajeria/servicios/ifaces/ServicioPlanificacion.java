@@ -172,6 +172,6 @@ public interface ServicioPlanificacion {
 	 * @return planificaciones by organismo ID
 	 * @throws BusinessException the business exception
 	 */
-	public List<PlanificacionBean> getPlanificacionesByOrganismoID(Integer organismoId) throws BusinessException;
+	List<PlanificacionBean> getPlanificacionesByOrganismoID(Integer organismoId) throws BusinessException;
 
 }

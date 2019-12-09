@@ -23,7 +23,7 @@ public interface ServicioAdjuntoEmailHistoricos {
 	 * @return todos id adjuntos cons
 	 * @throws BusinessException the business exception
 	 */
-	public List<Long> getTodosIdAdjuntosCons(List<Long> listaMensajes) throws BusinessException;
+	List<Long> getTodosIdAdjuntosCons(List<Long> listaMensajes) throws BusinessException;
 	
 	/**
 	 * Insert.

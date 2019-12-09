@@ -11,6 +11,21 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class InformesServiciosCodOrgPagadorBean implements Audit{
 
+	/**  servicio id. */
+	private Integer servicioId;
+
+	/**  anno. */
+	private Integer anno;
+
+	/**  mes. */
+	private Integer mes;
+
+	/**  cod organismo pagador. */
+	private String codOrganismoPagador;
+
+	/**  num total. */
+	private Integer numTotal;
+
 	/**
 	 * Constructor de informes servicios cod org pagador bean.
 	 */
@@ -21,21 +36,6 @@ public class InformesServiciosCodOrgPagadorBean implements Audit{
 		this.codOrganismoPagador=null;
 		this.numTotal=null;
 	}
-	
-	/**  servicio id. */
-	private Integer servicioId;
-	
-	/**  anno. */
-	private Integer anno;
-	
-	/**  mes. */
-	private Integer mes;
-	
-	/**  cod organismo pagador. */
-	private String codOrganismoPagador;
-	
-	/**  num total. */
-	private Integer numTotal;
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

@@ -33,13 +33,7 @@
 	  					size="100" cssStyle="width:530px;" maxlength="255" 
 						cssClass="input_tablas_registro" />  
 				</p>
-				<p class="criteria">
-					<label class="fieldText" style="width: 100px;">Apellidos:</label>
-	  				<s:textfield name="contacto.apellidos" id="contacto.apellidos"  
-	 					theme="simple" key="field.general.apellidos" labelposition="left" 
-	  					size="100" cssStyle="width:530px;" maxlength="255" 
-						cssClass="input_tablas_registro" />  
-				</p> 
+				
 				<p class="criteria"> 
 					<span> <label style="width: 100px;" class="fieldText">Aplicacion:</label> 
 	  					<s:select cssStyle="width:200px;" id="contacto.aplicacionid" 
@@ -146,12 +140,7 @@
 			<%-- nombre --%>
 			<display:column property="nombre" titleKey="field.contacto.nombre"
 				sortable="true" headerClass="separator center" class="" />
-
-			<%-- apellidos --%>
-			<display:column property="apellidos"
-				titleKey="field.contacto.apellidos" sortable="true"
-				headerClass="separator center" class="" />
-
+			
 			<%-- correo --%>
 			<display:column property="email" titleKey="field.contacto.email"
 				sortable="true" headerClass="separator center" class="" />

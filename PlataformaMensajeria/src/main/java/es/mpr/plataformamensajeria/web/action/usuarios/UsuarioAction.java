@@ -1,6 +1,7 @@
 package es.mpr.plataformamensajeria.web.action.usuarios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +21,12 @@ import com.map.j2ee.util.KeyValueObject;
 import com.opensymphony.xwork2.Preparable;
 
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
+import es.mpr.plataformamensajeria.beans.ContactoBean;
 import es.mpr.plataformamensajeria.beans.UsuarioAplicacionBean;
 import es.mpr.plataformamensajeria.beans.UsuarioBean;
 import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioAplicacion;
+import es.mpr.plataformamensajeria.servicios.ifaces.ServicioContacto;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioAplicacion;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
@@ -45,6 +48,42 @@ import es.mpr.template.web.action.admin.UsuariosForm;
 @Scope("prototype")
 public class UsuarioAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_DESASIGNAR_APLICACION";
+
+	protected static final String LOGDOTSOURCE_US = "log.SOURCE_USUARIOS";
+
+	protected static final String PLATAFORMADOTUS = "plataforma.usuario.add.contacto";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String R_CONST_REF = ",";
+
+	protected static final String R_CONST_0 = "1";
+
+	protected static final String R_CONST_1 = "2";
+
+	protected static final String R_CONST_2 = "20";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String PLATAFORMADOTUS0 = "plataforma.usuario.add.usuarioaplicacion.AEATGISS";
+
+	protected static final String PLATAFORMADOTUS1 = "plataforma.usuario.create.usuarioexistente";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -62,6 +101,9 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	/**  servicio usuario aplicacion. */
 	@Resource(name = "servicioUsuarioAplicacionImpl")
 	private ServicioUsuarioAplicacion servicioUsuarioAplicacion;
+	
+	@Resource(name = "servicioContactosImpl")
+	private ServicioContacto servicioContacto;
 
 	/**  properties. */
 	@Resource(name = "plataformaMensajeriaProperties")
@@ -73,6 +115,9 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	/**  usuario. */
 	private UsuarioBean usuario;
 	
+	/**  contacto. */
+	private ContactoBean contacto;
+	
 	/**  usuario aplicacion. */
 	private UsuarioAplicacionBean usuarioAplicacion;
 
@@ -80,7 +125,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	public List<UsuarioBean> listaUsuarios = null;
 	
 	/**  lista usuario aplicaciones. */
-	List<UsuarioAplicacionBean> listaUsuarioAplicaciones = new ArrayList<UsuarioAplicacionBean>();
+	List<UsuarioAplicacionBean> listaUsuarioAplicaciones = new ArrayList<>();
 
 	/**  combo roles. */
 	List<KeyValueObject> comboRoles = new ArrayList<>();
@@ -110,10 +155,14 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	private String usuarioAplicacionId;
 
 	/**  form. */
-	private UsuariosForm form;// Para realizar el populate
+	private UsuariosForm form;
+	// Para realizar el populate
 	
 	/**  user 060 VO. */
 	private User060VO user060VO;
+
+	/**  user name to load. */
+	private String userNameToLoad;
 
 	/**
 	 * New search.
@@ -135,22 +184,26 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 
-		if (usuario != null)
-			if (usuario.getNombre() != null && usuario.getNombre().length() <= 0)
-				usuario.setNombre(null);
+		if (usuario != null && usuario.getNombre() != null && usuario.getNombre().isEmpty()) {
+			usuario.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_2));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<UsuarioBean> result = servicioUsuario.getUsuarios(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_2)), order,
 				columnSort, usuario);
 		Integer totalSize = result.getTotalList();
 
@@ -160,14 +213,14 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_2)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 		}
 
 		if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
-			for (int indice = 0; indice < listaUsuarios.size(); indice++) {
+			for (int indice = 0, s = listaUsuarios.size(); indice < s; indice++) {
 
 				UsuarioBean usuario = listaUsuarios.get(indice);
 				usuario.setNombre(StringEscapeUtils.escapeHtml(usuario.getNombre()));
@@ -178,9 +231,6 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 
 		return SUCCESS;
 	}
-
-	/**  user name to load. */
-	private String userNameToLoad;
 
 	/**
 	 * Obtener user name to load.
@@ -212,16 +262,30 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String source = properties.getProperty(LOGDOTSOURCE_US, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (usuario != null) {
-			if (newActivo != null && newActivo.equals("true")) {
+			if (newActivo != null && "true".equals(newActivo)) {
 				usuario.setActivo(true);
 			} else {
 				usuario.setActivo(false);
 			}
 			if (validUsuario(usuario) && !existeUsuario(usuario.getLogin())) {
+				
+				if(usuario.getRolId() == 2){
+					contacto = new ContactoBean();
+					contacto.setNombre(usuario.getNombre());
+					contacto.setOrganismo(usuario.getOrganismo());
+					contacto.setTelefono(usuario.getTelefono());
+					contacto.setEmail(usuario.getEmail());
+					
+					Long idContacto = servicioContacto.newContacto(contacto, source, accion, accionId);
+					usuario.setIdcontacto(idContacto);
+					addActionMessageSession(this.getText(PLATAFORMADOTUS));
+				}				
+				
 				Integer id = servicioUsuario.newUsuario(usuario, source, accion, accionId);
 				this.idUsuario = id.toString();
 				addActionMessageSession(this.getText("plataforma.usuario.create.ok"));
@@ -246,7 +310,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	private boolean existeUsuario(String loginUsuario) throws BusinessException {
 		boolean sw = servicioUsuario.existeUsuario(loginUsuario);
 		if (sw) {
-			addActionErrorSession(this.getText("plataforma.usuario.create.usuarioexistente"));
+			addActionErrorSession(this.getText(PLATAFORMADOTUS1));
 			usuario.setNombre(null);
 			usuario.setEmail(null);
 			usuario.setLogin(null);
@@ -268,7 +332,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	private boolean existeUsuarioEdicion(Integer idUsuario, String loginUsuario) throws BusinessException {
 		boolean sw = servicioUsuario.existeUsuarioEdicion(idUsuario, loginUsuario);
 		if (sw) {
-			addFieldErrorSession(this.getText("plataforma.usuario.create.usuarioexistente"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTUS1));
 		}
 		return sw;
 	}
@@ -312,24 +376,25 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 	///MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_US, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		UsuarioBean usuarioBBDD = null;
 		if (usuario == null) {
 			addActionErrorSession(this.getText("plataforma.usuario.update.error"));
 		} else {
 			if (usuario.getUsuarioId() == null) {
 				if (idUsuario != null) {
-					usuario.setUsuarioId(new Long(idUsuario));
+					usuario.setUsuarioId(Long.valueOf(idUsuario));
 					usuarioBBDD = servicioUsuario.loadUsuario(usuario);
 				} else {
 					String idServidor = (String) request.getAttribute("idUsuario");
 					if (idServidor != null) {
-						usuario.setId(new Integer(idUsuario));
+						usuario.setId(Integer.valueOf(idUsuario));
 						usuarioBBDD = servicioUsuario.loadUsuario(usuario);
 					}
 				}
@@ -344,10 +409,38 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 				usuarioBBDD.setActivo(usuario.getActivo());
 				usuarioBBDD.setEmail(usuario.getEmail());
 				usuarioBBDD.setRolId(usuario.getRolId());
+				usuarioBBDD.setTelefono(usuario.getTelefono());
+				usuarioBBDD.setOrganismo(usuario.getOrganismo());
 				Integer rolSession = PlataformaMensajeriaUtil.getRolUsuarioByUsername(usuario.getLogin(), servicioUsuario);
 
 				if (validUsuario(usuarioBBDD)
-						&& !existeUsuarioEdicion(usuarioBBDD.getUsuarioId().intValue(), usuarioBBDD.getLogin())) {
+						&& !existeUsuarioEdicion(usuarioBBDD.getUsuarioId().intValue(), usuarioBBDD.getLogin()) && validAplicaciones(usuarioBBDD)) {
+					if(usuarioBBDD.getRolId() == 2){
+						contacto = new ContactoBean();
+						if(usuarioBBDD.getIdcontacto() != null){
+								
+							contacto.setContactoId(usuarioBBDD.getIdcontacto());
+							contacto = servicioContacto.loadContacto(contacto);
+							contacto.setNombre(usuarioBBDD.getNombre());
+							contacto.setEmail(usuarioBBDD.getEmail());
+							contacto.setTelefono(usuarioBBDD.getTelefono());
+							contacto.setOrganismo(usuarioBBDD.getOrganismo());
+							servicioContacto.updateContacto(contacto, source, accion, accionId);
+							addActionMessageSession(this.getText("plataforma.usuario.update.contacto"));
+						} else{
+								
+							contacto.setNombre(usuario.getNombre());
+							contacto.setOrganismo(usuario.getOrganismo());
+							contacto.setTelefono(usuario.getTelefono());
+							contacto.setEmail(usuario.getEmail());
+							
+							Long idContacto = servicioContacto.newContacto(contacto, source, accion, accionId);
+							usuarioBBDD.setIdcontacto(idContacto);
+							addActionMessageSession(this.getText(PLATAFORMADOTUS));
+						}
+						
+					}
+					
 					servicioUsuario.updateUsuario(usuarioBBDD, source, accion, accionId);
 					addActionMessageSession(this.getText("plataforma.usuario.update.ok"));
 
@@ -365,6 +458,29 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 
 	}
 
+	private boolean validAplicaciones(UsuarioBean usuarioBBDD) throws BusinessException {
+		String aplicacionAEATGISS = properties.getProperty(PLATAFORMADOTUS0, null);
+		List<String> aplAeatGiss = new ArrayList<>(Arrays.asList(aplicacionAEATGISS.split(R_CONST_REF)));
+		
+		if("".equals(usuarioBBDD.getOrganismo()) && usuarioBBDD.getRolId() == 2){
+			List<UsuarioAplicacionBean> listaUsuariosAplicaciones = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(Integer.valueOf(idUsuario));
+			for(UsuarioAplicacionBean aplicacion : listaUsuariosAplicaciones){
+					
+					for(String aplicacionAeatGiss : aplAeatGiss){
+						if(aplicacionAeatGiss.equals(String.valueOf(aplicacion.getAplicacionId()))){
+							addActionErrorSession(this.getText("plataforma.usuario.add.usuarioaplicacion.validaAplicaciones"));						
+									
+							return false;
+						}
+					}					
+			}
+		}
+		
+		
+		return true;
+	}
+
+
 	/**
 	 * Load.
 	 *
@@ -373,14 +489,16 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 	
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		if (idUsuario == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		if (idUsuario == null) {
 			throw new BusinessException("EL idUsuario recibido es nulo");
+		}
 		try {
 
 			usuario = new UsuarioBean();
-			usuario.setUsuarioId(new Long(idUsuario));
+			usuario.setUsuarioId(Long.valueOf(idUsuario));
 			usuario = servicioUsuario.loadUsuario(usuario);
 
 			return SUCCESS;
@@ -402,22 +520,23 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 	
 	public String delete() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
-		String accionActualizar = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdActualizar = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_DESASIGNAR_APLICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_US, null);
+		String accionActualizar = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdActualizar = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idUsuario == null) {
 			addActionErrorSession(this.getText("plataforma.usuario.delete.error"));
 		} else {
 			usuario = new UsuarioBean();
-			usuario.setUsuarioId(new Long(idUsuario));
+			usuario.setUsuarioId(Long.valueOf(idUsuario));
 			
 			///traer todas las aplicaciones por el usuario y se eliminan las relaciones en tabla usuario-aplicacion
-			List<UsuarioAplicacionBean> listaUsuariosAplicaciones = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(new Integer(idUsuario));
+			List<UsuarioAplicacionBean> listaUsuariosAplicaciones = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(Integer.valueOf(idUsuario));
 			for (UsuarioAplicacionBean ua : listaUsuariosAplicaciones) {
 				if (null != ua.getUsuarioAplicacionId()){
 					UsuarioAplicacionBean uab = new UsuarioAplicacionBean();
@@ -440,24 +559,25 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 
 	public String deleteSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
-		String accionActualizar = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdActualizar = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_DESASIGNAR_APLICACION", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_US, null);
+		String accionActualizar = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdActualizar = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.usuario.deleteselected.error"));
 		} else {
 			for (String idUsuario : checkDelList) {
 				usuario = new UsuarioBean();
-				usuario.setUsuarioId(new Long(idUsuario));
+				usuario.setUsuarioId(Long.valueOf(idUsuario));
 				
 				///traer todas las aplicaciones por el usuario y se eliminan las relaciones en tabla usuario-aplicacion
-				List<UsuarioAplicacionBean> listaUsuariosAplicaciones = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(new Integer(idUsuario));
+				List<UsuarioAplicacionBean> listaUsuariosAplicaciones = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(Integer.valueOf(idUsuario));
 				for (UsuarioAplicacionBean ua : listaUsuariosAplicaciones) {
 					if (null != ua.getUsuarioAplicacionId()){
 						UsuarioAplicacionBean uab = new UsuarioAplicacionBean();
@@ -481,14 +601,15 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 	
 	public String addUsuarioAplicacion() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_US, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ASIGNAR_APLICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		boolean sw = true;
-		if (validaCampos(usuarioAplicacion)) {
+		if (validaCampos(usuarioAplicacion,usuario)) {
 			try {
 				servicioUsuarioAplicacion.newUsuarioAplicacion(usuarioAplicacion, source, accion, accionId, descripcion);
 			} catch (Exception e) {
@@ -497,6 +618,21 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 				sw = false;
 			}
 			if (sw) {
+				
+				usuario.setUsuarioId(Long.valueOf(idUsuario));
+				usuario = servicioUsuario.loadUsuario(usuario);
+				if(usuario.getIdcontacto() != null){
+					contacto = new ContactoBean();
+					contacto.setContactoId(usuario.getIdcontacto());
+					contacto = servicioContacto.loadContacto(contacto);
+					if(contacto.getAplicacionid() == null){
+						contacto.setAplicacionid(usuarioAplicacion.getAplicacionId());
+						servicioContacto.updateContacto(contacto, source, accion, accionId);
+						addActionMessageSession(this.getText("plataforma.usuario.add.contacto.aplicacion"));
+					}
+				}
+				
+				
 				idUsuario = usuarioAplicacion.getUsuarioId().toString();
 				UsuarioBean u = new UsuarioBean();
 				u.setUsuarioId(usuarioAplicacion.getUsuarioId());
@@ -517,8 +653,10 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return true, if successful
 	 */
 	
-	private boolean validaCampos(UsuarioAplicacionBean usuarioAplicacion2) {
+	private boolean validaCampos(UsuarioAplicacionBean usuarioAplicacion2,UsuarioBean usuario) {
 		boolean sw = true;
+		String aplicacionAEATGISS = properties.getProperty(PLATAFORMADOTUS0, null);
+		List<String> aplAeatGiss = new ArrayList<>(Arrays.asList(aplicacionAEATGISS.split(R_CONST_REF)));
 		if (PlataformaMensajeriaUtil.isEmptyNumber(usuarioAplicacion.getAplicacionId().intValue())) {
 			addActionErrorSession(this.getText("plataforma.usuario.add.usuarioaplicacion.field.aplicacionid.error"));
 			sw = false;
@@ -527,6 +665,16 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 			addActionErrorSession(this.getText("plataforma.usuario.add.usuarioaplicacion.field.modo.error"));
 			sw = false;
 		}
+		if ("".equals(usuario.getOrganismo())){
+			for(String aplicacion : aplAeatGiss){
+				if(aplicacion.equals(String.valueOf(usuarioAplicacion2.getAplicacionId()))){
+						
+					addActionErrorSession(this.getText("plataforma.usuario.add.usuarioaplicacion.organismo"));
+					sw = false;
+				}
+			}		
+		}
+		
 
 		return sw;
 	}
@@ -539,17 +687,18 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 */
 	
 	public String deleteUsuarioAplicacion() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_DESASIGNAR_APLICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_US, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (!PlataformaMensajeriaUtil.isEmpty(usuarioAplicacionId) && !PlataformaMensajeriaUtil.isEmpty(idUsuario)) {
 			UsuarioAplicacionBean usuarioAplicacionBean = new UsuarioAplicacionBean();
-			usuarioAplicacionBean.setUsuarioAplicacionId(new Long(usuarioAplicacionId));
+			usuarioAplicacionBean.setUsuarioAplicacionId(Long.valueOf(usuarioAplicacionId));
 			UsuarioBean usuario = new UsuarioBean();
-			usuario.setUsuarioId(new Long(idUsuario));
+			usuario.setUsuarioId(Long.valueOf(idUsuario));
 			UsuarioBean usuBean = servicioUsuario.loadUsuario(usuario);
 			usuBean.setModificadoPor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			usuBean.setFechaModificacion(new Date());
@@ -571,8 +720,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	public void prepare() throws Exception {
 		if (!PlataformaMensajeriaUtil.isEmpty(idUsuario)) {
 			comboAplicacionesNoAsignadas = getComboAplicacionesNoAsignadas(idUsuario);
-			List<UsuarioAplicacionBean> lista = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(new Integer(
-					idUsuario));
+			List<UsuarioAplicacionBean> lista = servicioUsuarioAplicacion.getUsuarioAplicacionesByUsuarioId(Integer.valueOf(idUsuario));
 			for (UsuarioAplicacionBean ua : lista) {
 				if (null != ua.getUsuarioAplicacionId()){
 					listaUsuarioAplicaciones.add(ua);
@@ -599,7 +747,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 			logger.error("UsuarioAction - getComboAplicacionesNoAsignadas:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (AplicacionBean key : keys) {
 
 				option = new KeyValueObject();
@@ -607,6 +755,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -626,7 +775,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 			logger.error("UsuarioAction - getComboAplicaciones:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (AplicacionBean key : keys) {
 
 				option = new KeyValueObject();
@@ -634,6 +783,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -647,11 +797,11 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
 		option = new KeyValueObject();
-		option.setCodigo("1");
+		option.setCodigo(R_CONST_0);
 		option.setDescripcion("Administrador");
 		result.add(option);
 		option = new KeyValueObject();
-		option.setCodigo("2");
+		option.setCodigo(R_CONST_1);
 		option.setDescripcion("Propietario Aplicacion");
 		result.add(option);
 		option = new KeyValueObject();
@@ -671,11 +821,11 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
 		option = new KeyValueObject();
-		option.setCodigo("1");
+		option.setCodigo(R_CONST_0);
 		option.setDescripcion("Lectura");
 		result.add(option);
 		option = new KeyValueObject();
-		option.setCodigo("2");
+		option.setCodigo(R_CONST_1);
 		option.setDescripcion("Lectura/Escritura");
 		result.add(option);
 		return result;
@@ -688,11 +838,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 	 * @return true, si es empty
 	 */
 	public boolean isEmpty(String value) {
-		if (value == null || (value != null && value.equals(""))) {
-			return true;
-		} else {
-			return false;
-		}
+		return value == null || (value != null && "".equals(value));
 	}
 
 	/**

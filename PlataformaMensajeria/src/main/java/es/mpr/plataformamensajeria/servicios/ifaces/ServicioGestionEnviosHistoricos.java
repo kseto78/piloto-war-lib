@@ -168,7 +168,7 @@ public interface ServicioGestionEnviosHistoricos {
 	 * @return tbl gestion envios hist
 	 * @throws BusinessException the business exception
 	 */
-	public List<TblGestionEnviosHist> getTblGestionEnviosHist(List<Long> subList)throws BusinessException;
+	List<TblGestionEnviosHist> getTblGestionEnviosHist(List<Long> subList)throws BusinessException;
 	
 	/**
 	 * Insert.
@@ -177,7 +177,7 @@ public interface ServicioGestionEnviosHistoricos {
 	 * @return the integer
 	 * @throws BusinessException the business exception
 	 */
-	public Integer insert(TblGestionEnviosHist gestionEnvioHistorico)throws BusinessException;
+	Integer insert(TblGestionEnviosHist gestionEnvioHistorico)throws BusinessException;
 
 	/**
 	 * Delete.
@@ -195,6 +195,5 @@ public interface ServicioGestionEnviosHistoricos {
 	 */
 	TblGestionEnviosHist getEnvio(String idMensaje) throws BusinessException;
 
-//	PaginatedList<ViewMisimBean> getIntercambiosMisim(int start, int size,Long idLote) throws BusinessException;
 
 }

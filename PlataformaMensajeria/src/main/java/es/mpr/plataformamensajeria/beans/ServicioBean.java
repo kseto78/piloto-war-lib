@@ -13,8 +13,208 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class ServicioBean implements Audit, Serializable {
 
+	protected static final String SPAN_CLASSINACT = "<span class='inactivo'></span>";
+
+	protected static final String TRUE = "true";
+
+	protected static final String FALSE = "false";
+
+	protected static final String SPAN_CLASSACTIV = "<span class='activo'></span>";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -7986269951829415111L;
+
+	/**  servicio id. */
+	protected Integer servicioId;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  descripcion. */
+	protected String descripcion = null;
+
+	/**  activo. */
+	protected Boolean activo = null;
+
+	/**  canalid. */
+	protected Integer canalid = null;
+
+	/**  aplicacionid. */
+	protected Integer aplicacionid = null;
+
+	/**  fechacreacion. */
+	protected Date fechacreacion = null;
+
+	/**  creadopor. */
+	protected String creadopor = null;
+
+	/**  fechamodificacion. */
+	protected Date fechamodificacion = null;
+
+	/**  modificadopor. */
+	protected String modificadopor = null;
+
+	/**  externalid. */
+	protected String externalid = null;
+
+	/**  nmaxenvios. */
+	protected Integer nmaxenvios = null;
+
+	/**  is activo. */
+	protected String isActivo = null;
+
+	/**  canalnombre. */
+	protected String canalnombre = null;
+
+	/**  aplicacionnombre. */
+	protected String aplicacionnombre = null;
+
+	/**  frommail. */
+	protected String frommail = null;
+
+	/**  frommailname. */
+	protected String frommailname = null;
+
+	/**  historificacion. */
+	protected Integer historificacion = null;
+
+	/**  historificacion input. */
+	protected Integer historificacionInput = null;
+
+	/**  motivohistorificacion. */
+	protected String motivohistorificacion = null;
+
+	/**  conservacion. */
+	protected Integer conservacion = null;
+
+	/**  conservacion input. */
+	protected Integer conservacionInput = null;
+
+	/**  motivoconservacion. */
+	protected String motivoconservacion = null;
+
+	/**  pendienteaprobacion. */
+	protected Boolean pendienteaprobacion = null;
+
+	/**  is pendiente aprobacion. */
+	protected String isPendienteAprobacion = null;
+
+	/**  nombreloteenvio. */
+	protected String nombreloteenvio = null;
+
+	/**  badge. */
+	protected Integer badge = null;
+
+	/**  fcmprojectkey. */
+	protected String fcmprojectkey = null;
+
+	/**  apnsrutacertificado. */
+	protected String apnsrutacertificado = null;
+
+	/**  apnspasswordcertificado. */
+	protected String apnspasswordcertificado = null;
+
+	/**  androidplataforma. */
+	protected Boolean androidplataforma = null;
+
+	/**  iosplataforma. */
+	protected Boolean iosplataforma = null;
+
+	/**  is android plataforma. */
+	protected String isAndroidPlataforma = null;
+
+	/**  is ios plataforma. */
+	protected String isIosPlataforma = null;
+
+	/**  endpoint. */
+	protected String endpoint = null;
+
+	/**  informesactivo. */
+	protected Boolean informesactivo = null;
+
+	/**  is informes activo. */
+	protected String isInformesActivo = null;
+
+	/**  agrupacionestado. */
+	protected Boolean agrupacionestado = null;
+
+	/**  is agrupacion estado. */
+	protected String isAgrupacionEstado = null;
+
+	/**  agrupacioncodorg. */
+	protected Boolean agrupacioncodorg = null;
+
+	/**  is agrupacion cod org. */
+	protected String isAgrupacionCodOrg = null;
+
+	/**  agrupacioncodsia. */
+	protected Boolean agrupacioncodsia = null;
+
+	/**  is agrupacion cod sia. */
+	protected String isAgrupacionCodSia = null;
+
+	/**  agrupacioncodorgpagador. */
+	protected Boolean agrupacioncodorgpagador = null;
+
+	/**  is agrupacion cod org pagador. */
+	protected String isAgrupacionCodOrgPagador = null;
+
+	/**  informesdestinatarios. */
+	protected String informesdestinatarios = null;
+
+	/**  responsablefuncionalnombre. */
+	protected String responsablefuncionalnombre = null;
+
+	/**  responsablefuncionalemail. */
+	protected String responsablefuncionalemail = null;
+
+	/**  responsabletecniconombre. */
+	protected String responsabletecniconombre = null;
+
+	/**  responsabletecnicoemail. */
+	protected String responsabletecnicoemail = null;
+
+	/**  multiorganismo. */
+	protected Boolean multiorganismo = null;
+
+	/**  is multiorganismo. */
+	protected String isMultiorganismo = null;
+
+	/**  premium. */
+	protected Boolean premium = null;
+
+	/**  is premium. */
+	protected String isPremium = null;
+
+	/**  exclusivo. */
+	protected Boolean exclusivo = null;
+
+	/**  is exclusivo. */
+	protected String isExclusivo = null;
+
+	/**  smsExtranjeros. */
+	protected Boolean smsExtranjeros = null;
+
+	/**  is smsExtranjeros. */
+	protected String isSmsExtranjeros = null;
+
+	/**  numero max reenvios. */
+	protected Integer numeroMaxReenvios = null;
+
+	/**  eliminado. */
+	protected String eliminado = null;
+
+	/**  caducidad web push. */
+	protected Integer caducidadWebPush = null;
+
+	/**  vapid public key. */
+	protected String vapidPublicKey = null;
+
+	/**  vapid private key. */
+	protected String vapidPrivateKey = null;
+
+	/**  caducidad certificado. */
+	protected Date caducidadCertificado = null;
 
 	/**
 	 * Constructor de servicio bean.
@@ -79,205 +279,13 @@ public class ServicioBean implements Audit, Serializable {
 		this.caducidadCertificado = null;
 	}
 
-	/**  servicio id. */
-	protected Integer servicioId;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  descripcion. */
-	protected String descripcion = null;
-	
-	/**  activo. */
-	protected Boolean activo = null;
-	
-	/**  canalid. */
-	protected Integer canalid = null;
-	
-	/**  aplicacionid. */
-	protected Integer aplicacionid = null;
-	
-	/**  fechacreacion. */
-	protected Date fechacreacion = null;
-	
-	/**  creadopor. */
-	protected String creadopor = null;
-	
-	/**  fechamodificacion. */
-	protected Date fechamodificacion = null;
-	
-	/**  modificadopor. */
-	protected String modificadopor = null;
-	
-	/**  externalid. */
-	protected String externalid = null;
-	
-	/**  nmaxenvios. */
-	protected Integer nmaxenvios = null;
-	
-	/**  is activo. */
-	protected String isActivo = null;
-	
-	/**  canalnombre. */
-	protected String canalnombre = null;
-	
-	/**  aplicacionnombre. */
-	protected String aplicacionnombre = null;
-	
-	/**  frommail. */
-	protected String frommail = null;
-	
-	/**  frommailname. */
-	protected String frommailname = null;
-	
-	/**  historificacion. */
-	protected Integer historificacion = null;
-	
-	/**  historificacion input. */
-	protected Integer historificacionInput = null;
-	
-	/**  motivohistorificacion. */
-	protected String motivohistorificacion = null;
-	
-	/**  conservacion. */
-	protected Integer conservacion = null;
-	
-	/**  conservacion input. */
-	protected Integer conservacionInput = null;
-	
-	/**  motivoconservacion. */
-	protected String motivoconservacion = null;
-	
-	/**  pendienteaprobacion. */
-	protected Boolean pendienteaprobacion = null;
-	
-	/**  is pendiente aprobacion. */
-	protected String isPendienteAprobacion = null;
-	
-	/**  nombreloteenvio. */
-	protected String nombreloteenvio = null;
-	
-	/**  badge. */
-	protected Integer badge = null;
-	
-	/**  fcmprojectkey. */
-	protected String fcmprojectkey = null;
-	
-	/**  apnsrutacertificado. */
-	protected String apnsrutacertificado = null;
-	
-	/**  apnspasswordcertificado. */
-	protected String apnspasswordcertificado = null;
-	
-	/**  androidplataforma. */
-	protected Boolean androidplataforma = null;
-	
-	/**  iosplataforma. */
-	protected Boolean iosplataforma = null;
-	
-	/**  is android plataforma. */
-	protected String isAndroidPlataforma = null;
-	
-	/**  is ios plataforma. */
-	protected String isIosPlataforma = null;
-	
-	/**  endpoint. */
-	protected String endpoint = null;
-	
-	/**  informesactivo. */
-	protected Boolean informesactivo = null;
-	
-	/**  is informes activo. */
-	protected String isInformesActivo = null;
-	
-	/**  agrupacionestado. */
-	protected Boolean agrupacionestado = null;
-	
-	/**  is agrupacion estado. */
-	protected String isAgrupacionEstado = null;
-	
-	/**  agrupacioncodorg. */
-	protected Boolean agrupacioncodorg = null;
-	
-	/**  is agrupacion cod org. */
-	protected String isAgrupacionCodOrg = null;
-	
-	/**  agrupacioncodsia. */
-	protected Boolean agrupacioncodsia = null;
-	
-	/**  is agrupacion cod sia. */
-	protected String isAgrupacionCodSia = null;
-	
-	/**  agrupacioncodorgpagador. */
-	protected Boolean agrupacioncodorgpagador = null;
-	
-	/**  is agrupacion cod org pagador. */
-	protected String isAgrupacionCodOrgPagador = null;
-	
-	/**  informesdestinatarios. */
-	protected String informesdestinatarios = null;
-
-	/**  responsablefuncionalnombre. */
-	protected String responsablefuncionalnombre = null;
-	
-	/**  responsablefuncionalemail. */
-	protected String responsablefuncionalemail = null;
-	
-	/**  responsabletecniconombre. */
-	protected String responsabletecniconombre = null;
-	
-	/**  responsabletecnicoemail. */
-	protected String responsabletecnicoemail = null;
-	
-	/**  multiorganismo. */
-	protected Boolean multiorganismo = null;
-	
-	/**  is multiorganismo. */
-	protected String isMultiorganismo = null;
-	
-	/**  premium. */
-	protected Boolean premium = null;
-	
-	/**  is premium. */
-	protected String isPremium = null;
-	
-	/**  exclusivo. */
-	protected Boolean exclusivo = null;
-	
-	/**  is exclusivo. */
-	protected String isExclusivo = null;
-	
-	/**  smsExtranjeros. */
-	protected Boolean smsExtranjeros = null;
-	
-	/**  is smsExtranjeros. */
-	protected String isSmsExtranjeros = null;
-	
-	/**  numero max reenvios. */
-	protected Integer numeroMaxReenvios = null;
-	
-	/**  eliminado. */
-	protected String eliminado = null;
-	
-	/**  caducidad web push. */
-	protected Integer caducidadWebPush = null;
-	
-	/**  vapid public key. */
-	protected String vapidPublicKey = null;
-	
-	/**  vapid private key. */
-	protected String vapidPrivateKey = null;
-	
-	/**  caducidad certificado. */
-	protected Date caducidadCertificado = null;
-	
 	/**
 	 * Modificar activado.
 	 *
 	 * @param activado new activado
 	 */
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (activado != null && TRUE.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -291,9 +299,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 
 	}
@@ -305,9 +313,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsActivo() {
 		if (activo != null && activo) {
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		} else {
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		}
 
 	}
@@ -318,7 +326,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isActivo new checks if is activo
 	 */
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (isActivo != null && TRUE.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -360,9 +368,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsPendienteAprobacion() {
 		if (pendienteaprobacion != null && pendienteaprobacion) {
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		} else {
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		}
 	}
 
@@ -372,12 +380,13 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isPendienteAprobacion new checks if is pendiente aprobacion
 	 */
 	public void setIsPendienteAprobacion(String isPendienteAprobacion) {
-		if (isPendienteAprobacion != null && isPendienteAprobacion.equals("true")) {
+		if (isPendienteAprobacion != null && TRUE.equals(isPendienteAprobacion)) {
 			this.pendienteaprobacion = true;
 		} else {
 			this.pendienteaprobacion = false;
 		}
-		this.isPendienteAprobacion = isPendienteAprobacion; // TODO
+		this.isPendienteAprobacion = isPendienteAprobacion; 
+		// TODO
 	}
 
 	/**
@@ -387,9 +396,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsAndroidPlataforma() {
 		if (this.androidplataforma != null && this.androidplataforma) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -400,7 +409,7 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public void setIsAndroidPlataforma(String androidPlataforma) {
 		this.isAndroidPlataforma = androidPlataforma;
-		if (androidPlataforma != null && androidPlataforma.equals("true")) {
+		if (androidPlataforma != null && TRUE.equals(androidPlataforma)) {
 			this.androidplataforma = true;
 		} else {
 			this.androidplataforma = false;
@@ -415,9 +424,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsIosPlataforma() {
 		if (this.iosplataforma != null && this.iosplataforma) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -428,7 +437,7 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public void setIsIosPlataforma(String iosPlataforma) {
 		this.isIosPlataforma = iosPlataforma;
-		if (iosPlataforma != null && iosPlataforma.equals("true")) {
+		if (iosPlataforma != null && TRUE.equals(iosPlataforma)) {
 			this.iosplataforma = true;
 		} else {
 			this.iosplataforma = false;
@@ -441,7 +450,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param informesActivado new informes activado
 	 */
 	public void setInformesActivado(String informesActivado) {
-		if (informesActivado != null && informesActivado.equals("true")) {
+		if (informesActivado != null && TRUE.equals(informesActivado)) {
 			this.informesactivo = true;
 		} else {
 			this.informesactivo = false;
@@ -455,9 +464,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getInformesActivado() {
 		if (informesactivo != null && informesactivo) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 
 	}
@@ -469,9 +478,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsInformesActivo() {
 		if (informesactivo != null && informesactivo) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -481,7 +490,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isInformesActivo new checks if is informes activo
 	 */
 	public void setIsInformesActivo(String isInformesActivo) {
-		if (isInformesActivo != null && isInformesActivo.equals("true")) {
+		if (isInformesActivo != null && TRUE.equals(isInformesActivo)) {
 			this.informesactivo = true;
 		} else {
 			this.informesactivo = false;
@@ -495,7 +504,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param agrupacionEstadoActivado new agrupacion estado activado
 	 */
 	public void setAgrupacionEstadoActivado(String agrupacionEstadoActivado) {
-		if (agrupacionEstadoActivado != null && agrupacionEstadoActivado.equals("true")) {
+		if (agrupacionEstadoActivado != null && TRUE.equals(agrupacionEstadoActivado)) {
 			this.agrupacionestado = true;
 		} else {
 			this.agrupacionestado = false;
@@ -510,9 +519,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getAgrupacionEstadoActivado() {
 		if (agrupacionestado != null && agrupacionestado) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 
 	}
@@ -524,9 +533,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsAgrupacionEstado() {
 		if (agrupacionestado != null && agrupacionestado) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -536,7 +545,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isAgrupacionEstado new checks if is agrupacion estado
 	 */
 	public void setIsAgrupacionEstado(String isAgrupacionEstado) {
-		if (isAgrupacionEstado != null && isAgrupacionEstado.equals("true")) {
+		if (isAgrupacionEstado != null && TRUE.equals(isAgrupacionEstado)) {
 			this.agrupacionestado = true;
 		} else {
 			this.agrupacionestado = false;
@@ -550,7 +559,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param agrupacionCodOrgActivado new agrupacion cod org activado
 	 */
 	public void setAgrupacionCodOrgActivado(String agrupacionCodOrgActivado) {
-		if (agrupacionCodOrgActivado != null && agrupacionCodOrgActivado.equals("true")) {
+		if (agrupacionCodOrgActivado != null && TRUE.equals(agrupacionCodOrgActivado)) {
 			this.agrupacioncodorg = true;
 		} else {
 			this.agrupacioncodorg = false;
@@ -564,9 +573,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getgrupacionCodOrgActivado() {
 		if (agrupacioncodorg != null && agrupacioncodorg) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 
 	}
@@ -578,9 +587,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsAgrupacionCodOrg() {
 		if (agrupacioncodorg != null && agrupacioncodorg) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -590,7 +599,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isAgrupacionCodOrg new checks if is agrupacion cod org
 	 */
 	public void setIsAgrupacionCodOrg(String isAgrupacionCodOrg) {
-		if (isAgrupacionCodOrg != null && isAgrupacionCodOrg.equals("true")) {
+		if (isAgrupacionCodOrg != null && TRUE.equals(isAgrupacionCodOrg)) {
 			this.agrupacioncodorg = true;
 		} else {
 			this.agrupacioncodorg = false;
@@ -604,7 +613,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param agrupacionCodSiaActivado new agrupacion cod sia activado
 	 */
 	public void setAgrupacionCodSiaActivado(String agrupacionCodSiaActivado) {
-		if (agrupacionCodSiaActivado != null && agrupacionCodSiaActivado.equals("true")) {
+		if (agrupacionCodSiaActivado != null && TRUE.equals(agrupacionCodSiaActivado)) {
 			this.agrupacioncodsia = true;
 		} else {
 			this.agrupacioncodsia = false;
@@ -618,9 +627,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getAgrupacionCodOrgActivado() {
 		if (agrupacioncodsia != null && agrupacioncodsia) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 
 	}
@@ -632,9 +641,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsAgrupacionCodSia() {
 		if (agrupacioncodsia != null && agrupacioncodsia) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -644,7 +653,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isAgrupacionCodSia new checks if is agrupacion cod sia
 	 */
 	public void setIsAgrupacionCodSia(String isAgrupacionCodSia) {
-		if (isAgrupacionCodSia != null && isAgrupacionCodSia.equals("true")) {
+		if (isAgrupacionCodSia != null && TRUE.equals(isAgrupacionCodSia)) {
 			this.agrupacioncodsia = true;
 		} else {
 			this.agrupacioncodsia = false;
@@ -658,7 +667,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param agrupacionCodOrgPagadorActivado new agrupacion cod org pagador activado
 	 */
 	public void setAgrupacionCodOrgPagadorActivado(String agrupacionCodOrgPagadorActivado) {
-		if (agrupacionCodOrgPagadorActivado != null && agrupacionCodOrgPagadorActivado.equals("true")) {
+		if (agrupacionCodOrgPagadorActivado != null && TRUE.equals(agrupacionCodOrgPagadorActivado)) {
 			this.agrupacioncodorgpagador = true;
 		} else {
 			this.agrupacioncodorgpagador = false;
@@ -672,9 +681,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getAgrupacionCodOrgPagadorActivado() {
 		if (agrupacioncodorgpagador != null && agrupacioncodorgpagador) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 
 	}
@@ -686,9 +695,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsAgrupacionCodOrgPagador() {
 		if (agrupacioncodorgpagador != null && agrupacioncodorgpagador) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -698,7 +707,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isAgrupacionCodOrgPagador new checks if is agrupacion cod org pagador
 	 */
 	public void setIsAgrupacionCodOrgPagador(String isAgrupacionCodOrgPagador) {
-		if (isAgrupacionCodOrgPagador != null && isAgrupacionCodOrgPagador.equals("true")) {
+		if (isAgrupacionCodOrgPagador != null && TRUE.equals(isAgrupacionCodOrgPagador)) {
 			this.agrupacioncodorgpagador = true;
 		} else {
 			this.agrupacioncodorgpagador = false;
@@ -713,9 +722,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsMultiorganismo() {
 		if (multiorganismo != null && multiorganismo) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -725,7 +734,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isMultiorganismo new checks if is multiorganismo
 	 */
 	public void setIsMultiorganismo(String isMultiorganismo) {
-		if (isMultiorganismo != null && isMultiorganismo.equals("true")) {
+		if (isMultiorganismo != null && TRUE.equals(isMultiorganismo)) {
 			this.multiorganismo = true;
 		} else {
 			this.multiorganismo = false;
@@ -740,9 +749,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsPremium() {
 		if (premium != null && premium) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -752,7 +761,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isPremium new checks if is premium
 	 */
 	public void setIsPremium(String isPremium) {
-		if (isPremium != null && isPremium.equals("true")) {
+		if (isPremium != null && TRUE.equals(isPremium)) {
 			this.premium = true;
 		} else {
 			this.premium = false;
@@ -767,9 +776,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsExclusivo() {
 		if (exclusivo != null && exclusivo) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -779,7 +788,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isExclusivo new checks if is exclusivo
 	 */
 	public void setIsExclusivo(String isExclusivo) {
-		if (isExclusivo != null && isExclusivo.equals("true")) {
+		if (isExclusivo != null && TRUE.equals(isExclusivo)) {
 			this.exclusivo = true;
 		} else {
 			this.exclusivo = false;
@@ -794,9 +803,9 @@ public class ServicioBean implements Audit, Serializable {
 	 */
 	public String getIsSmsExtranjeros() {
 		if (smsExtranjeros != null && smsExtranjeros) {
-			return "true";
+			return TRUE;
 		} else {
-			return "false";
+			return FALSE;
 		}
 	}
 
@@ -806,7 +815,7 @@ public class ServicioBean implements Audit, Serializable {
 	 * @param isSmsExtranjeros new checks if is smsExtranjeros
 	 */
 	public void setIsSmsExtranjeros(String isSmsExtranjeros) {
-		if (isSmsExtranjeros!= null && isSmsExtranjeros.equals("true")) {
+		if (isSmsExtranjeros!= null && TRUE.equals(isSmsExtranjeros)) {
 			this.smsExtranjeros = true;
 		} else {
 			this.smsExtranjeros = false;

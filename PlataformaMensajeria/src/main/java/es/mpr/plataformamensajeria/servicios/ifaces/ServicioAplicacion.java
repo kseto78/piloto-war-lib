@@ -96,7 +96,7 @@ public interface ServicioAplicacion {
 	 * @return aplicaciones no asignadas
 	 * @throws BusinessException the business exception
 	 */
-	public List<AplicacionBean> getAplicacionesNoAsignadas(String idUsuario) throws BusinessException;
+	List<AplicacionBean> getAplicacionesNoAsignadas(String idUsuario) throws BusinessException;
 
 	/**
 	 * Obtener aplicaciones menu.
@@ -105,7 +105,7 @@ public interface ServicioAplicacion {
 	 * @param userName the user name
 	 * @return aplicaciones menu
 	 */
-	public List<AplicacionBean> getAplicacionesMenu(String rolUsuario, Integer userName);
+	List<AplicacionBean> getAplicacionesMenu(String rolUsuario, Integer userName);
 
 	/**
 	 * Existe usuario.
@@ -119,6 +119,6 @@ public interface ServicioAplicacion {
 
 	void smsEnviado(Long idAplicacion);
 
-	public List<AplicacionBean> getAplicacionesByCanal(String rolUsuario, Integer idUsuario, long canalId);
+	List<AplicacionBean> getAplicacionesByCanal(String rolUsuario, Integer idUsuario, long canalId);
 
 }

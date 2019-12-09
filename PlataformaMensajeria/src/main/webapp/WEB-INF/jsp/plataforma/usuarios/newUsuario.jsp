@@ -1,4 +1,5 @@
 <%@include file="/WEB-INF/jsp/utils/taglibs.jsp"%>
+<%@page import="es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties" %>
 <plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR,ROL_CAID">
 	<script>
 		document.location.href="permisoDenegado.action";
@@ -61,6 +62,25 @@
 								size="50"
 								cssClass=""/>
                     </p>
+                    <p class="criteria">
+                 		<label class="fieldText" style="width: 120px;">Telefono:</label>
+                 		<s:textfield
+								name="usuario.telefono" value="%{usuario.telefono}" id="usuario.telefono"
+								theme="simple" style="width:300px;"
+								size="50"
+								cssClass=""/>
+                    </p>
+                      <p class="criteria">
+                 		<label class="fieldText" style="width: 120px;">Organismo:</label>
+                 		<s:textfield
+								name="usuario.organismo" value="%{usuario.organismo}" id="usuario.organismo"
+								theme="simple" style="width:300px;"
+								size="50"
+								cssClass=""/>
+						<label class="tiptext"><img src="./img/icoHelp.png" height="10" width="10" "><label class="description">Si desea que el usuario pueda acceder a todos los envios de AEAT
+						 y GISS, debe de introducir los siguientes organismos: <br> AEAT - <%=PlataformaMensajeriaProperties.getInstance().getProperty("usuario.ayuda.organismo.aeat", "")%> 
+						 <br>GISS - <%=PlataformaMensajeriaProperties.getInstance().getProperty("usuario.ayuda.organismo.giss", "")%></label></label>
+                   	 </p>
                       <p class="criteria">
                  		<label class="fieldText" style="width: 120px;">Activo:</label>
 						<s:checkbox theme="simple" name="newActivo"
@@ -124,3 +144,12 @@
         <s:form id="loadUsuarioFromLDAP" name="loadUsuarioFromLDAP" action="loadUserByName" theme="simple">
         		<input type="hidden" name="userNameToLoad" id="userNameToLoad"/>
         </s:form>
+        <script>
+        $(".tiptext").mouseover(function() {
+   		    $(this).children(".description").show();
+   		}).mouseout(function() {
+   		    $(this).children(".description").hide();
+   		});
+        </script>
+        			
+        

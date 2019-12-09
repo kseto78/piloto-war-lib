@@ -1,6 +1,5 @@
 package es.mpr.plataformamensajeria.servicios.ifaces;
 
-import java.util.Date;
 import java.util.List;
 
 import com.map.j2ee.exceptions.BusinessException;
@@ -22,7 +21,7 @@ public interface ServicioMensajes {
 	 * @return todos mensajes lote historificar
 	 * @throws BusinessException the business exception
 	 */
-	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID) throws BusinessException;
+	List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID) throws BusinessException;
 	
 	/**
 	 * Test lote sin mensajes.
@@ -31,5 +30,5 @@ public interface ServicioMensajes {
 	 * @return the boolean
 	 * @throws BusinessException the business exception
 	 */
-	public Boolean testLoteSinMensajes(Long loteEnvioId) throws BusinessException;
+	Boolean testLoteSinMensajes(Long loteEnvioId) throws BusinessException;
 }

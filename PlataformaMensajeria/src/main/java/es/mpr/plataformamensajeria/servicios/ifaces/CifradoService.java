@@ -60,9 +60,9 @@ public interface CifradoService {
 	 * @return El documento descifrado
 	 * @throws Exception
 	 */
-	Document descifrar(final Document documento, final String keyStoreType,
-			final String keyStorePassword, final String keyStoreAlias,
-			final String aliasPassword, final String keyStoreFile)
+	Document descifrar(Document documento, String keyStoreType,
+			String keyStorePassword, String keyStoreAlias,
+			String aliasPassword, String keyStoreFile)
 			throws Exception;
 
 	/**
@@ -83,9 +83,9 @@ public interface CifradoService {
 	 * @return
 	 * @throws Exception
 	 */
-	Document descifrarKey(final Document documento, final String keyStoreType,
-			final String keyStorePassword, final String keyStoreAlias,
-			final String aliasPassword, final String keyStoreFile)
+	Document descifrarKey(Document documento, String keyStoreType,
+			String keyStorePassword, String keyStoreAlias,
+			String aliasPassword, String keyStoreFile)
 			throws Exception;
 	
 	/**
@@ -108,12 +108,12 @@ public interface CifradoService {
 	 *            Lista de nodos que cifrar
 	 * @return Un documento cuyos nodos espcificado han sido cifrados
 	 */
-	Document cifrar(final Document documento, final String keyStoreType,
-			final String keyStorePassword, final String keyStoreAlias,
-			final String aliasPassword, final String keyStoreFile,
-			final List<Node> nodosAFirmar) throws Exception;
+	Document cifrar(Document documento, String keyStoreType,
+			String keyStorePassword, String keyStoreAlias,
+			String aliasPassword, String keyStoreFile,
+			List<Node> nodosAFirmar) throws Exception;
 	
 	
-	public List<KeyValueObject> getCertificados() throws BusinessException;
+	List<KeyValueObject> getCertificados() throws BusinessException;
 	
 }

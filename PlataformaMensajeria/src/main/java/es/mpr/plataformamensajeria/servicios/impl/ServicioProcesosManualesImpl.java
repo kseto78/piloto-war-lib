@@ -15,7 +15,6 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.beanutils.converters.LongConverter;
 import org.apache.log4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +23,13 @@ import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 import com.map.j2ee.util.beanutils.converters.DateConverter;
 
-import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean;
 import es.minhap.plataformamensajeria.iop.dao.QueryExecutorProcesosManuales;
 import es.minhap.plataformamensajeria.iop.manager.TblProcesosManualesManager;
-import es.minhap.sim.model.TblOrganismos;
-import es.minhap.sim.model.TblProcesos;
 import es.minhap.sim.model.TblProcesosManuales;
 import es.minhap.sim.model.ViewProcesosManuales;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesosManuales;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
-import es.mpr.plataformamensajeria.web.action.organismos.OrganismosAction;
 
 /**
  * <p>
@@ -45,6 +40,8 @@ import es.mpr.plataformamensajeria.web.action.organismos.OrganismosAction;
  */
 @Service("servicioProcesosManualesImpl")
 public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
+
+	protected static final String NOMBRE = "nombre";
 
 	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
 	private static final String ERRORS_EJECUCIONJOBS_GET_PROCESOS = "errors.ejecucionjobs.getProcesos";
@@ -78,13 +75,13 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "nombre");
+			columns.put("1", NOMBRE);
 			columns.put("2", "job");
 			
 
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "nombre";
+				column = NOMBRE;
 			}
 
 			es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean ob = new es.minhap.plataformamensajeria.iop.beans.ProcesosManualesBean();
@@ -92,16 +89,6 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 			List<ViewProcesosManuales> lista = queryExecutorProcesosManualesImpl
 					.getProcesosManualesPaginado(inicio, size, order, column, ob);
 //			
-//			for(TblProcesos proceso : lista){	
-//				if(proceso.getProximaEjecucion() != null){
-//					CronExpression cronExp = new CronExpression(proceso.getProximaEjecucion());
-//					Calendar fecha_ejecucion = Calendar.getInstance();
-//					Date fecha_siguiente_ejecucion = fecha_ejecucion.getTime();
-//					cronExp.getNextValidTimeAfter(fecha_siguiente_ejecucion);
-//					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//					proceso.setProximaEjecucion(format.format(cronExp.getNextValidTimeAfter(fecha_siguiente_ejecucion)));
-//				}
-//			}
 			List<ProcesosManualesBean> pageList = getListProcesosManualesBean(lista);
 
 			// Total de organismos
@@ -172,8 +159,7 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 			procesosManualesTO.setModificadoPor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			tblProcesosManualesManager.update(procesosManualesTO, source, accion, accionId);
 			
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProcesosImpl - updateProceso:" + e);
 			throw new BusinessException(e,"errors.ejecucionjobs.updateProceso");		
 		} 
@@ -187,15 +173,6 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 //	@Override
 //	@Transactional
 //	public ProcesosBean loadProceso(ProcesosBean proceso)
-//			throws BusinessException {
-//		try {
-//			TblProcesos procesoTO = tblProcesosManager.getProcesoById(proceso.getProcesosId().longValue());
-//			return getProcesosBean(procesoTO);
-//		} catch (Exception e) {
-//			logger.error("ServicioProcesosImpl - loadProceso:" + e);
-//			throw new BusinessException(e, "errors.action.ejecucionjobs.loadProcesoServicio");
-//		}
-//	}
 
 	/* (non-Javadoc)
 	 * @see es.mpr.plataformamensajeria.servicios.ifaces.ServicioOrganismo#deleteOrganismo(java.lang.Long, java.lang.String, java.lang.String, java.lang.Long)
@@ -204,21 +181,9 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 //	@Override
 //	@Transactional
 //	public void deleteOrganismoPdp(Long organismoPdpId, String source, String accion,
-//			Long accionId) throws BusinessException {
-//		try {
 //			TblPdpDiputaciones o = tblPdpDiputacionesManager
-//					.getPdpDiputacionesById(organismoPdpId);
 //
 ////			o.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado()
-////					.getNombreCompleto());
-//			o.setFechamodificacion(new Date());
-//			o.setEliminado("S");			
-//			tblPdpDiputacionesManager.update(o, source, accion, accionId);
-//		} catch (Exception e) {
-//			logger.error("ServicioOrganismoImpl - deleteOrganismo:" + e);
-//			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
-//		}
-//	}
 
 
 	
@@ -272,8 +237,6 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 	protected List<ProcesosManualesBean> getListProcesosManualesBean(List<ViewProcesosManuales> lista)
 			throws BusinessException {
 		List<ProcesosManualesBean> result = null;
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
 		if (lista != null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 
@@ -334,10 +297,6 @@ public class ServicioProcesosManualesImpl implements ServicioProcesosManuales {
 			ConvertUtils.register(converter, java.util.Date.class);
 			BeanUtils.copyProperties(procesoManual, o);
 			procesoManual.setProcesosManualesId(o.getProcesosManualesId().intValue());			
-//			proceso.setInicioUltimaEjecucion(o.getInicioUltimaEjecucion());
-//			proceso.setFinUltimaEjecucion(o.getFinUltimaEjecucion());
-//			proceso.setModificadoPor(o.getModificadoPor());
-//			proceso.setFechaModificacion(o.getFechaModificacion());
 			
 			
 			

@@ -33,7 +33,9 @@ import org.displaytag.model.TableModel;
  * The Class PlataformaMensajeriaExcelExport.
  */
 public class PlataformaMensajeriaExcelExport implements BinaryExportView{
-	    /**
+	    protected static final String DEPRECATION = "deprecation";
+
+		/**
 	     * TableModel to render.
 	     */
 	    private TableModel model;
@@ -62,8 +64,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
     	 * @see org.displaytag.export.ExportView#setParameters(TableModel, boolean, boolean, boolean)
     	 */
 	    public void setParameters(TableModel tableModel, boolean exportFullList, boolean includeHeader,
-	        boolean decorateValues)
-	    {
+	        boolean decorateValues) {
 	        this.model = tableModel;
 	        this.exportFull = exportFullList;
 	        this.header = includeHeader;
@@ -76,9 +77,9 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
     	 * @return "application/vnd.ms-excel"
     	 * @see org.displaytag.export.BaseExportView#getMimeType()
     	 */
-	    public String getMimeType()
-	    {
-	        return "application/vnd.ms-excel"; //$NON-NLS-1$
+	    public String getMimeType() {
+	        return "application/vnd.ms-excel"; 
+	        //$NON-NLS-1$
 	    }
 
 	    /**
@@ -88,17 +89,14 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
     	 * @throws JspException the jsp exception
     	 * @see org.displaytag.export.BinaryExportView#doExport(OutputStream)
     	 */
-	    public void doExport(OutputStream out) throws JspException
-	    {
-	        try
-	        {
+	    public void doExport(OutputStream out) throws JspException {
+	        try {
 	            HSSFWorkbook wb = new HSSFWorkbook();
 	            sheet = wb.createSheet("-");
 	            int rowNum = 0;
 	            int colNum = 0;
 
-	            if (this.header)
-	            {
+	            if (this.header) {
 	                // Create an header row
 	                HSSFRow xlsRow = sheet.createRow(rowNum++);
 
@@ -107,9 +105,12 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	                
 	                HSSFPalette palette = wb.getCustomPalette();
 	                palette.setColorAtIndex(HSSFColor.BLUE.index,
-	                        (byte) 214,  //RGB red (0-255)
-	                        (byte) 220,    //RGB green
-	                        (byte) 223     //RGB blue
+	                        (byte) 214,  
+	                        //RGB red (0-255)
+	                        (byte) 220,    
+	                        //RGB green
+	                        (byte) 223     
+	                        //RGB blue
 	                );
 	                headerStyle.setFillBackgroundColor(HSSFColor.BLUE.index);
 	                headerStyle.setFillForegroundColor(HSSFColor.BLUE.index);
@@ -121,87 +122,62 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 
 	                Iterator<?> iterator = this.model.getHeaderCellList().iterator();
 
-	                while (iterator.hasNext())
-	                {
+	                while (iterator.hasNext()) {
 	                    HeaderCell headerCell = (HeaderCell) iterator.next();
 
 	                    String columnHeader = headerCell.getTitle();
 
-	                    if (columnHeader == null)
-	                    {
+	                    if (columnHeader == null) {
 	                        columnHeader = StringUtils.capitalize(headerCell.getBeanPropertyName());
 	                    }
 
-	                    @SuppressWarnings("deprecation")
+	                    @SuppressWarnings(DEPRECATION)
 						HSSFCell cell = xlsRow.createCell((short) colNum++);
 	                    cell.setCellValue(StringEscapeUtils.unescapeHtml(StringUtils.capitalize(columnHeader)));
 	                    cell.setCellStyle(headerStyle);
-	                    //cell.setsetEncoding(HSSFCell.ENCODING_UTF_16);
 	                }
 	            }
 
 	            // get the correct iterator (full or partial list according to the exportFull field)
 	            RowIterator rowIterator = this.model.getRowIterator(this.exportFull);
 	            // iterator on rows
-	            //int i=0;
-	            while (rowIterator.hasNext())
-	            {
+	            while (rowIterator.hasNext()) {
 	                Row row = rowIterator.next();
 	                HSSFRow xlsRow = sheet.createRow(rowNum++);
 	                colNum = 0;
 
 	                // iterator on columns
 	                ColumnIterator columnIterator = row.getColumnIterator(this.model.getHeaderCellList());
-	                //HSSFPalette palette = wb.getCustomPalette();
-	                while (columnIterator.hasNext())
-	                {
+	                while (columnIterator.hasNext()) {
 	                    Column column = columnIterator.nextColumn();
-	                    //HSSFCellStyle estiloCelda = wb.createCellStyle();
 	                    // Get the value to be displayed for the column
 	                    Object value = column.getValue(this.decorated);
 
-	                    @SuppressWarnings("deprecation")
+	                    @SuppressWarnings(DEPRECATION)
 						HSSFCell cell = xlsRow.createCell((short) colNum++);
-	                    //cell.setEncoding(HSSFCell.ENCODING_UTF_16);
 
-	                    if (value instanceof Number)
-	                    {
+	                    if (value instanceof Number) {
 	                        Number num = (Number) value;
 	                        cell.setCellValue(num.doubleValue());
-	                        //estiloCelda.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	                        //cell.setCellStyle(estiloCelda);
-	                    }
-	                    else if (value instanceof Date)
-	                    {
+	                    } else if (value instanceof Date) {
 	                        cell.setCellValue((Date) value);
-	                    }
-	                    else if (value instanceof Calendar)
-	                    {
+	                    } else if (value instanceof Calendar) {
 	                        cell.setCellValue((Calendar) value);
-	                    }
-	                    else
-	                    {
+	                    } else {
 	                    	String returnString = ObjectUtils.toString(value);
 	                    	if(returnString.indexOf("<span class='activo'>")!=-1){
 	                    		returnString = "Si";
-	                    		//estiloCelda.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	                    		//cell.setCellStyle(estiloCelda);
 	                    	}else if(returnString.indexOf("<span class='inactivo'>")!=-1){
 	                    		returnString = "No";
-	                    		//estiloCelda.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	                    		//cell.setCellStyle(estiloCelda);
 	                    	}else if(returnString.indexOf("<center>")!=-1){
 	                    		returnString = "";
 	                    	}
 	                        cell.setCellValue(escapeColumnValue(returnString));
 	                    }
 	                }
-	                //i++;
 	            }
 	            wb.write(out);
-	        }
-	        catch (Exception e)
-	        {
+	        } catch (Exception e) {
 	            throw new ExcelGenerationException(e);
 	        }
 	    }
@@ -212,10 +188,8 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	     * @param rawValue the object value
 	     * @return the escaped value
 	     */
-	    protected String escapeColumnValue(Object rawValue)
-	    {
-	        if (rawValue == null)
-	        {
+	    protected String escapeColumnValue(Object rawValue) {
+	        if (rawValue == null) {
 	            return null;
 	        }
 	        String returnString = ObjectUtils.toString(rawValue);
@@ -227,9 +201,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	        returnString = StringEscapeUtils.unescapeHtml(returnString);
 	        // remove the return, only newline valid in excel
 	        returnString = StringUtils.replace(StringUtils.trim(returnString), "\\r", " ");
-	        // unescape so that \n gets back to newline
-	        returnString = StringEscapeUtils.unescapeJava(returnString);
-	        return returnString;
+	        return StringEscapeUtils.unescapeJava(returnString);
 	    }
 
 	    /**
@@ -249,9 +221,9 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
 	         * Instantiate a new PdfGenerationException with a fixed message and the given cause.
 	         * @param cause Previous exception
 	         */
-	        public ExcelGenerationException(Throwable cause)
-	        {
-	            super(PlataformaMensajeriaExcelExport.class, Messages.getString("ExcelView.errorexporting"), cause); //$NON-NLS-1$
+	        public ExcelGenerationException(Throwable cause) {
+	            super(PlataformaMensajeriaExcelExport.class, Messages.getString("ExcelView.errorexporting"), cause); 
+	            //$NON-NLS-1$
 	        }
 
 	        /**
@@ -260,8 +232,7 @@ public class PlataformaMensajeriaExcelExport implements BinaryExportView{
         	 * @return severity
         	 * @see org.displaytag.exception.BaseNestableJspTagException#getSeverity()
         	 */
-	        public SeverityEnum getSeverity()
-	        {
+	        public SeverityEnum getSeverity() {
 	            return SeverityEnum.ERROR;
 	        }
 	    }

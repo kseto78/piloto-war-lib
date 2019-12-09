@@ -12,6 +12,51 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class EstadisticasConsolidadasBean implements Audit{
 
+	/**  estadisticas cons id. */
+	private Integer estadisticasConsId;
+
+	/**  servidor id. */
+	private Integer servidorId;
+
+	/**  servidor nombre. */
+	private String servidorNombre;
+
+	/**  aplicacion id. */
+	private Integer aplicacionId;
+
+	/**  planificacion id. */
+	private Integer planificacionId;
+
+	/**  aplicacion nombre. */
+	private String aplicacionNombre;
+
+	/**  servicio id. */
+	private Integer servicioId;
+
+	/**  servicio nombre. */
+	private String servicioNombre;
+
+	/**  canal id. */
+	private Integer canalId;
+
+	/**  canal nombre. */
+	private String canalNombre;
+
+	/**  estado id. */
+	private Integer estadoId;
+
+	/**  estado nombre. */
+	private String estadoNombre;
+
+	/**  anno. */
+	private Integer anno;
+
+	/**  mes. */
+	private String mes;
+
+	/**  num total. */
+	private Integer numTotal;
+
 	/**
 	 * Constructor de estadisticas consolidadas bean.
 	 */
@@ -20,7 +65,8 @@ public class EstadisticasConsolidadasBean implements Audit{
 		this.servidorId = null;
 		this.servidorNombre = null;
 		this.aplicacionId = null;
-		this.planificacionId = 0; // En el SQL de VIEW_ESTADISTICA siempre setea este atributo a valor 0
+		this.planificacionId = 0; 
+		// En el SQL de VIEW_ESTADISTICA siempre setea este atributo a valor 0
 		this.aplicacionNombre = null;
 		this.servicioId = null;
 		this.servicioNombre = null;
@@ -34,51 +80,6 @@ public class EstadisticasConsolidadasBean implements Audit{
 
 	}
 	
-	/**  estadisticas cons id. */
-	private Integer estadisticasConsId;
-	
-	/**  servidor id. */
-	private Integer servidorId;
-	
-	/**  servidor nombre. */
-	private String servidorNombre;
-	
-	/**  aplicacion id. */
-	private Integer aplicacionId;
-	
-	/**  planificacion id. */
-	private Integer planificacionId;
-	
-	/**  aplicacion nombre. */
-	private String aplicacionNombre;
-	
-	/**  servicio id. */
-	private Integer servicioId;
-	
-	/**  servicio nombre. */
-	private String servicioNombre;
-	
-	/**  canal id. */
-	private Integer canalId;
-	
-	/**  canal nombre. */
-	private String canalNombre;
-	
-	/**  estado id. */
-	private Integer estadoId;
-	
-	/**  estado nombre. */
-	private String estadoNombre;
-	
-	/**  anno. */
-	private Integer anno;
-	
-	/**  mes. */
-	private String mes;
-	
-	/**  num total. */
-	private Integer numTotal;
-
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */

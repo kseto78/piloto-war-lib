@@ -13,8 +13,217 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class OrganismoBean implements Audit, Serializable {
 
+	protected static final String TRUE = "true";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -1268241822059205167L;
+
+	/**  organismo id. */
+	protected Integer organismoId;
+
+	/**  dir 3. */
+	protected String dir3;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  descripcion. */
+	protected String descripcion = null;
+
+	/**  activo. */
+	protected Boolean activo = null;
+
+	/**  fechacreacion. */
+	protected Date fechacreacion = null;
+
+	/**  fecha creacion desde. */
+	protected Date fechaCreacionDesde = null;
+
+	/**  fecha creacion hasta. */
+	protected Date fechaCreacionHasta = null;
+
+	/**  fechamodificacion. */
+	protected Date fechamodificacion = null;
+
+	/**  creadopor. */
+	protected String creadopor = null;
+
+	/**  modificadopor. */
+	protected String modificadopor = null;
+
+	/**  externalid. */
+	protected Long externalid;
+
+	/**  nombrecuentaenvio. */
+	protected String nombrecuentaenvio;
+
+	/**  historificacion. */
+	protected Integer historificacion;
+
+	/**  motivohistorificacion. */
+	protected String motivohistorificacion;
+
+	/**  conservacion. */
+	protected Integer conservacion;
+
+	/**  motivoconservacion. */
+	protected String motivoconservacion;
+
+	/**  is activo. */
+	protected String isActivo = null;
+
+	/**  estado. */
+	protected String estado;
+
+	/**  nifcif. */
+	protected String nifcif;
+
+	/**  siglas. */
+	protected String siglas;
+
+	/**  nivel administracion. */
+	protected Integer nivelAdministracion;
+
+	/**  nivel jerarquico. */
+	protected Integer nivelJerarquico;
+
+	/**  cod unidad superior. */
+	protected String codUnidadSuperior;
+
+	/**  denom unidad superior. */
+	protected String denomUnidadSuperior;
+
+	/**  cod unidad raiz. */
+	protected String codUnidadRaiz;
+
+	/**  denom unidad raiz. */
+	protected String denomUnidadRaiz;
+
+	/**  es edp. */
+	protected String esEdp;
+
+	/**  cod edp principal. */
+	protected String codEdpPrincipal;
+
+	/**  denom edp principal. */
+	protected String denomEdpPrincipal;
+
+	/**  cod tipo ent public. */
+	protected String codTipoEntPublic;
+
+	/**  cod tipo unidad. */
+	protected String codTipoUnidad;
+
+	/**  cod amb territorial. */
+	protected String codAmbTerritorial;
+
+	/**  cod amb ent geografica. */
+	protected String codAmbEntGeografica;
+
+	/**  cod amb pais. */
+	protected String codAmbPais;
+
+	/**  cod amb comunidad. */
+	protected String codAmbComunidad;
+
+	/**  cod amb provincia. */
+	protected String codAmbProvincia;
+
+	/**  cod amb municipio. */
+	protected String codAmbMunicipio;
+
+	/**  cod amb isla. */
+	protected String codAmbIsla;
+
+	/**  cod amb elm. */
+	protected String codAmbElm;
+
+	/**  cod amb loc extranjera. */
+	protected String codAmbLocExtranjera;
+
+	/**  competencias. */
+	protected String competencias;
+
+	/**  disposicion legal. */
+	protected String disposicionLegal;
+
+	/**  fecha alta oficial. */
+	protected Date fechaAltaOficial;
+
+	/**  fecha baja oficial. */
+	protected Date fechaBajaOficial;
+
+	/**  fecha extincion. */
+	protected Date fechaExtincion;
+
+	/**  fecha anulacion. */
+	protected Date fechaAnulacion;
+
+	/**  observ generales. */
+	protected String observGenerales;
+
+	/**  observ baja. */
+	protected String observBaja;
+
+	/**  tipo via. */
+	protected String tipoVia;
+
+	/**  nombre via. */
+	protected String nombreVia;
+
+	/**  num via. */
+	protected String numVia;
+
+	/**  complemento. */
+	protected String complemento;
+
+	/**  cod postal. */
+	protected String codPostal;
+
+	/**  cod pais. */
+	protected String codPais;
+
+	/**  cod comunidad. */
+	protected String codComunidad;
+
+	/**  cod provincia. */
+	protected String codProvincia;
+
+	/**  cod localidad. */
+	protected String codLocalidad;
+
+	/**  cod ent geografica. */
+	protected String codEntGeografica;
+
+	/**  dir extranjera. */
+	protected String dirExtranjera;
+
+	/**  loc extranjera. */
+	protected String locExtranjera;
+
+	/**  observaciones. */
+	protected String observaciones;
+
+	/**  asociados servicio. */
+	protected Boolean asociadosServicio;
+
+	/**  fecha estado. */
+	protected Date fechaEstado;
+
+	/**  fecha estado str. */
+	protected String fechaEstadoStr;
+
+	/**  manual. */
+	protected Boolean manual;
+
+	/**  fecha activo. */
+	protected Date fechaActivo;
+
+	/**  id organismo pdp. */
+	protected Long idPdpDiputaciones;
+
+	/**  id proveedor sms. */
+	protected Long idProveedorSMS;
 
 	/**
 	 * Constructor de organismo bean.
@@ -92,213 +301,6 @@ public class OrganismoBean implements Audit, Serializable {
 		
 	}
 
-	/**  organismo id. */
-	protected Integer organismoId;
-	
-	/**  dir 3. */
-	protected String dir3;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  descripcion. */
-	protected String descripcion = null;
-	
-	/**  activo. */
-	protected Boolean activo = null;
-	
-	/**  fechacreacion. */
-	protected Date fechacreacion = null;
-	
-	/**  fecha creacion desde. */
-	protected Date fechaCreacionDesde = null;
-	
-	/**  fecha creacion hasta. */
-	protected Date fechaCreacionHasta = null;
-	
-	/**  fechamodificacion. */
-	protected Date fechamodificacion = null;
-	
-	/**  creadopor. */
-	protected String creadopor = null;
-	
-	/**  modificadopor. */
-	protected String modificadopor = null;
-	
-	/**  externalid. */
-	protected Long externalid;
-	
-	/**  nombrecuentaenvio. */
-	protected String nombrecuentaenvio;
-	
-	/**  historificacion. */
-	protected Integer historificacion;
-	
-	/**  motivohistorificacion. */
-	protected String motivohistorificacion;
-	
-	/**  conservacion. */
-	protected Integer conservacion;
-	
-	/**  motivoconservacion. */
-	protected String motivoconservacion;
-	
-	/**  is activo. */
-	protected String isActivo = null;
-	
-	/**  estado. */
-	protected String estado;
-	
-	/**  nifcif. */
-	protected String nifcif;
-	
-	/**  siglas. */
-	protected String siglas;
-	
-	/**  nivel administracion. */
-	protected Integer nivelAdministracion;
-	
-	/**  nivel jerarquico. */
-	protected Integer nivelJerarquico;
-	
-	/**  cod unidad superior. */
-	protected String codUnidadSuperior;
-	
-	/**  denom unidad superior. */
-	protected String denomUnidadSuperior;
-	
-	/**  cod unidad raiz. */
-	protected String codUnidadRaiz;
-	
-	/**  denom unidad raiz. */
-	protected String denomUnidadRaiz;
-	
-	/**  es edp. */
-	protected String esEdp;
-	
-	/**  cod edp principal. */
-	protected String codEdpPrincipal;
-	
-	/**  denom edp principal. */
-	protected String denomEdpPrincipal;
-	
-	/**  cod tipo ent public. */
-	protected String codTipoEntPublic;
-	
-	/**  cod tipo unidad. */
-	protected String codTipoUnidad;
-	
-	/**  cod amb territorial. */
-	protected String codAmbTerritorial;
-	
-	/**  cod amb ent geografica. */
-	protected String codAmbEntGeografica;
-	
-	/**  cod amb pais. */
-	protected String codAmbPais;
-	
-	/**  cod amb comunidad. */
-	protected String codAmbComunidad;
-	
-	/**  cod amb provincia. */
-	protected String codAmbProvincia;
-	
-	/**  cod amb municipio. */
-	protected String codAmbMunicipio;
-	
-	/**  cod amb isla. */
-	protected String codAmbIsla;
-	
-	/**  cod amb elm. */
-	protected String codAmbElm;
-	
-	/**  cod amb loc extranjera. */
-	protected String codAmbLocExtranjera;
-	
-	/**  competencias. */
-	protected String competencias;
-	
-	/**  disposicion legal. */
-	protected String disposicionLegal;
-	
-	/**  fecha alta oficial. */
-	protected Date fechaAltaOficial;
-	
-	/**  fecha baja oficial. */
-	protected Date fechaBajaOficial;
-	
-	/**  fecha extincion. */
-	protected Date fechaExtincion;
-	
-	/**  fecha anulacion. */
-	protected Date fechaAnulacion;
-	
-	/**  observ generales. */
-	protected String observGenerales;
-	
-	/**  observ baja. */
-	protected String observBaja;
-	
-	/**  tipo via. */
-	protected String tipoVia;
-	
-	/**  nombre via. */
-	protected String nombreVia;
-	
-	/**  num via. */
-	protected String numVia;
-	
-	/**  complemento. */
-	protected String complemento;
-	
-	/**  cod postal. */
-	protected String codPostal;
-	
-	/**  cod pais. */
-	protected String codPais;
-	
-	/**  cod comunidad. */
-	protected String codComunidad;
-	
-	/**  cod provincia. */
-	protected String codProvincia;
-	
-	/**  cod localidad. */
-	protected String codLocalidad;
-	
-	/**  cod ent geografica. */
-	protected String codEntGeografica;
-	
-	/**  dir extranjera. */
-	protected String dirExtranjera;
-	
-	/**  loc extranjera. */
-	protected String locExtranjera;
-	
-	/**  observaciones. */
-	protected String observaciones;
-	
-	/**  asociados servicio. */
-	protected Boolean asociadosServicio;
-	
-	/**  fecha estado. */
-	protected Date fechaEstado;
-	
-	/**  fecha estado str. */
-	protected String fechaEstadoStr;
-	
-	/**  manual. */
-	protected Boolean manual;
-	
-	/**  fecha activo. */
-	protected Date fechaActivo;
-	
-	/**  id organismo pdp. */
-	protected Long idPdpDiputaciones;
-	
-	/**  id proveedor sms. */
-	protected Long idProveedorSMS;
-	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */
@@ -331,7 +333,7 @@ public class OrganismoBean implements Audit, Serializable {
 	 * @param activado new activado
 	 */
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (activado != null && TRUE.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -358,7 +360,7 @@ public class OrganismoBean implements Audit, Serializable {
 	 * @param isActivo new checks if is activo
 	 */
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (isActivo != null && TRUE.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -373,7 +375,7 @@ public class OrganismoBean implements Audit, Serializable {
 	 */
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return TRUE;
 		} else {
 			return "false";
 		}

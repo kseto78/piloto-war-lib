@@ -6,8 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Blob;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -15,6 +13,8 @@ import org.apache.log4j.Logger;
  */
 public class UtilCreateFile {
 	
+	protected static final String UTILCREATEFILEDOT = "UtilCreateFile.getAdjuntoMensaje";
+	protected static final String UTILCREATEFILEDOT0 = "UtilCreateFile.getCuerpoMensajeFronFile";
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(UtilCreateFile.class);
 	
@@ -32,7 +32,7 @@ public class UtilCreateFile {
 			try {
 				fr = new FileReader(ruta);
 			} catch (FileNotFoundException e) {
-				logger.error("UtilCreateFile.getCuerpoMensajeFronFile", e);
+				logger.error(UTILCREATEFILEDOT0, e);
 			}
 			
 			br = new BufferedReader(fr);
@@ -45,20 +45,21 @@ public class UtilCreateFile {
 		    }
 		
 		} catch (IOException e) {
-			logger.error("UtilCreateFile.getCuerpoMensajeFronFile", e);
+			logger.error(UTILCREATEFILEDOT0, e);
 
 		} finally{
-			if (null != br)
+			if (null != br) {
 				try {
 					br.close();
 				} catch (IOException e1) {
-					logger.error("UtilCreateFile.getCuerpoMensajeFronFile", e1);
+					logger.error(UTILCREATEFILEDOT0, e1);
 				}
+			}
 			if (null != fr){
 				try{
 					fr.close();
 				} catch (IOException e1) {
-					logger.error("UtilCreateFile.getCuerpoMensajeFronFile", e1);
+					logger.error(UTILCREATEFILEDOT0, e1);
 				}
 			}
 			
@@ -76,24 +77,22 @@ public class UtilCreateFile {
 	 */
 	public static byte[] getAdjuntoMensaje(String ruta) {
 		byte[] bytesArray = null;
-		@SuppressWarnings("unused")
-		Blob blob = null;
 		FileInputStream fis = null;
 		try {
 			File file = new File(ruta);
 			bytesArray = new byte[(int) file.length()];			
 			fis = new FileInputStream(file);
-			fis.read(bytesArray); //read file into bytes[]
-			blob = new javax.sql.rowset.serial.SerialBlob(bytesArray);
+			fis.read(bytesArray); 
+			//read file into bytes[]
 		} catch (Exception e ) {
-			logger.error("UtilCreateFile.getAdjuntoMensaje", e);
+			logger.error(UTILCREATEFILEDOT, e);
 		}finally{
 			try{
 				if (null != fis){
 					fis.close();
 				}
 			} catch (IOException e1) {
-				logger.error("UtilCreateFile.getAdjuntoMensaje", e1);
+				logger.error(UTILCREATEFILEDOT, e1);
 			}
 		}
 		

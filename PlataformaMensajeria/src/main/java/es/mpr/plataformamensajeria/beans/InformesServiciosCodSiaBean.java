@@ -11,6 +11,21 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class InformesServiciosCodSiaBean implements Audit{
 
+	/**  servicio id. */
+	private Integer servicioId;
+
+	/**  anno. */
+	private Integer anno;
+
+	/**  mes. */
+	private Integer mes;
+
+	/**  cod sia. */
+	private String codSia;
+
+	/**  num total. */
+	private Integer numTotal;
+
 	/**
 	 * Constructor de informes servicios cod sia bean.
 	 */
@@ -21,21 +36,6 @@ public class InformesServiciosCodSiaBean implements Audit{
 		this.codSia=null;
 		this.numTotal=null;
 	}
-	
-	/**  servicio id. */
-	private Integer servicioId;
-	
-	/**  anno. */
-	private Integer anno;
-	
-	/**  mes. */
-	private Integer mes;
-	
-	/**  cod sia. */
-	private String codSia;
-	
-	/**  num total. */
-	private Integer numTotal;
 	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

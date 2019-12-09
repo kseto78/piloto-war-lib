@@ -47,6 +47,48 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ReceptoresSMSAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	protected static final String LOGDOTSOURCE_PR = "log.SOURCE_PROVEEDORES";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servidores.planificacion.horaDesde.menor.error";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String RECEPTORESSMSAC = "ReceptoresSMSAction - getParametrosReceptorSMS:";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String TRUE = "true";
+
+	protected static final String R_CONST_REF = ":";
+
+	protected static final String R_CONST_0 = "20";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String GENERALESDOTTIP = "generales.TIPO_SERVIDOR_RECEPCION";
+
+	protected static final String LOGDOTSOURCE_RE = "log.SOURCE_RECEPTORES";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
+	protected static final String RECEPTORESSMSAC0 = "ReceptoresSMSAction - getLoadPlanificacionesReceptorSMS:";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -83,7 +125,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	private PlanificacionBean planificacionServidor;
 
 	/**  combo tipo parametros. */
-	List<KeyValueObject> comboTipoParametros = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboTipoParametros = new ArrayList<>();
 
 	/**  lista receptores SMS. */
 	public List<ReceptorSMSBean> listaReceptoresSMS = null;
@@ -95,7 +137,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	private List<PlanificacionBean> listaPlanificacionesServidor = null;
 	
 	/**  tipos parametros. */
-	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<TipoParametroBean>();
+	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<>();
 
 	/**  check del list. */
 	private String[] checkDelList;
@@ -136,41 +178,45 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String search() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 
-		if (receptorSMS != null)
-			if (receptorSMS.getNombre() != null && receptorSMS.getNombre().length() <= 0)
-				receptorSMS.setNombre(null);
+		if (receptorSMS != null && receptorSMS.getNombre() != null && receptorSMS.getNombre().isEmpty()) {
+			receptorSMS.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ReceptorSMSBean> result = servicioReceptorSMS.getReceptoresSMS(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)), order,
 				columnSort, receptorSMS,
-				Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_RECEPCION", null)));
+				Integer.parseInt(properties.getProperty(GENERALESDOTTIP, null)));
 		Integer totalSize = result.getTotalList();
 
 		listaReceptoresSMS = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
 		}
 
 		if (listaReceptoresSMS != null && !listaReceptoresSMS.isEmpty()) {
-			for (int indice = 0; indice < listaReceptoresSMS.size(); indice++) {
+			for (int indice = 0, s = listaReceptoresSMS.size(); indice < s; indice++) {
 
 				ReceptorSMSBean receptorSMS = listaReceptoresSMS.get(indice);
 				receptorSMS.setNombre(StringEscapeUtils.escapeHtml(receptorSMS.getNombre()));
@@ -186,40 +232,44 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	// //MIGRADO
 	public String execute() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 
-		if (receptorSMS != null)
-			if (receptorSMS.getNombre() != null && receptorSMS.getNombre().length() <= 0)
-				receptorSMS.setNombre(null);
+		if (receptorSMS != null && receptorSMS.getNombre() != null && receptorSMS.getNombre().isEmpty()) {
+			receptorSMS.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ReceptorSMSBean> result = servicioReceptorSMS.getReceptoresSMS(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)), order,
 				columnSort, receptorSMS,
-				Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_RECEPCION", null)));
+				Integer.parseInt(properties.getProperty(GENERALESDOTTIP, null)));
 		Integer totalSize = result.getTotalList();
 
 		listaReceptoresSMS = result.getPageList();
 
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
 		}
 
 		if (listaReceptoresSMS != null && !listaReceptoresSMS.isEmpty()) {
-			for (int indice = 0; indice < listaReceptoresSMS.size(); indice++) {
+			for (int indice = 0, s = listaReceptoresSMS.size(); indice < s; indice++) {
 
 				ReceptorSMSBean receptor = listaReceptoresSMS.get(indice);
 				receptor.setNombre(StringEscapeUtils.escapeHtml(receptor.getNombre()));
@@ -241,10 +291,11 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_RECEPTORES", null);
+		String source = properties.getProperty(LOGDOTSOURCE_RE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (receptorSMS != null) {
 			if (receptorSMS.getIsActivo() != null && receptorSMS.getIsActivo().indexOf("'activo'") != -1) {
 				receptorSMS.setActivo(true);
@@ -253,12 +304,13 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 			}
 			if (validaServidor(receptorSMS) && validPassword(receptorSMS)) {
 				if (null != receptorSMS.getPassword()) {
-					receptorSMS.setPassword(Base64.encode(receptorSMS.getPassword().trim().getBytes())); // Eliminamos
+					receptorSMS.setPassword(Base64.encode(receptorSMS.getPassword().trim().getBytes())); 
+					// Eliminamos
 																											// los
 																											// espacios
 				}
 				Long idReceptorSMS = servicioReceptorSMS.newReceptorSMS(receptorSMS,
-						Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_RECEPCION", null)), source, accion, accionId);
+						Integer.parseInt(properties.getProperty(GENERALESDOTTIP, null)), source, accion, accionId);
 				this.idReceptorSMS = idReceptorSMS.toString();
 				addActionMessageSession(this.getText("plataforma.receptorsms.create.ok"));
 			} else {
@@ -279,26 +331,26 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_RECEPTORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_RE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		ReceptorSMSBean receptorSMSBBDD = null;
 		if (receptorSMS == null) {
-			// throw new BusinessException("EL receptorSMS recibido es nulo");
 			addActionErrorSession(this.getText("plataforma.receptorsms.update.error"));
 
 		} else {
 			if (receptorSMS.getReceptorSMSId() == null) {
 				if (idReceptorSMS != null) {
-					receptorSMS.setReceptorSMSId(new Long(idReceptorSMS));
+					receptorSMS.setReceptorSMSId(Long.valueOf(idReceptorSMS));
 					receptorSMSBBDD = servicioReceptorSMS.loadReceptorSMS(receptorSMS);
 				} else {
 					String idProvedorSMS = (String) request.getAttribute("idReceptorSMS");
 					if (idProvedorSMS != null) {
-						receptorSMS.setId(new Long(idProvedorSMS));
+						receptorSMS.setId(Long.valueOf(idProvedorSMS));
 						receptorSMSBBDD = servicioReceptorSMS.loadReceptorSMS(receptorSMS);
 					}
 				}
@@ -318,7 +370,8 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 			}
 			if (receptorSMSBBDD != null && validaServidor(receptorSMSBBDD) && validPassword(receptorSMSBBDD)) {
 				if (null != receptorSMS.getPassword() && !receptorSMS.getPassword().isEmpty()) {
-					receptorSMSBBDD.setPassword(Base64.encode(receptorSMS.getPassword().trim().getBytes())); // Eliminamos
+					receptorSMSBBDD.setPassword(Base64.encode(receptorSMS.getPassword().trim().getBytes())); 
+					// Eliminamos
 																												// los
 																												// espacios
 				}
@@ -339,13 +392,15 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	// /MIGRADO
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		if (idReceptorSMS == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		if (idReceptorSMS == null) {
 			throw new BusinessException("EL idReceptorSMS recibido es nulo");
+		}
 		try {
 			receptorSMS = new ReceptorSMSBean();
-			receptorSMS.setReceptorSMSId(new Long(idReceptorSMS));
+			receptorSMS.setReceptorSMSId(Long.valueOf(idReceptorSMS));
 			receptorSMS = servicioReceptorSMS.loadReceptorSMS(receptorSMS);
 			if (null != receptorSMS.getPassword()) {
 				try {
@@ -355,12 +410,9 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 				}
 			}
 			return SUCCESS;
-		} catch (NumberFormatException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { receptorSMS
-					.getReceptorSMSId().toString() });
-			throw new BusinessException(mensg);
-		} catch (BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { receptorSMS
+		} catch (NumberFormatException | BusinessException e) {
+			logger.error(e.getMessage(), e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { receptorSMS
 					.getReceptorSMSId().toString() });
 			throw new BusinessException(mensg);
 		}
@@ -375,12 +427,13 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String deleteParametroReceptorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_RECEPTORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_RE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PARAMETRO", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (parametroServidorId == null) {
 			addActionErrorSession(this.getText("plataforma.receptorsms.parametro.delete.error"));
 		} else {
@@ -401,12 +454,13 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	//////MIGRADO
 	public String deletePlanificacionReceptorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_RECEPTORES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_RE, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (planificacionId == null) {
 			addActionErrorSession(this.getText("plataforma.receptorsms.planificacion.delete.error"));
 
@@ -427,20 +481,21 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	///MIGRADO
 	public String delete() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idReceptorSMS == null) {
 			addActionErrorSession(this.getText("plataforma.receptorsms.delete.error"));
 		} else {
 			receptorSMS = new ReceptorSMSBean();
-			receptorSMS.setReceptorSMSId(new Long(idReceptorSMS));
+			receptorSMS.setReceptorSMSId(Long.valueOf(idReceptorSMS));
 			servicioReceptorSMS.deleteReceptorSMS(receptorSMS, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			addActionMessageSession(this.getText("plataforma.receptorsms.delete.ok"));
 
@@ -457,21 +512,22 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	/////MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.receptorsms.deleteSelected.error"));
 		} else {
 			for (String idReceptorSMS : checkDelList) {
 				receptorSMS = new ReceptorSMSBean();
-				receptorSMS.setReceptorSMSId(new Long(idReceptorSMS));
+				receptorSMS.setReceptorSMSId(Long.valueOf(idReceptorSMS));
 				servicioReceptorSMS.deleteReceptorSMS(receptorSMS,accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			}
 			addActionMessageSession(this.getText("plataforma.receptorsms.deleteSelected.ok"));
@@ -489,12 +545,13 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
  */
 ////MIGRADO
 	public String addParametroReceptorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_RECEPTORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_RE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PARAMETRO", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (parametroServidor != null) {
 			if (!validaParametro(parametroServidor)) {
 				return ERROR;
@@ -503,6 +560,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 					servicioParametroServidor.newParametroServidor(parametroServidor, source, accion, accionId, descripcion);
 					addActionMessageSession(this.getText("plataforma.receptorsms.parametro.add.ok"));
 				} catch (ConstraintViolationException e) {
+					logger.error(e.getMessage(), e);
 					addActionErrorSession(this.getText("plataforma.receptorsms.parametro.add.constraint.error"));
 				}
 			}
@@ -521,12 +579,13 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	////MIGRADO
 	public String addPlanificacionReceptorSMS() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_RECEPTORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_RE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (planificacionServidor != null && PlataformaMensajeriaUtil.isEmpty(idReceptorSMS)) {
 			if (planificacionValida(planificacionServidor)) {
 				planificacionServidor.setActivo(true);
@@ -539,10 +598,12 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 						planificacionServidor.getSabado(), planificacionServidor.getDomingo(),
 						planificacionServidor.getHoraHasta(), planificacionServidor.getHoraDesde());
 
-				if (valido == 1) {
+				switch (valido) {
+				case 1:
 					servicioPlanificacion.newPlanificacion(planificacionServidor, source, accion, accionId, descripcion);
 					addActionMessageSession(this.getText("plataforma.receptorsms.planificacion.add.ok"));
-				} else if (valido == 0) {
+					break;
+				case 0:
 					addActionErrorSession("No se ha a&ntilde;adido la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
 					return ERROR;
 				}
@@ -613,21 +674,17 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	// //MIGRADO
 	private List<PlanificacionBean> getLoadPlanificacionesReceptorSMS() {
 		List<PlanificacionBean> lista = null;
-		if (idReceptorSMS != null && idReceptorSMS.length() > 0) {
+		if (idReceptorSMS != null && !idReceptorSMS.isEmpty()) {
 			try {
 				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idReceptorSMS));
-			} catch (NumberFormatException e) {
-				logger.error("ReceptoresSMSAction - getLoadPlanificacionesReceptorSMS:" + e);
-			} catch (BusinessException e) {
-				logger.error("ReceptoresSMSAction - getLoadPlanificacionesReceptorSMS:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(RECEPTORESSMSAC0 + e);
 			}
 		} else if (receptorSMS != null && receptorSMS.getReceptorSMSId() != null) {
 			try {
 				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idReceptorSMS));
-			} catch (NumberFormatException e) {
-				logger.error("ReceptoresSMSAction - getLoadPlanificacionesReceptorSMS:" + e);
-			} catch (BusinessException e) {
-				logger.error("ReceptoresSMSAction - getLoadPlanificacionesReceptorSMS:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(RECEPTORESSMSAC0 + e);
 				
 			}
 		}
@@ -642,22 +699,18 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	// //MIGRADO
 	private List<ParametroServidorBean> getParametrosReceptorSMS() {
 		List<ParametroServidorBean> lista = null;
-		if (idReceptorSMS != null && idReceptorSMS.length() > 0) {
+		if (idReceptorSMS != null && !idReceptorSMS.isEmpty()) {
 			try {
 				lista = servicioParametroServidor.getParametroServidorByReceptorSMSId(Integer.valueOf(idReceptorSMS));
-			} catch (NumberFormatException e) {
-				logger.error("ReceptoresSMSAction - getParametrosReceptorSMS:" + e);
-			} catch (BusinessException e) {
-				logger.error("ReceptoresSMSAction - getParametrosReceptorSMS:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(RECEPTORESSMSAC + e);
 			}
 		} else if (receptorSMS != null && receptorSMS.getReceptorSMSId() != null) {
 			try {
 				lista = servicioParametroServidor.getParametroServidorByReceptorSMSId(receptorSMS.getReceptorSMSId()
 						.intValue());
-			} catch (NumberFormatException e) {
-				logger.error("ReceptoresSMSAction - getParametrosReceptorSMS:" + e);
-			} catch (BusinessException e) {
-				logger.error("ReceptoresSMSAction - getParametrosReceptorSMS:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(RECEPTORESSMSAC + e);
 			}
 		}
 		return lista;
@@ -670,7 +723,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	// ///MIGRADO
 	private List<KeyValueObject> getComboValues() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option = null;
 		ArrayList<TipoParametroBean> keys = null;
@@ -681,7 +734,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 			logger.error("ReceptoresSMSAction - getComboValues:" + e);
 		}
 
-		if (keys != null && keys.size() > 0)
+		if (keys != null && !keys.isEmpty()) {
 			for (TipoParametroBean key : keys) {
 
 				option = new KeyValueObject();
@@ -690,6 +743,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 
 				result.add(option);
 			}
+		}
 		return result;
 	}
 	
@@ -701,11 +755,7 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	 */
 	///MIGRADO
 	public boolean isEmpty(String value) {
-		if (value == null || value.equals("")) {
-			return true;
-		} else {
-			return false;
-		}
+		return value == null || "".equals(value);
 	}
 
 	/**
@@ -747,15 +797,15 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 			sw = false;
 		}
 		if (PlataformaMensajeriaUtil.isEmpty(servidor.getRePassword())
-				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && checkPassword.equals("true")) {
+				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && TRUE.equals(checkPassword)) {
 			addFieldErrorSession(this.getText("plataforma.receptorsms.field.rePassword.error"));
 			sw = false;
 		}
 		// Eliminamos los espacios
 		if (!PlataformaMensajeriaUtil.isEmpty(servidor.getPassword())
 				&& !PlataformaMensajeriaUtil.isEmpty(servidor.getRePassword())
-				&& !(servidor.getPassword().trim().equals(servidor.getRePassword().trim()))
-				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && checkPassword.equals("true")) {
+				&& !servidor.getPassword().trim().equals(servidor.getRePassword().trim())
+				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && TRUE.equals(checkPassword)) {
 			addFieldErrorSession(this.getText("plataforma.receptorsms.field.passwords.error"));
 			sw = false;
 		}
@@ -799,10 +849,8 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 					addFieldErrorSession(this.getText("plataforma.receptorsms.planificacion.horaHasta.formato.error"));
 					sw = false;
 				}
-				if (sw) {
-					if (!validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
-						sw = false;
-					}
+				if (sw && !validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
+					sw = false;
 				}
 			}
 			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes())
@@ -830,17 +878,17 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	// //MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
-		String[] horaDesdeArray = horaDesde.split(":");
-		String[] horaHastaArray = horaHasta.split(":");
-		int hDesde = Integer.valueOf(horaDesdeArray[0]);
-		int mDesde = Integer.valueOf(horaDesdeArray[1]);
-		int hHasta = Integer.valueOf(horaHastaArray[0]);
-		int mHasta = Integer.valueOf(horaHastaArray[1]);
+		String[] horaDesdeArray = horaDesde.split(R_CONST_REF);
+		String[] horaHastaArray = horaHasta.split(R_CONST_REF);
+		int hDesde = Integer.parseInt(horaDesdeArray[0]);
+		int mDesde = Integer.parseInt(horaDesdeArray[1]);
+		int hHasta = Integer.parseInt(horaHastaArray[0]);
+		int mHasta = Integer.parseInt(horaHastaArray[1]);
 		if (hDesde > hHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde > mHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde == mHasta) {
 			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.iguales.error"));
@@ -858,10 +906,8 @@ public class ReceptoresSMSAction extends PlataformaPaginationAction implements S
 	// //MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
-		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
-			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
-				sw = false;
-			}
+		if (!PlataformaMensajeriaUtil.isEmpty(hora) && !PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+			sw = false;
 		}
 		return sw;
 	}

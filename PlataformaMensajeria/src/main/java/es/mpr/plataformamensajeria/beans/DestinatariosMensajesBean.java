@@ -19,25 +19,6 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class DestinatariosMensajesBean implements Audit, Serializable {
 
 	private static final long serialVersionUID = -4567510927310978557L;
-	/**
-	 * Constructor por defecto
-	 */
-	public DestinatariosMensajesBean() {
-		this.destinatariosMensajes = null;
-		this.mensajeId = null;
-		this.destinatario = null;
-		this.estado = null;
-		this.fechaCreacion = null;
-		this.creadoPor = null;
-		this.fechaModificacion = null;
-		this.modificadoPor = null;
-		this.codigoExterno = null;
-		this.uim = null;
-		this.nodo = null;
-		this.listaDestinatarios = null;
-		this.ultimoEnvio = null;
-		this.tipoMensaje = null;
-	}
 
 	private Long destinatariosMensajes;
 
@@ -66,6 +47,25 @@ public class DestinatariosMensajesBean implements Audit, Serializable {
 	private ArrayList<DestinatarioBean> listaDestinatarios;
 
 	private String tipoMensaje;
+	/**
+	 * Constructor por defecto
+	 */
+	public DestinatariosMensajesBean() {
+		this.destinatariosMensajes = null;
+		this.mensajeId = null;
+		this.destinatario = null;
+		this.estado = null;
+		this.fechaCreacion = null;
+		this.creadoPor = null;
+		this.fechaModificacion = null;
+		this.modificadoPor = null;
+		this.codigoExterno = null;
+		this.uim = null;
+		this.nodo = null;
+		this.listaDestinatarios = null;
+		this.ultimoEnvio = null;
+		this.tipoMensaje = null;
+	}
 
 	/**
 	 * Obtener XML

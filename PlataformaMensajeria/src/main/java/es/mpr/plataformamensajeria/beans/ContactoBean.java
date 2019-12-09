@@ -13,26 +13,6 @@ public class ContactoBean implements Audit,Serializable{
 	 */
 	private static final long serialVersionUID = -8289126790241537979L;
 
-
-	public ContactoBean() {
-		super();
-		this.contactoId=null;
-		this.organismo = null;
-		this.aplicacion = null;
-		this.aplicacionid = null;
-		this.servicio = null;
-		this.servicioid = null;
-		this.nombre = null;
-		this.apellidos = null;
-		this.email = null;
-		this.telefono = null;
-		this.creadopor = null;
-		this.fechacreacion = null;
-		this.fechamodificacion = null;
-		this.modificadopor = null;
-		this.eliminado=null;
-	}
-	
 	/** aplicacion id. */
 	protected Long contactoId = null;
 
@@ -41,28 +21,25 @@ public class ContactoBean implements Audit,Serializable{
 
 	/** nombre aplicacion. */
 	protected String aplicacion = null;
-	
+
 	/** aplicacion id. */
 	protected Long aplicacionid = null;
-	
+
 	/** nombre Servicio. */
 	protected String servicio = null;
-	
+
 	/** servicio id. */
 	protected Long servicioid = null;
-	
+
 	/** nombre. */
 	protected String nombre = null;
-	
-	/** apellidos. */
-	protected String apellidos = null;
 
 	/** email. */
 	protected String email = null;
-	
+
 	/** telefono. */
 	protected String telefono = null;
-	
+
 	/** creado por. */
 	protected String creadopor = null;
 
@@ -74,10 +51,28 @@ public class ContactoBean implements Audit,Serializable{
 
 	/** modificado por. */
 	protected String modificadopor = null;
-	
+
 	/** eliminado por. */
 	protected String eliminado = null;
-	
+
+
+	public ContactoBean() {
+		super();
+		this.contactoId=null;
+		this.organismo = null;
+		this.aplicacion = null;
+		this.aplicacionid = null;
+		this.servicio = null;
+		this.servicioid = null;
+		this.nombre = null;
+		this.email = null;
+		this.telefono = null;
+		this.creadopor = null;
+		this.fechacreacion = null;
+		this.fechamodificacion = null;
+		this.modificadopor = null;
+		this.eliminado=null;
+	}
 	
 	public String getEliminado() {
 		return eliminado;
@@ -156,16 +151,6 @@ public class ContactoBean implements Audit,Serializable{
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-
-	public String getApellidos() {
-		return apellidos;
-	}
-
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
 	}
 
 

@@ -11,6 +11,112 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class EnvioMensajesAplicacionBean implements Audit{
 
+	/**  aplicacion id. */
+	private Integer aplicacionId;
+
+	/**  canal id. */
+	private String canalId;
+
+	/**  servicio id. */
+	private String servicioId;
+
+	/**  nombre lote. */
+	private String nombreLote;
+
+	/**  organismo. */
+	private String organismo;
+
+	/**  organismo pagador. */
+	private String organismoPagador;
+
+	/**  mensaje. */
+	private String mensaje;
+
+	/**  asunto. */
+	private String asunto;
+
+	/**  adjunto. */
+	private File adjunto;
+
+	/**  titulo. */
+	private String titulo;
+
+	/**  cuerpo. */
+	private String cuerpo;
+
+	/**  id externo. */
+	private String idExterno;
+
+	/**  movil. */
+	private String movil;
+
+	/**  to. */
+	private String to;
+
+	/**  cc. */
+	private String cc;
+
+	/**  cco. */
+	private String cco;
+
+	/**  id usuario. */
+	private String idUsuario;
+
+	/**  url acuse AEAT. */
+	private String urlAcuseAEAT;
+
+	/**  passbook. */
+	private String passbook;
+
+	/**  key princ. */
+	private String keyPrinc;
+
+	/**  label princ. */
+	private String labelPrinc;
+
+	/**  value princ. */
+	private String valuePrinc;
+
+	/**  key sec. */
+	private String keySec;
+
+	/**  label sec. */
+	private String labelSec;
+
+	/**  value sec. */
+	private String valueSec;
+
+	/**  key aux. */
+	private String keyAux;
+
+	/**  label aux. */
+	private String labelAux;
+
+	/**  value aux. */
+	private String valueAux;
+
+	/**  key tras. */
+	private String keyTras;
+
+	/**  label tras. */
+	private String labelTras;
+
+	/**  value tras. */
+	private String valueTras;
+
+	/**  url. */
+	private String url;
+
+	/**  logo passbook. */
+	private String logoPassbook;
+
+	/**  descripcion passbook. */
+	private String descripcionPassbook;
+
+	/**  nombre adjunto */
+	private String nombreAdjunto;
+
+
 	/**
 	 * Constructor de envio mensajes aplicacion bean.
 	 */
@@ -19,18 +125,12 @@ public class EnvioMensajesAplicacionBean implements Audit{
 			this.canalId = null;
 			this.servicioId = null;
 			this.nombreLote = null;
-//			this.codSia=null;
 			this.organismo = null;
 			this.organismoPagador = null;
 			this.mensaje = null;
 			this.asunto = null;
-//			this.origen=null;
-//			this.modo=null;
-//			this.adjunto=null;
 			this.titulo = null;
 			this.cuerpo = null;
-//			this.icono=null;
-//			this.sonido=null;
 			this.idExterno = null;		
 			this.movil = null;
 			this.to = null;
@@ -60,115 +160,6 @@ public class EnvioMensajesAplicacionBean implements Audit{
 			this.nombreAdjunto = null;
 		}
 		
-	/**  aplicacion id. */
-	private Integer aplicacionId;
-	
-	/**  canal id. */
-	private String canalId;
-	
-	/**  servicio id. */
-	private String servicioId;
-	
-	/**  nombre lote. */
-	private String nombreLote;
-
-/**  organismo. */
-//	private String codSia;
-	private String organismo;
-	
-	/**  organismo pagador. */
-	private String organismoPagador;
-	
-	/**  mensaje. */
-	private String mensaje;
-	
-	/**  asunto. */
-	private String asunto;
-//	private String origen; 	
-/**  adjunto. */
-//	private String modo;
-	private File adjunto;
-	
-	/**  titulo. */
-	private String titulo;
-	
-	/**  cuerpo. */
-	private String cuerpo;
-//	private String icono;		
-/**  id externo. */
-//	private String sonido;
-	private String idExterno;
-	
-	/**  movil. */
-	private String movil; 	
-	
-	/**  to. */
-	private String to;
-	
-	/**  cc. */
-	private String cc;
-	
-	/**  cco. */
-	private String cco;
-	
-	/**  id usuario. */
-	private String idUsuario;
-	
-	/**  url acuse AEAT. */
-	private String urlAcuseAEAT;
-	
-	/**  passbook. */
-	private String passbook;
-	
-	/**  key princ. */
-	private String keyPrinc;
-	
-	/**  label princ. */
-	private String labelPrinc;
-	
-	/**  value princ. */
-	private String valuePrinc;
-	
-	/**  key sec. */
-	private String keySec;
-	
-	/**  label sec. */
-	private String labelSec;
-	
-	/**  value sec. */
-	private String valueSec;
-	
-	/**  key aux. */
-	private String keyAux;
-	
-	/**  label aux. */
-	private String labelAux;
-	
-	/**  value aux. */
-	private String valueAux;
-	
-	/**  key tras. */
-	private String keyTras;
-	
-	/**  label tras. */
-	private String labelTras;
-	
-	/**  value tras. */
-	private String valueTras;
-	
-	/**  url. */
-	private String url;
-	
-	/**  logo passbook. */
-	private String logoPassbook;
-	
-	/**  descripcion passbook. */
-	private String descripcionPassbook;
-	
-	/**  nombre adjunto */
-	private String nombreAdjunto;
-	
-	
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */
@@ -249,17 +240,11 @@ public class EnvioMensajesAplicacionBean implements Audit{
 	public void setNombreLote(String nombreLote) {
 		this.nombreLote = nombreLote;
 	}
-//	public String getCodSia() {
-//		return codSia;
-//	}
-//	public void setCodSia(String codSia) {
-//		this.codSia = codSia;
 /**
  * Obtener organismo.
  *
  * @return organismo
  */
-//	}
 	public String getOrganismo() {
 		return organismo;
 	}
@@ -326,23 +311,11 @@ public class EnvioMensajesAplicacionBean implements Audit{
 	public void setAsunto(String asunto) {
 		this.asunto = asunto;
 	}
-//	public String getOrigen() {
-//		return origen;
-//	}
-//	public void setOrigen(String origen) {
-//		this.origen = origen;
-//	}
-//	public String getModo() {
-//		return modo;
-//	}
-//	public void setModo(String modo) {
-//		this.modo = modo;
 /**
  * Obtener adjunto.
  *
  * @return adjunto
  */
-//	}
 	public File getAdjunto() {
 		return adjunto;
 	}
@@ -392,18 +365,6 @@ public class EnvioMensajesAplicacionBean implements Audit{
 		this.cuerpo = cuerpo;
 	}
 
-	//	public String getIcono() {
-//		return icono;
-//	}
-//	public void setIcono(String icono) {
-//		this.icono = icono;
-//	}
-//	public String getSonido() {
-//		return sonido;
-//	}
-//	public void setSonido(String sonido) {
-//		this.sonido = sonido;
-//	}
 
 	/**
 	 * Obtener id externo.

@@ -40,6 +40,18 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioProveedorSMSImpl")
 public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	
+	protected static final String SERVICIOPROVEED = "ServicioProveedorSMS - getProveedoresSMS:";
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String SERVICIOPROVEED0 = "ServicioProveedorImpl - getProveedoresSMSTO:";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String S = "S";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProveedorSMSImpl.class);
 	
@@ -70,14 +82,11 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			query.setEliminadoIsNull(true);
 			List<TblServidores> lista = tblServidoresManager.getServidoresByQuery(query);
 			
-			List<ProveedorSMSBean> result = getListViewProveedorSMSBean(lista);					
+			return getListViewProveedorSMSBean(lista);
 			
-			return result;
-			
-		} 
-		catch (Exception e){
-			logger.error("ServicioProveedorSMS - getProveedoresSMS:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+		} catch (Exception e){
+			logger.error(SERVICIOPROVEED + e);
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		}
 	}	
 	
@@ -92,14 +101,17 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		String nombre = null;
 		try {
 			//Columna para ordenar
-			Hashtable<String, String> columns = new Hashtable<String,String>();
-			columns.put("2","nombre");
-			if (columnSort==null)
-				columnSort = "2"; //Id
+			Hashtable<String, String> columns = new Hashtable<>();
+			columns.put(R_CONST_REF,NOMBRE);
+			if (columnSort==null) {
+				columnSort = R_CONST_REF;
+			} 
+				//Id
 			
 			String column = columns.get(columnSort);
-			if (column==null)
-				column = "nombre";
+			if (column==null) {
+				column = NOMBRE;
+			}
 			
 			if (null != criterio && null != criterio.getNombre()){
 				nombre = criterio.getNombre();
@@ -111,15 +123,14 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			// Total de organismos
 			Integer rowcount = tblServidoresManager.getServidoresPaginado(start, size, order, column, nombre, tipoServidor, true).size();
 			
-			PaginatedList<ProveedorSMSBean> result = new PaginatedList<ProveedorSMSBean>();
+			PaginatedList<ProveedorSMSBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 			
 			return result;
-		}
-		catch (Exception e){
-			logger.error("ServicioProveedorSMS - getProveedoresSMS:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+		} catch (Exception e){
+			logger.error(SERVICIOPROVEED + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 			
 		}
 	}
@@ -167,8 +178,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accion, accionId);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorSMS - updateProveedorSMS:" + e);
 			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
 		}	
@@ -185,10 +195,9 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 		try {
 			TblServidores serv =tblServidoresManager.getServidorById(servidor.getProveedorSMSId());
 			return getProveedorSMSBean(serv);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorSMS - loadProveedorSMS:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");		
+			throw new BusinessException(e, ERRORSDOTORGANI);		
 		}
 	}
 
@@ -207,11 +216,11 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			for (TblPlanificaciones p : listaPlanificaciones) {
 				p.setModificadopor(modificador);
 				p.setFechamodificacion(new Date());
-				p.setEliminado("S");
+				p.setEliminado(S);
 				tblPlanificacionesManager.updatePlanificacion(p, source, accionPlanificacion, accionIdPlanificacion, descripcion);
 			}
 			
-			servidorTO.setEliminado("S");
+			servidorTO.setEliminado(S);
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accionServidor, accionIdServidor);
@@ -230,8 +239,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
-	protected TblServidores getProveedoresSMSTO(ProveedorSMSBean proveedorSMS) throws BusinessException
-	{
+	protected TblServidores getProveedoresSMSTO(ProveedorSMSBean proveedorSMS) throws BusinessException {
 		TblServidores servidorTO = new TblServidores();
 		
 		try {
@@ -239,12 +247,10 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			servidorTO.setServidorid(proveedorSMS.getProveedorSMSId());
 			//false = Recepción de Estado / true= Consulta de Estado
 			servidorTO.setFechacreacion(proveedorSMS.getFechacreacion());
-			servidorTO.setMetodoconsulta((proveedorSMS.getMetodoconsulta().equals("true")? true : false));
+			servidorTO.setMetodoconsulta("true".equals(proveedorSMS.getMetodoconsulta()));
 			
-		} catch (IllegalAccessException  e) {
-			logger.error("ServicioProveedorImpl - getProveedoresSMSTO:" + e);
-		}catch (InvocationTargetException e){
-			logger.error("ServicioProveedorImpl - getProveedoresSMSTO:" + e);
+		} catch (IllegalAccessException | InvocationTargetException e){
+			logger.error(SERVICIOPROVEED0 + e);
 		}
 		return servidorTO;
 	}
@@ -258,8 +264,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	 * @throws BusinessException the business exception
 	 */
 	//////MIGRADO
-	protected ProveedorSMSBean getProveedorSMSBean(TblServidores serv) throws BusinessException
-	{
+	protected ProveedorSMSBean getProveedorSMSBean(TblServidores serv) throws BusinessException {
 		ProveedorSMSBean servidor = new ProveedorSMSBean();
 		
 		try {
@@ -267,9 +272,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			//0= Recepción de Estado / 1= Consulta de Estado 
 			servidor.setMetodoconsulta(String.valueOf(serv.getMetodoconsulta()));
 			servidor.setProveedorSMSId(serv.getServidorid());
-		} catch (IllegalAccessException e) {
-			throw new BusinessException(e);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new BusinessException(e);
 		}
 		
@@ -284,12 +287,12 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	 * @throws BusinessException the business exception
 	 */
 	//////MIGRADO
-	protected List<ProveedorSMSBean> getListViewProveedorSMSBean(List<TblServidores> lista) throws BusinessException
-	{	
+	protected List<ProveedorSMSBean> getListViewProveedorSMSBean(List<TblServidores> lista) throws BusinessException {
+	
 		List<ProveedorSMSBean> result = null;
 		
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<ProveedorSMSBean>();
+			result = new ArrayList<>();
 		
 			for (TblServidores s : lista) {
 				ProveedorSMSBean servidor =  new ProveedorSMSBean();
@@ -299,9 +302,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 					ConvertUtils.register (converter, java.util.Date.class);
 					BeanUtils.copyProperties(servidor, s);
 					servidor.setProveedorSMSId(s.getServidorid());
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			
@@ -319,7 +320,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 	@Override
 	public List<ProveedorSMSBean> getProveedoresSMSNoAsignados(
 			Integer idServicio, int tipoServidor) throws BusinessException {
-		ArrayList<ProveedorSMSBean> listaServidores = new ArrayList<ProveedorSMSBean>();
+		ArrayList<ProveedorSMSBean> listaServidores = new ArrayList<>();
 		try{
 			TblServidoresQuery query = new TblServidoresQuery();
 			query.setEliminadoIsNull(true);
@@ -338,7 +339,7 @@ public class ServicioProveedorSMSImpl implements ServicioProveedorSMS{
 			
 		} catch (Exception e) {
 			logger.error("ServicioProveedorSMS - getProveedoresSMSNoAsignados:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 		return listaServidores;
 	}

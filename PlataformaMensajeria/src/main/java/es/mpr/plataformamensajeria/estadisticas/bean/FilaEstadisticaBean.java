@@ -19,7 +19,6 @@ public class FilaEstadisticaBean implements Audit {
     private List<String> nombreColumnas;
     
     /**  lista columnas map. */
-    //private List<HashMap<String,String>> listaColumnasMap;
     private List<ColumnaBean> listaColumnasMap = null;
  	
 	 /**  valor columna. */
@@ -50,9 +49,9 @@ public class FilaEstadisticaBean implements Audit {
 	 */
 	public void reset(){
 		this.nombreGrupo = null;
-		this.nombreColumnas = new ArrayList<String>();
-		this.valorColumna = new HashMap<String,String>();
-		this.listaColumnasMap = new ArrayList<ColumnaBean>();
+		this.nombreColumnas = new ArrayList<>();
+		this.valorColumna = new HashMap<>();
+		this.listaColumnasMap = new ArrayList<>();
 		this.valorCount = 0;
 		this.columnaCount =0;
 		this.nombreColumnaGrupo = null;
@@ -105,8 +104,7 @@ public class FilaEstadisticaBean implements Audit {
 	 * @return valor
 	 */
 	public Object getValor(){
-		Integer intResult = new Integer(0);
-		//int numColumnas=nombreColumnas.size()-1;
+		Integer intResult = Integer.valueOf(0);
 		
 		String column = nombreColumnas.get(valorCount);
 		String valor = valorColumna.get(column);
@@ -117,7 +115,6 @@ public class FilaEstadisticaBean implements Audit {
 		try{
 			intResult = Integer.parseInt(valor);
 		}catch (Exception e) {
-			e.printStackTrace();
 		}
 		return intResult;
 		
@@ -130,8 +127,7 @@ public class FilaEstadisticaBean implements Audit {
 	 * @return valor total
 	 */
 	public Object getValorTotal(){
-		Long parcial = new Long(0);
-		//int numColumnas=nombreColumnas.size()-1;
+		Long parcial = Long.valueOf(0);
 		Iterator<String> it = nombreColumnas.iterator();
 		while(it.hasNext()){
 			String val = it.next();
@@ -141,11 +137,6 @@ public class FilaEstadisticaBean implements Audit {
 			parcial+=vLong;
 		}
 
-		try{
-			//intResult = Integer.parseInt(valor);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
 		return parcial;
 		
 		
@@ -159,7 +150,7 @@ public class FilaEstadisticaBean implements Audit {
 	 * @return lista columnas map
 	 */
 	public List<ColumnaBean> getListaColumnasMap() {
-		return new ArrayList<ColumnaBean>(listaColumnasMap);
+		return new ArrayList<>(listaColumnasMap);
 	}
 
 	/**
@@ -168,7 +159,7 @@ public class FilaEstadisticaBean implements Audit {
 	 * @param listaColumnasMap new lista columnas map
 	 */
 	public void setListaColumnasMap(List<ColumnaBean> listaColumnasMap) {
-		this.listaColumnasMap = new ArrayList<ColumnaBean>(listaColumnasMap);
+		this.listaColumnasMap = new ArrayList<>(listaColumnasMap);
 	}
 
 	/**
@@ -195,7 +186,7 @@ public class FilaEstadisticaBean implements Audit {
 	 * @return nombre columnas
 	 */
 	public List<String> getNombreColumnas() {
-		return new ArrayList<String>(nombreColumnas);
+		return new ArrayList<>(nombreColumnas);
 	}
 
 	/**
@@ -204,7 +195,7 @@ public class FilaEstadisticaBean implements Audit {
 	 * @param nombreColumnas new nombre columnas
 	 */
 	public void setNombreColumnas(List<String> nombreColumnas) {
-		this.nombreColumnas = new ArrayList<String>(nombreColumnas);
+		this.nombreColumnas = new ArrayList<>(nombreColumnas);
 	}
 
 	/**

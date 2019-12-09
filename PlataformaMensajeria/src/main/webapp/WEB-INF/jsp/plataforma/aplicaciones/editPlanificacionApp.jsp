@@ -58,7 +58,12 @@
 												list="comboHorasFin" listKey="codigo"
 												listValue="descripcion" cssClass="W65" 
 												value="%{planificacion.horaHasta}" disabled="false" />
-					                    </p>         
+					                    </p>
+					                    <p class="criteria">
+					                        <label style="width: 120px;" class="fieldText">Activo:</label>
+					                        <s:checkbox theme="simple" id="planificacion.isActivo" name="planificacion.isActivo" value="%{planificacion.activado}" />
+					                        <s:hidden name="modificaActivo" id="modificaActivo" value="true"/>
+                    					</p>
 					                    <input type="hidden" name="planificacion.servicioId" id="planificacion.servicioId" value="${planificacion.servicioId}"/> 
 					                    <input type="hidden" name="planificacion.tipoPlanificacionId" id="planificacion.tipoPlanificacionId" 
 					                    		value="${planificacion.tipoPlanificacionId}"/>

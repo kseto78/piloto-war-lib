@@ -14,7 +14,6 @@ public class TemplatePasswordCallback extends FirmaPasswordCallback {
 	public TemplatePasswordCallback() {
     	passwords.put("framework","changeit");
     	
-    	//passwords.put("accv-ca2", "password");
     }
 	
 }

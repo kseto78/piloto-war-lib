@@ -23,6 +23,16 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class UsoServidoresBean implements Audit{
 
 
+	/**  servidor. */
+	protected String servidor;
+
+	/**  nenvios. */
+	protected Integer nenvios;
+
+	/**  tipo servidor. */
+	protected Integer tipoServidor;
+
+
 	/**
 	 * Constructor de uso servidores bean.
 	 */
@@ -32,16 +42,6 @@ public class UsoServidoresBean implements Audit{
 		this.nenvios = null;
 		this.tipoServidor = null;
 	}
-	
-	/**  servidor. */
-	protected String servidor;
-	
-	/**  nenvios. */
-	protected Integer nenvios;
-	
-	/**  tipo servidor. */
-	protected Integer tipoServidor;
-
 	
 	/**
 	 * Obtener id.

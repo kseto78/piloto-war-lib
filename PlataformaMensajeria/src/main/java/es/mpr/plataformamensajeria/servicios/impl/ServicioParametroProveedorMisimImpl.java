@@ -39,10 +39,9 @@ public class ServicioParametroProveedorMisimImpl implements ServicioParametroPro
 			parametroProv.setIdProveedor(parametroProveedorMisim.getIdProveedor());
 			parametroProv.setParametro(parametroProveedorMisim.getParametro());
 			
-			if(parametroProveedorMisim.getTipoValor().equals("parametroProveedor.valor")){
+			if("parametroProveedor.valor".equals(parametroProveedorMisim.getTipoValor())){
 				parametroProv.setValor(parametroProveedorMisim.getResultadoValor().trim());
-			}
-			else{
+			} else{
 				parametroProv.setVariable(parametroProveedorMisim.getResultadoValor().trim());
 			}
 			
@@ -71,8 +70,7 @@ public class ServicioParametroProveedorMisimImpl implements ServicioParametroPro
 	public List<ParametrosProveedorBean> getParametrosProveedorMisimByProveedorId(Long idProveedor) throws BusinessException {
 		try {
 			List<ParametrosProveedor> lista = parametrosProveedorManager.getParametrosPorProveedorMisim(idProveedor);
-			List<ParametrosProveedorBean> result = getListViewParametroProveedorBean(lista);
-			return result;
+			return getListViewParametroProveedorBean(lista);
 		} catch (Exception e) {
 			logger.error("ServicioParametroProveedorMisimImpl - getParametroServidorByServidorId:" + e);
 			throw new BusinessException(e, "errors.proveedorMisim.getParametrosProveedorMisimByProveedorId");
@@ -107,7 +105,7 @@ public class ServicioParametroProveedorMisimImpl implements ServicioParametroPro
 		List<ParametrosProveedorBean> result = null;
 
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<ParametrosProveedorBean>();
+			result = new ArrayList<>();
 
 			for (ParametrosProveedor ps : lista) {
 				ParametrosProveedorBean proveedor = new ParametrosProveedorBean();

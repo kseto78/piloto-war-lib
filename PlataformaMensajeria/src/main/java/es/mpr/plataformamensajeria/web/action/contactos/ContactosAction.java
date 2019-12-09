@@ -42,6 +42,22 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ContactosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String PLATAFORMADOTCO = "plataforma.contacto.update.error";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String CONTACTOSACTION = "ContactosAction - load:";
+
+	protected static final String LOGDOTSOURCE_CO = "log.SOURCE_CONTACTOS";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String R_CONST_REF = "20";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -98,6 +114,9 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 	/** Constante TABLE_ID. */
 	private static final String TABLE_ID = "tableId";
 
+	/** user name to load. */
+	private String userNameToLoad;
+
 
 	/**
 	 * New search.
@@ -112,19 +131,23 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute(INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(INFO_USER) == null) {
 			return NO_USER;
-		int page = getPage(TABLE_ID); // Pagina a mostrar
-		String order = getOrder(TABLE_ID); // Ordenar de modo ascendente o
+		}
+		int page = getPage(TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLE_ID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort(TABLE_ID); // Columna usada para
+		String columnSort = getColumnSort(TABLE_ID); 
+		// Columna usada para
 														// ordenar
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 
 		PaginatedList<ContactoBean> result;
 		
-		result = servicioContacto.getContactos(inicio,(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order,
+		result = servicioContacto.getContactos(inicio,export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)), order,
 				columnSort, contacto);
 
 		listaContactos = result.getPageList();
@@ -134,10 +157,10 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 		}
 
 		getRequest().getSession().setAttribute("contacto", contacto);
@@ -156,10 +179,11 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 		 */
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_CONTACTOS", null);
+		String source = properties.getProperty(LOGDOTSOURCE_CO, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return NO_USER;
 		}
 		if (contacto != null) {
@@ -176,11 +200,6 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 		return SUCCESS;
 	
 	}
-
-	/** user name to load. */
-	private String userNameToLoad;
-
-
 
 	/**
 	 * Obtener user name to load.
@@ -213,15 +232,16 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 	public String update() throws BaseException {
 		String accion = properties.getProperty(ContactosAction.LOG_ACCION_ACTUALIZAR, null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_CONTACTOS", null);
+		String source = properties.getProperty(LOGDOTSOURCE_CO, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return NO_USER;
 		}
 		ContactoBean contactoBBDD = null;
 		if (contacto == null) {
-			addActionErrorSession(this.getText("plataforma.contacto.update.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTCO));
 		} else {
 			logger.info("[ContactosAction - IdContacto] valor == " + contacto.getContactoId());			
 
@@ -231,8 +251,7 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 			contactoBBDD.setOrganismo(contacto.getOrganismo());
 			contactoBBDD.setAplicacionid(contacto.getAplicacionid());
 			contactoBBDD.setServicioid(contacto.getServicioid());					
-			contactoBBDD.setNombre(contacto.getNombre());
-			contactoBBDD.setApellidos(contacto.getApellidos());
+			contactoBBDD.setNombre(contacto.getNombre());			
 			contactoBBDD.setEmail(contacto.getEmail());
 			contactoBBDD.setTelefono(contacto.getTelefono());
 			
@@ -272,11 +291,12 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("ContactosAction - load:" + e);
+			logger.error(CONTACTOSACTION + e);
 			return NO_USER;
 		}
-		if (idContacto == null)
+		if (idContacto == null) {
 			throw new BusinessException("EL idContacto recibido es nulo");
+		}
 		try {
 			contacto = new ContactoBean();
 			Long cntcId = Long.valueOf(idContacto);
@@ -285,9 +305,9 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 			
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("plataforma.contacto.update.error", new String[] { contacto
+			String mensg = this.getText(PLATAFORMADOTCO, new String[] { contacto
 					.getContactoId().toString() });
-			logger.error("ContactosAction - load:" + e);
+			logger.error(CONTACTOSACTION + e);
 			throw new BusinessException(mensg);
 		}
 
@@ -303,12 +323,13 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 	 */
 
 	public String delete() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_CONTACTOS", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_CO, null);
 		
-		if (getRequest().getSession().getAttribute(ContactosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(ContactosAction.INFO_USER) == null) {
 			return NO_USER;
+		}
 		if (idContacto == null) {
 			addActionErrorSession(this.getText("plataforma.ejecucionjob.delete.error"));			
 			
@@ -332,18 +353,20 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 	 */
 
 	public String deleteSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_CONTACTOS", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_CO, null);
 				
 		
-		if (getRequest().getSession().getAttribute(INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(INFO_USER) == null) {
 			return "NO_USER";
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.contactos.deleteselected.error"));
 			
 		} else {
-			for (String contactoId : checkDelList) {								
+			for (String contactoId : checkDelList) {
+									
 				servicioContacto.deleteContacto(Long.valueOf(contactoId), source, accion, accionId);
 			}
 			addActionMessageSession(this.getText("plataforma.contactos.deleteselected.ok"));
@@ -369,7 +392,7 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 			logger.error("ContactosAction - getComboAplicaciones:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (AplicacionBean key : keys) {
 
 				option = new KeyValueObject();
@@ -377,6 +400,7 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -388,11 +412,7 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 	 * @return true, si es empty
 	 */
 	public boolean isEmpty(String value) {
-		if (value == null || (value != null && value.equals(""))) {
-			return true;
-		} else {
-			return false;
-		}
+		return value == null || (value != null && "".equals(value));
 	}
 
 	/**
@@ -541,7 +561,7 @@ public class ContactosAction extends PlataformaPaginationAction implements Servl
 	 * @param comboServicios new combo servicios
 	 */
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
-		this.comboServicios = new ArrayList<KeyValueObject>(comboServicios);
+		this.comboServicios = new ArrayList<>(comboServicios);
 	}
 	
 	public String getServicioId() {

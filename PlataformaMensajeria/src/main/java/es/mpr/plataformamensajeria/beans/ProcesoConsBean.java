@@ -13,6 +13,24 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class ProcesoConsBean implements Audit{
 
+	/**  proceso cons id. */
+	private Long procesoConsId;
+
+	/**  codigo estado. */
+	private String codigoEstado;
+
+	/**  descripcion estado. */
+	private String descripcionEstado;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  fecha inicio. */
+	private Date fechaInicio;
+
+	/**  fecha fin. */
+	private Date fechaFin;
+
 	/**
 	 * Constructor de proceso cons bean.
 	 */
@@ -24,24 +42,6 @@ public class ProcesoConsBean implements Audit{
 		this.fechaInicio=null;
 		this.fechaFin=null;
 	}
-	
-	/**  proceso cons id. */
-	private Long procesoConsId;
-	
-	/**  codigo estado. */
-	private String codigoEstado;
-	
-	/**  descripcion estado. */
-	private String descripcionEstado;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  fecha inicio. */
-	private Date fechaInicio;
-	
-	/**  fecha fin. */
-	private Date fechaFin;
 	
 	/**
 	 * Obtener proceso cons id.

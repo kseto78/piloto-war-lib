@@ -26,8 +26,7 @@ public interface ISaludoService {
      * @return the es.mpr.template.ws.saludo.types. saludo return
      */
     @WebResult(name = "saludoReturn", targetNamespace = "http://ws.mpr.es/saludo/types", partName = "out")
-    @WebMethod()
-    public es.mpr.template.ws.saludo.types.SaludoReturn saludar(
+    @WebMethod() es.mpr.template.ws.saludo.types.SaludoReturn saludar(
         @WebParam(partName = "in", name = "saludoIn", targetNamespace = "http://ws.mpr.es/saludo/types")
         es.mpr.template.ws.saludo.types.SaludoIn in
     );

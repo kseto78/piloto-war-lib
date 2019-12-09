@@ -24,6 +24,60 @@ public class UsuariosPushBean implements Audit, Serializable{
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  usuario id. */
+	protected Integer usuarioId;
+
+	/**  nombre usuario. */
+	protected String nombreUsuario;
+
+	/**  servicio id. */
+	protected Integer servicioId;
+
+	/**  plataforma id. */
+	protected Integer plataformaId;
+
+	/**  token usuario. */
+	protected String tokenUsuario;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion;
+
+	/**  dispositivo id. */
+	protected String dispositivoId;
+
+	/**  aplicacion id. */
+	protected Integer aplicacionId;
+
+	/**  plataforma. */
+	protected String plataforma;
+
+	/**  fecha desde. */
+	protected Date fechaDesde;
+
+	/**  fecha hasta. */
+	protected Date fechaHasta;
+
+	/**  fecha. */
+	protected Date fecha;
+
+	/**  aplicacion. */
+	protected String aplicacion;
+
+	/**  servicio. */
+	protected String servicio;
+
+	/**  nombre. */
+	protected String nombre;
+
+	/**  apellido 1. */
+	protected String apellido1;
+
+	/**  apellido 2. */
+	protected String apellido2;
+
 	/**
 	 * Constructor de usuarios push bean.
 	 */
@@ -51,60 +105,6 @@ public class UsuariosPushBean implements Audit, Serializable{
 	}
 	
 	
-	/**  usuario id. */
-	protected Integer usuarioId;
-	
-	/**  nombre usuario. */
-	protected String nombreUsuario;
-	
-	/**  servicio id. */
-	protected Integer servicioId;
-	
-	/**  plataforma id. */
-	protected Integer plataformaId;
-	
-	/**  token usuario. */
-	protected String tokenUsuario;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion;
-	
-	/**  dispositivo id. */
-	protected String dispositivoId;
-	
-	/**  aplicacion id. */
-	protected Integer aplicacionId;
-	
-	/**  plataforma. */
-	protected String plataforma;
-	
-	/**  fecha desde. */
-	protected Date fechaDesde;
-	
-	/**  fecha hasta. */
-	protected Date fechaHasta;
-	
-	/**  fecha. */
-	protected Date fecha;
-	
-	/**  aplicacion. */
-	protected String aplicacion;
-	
-	/**  servicio. */
-	protected String servicio;
-	
-	/**  nombre. */
-	protected String nombre;
-	
-	/**  apellido 1. */
-	protected String apellido1;
-	
-	/**  apellido 2. */
-	protected String apellido2;
-
 	/**
 	 * Obtener usuario id.
 	 *

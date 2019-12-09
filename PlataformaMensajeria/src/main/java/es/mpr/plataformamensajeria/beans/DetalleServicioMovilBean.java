@@ -15,6 +15,64 @@ public class DetalleServicioMovilBean implements Audit{
 
 
 
+	protected static final String SPAN_CLASSINACT = "<span class='inactivo'></span>";
+
+	protected static final String TRUE = "true";
+
+	protected static final String FALSE = "false";
+
+	protected static final String SPAN_CLASSACTIV = "<span class='activo'></span>";
+
+	/**  servicio movil id. */
+	protected Integer servicioMovilId;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  descripcion. */
+	protected String descripcion = null;
+
+	/**  tipo. */
+	protected Integer tipo = null;
+
+	/**  estado. */
+	protected Integer estado = null;
+
+	/**  url servicio. */
+	protected String urlServicio = null;
+
+	/**  nombre contacto. */
+	protected String nombreContacto = null;
+
+	/**  telefono contacto. */
+	protected String telefonoContacto = null;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion = null;
+
+	/**  creado por. */
+	protected String creadoPor = null;
+
+	/**  modificado por. */
+	protected String modificadoPor = null;
+
+	/**  is tipo. */
+	protected String isTipo = null;
+
+	/**  is estado. */
+	protected String isEstado = null;
+
+	/**  lista usuarios. */
+	protected List<DetalleUsuarioBean> listaUsuarios;
+
+	/**  lista usuarios servicios moviles. */
+	protected List<UsuariosServiciosMovilesBean> listaUsuariosServiciosMoviles;
+
+
+
 	/**
 	 * Constructor de detalle servicio movil bean.
 	 */
@@ -36,56 +94,6 @@ public class DetalleServicioMovilBean implements Audit{
 		this.isEstado = null;
 	}
 
-	/**  servicio movil id. */
-	protected Integer servicioMovilId;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  descripcion. */
-	protected String descripcion = null;
-	
-	/**  tipo. */
-	protected Integer tipo = null;
-	
-	/**  estado. */
-	protected Integer estado = null;
-	
-	/**  url servicio. */
-	protected String urlServicio = null;
-	
-	/**  nombre contacto. */
-	protected String nombreContacto = null;
-	
-	/**  telefono contacto. */
-	protected String telefonoContacto = null;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion = null;
-	
-	/**  creado por. */
-	protected String creadoPor = null;
-	
-	/**  modificado por. */
-	protected String modificadoPor = null;
-	
-	/**  is tipo. */
-	protected String isTipo = null;
-	
-	/**  is estado. */
-	protected String isEstado = null;
-	
-	/**  lista usuarios. */
-	protected List<DetalleUsuarioBean> listaUsuarios;
-	
-	/**  lista usuarios servicios moviles. */
-	protected List<UsuariosServiciosMovilesBean> listaUsuariosServiciosMoviles;
-	
-	
-	
 	/**
 	 * Obtener servicio movil id.
 	 *
@@ -331,10 +339,10 @@ public class DetalleServicioMovilBean implements Audit{
 	 * @param autentificado new autentificado
 	 */
 	public void setAutentificado(String autentificado){
-		if(autentificado != null && autentificado.equals("true")){
-			this.tipo = new Integer(1);
+		if(autentificado != null && TRUE.equals(autentificado)){
+			this.tipo = Integer.valueOf(1);
 		}else{
-			this.tipo = new Integer(0);
+			this.tipo = Integer.valueOf(0);
 		}
 	}
 	
@@ -346,9 +354,9 @@ public class DetalleServicioMovilBean implements Audit{
 	 */
 	public String getAutentificado(){
 		if(tipo != null && tipo.intValue()==1){
-			return "true";
+			return TRUE;
 		}else{
-			return "false";
+			return FALSE;
 		}
 	}	
 	
@@ -360,9 +368,9 @@ public class DetalleServicioMovilBean implements Audit{
 	 */
 	public String getIsTipo() {
 		if(tipo != null && tipo.intValue()==1){
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		}else{
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		}
 		
 	}
@@ -374,10 +382,10 @@ public class DetalleServicioMovilBean implements Audit{
 	 * @param isTipo new checks if is tipo
 	 */
 	public void setIsTipo(String isTipo) {
-		if(isTipo!=null && isTipo.equals("true")){
-			this.tipo = new Integer(1);
+		if(isTipo!=null && TRUE.equals(isTipo)){
+			this.tipo = Integer.valueOf(1);
 		}else{
-			this.tipo = new Integer(0);
+			this.tipo = Integer.valueOf(0);
 		}
 		this.isTipo   = isTipo;
 	}
@@ -410,10 +418,10 @@ public class DetalleServicioMovilBean implements Audit{
 	 * @param activado new activado
 	 */
 	public void setActivado(String activado){
-		if(activado!=null&&activado.equals("true")){
-			this.estado = new Integer(1);
+		if(activado!=null&&TRUE.equals(activado)){
+			this.estado = Integer.valueOf(1);
 		}else{
-			this.estado = new Integer(0);
+			this.estado = Integer.valueOf(0);
 		}
 	}
 	
@@ -425,9 +433,9 @@ public class DetalleServicioMovilBean implements Audit{
 	 */
 	public String getActivado(){
 		if(estado!=null&&estado.intValue()==1){
-			return "true";
+			return TRUE;
 		}else{
-			return "false";
+			return FALSE;
 		}
 	}	
 	
@@ -439,9 +447,9 @@ public class DetalleServicioMovilBean implements Audit{
 	 */
 	public String getIsEstado() {
 		if(estado!=null&&estado.intValue()==1){
-			return "<span class='activo'></span>";
+			return SPAN_CLASSACTIV;
 		}else{
-			return "<span class='inactivo'></span>";
+			return SPAN_CLASSINACT;
 		}
 		
 	}
@@ -453,10 +461,10 @@ public class DetalleServicioMovilBean implements Audit{
 	 * @param isEstado new checks if is estado
 	 */
 	public void setIsEstado(String isEstado) {
-		if(isEstado!=null&&isEstado.equals("true")){
-			this.estado = new Integer(1);
+		if(isEstado!=null&&TRUE.equals(isEstado)){
+			this.estado = Integer.valueOf(1);
 		}else{
-			this.estado = new Integer(0);
+			this.estado = Integer.valueOf(0);
 		}
 		this.isEstado   = isEstado;
 	}
@@ -526,7 +534,7 @@ public class DetalleServicioMovilBean implements Audit{
 	 */
 	public void addDetalleUsuario(DetalleUsuarioBean usuariosBean) {
 		if(listaUsuarios==null){
-			listaUsuarios = new ArrayList<DetalleUsuarioBean>();
+			listaUsuarios = new ArrayList<>();
 		}
 		listaUsuarios.add(usuariosBean);
 	}

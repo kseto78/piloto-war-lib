@@ -24,6 +24,30 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class UsuariosServiciosMovilesBean implements Audit {
 
 
+	/**  usuario servicio movil id. */
+	protected Integer usuarioServicioMovilId;
+
+	/**  usuario id. */
+	protected Integer usuarioId;
+
+	/**  servicio movil id. */
+	protected Integer servicioMovilId;
+
+	/**  estado suscripcion. */
+	protected Integer estadoSuscripcion = null;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  creado por. */
+	protected String creadoPor = null;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion = null;
+
+	/**  modificado por. */
+	protected String modificadoPor = null;
+
 	/**
 	 * Constructor de usuarios servicios moviles bean.
 	 */
@@ -39,30 +63,6 @@ public class UsuariosServiciosMovilesBean implements Audit {
 		this.modificadoPor = null;
 
 	}
-
-	/**  usuario servicio movil id. */
-	protected Integer usuarioServicioMovilId;
-	
-	/**  usuario id. */
-	protected Integer usuarioId;
-	
-	/**  servicio movil id. */
-	protected Integer servicioMovilId;
-	
-	/**  estado suscripcion. */
-	protected Integer estadoSuscripcion = null;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  creado por. */
-	protected String creadoPor = null;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion = null;
-	
-	/**  modificado por. */
-	protected String modificadoPor = null;
 
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

@@ -172,7 +172,7 @@ public class PaginacionBean {
 	 */
 	private void calcularNumPaginasTotales(int numResultados){
 		int numPaginasTotalesAux = numResultados/numRegistrosMostrar;
-		if((numResultados%numRegistrosMostrar)>0){
+		if(numResultados%numRegistrosMostrar>0){
 			numPaginasTotalesAux++;
 		}
 		this.setNumPaginasTotales(numPaginasTotalesAux);
@@ -184,7 +184,6 @@ public class PaginacionBean {
 	public void limpiarPaginacion(){
 		this.setNumPaginaActual(NUM_PAG_ACTUAL_DEFAULT);
 		this.setNumPaginasTotales(NUM_PAG_TOTALES_DEFAULT);
-//		this.setNumRegistrosMostrar(NUM_REG_MOSTRAR_DEFAULT_10);
 		this.setElementoInicialPaginacion(ELEMENTO_INICIAL_PAGINACION);
 		this.setElementoFinalPaginacion(ELEMENTO_FINAL_PAGINACION);
 		this.setNumRegistrosTotales(ELEMENTO_INICIAL_PAGINACION);
@@ -229,8 +228,8 @@ public class PaginacionBean {
 	 * @return the list<? extends object>
 	 */
 	public List<? extends Object> aplicarPaginacion(List<? extends Object> listaOriginal){
-		List<? extends Object> listaDevuelta = new ArrayList<Object>();
-		if(listaOriginal!=null && listaOriginal.size()>0){
+		List<? extends Object> listaDevuelta = new ArrayList<>();
+		if(listaOriginal!=null && !listaOriginal.isEmpty()){
 			this.numRegistrosTotales=listaOriginal.size();
 			this.calcularNumPaginasTotales(listaOriginal.size());
 			this.setElementoInicialPaginacion(0);

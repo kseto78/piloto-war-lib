@@ -22,6 +22,21 @@ public class JobBean implements Audit, Serializable {
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 6053798532526486070L;
 
+	/**  servicio id. */
+	private Long servicioId;
+
+	/**  fecha. */
+	private Date fecha;
+
+	/**  nombre job. */
+	private String nombreJob;
+
+	/**  fecha fin. */
+	private Date fechaFin;
+
+	/** parametro 1 */
+	private String parametro1;
+
 
 
 	/**
@@ -35,23 +50,6 @@ public class JobBean implements Audit, Serializable {
 		this.parametro1 = null;
 		
 	}
-
-	/**  servicio id. */
-	private Long servicioId;
-	
-	/**  fecha. */
-	private Date fecha;
-	
-	/**  nombre job. */
-	private String nombreJob;
-	
-	/**  fecha fin. */
-	private Date fechaFin;
-	
-	/** parametro 1 */
-	private String parametro1;
-	
-	
 
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

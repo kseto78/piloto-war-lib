@@ -1,6 +1,5 @@
 package es.mpr.plataformamensajeria.servicios.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,19 +52,18 @@ public class ServicioUsuarioAplicacionImpl implements ServicioUsuarioAplicacion{
 	 */
 	
 	////MIGRADO
-	protected List<UsuarioAplicacionBean> getListViewUsuarioAplicacionBean(List<ViewUsuariosAplicaciones> lista) throws BusinessException
-	{	
+	protected List<UsuarioAplicacionBean> getListViewUsuarioAplicacionBean(List<ViewUsuariosAplicaciones> lista) throws BusinessException {
+	
 		List<UsuarioAplicacionBean> result = new ArrayList<>();
 	
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			for (ViewUsuariosAplicaciones ua : lista) {
 				if (null != ua){
 					UsuarioAplicacionBean usuario =  new UsuarioAplicacionBean();
 					usuario.setAplicacionId(ua.getAplicacionid());
 					usuario.setCreadoPor(ua.getCreadopor());
 					usuario.setFechaCreacion((null != ua.getFechacreacion())? DateUtils.truncate(ua.getFechacreacion(), Calendar.DATE) : null);
-					usuario.setIsActivo((null !=ua.getActivo() && ua.getActivo()== 0)? false : true);
+					usuario.setIsActivo(null == ua.getActivo() || ua.getActivo() != 0);
 					usuario.setModo(ua.getModo());
 					usuario.setNombreAplicacion(ua.getNombreaplicacion());
 					usuario.setNombreUsuario(ua.getNombreusuario());
@@ -82,12 +80,11 @@ public class ServicioUsuarioAplicacionImpl implements ServicioUsuarioAplicacion{
 
 	
 ////MIGRADO
-	protected List<UsuarioAplicacionBean> getListUsuarioAplicacionBean(List<TblUsuariosAplicaciones> lista) throws BusinessException
-	{	
+	protected List<UsuarioAplicacionBean> getListUsuarioAplicacionBean(List<TblUsuariosAplicaciones> lista) throws BusinessException {
+		
 		List<UsuarioAplicacionBean> result = new ArrayList<>();
 	
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			for (TblUsuariosAplicaciones ua : lista) {
 				if (null != ua){
 					UsuarioAplicacionBean usuario =  new UsuarioAplicacionBean();
@@ -136,8 +133,7 @@ public class ServicioUsuarioAplicacionImpl implements ServicioUsuarioAplicacion{
 	 * @throws IllegalAccessException 
 	 */
 	////MIGRADO
-	protected TblUsuariosAplicaciones getUsuarioAplicacionTO(UsuarioAplicacionBean usuarioAplicacion)
-	{
+	protected TblUsuariosAplicaciones getUsuarioAplicacionTO(UsuarioAplicacionBean usuarioAplicacion) {
 		 
 		TblUsuariosAplicaciones u = new TblUsuariosAplicaciones();
 		u.setAplicacionid((null != usuarioAplicacion.getAplicacionId())? usuarioAplicacion.getAplicacionId() : null);
@@ -157,15 +153,14 @@ public class ServicioUsuarioAplicacionImpl implements ServicioUsuarioAplicacion{
 	 * @throws IllegalAccessException 
 	 */
 	///MIGRADO
-	protected UsuarioAplicacionBean getUsuarioAplicacionBean(TblUsuariosAplicaciones usuario)
-	{
+	protected UsuarioAplicacionBean getUsuarioAplicacionBean(TblUsuariosAplicaciones usuario) {
 		 
 		UsuarioAplicacionBean ua = new UsuarioAplicacionBean();
 		ua.setAplicacionId(usuario.getAplicacionid());
 		ua.setCreadoPor(usuario.getCreadopor());
 		ua.setFechaCreacion((null !=usuario.getFechacreacion())? DateUtils.truncate(usuario.getFechacreacion(), Calendar.DATE) : null);
-		ua.setIsActivo((null != usuario.getTblUsuarios() && 
-				null != usuario.getTblUsuarios().getActivo() && usuario.getTblUsuarios().getActivo())? true : false);
+		ua.setIsActivo(null != usuario.getTblUsuarios() && 
+				null != usuario.getTblUsuarios().getActivo() && usuario.getTblUsuarios().getActivo());
 		ua.setModo(usuario.getModo());
 		ua.setNombreUsuario((null != usuario.getTblUsuarios())? usuario.getTblUsuarios().getNombre() : null);
 		ua.setRolId((null != usuario.getTblUsuarios())? usuario.getTblUsuarios().getRolid() : null);
@@ -214,8 +209,7 @@ public class ServicioUsuarioAplicacionImpl implements ServicioUsuarioAplicacion{
 		TblUsuariosAplicaciones usuarioAplicacionTO = tblUsuariosAplicacionesManager.getUsuariosAplicacionesById(usuarioAplicacionBean.getUsuarioAplicacionId());
 		tblUsuariosAplicacionesManager.delete(usuarioAplicacionTO, source, accion, accionId, descripcion);
 
-	}
-	catch (Exception e){
+	} catch (Exception e){
 		logger.error("OrganismosAction - deleteUsuarioAplicacion:" + e);			
 		throw new BusinessException(e,"errors.organismo.deleteOrganismo");			
 	}

@@ -30,7 +30,13 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
     
 	 //~ Static fields/initializers =====================================================================================
 
-    private static final Log logger = LogFactory.getLog(AutenticaAuthenticationEntryPoint.class);
+    protected static final String HTTP = "http";
+
+	protected static final String UNABLE_TO_REDIR = "Unable to redirect to HTTPS as no port mapping found for HTTP port ";
+
+	protected static final String HTTPS = "https";
+
+	private static final Log logger = LogFactory.getLog(AutenticaAuthenticationEntryPoint.class);
 
     //~ Instance fields ================================================================================================
 
@@ -82,7 +88,7 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
 
         if (serverSideRedirect) {
 
-            if (forceHttps && "http".equals(request.getScheme())) {
+            if (forceHttps && HTTP.equals(request.getScheme())) {
                 redirectUrl = buildHttpsRedirectUrlForRequest(httpRequest);
             }
 
@@ -132,15 +138,15 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
         urlBuilder.setContextPath(request.getContextPath());
         urlBuilder.setPathInfo(loginForm);
 
-        if (forceHttps && "http".equals(scheme)) {
-            Integer httpsPort = portMapper.lookupHttpsPort(new Integer(serverPort));
+        if (forceHttps && HTTP.equals(scheme)) {
+            Integer httpsPort = portMapper.lookupHttpsPort(Integer.valueOf(serverPort));
 
             if (httpsPort != null) {
                 // Overwrite scheme and port in the redirect URL
-                urlBuilder.setScheme("https");
+                urlBuilder.setScheme(HTTPS);
                 urlBuilder.setPort(httpsPort.intValue());
             } else {
-                logger.warn("Unable to redirect to HTTPS as no port mapping found for HTTP port " + serverPort);
+                logger.warn(UNABLE_TO_REDIR + serverPort);
             }
         }
 
@@ -154,11 +160,11 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
             throws IOException, ServletException {
 
         int serverPort = portResolver.getServerPort(request);
-        Integer httpsPort = portMapper.lookupHttpsPort(new Integer(serverPort));
+        Integer httpsPort = portMapper.lookupHttpsPort(Integer.valueOf(serverPort));
 
         if (httpsPort != null) {
             RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
-            urlBuilder.setScheme("https");
+            urlBuilder.setScheme(HTTPS);
             urlBuilder.setServerName(request.getServerName());
             urlBuilder.setPort(httpsPort.intValue());
             urlBuilder.setContextPath(request.getContextPath());
@@ -170,7 +176,7 @@ public class AutenticaAuthenticationEntryPoint implements AuthenticationEntryPoi
         }
 
         // Fall through to server-side forward with warning message
-        logger.warn("Unable to redirect to HTTPS as no port mapping found for HTTP port " + serverPort);
+        logger.warn(UNABLE_TO_REDIR + serverPort);
 
         return null;
     }

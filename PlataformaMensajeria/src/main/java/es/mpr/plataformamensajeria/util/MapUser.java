@@ -28,8 +28,7 @@ public class MapUser
    * @param authorities the authorities
    * @param user the user
    */
-  public MapUser(String username, String password, boolean isEnabled, List<GrantedAuthority> authorities, Object user)
-  {
+  public MapUser(String username, String password, boolean isEnabled, List<GrantedAuthority> authorities, Object user) {
 	  
     super(username, password, isEnabled, null, null, null, null, null, true, true, true, authorities);
     setUserInfo(user);
@@ -43,8 +42,7 @@ public class MapUser
    * @param isEnabled the is enabled
    * @param arrayAuths the array auths
    */
-  public MapUser(String username, String password, boolean isEnabled, List<GrantedAuthority> arrayAuths)
-  {
+  public MapUser(String username, String password, boolean isEnabled, List<GrantedAuthority> arrayAuths) {
     super(username, password, isEnabled, null, null, null, null, null, true, true, true, arrayAuths);
   }
   
@@ -53,8 +51,7 @@ public class MapUser
    *
    * @return user info
    */
-  public Object getUserInfo()
-  {
+  public Object getUserInfo() {
     return this.userInfo;
   }
   
@@ -63,8 +60,7 @@ public class MapUser
    *
    * @param userInfo new user info
    */
-  public void setUserInfo(Object userInfo)
-  {
+  public void setUserInfo(Object userInfo) {
     this.userInfo = userInfo;
   }
 }

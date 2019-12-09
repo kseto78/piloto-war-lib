@@ -13,7 +13,7 @@ public class ResultOptions implements Serializable {
 	private static final long serialVersionUID = 2938205591957165L;
 	
 	/**  items. */
-	private List<SelectOption> items = new ArrayList<SelectOption>();
+	private List<SelectOption> items = new ArrayList<>();
 	
 	/**
 	 * Obtener items.

@@ -54,6 +54,42 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class ProveedorMisimAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String DATOS_INCORRECT = "Datos incorrectos";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String PROVEEDORMISIMA = "ProveedorMisimAction - getParametrosProveedorMisim: idProveedor no es numerico";
+
+	protected static final String GOOGLE = "Google";
+
+	protected static final String HYPHEN2 = "-2";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String LOGDOTSOURCE_PR = "log.SOURCE_PROVEEDORES_MISIM";
+
+	protected static final String R_CONST_REF = "20";
+
+	protected static final String PLATAFORMADOTPR = "plataforma.proveedorMisim.update.error";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String PROVEEDORMISIMA0 = "ProveedorMisimAction - getParametrosProveedorMisim:";
+
+	protected static final String APPLE = "Apple";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -144,7 +180,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	String json;
 
 	/** Constante RECOVERY. */
-	private static final String RECOVERY = "recovery";
+	private static final String TXTRECOVERY = "recovery";
 
 	/**
 	 * New search.
@@ -164,19 +200,24 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 */
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute("infoUser") == null) return "noUser";
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para ordenar
 
-		if (proveedorMisim != null)
-			if (proveedorMisim.getNombre() != null && proveedorMisim.getNombre().length() <= 0)
-				proveedorMisim.setNombre(null);
+		if (proveedorMisim != null && proveedorMisim.getNombre() != null && proveedorMisim.getNombre().isEmpty()) {
+			proveedorMisim.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ProveedorMisimBean> result = servicioProveedorMisim.getProveedoresMisim(inicio, 
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, 
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)), order, 
 				columnSort, proveedorMisim);
 		Integer totalSize = result.getTotalList();
 
@@ -185,14 +226,14 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 		// Atributos de request
 		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), 
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 		}
 
 		if (listaProveedoresMisim != null && !listaProveedoresMisim.isEmpty()) {
-			for (int indice = 0; indice < listaProveedoresMisim.size(); indice++) {
+			for (int indice = 0, s = listaProveedoresMisim.size(); indice < s; indice++) {
 
 				ProveedorMisimBean proveedorMisim = listaProveedoresMisim.get(indice);
 				proveedorMisim.setNombre(StringEscapeUtils.escapeHtml(proveedorMisim.getNombre()));
@@ -222,10 +263,11 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 		
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES_MISIM", null);
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 
 		if (proveedorMisim != null) {
 			
@@ -279,9 +321,8 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	if (proveedorMisim.getProducto().getIdProducto()==null){
 		addActionErrorSession(this.getText("plataforma.proveedorMisim.field.Producto.error"));
 		sw = false;	
-	}
-	
-	else if (proveedorMisim.getProducto().getIdProducto()== -2) {	
+	} else if (proveedorMisim.getProducto().getIdProducto()== -2) {
+		
 		if (PlataformaMensajeriaUtil.isEmpty(proveedorMisim.getProducto().getNombre())) {
 			addActionErrorSession(this.getText("plataforma.proveedorMisim.field.nombreProducto.error"));
 			sw = false;
@@ -296,9 +337,8 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	if (proveedorMisim.getEndpoint().getIdEndpoint()==null){
 		addActionErrorSession(this.getText("plataforma.proveedorMisim.field.Endpoint.error"));
 		sw = false;	
-	}	
-	
-	else if (proveedorMisim.getEndpoint().getIdEndpoint()== -2) {	
+	} else if (proveedorMisim.getEndpoint().getIdEndpoint()== -2) {
+		
 		if (PlataformaMensajeriaUtil.isEmpty(proveedorMisim.getEndpoint().getNombre())) {
 			addActionErrorSession(this.getText("plataforma.proveedorMisim.field.nombreEndpoint.error"));
 			sw = false;
@@ -328,7 +368,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 			sw = false;
 		}	
 	}
-	if (proveedorMisim.getProducto().getIdProducto() == 3 && proveedorMisim.getCompany().equals("")){
+	if (proveedorMisim.getProducto().getIdProducto() == 3 && "".equals(proveedorMisim.getCompany())){
 		addActionErrorSession(this.getText("plataforma.proveedorMisim.field.company.error"));
 		sw = false;
 	}
@@ -343,19 +383,20 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String update() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES_MISIM", null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 
 		ProveedorMisimBean proveedorMisimBBDD = null;
 		if (proveedorMisim == null) {
-			addActionErrorSession(this.getText("plataforma.proveedorMisim.update.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTPR));
 		} else {
 			
 			if (!validaProveedorMisim(proveedorMisim, true)) {
-				addActionErrorSession(this.getText("plataforma.proveedorMisim.update.error"));
+				addActionErrorSession(this.getText(PLATAFORMADOTPR));
 				return ERROR;
 			}
 			
@@ -365,7 +406,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 			
 			if (proveedorMisim.getIdProveedor() == null) {
 				if (idProveedor != null) {
-					proveedorMisim.setIdProveedor(new Long(idProveedor));
+					proveedorMisim.setIdProveedor(Long.valueOf(idProveedor));
 					proveedorMisimBBDD = servicioProveedorMisim.loadProveedorMisim(proveedorMisim);
 				} else {
 					String idProveedor = (String) request.getAttribute("idProveedor");
@@ -425,32 +466,39 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para ordenar
 
-		if (proveedorMisim != null)
-			if (proveedorMisim.getNombre() != null && proveedorMisim.getNombre().length() <= 0)
-				proveedorMisim.setNombre(null);
+		if (proveedorMisim != null && proveedorMisim.getNombre() != null && proveedorMisim.getNombre().isEmpty()) {
+			proveedorMisim.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF));
 		PaginatedList<ProveedorMisimBean> result = servicioProveedorMisim.getProveedoresMisim(inicio, 
-				Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, proveedorMisim);
+				Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)), order, columnSort, proveedorMisim);
 
 		listaProveedoresMisim = result.getPageList();
 		
-		if (idProveedor == null)
+		if (idProveedor == null) {
 			throw new BusinessException("EL idProveedor recibido es nulo");
+		}
 		try {
 			proveedorMisim = new ProveedorMisimBean();
-			proveedorMisim.setIdProveedor(new Long(idProveedor));
+			proveedorMisim.setIdProveedor(Long.valueOf(idProveedor));
 			proveedorMisim = servicioProveedorMisim.loadProveedorMisim(proveedorMisim);
 			
 			return SUCCESS;
 		} catch (NumberFormatException e) {
-			String mensg = this.getText("errors.action.proveedorMisim.loadProveedorMisim", new String[] { (null != proveedorMisim && null != proveedorMisim.getIdProveedor())? proveedorMisim.getIdProveedor().toString() : "No existe IdProveedor" });
+			logger.error(e.getMessage(), e);
+			String mensg = this.getText("errors.action.proveedorMisim.loadProveedorMisim", new String[] { (null != proveedorMisim && 
+				null != proveedorMisim.getIdProveedor())? proveedorMisim.getIdProveedor().toString() : "No existe IdProveedor" });
 			throw new BusinessException(mensg);
 		}
 	}	
@@ -462,17 +510,18 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String delete() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES_MISIM", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idProveedor == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorMisim.delete.error"));
 
 		} else {
 			proveedorMisim = new ProveedorMisimBean();
-			proveedorMisim.setIdProveedor(new Long(idProveedor));
+			proveedorMisim.setIdProveedor(Long.valueOf(idProveedor));
 			servicioProveedorMisim.deleteProveedorMisim(proveedorMisim, accion, accionId, source);
 			addActionMessageSession(this.getText("plataforma.proveedorMisim.delete.ok"));
 		}
@@ -487,18 +536,19 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String deleteSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES_MISIM", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorMisim.deleteSelected.error"));
 
 		} else {
 			for (String idProveedor : checkDelList) {
 				proveedorMisim = new ProveedorMisimBean();
-				proveedorMisim.setIdProveedor(new Long(idProveedor));
+				proveedorMisim.setIdProveedor(Long.valueOf(idProveedor));
 				servicioProveedorMisim.deleteProveedorMisim(proveedorMisim, accion, accionId, source);
 			}
 			addActionMessageSession(this.getText("plataforma.proveedorMisim.deleteSelected.ok"));
@@ -515,7 +565,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	public void prepare() throws Exception {
 		this.validate();
 		session = (Map) ActionContext.getContext().get("session");
-		recovery = (String) session.get(RECOVERY);
+		recovery = (String) session.get(TXTRECOVERY);
 		
 		comboProductosProveedorMisim = getComboValuesProductos();
 		comboEndpointsProveedorMisim = getComboValuesEndpoints();
@@ -533,12 +583,12 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 		
 
 		option = new KeyValueObject();
-		option.setCodigo("Google");
-		option.setDescripcion("Google");
+		option.setCodigo(GOOGLE);
+		option.setDescripcion(GOOGLE);
 		result.add(option);
 		option = new KeyValueObject();
-		option.setCodigo("Apple");
-		option.setDescripcion("Apple");
+		option.setCodigo(APPLE);
+		option.setDescripcion(APPLE);
 		result.add(option);
 		
 		return result;
@@ -561,7 +611,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 		}
 
 		option = new KeyValueObject();
-		option.setCodigo("-2");
+		option.setCodigo(HYPHEN2);
 		option.setDescripcion("NUEVO PRODUCTO");
 		result.add(option);
 		
@@ -593,7 +643,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 			logger.error("ProveedorMisimAction - getComboValuesEndpoints:" + e);
 		}
 		option = new KeyValueObject();
-		option.setCodigo("-2");
+		option.setCodigo(HYPHEN2);
 		option.setDescripcion("NUEVO ENDPOINT");
 		result.add(option);
 		
@@ -626,7 +676,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 		}
 
 		option = new KeyValueObject();
-		option.setCodigo("-2");
+		option.setCodigo(HYPHEN2);
 		option.setDescripcion("NUEVA TRANSFORMACIÓN");
 		result.add(option);
 		
@@ -648,7 +698,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @return combo values comunicaciones
 	 */
 	private List<KeyValueObject> getComboValuesComunicaciones() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option = null;
 		ArrayList<ComunicacionBean> keys = null;
@@ -658,7 +708,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 			logger.error("ProveedorMisimAction - getComboValuesComunicaciones:" + e);
 		}
 
-		if (keys != null && keys.size() > 0)
+		if (keys != null && !keys.isEmpty()) {
 			for (ComunicacionBean key : keys) {
 
 				option = new KeyValueObject();
@@ -666,6 +716,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 	
@@ -689,11 +740,12 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @return the string
 	 */
 	public String ajaxLoadProducto() {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		String idProducto = getRequest().getParameter("idProducto");
 		if (idProducto == null) {
-			addFieldErrorSession("Datos incorrectos");
+			addFieldErrorSession(DATOS_INCORRECT);
 		} else {
 			try {
 				Producto producto = null;
@@ -703,8 +755,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 						json = new Gson().toJson(producto);
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error("ProveedorMisimAction - ajaxLoadProducto:" + e);
 			}
 
@@ -718,11 +769,12 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @return the string
 	 */
 	public String ajaxLoadEndpoint() {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		String idEndpoint = getRequest().getParameter("idEndpoint");
 		if (idEndpoint == null) {
-			addFieldErrorSession("Datos incorrectos");
+			addFieldErrorSession(DATOS_INCORRECT);
 		} else {
 			try {
 				Endpoint endpoint = null;
@@ -732,8 +784,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 						json = new Gson().toJson(endpoint);
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error("ProveedorMisimAction - ajaxLoadEndpoint:" + e);
 			}
 
@@ -747,11 +798,12 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @return the string
 	 */
 	public String ajaxLoadTransformacion() {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		String idTransformacion = getRequest().getParameter("idTransformacion");
 		if (idTransformacion == null) {
-			addFieldErrorSession("Datos incorrectos");
+			addFieldErrorSession(DATOS_INCORRECT);
 		} else {
 			try {
 				Transformacion transformacion = null;
@@ -761,8 +813,7 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 						json = new Gson().toJson(transformacion);
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error("ProveedorMisimAction - ajaxLoadTransformacion:" + e);
 			}
 
@@ -777,21 +828,21 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 */
 	private List<ParametrosProveedorBean> getParametrosProveedorMisim() {
 		List<ParametrosProveedorBean> lista = null;
-		if (idProveedor != null && idProveedor.length() > 0) {
+		if (idProveedor != null && !idProveedor.isEmpty()) {
 			try {
 				lista = servicioParametroProveedorMisim.getParametrosProveedorMisimByProveedorId(Long.valueOf(idProveedor));
 			} catch (NumberFormatException e) {
-				logger.error("ProveedorMisimAction - getParametrosProveedorMisim: idProveedor no es numerico" + e);
+				logger.error(PROVEEDORMISIMA + e);
 			} catch (BusinessException e) {
-				logger.error("ProveedorMisimAction - getParametrosProveedorMisim:" + e);
+				logger.error(PROVEEDORMISIMA0 + e);
 			}
 		} else if (proveedorMisim != null && proveedorMisim.getIdProveedor() != null) {
 			try {
 				lista = servicioParametroProveedorMisim.getParametrosProveedorMisimByProveedorId(proveedorMisim.getIdProveedor());
 			} catch (NumberFormatException e) {
-				logger.error("ProveedorMisimAction - getParametrosProveedorMisim: idProveedor no es numerico" + e);
+				logger.error(PROVEEDORMISIMA + e);
 			} catch (BusinessException e) {
-				logger.error("ProveedorMisimAction - getParametrosProveedorMisim:" + e);
+				logger.error(PROVEEDORMISIMA0 + e);
 			}
 		}
 		return lista;
@@ -804,12 +855,14 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String addParametroProveedorMisim() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES_MISIM", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PARAMETRO", null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		if (parametroProveedor != null) {
 			if (!validaParametro(parametroProveedor)) {
 				return ERROR;
@@ -856,8 +909,9 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String deleteParametroProveedorMisim() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idParametrosProveedor == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorMisim.parametroProveedor.delete.error"));
 		} else {
@@ -874,8 +928,9 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BaseException the base exception
 	 */
 	public String deleteParametrosProveedorMisimSelected() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (checkDelListParametrosProveedorMisim == null) {
 			addActionErrorSession(this.getText("plataforma.proveedorMisim.parametroProveedor.deleteSelected.error"));
 
@@ -899,9 +954,9 @@ public class ProveedorMisimAction extends PlataformaPaginationAction implements 
 	 * @throws BusinessException the business exception
 	 */
 	private void deleteParametroProveedorMisim(Long idParametrosProveedor) throws BusinessException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES_MISIM", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PARAMETRO", null);
 		
 		ParametrosProveedorBean parametrosProveedor = new ParametrosProveedorBean();

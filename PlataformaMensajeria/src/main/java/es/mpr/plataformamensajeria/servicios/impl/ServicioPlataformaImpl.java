@@ -41,11 +41,8 @@ public class ServicioPlataformaImpl implements ServicioPlataforma {
 	public List<PlataformaBean> getPlataformas() throws BusinessException {
 		try {
 			List<TblPlataformas> lista = tblPlataformasManager.getPlataformasActivas();
-			List<PlataformaBean> result = getListPlataformaBean(lista);					
-		
-			return result;		
-		} 
-		catch (Exception e){
+			return getListPlataformaBean(lista);		
+		} catch (Exception e){
 			logger.error("ServicioPlataformaImpl - getPlataformas:" + e);
 			throw new BusinessException(e,"errors.organismo.getOrganismos");	
 		} 
@@ -59,12 +56,12 @@ public class ServicioPlataformaImpl implements ServicioPlataforma {
 	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
-	protected List<PlataformaBean> getListPlataformaBean(List<TblPlataformas> lista) throws BusinessException
-	{	
+	protected List<PlataformaBean> getListPlataformaBean(List<TblPlataformas> lista) throws BusinessException {
+	
 		List<PlataformaBean> result = null;
 		
 		if (lista!=null && !lista.isEmpty()){
-			result = new ArrayList<PlataformaBean>();
+			result = new ArrayList<>();
 			for (TblPlataformas p : lista) {
 				PlataformaBean plataformaBean =  new PlataformaBean();
 				try {
@@ -72,9 +69,7 @@ public class ServicioPlataformaImpl implements ServicioPlataforma {
 					DateConverter converter = new DateConverter(defaultValue);         
 					ConvertUtils.register(converter, java.util.Date.class);
 					BeanUtils.copyProperties(plataformaBean, p);
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			

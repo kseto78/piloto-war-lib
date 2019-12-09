@@ -29,7 +29,6 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajesHistoricos;
 @Service("servicioMensajesHistoricosImpl")
 public class ServicioMensajesHistoricosImpl implements ServicioMensajesHistoricos{
 	
-//	private static Logger logger = Logger.getLogger(ServicioMensajesHistoricosImpl.class);
 	
 	/**  tbl mensajes hist manager. */
 @Resource(name = "TblMensajesHistManagerImpl")

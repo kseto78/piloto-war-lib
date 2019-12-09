@@ -1,13 +1,9 @@
 package es.mpr.plataformamensajeria.servicios.ifaces;
 
-import java.util.List;
-
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
-import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.ContactoBean;
-import es.mpr.plataformamensajeria.beans.UsuarioBean;
 
 
 

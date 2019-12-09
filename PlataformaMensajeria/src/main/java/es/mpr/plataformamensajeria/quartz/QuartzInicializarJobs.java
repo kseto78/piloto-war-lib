@@ -2,14 +2,12 @@ package es.mpr.plataformamensajeria.quartz;
 
 import java.text.ParseException;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 import org.quartz.CronExpression;
 import org.quartz.Job;
-import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -18,13 +16,6 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.quartz.Trigger;
-import org.quartz.TriggerKey;
-
-import com.map.j2ee.exceptions.BusinessException;
-
-import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
-import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesos;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 
 
@@ -34,6 +25,12 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 public class QuartzInicializarJobs extends HttpServlet  {
 
 		
+	protected static final String QUARTZINICIALIZ = "[QuartzInicializarJobs - planificarJobCons] ";
+
+	protected static final String UNCHECKED = "unchecked";
+
+	protected static final String S = "S";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -78,6 +75,14 @@ public class QuartzInicializarJobs extends HttpServlet  {
 	
 	private static final String TRIGGER = "_TRIGGER";
 	
+	/**
+	 * Constructor de quartz inicializar jobs.
+	 */
+	public QuartzInicializarJobs() {
+		super();
+		
+	}
+
 	/* (non-Javadoc)
 	 * @see javax.servlet.GenericServlet#init()
 	 */
@@ -90,7 +95,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 		
 		try {
            this.planificarJobs();
-           if(nodoPrincipal != null && nodoPrincipal.equals("S")){
+           if(nodoPrincipal != null && S.equals(nodoPrincipal)){
         	   Planificador p = new Planificador(applicationContext);
                p.run();
            }         
@@ -98,15 +103,6 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			logger.error("[QuartzInicializarJobs - init] ",e);
 		}
 	}
-	
-	/**
-	 * Constructor de quartz inicializar jobs.
-	 */
-	public QuartzInicializarJobs() {
-		super();
-		
-	}
-	
 	
 	/**
 	 * Planificar jobs.
@@ -120,30 +116,30 @@ public class QuartzInicializarJobs extends HttpServlet  {
 				String activarJobDIR3 = configProp.getProperty("jobDIR3.activacion", null);
 				String anularMensajes = configProp.getProperty("jobAnularMensajes.activacion", null);
 				
-				if((activarJobHist!=null && activarJobHist.equals("S")) ||
-						(activarJobCons!=null && activarJobCons.equals("S")) ||
-						(activarJobInformesServicios!=null && activarJobInformesServicios.equals("S")) ||
-						(activarJobDIR3!=null && activarJobDIR3.equals("S"))){
+				if((activarJobHist!=null && S.equals(activarJobHist)) ||
+						(activarJobCons!=null && S.equals(activarJobCons)) ||
+						(activarJobInformesServicios!=null && S.equals(activarJobInformesServicios)) ||
+						(activarJobDIR3!=null && S.equals(activarJobDIR3))){
 					
 			        // Obtenemos la referencia del planificador
 					SchedulerFactory sf = new StdSchedulerFactory();
 					Scheduler scheduler = sf.getScheduler();
 					scheduler.getContext().put("applicationContext",applicationContext);
 					
-					if(activarJobHist!=null && "S".equals(activarJobHist)){
+					if(S.equals(activarJobHist)){
 						this.planificarJobHist(scheduler);
 					}
-					if(activarJobCons!=null && "S".equals(activarJobCons)){
+					if(S.equals(activarJobCons)){
 						this.planificarJobCons(scheduler);
 					}
-					if(activarJobInformesServicios!=null && "S".equals(activarJobInformesServicios)){
+					if(S.equals(activarJobInformesServicios)){
 						this.planificarJobInformesServicios(scheduler);
 					}
 					
-					if(activarJobDIR3!= null && "S".equals(activarJobDIR3)){
+					if(S.equals(activarJobDIR3)){
 						this.planificarJobDIR3(scheduler);
 					}
-					if(anularMensajes!= null && "S".equals(anularMensajes)){
+					if(S.equals(anularMensajes)){
 						this.planificarAnularMensajes(scheduler);
 					}					
 					scheduler.start();
@@ -169,7 +165,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			
 			job.setName(HIST_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(UNCHECKED)
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.HistorificacionJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobHist.expression", null);
@@ -208,7 +204,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(CONS_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(UNCHECKED)
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.EstadisticasConsolidadasJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobCons.expression", null);
@@ -228,7 +224,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			scheduler.scheduleJob(job, trigger);
 			
 		}catch (SchedulerException | ParseException | ClassNotFoundException se){
-			logger.error("[QuartzInicializarJobs - planificarJobCons] ",se);
+			logger.error(QUARTZINICIALIZ,se);
 			logger.debug("planificarJobCons - Error: " + se.getMessage());
 		}
 	}
@@ -247,7 +243,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(INFORMES_SERVICIOS_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(UNCHECKED)
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.InformesServiciosJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobInformesServicios.expression", null);
@@ -281,7 +277,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(DIR3_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(UNCHECKED)
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.RecuperarInforDIRJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobDIR3.expression", null);
@@ -301,7 +297,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			scheduler.scheduleJob(job, trigger);
 			
 		}catch (SchedulerException | ParseException | ClassNotFoundException se){
-			logger.error("[QuartzInicializarJobs - planificarJobCons] ",se);
+			logger.error(QUARTZINICIALIZ,se);
 			logger.debug("planificarJobDIR3 - Error: " + se.getMessage());
 		}
 	}
@@ -314,7 +310,7 @@ public class QuartzInicializarJobs extends HttpServlet  {
 			JobDetailImpl job = new JobDetailImpl();
 			job.setName(ANULAR_MENSAJES_JOB_NAME);
 			job.setGroup(org.quartz.Scheduler.DEFAULT_GROUP);
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings(UNCHECKED)
 			Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs.AnularMensajesJob");
 			job.setJobClass(clase);
 			String cronExpression = configProp.getProperty("cron.jobAnularMensajes.expression", null);

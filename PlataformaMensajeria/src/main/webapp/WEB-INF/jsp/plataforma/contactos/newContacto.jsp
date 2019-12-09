@@ -31,14 +31,7 @@
 					<s:textfield name="contacto.nombre" value="%{contacto.nombre}"
 						id="contacto.nombre" theme="simple" style="width:300px;" size="50"
 						cssClass="" />
-				</p>
-				<!-- 				Apellidos -->
-				<p class="criteria">
-					<label class="fieldText" style="width: 120px;">Apellidos:</label>
-					<s:textfield name="contacto.apellidos"
-						value="%{contacto.apellidos}" id="contacto.apellidos"
-						theme="simple" style="width:300px;" size="50" cssClass="" />
-				</p>
+				</p>				
 				<!-- 				Email -->
 				<p class="criteria">
 					<label class="fieldText" style="width: 120px;">E-mail:</label>

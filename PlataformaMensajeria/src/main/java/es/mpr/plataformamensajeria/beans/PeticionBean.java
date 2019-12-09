@@ -12,6 +12,31 @@ public class PeticionBean implements Audit {
 
 	
 
+	/**  id peticion. */
+	protected Long idPeticion = null;
+
+	/**  proveedor. */
+	protected ProveedorMisimBean proveedor = null;
+
+	/**  estado. */
+	protected EstadoBean estado = null;
+
+	/**  aplicacion. */
+	protected AplicacionBean aplicacion = null;
+
+	/**  producto. */
+	protected ProductoBean producto = null;
+
+	/**  id mensaje. */
+	protected Long idMensaje = null;
+
+	/**  mensaje peticion. */
+	protected String mensajePeticion = null;
+
+	/**  mensaje respuesta. */
+	protected String mensajeRespuesta = null;
+
+
 	/**
 	 * Constructor de peticion bean.
 	 */
@@ -28,31 +53,6 @@ public class PeticionBean implements Audit {
 	}
 
 	
-	/**  id peticion. */
-	protected Long idPeticion = null;
-	
-	/**  proveedor. */
-	protected ProveedorMisimBean proveedor = null;
-	
-	/**  estado. */
-	protected EstadoBean estado = null;
-	
-	/**  aplicacion. */
-	protected AplicacionBean aplicacion = null;
-	
-	/**  producto. */
-	protected ProductoBean producto = null;
-	
-	/**  id mensaje. */
-	protected Long idMensaje = null;
-	
-	/**  mensaje peticion. */
-	protected String mensajePeticion = null;
-	
-	/**  mensaje respuesta. */
-	protected String mensajeRespuesta = null;
-
-
 	/**
 	 * Obtener id peticion.
 	 *

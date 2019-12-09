@@ -39,6 +39,12 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioUsuariosPushImpl")
 public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 
+	protected static final String FECHA = "fecha";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String R_CONST_0 = "5";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
 	
@@ -68,19 +74,20 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 			
 			columns.put("0","usuarioid");
 			columns.put("1","nombreusuario");
-			columns.put("2","aplicacion");
+			columns.put(R_CONST_REF,"aplicacion");
 			columns.put("3","servicio");
 			columns.put("4","plataforma");
-			columns.put("5","fecha");
+			columns.put(R_CONST_0,FECHA);
 			if (columnSort==null){
-				columnSort = "5"; //Fecha
+				columnSort = R_CONST_0; 
+				//Fecha
 			}
 			String column = columns.get(columnSort);
 			if (column==null){
-				column = "fecha";
+				column = FECHA;
 			}
 			if (order == null) {
-				order = "2";
+				order = R_CONST_REF;
 			}
 			
 			es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean upb = new es.minhap.plataformamensajeria.iop.beans.UsuariosPushBean();
@@ -91,13 +98,14 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 			
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
 	    	Integer userName = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
-	    	if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)){
+	    	if (rolUsuario != null && PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario)){
 	    		TblUsuariosAplicacionesQuery queryUsuariosAplicaciones = new TblUsuariosAplicacionesQuery();
 				TblUsuariosQuery queryUsuarios = new TblUsuariosQuery();
 				queryUsuarios.setUsuarioid((null != userName)? userName.longValue() : null);
 				queryUsuariosAplicaciones.setTblUsuarios(queryUsuarios);
 				List<TblUsuariosAplicaciones> listaUsuarioAplicaciones = tblUsuariosAplicacionesManager.getUsuariosAplicacionesByQuery(queryUsuariosAplicaciones);
-				if(listaUsuarioAplicaciones != null){	
+				if(listaUsuarioAplicaciones != null){
+		
 					boolean first = true;
 					String listaIdAplicaciones = "";
 					for(TblUsuariosAplicaciones apl : listaUsuarioAplicaciones){
@@ -119,7 +127,7 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 			Integer rowcount = viewUsuariosPushManager.getUsuariosPushPaginado(start, size, order, column, 
 					upb, true).size();
 					
-			PaginatedList<UsuariosPushBean> result = new PaginatedList<UsuariosPushBean>();
+			PaginatedList<UsuariosPushBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 			
@@ -165,7 +173,7 @@ public class ServicioUsuariosPushImpl implements ServicioUsuariosPush{
 		List<UsuariosPushBean> result = null;
 		
 		if(lista != null && !lista.isEmpty()){
-			result = new ArrayList<UsuariosPushBean>();
+			result = new ArrayList<>();
 			
 			for(ViewUsuariosPush vup : lista){
 				UsuariosPushBean usuariosPush = new UsuariosPushBean();

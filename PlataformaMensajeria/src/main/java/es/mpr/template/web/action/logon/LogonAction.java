@@ -20,16 +20,15 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.map.j2ee.security.perm.model.User060VO;
-//import com.map.j2ee.security.perm.model.User060VO;
 import com.map.j2ee.util.Constants;
 import com.opensymphony.xwork2.ActionSupport;
 
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosManager;
+import es.minhap.sim.model.TblUsuarios;
 import es.minhap.sim.model.TblUsuariosAplicaciones;
 import es.minhap.sim.query.TblUsuariosAplicacionesQuery;
 import es.minhap.sim.query.TblUsuariosQuery;
@@ -44,6 +43,20 @@ import es.sag.autentica.sign.ValidateSign;
 @Scope("prototype")
 public class LogonAction extends ActionSupport implements ServletRequestAware{
 		
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String ORGANISMO_AGREG = "ORGANISMO AGREGADO AL USUARIO: ";
+
+	protected static final String BLANKIGUAL_A_AP = " Igual a Aplicacion ";
+
+	protected static final String OK = "OK";
+
+	protected static final String PLATAFORMAMENSA = "PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA";
+
+	protected static final String ETIQUETAORGANIS = "etiquetaOrganismos ";
+
+	protected static final String PLATAFORMAMENSA0 = "PlataformaMensajeriaUtil.ID_APLICACION_AEAT";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -2273409755502204354L;
 	
@@ -80,37 +93,37 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     	String etiquetaOrganismo = properties.getProperty("logonAction.ETIQUETA_ORGANISMO",null);
     	String rutaCertificadoAutentica = properties.getProperty("logonAction.RUTA_CERTIFICADO_AUTENTICA",null);
     	
-    	String etiquetaPuestos = properties.getProperty("logonAction.ETIQUETA_PUESTOS",null);
+    	properties.getProperty("logonAction.ETIQUETA_PUESTOS",null);
     	
     	String expresionOK = properties.getProperty("logonAction.OK",null);        
 
     	//Si el usuario no esta en sesion, se intenta localizar el fichero XML de regreso de AutenticA
-    	if(request.getSession().getAttribute("infoUser")==null){
+    	if(request.getSession().getAttribute(INFOUSER)==null){
     		
-    		if(request.getParameter(autenticaUserXML)==null || ("").equals(request.getParameter(autenticaUserXML))){
+    		if(request.getParameter(autenticaUserXML)==null || "".equals(request.getParameter(autenticaUserXML))){
     			logger.error("AutenticA - Error: No existe el fichero AUTENTICA_USER_XML como parametro.");
     			return ERROR;
     		}
         		
     		FileInputStream cerAutentica  =  new FileInputStream (rutaCertificadoAutentica);
     		
-    		String xml_user_autentica = request.getParameter(autenticaUserXML);
+    		String xmlUserAutentica = request.getParameter(autenticaUserXML);
     		if (logger.isDebugEnabled()) {
-    			logger.debug("[LogonAction] - xmlAutentica: " + xml_user_autentica);
+    			logger.debug("[LogonAction] - xmlAutentica: " + xmlUserAutentica);
     		}
 
     		ValidateSign val = new ValidateSign();
-    		String isValid = val.validateSign(xml_user_autentica, cerAutentica);
+    		String isValid = val.validateSign(xmlUserAutentica, cerAutentica);
     		
     		cerAutentica.close();
     		
-    		if(!isValid.equals("OK")){
+    		if(!OK.equals(isValid)){
     			return ERROR;
     		}
     		try{
     			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     			InputSource src = new InputSource();
-    			src.setCharacterStream(new StringReader(xml_user_autentica));
+    			src.setCharacterStream(new StringReader(xmlUserAutentica));
 
     			Document doc = builder.parse(src);
     			
@@ -133,28 +146,35 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
         			    	
         			    	logger.debug("listUsuarioAplicaciones "+listUsuarioAplicaciones.size());		    	
         			    	if(listUsuarioAplicaciones!=null && !listUsuarioAplicaciones.isEmpty()){
-        			    		List<String> arrayOrganismos = new ArrayList<String>();
+        			    		List<String> arrayOrganismos = new ArrayList<>();
         			    		for (TblUsuariosAplicaciones usuarioAplicacion : listUsuarioAplicaciones){
         			    			logger.debug("usuarioAplicacion "+usuarioAplicacion.getAplicacionid() +" Aplicacion" + usuarioAplicacion.getAplicacionid());
         			    			if(usuarioAplicacion.getAplicacionid()!=null){
-        			    				logger.debug("ID_APLICACION_AEAT "+properties.getProperty("PlataformaMensajeriaUtil.ID_APLICACION_AEAT", null +" Igual a Aplicacion " + usuarioAplicacion.getAplicacionid().toString()));
-        		    			    	if(properties.getProperty("PlataformaMensajeriaUtil.ID_APLICACION_AEAT", null).equals(usuarioAplicacion.getAplicacionid().toString())){
-        		    			    		logger.debug("etiquetaOrganismos "+etiquetaOrganismo);
-        		    			    		if(doc.getElementsByTagName(etiquetaOrganismo)!= null && doc.getElementsByTagName(etiquetaOrganismo).item(0)!=null){
-	    	    	    			    		NodeList puestosList = doc.getElementsByTagName(etiquetaOrganismo).item(0).getChildNodes();
-	    	    	    			    		logger.debug("puestosList "+puestosList.item(0).getNodeValue());
-	    	    	    			    		if(puestosList!=null && puestosList.getLength()>0){
-		    	    	    			    		for(int i=0; i < puestosList.getLength(); i++){
-//		    	    	    			    			Element element = (Element) puestosList.item(i);
-		    	    	    			    			String organismo = puestosList.item(i).getNodeValue();
-		    	    	    			    			arrayOrganismos.add(organismo);
-		    	    	    			    		}
-		    	    	    			    		
-		    	    	    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ES_AEAT",null), "OK");
-		    	    	    			    		break;
-	    	    	    			    		}
+        			    				logger.debug("ID_APLICACION_AEAT "+
+        			    					properties.getProperty(PLATAFORMAMENSA0, null +
+        			    						BLANKIGUAL_A_AP + usuarioAplicacion.getAplicacionid()));
+        		    			    	if(properties.getProperty(PLATAFORMAMENSA0, null).equals(usuarioAplicacion.getAplicacionid().toString())){
+        		    			    		logger.debug(ETIQUETAORGANIS+etiquetaOrganismo);
+        		    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ES_AEAT",null), OK);
+        		    			    		TblUsuarios usuario = tblUsuariosManager.getById(Long.valueOf(idUsuario));
+        		    			    		if(null != usuario.getOrganismo() && !"".equals(usuario.getOrganismo())){
+        		    			    			arrayOrganismos.add(usuario.getOrganismo());
+        		    			    			logger.info(ORGANISMO_AGREG+usuario.getOrganismo());
         		    			    		}
         		    			    	}
+        			    				logger.debug("ID_APLICACION_GISS "+
+        			    					properties.getProperty(PLATAFORMAMENSA0, null +
+        			    						BLANKIGUAL_A_AP + usuarioAplicacion.getAplicacionid()));
+        		    			    	if(properties.getProperty("PlataformaMensajeriaUtil.ID_APLICACION_GISS", null).equals(usuarioAplicacion.getAplicacionid().toString())){
+        		    			    		logger.debug(ETIQUETAORGANIS+etiquetaOrganismo);
+        		    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ES_GISS",null), OK);
+        		    			    		TblUsuarios usuario = tblUsuariosManager.getById(Long.valueOf(idUsuario));
+        		    			    		if(null != usuario.getOrganismo() && !"".equals(usuario.getOrganismo())){
+        		    			    			arrayOrganismos.add(usuario.getOrganismo());
+        		    			    			logger.info(ORGANISMO_AGREG+usuario.getOrganismo());
+        		    			    		}
+        		    			    	}
+        			    			
         			    			}
         			    		}
         			    		logger.debug("arrayOrganismos "+arrayOrganismos);
@@ -169,15 +189,15 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     			    		return ERROR;
     			    	}	    	
     			    	if(rolUsuarioId != null && rolUsuarioId == 1){
-    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null), 
+    			    		request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA,null), 
     			    				properties.getProperty("PlataformaMensajeriaUtil.ROL_ADMINISTRADOR",null));
 
     			    	}else if(rolUsuarioId!=null&&rolUsuarioId == 2){
-    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null),
+    			    		request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA,null),
     			    				properties.getProperty("PlataformaMensajeriaUtil.ROL_PROPIETARIO",null));
 
     			    	}else if(rolUsuarioId!=null&&rolUsuarioId == 3){
-    			    		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null),
+    			    		request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA,null),
     			    				properties.getProperty("PlataformaMensajeriaUtil.ROL_CAID",null));
 
     			    	}
@@ -195,7 +215,7 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     			        
     			        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(springUser, null, getAuthorities2(usuario, rolUsuarioId), null, null, null, null, null));
     			        
-    			        request.getSession().setAttribute("infoUser", springUser);
+    			        request.getSession().setAttribute(INFOUSER, springUser);
     				}
     				
     				if( request.getSession().getAttribute(Constants.STRUTS2SESSIONLOCALEKEY) == null){
@@ -204,8 +224,9 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     		    	    request.getSession().setAttribute(Constants.STRUTS2SESSIONLOCALEKEY, locale);
     		    	}
     		    	    	       
-    		       	if(logger.isDebugEnabled())
-    		       		logger.debug("en sesion el locale vale----" + request.getSession().getAttribute(Constants.STRUTS2SESSIONLOCALEKEY).toString());		
+    		       	if(logger.isDebugEnabled()) {
+						logger.debug("en sesion el locale vale----" + request.getSession().getAttribute(Constants.STRUTS2SESSIONLOCALEKEY));
+					}		
     				
     				
     			} else {
@@ -217,8 +238,6 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
     		} catch (Exception e) {
     			
     			logger.error("AutenticA - Excepcion - " + e.getMessage());
-    			e.printStackTrace();
-    			
     			return ERROR;
     		}
 
@@ -251,13 +270,12 @@ public class LogonAction extends ActionSupport implements ServletRequestAware{
 	 * @param rolUsuarioId the rol usuario id
 	 * @return authorities 2
 	 */
-	protected List<GrantedAuthority> getAuthorities2(User060VO usuario, Integer rolUsuarioId)
-	  {
+	protected List<GrantedAuthority> getAuthorities2(User060VO usuario, Integer rolUsuarioId) {
 	    List<GrantedAuthority> authList = new ArrayList<>(2);
 	    
 	    
 	    authList.add(new GrantedAuthorityImpl("ROLE_"));
-	    String role = new String();
+	    String role = "";
 	    if(rolUsuarioId==1){
 	    	role = "ROLE_ADMINISTRADOR";
 	    }

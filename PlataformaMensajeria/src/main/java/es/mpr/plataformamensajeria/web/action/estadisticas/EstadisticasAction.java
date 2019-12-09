@@ -45,6 +45,8 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class EstadisticasAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	protected static final String R_CONST_REF = "3";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -52,22 +54,22 @@ public class EstadisticasAction extends PlataformaPaginationAction implements Se
 	private static Logger logger = Logger.getLogger(EstadisticasAction.class);
 	
 	/**  combo aplicaciones. */
-	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboAplicaciones = new ArrayList<>();
 	
 	/**  combo servidores. */
-	List<KeyValueObject> comboServidores = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServidores = new ArrayList<>();
 	
 	/**  combo servicios. */
-	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServicios = new ArrayList<>();
 	
 	/**  combo estados. */
-	List<KeyValueObject> comboEstados = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboEstados = new ArrayList<>();
 	
 	/**  combo canales. */
-	List<KeyValueObject> comboCanales = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboCanales = new ArrayList<>();
 	
 	/**  combo agrupar. */
-	List<KeyValueObject> comboAgrupar = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboAgrupar = new ArrayList<>();
 	
 	/**  lista fila estadistica bean. */
 	List<FilaEstadisticaBean> listaFilaEstadisticaBean = null;
@@ -126,11 +128,13 @@ public class EstadisticasAction extends PlataformaPaginationAction implements Se
 	///MIGRADO
 	@SuppressWarnings("unchecked")
 	public String search() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute("infoUser")==null) {
+			return "noUser";
+		} 
 		if(estadisticaBean!=null&&estadisticaBean.getVistaId()!=null){
 	    	vistaIdSelected=estadisticaBean.getVistaId().toString();
 	    }else{
-	    	vistaIdSelected = "3";
+	    	vistaIdSelected = R_CONST_REF;
 	    }
 		if(validUsuario()){
 			if(validaBusqueda(estadisticaBean)){
@@ -143,10 +147,10 @@ public class EstadisticasAction extends PlataformaPaginationAction implements Se
 			    if(estadisticaBean!=null&&estadisticaBean.getVistaId()!=null){
 			    	vistaIdSelected=estadisticaBean.getVistaId().toString();
 			    }else{
-			    	vistaIdSelected = "3";
+			    	vistaIdSelected = R_CONST_REF;
 			    }
 			    
-			    if(reverse!=null&&reverse.equals("true")){
+			    if(reverse!=null&&"true".equals(reverse)){
 			    	listaFilaEstadisticaBean = estadisticasPlataforma.getEstadisticas(estadisticaBean, true);
 			    }else{
 			    	listaFilaEstadisticaBean = estadisticasPlataforma.getEstadisticas(estadisticaBean, false);
@@ -207,11 +211,9 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 			addActionErrorSession(this.getText("plataforma.estadistica.vista.error"));
 			sw=false;
 		}
-		if(estadisticaBean2!=null && estadisticaBean2.getFechaDesde() != null && estadisticaBean2.getFechaHasta() != null && estadisticaBean2.getVistaId() == 3){
-			if((estadisticaBean2.getFechaHasta().getTime() - estadisticaBean2.getFechaDesde().getTime())/86400000L > 100){
-				addActionErrorSession(this.getText("plataforma.estadistica.vista.maxfechas.error"));
-				sw=false;
-			}
+		if(estadisticaBean2!=null && estadisticaBean2.getFechaDesde() != null && estadisticaBean2.getFechaHasta() != null && estadisticaBean2.getVistaId() == 3 && (estadisticaBean2.getFechaHasta().getTime() - estadisticaBean2.getFechaDesde().getTime())/86400000L > 100) {
+			addActionErrorSession(this.getText("plataforma.estadistica.vista.maxfechas.error"));
+			sw=false;
 		}
 		return sw;
 	}
@@ -223,7 +225,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboAplicaciones() {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         ArrayList<AplicacionBean> keys = null;
 		try {
@@ -234,7 +236,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 		} catch (Exception e) {
 			logger.error("EstadisticasAction - getComboAplicaciones:", e);
 		}
-		if(keys!=null&&keys.size()>0){
+		if(keys!=null&&!keys.isEmpty()){
 	        for (AplicacionBean key :keys) {
 	            
 	            option = new KeyValueObject();
@@ -253,7 +255,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboServidores() {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         //TODO: DEVOLVER SOLO LOS PARAMETROS ACTIVOS!!!!
         ArrayList<ServidorBean> keys = null;
@@ -266,7 +268,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 		}
         
         
-		if(keys!=null&&keys.size()>0){
+		if(keys!=null&&!keys.isEmpty()){
 	        for (ServidorBean key :keys) {
 	            
 	            option = new KeyValueObject();
@@ -285,7 +287,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboServicios() {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         //TODO: DEVOLVER SOLO LOS PARAMETROS ACTIVOS!!!!
         ArrayList<ServicioBean> keys = null;
@@ -293,18 +295,17 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
 			Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
 			if(estadisticaBean!=null && estadisticaBean.getAplicacionId()!=null && 
-					!(estadisticaBean.getAplicacionId().equals(Integer.valueOf(0)))){
+					!estadisticaBean.getAplicacionId().equals(Integer.valueOf(0))){
 				keys = (ArrayList<ServicioBean>)servicioServicio.getServiciosByAplicacionId(estadisticaBean.getAplicacionId());
 			}else{
 				keys = (ArrayList<ServicioBean>)servicioServicio.getServicios(rolUsuario,idUsuario);
 			}
-			//keys = (ArrayList<ServicioBean>)servicioServicio.getServicios(rolUsuario,idUsuario);
 		} catch (BusinessException e) {
 			logger.error("EstadisticasAction - getComboServicios:", e);
 		}
         
         
-		if(keys!=null&&keys.size()>0){
+		if(keys!=null&&!keys.isEmpty()){
 	        for (ServicioBean key :keys) {
 	            
 	            option = new KeyValueObject();
@@ -323,7 +324,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboEstados() {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         //TODO: DEVOLVER SOLO LOS PARAMETROS ACTIVOS!!!!
         ArrayList<EstadoBean> keys = null;
@@ -334,7 +335,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 		}
         
         
-		if(keys!=null&&keys.size()>0){
+		if(keys!=null&&!keys.isEmpty()){
 	        for (EstadoBean key :keys) {
 	            
 	            option = new KeyValueObject();
@@ -353,7 +354,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboCanales() {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         //TODO: DEVOLVER SOLO LOS PARAMETROS ACTIVOS!!!!
         ArrayList<CanalBean> keys = null;
@@ -364,7 +365,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 		}
         
         
-		if(keys!=null&&keys.size()>0){
+		if(keys!=null&&!keys.isEmpty()){
 	        for (CanalBean key :keys) {
 	            
 	            option = new KeyValueObject();
@@ -381,6 +382,7 @@ private boolean validaBusqueda(EstadisticasBean estadisticaBean2) {
 	 */
 	@Override
 	public void prepare() throws Exception {
+		// This method has to be empty.
 			
 	}
 	

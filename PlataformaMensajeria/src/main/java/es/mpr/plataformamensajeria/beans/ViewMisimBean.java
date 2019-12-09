@@ -13,20 +13,9 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class ViewMisimBean implements Audit {
 
-	/**
-	 * Constructor de view misim bean.
-	 */
-	public ViewMisimBean() {
-		this.fechaCreacion = null;
-		this.idLote = null;
-		this.proveedorProducto = null;
-		this.idPeticion = null;
-		
-	}
-
 	/**  fecha creacion. */
 	private Date fechaCreacion;
-	
+
 	/**  fecha creacion str. */
 	private String fechaCreacionStr;
 
@@ -38,7 +27,18 @@ public class ViewMisimBean implements Audit {
 
 	/**  id peticion. */
 	private Long idPeticion;
-	
+
+
+	/**
+	 * Constructor de view misim bean.
+	 */
+	public ViewMisimBean() {
+		this.fechaCreacion = null;
+		this.idLote = null;
+		this.proveedorProducto = null;
+		this.idPeticion = null;
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

@@ -15,6 +15,61 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class HistoricoHistBean implements Audit{
 
+	/**  historico id. */
+	private Long historicoId;
+
+	/**  fecha. */
+	private Date fecha;
+
+	/**  mensaje id. */
+	private Long mensajeId;
+
+	/**  estado id. */
+	private Long estadoId;
+
+	/**  servidor id. */
+	private Long servidorId;
+
+	/**  planificacion id. */
+	private Long planificacionId;
+
+	/**  descripcion. */
+	private String descripcion;
+
+	/**  sub estado id. */
+	private Integer subEstadoId;
+
+	/**  fecha historificacion. */
+	private Date fechaHistorificacion;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  creado por. */
+	private String creadoPor;
+
+	/**  estado. */
+	private String estado;
+
+	/**  id envio SMS. */
+	private Long idEnvioSMS;
+
+	/**  uim. */
+	private String uim;
+
+	/**  id grupo. */
+	private Long idGrupo;
+
+	/**  nombre servidor. */
+	private String nombreServidor;
+
+	/**  nombre servidor SMS. */
+	private String nombreServidorSMS;
+
+	/**  destinatarios mensajes. */
+	private Long destinatariosMensajes;
+
+
 	/**
 	 * Constructor de historico hist bean.
 	 */
@@ -36,61 +91,6 @@ public class HistoricoHistBean implements Audit{
 		
 	}
 	
-	/**  historico id. */
-	private Long historicoId;
-	
-	/**  fecha. */
-	private Date fecha;
-	
-	/**  mensaje id. */
-	private Long mensajeId;
-	
-	/**  estado id. */
-	private Long estadoId;
-	
-	/**  servidor id. */
-	private Long servidorId;
-	
-	/**  planificacion id. */
-	private Long planificacionId;
-	
-	/**  descripcion. */
-	private String descripcion;
-	
-	/**  sub estado id. */
-	private Integer subEstadoId;
-	
-	/**  fecha historificacion. */
-	private Date fechaHistorificacion;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  creado por. */
-	private String creadoPor;
-	
-	/**  estado. */
-	private String estado;
-	
-	/**  id envio SMS. */
-	private Long idEnvioSMS;
-	
-	/**  uim. */
-	private String uim;
-	
-	/**  id grupo. */
-	private Long idGrupo;
-	
-	/**  nombre servidor. */
-	private String nombreServidor;
-	
-	/**  nombre servidor SMS. */
-	private String nombreServidorSMS;
-	
-	/**  destinatarios mensajes. */
-	private Long destinatariosMensajes;
-	
-
 	/**
 	 * Obtener fecha formateada.
 	 *

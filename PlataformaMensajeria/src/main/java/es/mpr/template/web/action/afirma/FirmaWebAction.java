@@ -41,15 +41,14 @@ public class FirmaWebAction extends ActionSupport {
 	 * Devuelve la propiedad <i>resultado</i> en formato JSON
 	 * 
 	 */
-	public String execute()
-	{
-		//if(request.getSession().getAttribute("infoUser")==null) return "noUser"; 
-		HashMap<String,Object> input = new HashMap<String,Object>();
+	public String execute() {
+		HashMap<String,Object> input = new HashMap<>();
 		input.put(SignServiceImpl.PARAMS_IDAPLICACION,"mpr.dgiae.fwkv3");
 		input.put(SignServiceImpl.PARAMS_ALIASFIRMANTE,"mpr.dgiae.fwkv3.firmante2");
 		input.put(SignServiceImpl.PARAMS_REQUESTID, "1111");
 		input.put(SignServiceImpl.PARAMS_DOCUMENT_BASE64,firmaUsuario.getBytes());
-		input.put(SignServiceImpl.PARAMS_DOCUMENT_TYPE,SignServiceImpl.DOCUMENT_TYPE_XML); //Se puede obtener a partir del parametro PARAMS_SIGNATURETYPE
+		input.put(SignServiceImpl.PARAMS_DOCUMENT_TYPE,SignServiceImpl.DOCUMENT_TYPE_XML); 
+		//Se puede obtener a partir del parametro PARAMS_SIGNATURETYPE
 		input.put(SignServiceImpl.PARAMS_SIGNATURE_TYPE,SignServiceImpl.SIGNATURE_TYPE_XADES);
 				
 		try {
@@ -57,21 +56,18 @@ public class FirmaWebAction extends ActionSupport {
 			
 			logger.info("Resultado correcto: " + response.getResultadoCorrecto());
 			
-			if (response.getResultObject()!=null && response.getResultObject().getResultMessage()!=null)
-			{
+			if (response.getResultObject()!=null && response.getResultObject().getResultMessage()!=null) {
 				resultado = response.getResultObject().getResultMessage().getValue();
 			}
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			
 			logger.error(e);
 			
-			if (e!=null && e.getCause()!=null)
-			{
+			if (e!=null && e.getCause()!=null) {
 				resultado = e.getCause().getMessage();
-			}
-			else
+			} else {
 				resultado = e.getMessage();
+			}
 			
 			return ERROR;
 		}

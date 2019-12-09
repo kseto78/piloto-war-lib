@@ -38,10 +38,29 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class UsuariosPushAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String IOS = "iOS";
+
+	protected static final String ANDROID = "Android";
+
+	protected static final String R_CONST_REF = "0";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String R_CONST_0 = "20";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-//	private static Logger logger = Logger.getLogger(ServidoresAction.class);
 	
 	/**  servicio usuario push. */
 @Resource(name="servicioUsuariosPushImpl")
@@ -64,13 +83,13 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
 	
 	/**  combo aplicaciones. */
 	//Combos
-	List<KeyValueObject> comboAplicaciones = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboAplicaciones = new ArrayList<>();
 	
 	/**  combo servicios. */
-	List<KeyValueObject> comboServicios = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboServicios = new ArrayList<>();
 	
 	/**  combo plataformas. */
-	List<KeyValueObject> comboPlataformas = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboPlataformas = new ArrayList<>();
 	
 	/**  lista usuarios push. */
 	public List<UsuariosPushBean> listaUsuariosPush= null;
@@ -87,21 +106,23 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
     ////MIGRADO
     public String newSearch() throws BaseException {
     	
-    	if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+    	if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
     	
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
     	if(usuariosPush==null){
     		usuariosPush = new UsuariosPushBean();
     	}
     	Integer totalSize = 0;
-    	resultCount = "0";
+    	resultCount = R_CONST_REF;
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
     	    	 	
         return SUCCESS;
@@ -115,27 +136,32 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
      */
     ///MIGRADO
 	public String search() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-	   	int page = getPage("tableId"); //Pagina a mostrar
-    	String order = getOrder("tableId"); //Ordenar de modo ascendente o descendente
-    	String columnSort = getColumnSort("tableId"); //Columna usada para ordenar
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+	   	int page = getPage(TABLEID); 
+	   	//Pagina a mostrar
+    	String order = getOrder(TABLEID); 
+    	//Ordenar de modo ascendente o descendente
+    	String columnSort = getColumnSort(TABLEID); 
+    	//Columna usada para ordenar
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-    	int inicio = (page-1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+    	int inicio = (page-1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
     	
     	
-    	PaginatedList<UsuariosPushBean> result = servicioUsuarioPush.getUsuariosPush(inicio,(export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")),
+    	PaginatedList<UsuariosPushBean> result = servicioUsuarioPush.getUsuariosPush(inicio,export?-1:Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)),
     			order, columnSort,usuariosPush,export,request); 
     	Integer totalSize = result.getTotalList();
     	
     	listaUsuariosPush =  result.getPageList();
-    	resultCount = (totalSize!=null)?totalSize.toString():"0";
+    	resultCount = (totalSize!=null)?totalSize.toString():R_CONST_REF;
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
     	
         return SUCCESS;
@@ -148,6 +174,7 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
 	 */
 	@Override
 	public void prepare() throws Exception {
+		// This method has to be empty.
 		
 	}
     
@@ -158,16 +185,16 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
      */
     ///MIGRADO
 	public List<KeyValueObject> getComboPlataformas() {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         option = new KeyValueObject();
-		option.setCodigo("Android");
-		option.setDescripcion("Android");
+		option.setCodigo(ANDROID);
+		option.setDescripcion(ANDROID);
 		result.add(option);		
 		
 		option = new KeyValueObject();
-		option.setCodigo("iOS");
-		option.setDescripcion("iOS");
+		option.setCodigo(IOS);
+		option.setDescripcion(IOS);
 		result.add(option);
 		
 		return result;
@@ -205,7 +232,7 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
 	 */
 	///MIGRADO
 	public List<KeyValueObject> getComboServicios() throws BusinessException {
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         ArrayList<ServicioBean> keys = null;
 		String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
@@ -215,7 +242,7 @@ public class UsuariosPushAction extends PlataformaPaginationAction implements Se
 		}else{
 			keys = (ArrayList<ServicioBean>)servicioServicio.getServicios(rolUsuario,idUsuario);
 		}
-		if(keys!=null&&keys.size()>0){
+		if(keys!=null&&!keys.isEmpty()){
 	        for (ServicioBean key :keys) {
 	            
 	            option = new KeyValueObject();

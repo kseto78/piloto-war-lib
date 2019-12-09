@@ -110,7 +110,8 @@ public class ServicioProcesoConsolidadasImpl implements ServicioProcesoConsolida
 			List<Long> listaIdMensajesAdjuntosHist, List<Long> listaIdDestinatariosHist, List<Long> listaHistoricoHist,
 			List<Long> listaIdDestinatariosMensajesHist, List<TblGestionEnviosHist> listaGestionEnviosHist) throws BusinessException {
 		//Realizamos la inserccion de las estadisticas consolidadas
-	try{	
+	try{
+		
 		if(null != listaEstadisticasConsolidadas){
 			
 			if(!listaEstadisticasConsolidadas.isEmpty()){
@@ -182,9 +183,7 @@ public class ServicioProcesoConsolidadasImpl implements ServicioProcesoConsolida
 				}
 			}
 			
-		}
-		
-		else {
+		} else {
 			return false;
 		}	
 		

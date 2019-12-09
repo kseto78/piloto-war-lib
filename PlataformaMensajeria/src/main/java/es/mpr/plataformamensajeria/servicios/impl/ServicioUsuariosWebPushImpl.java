@@ -33,6 +33,18 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioUsuariosWebPushImpl")
 public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
+
+	protected static final String R_CONST_REF = "4";
+
+
+	protected static final String FECHACREACION = "fechacreacion";
+
+
+	protected static final String SERVICIOUSUARIO = "ServicioUsuariosPushImpl - getUsuariosPush:";
+
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioUsuariosWebPushImpl.class);
 	
@@ -58,8 +70,8 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 		try{
 			return pushServiceImpl.getNewKeys();
 		} catch (Exception e) {
-			logger.error("ServicioUsuariosPushImpl - getUsuariosPush:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOUSUARIO + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -75,13 +87,14 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 			columns.put("0","usuariowebpushid");
 			columns.put("1","usuarioid");
 			columns.put("3","servicioid");
-			columns.put("4","fechacreacion");
+			columns.put(R_CONST_REF,FECHACREACION);
 			if (columnSort==null){
-				columnSort = "4"; //Fecha
+				columnSort = R_CONST_REF; 
+				//Fecha
 			}
 			String column = columns.get(columnSort);
 			if (column==null){
-				column = "fechacreacion";
+				column = FECHACREACION;
 			}
 			if (order == null) {
 				order = "2";
@@ -92,13 +105,14 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 			
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
 	    	Integer userName = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
-	    	if (rolUsuario != null && rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)){
+	    	if (rolUsuario != null && PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario)){
 	    		TblUsuariosAplicacionesQuery queryUsuariosAplicaciones = new TblUsuariosAplicacionesQuery();
 				TblUsuariosQuery queryUsuarios = new TblUsuariosQuery();
 				queryUsuarios.setUsuarioid((null != userName)? userName.longValue() : null);
 				queryUsuariosAplicaciones.setTblUsuarios(queryUsuarios);
 				List<TblUsuariosAplicaciones> listaUsuarioAplicaciones = tblUsuariosAplicacionesManager.getUsuariosAplicacionesByQuery(queryUsuariosAplicaciones);
-				if(listaUsuarioAplicaciones != null){	
+				if(listaUsuarioAplicaciones != null){
+		
 					boolean first = true;
 					String listaIdAplicaciones = "";
 					for(TblUsuariosAplicaciones apl : listaUsuarioAplicaciones){
@@ -127,8 +141,8 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 			
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioUsuariosPushImpl - getUsuariosPush:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOUSUARIO + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 		
 	}
@@ -167,7 +181,7 @@ public class ServicioUsuariosWebPushImpl implements ServicioUsuariosWebPush{
 	 * @throws BusinessException the business exception
 	 */
 	private List<UsuariosWebPushBean> getListTblUsuariosWebPushBean(List<TblUsuariosWebPush> lista) throws BusinessException{
-			List<UsuariosWebPushBean> result = new ArrayList<UsuariosWebPushBean>();
+			List<UsuariosWebPushBean> result = new ArrayList<>();
 			
 			if(lista != null && !lista.isEmpty()){
 								

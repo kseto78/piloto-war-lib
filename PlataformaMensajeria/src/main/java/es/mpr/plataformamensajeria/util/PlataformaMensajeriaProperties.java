@@ -25,6 +25,7 @@ public class PlataformaMensajeriaProperties {
 	 * Constructor de plataforma mensajeria properties.
 	 */
 	private PlataformaMensajeriaProperties() {
+		// This method has to be empty.
 		
 	}
 

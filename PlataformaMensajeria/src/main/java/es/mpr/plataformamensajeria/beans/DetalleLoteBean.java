@@ -16,6 +16,18 @@ public class DetalleLoteBean implements Audit, Serializable {
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -7720405961205898287L;
 
+	/**  nombre aplicacion. */
+	private String nombreAplicacion;
+
+	/**  nombre servicio. */
+	private String nombreServicio;
+
+	/**  nombre lote envio. */
+	private String nombreLoteEnvio;
+
+	/**  id lote envio. */
+	private Integer idLoteEnvio;
+
 
 
 	/**
@@ -28,20 +40,6 @@ public class DetalleLoteBean implements Audit, Serializable {
 		this.idLoteEnvio = null;
 		
 	}
-
-	/**  nombre aplicacion. */
-	private String nombreAplicacion;
-
-	/**  nombre servicio. */
-	private String nombreServicio;
-
-	/**  nombre lote envio. */
-	private String nombreLoteEnvio;
-
-	/**  id lote envio. */
-	private Integer idLoteEnvio;
-	
-
 
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()

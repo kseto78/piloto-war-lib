@@ -1,8 +1,6 @@
 package es.mpr.plataformamensajeria.quartz.jobs;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +25,6 @@ import es.minhap.plataformamensajeria.iop.managerimpl.TblMensajesManagerImpl;
 import es.minhap.plataformamensajeria.iop.managerimpl.TblParametrosServidorManagerImpl;
 import es.mpr.plataformamensajeria.beans.JobBean;
 import es.mpr.plataformamensajeria.beans.ProcesoHistBean;
-import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioLotesEnvios;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoHistoricos;
@@ -40,6 +37,10 @@ import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
  */
 @Service("anularMensajesJob")
 public class AnularMensajesJob implements Job {
+
+	protected static final String ANULARMENSAJESJ = "AnularMensajesJob.Execute ";
+
+	protected static final String TBLMENSAJESMANA = "TblMensajesManagerImpl";
 
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(AnularMensajesJob.class);
@@ -56,7 +57,7 @@ public class AnularMensajesJob implements Job {
 	/**  servicio mensajes. */
 	private ServicioMensajes servicioMensajes;
 	
-	@Resource(name = "TblMensajesManagerImpl")
+	@Resource(name = TBLMENSAJESMANA)
 	private TblMensajesManager tblMensajesManager;
 	
 	/**  properties. */
@@ -72,10 +73,12 @@ public class AnularMensajesJob implements Job {
 	private static String ESTADO_PROCESO_KO = "KO";
 	
 	/**  caracter separador lineas. */
-	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; //El salto de linea esta preparado para el correo en formato HTML
+	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; 
+	//El salto de linea esta preparado para el correo en formato HTML
 	
 	/**  caracter tab. */
-	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; //El tab esta preparado para el correo en formato HTML
+	private static String CARACTER_TAB = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; 
+	//El tab esta preparado para el correo en formato HTML
 
 	/**  job bean. */
 	private JobBean jobBean = null;
@@ -142,7 +145,8 @@ public class AnularMensajesJob implements Job {
 			
 			if(null != jobBean && jobBean.getFecha() != null){
 				fechaInicio = jobBean.getFecha();
-			}else{				
+			}else{
+	
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(fechaInicio);
 				cal.add(Calendar.DATE, -14);
@@ -160,7 +164,7 @@ public class AnularMensajesJob implements Job {
 			
 
 			String listaServiciosBusqueda = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null);
-			if(null == listaServiciosBusqueda || listaServiciosBusqueda.equals("")) {
+			if(null == listaServiciosBusqueda || "".equals(listaServiciosBusqueda)) {
 				descripcionEstado.append("Se ha produciodo un error en la carga de los servicios");
 				procesoHistBean.setCodigoEstado(ESTADO_PROCESO_KO);
 				servicioProcesoHistoricos.newServicioProcesoHistoricos(procesoHistBean);
@@ -190,7 +194,7 @@ public class AnularMensajesJob implements Job {
 			descripcionEstado.append("Se ha producido una excepcion. Para mas informacion, consulte logs. ").append(CARACTER_SEPARADOR_LINEAS);
 			
 			servicioProcesoHistoricos.newServicioProcesoHistoricos(procesoHistBean);
-			logger.error("AnularMensajesJob.Execute " , ex);
+			logger.error(ANULARMENSAJESJ , ex);
 		}finally{
 			logger.info("--- Fin Job Anular Mensajes Job ---");
 			procesoHistBean.setFechaFin(new Date());
@@ -201,7 +205,7 @@ public class AnularMensajesJob implements Job {
 				try {
 					sendMailService.initJob(NOMBRE_JOB, procesoHistBean.getCodigoEstado(), descripcionEstado.toString(), properties, tblParametrosServidorManager);
 				} catch (ServletException e) {
-					logger.error("AnularMensajesJob.Execute " , e);
+					logger.error(ANULARMENSAJESJ , e);
 				}
 			}
 			
@@ -209,153 +213,52 @@ public class AnularMensajesJob implements Job {
 		}
 			
 //			//Buscamos los mensajes de AEAT y GISS anulados entre las fechas
-//			if(null != properties.getProperty("jobAnulacionMensajes.serviciosAEATGiss", null)) {
-//				String propertyServicios = properties.getProperty("jobAnulacionMensajes.serviciosAEATGiss", null);
-//				List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(propertyServicios.split(",")));
-//				listaServicios = new ArrayList<>();
-//				for(String serv:serviciosAeatGiss){
-//					ServicioBean sb = new ServicioBean();
-//					sb.setServicioId(Integer.valueOf(serv));
-//					listaServicios.add(servicioServicios.loadServicio(sb));
-//				}				
-//			}else{
-//				listaServicios = servicioServicios.getServiciosHistorico();
-//			}
 			
 //			////esto es para borrar
-//			listaServicios = new ArrayList<>();
-//			ServicioBean se = new ServicioBean();
-//			se.setServicioId(283);
-//			listaServicios.add(servicioServicios.loadServicio(se));
 			
 			
 			
-//			if(null != listaServicios){
 //				
 //
-//				for(ServicioBean servicio : listaServicios){
 //					
-//					Calendar calendar = Calendar.getInstance();
 //
-//					if(null != servicio && null != servicio.getHistorificacion() && null != servicio.getServicioId()){
 //						
-//						if (null != jobBean && null != jobBean.getFecha()){
 //							//Indicamos la fecha introducida en la pantalla
-//							logger.info("Servicio ID "+servicio.getServicioId());
-//							calendar.setTime(jobBean.getFecha());
-//							auxS = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
-//							logger.info("Consulta Lotes envios: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
-//						}else{
 //							//Calculamos la fecha a partir de la cual se realiza el historico de mensajes
-//							Integer historificacion = servicio.getHistorificacion();
-//							logger.info("Servicio ID "+servicio.getServicioId());
 //	
 //							calendar.add(Calendar.DATE, -historificacion); //Le restamos a la fecha actual los dias marcados en el atributo de historico del servicio
-//							auxS = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
 //	
-//							logger.info("Consulta Lotes envios: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
-//						}
-//						lotesCorrectos = new ArrayList<>();
-//						lotesIncorrectos = new ArrayList<>();
-//						lotesNoHistorificados = new ArrayList<>();
-//						mensajesConservados = 0;
-//						mensajesNoConservados = 0;
 //						
-//						servicioAnalizado = servicio.getNombre();
-//						idServicioAnalizado = servicio.getServicioId();
-//						List<Long> listaLotesEnvios = servicioLotesEnvios.getLotesEnviosTOHist(servicio.getServicioId(), calendar.getTime());
 //	
 ////					////esto es para borrar
-////							listaLotesEnvios = new ArrayList<>();
-////							listaLotesEnvios.add(32267L);
-////							Date leche = new Date("20/04/2016");
 //							
-//							if(null != listaLotesEnvios && !listaLotesEnvios.isEmpty()){
-//								logger.info("Existen "+ listaLotesEnvios.size() +" lotes de envios del servicio con ID "+servicio.getServicioId()+" con fecha anterior o igual a "+auxS+". ");
 //
-//								int numLotesEnvioExito = 0;
-//								int numLotesEnvioFallo = 0;
 //								/*Se comprueba para cada lote que los mensajes cuya fecha de 'ultimoenvio' es igual o mayor a la definida en el servicio
 //								y que ademas TODOS los mensajes del lote se encuentren en estado final (ENVIADO o ANULADO).
 //								Si es asi, se historifican los mensajes del lote. */
-//								for(Long idLote : listaLotesEnvios){ 
-//									long startTime = System.currentTimeMillis();
 //																								
-//									boolean exitoLE = false;
 //
 //
-//										boolean historificamosLote=false;
 //										
 //										//Se obtienen todos los mensajes del lote actual
-//										logger.info("Obtener mensajes del lote "+ idLote +" del servicio con ID "+servicio.getServicioId()+". ");
-//										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote);
-////										List<Long> listaMensajesHist = servicioMensajes.getTodosMensajesLoteHistorificar(idLote, leche );
 //
-//										if(null != listaMensajesHist && !listaMensajesHist.isEmpty()){
-//											logger.info("El lote de envio "+ idLote +" tiene "+listaMensajesHist.size()+" mensajes. ");
-//											historificamosLote = true;
 //
-//										} else {///NO HAY MENSAJES A HISTORIFICAR Si el lote no tiene mensajes se historifica
-//											if (!servicioMensajes.testLoteSinMensajes(idLote)){
-//												historificamosLote=false;
-//												lotesNoHistorificados.add(idLote.intValue());
-//												logger.info("No existen mensajes en el lote de envios con ID "+idLote+" con fecha anterior o igual a "+auxS+". ");
 //											
-//											}else{ 	//Estamos en un lote que no tiene mensajes
-//												try{
 //													
-//													exitoLE = servicioProcesoHistoricos.procesoHistoricoLotesEnvio(idLote, listaMensajesHist);
 //
-//													if(exitoLE){
-//														numLotesEnvioExito++;
-//														lotesCorrectos.add(idLote.intValue());
-//														mensajesConservados = mensajesConservados + listaMensajesHist.size();
-//													} else {
-//														numLotesEnvioFallo++;
-//														lotesIncorrectos.add(idLote.intValue());
-//														mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-//														logger.info("Se ha producido un error al historificar el lote "+idLote+". ");
-//													}
 //
-//												} catch (Exception e) {
-//													numLotesEnvioFallo++;
-//													lotesIncorrectos.add(idLote.intValue());
-//													mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-//													logger.info("Se ha producido un error al historificar el lote "+idLote+". ");
-//													logger.error("Se ha producido un error al historificar el lote "+idLote+". ", e);
-//												}
 //											} //fin else lote sin mensajes
 //										}//fin else no hay mensajes a historificar en el lote
 //										
-//										if(historificamosLote){
 //											logger.info("Se van a historificar "+ listaMensajesHist.size() +" mensajes del servicio con ID "+servicio.getServicioId()+" "
-//												+ "con fecha anterior o igual a "+auxS+".");
 //
 //											
 //
-//												logger.info("Proceso extraer info lote envio: " + new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss.SSS").format(new Date()));
 //
 //											//Se realiza el historico por cada lote de envio
-//												try{
-//													exitoLE = servicioProcesoHistoricos.procesoHistoricoLotesEnvio(idLote, listaMensajesHist);
-//													 long stopTime = System.currentTimeMillis();
-//												     long elapsedTime = stopTime - startTime;
-//												     logger.info("Tiempo TOTAL Historificar lote "+idLote+" ------->" + elapsedTime);
 //													
 //
-//													if(exitoLE){
-//														numLotesEnvioExito++;
-//														lotesCorrectos.add(idLote.intValue());
-//														mensajesConservados = mensajesConservados + listaMensajesHist.size();
-//													} else {
-//														numLotesEnvioFallo++;
-//														lotesIncorrectos.add(idLote.intValue());
-//														mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
-//														logger.info("Se ha producido un error al historificar el lote "+idLote+". ");
-//													}
 //
-//												} catch (Exception e) {
-//													numLotesEnvioFallo++;
 //													lotesIncorrectos.add(idLote.intValue());
 //													mensajesNoConservados = mensajesNoConservados + listaMensajesHist.size();
 //													logger.error("Se ha producido un error al historificar el lote "+idLote+". ", e);
@@ -485,7 +388,7 @@ public class AnularMensajesJob implements Job {
 			servicioLotesEnvios = (ServicioLotesEnvios) applicationContext.getBean("servicioLotesEnviosImpl");
 			servicioMensajes = (ServicioMensajes) applicationContext.getBean("servicioMensajesImpl");
 			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
-			tblMensajesManager = (TblMensajesManagerImpl) applicationContext.getBean("TblMensajesManagerImpl");
+			tblMensajesManager = (TblMensajesManagerImpl) applicationContext.getBean(TBLMENSAJESMANA);
 			properties  = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 			
 		} catch (Exception objException) {

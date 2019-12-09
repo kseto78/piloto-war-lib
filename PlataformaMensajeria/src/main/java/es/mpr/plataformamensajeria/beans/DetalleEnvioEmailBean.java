@@ -15,6 +15,72 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleEnvioEmailBean implements Audit{
 
+	protected static final String BLANK = ", <";
+
+	protected static final String R_CONST_REF = "<";
+
+	protected static final String R_CONST_0 = ">";
+
+	/**  envio id. */
+	protected String envioId;
+
+	/**  email id. */
+	private Integer emailId;
+
+	/**  nombre aplicacion. */
+	private String nombreAplicacion;
+
+	/**  nombre servicio. */
+	private String nombreServicio;
+
+	/**  nombre lote envio. */
+	private String nombreLoteEnvio;
+
+	/**  origen. */
+	private String origen;
+
+	/**  destino. */
+	private String destino;
+
+	/**  bcc. */
+	private String bcc;
+
+	/**  cc. */
+	private String cc;
+
+	/**  asunto. */
+	private String asunto;
+
+	/**  cuerpo. */
+	private String cuerpo;
+
+	/**  id lote. */
+	private Integer idLote;
+
+	/**  id externo. */
+	private String idExterno;
+
+	/**  listado adjuntos. */
+	private List<AdjuntoEmailBean> listadoAdjuntos = new ArrayList<>();
+
+	/**  listado imagenes. */
+	private List<AdjuntoEmailBean> listadoImagenes = new ArrayList<>();
+
+	/**  listado historico. */
+	private List<HistoricoBean> listadoHistorico = new ArrayList<>();
+
+	/**  descripcion. */
+	private String descripcion;
+
+	/**  codificacion. */
+	private String codificacion;
+
+	/**  prioridad. */
+	private String prioridad;
+
+	/**  tipo contenido. */
+	private String tipoContenido;
+
 	/**
 	 * Constructor de detalle envio email bean.
 	 */
@@ -29,72 +95,12 @@ public class DetalleEnvioEmailBean implements Audit{
 		this.cc = null;
 		this.asunto = null;
 		this.cuerpo = null;
-		this.listadoAdjuntos = new ArrayList<AdjuntoEmailBean>();
-		this.listadoImagenes = new ArrayList<AdjuntoEmailBean>();
-		this.listadoHistorico = new ArrayList<HistoricoBean>();
+		this.listadoAdjuntos = new ArrayList<>();
+		this.listadoImagenes = new ArrayList<>();
+		this.listadoHistorico = new ArrayList<>();
 		this.descripcion = null;
 	}
 
-	
-	/**  envio id. */
-	protected String envioId;
-	
-	/**  email id. */
-	private Integer emailId;
-	
-	/**  nombre aplicacion. */
-	private String nombreAplicacion;
-	
-	/**  nombre servicio. */
-	private String nombreServicio;
-	
-	/**  nombre lote envio. */
-	private String nombreLoteEnvio;
-	
-	/**  origen. */
-	private String origen;
-	
-	/**  destino. */
-	private String destino;
-	
-	/**  bcc. */
-	private String bcc;
-	
-	/**  cc. */
-	private String cc;
-	
-	/**  asunto. */
-	private String asunto;
-	
-	/**  cuerpo. */
-	private String cuerpo;
-	
-	/**  id lote. */
-	private Integer idLote;
-	
-	/**  id externo. */
-	private String idExterno;
-	
-	/**  listado adjuntos. */
-	private List<AdjuntoEmailBean> listadoAdjuntos = new ArrayList<AdjuntoEmailBean>();
-	
-	/**  listado imagenes. */
-	private List<AdjuntoEmailBean> listadoImagenes = new ArrayList<AdjuntoEmailBean>();
-	
-	/**  listado historico. */
-	private List<HistoricoBean> listadoHistorico = new ArrayList<HistoricoBean>();
-	
-	/**  descripcion. */
-	private String descripcion;
-	
-	/**  codificacion. */
-	private String codificacion;
-	
-	/**  prioridad. */
-	private String prioridad;
-	
-	/**  tipo contenido. */
-	private String tipoContenido;
 	
 	/**
 	 * Obtener prioridad HTML.
@@ -103,7 +109,7 @@ public class DetalleEnvioEmailBean implements Audit{
 	 */
 	public String getPrioridadHTML(){
 		if(prioridad!=null){
-			if(prioridad.equals("1")){
+			if("1".equals(prioridad)){
 				return "Urgente";
 				
 			}else{
@@ -265,10 +271,10 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @param cc the cc
 	 */
 	public void addCc(String cc){
-		if(this.cc!=null&&this.cc.length()>0){
-			this.cc+=", <"+cc+">";
+		if(this.cc!=null&&!this.cc.isEmpty()){
+			this.cc+=BLANK+cc+R_CONST_0;
 		}else{
-			this.cc="<"+cc+">";
+			this.cc=R_CONST_REF+cc+R_CONST_0;
 		}
 	}
 	
@@ -278,10 +284,10 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @param bcc the bcc
 	 */
 	public void addBcc(String bcc){
-		if(this.bcc!=null&&this.bcc.length()>0){
-			this.bcc+=", <"+bcc+">";
+		if(this.bcc!=null&&!this.bcc.isEmpty()){
+			this.bcc+=BLANK+bcc+R_CONST_0;
 		}else{
-			this.bcc="<"+bcc+">";
+			this.bcc=R_CONST_REF+bcc+R_CONST_0;
 		}
 	}
 	
@@ -291,10 +297,10 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @param to the to
 	 */
 	public void addDestino(String to){
-		if(destino!=null&&destino.length()>0){
-			destino+=", <"+to+">";
+		if(destino!=null&&!destino.isEmpty()){
+			destino+=BLANK+to+R_CONST_0;
 		}else{
-			destino="<"+to+">";
+			destino=R_CONST_REF+to+R_CONST_0;
 		}
 	}
 	
@@ -466,7 +472,7 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @return listado adjuntos
 	 */
 	public List<AdjuntoEmailBean> getListadoAdjuntos() {
-		return new ArrayList<AdjuntoEmailBean>(listadoAdjuntos);
+		return new ArrayList<>(listadoAdjuntos);
 	}
 	
 	/**
@@ -475,7 +481,7 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @param listadoAdjuntos new listado adjuntos
 	 */
 	public void setListadoAdjuntos(List<AdjuntoEmailBean> listadoAdjuntos) {
-		this.listadoAdjuntos = new ArrayList<AdjuntoEmailBean>(listadoAdjuntos);
+		this.listadoAdjuntos = new ArrayList<>(listadoAdjuntos);
 	}
 	
 	/**
@@ -484,7 +490,7 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @return listado historico
 	 */
 	public List<HistoricoBean> getListadoHistorico() {
-		return new ArrayList<HistoricoBean>(listadoHistorico);
+		return new ArrayList<>(listadoHistorico);
 	}
 	
 	/**
@@ -493,7 +499,7 @@ public class DetalleEnvioEmailBean implements Audit{
 	 * @param listadoHistorico new listado historico
 	 */
 	public void setListadoHistorico(List<HistoricoBean> listadoHistorico) {
-		this.listadoHistorico = new ArrayList<HistoricoBean>(listadoHistorico);
+		this.listadoHistorico = new ArrayList<>(listadoHistorico);
 	}
 	
 	/**

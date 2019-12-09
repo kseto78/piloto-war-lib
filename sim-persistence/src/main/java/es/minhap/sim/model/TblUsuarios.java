@@ -38,6 +38,12 @@ public class TblUsuarios implements java.io.Serializable {
 
 	@Column(name = "EMAIL", length = 100)
 	private String email;
+	
+	@Column(name = "TELEFONO", length = 50)
+	private String telefono;
+	
+	@Column(name = "ORGANISMO", length = 100)
+	private String organismo;
 
 	@Column(name = "FECHACREACION", nullable = false, length = 7)
 	private Date fechacreacion;
@@ -56,6 +62,9 @@ public class TblUsuarios implements java.io.Serializable {
 
 	@Column(name = "FECHAMODIFICACION", length = 7)
 	private Date fechamodificacion;
+	
+	@Column(name = "IDCONTACTO", precision = 22, scale = 0)
+	private Long idcontacto;
 
 	public TblUsuarios() {
 	}
@@ -208,6 +217,30 @@ public class TblUsuarios implements java.io.Serializable {
 	 */
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public String getOrganismo() {
+		return organismo;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+	public void setOrganismo(String organismo) {
+		this.organismo = organismo;
+	}
+
+	public Long getIdcontacto() {
+		return idcontacto;
+	}
+
+	public void setIdcontacto(Long idcontacto) {
+		this.idcontacto = idcontacto;
 	}
 
 }

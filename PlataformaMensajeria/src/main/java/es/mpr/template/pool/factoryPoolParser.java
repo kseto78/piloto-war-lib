@@ -1,6 +1,5 @@
 package es.mpr.template.pool;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.pool.BasePoolableObjectFactory;
@@ -27,10 +26,6 @@ public class factoryPoolParser extends BasePoolableObjectFactory {
 		// la factoria retorna objetos DocumentBuilder
 		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactoryImpl.newInstance();   
-        // 2. A partir del objeto DocumentBuilderFactory crear un objeto DocumentBuilder   
-        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();   
-        // 3. Generar el documento XML   
-        	
-		return docBuilder;
+        return dbFactory.newDocumentBuilder();
 	}
 }

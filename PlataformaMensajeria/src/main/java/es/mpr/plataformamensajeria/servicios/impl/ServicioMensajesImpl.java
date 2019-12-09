@@ -1,7 +1,5 @@
 package es.mpr.plataformamensajeria.servicios.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -22,7 +20,6 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioMensajes;
  */
 @Service("servicioMensajesImpl")
 public class ServicioMensajesImpl implements ServicioMensajes{
-//private static Logger logger = Logger.getLogger(ServicioLotesEnviosImpl.class);
 	
 	/**  tbl mensajes manager. */
 @Resource(name = "TblMensajesManagerImpl")
@@ -39,15 +36,9 @@ public class ServicioMensajesImpl implements ServicioMensajes{
 	@Override
 	public List<Long> getTodosMensajesLoteHistorificar(Long loteEnvioID) throws BusinessException {
 
-		List<Long> res = queryMensajes.getIdMensajesByLote(loteEnvioID);
-		return res;
+		return queryMensajes.getIdMensajesByLote(loteEnvioID);
 		/* Antes hacia una comparacion para ver si los mensajes y los estados de la tabla mensajes correspondia con la misma cantidad
 		  en la tabla gestion de envios con un estado final*/
-//		if (res.size() == queryMensajes.countMensajesHistorificacion(loteEnvioID, fecha)){
-//			return res;
-//		}else{
-//			return new ArrayList<>();
-//		}
 	}
 	
 	/* (non-Javadoc)
@@ -56,7 +47,7 @@ public class ServicioMensajesImpl implements ServicioMensajes{
 	@Override
 	public Boolean testLoteSinMensajes(Long loteEnvioId) throws BusinessException {
 		List<Long> res = queryMensajes.getIdMensajesByLote(loteEnvioId);
-		return (null == res ||  res.isEmpty())? true : false;
+		return null == res ||  res.isEmpty();
 	}
 
 	

@@ -20,6 +20,43 @@ public class UsuarioAplicacionBean implements Audit{
 		
 		/** Constante MODO_NO_DEFINIDO. */
 		private static final String MODO_NO_DEFINIDO="No definido";
+
+		/**  usuario aplicacion id. */
+		protected Long usuarioAplicacionId;
+
+		/**  usuario id. */
+		protected Long usuarioId;
+
+		/**  aplicacion id. */
+		protected Long aplicacionId;
+
+		/**  rol id. */
+		protected Integer rolId;
+
+		/**  modo. */
+		protected Integer modo;
+
+		/**  fecha creacion. */
+		protected Date fechaCreacion = null;
+
+		/**  creado por. */
+		protected String creadoPor = null;
+
+		/**  nombre aplicacion. */
+		protected String nombreAplicacion;
+
+		/**  nombre usuario. */
+		protected String nombreUsuario;
+
+		/**  rol usuario. */
+		protected String rolUsuario;
+
+		/**  is activo. */
+		protected Boolean isActivo = null;
+
+		/**  modo lectura. */
+		@SuppressWarnings("unused")
+		private String modoLectura = null;
 		
 		/**
 		 * Constructor de usuario aplicacion bean.
@@ -40,43 +77,6 @@ public class UsuarioAplicacionBean implements Audit{
 
 		}
 
-		/**  usuario aplicacion id. */
-		protected Long usuarioAplicacionId;
-
-		/**  usuario id. */
-		protected Long usuarioId;
-		
-		/**  aplicacion id. */
-		protected Long aplicacionId;
-		
-		/**  rol id. */
-		protected Integer rolId;
-		
-		/**  modo. */
-		protected Integer modo;
-		
-		/**  fecha creacion. */
-		protected Date fechaCreacion = null;
-		
-		/**  creado por. */
-		protected String creadoPor = null;
-		
-		/**  nombre aplicacion. */
-		protected String nombreAplicacion;
-		
-		/**  nombre usuario. */
-		protected String nombreUsuario;
-		
-		/**  rol usuario. */
-		protected String rolUsuario;
-		
-		/**  is activo. */
-		protected Boolean isActivo = null;
-
-		/**  modo lectura. */
-		@SuppressWarnings("unused")
-		private String modoLectura = null;
-		
 		/**
 		 * Modificar id.
 		 *

@@ -18,17 +18,18 @@ import org.apache.ws.security.WSPasswordCallback;
  */
 public class ServerPasswordCallback implements CallbackHandler {
 
-    /**  passwords. */
+    protected static final String STOREPASS = "storepassword";
+	/**  passwords. */
     private Map<String, String> passwords =
-        new HashMap<String, String>();
+        new HashMap<>();
 
     /**
      * <p>Establecemos cada alias/contrase&ntilde;a</p>.
      */
     public ServerPasswordCallback() {
     	passwords.put("framework","changeit");
-        passwords.put("clientx509v1", "storepassword");
-        passwords.put("serverx509v1", "storepassword");
+        passwords.put("clientx509v1", STOREPASS);
+        passwords.put("serverx509v1", STOREPASS);
     }
 
     /**
@@ -43,23 +44,20 @@ public class ServerPasswordCallback implements CallbackHandler {
             WSPasswordCallback pc = (WSPasswordCallback)callbacks[i];
             
             String pass = passwords.get(pc.getIdentifier());
-            if (pc.getType()!=null) 
-            {	            	
+            if (pc.getType()!=null) {
+	            		
             	//Validamos la password si viene en texto plano
             	
-            	if (pc.getType().equals(WSConstants.PASSWORD_DIGEST))
-            	{
+            	if (WSConstants.PASSWORD_DIGEST.equals(pc.getType())) {
             		pc.setPassword(pass);
             		return;
-            	}
-            	else
-            		if (pass!=null && pass.equals(pc.getPassword()))
-            			return;
-            		else
-            			throw new IOException();
-            }
-            else if (pc.getIdentifier()!=null)
-            	 {
+            	} else
+            		if (pass!=null && pass.equals(pc.getPassword())) {
+						return;
+					} else {
+						throw new IOException();
+					}
+            } else if (pc.getIdentifier()!=null) {
             		//Consideramos valido el usuario o alias
             		pc.setPassword(pass);
             		return;

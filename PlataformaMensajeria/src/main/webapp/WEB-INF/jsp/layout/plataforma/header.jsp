@@ -25,7 +25,11 @@
         			entorno = "PRE";
         		}
         	%>
-        	<%=entorno %></p>
+        	
+			</span>
+        	<%=entorno %></p>        
+        	<strong><p style="padding-top: 2.3em;padding-left: 0.7em;float: left;font-size: 1.0em;color: #065bf1;">
+        	<%=PlataformaMensajeriaProperties.getInstance().getProperty("generales.version", "")%></p></strong>
             <div>
             	<p class="headerLinks">            	
             	<plataforma:securityadmin usuarioLogueado="true" showIfNotGranted="true">

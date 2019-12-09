@@ -15,6 +15,70 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class MensajeHistoricosBean implements Audit{
 
+	/**  mensaje id. */
+	private Long mensajeId;
+
+	/**  lote envio id. */
+	private Long loteEnvioId;
+
+	/**  codigo externo. */
+	private String codigoExterno;
+
+	/**  cabecera. */
+	private String cabecera;
+
+	/**  estado actual. */
+	private String estadoActual;
+
+	/**  numero envios. */
+	private Integer numeroEnvios;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  creado por. */
+	private String creadoPor;
+
+	/**  fecha modificacion. */
+	private Date fechaModificacion;
+
+	/**  modificado por. */
+	private String modificadoPor;
+
+	/**  ultimo envio. */
+	private Date ultimoEnvio;
+
+	/**  ultimo id historico. */
+	private Long ultimoIdHistorico;
+
+	/**  cuerpo. */
+	private String cuerpo;
+
+	/**  tipo cuerpo. */
+	private String tipoCuerpo;
+
+	/**  tipo codificacion. */
+	private String tipoCodificacion;
+
+	/**  prioridad. */
+	private Integer prioridad;
+
+	/**  tipo mensaje. */
+	private String tipoMensaje;
+
+	/**  telefono. */
+	private String telefono;
+
+	/**  uim. */
+	private String uim;
+
+	/**  id envios sms. */
+	private Long idEnviosSms;
+
+	/**  fecha historificacion. */
+	private Date fechaHistorificacion;
+
+
 	/**
 	 * Constructor de mensaje historicos bean.
 	 */
@@ -43,70 +107,6 @@ public class MensajeHistoricosBean implements Audit{
 	}
 	
 	
-	/**  mensaje id. */
-	private Long mensajeId;
-	
-	/**  lote envio id. */
-	private Long loteEnvioId;
-	
-	/**  codigo externo. */
-	private String codigoExterno;
-	
-	/**  cabecera. */
-	private String cabecera;
-	
-	/**  estado actual. */
-	private String estadoActual;
-	
-	/**  numero envios. */
-	private Integer numeroEnvios;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  creado por. */
-	private String creadoPor;
-	
-	/**  fecha modificacion. */
-	private Date fechaModificacion;
-	
-	/**  modificado por. */
-	private String modificadoPor;
-	
-	/**  ultimo envio. */
-	private Date ultimoEnvio;
-	
-	/**  ultimo id historico. */
-	private Long ultimoIdHistorico;
-	
-	/**  cuerpo. */
-	private String cuerpo;
-	
-	/**  tipo cuerpo. */
-	private String tipoCuerpo;
-	
-	/**  tipo codificacion. */
-	private String tipoCodificacion;
-	
-	/**  prioridad. */
-	private Integer prioridad;
-	
-	/**  tipo mensaje. */
-	private String tipoMensaje;
-	
-	/**  telefono. */
-	private String telefono;
-	
-	/**  uim. */
-	private String uim;
-	
-	/**  id envios sms. */
-	private Long idEnviosSms;
-	
-	/**  fecha historificacion. */
-	private Date fechaHistorificacion;
-
-
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */

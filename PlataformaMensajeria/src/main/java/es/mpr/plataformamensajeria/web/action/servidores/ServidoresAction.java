@@ -47,6 +47,46 @@ import es.mpr.plataformamensajeria.util.SMTPConnectionTest;
 public class ServidoresAction extends PlataformaPaginationAction implements
 		ServletRequestAware, Preparable {
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	protected static final String LOGDOTSOURCE_PR = "log.SOURCE_PROVEEDORES";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servidores.planificacion.horaDesde.menor.error";
+
+	protected static final String GENERALESDOTTIP = "generales.TIPO_SERVIDOR_SMTP";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String R_CONST_REF = ":";
+
+	protected static final String R_CONST_0 = "20";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String LOGDOTSOURCE_SE = "log.SOURCE_SERVIDORES";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String SERVIDORESACTIO = "ServidoresActioin - getParametrosServidor:";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
+	protected static final String SERVIDORESACTIO0 = "ServidoresActioin - getLoadPlanificacionesServidor:";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -95,7 +135,7 @@ public class ServidoresAction extends PlataformaPaginationAction implements
 	private List<PlanificacionBean> listaPlanificacionesServidor = null;
 	
 	/**  tipos parametros. */
-	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<TipoParametroBean>();
+	ArrayList<TipoParametroBean> tiposParametros = new ArrayList<>();
 
 	/**  tipo parametro id. */
 	private String tipoParametroId;
@@ -118,7 +158,6 @@ public class ServidoresAction extends PlataformaPaginationAction implements
 	/**  filtro buscador. */
 	private String filtroBuscador;
 	
-//	private Boolean busqueda = false; 
 
 
 	/**
@@ -140,38 +179,43 @@ public String newSearch() throws BaseException {
 	///MIGRADO
 	public String search() throws BaseException {
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 		
-		if (servidor != null)
-			if (servidor.getNombre() != null
-					&& servidor.getNombre().length() <= 0)
-				servidor.setNombre(null);
+		if (servidor != null && servidor.getNombre() != null
+				&& servidor.getNombre().isEmpty()) {
+			servidor.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServidorBean> result = servicioServidor.getServidores(
-				inicio, (export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, servidor,Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMTP",null)));
+				inicio, export?-1:Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)), order, columnSort, servidor,Integer.parseInt(properties.getProperty(GENERALESDOTTIP,null)));
 		Integer totalSize = result.getTotalList();
 
 		listaServidores = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE",null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ,null), totalSize);
 		
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE",null), Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0,null), Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE",null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0,null), totalSize);
 		}
 
 		if (listaServidores != null && !listaServidores.isEmpty()) {
-			for (int indice = 0; indice < listaServidores.size(); indice++) {
+			for (int indice = 0, s = listaServidores.size(); indice < s; indice++) {
 
 				ServidorBean servidor = listaServidores.get(indice);
 				servidor.setNombre(StringEscapeUtils.escapeHtml(servidor
@@ -190,33 +234,38 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String execute() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para
 														// ordenar
 
-		if (servidor != null)
-			if (servidor.getNombre() != null
-					&& servidor.getNombre().length() <= 0)
-				servidor.setNombre(null);
+		if (servidor != null && servidor.getNombre() != null
+				&& servidor.getNombre().isEmpty()) {
+			servidor.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServidorBean> result = servicioServidor.getServidores(
-				inicio, (export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, servidor, Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMTP",null)));
+				inicio, export?-1:Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)), order, columnSort, servidor, Integer.parseInt(properties.getProperty(GENERALESDOTTIP,null)));
 		Integer totalSize = result.getTotalList();
 
 		listaServidores = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE",null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ,null), totalSize);
 		
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE",null), Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0,null), Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE",null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0,null), totalSize);
 		}
 
 		if (listaServidores != null && !listaServidores.isEmpty()) {
@@ -241,10 +290,13 @@ public String newSearch() throws BaseException {
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-		if (servidor != null) { 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+		if (servidor != null) {
+ 	
 			if (servidor.getIsActivo() != null
 					&& servidor.getIsActivo().indexOf("'activo'") != -1) {
 				servidor.setActivo(true);
@@ -252,7 +304,7 @@ public String newSearch() throws BaseException {
 				servidor.setActivo(false);
 			}
 			if (validaServidor(servidor)) {
-				Long idServidor = servicioServidor.newServidor(servidor, Integer.parseInt(properties.getProperty("generales.TIPO_SERVIDOR_SMTP",null)), source, accion, accionId);
+				Long idServidor = servicioServidor.newServidor(servidor, Integer.parseInt(properties.getProperty(GENERALESDOTTIP,null)), source, accion, accionId);
 				this.idServidor = idServidor.toString();
 				addActionMessageSession(this
 						.getText("plataforma.servidores.create.ok"));
@@ -298,11 +350,13 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String update() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROVEEDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		
 		ServidorBean servidorBBDD = null;
 		if (servidor == null) {
@@ -310,13 +364,13 @@ public String newSearch() throws BaseException {
 		} else {
 			if (servidor.getServidorid() == null) {
 				if (idServidor != null) {
-					servidor.setServidorid(new Long(idServidor));
+					servidor.setServidorid(Long.valueOf(idServidor));
 					servidorBBDD = servicioServidor.loadServidor(servidor);
 				} else {
 					String idServidor = (String) request.getAttribute("idServidor");
 					
 					if (idServidor != null) {
-						servidor.setId(new Long(idServidor));
+						servidor.setId(Long.valueOf(idServidor));
 						servidorBBDD = servicioServidor.loadServidor(servidor);
 					}
 				}
@@ -348,23 +402,22 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String load() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-		if (idServidor == null)
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+		if (idServidor == null) {
 			throw new BusinessException("EL idServidor recibido es nulo");
+		}
 		
 		try {
 			servidor = new ServidorBean();
-			servidor.setServidorid(new Long(idServidor));
+			servidor.setServidorid(Long.valueOf(idServidor));
 			servidor = servicioServidor.loadServidor(servidor);
 			return SUCCESS;
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | BusinessException e) {
+			logger.error(e.getMessage(), e);
 			String mensg = this.getText(
-					"errors.action.organismo.loadOrganismo",
-					new String[] { servidor.getServidorid().toString() });
-			throw new BusinessException(mensg);
-		} catch (BusinessException e) {
-			String mensg = this.getText(
-					"errors.action.organismo.loadOrganismo",
+					ERRORSDOTACTION,
 					new String[] { servidor.getServidorid().toString() });
 			throw new BusinessException(mensg);
 		}
@@ -380,20 +433,22 @@ public String newSearch() throws BaseException {
 	 */
 	////MIGRADO
 	public String deleteParametroServidor() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PARAMETRO", null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		
 		if (parametroServidorId == null) {
 			addActionErrorSession(this.getText("plataforma.servidores.parametro.delete.error"));
 		} else {
 			parametroServidor = new ParametroServidorBean();
-			parametroServidor.setParametroservidorid(new Long(parametroServidorId));
+			parametroServidor.setParametroservidorid(Long.valueOf(parametroServidorId));
 			servidor = new ServidorBean();
-			servidor.setServidorid(new Long(idServidor));
+			servidor.setServidorid(Long.valueOf(idServidor));
 			servidor = servicioServidor.loadServidor(servidor);
 			
 			//se actualiza para actualizar la fecha de modificado y modificadopor
@@ -413,19 +468,20 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String deletePlanificacionServidor() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
-		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		String descripcion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		
 		if (planificacionId == null) {
 			addActionErrorSession(this.getText("plataforma.servidores.planificacion.delete.error"));
 		} else {
 			planificacionServidor = new PlanificacionBean();
-			planificacionServidor.setPlanificacionId(new Integer(
-					planificacionId));
+			planificacionServidor.setPlanificacionId(Integer.valueOf(planificacionId));
 			servicioPlanificacion.deletePlanificacion(planificacionServidor, source, accion, accionId, descripcion);
 			addActionMessageSession(this
 					.getText("plataforma.servidores.planificacion.delete.ok"));
@@ -442,20 +498,22 @@ public String newSearch() throws BaseException {
 	 */
 	////////MIGRADO
 	public String delete() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		if (idServidor == null) {
 			addActionErrorSession(this
 					.getText("plataforma.servidores.delete.error"));
 		} else {
 			servidor = new ServidorBean();
-			servidor.setServidorid(new Long(idServidor));
+			servidor.setServidorid(Long.valueOf(idServidor));
 			servicioServidor.deleteServidor(servidor, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			addActionMessageSession(this
 					.getText("plataforma.servidores.delete.ok"));
@@ -472,21 +530,23 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accionPlanificacion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdPlanificacion = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String accionServidor = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionIdServidor = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
+		String accionPlanificacion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdPlanificacion = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String accionServidor = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionIdServidor = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		if (checkDelList == null) {
 			addActionErrorSession(this
 					.getText("plataforma.servidores.deleteSelected.error"));
 		} else {
 			for (String idServidor : checkDelList) {
 				servidor = new ServidorBean();
-				servidor.setServidorid(new Long(idServidor));
+				servidor.setServidorid(Long.valueOf(idServidor));
 				servicioServidor.deleteServidor(servidor, accionServidor, accionIdServidor, source, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			}
 			addActionMessageSession(this
@@ -537,20 +597,27 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String checkSMTPConnection() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		
 		// Obtener los parametros configurados para el servidor y realizar una
 		// validacion para comprobar que se han configurado todos
-		String ip = null, user = null, password = null, secure = null, port = null, reqAuth= null;
+		String ip = null;
+		String user = null;
+		String password = null;
+		String secure = null;
+		String port = null;
+		String reqAuth = null;
 		String msgError = this.getText("plataforma.servidores.checkparameters");
 		List<ParametroServidorBean> listaParametrosServidor = servicioParametroServidor
-				.getParametroServidorByServidorId(new Integer(idServidor)); 
+				.getParametroServidorByServidorId(Integer.valueOf(idServidor)); 
 		List<TipoParametroBean> listaTiposParametrosServidor = servicioTipoParametro
 				.getTipoParametrosServidor();
 
 		// Validar el numero de parametros configurados en el servidor
 		// y numero de tipos de parametros
-		HashMap<Integer, String> mapaParametrosServidor = new HashMap<Integer, String>();
+		HashMap<Integer, String> mapaParametrosServidor = new HashMap<>();
 		for (ParametroServidorBean parametroServidor : listaParametrosServidor) {
 			mapaParametrosServidor.put(parametroServidor.getTipoparametroid().intValue(),
 					parametroServidor.getValor());
@@ -560,7 +627,7 @@ public String newSearch() throws BaseException {
 			if (tipoParametroBean.getTipoparametroid()!=ParametroServidorBean.CONEXION_SEGURA&&
 				tipoParametroBean.getTipoparametroid()!=ParametroServidorBean.REQ_AUTH&&
 				tipoParametroBean.getTipoparametroid()!=ParametroServidorBean.USUARIO&&
-				tipoParametroBean.getTipoparametroid()!=ParametroServidorBean.PASSWORD&&
+				tipoParametroBean.getTipoparametroid()!=ParametroServidorBean.PASS&&
 					!mapaParametrosServidor.containsKey(tipoParametroBean
 					.getTipoparametroid())) {
 					sw = false;
@@ -576,7 +643,7 @@ public String newSearch() throws BaseException {
 					user = mapaParametrosServidor.get(tipoParametroBean
 							.getTipoparametroid());
 				}
-				if (ParametroServidorBean.PASSWORD == tipoParametroBean
+				if (ParametroServidorBean.PASS == tipoParametroBean
 						.getTipoparametroid()) {
 					password = mapaParametrosServidor.get(tipoParametroBean
 							.getTipoparametroid());
@@ -628,12 +695,14 @@ public String newSearch() throws BaseException {
 	 */
 	/////MIGRADO
 	public String addParametroServidor() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PARAMETRO", null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		if (parametroServidor != null) {
 			if (!validaParametro(parametroServidor)) {
 				return ERROR;
@@ -657,33 +726,35 @@ public String newSearch() throws BaseException {
 	 */
 	//////MIGRADO
 	public String addPlanificacion() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVIDORES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
 		
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		if (planificacionServidor != null
 				&& !PlataformaMensajeriaUtil
 						.isEmptyNumber(planificacionServidor.getServidorId())) {
 			if (planificacionValida(planificacionServidor)) {
 				planificacionServidor.setActivo(true);
-				planificacionServidor.setTipoPlanificacionId(new Integer(1));
+				planificacionServidor.setTipoPlanificacionId(Integer.valueOf(1));
 				
 				int valido = servicioPlanificacion.validaPlanificacionServidor(planificacionId, planificacionServidor.getServidorId(),
 						planificacionServidor.getLunes(),planificacionServidor.getMartes(),planificacionServidor.getMiercoles(),
 						planificacionServidor.getJueves(),planificacionServidor.getViernes(),planificacionServidor.getSabado(),
 						planificacionServidor.getDomingo(),planificacionServidor.getHoraHasta(),planificacionServidor.getHoraDesde());
 				
-				if(valido == 1){
+				switch (valido) {
+				case 1:
 					servicioPlanificacion.newPlanificacion(planificacionServidor, source, accion, accionId, descripcion);
 					addActionMessageSession(this
 							.getText("plataforma.servidores.planificacion.add.ok"));
-
-				}else if (valido == 0)
-				{
-			    	   addActionErrorSession("No se ha a&ntilde;adido la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
-			    	   return ERROR;
+					break;
+				case 0:
+					addActionErrorSession("No se ha a&ntilde;adido la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
+					return ERROR;
 				}
 			} else {
 				return ERROR;
@@ -745,12 +816,10 @@ public String newSearch() throws BaseException {
 							.getText("plataforma.servidores.planificacion.horaHasta.formato.error"));
 					sw = false;
 				}
-				if (sw) {
-					if (!validoHoras(planificacionServidor.getHoraDesde(),
-							planificacionServidor.getHoraHasta())) {
-						sw = false;
-					}
-				}
+				if (sw && !validoHoras(planificacionServidor.getHoraDesde(),
+						planificacionServidor.getHoraHasta())) {
+sw = false;
+}
 			}
 			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor
 					.getLunes())
@@ -785,19 +854,19 @@ public String newSearch() throws BaseException {
 	/////MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
-		String[] horaDesdeArray = horaDesde.split(":");
-		String[] horaHastaArray = horaHasta.split(":");
-		int hDesde = new Integer(horaDesdeArray[0]);
-		int mDesde = new Integer(horaDesdeArray[1]);
-		int hHasta = new Integer(horaHastaArray[0]);
-		int mHasta = new Integer(horaHastaArray[1]);
+		String[] horaDesdeArray = horaDesde.split(R_CONST_REF);
+		String[] horaHastaArray = horaHasta.split(R_CONST_REF);
+		int hDesde = Integer.parseInt(horaDesdeArray[0]);
+		int mDesde = Integer.parseInt(horaDesdeArray[1]);
+		int hHasta = Integer.parseInt(horaHastaArray[0]);
+		int mHasta = Integer.parseInt(horaHastaArray[1]);
 		if (hDesde > hHasta) {
 			addFieldErrorSession(this
-					.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+					.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde > mHasta) {
 			addFieldErrorSession(this
-					.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+					.getText(PLATAFORMADOTSE));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde == mHasta) {
 			addFieldErrorSession(this
@@ -816,10 +885,8 @@ public String newSearch() throws BaseException {
 ////MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
-		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
-			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
-				sw = false;
-			}
+		if (!PlataformaMensajeriaUtil.isEmpty(hora) && !PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+			sw = false;
 		}
 		return sw;
 	}
@@ -864,22 +931,18 @@ public String newSearch() throws BaseException {
     ///MIGRADO
 	private List<PlanificacionBean> getLoadPlanificacionesServidor() {
 		List<PlanificacionBean> lista = null;
-		if (idServidor != null && idServidor.length() > 0) {
+		if (idServidor != null && !idServidor.isEmpty()) {
 			try {
-				lista = servicioPlanificacion.getPlanificacionesByServidorId(new Integer(idServidor));
-			} catch (NumberFormatException e) {
-				logger.error("ServidoresActioin - getLoadPlanificacionesServidor:" + e);
-			} catch (BusinessException e) {
-				logger.error("ServidoresActioin - getLoadPlanificacionesServidor:" + e);
+				lista = servicioPlanificacion.getPlanificacionesByServidorId(Integer.valueOf(idServidor));
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(SERVIDORESACTIO0 + e);
 			}
 		} else if (servidor != null && servidor.getServidorid() != null) {
 			try {
 				lista = servicioPlanificacion
-						.getPlanificacionesByServidorId(new Integer(idServidor));
-			} catch (NumberFormatException e) {
-				logger.error("ServidoresActioin - getLoadPlanificacionesServidor:" + e);
-			} catch (BusinessException e) {
-				logger.error("ServidoresActioin - getLoadPlanificacionesServidor:" + e);
+						.getPlanificacionesByServidorId(Integer.valueOf(idServidor));
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(SERVIDORESACTIO0 + e);
 			}
 		}
 		return lista;
@@ -893,25 +956,20 @@ public String newSearch() throws BaseException {
 	///////MIGRADO
 	private List<ParametroServidorBean> getParametrosServidor() {
 		List<ParametroServidorBean> lista = null;
-		if (idServidor != null && idServidor.length() > 0) {
+		if (idServidor != null && !idServidor.isEmpty()) {
 			try {
 				lista = servicioParametroServidor
-						.getParametroServidorByServidorId(new Integer(
-								idServidor));
-			} catch (NumberFormatException e) {
-				logger.error("ServidoresActioin - getParametrosServidor:" + e);
-			} catch (BusinessException e) {
-				logger.error("ServidoresActioin - getParametrosServidor:" + e);
+						.getParametroServidorByServidorId(Integer.valueOf(idServidor));
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(SERVIDORESACTIO + e);
 			}
 		} else if (servidor != null && servidor.getServidorid() != null) {
 			try {
 				lista = servicioParametroServidor
 						.getParametroServidorByServidorId(servidor
 								.getServidorid().intValue());
-			} catch (NumberFormatException e) {
-				logger.error("ServidoresActioin - getParametrosServidor:" + e);
-			} catch (BusinessException e) {
-				logger.error("ServidoresActioin - getParametrosServidor:" + e);
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(SERVIDORESACTIO + e);
 			}
 		}
 		return lista;
@@ -924,7 +982,7 @@ public String newSearch() throws BaseException {
  */
 /////MIGRADO
 	private List<KeyValueObject> getComboValues() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option = null;
 		
 		ArrayList<TipoParametroBean> keys = null;
@@ -935,7 +993,7 @@ public String newSearch() throws BaseException {
 			logger.error("ServidoresActioin - getComboValues:" + e);
 		}
 
-		if (keys != null && keys.size() > 0)
+		if (keys != null && !keys.isEmpty()) {
 			for (TipoParametroBean key : keys) {
 
 				option = new KeyValueObject();
@@ -943,6 +1001,7 @@ public String newSearch() throws BaseException {
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 

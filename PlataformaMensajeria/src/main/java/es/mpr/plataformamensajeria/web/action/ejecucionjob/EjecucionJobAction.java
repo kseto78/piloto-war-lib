@@ -19,8 +19,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.quartz.JobExecutionException;
@@ -74,6 +72,66 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Controller("ejecucionJobAction")
 @Scope("prototype")
 public class EjecucionJobAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
+
+	protected static final String EJECUCIONJOBACT = "EjecucionJobAction - load:";
+
+	protected static final String PLATAFORMADOTEJ = "plataforma.ejecucionjob.field.aeatgiss.error";
+
+	protected static final String R_CONST_REF = "10";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String BLANK = " ";
+
+	protected static final String REENVIARMENSAJE = "ReenviarMensajesPendientesJob";
+
+	protected static final String R_CONST_0 = ",";
+
+	protected static final String R_CONST_1 = "0";
+
+	protected static final String R_CONST_2 = "1";
+
+	protected static final String R_CONST_3 = "2";
+
+	protected static final String R_CONST_4 = "3";
+
+	protected static final String R_CONST_5 = "4";
+
+	protected static final String LOGDOTSOURCE_JO = "log.SOURCE_JOBS";
+
+	protected static final String R_CONST_6 = "5";
+
+	protected static final String R_CONST_7 = "6";
+
+	protected static final String R_CONST_8 = "7";
+
+	protected static final String R_CONST_9 = ";";
+
+	protected static final String R_CONST_10 = "20";
+
+	protected static final String PLATAFORMADOTEJ0 = "plataforma.ejecucionjob.update.error.planificarNodo";
+
+	protected static final String LOGDOTSOURCE_PR = "log.SOURCE_PROCESOS_MANUALES";
+
+	protected static final String N = "\\n";
+
+	protected static final String R = "\\r";
+
+	protected static final String R_CONST_11 = "50";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String ERRORSDOTACTION = "errors.action.ejecucionjobs.loadProcesoServicio";
+
+	protected static final String BLANK0 = "0 ";
+
+	protected static final String R_CONST_12 = "100";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
 
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -154,10 +212,10 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	private ProcesosBean proceso; 
 	
 	/**  combo numero de dias. */
-	List<KeyValueObject> comboNumeroDias = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboNumeroDias = new ArrayList<>();
 	
 	/**  combo numero de dias. */
-	List<KeyValueObject> comboListadoJobs = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboListadoJobs = new ArrayList<>();
 
 	/** Constante TABLE_ID. */
 	private static final String TABLE_ID = "tableId";
@@ -179,7 +237,6 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	private TblProcesosManagerImpl tblProcesosManagerImpl;
 	
 //	@Resource(name = "pushServiceImpl")
-//	private IPushService pushServiceImpl;
 
 	/**  job bean. */
 	private JobBean jobBean;
@@ -256,8 +313,9 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	 */
 	/////MIGRADO
 	public String ejecucionJobAction() throws BaseException {
-		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null) {
 			return EjecucionJobAction.NO_USER;
+		}
 
 		comboServicios = getComboServicios();
 		comboJobs = getComboJobs();
@@ -272,23 +330,22 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	 */
 	// ///MIGRADO
 	public String seleccionarJobAction() throws BaseException {
-		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null) {
 			return EjecucionJobAction.NO_USER;
+		}
 		
 		try {
 			ServletContext servletContext= getRequest().getSession().getServletContext();
 			if(jobBean != null){
-				if (jobBean.getNombreJob().equals(PROC_HIST)){
+				if (PROC_HIST.equals(jobBean.getNombreJob())){
 					historificacionJob.lanzarJob(servletContext, jobBean);
-				}else if (jobBean.getNombreJob().equals(PROC_CONS)){
+				}else if (PROC_CONS.equals(jobBean.getNombreJob())){
 					estadisticasConsolidadasJob.lanzarJob(servletContext, jobBean);
-				}else if (jobBean.getNombreJob().equals(PROC_INFORMES)){
+				}else if (PROC_INFORMES.equals(jobBean.getNombreJob())){
 					informesServiciosJob.lanzarJob(servletContext, jobBean);
-	//				pushServiceImpl.sendPush(null, null);
-				}else if (jobBean.getNombreJob().equals(PROC_ANULACION_MENSAJES)){
+				}else if (PROC_ANULACION_MENSAJES.equals(jobBean.getNombreJob())){
 					anularMensajesJob.lanzarJob(servletContext, jobBean);
-				}				
-				else{
+				} else{
 				
 					recuperarInforDIRJob.lanzarJob(servletContext, jobBean);
 				}
@@ -310,14 +367,15 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_JOBS", null);
+		String source = properties.getProperty(LOGDOTSOURCE_JO, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
 			logger.error("EjecucionJobAction - createProcesoManual:" + e);
 			return EjecucionJobAction.NO_USER;
 		}
-		if (procesoManual != null) {			
+		if (procesoManual != null) {
+				
 			if (!validaObligatoriosProcesoManual(procesoManual)) {
 				return ERROR;
 			}			
@@ -350,45 +408,51 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
  */
 /////MIGRADO
 	public String cargarServiciosConservacionEvent() throws BaseException, ParseException {
-		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null) {
 			return EjecucionJobAction.NO_USER;
+		}
 
 		if (null != jobBean){
-			if(jobBean.getNombreJob().equals(PROC_HIST)){
+			if(PROC_HIST.equals(jobBean.getNombreJob())){
 				comboServicios = getComboServicios();
-			}else if(jobBean.getNombreJob().equals(PROC_CONS)){
+			}else if(PROC_CONS.equals(jobBean.getNombreJob())){
 				comboServicios = getComboServiciosConservacion();
-			} else if(jobBean.getNombreJob().equals(PROC_ANULACION_MENSAJES)){
+			} else if(PROC_ANULACION_MENSAJES.equals(jobBean.getNombreJob())){
 				propertyServiciosAnularMensajes = getPropertyServiciosAnularMensajes();
-			}else if(jobBean.getNombreJob().equals(PROC_REENVIO)){
+			}else if(PROC_REENVIO.equals(jobBean.getNombreJob())){
 				PaginatedList<ProcesosBean> result;
 				
 				PaginatedList<ProcesosManualesBean> resultProcesosManuales;
 				
-				int page = getPage(EjecucionJobAction.TABLE_ID); // Pagina a mostrar
-				String order = getOrder(EjecucionJobAction.TABLE_ID); // Ordenar de modo ascendente o
-				String columnSort = getColumnSort(EjecucionJobAction.TABLE_ID); // Columna usada para ordenar
+				int page = getPage(EjecucionJobAction.TABLE_ID); 
+				// Pagina a mostrar
+				String order = getOrder(EjecucionJobAction.TABLE_ID); 
+				// Ordenar de modo ascendente o
+				String columnSort = getColumnSort(EjecucionJobAction.TABLE_ID); 
+				// Columna usada para ordenar
 				
-				String orderProcesos = getOrder(EjecucionJobAction.TABLE_PROCESOS); // Ordenar de modo ascendente o
-				String columnSortProcesos = getColumnSort(EjecucionJobAction.TABLE_PROCESOS); // Columna usada para ordenar
+				String orderProcesos = getOrder(EjecucionJobAction.TABLE_PROCESOS); 
+				// Ordenar de modo ascendente o
+				String columnSortProcesos = getColumnSort(EjecucionJobAction.TABLE_PROCESOS); 
+				// Columna usada para ordenar
 				
 				ProcesosBean procesosBean = new ProcesosBean();
 				
 				int inicio = (page - 1) * pageSize;
 				boolean export = false;
-				result = servicioProcesos.getProcesos((export) ? -1 : pageSize, orderProcesos,
+				result = servicioProcesos.getProcesos(export ? -1 : pageSize, orderProcesos,
 						columnSortProcesos, procesosBean);				
 				
 				listaProcesos = result.getPageList();				
 				
 				
 				ProcesosManualesBean procesosManualesBean = new ProcesosManualesBean();
-				resultProcesosManuales = servicioProcesosManuales.getProcesosManuales(inicio,(export) ? -1 : pageSize, order,
+				resultProcesosManuales = servicioProcesosManuales.getProcesosManuales(inicio,export ? -1 : pageSize, order,
 						columnSort, procesosManualesBean);
 				Integer totalSize = resultProcesosManuales.getTotalList();
 				listaProcesosManuales = resultProcesosManuales.getPageList();
-				resultCount = (totalSize != null) ? totalSize.toString() : "0";
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+				resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
+				getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 				getRequest().setAttribute(properties.getProperty(EjecucionJobAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
 						pageSize);
 
@@ -408,17 +472,18 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	 */
 	////MIGRADO
 	public String deleteProcesoManual() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);		
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));		
-		String source = properties.getProperty("log.SOURCE_PROCESOS_MANUALES", null);
-		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);		
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));		
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null) {
 			return NO_USER;
+		}
 		if (procesoManualId == null) {
 			addActionErrorSession(this.getText("plataforma.ejecucionjob.delete.error"));			
 			
 		} else {
 			procesoManual = new ProcesosManualesBean();
-			procesoManual.setProcesosManualesId((new Integer(procesoManualId)));
+			procesoManual.setProcesosManualesId(Integer.valueOf(procesoManualId));
 			
 			servicioProcesosManuales.deleteProcesoManual(Long.parseLong(procesoManualId), source, accion, accionId);
 			addActionMessageSession(this.getText("plataforma.procesomanual.delete.ok"));
@@ -428,36 +493,43 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	}
 	
 	public String loadMensajesReenvios() throws BusinessException{
-		PaginatedList<GestionEnvioBean> result = new PaginatedList<GestionEnvioBean>();		
+		PaginatedList<GestionEnvioBean> result = null;		
 		Integer totalSize;
 		
 		String serviciosExcluidos = "";
-		if(datosServiciosExcluidos != null) serviciosExcluidos = datosServiciosExcluidos;
+		if(datosServiciosExcluidos != null) {
+			serviciosExcluidos = datosServiciosExcluidos;
+		}
 		
 		
-		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(EjecucionJobAction.INFO_USER) == null) {
 			return EjecucionJobAction.NO_USER;
+		}
 
 		// Carga Destinatarios_mensajes		
-		int page = getPage(EjecucionJobAction.TABLE_ID); // Pagina a mostrar
+		int page = getPage(EjecucionJobAction.TABLE_ID); 
+		// Pagina a mostrar
 		int inicio = (page - 1) * pageSize;
-		String order = getOrder(EjecucionJobAction.TABLE_ID); // Ordenar de modo ascendente o
+		String order = getOrder(EjecucionJobAction.TABLE_ID); 
+		// Ordenar de modo ascendente o
 		// descendente
-		String columnSort = getColumnSort(EjecucionJobAction.TABLE_ID); // Columna usada para
+		String columnSort = getColumnSort(EjecucionJobAction.TABLE_ID); 
+		// Columna usada para
 		// ordenar
 		GestionEnvioBean gestionEnvioBean = new GestionEnvioBean();
 		
 		Date fechaInicio = null;
 		Date fechaFin = null;
 		
-		if (null != jobBean && null != jobBean.getFecha()) {			
+		if (null != jobBean && null != jobBean.getFecha()) {
+				
 			fechaInicio = jobBean.getFecha();			
 		}else{
 			int numeroDiasAtras;
 			if(null != jobBean && jobBean.getParametro1() != null){
-				numeroDiasAtras = Integer.valueOf(jobBean.getParametro1());
+				numeroDiasAtras = Integer.parseInt(jobBean.getParametro1());
 			}else if(proceso != null && proceso.getParametro1() != null){
-				numeroDiasAtras = Integer.valueOf(proceso.getParametro1());
+				numeroDiasAtras = Integer.parseInt(proceso.getParametro1());
 			}else{
 				numeroDiasAtras=7;
 			}			
@@ -471,7 +543,8 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 			fechaFin = new Date();
 		}
 
-		gestionEnvioBean.setEstadoId(3L); //Estado pendiente de envio
+		gestionEnvioBean.setEstadoId(3L); 
+		//Estado pendiente de envio
 		gestionEnvioBean.setFechaDesde(fechaInicio);
 		gestionEnvioBean.setFechaHasta(fechaFin);
 		
@@ -479,7 +552,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		
 		result = servicioGestionEnvios.getGestionDeEnviosDestinatariosReenvioJob(inicio,
-				(export) ? -1 : pageSize, order,
+				export ? -1 : pageSize, order,
 				columnSort, gestionEnvioBean, request, serviciosExcluidos,datosServicios);
 		
 				
@@ -487,8 +560,8 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		totalSize = result.getTotalList();
 		listaGestionEnvios = result.getPageList();
 		
-		resultCount = (totalSize != null) ? totalSize.toString() : "0";
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 		getRequest().setAttribute(properties.getProperty(EjecucionJobAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
 				pageSize);
 		
@@ -507,36 +580,39 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("EjecucionJobAction - load:" + e);
+			logger.error(EJECUCIONJOBACT + e);
 			return EjecucionJobAction.NO_USER;
 		}
-		if (procesosId == null)
+		if (procesosId == null) {
 			throw new BusinessException("El procesoId recibido es nulo");
+		}
 		try {
 			proceso = new ProcesosBean();
-			proceso.setProcesosId((new Integer(procesosId)));
+			proceso.setProcesosId(Integer.valueOf(procesosId));
 			proceso = servicioProcesos.loadProceso(proceso);
 			
-			if ( proceso.getParametro2() != null && !proceso.getParametro2().equals(("")) ){
+			if ( proceso.getParametro2() != null && !"".equals(proceso.getParametro2()) ){
 				List<String> list = Arrays.asList(proceso.getParametro2().split("\\s*,\\s*"));
 				
 				StringBuilder infoServicio = new StringBuilder(); 
-				for(String serv : list){					
+				for(String serv : list){
+						
 					ServicioBean sBean = new ServicioBean();
 					sBean.setServicioId(Integer.valueOf(serv));
 					ServicioBean servBean = servicioServicio.loadServicio(sBean);
-					String act = servBean.getServicioId() + "," + servBean.getNombre() + ","+ servBean.getDescripcion()+";";
+					String act = servBean.getServicioId() + R_CONST_0 + servBean.getNombre() + R_CONST_0+ servBean.getDescripcion()+R_CONST_9;
 					infoServicio.append(act);					
 				}
-				tieneServicios = infoServicio.toString().replace("\n", "").replace("\r", "");
+				tieneServicios = infoServicio.toString().replace(N, "").replace(R, "");
 				tieneServicios = tieneServicios.substring(0, tieneServicios.length() -1);
 			}
 			
+			addActionWarningMessageSession(properties.getProperty("plataforma.jobs.update.aviso", null));
 						
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("errors.action.ejecucionjobs.loadProcesoServicio", new String[] { proceso.getProcesosId().toString() });
-			logger.error("EjecucionJobAction - load:" + e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { proceso.getProcesosId().toString() });
+			logger.error(EJECUCIONJOBACT + e);
 			throw new BusinessException(mensg);
 		} 
 
@@ -561,12 +637,12 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 			sw = false;
 		}
 		if (PlataformaMensajeriaUtil.isEmpty(proceso.getParametro2())) {
-			addActionErrorSession(this.getText("plataforma.ejecucionjob.field.aeatgiss.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTEJ));
 			sw = false;
 		}
 		if (!PlataformaMensajeriaUtil.isEmpty(proceso.getParametro2())) {
-			List<String> serviciosAeatGissProperty = new ArrayList<String>(Arrays.asList(properties.getProperty("activemq.job.cronReenvio.serviciosExcluidos", null).trim().split(",")));
-			List<String> serviciosAeatGiss= new ArrayList<String>(Arrays.asList(proceso.getParametro2().split(",")));
+			List<String> serviciosAeatGissProperty = new ArrayList<>(Arrays.asList(properties.getProperty("activemq.job.cronReenvio.serviciosExcluidos", null).trim().split(R_CONST_0)));
+			List<String> serviciosAeatGiss= new ArrayList<>(Arrays.asList(proceso.getParametro2().split(R_CONST_0)));
 				
 			Boolean encontrado;
 			for(String servProperty:serviciosAeatGissProperty){
@@ -577,7 +653,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 					}								
 				}				
 				if(!encontrado){
-					addActionErrorSession(this.getText("plataforma.ejecucionjob.field.aeatgiss.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTEJ));
 					sw = false;
 				}
 					
@@ -605,51 +681,54 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 			logger.error("EjecucionJobAction - load:ProcesoManual" + e);
 			return EjecucionJobAction.NO_USER;
 		}
-		if (procesoManualId == null)
+		if (procesoManualId == null) {
 			throw new BusinessException("El procesoManualId recibido es nulo");
+		}
 		try {
 			procesoManual = new ProcesosManualesBean();
-			procesoManual.setProcesosManualesId((new Integer(procesoManualId)));
+			procesoManual.setProcesosManualesId(Integer.valueOf(procesoManualId));
 			procesoManual = servicioProcesosManuales.loadProcesoManual(procesoManual);
 			
-			if ( procesoManual.getParametro2() != null && !procesoManual.getParametro2().equals(("")) ){
+			if ( procesoManual.getParametro2() != null && !"".equals(procesoManual.getParametro2()) ){
 				List<String> list = Arrays.asList(procesoManual.getParametro2().split("\\s*,\\s*"));
 				
 				StringBuilder infoServicio = new StringBuilder(); 
-				for(String serv : list){					
+				for(String serv : list){
+						
 					ServicioBean sBean = new ServicioBean();
 					sBean.setServicioId(Integer.valueOf(serv));
 					ServicioBean servBean = servicioServicio.loadServicio(sBean);
-					String act = servBean.getServicioId() + "," + servBean.getNombre() + ","+ servBean.getDescripcion()+";";
+					String act = servBean.getServicioId() + R_CONST_0 + servBean.getNombre() + R_CONST_0+ servBean.getDescripcion()+R_CONST_9;
 					infoServicio.append(act);					
 				}
-				tieneServicios = infoServicio.toString().replace("\n", "").replace("\r", "");
+				tieneServicios = infoServicio.toString().replace(N, "").replace(R, "");
 				tieneServicios = tieneServicios.substring(0, tieneServicios.length() -1);
 			}	
 			
 			ProcesosBean proceso = new ProcesosBean();
-			proceso.setNombreClase("ReenviarMensajesPendientesJob");
+			proceso.setNombreClase(REENVIARMENSAJE);
 			proceso = servicioProcesos.loadProcesoNombreClase(proceso);
-			if ( proceso.getParametro2() != null && !proceso.getParametro2().equals(("")) ){
+			if ( proceso.getParametro2() != null && !"".equals(proceso.getParametro2()) ){
 				List<String> list = Arrays.asList(proceso.getParametro2().split("\\s*,\\s*"));
 				
 				StringBuilder infoServicio = new StringBuilder(); 
-				for(String serv : list){					
+				for(String serv : list){
+						
 					ServicioBean sBean = new ServicioBean();
 					sBean.setServicioId(Integer.valueOf(serv));
 					ServicioBean servBean = servicioServicio.loadServicio(sBean);
-					String act = servBean.getServicioId() + "," + servBean.getNombre() + ","+ servBean.getDescripcion()+";";
+					String act = servBean.getServicioId() + R_CONST_0 + servBean.getNombre() + R_CONST_0+ servBean.getDescripcion()+R_CONST_9;
 					infoServicio.append(act);					
 				}
-				tieneServiciosAutomatica = infoServicio.toString().replace("\n", "").replace("\r", "");
+				tieneServiciosAutomatica = infoServicio.toString().replace(N, "").replace(R, "");
 				tieneServiciosAutomatica = tieneServiciosAutomatica.substring(0, tieneServiciosAutomatica.length() -1);
 			}	
 			
 						
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("errors.action.ejecucionjobs.loadProcesoServicio", new String[] { proceso.getProcesosId().toString() });
-			logger.error("EjecucionJobAction - load:" + e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { proceso.getProcesosId().toString() });
+			logger.error(EJECUCIONJOBACT + e);
 			throw new BusinessException(mensg);
 		} 
 
@@ -659,17 +738,17 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("EjecucionJobAction - load:" + e);
+			logger.error(EJECUCIONJOBACT + e);
 			return EjecucionJobAction.NO_USER;
 		}
 		
 		try {
 			
-			if(procesosId !=null && !procesosId.equals("")){
+			if(procesosId !=null && !"".equals(procesosId)){
 				proceso = new ProcesosBean();
-				proceso.setProcesosId(new Integer(procesosId));
+				proceso.setProcesosId(Integer.valueOf(procesosId));
 				proceso = servicioProcesos.loadProceso(proceso);
-				if(null != proceso.getParametro1() && !proceso.getParametro1().equals("") ){
+				if(null != proceso.getParametro1() && !"".equals(proceso.getParametro1()) ){
 					jobBean = new JobBean();
 					jobBean.setParametro1(proceso.getParametro1());
 				}				
@@ -683,14 +762,14 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				proceso = servicioProcesos.loadProceso(proceso);			
 			}
 			
-			if(procesoManualId !=null && !procesoManualId.equals("")){
+			if(procesoManualId !=null && !"".equals(procesoManualId)){
 				procesoManual = new ProcesosManualesBean();
-				procesoManual.setProcesosManualesId(new Integer(procesoManualId));
+				procesoManual.setProcesosManualesId(Integer.valueOf(procesoManualId));
 				procesoManual = servicioProcesosManuales.loadProcesoManual(procesoManual);
-				if(null != procesoManual.getParametro2() && !procesoManual.getParametro2().equals("") ){
+				if(null != procesoManual.getParametro2() && !"".equals(procesoManual.getParametro2()) ){
 					datosServicios = procesoManual.getParametro2();
 				}
-				if(null != procesoManual.getParametro1() && !procesoManual.getParametro1().equals("") ){
+				if(null != procesoManual.getParametro1() && !"".equals(procesoManual.getParametro1()) ){
 					jobBean = new JobBean();
 					jobBean.setParametro1(procesoManual.getParametro1());
 				}
@@ -699,12 +778,12 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				proceso = servicioProcesos.loadProceso(proceso);
 			}	
 			
-			if(proceso.getEstado().equals("En ejecucion...")){
+			if("En ejecucion...".equals(proceso.getEstado())){
 				addActionErrorSession(this.getText("errors.action.ejecucionjobs.estadoEjecucion"));
 				return SUCCESS;
 			}
 			
-			if(proceso.getNombreClase().equals("ReenviarMensajesPendientesJob")){
+			if(REENVIARMENSAJE.equals(proceso.getNombreClase())){
 				ServletContext servletContext= getRequest().getSession().getServletContext();			
 				ReenviarMensajesPendientesJob reenvio = new ReenviarMensajesPendientesJob();
 				reenvio.lanzarJob(servletContext, jobBean, datosServicios);
@@ -731,18 +810,20 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	 */
 	///MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
 		String source = properties.getProperty("log.SOURCE_USUARIOS", null);
 				
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFO_USER) == null) {
+			return NO_USER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.procesomanual.deleteselected.error"));
 			
 		} else {
-			for (String idProcesoManual : checkDelList) {								
+			for (String idProcesoManual : checkDelList) {
+									
 				servicioProcesosManuales.deleteProcesoManual(Long.valueOf(idProcesoManual), source, accion, accionId);
 			}
 			addActionMessageSession(this.getText("plataforma.procesomanual.deleteselected.ok"));
@@ -763,33 +844,37 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	 */
 	///MIGRADO
 	public String update() throws BaseException, ClassNotFoundException, IOException {
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_JOBS", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_JO, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFO_USER) == null) {
+			return NO_USER;
+		}
 		ProcesosBean procesoBBDD = null;
 		ProcesosBean procesoBBDDcopia = null;
 		
 		if (proceso == null) {
 			addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error"));
-		} 
-		else {
+		} else {
 			if(!validaObligatoriosProcesoAutomatico(proceso)){
 				return SUCCESS;
 			}
 			
 			procesoBBDD = servicioProcesos.loadProceso(proceso);
 			
-			procesoBBDDcopia = copiarProceso(procesoBBDD); //Se realiza una copia del proceso, por si hay un fallo en la conexion con el nodo principal
+			procesoBBDDcopia = copiarProceso(procesoBBDD); 
+			//Se realiza una copia del proceso, por si hay un fallo en la conexion con el nodo principal
 									
-			if (procesoBBDD != null) {				
-				if(!proceso.getActivo() && procesoBBDD.getActivo()){					
+			if (procesoBBDD != null) {
+					
+				if(!proceso.getActivo() && procesoBBDD.getActivo()){
+						
 					addActionWarningMessageSession(this.getText("plataforma.jobs.update.desactivado"));
 					procesoBBDD.setEstado("Desactivado");
 				}
-				if(proceso.getActivo() && !procesoBBDD.getActivo()){					
+				if(proceso.getActivo() && !procesoBBDD.getActivo()){
+						
 					addActionWarningMessageSession(this.getText("plataforma.jobs.update.activado"));
 					procesoBBDD.setEstado("Sin Inicializar");
 				}
@@ -803,42 +888,58 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				String proxEje[] = proceso.getHoraInicio().split(":");
 				String hora = proxEje[0];
 				String minutos = proxEje[1];
-				if(proceso.getTipo().equals("diaria")){
-					procesoBBDD.setProximaEjecucion("0 "+minutos+" "+hora+" * * ?");
+				if("diaria".equals(proceso.getTipo())){
+					procesoBBDD.setProximaEjecucion(BLANK0+minutos+BLANK+hora+" * * ?");
 				}else{
 					StringBuilder diasSemana = new StringBuilder();
 					
-					if(proceso.getLunes()){		
+					if(proceso.getLunes()){
+			
 						diasSemana.append("MON,");
 						procesoBBDD.setLunes(true);
-					}else procesoBBDD.setLunes(false);
+					} else {
+						procesoBBDD.setLunes(false);
+					}
 					if(proceso.getMartes()){
 						diasSemana.append("TUE,");
 						procesoBBDD.setMartes(true);
-					}else procesoBBDD.setMartes(false);
+					} else {
+						procesoBBDD.setMartes(false);
+					}
 					if(proceso.getMiercoles()){
 						diasSemana.append("WED,");
 						procesoBBDD.setMiercoles(true);
-					}else procesoBBDD.setMiercoles(false);
+					} else {
+						procesoBBDD.setMiercoles(false);
+					}
 					if(proceso.getJueves()){
 						diasSemana.append("THU,");
 						procesoBBDD.setJueves(true);
-					}else procesoBBDD.setJueves(false);
+					} else {
+						procesoBBDD.setJueves(false);
+					}
 					if(proceso.getViernes()){
 						diasSemana.append("FRI,");
 						procesoBBDD.setViernes(true);
-					}else procesoBBDD.setViernes(false);
+					} else {
+						procesoBBDD.setViernes(false);
+					}
 					if(proceso.getSabado()){
 						diasSemana.append("SAT,");
 						procesoBBDD.setSabado(true);
-					}else procesoBBDD.setSabado(false);
+					} else {
+						procesoBBDD.setSabado(false);
+					}
 					if(proceso.getDomingo()){
 						diasSemana.append("SUN,");
 						procesoBBDD.setDomingo(true);
-					}else procesoBBDD.setDomingo(false);
-					diasSemana.setLength(diasSemana.length() - 1); //Eliminamos la ultima coma
+					} else {
+						procesoBBDD.setDomingo(false);
+					}
+					diasSemana.setLength(diasSemana.length() - 1); 
+					//Eliminamos la ultima coma
 					
-					procesoBBDD.setProximaEjecucion("0 "+minutos+" "+hora+" ? * "+diasSemana+ " *");
+					procesoBBDD.setProximaEjecucion(BLANK0+minutos+BLANK+hora+" ? * "+diasSemana+ " *");
 				}
 				
 				
@@ -846,7 +947,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				
 				String nodoActivos = properties.getProperty(NODO_ACTIVO, null);
 				String res = "";
-				if(nodoActivos.equals("S")){
+				if("S".equals(nodoActivos)){
 					ApplicationContext  applicationContext = WebApplicationContextUtils.getWebApplicationContext(getRequest().getSession().getServletContext());
 					Planificador p = new Planificador(applicationContext);
 					p.planificarProcesos(procesoBBDD);
@@ -862,17 +963,16 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 						}else if(res.contains("Nodo no principal, no se planifica ningun job.")){
 							servicioProcesos.updateProceso(procesoBBDDcopia, source, accion, accionId);
 							addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error.planificarNodoPrincipal"));
-						}
-							else{
+						} else{
 								servicioProcesos.updateProceso(procesoBBDDcopia, source, accion, accionId);
-								addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error.planificarNodo"));
+								addActionErrorSession(this.getText(PLATAFORMADOTEJ0));
 							}
-					} catch (IOException e) {						
-						e.printStackTrace();				
+					} catch (IOException e) {
+							
 						servicioProcesos.updateProceso(procesoBBDDcopia, source, accion, accionId);
 						getRequest().getSession().removeAttribute("MSGPLT");
 						getRequest().getSession().removeAttribute("MSGPLT_ERROR");
-						addActionErrorSession(this.getText("plataforma.ejecucionjob.update.error.planificarNodo"));
+						addActionErrorSession(this.getText(PLATAFORMADOTEJ0));
 					}
 				}				
 			}			
@@ -887,7 +987,8 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
 
-		oos.writeObject(procesoBBDD);		// serialize
+		oos.writeObject(procesoBBDD);		
+		// serialize
 		oos.flush();
 		
 		
@@ -898,7 +999,8 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 
 		ObjectInputStream ois = new ObjectInputStream(bis);
-		return ( (ProcesosBean) ois.readObject() );		// deserialize & typecast
+		return (ProcesosBean) ois.readObject();		
+		// deserialize & typecast
 	}
 
 	/**
@@ -910,7 +1012,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	 */
 	public static String connectionHTTP(String nodo) throws IOException{
 		String result = "";
-		if (null != nodo && !nodo.equals("")){
+		if (null != nodo && !"".equals(nodo)){
 			logger.info("connectionHTTP - Llamada al nodo que ejecuta los procesos automaticamente: " + nodo);
 			URL url = new URL(nodo);
 			URLConnection con = url.openConnection();
@@ -927,7 +1029,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 			result = resultado.toString();
 			
 			logger.info("connectionHTTP - Resultado:");
-			logger.info("connectionHTTP - " + resultado.toString());
+			logger.info("connectionHTTP - " + resultado);
 		}
 		
 		return result;
@@ -942,20 +1044,22 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	///MIGRADO
 	public String updateProcesoManual() throws BaseException {
 		
-		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_PROCESOS_MANUALES", null);
+		String accion = properties.getProperty(LOGDOTACCION_AC, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_PR, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFO_USER) == null) {
+			return NO_USER;
+		}
 		ProcesosManualesBean procesoManualBBDD = null;
 		if (procesoManual == null) {
 			addActionErrorSession(this.getText("plataforma.procesomanual.update.error"));
-		} 
-		else {			
+		} else {
+	
 			procesoManualBBDD = servicioProcesosManuales.loadProcesoManual(procesoManual);
 			
-			if (procesoManualBBDD != null) {							
+			if (procesoManualBBDD != null) {
+								
 				procesoManualBBDD.setNombre(procesoManual.getNombre());
 				procesoManualBBDD.setParametro1(procesoManual.getParametro1());
 				procesoManualBBDD.setParametro2(procesoManual.getParametro2());
@@ -1002,7 +1106,8 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		keys = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
 	
 		if (keys != null && !keys.isEmpty()) {
-			for (ServicioBean key : keys) {	
+			for (ServicioBean key : keys) {
+		
 				if (null != key.getConservacion()) {
 					option = new KeyValueObject();
 					option.setCodigo(key.getServicioId().toString());
@@ -1073,13 +1178,13 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	
 	public List<KeyValueObject> getComboNumeroDias() {
 		List<KeyValueObject> result = new ArrayList<>();
-		KeyValueObject option1 = new KeyValueObject("1", "1");
-		KeyValueObject option2 = new KeyValueObject("2", "2");
-		KeyValueObject option3 = new KeyValueObject("3", "3");
-		KeyValueObject option4 = new KeyValueObject("4", "4");
-		KeyValueObject option5 = new KeyValueObject("5", "5");
-		KeyValueObject option6 = new KeyValueObject("6", "6");
-		KeyValueObject option7 = new KeyValueObject("7", "7");
+		KeyValueObject option1 = new KeyValueObject(R_CONST_2, R_CONST_2);
+		KeyValueObject option2 = new KeyValueObject(R_CONST_3, R_CONST_3);
+		KeyValueObject option3 = new KeyValueObject(R_CONST_4, R_CONST_4);
+		KeyValueObject option4 = new KeyValueObject(R_CONST_5, R_CONST_5);
+		KeyValueObject option5 = new KeyValueObject(R_CONST_6, R_CONST_6);
+		KeyValueObject option6 = new KeyValueObject(R_CONST_7, R_CONST_7);
+		KeyValueObject option7 = new KeyValueObject(R_CONST_8, R_CONST_8);
 		
 		
 		result.add(option1);
@@ -1106,10 +1211,10 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 	////MIGRADO
 	public List<KeyValueObject> getComboPageSize() throws BusinessException {
 		List<KeyValueObject> result = new ArrayList<>();
-		KeyValueObject option10 = new KeyValueObject("10", "10");
-		KeyValueObject option20 = new KeyValueObject("20", "20");
-		KeyValueObject option50 = new KeyValueObject("50", "50");
-		KeyValueObject option100 = new KeyValueObject("100", "100");
+		KeyValueObject option10 = new KeyValueObject(R_CONST_REF, R_CONST_REF);
+		KeyValueObject option20 = new KeyValueObject(R_CONST_10, R_CONST_10);
+		KeyValueObject option50 = new KeyValueObject(R_CONST_11, R_CONST_11);
+		KeyValueObject option100 = new KeyValueObject(R_CONST_12, R_CONST_12);
 		result.add(option10);
 		result.add(option20);
 		result.add(option50);
@@ -1236,9 +1341,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 			List<KeyValueObject> result = new ArrayList<>();
 
 			KeyValueObject option;
-//			String listaServ = properties.getProperty("activemq.job.cronReenvio.serviciosExcluidos", null);
-//			List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(listaServ.split(",")));
-			List<String> serviciosAeatGiss = new ArrayList<String>();
+			List<String> serviciosAeatGiss = new ArrayList<>();
 			ArrayList<ViewServicios> keys = null;
 			try {
 				keys = (ArrayList<ViewServicios>) servicioServicio.getServiciosActivosNoEliminados();
@@ -1246,12 +1349,12 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 				logger.error("EjecucionJob - cargarComboServicioOrganismos:" + e);
 			}
 			
-			if (keys != null && !keys.isEmpty())
+			if (keys != null && !keys.isEmpty()) {
 				for (ViewServicios key : keys) {
 					if(null != key.getActivo() && key.getActivo()){
 						boolean encontrado = false;
 						for(String idServ : serviciosAeatGiss){
-							if((idServ.trim()).equals(key.getServicioid().toString())){
+							if(idServ.trim().equals(key.getServicioid().toString())){
 								encontrado = true;						
 							}
 						}
@@ -1263,6 +1366,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 						}
 					}
 				}
+			}
 
 			return result;
 		}
@@ -1416,13 +1520,13 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 
 		public String getPropertyServiciosAnularMensajes() throws BusinessException {
 			String idServ = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null);
-			ArrayList<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(idServ.split(",")));
+			ArrayList<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(idServ.split(R_CONST_0)));
 			propertyServiciosAnularMensajes ="";
 			for(String serv:serviciosAeatGiss){
 				ServicioBean servicio = new ServicioBean();
 				servicio.setServicioId(Integer.valueOf(serv));
 				servicio = servicioServicio.loadServicio(servicio);
-				propertyServiciosAnularMensajes += servicio.getNombre()+",";
+				propertyServiciosAnularMensajes += servicio.getNombre()+R_CONST_0;
 			}
 			
 			return propertyServiciosAnularMensajes.substring(0, propertyServiciosAnularMensajes.length() - 1);

@@ -126,10 +126,10 @@ public class UsuariosForm implements Serializable {
     private String despacho;
     
     /**  check box grupos. */
-    private ArrayList<String> checkBoxGrupos = new ArrayList<String>();
+    private ArrayList<String> checkBoxGrupos = new ArrayList<>();
    
     /**  check box grupos seleccionados. */
-    private ArrayList<String> checkBoxGruposSeleccionados = new ArrayList<String>();
+    private ArrayList<String> checkBoxGruposSeleccionados = new ArrayList<>();
     
     /**  list tipo usuario. */
     private List<String> listTipoUsuario = null;

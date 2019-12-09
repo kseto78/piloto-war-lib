@@ -38,6 +38,18 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioReceptorSMSImpl")
 public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String S = "S";
+
+	protected static final String SERVICIORECEPTO = "ServicioReceptorSMS - getReceptoresSMS:";
+
+	protected static final String SERVICIORECEPTO0 = "ServicioReceptorImpl - getServidorTO:";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioReceptorSMSImpl.class);
 	
@@ -68,13 +80,10 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 			query.setTipo(tipoServidor);
 			query.setEliminadoIsNull(true);
 			List<TblServidores> lista = tblServidoresManager.getServidoresByQuery(query);
-			List<ReceptorSMSBean> result = getListReceptorSMSBean(lista);					
-			
-			return result;
-		} 
-		catch (Exception e){
-			logger.error("ServicioReceptorSMS - getReceptoresSMS:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+			return getListReceptorSMSBean(lista);
+		} catch (Exception e){
+			logger.error(SERVICIORECEPTO + e);
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		}
 	}	
 	
@@ -90,15 +99,18 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 		String nombre = null;
 		try {
 			// Columna para ordenar
-			Hashtable<String, String> columns = new Hashtable<String, String>();
-			columns.put("2", "nombre");
+			Hashtable<String, String> columns = new Hashtable<>();
+			columns.put(R_CONST_REF, NOMBRE);
 			
-			if (columnSort == null)
-				columnSort = "2"; // Id
+			if (columnSort == null) {
+				columnSort = R_CONST_REF;
+			} 
+				// Id
 
 			String column = columns.get(columnSort);
-			if (column == null)
-				column = "nombre";
+			if (column == null) {
+				column = NOMBRE;
+			}
 
 			if (null != criterio && null != criterio.getNombre()) {
 				nombre = criterio.getNombre();
@@ -110,14 +122,14 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 			// Total de organismos
 			Integer rowcount = tblServidoresManager.getServidoresPaginado(start, size, order, column, nombre, tipoServidor, true).size();
 
-			PaginatedList<ReceptorSMSBean> result = new PaginatedList<ReceptorSMSBean>();
+			PaginatedList<ReceptorSMSBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
 			return result;
 		} catch (Exception e){
-			logger.error("ServicioReceptorSMS - getReceptoresSMS:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");	
+			logger.error(SERVICIORECEPTO + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);	
 		}
 	}
 
@@ -168,8 +180,7 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 			servidorTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			servidorTO.setFechacreacion(servidor.getFechacreacion());
 			tblServidoresManager.update(servidorTO, source, accion, accionId);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioReceptorSMS - updateReceptorSMS:" + e);
 			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
 		}	
@@ -186,8 +197,7 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 		try {
 			TblServidores serv =tblServidoresManager.getServidorById(servidor.getReceptorSMSId());
 			return getReceptorSMSBean(serv);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioReceptorSMS - loadReceptorSMS:" + e);
 			throw new BusinessException(e,"errors.organismo.loadOrganismo");			
 		}
@@ -208,15 +218,15 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 			for (TblPlanificaciones p : listaPlanificaciones) {
 				p.setModificadopor(modificador);
 				p.setFechamodificacion(new Date());
-				p.setEliminado("S");
+				p.setEliminado(S);
 				tblPlanificacionesManager.updatePlanificacion(p, source, accionPlanificacion, accionIdPlanificacion, descripcion);
 			}
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
-			servidorTO.setEliminado("S");
+			servidorTO.setEliminado(S);
 			tblServidoresManager.update(servidorTO, source, accionServidor, accionIdServidor);
-			return;
 		}catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			throw new BusinessException("Error eliminando receptor sms y planificaciones asociadas");
 		}
 		
@@ -230,8 +240,7 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
-	protected TblServidores getReceptoresSMSTO(ReceptorSMSBean receptorSMS) throws BusinessException
-	{
+	protected TblServidores getReceptoresSMSTO(ReceptorSMSBean receptorSMS) throws BusinessException {
 		TblServidores servidorTO = new TblServidores();
 		
 		try {
@@ -241,10 +250,8 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 			BeanUtils.copyProperties(servidorTO,receptorSMS);
 			servidorTO.setServidorid(receptorSMS.getReceptorSMSId());
 			servidorTO.setFechacreacion(receptorSMS.getFechacreacion());
-		} catch (IllegalAccessException  e) {
-			logger.error("ServicioReceptorImpl - getServidorTO:" + e);
-		}catch (InvocationTargetException e){
-			logger.error("ServicioReceptorImpl - getServidorTO:" + e);
+		} catch (IllegalAccessException | InvocationTargetException e){
+			logger.error(SERVICIORECEPTO0 + e);
 		}
 		
 		return servidorTO;
@@ -259,16 +266,13 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
-	protected ReceptorSMSBean getReceptorSMSBean(TblServidores serv) throws BusinessException
-	{
+	protected ReceptorSMSBean getReceptorSMSBean(TblServidores serv) throws BusinessException {
 		ReceptorSMSBean servidor = new ReceptorSMSBean();
 		
 		try {
 			BeanUtils.copyProperties(servidor, serv);
 			servidor.setReceptorSMSId(serv.getServidorid());
-		} catch (IllegalAccessException e) {
-			throw new BusinessException(e);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new BusinessException(e);
 		}
 		
@@ -283,12 +287,12 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	 * @throws BusinessException the business exception
 	 */
 	//////MIGRADO
-	protected List<ReceptorSMSBean> getListReceptorSMSBean(List<TblServidores> lista) throws BusinessException
-	{	
+	protected List<ReceptorSMSBean> getListReceptorSMSBean(List<TblServidores> lista) throws BusinessException {
+	
 		List<ReceptorSMSBean> result = null;
 		
 		if (lista!=null && !lista.isEmpty()){
-			result = new ArrayList<ReceptorSMSBean>();
+			result = new ArrayList<>();
 		
 			for (TblServidores s : lista) {
 				ReceptorSMSBean servidor =  new ReceptorSMSBean();
@@ -299,9 +303,7 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 					ConvertUtils.register (converter, java.util.Date.class);
 					BeanUtils.copyProperties(servidor, s);
 					servidor.setReceptorSMSId(s.getServidorid());
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			
@@ -319,7 +321,7 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 	@Override
 	public List<ReceptorSMSBean> getReceptoresSMSNoAsignados(
 			Integer idServicio, int tipoServidor) throws BusinessException {
-		ArrayList<ReceptorSMSBean> listaServidores = new ArrayList<ReceptorSMSBean>();
+		ArrayList<ReceptorSMSBean> listaServidores = new ArrayList<>();
 	
 		try{
 			TblServidoresQuery query = new TblServidoresQuery();
@@ -337,7 +339,7 @@ public class ServicioReceptorSMSImpl implements ServicioReceptorSMS{
 			
 		} catch (Exception e) {
 			logger.error("ServicioReceptorSMS - getReceptoresSMSNoAsignados:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 		
 		return listaServidores;

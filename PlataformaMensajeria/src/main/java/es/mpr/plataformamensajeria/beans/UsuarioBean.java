@@ -12,25 +12,7 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class UsuarioBean implements Audit {
 
-	/**
-	 * Constructor de usuario bean.
-	 */
-	public UsuarioBean() {
-		super();
-		this.usuarioId = null;
-		this.nombre = null;
-		this.login = null;
-		this.email = null;
-		this.fechaCreacion = null;
-		this.creadoPor = null;
-		this.activo = null;
-		this.rolId = null;
-		this.rolUsuario = null;
-		this.nombreAplicacion = null;
-		this.nombreUsuario = null;
-		this.aplicacionId = null;
-
-	}
+	protected static final String TRUE = "true";
 
 	/** usuario id. */
 	protected Long usuarioId;
@@ -52,6 +34,12 @@ public class UsuarioBean implements Audit {
 
 	/** email. */
 	protected String email = null;
+
+	/** telefono */
+	protected String telefono = null;
+
+	/** organismo */
+	protected String organismo = null;
 
 	/** rol id. */
 	protected Integer rolId = null;
@@ -77,6 +65,32 @@ public class UsuarioBean implements Audit {
 	/** is activo. */
 	protected String isActivo = null;
 
+	/** id contacto */
+	protected Long idcontacto;
+
+	/**
+	 * Constructor de usuario bean.
+	 */
+	public UsuarioBean() {
+		super();
+		this.usuarioId = null;
+		this.nombre = null;
+		this.login = null;
+		this.email = null;
+		this.fechaCreacion = null;
+		this.creadoPor = null;
+		this.activo = null;
+		this.rolId = null;
+		this.rolUsuario = null;
+		this.nombreAplicacion = null;
+		this.nombreUsuario = null;
+		this.aplicacionId = null;
+		this.telefono = null;
+		this.organismo = null;
+		this.idcontacto = null;
+
+	}
+
 	/**
 	 * Modificar activado.
 	 *
@@ -84,7 +98,7 @@ public class UsuarioBean implements Audit {
 	 *            new activado
 	 */
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (activado != null && TRUE.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -98,7 +112,7 @@ public class UsuarioBean implements Audit {
 	 */
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return TRUE;
 		} else if (activo != null && !activo) {
 			return "false";
 		} else {
@@ -130,7 +144,7 @@ public class UsuarioBean implements Audit {
 	 *            new checks if is activo
 	 */
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (isActivo != null && TRUE.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -441,4 +455,29 @@ public class UsuarioBean implements Audit {
 	public void setModificadoPor(String modificadoPor) {
 		this.modificadoPor = modificadoPor;
 	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+	public String getOrganismo() {
+		return organismo;
+	}
+
+	public void setOrganismo(String organismo) {
+		this.organismo = organismo;
+	}
+
+	public Long getIdcontacto() {
+		return idcontacto;
+	}
+
+	public void setIdcontacto(Long idcontacto) {
+		this.idcontacto = idcontacto;
+	}
+
 }

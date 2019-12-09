@@ -5,18 +5,6 @@
  		document.location.href="permisoDenegado.action";
 	</script>
 </plataforma:securityRedirect>
-<style>
-
-.description {
-    display:none;
-    position:absolute;
-    border:1px solid #000;
-    max-width:150px;
-/*     height:100px; */
-    background:yellow;
-}
-
-</style>
 <script>
 function submitForm(){
 	//en sms confirmar que tiene costes adicionales

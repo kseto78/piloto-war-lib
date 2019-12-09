@@ -41,6 +41,18 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioServidorPushImpl")
 public class ServicioServidorPushImpl implements ServicioServidorPush{
 	
+	protected static final String SERVICIOSERVIDO = "ServicioServidorPushImpl - getServidoresPushJPA:";
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String SERVICIOSERVIDO0 = "ServicioServidorPushImpl - getServidoresPush:";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String S = "S";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServidorPushImpl.class);
 	
@@ -69,13 +81,10 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 			query.setTipo(tipoServidor);
 			query.setEliminadoIsNull(true);
 			List<TblServidores> lista = tblServidoresManager.getServidoresByQuery(query);
-			List<ServidorPushBean> result = getListViewServidorPushBean(lista);					
-			
-			return result;		
-		} 
-		catch (Exception e){
-			logger.error("ServicioServidorPushImpl - getServidoresPush:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+			return getListViewServidorPushBean(lista);		
+		} catch (Exception e){
+			logger.error(SERVICIOSERVIDO0 + e);
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		}
 	}	
 	
@@ -91,15 +100,18 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		
 		try {
 			//Columna para ordenar
-			Hashtable<String, String> columns = new Hashtable<String,String>();
-			columns.put("2","nombre");
+			Hashtable<String, String> columns = new Hashtable<>();
+			columns.put(R_CONST_REF,NOMBRE);
 			
-			if (columnSort==null)
-				columnSort = "2"; //Id
+			if (columnSort==null) {
+				columnSort = R_CONST_REF;
+			} 
+				//Id
 			
 			String column = columns.get(columnSort);
-			if (column==null)
-				column = "nombre";
+			if (column==null) {
+				column = NOMBRE;
+			}
 			
 			if (null != criterio && null != criterio.getNombre()){
 				nombre = criterio.getNombre();
@@ -111,15 +123,14 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 			// Total de organismos
 			Integer rowcount = tblServidoresManager.getServidoresPaginado(start, size, order, column, nombre, tipoServidor, true).size();
 			
-			PaginatedList<ServidorPushBean> result = new PaginatedList<ServidorPushBean>();
+			PaginatedList<ServidorPushBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 			
 			return result;
-		}
-		catch (Exception e){
-			logger.error("ServicioServidorPushImpl - getServidoresPush:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");
+		} catch (Exception e){
+			logger.error(SERVICIOSERVIDO0 + e);
+			throw new BusinessException(e,ERRORSDOTORGANI);
 			
 		}
 	}
@@ -167,8 +178,7 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accion, accionId);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioServidoresPush - updateServidorPush:" + e);
 			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
 		}	
@@ -185,8 +195,7 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 		try {
 			TblServidores serv =tblServidoresManager.getServidorById(servidor.getServidorPushId());
 			return getServidorPushBean(serv);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioServidoresPush - loadServidorPush:" + e);
 			throw new BusinessException(e,"errors.organismo.loadOrganismo");			
 		}
@@ -207,15 +216,16 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 			for (TblPlanificaciones p : listaPlanificaciones) {
 				p.setModificadopor(modificador);
 				p.setFechamodificacion(new Date());
-				p.setEliminado("S");
+				p.setEliminado(S);
 				tblPlanificacionesManager.updatePlanificacion(p, source, accionPlanificacion, accionIdPlanificacion, descripcion);
 			}
 			
-			servidorTO.setEliminado("S");
+			servidorTO.setEliminado(S);
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accionServidor, accionIdServidor);
 		}catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			throw new BusinessException("Error eliminando proveedor sms y planificaciones asociadas");
 		}
 		
@@ -229,8 +239,7 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
-	protected TblServidores getServidoresPushJPA(ServidorPushBean servidorPush) throws BusinessException
-	{
+	protected TblServidores getServidoresPushJPA(ServidorPushBean servidorPush) throws BusinessException {
 		TblServidores servidorTO = new TblServidores();
 		try{
 			Date defaultValue = null;         
@@ -240,10 +249,8 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 			servidorTO.setServidorid(servidorPush.getServidorPushId());
 			servidorTO.setFechacreacion(servidorPush.getFechacreacion());
 			servidorTO.setPlataforma(servidorPush.getPlataformaid());
-		}catch (IllegalAccessException  e) {
-			logger.error("ServicioServidorPushImpl - getServidoresPushJPA:" + e);
-		}catch (InvocationTargetException e){
-			logger.error("ServicioServidorPushImpl - getServidoresPushJPA:" + e);
+		}catch (IllegalAccessException | InvocationTargetException e){
+			logger.error(SERVICIOSERVIDO + e);
 		}
 		
 		return servidorTO;
@@ -258,17 +265,14 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
-	protected ServidorPushBean getServidorPushBean(TblServidores serv) throws BusinessException
-	{
+	protected ServidorPushBean getServidorPushBean(TblServidores serv) throws BusinessException {
 		ServidorPushBean servidor = new ServidorPushBean();
 		
 		try {
 			BeanUtils.copyProperties(servidor, serv);
 			servidor.setServidorPushId(serv.getServidorid());
 			servidor.setPlataformaid(serv.getPlataforma());
-		} catch (IllegalAccessException e) {
-			throw new BusinessException(e);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new BusinessException(e);
 		}
 		
@@ -283,12 +287,12 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
-	protected List<ServidorPushBean> getListViewServidorPushBean(List<TblServidores> lista) throws BusinessException
-	{	
+	protected List<ServidorPushBean> getListViewServidorPushBean(List<TblServidores> lista) throws BusinessException {
+	
 		List<ServidorPushBean> result = null;
 		
 		if (lista!=null && !lista.isEmpty()){
-			result = new ArrayList<ServidorPushBean>();
+			result = new ArrayList<>();
 			for (TblServidores s : lista) {
 				ServidorPushBean servidor =  new ServidorPushBean();
 				try {
@@ -297,9 +301,7 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 					ConvertUtils.register (converter, java.util.Date.class);
 					BeanUtils.copyProperties(servidor, s);
 					servidor.setServidorPushId(s.getServidorid());
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			
@@ -318,7 +320,7 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 	@Override
 	public List<ServidorPushBean> getServidoresPushNoAsignados(
 			Integer idServicio, int tipoServidor) throws BusinessException {
-		ArrayList<ServidorPushBean> listaServidores = new ArrayList<ServidorPushBean>();
+		ArrayList<ServidorPushBean> listaServidores = new ArrayList<>();
 		try{
 			TblServidoresQuery query = new TblServidoresQuery();
 			query.setEliminadoIsNull(true);
@@ -337,7 +339,7 @@ public class ServicioServidorPushImpl implements ServicioServidorPush{
 			
 		} catch (Exception e) {
 			logger.error("ServicioProveedorSMS - getProveedoresSMSNoAsignados:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 		
 		return listaServidores;

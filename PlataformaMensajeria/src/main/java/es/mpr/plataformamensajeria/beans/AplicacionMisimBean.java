@@ -12,6 +12,11 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class AplicacionMisimBean implements Audit {
 
+	protected Long idAplicacion = null;
+	protected String nombre = null;
+	protected String usuario = null;
+	protected String password = null;
+
 	/**
 	 * Constructor por defecto
 	 */
@@ -23,11 +28,6 @@ public class AplicacionMisimBean implements Audit {
 		this.password = null;
 	}
 
-
-	protected Long idAplicacion = null;
-	protected String nombre = null;
-	protected String usuario = null;
-	protected String password = null;
 
 	/**
 	 * Obtener id Aplicacion

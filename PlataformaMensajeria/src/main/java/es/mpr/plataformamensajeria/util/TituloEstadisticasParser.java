@@ -8,6 +8,36 @@ import java.util.HashMap;
  */
 public class TituloEstadisticasParser {
 	
+	protected static final String R_CONST_REF = "10";
+
+	protected static final String SLASH = "_";
+
+	protected static final String R_CONST_0 = "11";
+
+	protected static final String R_CONST_1 = "12";
+
+	protected static final String R_CONST_2 = "'";
+
+	protected static final String HYPHEN = "-";
+
+	protected static final String R_CONST_3 = "1";
+
+	protected static final String R_CONST_4 = "2";
+
+	protected static final String R_CONST_5 = "3";
+
+	protected static final String R_CONST_6 = "4";
+
+	protected static final String R_CONST_7 = "5";
+
+	protected static final String R_CONST_8 = "6";
+
+	protected static final String R_CONST_9 = "7";
+
+	protected static final String R_CONST_10 = "8";
+
+	protected static final String R_CONST_11 = "9";
+
 	/** Constante ENERO_FULL. */
 	private static final String ENERO_FULL = "Enero";
 	
@@ -81,39 +111,37 @@ public class TituloEstadisticasParser {
 	private static final String DICIEMBRE_SHORT = "Dic";
 	
 	/** Constante MESES_FULL. */
-	private final static HashMap<String,String> MESES_FULL = new HashMap<String,String>();
- 	static
- 	{
- 		MESES_FULL.put("1", ENERO_FULL);
- 		MESES_FULL.put("2", FEBRERO_FULL);
- 		MESES_FULL.put("3", MARZO_FULL);
- 		MESES_FULL.put("4", ABRIL_FULL);
- 		MESES_FULL.put("5", MAYO_FULL);
- 		MESES_FULL.put("6", JUNIO_FULL);
- 		MESES_FULL.put("7", JULIO_FULL);
- 		MESES_FULL.put("8", AGOSTO_FULL);
- 		MESES_FULL.put("9", SEPTIEMBRE_FULL);
- 		MESES_FULL.put("10", OCTUBRE_FULL);
- 		MESES_FULL.put("11", NOVIEMBRE_FULL);
- 		MESES_FULL.put("12", DICIEMBRE_FULL);
+	private static final HashMap<String,String> MESES_FULL = new HashMap<>();
+ 	static {
+ 		MESES_FULL.put(R_CONST_3, ENERO_FULL);
+ 		MESES_FULL.put(R_CONST_4, FEBRERO_FULL);
+ 		MESES_FULL.put(R_CONST_5, MARZO_FULL);
+ 		MESES_FULL.put(R_CONST_6, ABRIL_FULL);
+ 		MESES_FULL.put(R_CONST_7, MAYO_FULL);
+ 		MESES_FULL.put(R_CONST_8, JUNIO_FULL);
+ 		MESES_FULL.put(R_CONST_9, JULIO_FULL);
+ 		MESES_FULL.put(R_CONST_10, AGOSTO_FULL);
+ 		MESES_FULL.put(R_CONST_11, SEPTIEMBRE_FULL);
+ 		MESES_FULL.put(R_CONST_REF, OCTUBRE_FULL);
+ 		MESES_FULL.put(R_CONST_0, NOVIEMBRE_FULL);
+ 		MESES_FULL.put(R_CONST_1, DICIEMBRE_FULL);
  	}	
 	
 	/** Constante MESES_SHORT. */
-	private final static HashMap<String,String> MESES_SHORT = new HashMap<String,String>();
- 	static
- 	{
- 		MESES_SHORT.put("1", ENERO_SHORT);
- 		MESES_SHORT.put("2", FEBRERO_SHORT);
- 		MESES_SHORT.put("3", MARZO_SHORT);
- 		MESES_SHORT.put("4", ABRIL_SHORT);
- 		MESES_SHORT.put("5", MAYO_SHORT);
- 		MESES_SHORT.put("6", JUNIO_SHORT);
- 		MESES_SHORT.put("7", JULIO_SHORT);
- 		MESES_SHORT.put("8", AGOSTO_SHORT);
- 		MESES_SHORT.put("9", SEPTIEMBRE_SHORT);
- 		MESES_SHORT.put("10", OCTUBRE_SHORT);
- 		MESES_SHORT.put("11", NOVIEMBRE_SHORT);
- 		MESES_SHORT.put("12", DICIEMBRE_SHORT);
+	private static final HashMap<String,String> MESES_SHORT = new HashMap<>();
+ 	static {
+ 		MESES_SHORT.put(R_CONST_3, ENERO_SHORT);
+ 		MESES_SHORT.put(R_CONST_4, FEBRERO_SHORT);
+ 		MESES_SHORT.put(R_CONST_5, MARZO_SHORT);
+ 		MESES_SHORT.put(R_CONST_6, ABRIL_SHORT);
+ 		MESES_SHORT.put(R_CONST_7, MAYO_SHORT);
+ 		MESES_SHORT.put(R_CONST_8, JUNIO_SHORT);
+ 		MESES_SHORT.put(R_CONST_9, JULIO_SHORT);
+ 		MESES_SHORT.put(R_CONST_10, AGOSTO_SHORT);
+ 		MESES_SHORT.put(R_CONST_11, SEPTIEMBRE_SHORT);
+ 		MESES_SHORT.put(R_CONST_REF, OCTUBRE_SHORT);
+ 		MESES_SHORT.put(R_CONST_0, NOVIEMBRE_SHORT);
+ 		MESES_SHORT.put(R_CONST_1, DICIEMBRE_SHORT);
  	}	
  	
  	
@@ -125,10 +153,10 @@ public class TituloEstadisticasParser {
 	  */
 	 public static String parseMesAnno(String mesAnno){
  		StringBuffer sbf = new StringBuffer();
- 		if(mesAnno!=null&&mesAnno.length()>0){
- 			mesAnno = mesAnno.replaceAll("'", "");
- 			String[] auxMesAnno = mesAnno.split("_");
- 			sbf.append(MESES_SHORT.get(auxMesAnno[0])).append("-").append(auxMesAnno[1]);
+ 		if(mesAnno!=null&&!mesAnno.isEmpty()){
+ 			mesAnno = mesAnno.replaceAll(R_CONST_2, "");
+ 			String[] auxMesAnno = mesAnno.split(SLASH);
+ 			sbf.append(MESES_SHORT.get(auxMesAnno[0])).append(HYPHEN).append(auxMesAnno[1]);
  		}
  		return sbf.toString();
  	}
@@ -141,10 +169,10 @@ public class TituloEstadisticasParser {
 	  */
 	 public static  String parseDiaMesAnno(String diaMesAnno){
  		StringBuffer sbf = new StringBuffer();
- 		if(diaMesAnno!=null&&diaMesAnno.length()>0){
- 			diaMesAnno=diaMesAnno.replaceAll("'", "");
- 			String[] auxDiaMesAnno = diaMesAnno.split("_");
- 			sbf.append(auxDiaMesAnno[0]).append("-").append(MESES_SHORT.get(auxDiaMesAnno[1])).append("-").append(auxDiaMesAnno[2]);
+ 		if(diaMesAnno!=null&&!diaMesAnno.isEmpty()){
+ 			diaMesAnno=diaMesAnno.replaceAll(R_CONST_2, "");
+ 			String[] auxDiaMesAnno = diaMesAnno.split(SLASH);
+ 			sbf.append(auxDiaMesAnno[0]).append(HYPHEN).append(MESES_SHORT.get(auxDiaMesAnno[1])).append(HYPHEN).append(auxDiaMesAnno[2]);
  			
  		}
  		return sbf.toString();
@@ -156,9 +184,9 @@ public class TituloEstadisticasParser {
 	  * @return meses full name
 	  */
  	public static ArrayList<String> getMesesFullName(){
- 		ArrayList<String> listadoMesesFullName = new ArrayList<String>();
+ 		ArrayList<String> listadoMesesFullName = new ArrayList<>();
  		for (int i= 1; i<=12; i++) {
-			listadoMesesFullName.add(String.valueOf(i)+"_"+MESES_FULL.get(String.valueOf(i)));
+			listadoMesesFullName.add(i+SLASH+MESES_FULL.get(String.valueOf(i)));
 		}
  		
  		return listadoMesesFullName;

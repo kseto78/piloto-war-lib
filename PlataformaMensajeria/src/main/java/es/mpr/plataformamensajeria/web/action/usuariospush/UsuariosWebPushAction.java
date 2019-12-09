@@ -47,6 +47,22 @@ import es.redsara.misim.misim_bus_webapp.respuesta.RespuestaRegistroWebPush;
 @Scope("prototype")
 public class UsuariosWebPushAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String R_CONST_REF = "0";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String R_CONST_0 = "20";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -121,7 +137,9 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
     ////MIGRADO
     public String newSearch() throws BaseException {
     	
-    	if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+    	if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
     	
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
     	if(usuariosWebPush==null){
@@ -129,15 +147,15 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
     		setUserSession();
     	}
     	Integer totalSize = 0;
-    	resultCount = "0";
+    	resultCount = R_CONST_REF;
     	publicKey = properties.getProperty("peticion.webpush.publicKey", null);
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
     	    	 	
         return SUCCESS;
@@ -151,25 +169,30 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
      */
     ///MIGRADO
 	public String search() throws BaseException {
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
-	   	int page = getPage("tableId"); //Pagina a mostrar
-    	String order = getOrder("tableId"); //Ordenar de modo ascendente o descendente
-    	String columnSort = getColumnSort("tableId"); //Columna usada para ordenar
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
+	   	int page = getPage(TABLEID); 
+	   	//Pagina a mostrar
+    	String order = getOrder(TABLEID); 
+    	//Ordenar de modo ascendente o descendente
+    	String columnSort = getColumnSort(TABLEID); 
+    	//Columna usada para ordenar
     	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-    	int inicio = (page-1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
-    	PaginatedList<UsuariosWebPushBean> result = servicioUsuarioWebPush.getUsuariosPush(inicio,(export)?-1:Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")),
+    	int inicio = (page-1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0));
+    	PaginatedList<UsuariosWebPushBean> result = servicioUsuarioWebPush.getUsuariosPush(inicio,export?-1:Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)),
     			order, columnSort,usuariosWebPush,export,request); 
     	Integer totalSize = result.getTotalList();
     	
     	listaUsuariosWebPush =  result.getPageList();
-    	resultCount = (totalSize!=null)?totalSize.toString():"0";
+    	resultCount = (totalSize!=null)?totalSize.toString():R_CONST_REF;
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
     	
         return SUCCESS;
@@ -183,10 +206,6 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 	 */
 	public String insertarUsuarioWebPush() throws BaseException{
 		
-//		logger.info("endpoint-->" + endpoint);
-//		logger.info("pdh-->" + pdh);
-//		logger.info("auth-->" + auth);
-//		logger.info("accion-->" + accion);
 
 		if(!StringUtils.isEmpty(endpoint)){
 	    	setUserSession();
@@ -197,15 +216,15 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
     		usuariosWebPush = new UsuariosWebPushBean();
     	}
     	Integer totalSize = 0;
-    	resultCount = "0";
+    	resultCount = R_CONST_REF;
     	
     	//Atributos de request
-    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
     	if(!export){
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_0)));
     	}else{
-    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
     	}
 
 		if(!StringUtils.isEmpty(endpoint) && !StringUtils.isEmpty(endpoint2)){
@@ -229,7 +248,6 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 				respuesta = envioMensajes.sendMessage();
 				logger.info(respuesta.getStatus().getDetails());
 				
-//				subscription = "Resultado de la suscripción";
 			}catch(Exception e){
 				generarRespuesta(e.getMessage());
 				logger.info("Respuesta: "+e.getMessage());
@@ -245,15 +263,14 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 	private String obtenerUrlDecode() {
 		String str = new String(DatatypeConverter.parseBase64Binary(endpoint+endpoint2));
 		
-		String url = URLDecoderUtil.decode(str, "UTF-8");
-		return url;
+		return URLDecoderUtil.decode(str, "UTF-8");
 	}
 
 	/**
 	 * 
 	 */
 	private void setUserSession() {
-		MapUser springUser = (MapUser) request.getSession().getAttribute("infoUser");
+		MapUser springUser = (MapUser) request.getSession().getAttribute(INFOUSER);
 		this.setIdUsuario(springUser.getUsername());
 	}
 
@@ -272,6 +289,7 @@ public class UsuariosWebPushAction extends PlataformaPaginationAction implements
 	 */
 	@Override
 	public void prepare() throws Exception {
+		// This method has to be empty.
 		
 	}
    	

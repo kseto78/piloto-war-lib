@@ -12,6 +12,78 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class DetalleServicioBean implements Audit{
 	
+		protected static final String TRUE = "true";
+
+		/**  servicio id. */
+		protected Integer servicioId;
+
+		/**  nombre. */
+		protected String nombre = null;
+
+		/**  descripcion. */
+		protected String descripcion = null;
+
+		/**  activo. */
+		protected Boolean activo = null;
+
+		/**  canalid. */
+		protected Integer canalid = null;
+
+		/**  aplicacionid. */
+		protected Integer aplicacionid = null;
+
+		/**  fechacreacion. */
+		protected Date fechacreacion = null;
+
+		/**  creadopor. */
+		protected String creadopor = null;
+
+		/**  fechamodificacion. */
+		protected Date fechamodificacion = null;
+
+		/**  modificadopor. */
+		protected String modificadopor = null;
+
+		/**  externalid. */
+		protected String  externalid = null;
+
+		/**  nmaxenvios. */
+		protected Integer nmaxenvios = null;
+
+		/**  headersms. */
+		protected String headersms = null;
+
+		/**  is activo. */
+		protected String isActivo = null;
+
+		/**  canalnombre. */
+		protected String canalnombre = null;
+
+		/**  aplicacionnombre. */
+		protected String aplicacionnombre = null;
+
+		/**  lista servidores servicios. */
+		protected List<ServidoresServiciosBean> listaServidoresServicios;
+
+		/**  lista planificaciones. */
+		protected List<PlanificacionBean> listaPlanificaciones;
+
+		/**  frommail. */
+		protected String frommail;
+
+		/**  frommailname. */
+		protected String frommailname;
+
+		/**  historificacion. */
+		protected Integer historificacion = null;
+
+		/**  conservacion. */
+		protected Integer conservacion = null;
+
+		/**  pendienteaprobacion. */
+		protected Boolean pendienteaprobacion = null;
+
+
 		/**
 		 * Constructor de detalle servicio bean.
 		 */
@@ -37,76 +109,6 @@ public class DetalleServicioBean implements Audit{
 		}
 
 		
-		/**  servicio id. */
-		protected Integer servicioId;
-		
-		/**  nombre. */
-		protected String nombre = null;
-		
-		/**  descripcion. */
-		protected String descripcion = null;
-		
-		/**  activo. */
-		protected Boolean activo = null;
-		
-		/**  canalid. */
-		protected Integer canalid = null;
-		
-		/**  aplicacionid. */
-		protected Integer aplicacionid = null;
-		
-		/**  fechacreacion. */
-		protected Date fechacreacion = null;
-		
-		/**  creadopor. */
-		protected String creadopor = null;
-		
-		/**  fechamodificacion. */
-		protected Date fechamodificacion = null;
-		
-		/**  modificadopor. */
-		protected String modificadopor = null;
-		
-		/**  externalid. */
-		protected String  externalid = null;
-		
-		/**  nmaxenvios. */
-		protected Integer nmaxenvios = null;
-		
-		/**  headersms. */
-		protected String headersms = null;
-		
-		/**  is activo. */
-		protected String isActivo = null; 
-		
-		/**  canalnombre. */
-		protected String canalnombre = null;
-		
-		/**  aplicacionnombre. */
-		protected String aplicacionnombre = null;
-		
-		/**  lista servidores servicios. */
-		protected List<ServidoresServiciosBean> listaServidoresServicios;
-		
-		/**  lista planificaciones. */
-		protected List<PlanificacionBean> listaPlanificaciones;
-		
-		/**  frommail. */
-		protected String frommail;
-		
-		/**  frommailname. */
-		protected String frommailname;
-		
-		/**  historificacion. */
-		protected Integer historificacion = null;
-		
-		/**  conservacion. */
-		protected Integer conservacion = null;
-		
-		/**  pendienteaprobacion. */
-		protected Boolean pendienteaprobacion = null;
-		
-
 		/**
 		 * Obtener lista servidores servicios.
 		 *
@@ -154,7 +156,7 @@ public class DetalleServicioBean implements Audit{
 		 * @param activado new activado
 		 */
 		public void setActivado(String activado){
-			if(activado!=null&&activado.equals("true")){
+			if(activado!=null&&TRUE.equals(activado)){
 				this.activo = true;
 			}else{
 				this.activo = false;
@@ -169,7 +171,7 @@ public class DetalleServicioBean implements Audit{
 		 */
 		public String getActivado(){
 			if(activo!=null&&activo){
-				return "true";
+				return TRUE;
 			}else{
 				return "false";
 			}
@@ -198,7 +200,7 @@ public class DetalleServicioBean implements Audit{
 		 * @param isActivo new checks if is activo
 		 */
 		public void setIsActivo(String isActivo) {
-			if(isActivo!=null&&isActivo.equals("true")){
+			if(isActivo!=null&&TRUE.equals(isActivo)){
 				this.activo = true;
 			}else{
 				this.activo = false;

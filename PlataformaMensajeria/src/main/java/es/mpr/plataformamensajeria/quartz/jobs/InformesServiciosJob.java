@@ -192,7 +192,8 @@ public class InformesServiciosJob implements Job {
 			
 			Calendar calendar = Calendar.getInstance();
 			Integer anno = calendar.get(Calendar.YEAR);
-			Integer mes = calendar.get(Calendar.MONTH); //Los meses los recupera del 0 (enero) al 11 (diciembre), por lo que ya tenemos en mes anterior
+			Integer mes = calendar.get(Calendar.MONTH); 
+			//Los meses los recupera del 0 (enero) al 11 (diciembre), por lo que ya tenemos en mes anterior
 			
 			//Si el mes es 0 (enero), debemos de calcular las estadisticas para el mes 12 (diciembre) del anno anterior
 			if(mes.equals(Integer.valueOf(0))){

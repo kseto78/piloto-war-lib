@@ -36,6 +36,12 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioServidorWebPushImpl")
 public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 	
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String S = "S";
+
 	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
 	private static final String ERRORS_ORGANISMO_GET_ORGANISMOS = "errors.organismo.getOrganismos";
 
@@ -68,8 +74,7 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 			query.setEliminadoIsNull(true);
 			List<TblServidores> lista = tblServidoresManager.getServidoresByQuery(query);
 			return getListViewServidorPushBean(lista);					
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioServidorPushImpl - getServidoresPush:" + e);
 			throw new BusinessException(e,ERRORS_ORGANISMO_GET_ORGANISMOS);	
 		}
@@ -86,14 +91,17 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 		try {
 			//Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("2","nombre");
+			columns.put(R_CONST_REF,NOMBRE);
 			
-			if (columnSort==null)
-				columnSort = "2"; //Id
+			if (columnSort==null) {
+				columnSort = R_CONST_REF;
+			} 
+				//Id
 			
 			String column = columns.get(columnSort);
-			if (column==null)
-				column = "nombre";
+			if (column==null) {
+				column = NOMBRE;
+			}
 			
 			if (null != criterio && null != criterio.getNombre()){
 				nombre = criterio.getNombre();
@@ -110,8 +118,7 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 			result.setTotalList(rowcount);
 			
 			return result;
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioServidorWebPushImpl - getServidoresPush:" + e);
 			throw new BusinessException(e,ERRORS_ORGANISMO_GET_ORGANISMOS);
 			
@@ -161,8 +168,7 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accion, accionId);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioServidoresWebPush - updateServidorWebPush:" + e);
 			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
 		}	
@@ -178,8 +184,7 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 		try {
 			TblServidores serv =tblServidoresManager.getServidorById(servidor.getServidorWebPushId());
 			return getServidorPushBean(serv);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioServidoresPush - loadServidorPush:" + e);
 			throw new BusinessException(e,"errors.organismo.loadOrganismo");			
 		}
@@ -199,16 +204,17 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 			for (TblPlanificaciones p : listaPlanificaciones) {
 				p.setModificadopor(modificador);
 				p.setFechamodificacion(new Date());
-				p.setEliminado("S");
+				p.setEliminado(S);
 				
 				tblPlanificacionesManager.updatePlanificacion(p, source, accionPlanificacion, accionIdPlanificacion, descripcion);
 			}
 			
-			servidorTO.setEliminado("S");
+			servidorTO.setEliminado(S);
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accionServidor, accionIdServidor);
 		}catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			throw new BusinessException("Error eliminando proveedor sms y planificaciones asociadas");
 		}
 		
@@ -267,8 +273,8 @@ public class ServicioServidorWebPushImpl implements ServicioServidorWebPush{
 	 * @param lista the lista
 	 * @return Lista de objetos OrganismoBean
 	 */
-	protected List<ServidorWebPushBean> getListViewServidorPushBean(List<TblServidores> lista)
-	{	
+	protected List<ServidorWebPushBean> getListViewServidorPushBean(List<TblServidores> lista) {
+	
 		List<ServidorWebPushBean> result = null;
 		
 		if (lista!=null && !lista.isEmpty()){

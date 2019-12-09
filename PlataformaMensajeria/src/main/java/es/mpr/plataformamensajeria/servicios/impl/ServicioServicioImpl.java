@@ -69,6 +69,24 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioServicioImpl")
 public class ServicioServicioImpl implements ServicioServicio {
 
+	protected static final String SERVICIOSERVICI = "ServicioServicioImpl - getServiciosByAplicacionId:";
+
+	protected static final String SERVICIOSERVICI0 = "ServicioServicioImpl - getServicios:";
+
+	protected static final String ERRORSDOTJOBDOT = "errors.job.historico.getServicios";
+
+	protected static final String ALTA_MASIVA_APL = "ALTA_MASIVA_APLICACION";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.deleteOrganismo";
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String S = "S";
+
+	protected static final String APLICACIONNOMBR = "aplicacionnombre";
+
+	protected static final String ERRORSDOTORGANI0 = "errors.organismo.getOrganismos";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServicioImpl.class);
 
@@ -134,7 +152,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			return getListServicioBean(lista);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServiciosMultiorganismo:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 	
@@ -144,10 +162,9 @@ public class ServicioServicioImpl implements ServicioServicio {
 			TblServiciosQuery query = new TblServiciosQuery();
 			query.setEliminadoIsNull(true);
 			query.setActivo(true);
-			query.addOrder("nombre", OrderType.ASC);
-			List<ViewServicios> lista = viewServiciosManager.getServicios();
-//			List<TblServicios> lista = tblServiciosManager.getServicios(query); 
-			return lista;
+			query.addOrder(NOMBRE, OrderType.ASC);
+			
+			return viewServiciosManager.getServicios();
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServiciosActivosNoEliminados:" + e);
 			throw new BusinessException(e, "errors.job.ejecucionjobs.getServicios");
@@ -163,12 +180,12 @@ public class ServicioServicioImpl implements ServicioServicio {
 	public List<ServicioBean> getServicios(String rolUsuario, Integer idUsuario) throws BusinessException {
 		List<ServicioBean> res = new ArrayList<>();
 		try{
-			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (rolUsuario != null && (PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)||PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario))) {
 				TblServiciosQuery query = new TblServiciosQuery();
 				query.setEliminadoIsNull(true);
 				query.setTblAplicacionesIsNotNull(true);
 				query.setTblCanalesIsNotNull(true);
-				query.addOrder("nombre", OrderType.ASC);
+				query.addOrder(NOMBRE, OrderType.ASC);
 				List<TblServicios> listaServicios = tblServiciosManager.getServicios(query);
 				if (null != listaServicios){
 					for (TblServicios s : listaServicios) {
@@ -214,23 +231,12 @@ public class ServicioServicioImpl implements ServicioServicio {
 						}
 					}
 				}
-//				TblServidoresServiciosQuery query = new TblServidoresServiciosQuery();
-//				for (TblServicios s : listaServicios) {
-//					query.addTblServiciosIdIn(s);
-//				}
 				
-//				List<TblServidoresServiciosBean> listaSS = tblServidoresServiciosManager.getServidoresServicioByQuery(query);
-//				for (TblServidoresServiciosBean tblSS : listaSS) {
-//					ServicioBean servicio = new ServicioBean();
-//					servicio.setServicioId(tblSS.getServicioId());
-//					servicio.setNombre(tblSS.getNombreServicio());
-//					res.add(servicio);
-//				}
 				
 			}
 		}catch(Exception e){
-			logger.error("ServicioServicioImpl - getServicios:", e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOSERVICI0, e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 		return res;
 	}
@@ -249,14 +255,17 @@ public class ServicioServicioImpl implements ServicioServicio {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("2", "aplicacionnombre");
-			columns.put("3", "nombre");
-			if (columnSort == null)
-				columnSort = "1"; // Id
+			columns.put("2", APLICACIONNOMBR);
+			columns.put("3", NOMBRE);
+			if (columnSort == null) {
+				columnSort = "1";
+			} 
+				// Id
 
 			String column = columns.get(columnSort);
-			if (column == null)
-				column = "aplicacionnombre";
+			if (column == null) {
+				column = APLICACIONNOMBR;
+			}
 
 			
 			List<ViewServicios> lista = null;
@@ -282,21 +291,19 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 
 //			lista = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre,
-//					aplicacionId, false);
 			List<ServicioBean> pageList = getListViewServicioBean(lista);
 			// Total de organismos
-//			Integer rowcount = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre, aplicacionId, true).size();
 			Integer rowcount = viewServiciosManager.getServiciosPaginado(start, size, order, column, nombre, aplicacionId, servicioId, true).size();
 
 			
-			PaginatedList<ServicioBean> result = new PaginatedList<ServicioBean>();
+			PaginatedList<ServicioBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioServicioImpl - getServicios:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOSERVICI0 + e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 
 		}
 	}
@@ -386,7 +393,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			for (TblPlanificaciones p : listaPlanificaciones) {
 				p.setModificadopor(modificador);
 				p.setFechamodificacion(new Date());
-				p.setEliminado("S");
+				p.setEliminado(S);
 				tblPlanificacionesManager.updatePlanificacion(p, source, accionPlanificacion, accionIdPlanificacion,
 						descripcionPlanificacion);
 			}
@@ -405,13 +412,13 @@ public class ServicioServicioImpl implements ServicioServicio {
 							descripcionServidorServicio);
 				}
 			}
-			servicioTO.setEliminado("S");
+			servicioTO.setEliminado(S);
 			servicioTO.setModificadopor(modificador);
 			servicioTO.setFechamodificacion(new Date());
 			tblServiciosManager.update(servicioTO, source, accionServicio, accionIdServicio);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - deleteServicio:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -502,8 +509,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 		ss.setNumintentos(servidoresServicios.getNumIntentos());
 		ss.setProveedorpasswordsms(servidoresServicios.getProveedorPasswordSMS());
 		ss.setProveedorusuariosms(servidoresServicios.getProveedorUsuarioSMS());
-		ss.setServidorservicioid((null != servidoresServicios.getServidorServicioId() ? servidoresServicios
-				.getServidorServicioId().longValue() : null));
+		ss.setServidorservicioid(null != servidoresServicios.getServidorServicioId() ? servidoresServicios
+				.getServidorServicioId().longValue() : null);
 		ss.setTblServicios((null != servidoresServicios.getServicioId()) ? tblServiciosManager
 				.getServicio(servidoresServicios.getServicioId().longValue()) : null);
 		ss.setTblServidores((null != servidoresServicios.getServidorId()) ? tblServidoresManager
@@ -674,7 +681,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 		List<ServicioBean> result = null;
 
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<ServicioBean>();
+			result = new ArrayList<>();
 
 			for (ViewServicios v : lista) {
 				ServicioBean servicio = new ServicioBean();
@@ -712,7 +719,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 		List<ServidoresServiciosBean> result = null;
 
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<ServidoresServiciosBean>();
+			result = new ArrayList<>();
 
 			for (TblServidoresServiciosBean ss : lista) {
 
@@ -744,11 +751,10 @@ public class ServicioServicioImpl implements ServicioServicio {
 	public List<ServicioBean> getServiciosByAplicacionId(Integer aplicacionId) throws BusinessException {
 		try {
 			List<ViewServicios> lista = viewServiciosManager.getServiciosByAplicacion(aplicacionId.longValue());
-			List<ServicioBean> result = getListViewServicioBean(lista);
-			return result;
+			return getListViewServicioBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioServicioImpl - getServiciosByAplicacionId:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOSERVICI + e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -770,8 +776,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 			
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioServicioImpl - getServiciosByAplicacionId:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOSERVICI + e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -789,7 +795,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 					accionId, descripcion);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - deleteServidoresServicios:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -806,7 +812,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 					descripcion);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - deleteServicioOrganismos:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -821,7 +827,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			return getOrganismoServicioBean(tblOrganismoServicioManager.getOrganismoServicioById(organismoServicio.getServicioOrganismoId()));
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - loadOrganismoServicioTO:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -843,7 +849,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			tblServidoresServiciosManager.insert(servidorServicioTO, source, accion, accionId, descripcion);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - newServidoresServicio:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -860,8 +866,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 		try {
 			servicioOrganismosTO.setCreadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			servicioOrganismosTO.setFechacreacion(new Date());
-			if("ALTA_MASIVA_APLICACION".equals(source)){
-				servicioOrganismosTO.setCreadopor("ALTA_MASIVA_APLICACION");
+			if(ALTA_MASIVA_APL.equals(source)){
+				servicioOrganismosTO.setCreadopor(ALTA_MASIVA_APL);
 			}
 			tblOrganismoServicioManager.insert(servicioOrganismosTO, source, accion, accionId, descripcion);
 		} catch (Exception e) {
@@ -881,11 +887,10 @@ public class ServicioServicioImpl implements ServicioServicio {
 			queryServicios.setServicioid(Long.parseLong(idServicio));
 			query.setTblServicios(queryServicios);
 			List<TblServidoresServiciosBean> lista = tblServidoresServiciosManager.getServidoresServicioByQuery(query);
-			List<ServidoresServiciosBean> result = getListServidoresServiciosBean(lista);
-			return result;
+			return getListServidoresServiciosBean(lista);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServidoresServicios:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -905,7 +910,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServicioOrganismo:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 
 	}
@@ -925,7 +930,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 			
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getOrganismoServicio:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 
 	}
@@ -939,7 +944,6 @@ public class ServicioServicioImpl implements ServicioServicio {
 	public List<ServicioBean> getServiciosHistorico() throws BusinessException {
 		try {
 			TblServiciosQuery query = new TblServiciosQuery();
-//			query.setEliminadoIsNull(true);
 			query.setHistorificacionIsNotNull(true);
 			query.setActivo(true);
 			List<TblServicios> listaServicios = tblServiciosManager.getServicios(query);
@@ -947,7 +951,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServiciosHistorico:" + e);
-			throw new BusinessException(e, "errors.job.historico.getServicios");
+			throw new BusinessException(e, ERRORSDOTJOBDOT);
 		}
 	}
 
@@ -968,7 +972,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - getServiciosCons:" + e);
-			throw new BusinessException(e, "errors.job.historico.getServicios");
+			throw new BusinessException(e, ERRORSDOTJOBDOT);
 		}
 	}
 
@@ -989,7 +993,7 @@ public class ServicioServicioImpl implements ServicioServicio {
 
 	} catch (Exception e) {
 		logger.error("ServicioServicioImpl - getServiciosInformes:" + e);
-		throw new BusinessException(e, "errors.job.historico.getServicios");
+		throw new BusinessException(e, ERRORSDOTJOBDOT);
 	}
 	}
 
@@ -1085,8 +1089,8 @@ public class ServicioServicioImpl implements ServicioServicio {
 			return result;
 
 		} catch (Exception e) {
-			logger.error("ServicioServicioImpl - getServiciosByAplicacionId:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOSERVICI + e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 

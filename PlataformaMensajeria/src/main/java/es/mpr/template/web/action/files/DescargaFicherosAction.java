@@ -40,7 +40,6 @@ public class DescargaFicherosAction extends ActionSupport implements ServletResp
 	 * @throws BaseException the base exception
 	 */
 	public String descargarFichero() throws BaseException{
-		//if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
 		FileSystemManager fileManager = null;
 		String sFichero = this.getFichero();
 		FileObject ficheroDescargar = null;
@@ -68,7 +67,8 @@ public class DescargaFicherosAction extends ActionSupport implements ServletResp
 		} finally {
 			try {
 				ficheroDescargar.close();
-			}catch (FileSystemException fse) {}
+			}catch (FileSystemException fse) {
+}
 			fileManager.closeFileSystem(ficheroDescargar.getFileSystem());			
 		}
 		return NONE;

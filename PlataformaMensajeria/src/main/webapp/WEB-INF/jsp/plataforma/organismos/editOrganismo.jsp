@@ -400,10 +400,11 @@
 						<tr>
 							<th class=""><input type="checkbox" id="checkAllS"
 								theme="simple" onclick="selectAllS(this)" /></th>
-							<th class="TH230">Servidor / Proveedor</th>
+							<th class="TH180">Servidor / Proveedor</th>
 							<th class="TH50separator">Nº reintentos</th>
 							<th class="TH80separator" id="auna">Header</th>
 							<th class="TH50separator" id="aune">Usuario</th>
+							<th class="TH50separator" id="aune">Contraseña</th>
 							<th class="TH20 separator"></th>
 						</tr>
 					</thead>
@@ -422,7 +423,13 @@
 								<td><s:label value="%{nombreServidor}" /></td>
 								<td><s:label value="%{numIntentos}" /></td>
 								<td id="aunaValue1"><s:label value="%{headerSMS}"/></td>
-								<td id="auneValue1"><s:label value="%{proveedorUsuarioSMS}"/></td>
+								<td id="auneValue1"><s:label value="%{proveedorUsuarioSMS}"/></td>								
+								<s:if test="#session.ROL_USUARIO_PLATAFORMA == 'ROL_ADMINISTRADOR'">									
+									<td id="auneValue1"><s:label value="%{proveedorPasswordSMS}"/></td>
+								</s:if>
+								<s:else>									
+									<td id="auneValue1"><s:label value="******"/></td>
+								</s:else>
 								<td class="buttons"><span class="delete"> <a
 										class="btnDelete" onclick="return confirmDelete();"
 										href="deleteServidorOrganismo.action?servidorOrganismoId=${servidorOrganismo.servidorOrganismoId}&idOrganismo=${organismo.organismoId}&idServidor=${servidorOrganismo.servidorId}"></a>
@@ -440,7 +447,7 @@
 						<s:else>
 							<tr>
 							<tfoot>
-								<td colspan="5"><s:submit id="eliminaSeleccionadosSO"
+								<td colspan="6"><s:submit id="eliminaSeleccionadosSO"
 										name="eliminaSeleccionadosSO" theme="simple" disabled="true"
 										value="%{getText('button.plataforma.eliminarseleccionados')}"
 										cssClass="button" />

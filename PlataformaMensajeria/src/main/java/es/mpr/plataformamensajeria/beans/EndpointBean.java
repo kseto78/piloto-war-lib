@@ -14,6 +14,40 @@ public class EndpointBean implements Audit {
 
 	
 
+	/**  id endpoint. */
+	protected Long idEndpoint = null;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  url endpoint. */
+	protected String urlEndpoint = null;
+
+	/**  service name. */
+	protected String serviceName = null;
+
+	/**  port name. */
+	protected String portName = null;
+
+	/**  url target name. */
+	protected String urlTargetName = null;
+
+	/**  url operation. */
+	protected String urlOperation = null;
+
+	/**  timeout. */
+	protected Long timeout = null;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  fecha actualizacion. */
+	protected Date fechaActualizacion = null;
+
+	/**  comunicacion. */
+	protected ComunicacionBean comunicacion = null;
+
+
 	/**
 	 * Constructor de endpoint bean.
 	 */
@@ -31,40 +65,6 @@ public class EndpointBean implements Audit {
 		this.fechaActualizacion = null;
 		this.comunicacion = null;
 	}
-
-	/**  id endpoint. */
-	protected Long idEndpoint = null;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  url endpoint. */
-	protected String urlEndpoint = null;
-	
-	/**  service name. */
-	protected String serviceName = null;	
-	
-	/**  port name. */
-	protected String portName = null;
-	
-	/**  url target name. */
-	protected String urlTargetName = null;
-	
-	/**  url operation. */
-	protected String urlOperation = null;
-	
-	/**  timeout. */
-	protected Long timeout = null;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  fecha actualizacion. */
-	protected Date fechaActualizacion = null;
-	
-	/**  comunicacion. */
-	protected ComunicacionBean comunicacion = null;
-
 
 	/**
 	 * Obtener id endpoint.

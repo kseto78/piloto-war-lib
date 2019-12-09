@@ -62,6 +62,26 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioOrganismoImpl")
 public class ServicioOrganismoImpl implements ServicioOrganismo {
 
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String SERVICIOORGANIS = "ServicioOrganismoImpl - getOrganismoBean:";
+
+	protected static final String SERVICIOORGANIS0 = "ServicioOrganismoImpl - getOrganismos:";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.updateOrganismo";
+
+	protected static final String SERVICIOORGANIS1 = "ServicioOrganismoImpl - updateOrganismo:";
+
+	protected static final String DIR3 = "dir3";
+
+	protected static final String R_CONST_REF = "1";
+
+	protected static final String R_CONST_0 = "2";
+
+	protected static final String ALTA_MASIVA_APL = "ALTA_MASIVA_APLICACION";
+
+	protected static final String SERVICIOORGANIS2 = "ServicioOrganismoImpl - autocomplete organismos:";
+
 	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
 	private static final String ERRORS_ORGANISMO_GET_ORGANISMOS = "errors.organismo.getOrganismos";
 
@@ -111,13 +131,13 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		try {
 			TblOrganismosQuery query = new TblOrganismosQuery();
 			query.setEliminadoIsNull(true);
-			query.addOrder("nombre", OrderType.ASC);
+			query.addOrder(NOMBRE, OrderType.ASC);
 			List<TblOrganismos> lista = tblOrganismosManager
 					.getOrganismosByQuery(query);
 
 			return getListOrganismoBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - getOrganismos:" + e);
+			logger.error(SERVICIOORGANIS0 + e);
 			throw new BusinessException(e,
 					ServicioOrganismoImpl.ERRORS_ORGANISMO_GET_ORGANISMOS);
 		}
@@ -202,14 +222,14 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "dir3");
-			columns.put("3", "nombre");
+			columns.put(R_CONST_REF, DIR3);
+			columns.put("3", NOMBRE);
 			columns.put("4", "estado");
 			columns.put("6", "codUnidadRaiz");
 
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "dir3";
+				column = DIR3;
 			}
 
 			es.minhap.plataformamensajeria.iop.beans.OrganismoBean ob = new es.minhap.plataformamensajeria.iop.beans.OrganismoBean();
@@ -229,7 +249,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - getOrganismos:" + e);
+			logger.error(SERVICIOORGANIS0 + e);
 			throw new BusinessException(e,
 					ServicioOrganismoImpl.ERRORS_ORGANISMO_GET_ORGANISMOS);
 
@@ -247,23 +267,26 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		String nombre = null;
 		try {
 			//Columna para ordenar
-			Hashtable<String, String> columns = new Hashtable<String,String>();
-			columns.put("2","nombre");
-			if (columnSort==null)
-				columnSort = "2"; //Id
+			Hashtable<String, String> columns = new Hashtable<>();
+			columns.put(R_CONST_0,NOMBRE);
+			if (columnSort==null) {
+				columnSort = R_CONST_0;
+			} 
+				//Id
 			
 			String column = columns.get(columnSort);
-			if (column==null)
-				column = "nombre";
+			if (column==null) {
+				column = NOMBRE;
+			}
 			
 			TblServidoresOrganismosQuery queryServOrg = new TblServidoresOrganismosQuery();
 			queryServOrg.setServidorid(criterio.getProveedorSMSId());
 
 			List<Long> listaServOrganismos = tblServidoreOrganismosManager.getOrganismosServidorActivos(criterio.getProveedorSMSId());
 			if(listaServOrganismos.isEmpty()){
-				PaginatedList<OrganismoBean> result = new PaginatedList<OrganismoBean>();
+				PaginatedList<OrganismoBean> result = new PaginatedList<>();
 				result.setTotalList(0);
-				List<OrganismoBean> pageList = new ArrayList<OrganismoBean>();
+				List<OrganismoBean> pageList = new ArrayList<>();
 				result.setPageList(pageList);
 				return result;
 			}
@@ -279,7 +302,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 				queryOrg.setMaxResults(size);
 			}
 			OrderType ord = null;
-			if (order == null || order.equals("1")){
+			if (order == null || R_CONST_REF.equals(order)){
 				ord = OrderType.ASC;
 			} else {
 				ord = OrderType.DESC;
@@ -295,13 +318,12 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 
 			Integer rowcount = queryExecutorOrganismosImpl.countServidoresPaginadoOrganismos(queryOrg);
 			
-			PaginatedList<OrganismoBean> result = new PaginatedList<OrganismoBean>();
+			PaginatedList<OrganismoBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 			
 			return result;
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioProveedorSMS - getProveedoresSMS:" + e);
 			throw new BusinessException(e, "errors.organismo.getOrganismos");
 			
@@ -351,21 +373,20 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 		try {
 			TblOrganismos organismoTO = getOrganismoTO(organismo);
 			organismoTO.setFechamodificacion(new Date());
-			if(organismo.getActivo() == true){
+			if(organismo.getActivo()){
 				organismoTO.setFechaActivo(new Date());
 			}else{
 				organismoTO.setFechaActivo(null);
 			}
 			organismoTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
-			if("ALTA_MASIVA_APLICACION".equals(source)){
-				organismoTO.setModificadopor("ALTA_MASIVA_APLICACION");
+			if(ALTA_MASIVA_APL.equals(source)){
+				organismoTO.setModificadopor(ALTA_MASIVA_APL);
 			}
 			tblOrganismosManager.update(organismoTO, source, accion, accionId);
 			
-		}
-		catch (Exception e){
-			logger.error("ServicioOrganismoImpl - updateOrganismo:" + e);
-			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
+		} catch (Exception e){
+			logger.error(SERVICIOORGANIS1 + e);
+			throw new BusinessException(e,ERRORSDOTORGANI);		
 		} 
 		
 	}
@@ -382,22 +403,21 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			OrganismoBean organismo = getOrganismoBean(org);
 			TblOrganismos organismoTO = getOrganismoTO(organismo);
 			organismoTO.setFechamodificacion(new Date());
-			if(organismo.getActivo() == true){
+			if(organismo.getActivo()){
 				organismoTO.setFechaActivo(new Date());
 			}else{
 				organismoTO.setFechaActivo(null);
 			}
 			organismoTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
-			if("ALTA_MASIVA_APLICACION".equals(source)){
-				organismoTO.setModificadopor("ALTA_MASIVA_APLICACION");
+			if(ALTA_MASIVA_APL.equals(source)){
+				organismoTO.setModificadopor(ALTA_MASIVA_APL);
 			}
 			organismoTO.setIdPdpDiputaciones(null);
 			tblOrganismosManager.update(organismoTO, source, accion, accionId);
 			
-		}
-		catch (Exception e){
-			logger.error("ServicioOrganismoImpl - updateOrganismo:" + e);
-			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
+		} catch (Exception e){
+			logger.error(SERVICIOORGANIS1 + e);
+			throw new BusinessException(e,ERRORSDOTORGANI);		
 		} 
 		
 	}
@@ -454,7 +474,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return queryExecutorOrganismosImpl.getListAutocomplete(term);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return new ArrayList<>();
 		}
 
@@ -469,7 +489,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return queryExecutorOrganismosImpl.getOrganismoIdByDir3(search);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return null;
 		}
 	}
@@ -480,7 +500,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return queryExecutorOrganismosImpl.getOrganismoIdByDir3SoloEliminado(search);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return null;
 		}
 	}
@@ -498,7 +518,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return (null != lista && !lista.isEmpty()) ? lista : null;
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return null;
 		}
 	}
@@ -509,7 +529,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return queryExecutorOrganismosImpl.getOrganismosHijos(search);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return null;
 		}
 	}
@@ -520,7 +540,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			return queryExecutorOrganismosImpl.getOrganismosByPdp(idOrganismosPdp);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return null;
 		}
 	}
@@ -537,10 +557,10 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			List<TblOrganismos> lista = tblOrganismosManager
 					.getOrganismosByQuery(query);
 
-			return (null != lista && !lista.isEmpty()) ? true : false;
+			return null != lista && !lista.isEmpty();
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return false;
 		}
 	}
@@ -559,10 +579,10 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			List<OrganismosServicioBean> lista = tblOrganismosServicioManager.getOrganismosServicioByQuery(query);
 					
 
-			return (null != lista && !lista.isEmpty()) ? true : false;
+			return null != lista && !lista.isEmpty();
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS2 + e);
 			return false;
 		}
 	}
@@ -682,7 +702,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			BeanUtils.copyProperties(organismo, o);
 			organismo.setOrganismoId(o.getOrganismoid().intValue());
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			logger.error("ServicioOrganismoImpl - getOrganismoBean:" + e);
+			logger.error(SERVICIOORGANIS + e);
 		}
 		return organismo;
 	}
@@ -717,7 +737,7 @@ public class ServicioOrganismoImpl implements ServicioOrganismo {
 			}
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			logger.error("ServicioOrganismoImpl - getOrganismoBean:" + e);
+			logger.error(SERVICIOORGANIS + e);
 		}
 		return ob;
 	}

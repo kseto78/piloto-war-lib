@@ -31,7 +31,6 @@ import es.mpr.plataformamensajeria.impl.PlataformaPaginationAction;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioServicioMovil;
 import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuario;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
-//import es.mpr.plataformamensajeria.servicios.ifaces.ServicioUsuarioServicioMovil;
 import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 import es.mpr.plataformamensajeria.util.Utiles;
 
@@ -50,6 +49,36 @@ import es.mpr.plataformamensajeria.util.Utiles;
 @Scope("prototype")
 public class ServiciosMovilesAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String ERRORSDOTACTION = "errors.action.servicioMovil.loadServicioMovil";
+
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servicioMovil.delete.error";
+
+	protected static final String ACTIVO = "'activo'";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String PLATAFORMAMENSA = "plataformaMensajeriaProperties";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZE";
+
+	protected static final String LOGDOTSOURCE_SE = "log.SOURCE_SERVICIOSMOVILES";
+
+	protected static final String SERVICIOSMOVILE = "[ServiciosMovilesAction - loadUsuariosServiciosMoviles] ";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
+	protected static final String R_CONST_REF = "20";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -57,7 +86,7 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	private static Logger logger = Logger.getLogger(ServiciosMovilesAction.class);
 	
 	/**  properties. */
-	@Resource(name = "plataformaMensajeriaProperties")
+	@Resource(name = PLATAFORMAMENSA)
 	private PlataformaMensajeriaProperties properties;
 	
 	/**  servicio servicio movil. */
@@ -69,11 +98,11 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	private ServicioUsuario servicioUsuario;
 	
 	/**  props. */
-	@Resource(name = "plataformaMensajeriaProperties")
+	@Resource(name = PLATAFORMAMENSA)
 	private PlataformaMensajeriaProperties props;
 
 	/** Constante Usuario. */
-	private static final String Usuario = "1";
+	private static final String TXTUSUARIO = "1";
 
 	/**  lista servicios moviles. */
 	public List<ServicioMovilBean> listaServiciosMoviles = null;
@@ -85,7 +114,7 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	private List<UsuariosPushBean> listaUsuariosServicioMovil;
 	
 	/**  combo tipos servicios. */
-	List<KeyValueObject> comboTiposServicios = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboTiposServicios = new ArrayList<>();
 	
 	/**  check del list. */
 	private String[] checkDelList;
@@ -187,37 +216,42 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 */
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute("infoUser") == null) return "noUser";
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para ordenar
 
-		if (servicioMovil != null)
-			if (servicioMovil.getNombre() != null && servicioMovil.getNombre().length() <= 0)
-				servicioMovil.setNombre(null);
+		if (servicioMovil != null && servicioMovil.getNombre() != null && servicioMovil.getNombre().isEmpty()) {
+			servicioMovil.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServicioMovilBean> result = servicioServicioMovil.getServiciosMoviles(inicio, 
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, 
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)), order, 
 				columnSort, servicioMovil);
 		Integer totalSize = result.getTotalList();
 
 		listaServiciosMoviles = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), 
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
 		}
 
 		if (listaServiciosMoviles != null && !listaServiciosMoviles.isEmpty()) {
-			for (int indice = 0; indice < listaServiciosMoviles.size(); indice++) {
+			for (int indice = 0, s = listaServiciosMoviles.size(); indice < s; indice++) {
 
-				ServicioMovilBean servicioMovil = new ServicioMovilBean();
+				ServicioMovilBean servicioMovil = null;
 				servicioMovil = listaServiciosMoviles.get(indice);
 				servicioMovil.setNombre(StringEscapeUtils.escapeHtml(servicioMovil.getNombre()));
 				servicioMovil.setDescripcion(StringEscapeUtils.escapeHtml(servicioMovil.getDescripcion()));
@@ -232,35 +266,39 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 */
 	public String execute() throws BaseException {
 
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para ordenar
 
-		if (servicioMovil != null)
-			if (servicioMovil.getNombre() != null && servicioMovil.getNombre().length() <= 0)
-				servicioMovil.setNombre(null);
+		if (servicioMovil != null && servicioMovil.getNombre() != null && servicioMovil.getNombre().isEmpty()) {
+			servicioMovil.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<ServicioMovilBean> result = servicioServicioMovil.getServiciosMoviles(inicio, 
-				(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, servicioMovil);
+				export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)), order, columnSort, servicioMovil);
 		Integer totalSize = result.getTotalList();
 
 		listaServiciosMoviles = result.getPageList();
 
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), 
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)));
 		} else {
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
 		}
 		if (listaServiciosMoviles != null && !listaServiciosMoviles.isEmpty()) {
-			for (int indice = 0; indice < listaServiciosMoviles.size(); indice++) {
+			for (int indice = 0, s = listaServiciosMoviles.size(); indice < s; indice++) {
 
 				ServicioMovilBean servicioMovil = listaServiciosMoviles.get(indice);
 				servicioMovil.setNombre(StringEscapeUtils.escapeHtml(servicioMovil.getNombre()));
@@ -281,23 +319,24 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 		
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVICIOSMOVILES", null);
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 
 		if (servicioMovil != null) {
 	    				
-			if (servicioMovil.getIsEstado() != null && servicioMovil.getIsEstado().indexOf("'activo'")!=-1) {
-				servicioMovil.setEstado(new Integer(1));
+			if (servicioMovil.getIsEstado() != null && servicioMovil.getIsEstado().indexOf(ACTIVO)!=-1) {
+				servicioMovil.setEstado(Integer.valueOf(1));
 			} else {
-				servicioMovil.setEstado(new Integer(0));
+				servicioMovil.setEstado(Integer.valueOf(0));
 			}
 
-			if (servicioMovil.getIsIndSuscripcion() != null && servicioMovil.getIsIndSuscripcion().indexOf("'activo'")!=-1) {
-				servicioMovil.setIndSuscripcion(new Integer(1));
+			if (servicioMovil.getIsIndSuscripcion() != null && servicioMovil.getIsIndSuscripcion().indexOf(ACTIVO)!=-1) {
+				servicioMovil.setIndSuscripcion(Integer.valueOf(1));
 			} else {
-				servicioMovil.setIndSuscripcion(new Integer(0));
+				servicioMovil.setIndSuscripcion(Integer.valueOf(0));
 			}
 			
 			if (!validaObligatorios(servicioMovil, true)) {
@@ -341,11 +380,12 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 * @throws BaseException the base exception
 	 */
 	public String update() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		String accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVICIOSMOVILES", null);
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
 
 		ServicioMovilBean servicioMovilBBDD = null;
 		if (servicioMovil == null) {
@@ -356,13 +396,13 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 			logger.info("[ServicioMovilAction - IdservicioMovil] valor == " + servicioMovil.getServicioMovilId());
 			if (servicioMovil.getServicioMovilId() == null) {
 				if (idServicioMovil != null) {
-					servicioMovil.setServicioMovilId(new Long(idServicioMovil));
+					servicioMovil.setServicioMovilId(Long.valueOf(idServicioMovil));
 					servicioMovilBBDD = servicioServicioMovil.loadServicioMovil(servicioMovil);
 				} else {
 					String idServicioMovil = (String) request.getAttribute("idServicioMovil");
 					logger.info("[ServicioMovilAction - request.getAttribute('idServicioMovil)' == " + idServicioMovil);
 					if (idServicioMovil != null) {
-						aplicacion.setId(new Long(idServicioMovil));
+						aplicacion.setId(Long.valueOf(idServicioMovil));
 						servicioMovilBBDD = servicioServicioMovil.loadServicioMovil(servicioMovil);
 					}
 				}
@@ -409,27 +449,32 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 * @throws BaseException the base exception
 	 */
 	public String load() throws BaseException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		int page = getPage("tableId"); // Pagina a mostrar
-		String order = getOrder("tableId"); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort("tableId"); // Columna usada para ordenar
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
+		int page = getPage(TABLEID); 
+		// Pagina a mostrar
+		String order = getOrder(TABLEID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(TABLEID); 
+		// Columna usada para ordenar
 
-		if (servicioMovil != null)
-			if (servicioMovil.getNombre() != null && servicioMovil.getNombre().length() <= 0)
-				servicioMovil.setNombre(null);
+		if (servicioMovil != null && servicioMovil.getNombre() != null && servicioMovil.getNombre().isEmpty()) {
+			servicioMovil.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF));
 		PaginatedList<ServicioMovilBean> result = servicioServicioMovil.getServiciosMoviles(inicio, 
-				Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")), order, columnSort, servicioMovil);
+				Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)), order, columnSort, servicioMovil);
 
 		listaServiciosMoviles = result.getPageList();
 		
-		if (idServicioMovil == null)
+		if (idServicioMovil == null) {
 			throw new BusinessException("EL idServicioMovil recibido es nulo");
+		}
 		try {
 			servicioMovil = new ServicioMovilBean();
-			servicioMovil.setServicioMovilId(new Long(idServicioMovil));
+			servicioMovil.setServicioMovilId(Long.valueOf(idServicioMovil));
 			servicioMovil = servicioServicioMovil.loadServicioMovil(servicioMovil);
 			listaUsuariosServicioMovil = loadUsuariosServiciosMoviles();
 			
@@ -438,16 +483,18 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 				totalSize = listaUsuariosServicioMovil.size();
 			}
 			
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), 
-					Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20")));
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), 
+					Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_REF)));
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 			
 			return SUCCESS;
 		} catch (NumberFormatException e) {
-			String mensg = this.getText("errors.action.servicioMovil.loadServicioMovil", new String[] { servicioMovil.getServicioMovilId().toString() });
+			logger.error(e.getMessage(), e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { servicioMovil.getServicioMovilId().toString() });
 			throw new BusinessException(mensg);
 		} catch (BusinessException e) {
-			String mensg = this.getText("errors.action.servicioMovil.loadServicioMovil", new String[] { aplicacion.getAplicacionId().toString() });
+			logger.error(e.getMessage(), e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { aplicacion.getAplicacionId().toString() });
 			throw new BusinessException(mensg);
 		}
 
@@ -460,17 +507,18 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 * @throws BaseException the base exception
 	 */
 	public String delete() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVICIOSMOVILES", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idServicioMovil == null) {
-			addActionErrorSession(this.getText("plataforma.servicioMovil.delete.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTSE));
 
 		} else {
 			servicioMovil = new ServicioMovilBean();
-			servicioMovil.setServicioMovilId(new Long(idServicioMovil));
+			servicioMovil.setServicioMovilId(Long.valueOf(idServicioMovil));
 			servicioServicioMovil.deleteServicioMovil(servicioMovil, accion, accionId, source);
 			addActionMessageSession(this.getText("plataforma.servicioMovil.delete.ok"));
 		}
@@ -485,18 +533,19 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 * @throws BaseException the base exception
 	 */
 	public String deleteSelected() throws BaseException {
-		String accion = properties.getProperty("log.ACCION_ELIMINAR", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVICIOSMOVILES", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		String accion = properties.getProperty(LOGDOTACCION_EL, null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.servicioMovil.deleteSelected.error"));
 
 		} else {
 			for (String idServicioMovil : checkDelList) {
 				servicioMovil = new ServicioMovilBean();
-				servicioMovil.setServicioMovilId(new Long(idServicioMovil));
+				servicioMovil.setServicioMovilId(Long.valueOf(idServicioMovil));
 				servicioServicioMovil.deleteServicioMovil(servicioMovil, accion, accionId, source);
 			}
 			addActionMessageSession(this.getText("plataforma.servicioMovil.deleteSelected.ok"));
@@ -513,16 +562,17 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 */
 	public String deleteImagen() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_ELIMINARIMAGEN", null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String source = properties.getProperty("log.SOURCE_SERVICIOSMOVILES", null);
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String source = properties.getProperty(LOGDOTSOURCE_SE, null);
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idServicioMovil == null) {
-			addActionErrorSession(this.getText("plataforma.servicioMovil.delete.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTSE));
 
 		} else {
 			servicioMovil = new ServicioMovilBean();
-			servicioMovil.setServicioMovilId(new Long(idServicioMovil));
+			servicioMovil.setServicioMovilId(Long.valueOf(idServicioMovil));
 			servicioServicioMovil.deleteImagenServicioMovil(servicioMovil, accion, accionId, source);
 			addActionMessageSession(this.getText("plataforma.servicioMovil.imagen.delete.ok"));
 		}
@@ -537,17 +587,17 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 */
 	private List<UsuariosPushBean> loadUsuariosServiciosMoviles() {
    		List<UsuariosPushBean> lista = null;
-   		if(idServicioMovil!=null&&idServicioMovil.length()>0){
+   		if(idServicioMovil!=null&&!idServicioMovil.isEmpty()){
    			try {
-   				lista = servicioUsuario.getUsuariosByServicioMovilId(new Long(idServicioMovil));
+   				lista = servicioUsuario.getUsuariosByServicioMovilId(Long.valueOf(idServicioMovil));
 				} catch (NumberFormatException | BusinessException e) {
-					logger.error("[ServiciosMovilesAction - loadUsuariosServiciosMoviles] " ,e);
+					logger.error(SERVICIOSMOVILE ,e);
 				}
    		}else if(servicioMovil!=null&&servicioMovil.getServicioMovilId()!=null){
    			try {
    				lista = servicioUsuario.getUsuariosByServicioMovilId(servicioMovil.getServicioMovilId());
 				}  catch (NumberFormatException | BusinessException e) {
-					logger.error("[ServiciosMovilesAction - loadUsuariosServiciosMoviles] " ,e);
+					logger.error(SERVICIOSMOVILE ,e);
 				}
    		}
 			return lista;
@@ -585,8 +635,7 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 			}
 			
 			return result;
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			LOG.error("[CifradoServiceImpl] - getCertificados:" + e);
 			throw new BusinessException(e,"errors.decode.getCertificados");	
 		}
@@ -1074,7 +1123,7 @@ public class ServiciosMovilesAction extends PlataformaPaginationAction implement
 	 * @return usuario
 	 */
 	public static String getUsuario() {
-		return Usuario;
+		return TXTUSUARIO;
 	}
 	
 	/**

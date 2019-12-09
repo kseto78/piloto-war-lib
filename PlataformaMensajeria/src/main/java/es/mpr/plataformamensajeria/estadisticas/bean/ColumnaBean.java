@@ -20,6 +20,14 @@ public class ColumnaBean implements Audit {
 	private String format;
 		
 		/**
+	 * Constructor de columna bean.
+	 */
+	public ColumnaBean(){
+	super();
+	reset();
+   }
+
+		/**
 		 * Obtener format.
 		 *
 		 * @return format
@@ -56,14 +64,6 @@ public class ColumnaBean implements Audit {
 	}
 
 		/**
-		 * Constructor de columna bean.
-		 */
-		public ColumnaBean(){
-    	super();
-    	reset();
-    }
-    
-	/**
 	 * Reset.
 	 */
 	public void reset(){

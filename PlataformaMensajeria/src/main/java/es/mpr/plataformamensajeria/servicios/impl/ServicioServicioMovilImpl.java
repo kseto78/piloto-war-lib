@@ -46,6 +46,18 @@ import es.mpr.plataformamensajeria.util.Utiles;
 @Service("servicioServicioMovilImpl")
 public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 
+	protected static final String ERRORSDOTSERVIC = "errors.servicioMovil.getServiciosMoviles";
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String SERVICIOSERVICI = "ServicioServicioImpl - getServicioBean:";
+
+	protected static final String SERVICIOSERVICI0 = "ServicioServicioMovilImpl - getServiciosMoviles:";
+
+	protected static final String SERVICIOSERVICI1 = "ServicioServicioMovilImpl - getServicioMovilBean:";
+
+	protected static final String R_CONST_REF = "1";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServicioMovilImpl.class);
 	
@@ -75,17 +87,17 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		
 		List<TblServiciosMoviles> list = null;
 		
-		try {			
+		try {
+				
 			TblServiciosMovilesQuery query = new TblServiciosMovilesQuery();
             query.setNombre(criterio.getNombre().toUpperCase());
             query.setNombreComparator(TextComparator.CONTAINS);
 
             list = tblServiciosMovilesManager.getListaServiciosMovilesByQuery(query);
 
-		} 
-		catch(Exception e){
-			logger.error("ServicioServicioMovilImpl - getServiciosMoviles:" + e);
-			throw new BusinessException(e, "errors.servicioMovil.getServiciosMoviles");
+		} catch(Exception e){
+			logger.error(SERVICIOSERVICI0 + e);
+			throw new BusinessException(e, ERRORSDOTSERVIC);
 		}
 		
 		return list;
@@ -105,10 +117,9 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 							
 			list = tblServiciosMovilesManager.getListaServiciosMovilesByQuery(query);
 			
-		} 
-		catch(Exception e){
-			logger.error("ServicioServicioMovilImpl - getServiciosMoviles:" + e);
-			throw new BusinessException(e, "errors.servicioMovil.getServiciosMoviles");
+		} catch(Exception e){
+			logger.error(SERVICIOSERVICI0 + e);
+			throw new BusinessException(e, ERRORSDOTSERVIC);
 		}
 		
 		return list;
@@ -127,14 +138,17 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "nombre");
+			columns.put(R_CONST_REF, NOMBRE);
 			columns.put("4", "tipo");
-			if (columnSort == null)
-				columnSort = "1"; // Id
+			if (columnSort == null) {
+				columnSort = R_CONST_REF;
+			} 
+				// Id
 
 			String column = columns.get(columnSort);
-			if (column == null)
-				column = "nombre";
+			if (column == null) {
+				column = NOMBRE;
+			}
 
 			if (null != criterio && null != criterio.getNombre()) {
 				nombre = criterio.getNombre();
@@ -147,14 +161,14 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 			Integer rowcount = tblServiciosMovilesManager.getServiciosMovilesPaginado(start, size, order, column, 
 					nombre, true).size();
 
-			PaginatedList<ServicioMovilBean> result = new PaginatedList<ServicioMovilBean>();
+			PaginatedList<ServicioMovilBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioServicioMovilImpl - getServiciosMoviles:" + e);
-			throw new BusinessException(e, "errors.servicioMovil.getServiciosMoviles");
+			logger.error(SERVICIOSERVICI0 + e);
+			throw new BusinessException(e, ERRORSDOTSERVIC);
 
 		}
 	}
@@ -186,7 +200,8 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 					ConvertUtils.register(converter, java.util.Date.class);
 					BeanUtils.copyProperties(servicioMovil, v);
 					servicioMovil.setServicioMovilId(v.getServiciosmovilesid());
-					servicioMovil.setTipoServicio((null != mapTipos.get(servicioMovil.getTipo().toString()))? mapTipos.get(servicioMovil.getTipo().toString()) : "Desconocido");
+					servicioMovil.setTipoServicio((null != 
+						mapTipos.get(servicioMovil.getTipo().toString()))? mapTipos.get(servicioMovil.getTipo().toString()) : "Desconocido");
 				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
@@ -287,8 +302,7 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 	public ServicioMovilBean loadServicioMovil(ServicioMovilBean servicioMovil) throws BusinessException {
 		try {
 			TblServiciosMoviles servicioMovilTO = tblServiciosMovilesManager.getServicioMovil(servicioMovil.getServicioMovilId());
-			ServicioMovilBean serMov = getServicioMovilBean(servicioMovilTO);
-			return serMov;
+			return getServicioMovilBean(servicioMovilTO);
 		} catch (Exception e) {
 			logger.error("ServicioServicioMovilImpl - loadServicioMovil:" + e);
 			throw new BusinessException(e, "errors.servicioMovil.loadServicioMovil");
@@ -403,10 +417,8 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 			servicio.setResponsablefuncionalnombre(serv.getRespFuncionalNombre());
 			servicio.setResponsabletecnicoemail(serv.getRespTecnicoEmail());
 			servicio.setResponsabletecniconombre(serv.getRespTecnicoNombre());
-		} catch (IllegalAccessException e) {
-			logger.error("ServicioServicioImpl - getServicioBean:" + e);
-		} catch (InvocationTargetException e) {
-			logger.error("ServicioServicioImpl - getServicioBean:" + e);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			logger.error(SERVICIOSERVICI + e);
 		}
 
 		return servicio;
@@ -449,7 +461,7 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		List<ServicioBean> result = null;
 
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<ServicioBean>();
+			result = new ArrayList<>();
 
 			for (ViewServicios v : lista) {
 				ServicioBean servicio = new ServicioBean();
@@ -460,9 +472,7 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 					ConvertUtils.register(converter, java.util.Date.class);
 					BeanUtils.copyProperties(servicio, v);
 					servicio.setServicioId(v.getServicioid().intValue());
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 				result.add(servicio);
@@ -499,7 +509,8 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 			servicioMovil.setCreadoPor(servMovil.getCreadopor());
 			servicioMovil.setFechaCreacion((null != servMovil.getFechacreacion() ) ? DateUtils.truncate(servMovil.getFechacreacion(), Calendar.DATE) : null);
 			servicioMovil.setModificadoPor(servMovil.getModificadopor());
-			servicioMovil.setFechaModificacion((null != servMovil.getFechamodificacion() ) ? DateUtils.truncate(servMovil.getFechamodificacion(), Calendar.DATE) : null);
+			servicioMovil.setFechaModificacion((null != 
+				servMovil.getFechamodificacion() ) ? DateUtils.truncate(servMovil.getFechamodificacion(), Calendar.DATE) : null);
 			
 			if(servMovil.getIcono()!=null){
 				
@@ -507,10 +518,8 @@ public class ServicioServicioMovilImpl implements ServicioServicioMovil{
 		        
 			}
 			
-		} catch (IllegalAccessException e) {
-			logger.error("ServicioServicioMovilImpl - getServicioMovilBean:" + e);
-		} catch (InvocationTargetException e) {
-			logger.error("ServicioServicioMovilImpl - getServicioMovilBean:" + e);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			logger.error(SERVICIOSERVICI1 + e);
 		}
 
 		return servicioMovil;

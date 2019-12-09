@@ -61,6 +61,22 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioServidorImpl")
 public class ServicioServidorImpl implements ServicioServidor {
 	
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String S = "S";
+
+	protected static final String SERVICIOSERVIDO = "ServicioServidorImpl - getServidorOrganismo:";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String ALTA_MASIVA_APL = "ALTA_MASIVA_APLICACION";
+
+	protected static final String SERVICIOSERVIDO0 = "ServicioServidorImpl - getServidoresYProveedores:";
+
+	protected static final String ERRORSDOTORGANI0 = "errors.organismo.deleteOrganismo";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioServidorImpl.class);
 	
@@ -113,13 +129,11 @@ public class ServicioServidorImpl implements ServicioServidor {
 			query.setEliminadoIsNull(true);
 			List<TblServidores> lista = tblServidoresManager.getServidoresByQuery(query);
 		
-			List<ServidorBean> result = getListServidorBean(lista);
-
-			return result;
+			return getListServidorBean(lista);
 
 		} catch (Exception e) {
 			logger.error("ServicioServidorImpl - getServidoresByTipoServidor:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -139,8 +153,8 @@ public class ServicioServidorImpl implements ServicioServidor {
 			tblServidoresManager.getServidoresByQuery(query);
 			return getListServidorBean(tblServidoresManager.getServidoresByQuery(query));
 		} catch (Exception e) {
-			logger.error("ServicioServidorImpl - getServidoresYProveedores:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOSERVIDO0 + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -154,10 +168,10 @@ public class ServicioServidorImpl implements ServicioServidor {
 		List<TblServidores> listaServidores = new ArrayList<>();
 		
 		try {
-			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (rolUsuario != null && (PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)||PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario))) {
 				TblServidoresQuery query = new TblServidoresQuery();
 				query.setEliminadoIsNull(true);
-				query.addOrder("nombre", OrderType.ASC);
+				query.addOrder(NOMBRE, OrderType.ASC);
 				listaServidores = tblServidoresManager.getServidoresByQuery(query);
 				for (TblServidores s : listaServidores) {
 					ServidorBean servidor = new ServidorBean();
@@ -204,7 +218,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("ServicioServidorImpl - getServidoresYProveedores:" + e);
+			logger.error(SERVICIOSERVIDO0 + e);
 		}
 		return listBean;
 	}
@@ -281,7 +295,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 			
 		} catch (Exception e) {
 			logger.error("ServicioServidorImpl - getServidoresNoAsignados:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 
 		return listaServidores;
@@ -295,7 +309,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 	public List<ServidorBean> getAllServidores() throws BusinessException {
 		TblServidoresQuery query = new TblServidoresQuery();
 		query.setEliminadoIsNull(true);
-		query.addOrder("nombre", OrderType.ASC);
+		query.addOrder(NOMBRE, OrderType.ASC);
 		List<TblServidores> lista = tblServidoresManager.getServidoresByQuery(query);
 		return getListServidorBean(lista);
 	}
@@ -311,14 +325,17 @@ public class ServicioServidorImpl implements ServicioServidor {
 
 			// Columna para ordenar
 			Hashtable<String, String> columns = new Hashtable<>();
-			columns.put("2", "nombre");
+			columns.put(R_CONST_REF, NOMBRE);
 			
-			if (columnSort == null)
-				columnSort = "2"; // Id
+			if (columnSort == null) {
+				columnSort = R_CONST_REF;
+			} 
+				// Id
 
 			String column = columns.get(columnSort);
-			if (column == null)
-				column = "nombre";
+			if (column == null) {
+				column = NOMBRE;
+			}
 
 			if (null != criterio && null != criterio.getNombre()){
 				nombre = criterio.getNombre();
@@ -337,7 +354,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 			return result;
 		} catch (Exception e) {
 			logger.error("ServicioServidorImpl - getServidores:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 
 		}
 	}
@@ -403,7 +420,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 			return getServidorBean(serv);
 		} catch (Exception e) {
 			logger.error("ServicioServidorImpl - loadServidor:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -422,18 +439,18 @@ public class ServicioServidorImpl implements ServicioServidor {
 			for (TblPlanificaciones p : listaPlanificaciones) {
 				p.setModificadopor(modificador);
 				p.setFechamodificacion(new Date());
-				p.setEliminado("S");
+				p.setEliminado(S);
 				tblPlanificacionesManager.updatePlanificacion(p, source, accionPlanificacion, accionIdPlanificacion, descripcion);
 			}
 			
-			servidorTO.setEliminado("S");
+			servidorTO.setEliminado(S);
 			servidorTO.setModificadopor(modificador);
 			servidorTO.setFechamodificacion(new Date());
 			tblServidoresManager.update(servidorTO, source, accionServidor, accionIdServidor);
 
 		} catch (Exception e) {
 			logger.error("ServicioServidorImpl - deleteServidor:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -527,9 +544,9 @@ public class ServicioServidorImpl implements ServicioServidor {
 	@Override
 	public List<ServidorBean> getAllServidoresBBDD() throws BusinessException {
 
-		List<ServidorBean> listAllServidores = new ArrayList<ServidorBean>();
+		List<ServidorBean> listAllServidores = new ArrayList<>();
 		TblServidoresQuery query = new TblServidoresQuery();
-		query.addOrder("nombre", OrderType.ASC);
+		query.addOrder(NOMBRE, OrderType.ASC);
 		List<TblServidores> listaServidores = tblServidoresManager.getServidoresByQuery(query);
 		if (null != listaServidores){
 			for (TblServidores servidor : listaServidores) {
@@ -554,7 +571,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 			query.setOrganismoid(Long.parseLong(idOrganismo));
 			return getListServidorOrganismosBean(tblServidoresOrganismosManager.getServidoresOrganismosByQuery(query));
 		} catch (Exception e) {
-			logger.error("ServicioServidorImpl - getServidorOrganismo:" + e);
+			logger.error(SERVICIOSERVIDO + e);
 		}
 		return new ArrayList<>();
 	}
@@ -588,7 +605,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 				res.add(aux);
 			}
 		} catch (Exception e) {
-			logger.error("ServicioServidorImpl - getServidorOrganismo:" + e);
+			logger.error(SERVICIOSERVIDO + e);
 		}
 
 		return res;
@@ -625,8 +642,8 @@ public class ServicioServidorImpl implements ServicioServidor {
 			soTO.setFechacreacion(new Date());
 			String modificador = PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto();
 			soTO.setCreadopor(modificador);
-			if("ALTA_MASIVA_APLICACION".equals(source)){
-				soTO.setCreadopor("ALTA_MASIVA_APLICACION");
+			if(ALTA_MASIVA_APL.equals(source)){
+				soTO.setCreadopor(ALTA_MASIVA_APL);
 			}
 			tblServidoresOrganismosManager.insert(soTO, source, accion, accionId, descripcion);
 		} catch (Exception e) {
@@ -671,7 +688,7 @@ public class ServicioServidorImpl implements ServicioServidor {
 					descripcion);
 		} catch (Exception e) {
 			logger.error("ServicioServicioImpl - deleteServicioOrganismos:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -719,10 +736,12 @@ public class ServicioServidorImpl implements ServicioServidor {
 					.getOrganismoById(servidorOrganismoTO.getOrganismoid()).getOrganismoid() : null);
 			so.setProveedorPasswordSMS(servidorOrganismoTO.getProveedorpasswordsms());
 			so.setProveedorUsuarioSMS(servidorOrganismoTO.getProveedorusuariosms());
-			so.setServidorId((null != servidorOrganismoTO.getServidorid())? tblServidoresManager.getServidorById(servidorOrganismoTO.getServidorid()).getServidorid() : null);
+			so.setServidorId((null != 
+				servidorOrganismoTO.getServidorid())? tblServidoresManager.getServidorById(servidorOrganismoTO.getServidorid()).getServidorid() : null);
 			so.setServidorOrganismoId((null != servidorOrganismoTO.getServidororganismoid())? servidorOrganismoTO.getServidororganismoid() : null);
-		} else
+		} else {
 			return null;
+		}
 		return so;
 	}
 

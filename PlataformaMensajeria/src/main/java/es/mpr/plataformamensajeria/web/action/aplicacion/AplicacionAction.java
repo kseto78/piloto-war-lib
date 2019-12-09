@@ -56,6 +56,30 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class AplicacionAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable, Serializable {
 
+	protected static final String LOGDOTACCION_DE = "log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String LOGDOTACCION_DE0 = "log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO";
+
+	protected static final String TRUE = "true";
+
+	protected static final String APLICACIONACTIO = "AplicacionAction - loadSeviciosAplicacion:";
+
+	protected static final String R_CONST_REF = "20";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ELIMINAR";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String APLICACIONACTIO0 = "AplicacionAction - load:";
+
+	protected static final String LOGDOTSOURCE_AP = "log.SOURCE_APLICACIONES";
+
+	protected static final String LOGDOTACCION_EL = "log.ACCION_ELIMINAR";
+
+	protected static final String LOGDOTACCIONID_0 = "log.ACCIONID_ACTUALIZAR";
+
 	/** Constante GENERALES_REQUEST_ATTRIBUTE_PAGESIZE. */
 	private static final String GENERALES_REQUEST_ATTRIBUTE_PAGESIZE = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
 
@@ -170,6 +194,9 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	@SuppressWarnings("rawtypes")
 	private Map session;
 
+	/**  detalle aplicacion. */
+	private DetalleAplicacionBean detalleAplicacion;
+
 	/**
 	 * New search.
 	 *
@@ -189,42 +216,48 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	/////MIGRADO
 	public String search() throws BaseException {
 		
-		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null) {
 			return NO_USER;
+		}
 		
-		int page = getPage(AplicacionAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(AplicacionAction.TABLE_ID); // Ordenar de modo ascendente o
+		int page = getPage(AplicacionAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(AplicacionAction.TABLE_ID); 
+		// Ordenar de modo ascendente o
 
 											// descendente
-		String columnSort = getColumnSort(AplicacionAction.TABLE_ID); // Columna usada para
+		String columnSort = getColumnSort(AplicacionAction.TABLE_ID); 
+		// Columna usada para
 														// ordenar
 
 		if (aplicacion != null){
-			if (aplicacion.getNombre() != null && aplicacion.getNombre().length() <= 0)
+			if (aplicacion.getNombre() != null && aplicacion.getNombre().isEmpty()) {
 				aplicacion.setNombre(null);
-			if (aplicacion.getAplicacionId() != null && aplicacion.getAplicacionId() <= 0)
+			}
+			if (aplicacion.getAplicacionId() != null && aplicacion.getAplicacionId() <= 0) {
 				aplicacion.setAplicacionId(null);
+			}
 		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, R_CONST_REF));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<AplicacionBean> result = servicioAplicacion.getAplicaciones(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, R_CONST_REF)), order,
 				columnSort, aplicacion);
 		Integer totalSize = result.getTotalList();
 
 		listaAplicaciones = result.getPageList();
 
 		// Atributos de request
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, R_CONST_REF)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaAplicaciones != null && !listaAplicaciones.isEmpty()) {
-			for (int indice = 0; indice < listaAplicaciones.size(); indice++) {
+			for (int indice = 0, s = listaAplicaciones.size(); indice < s; indice++) {
 
 				AplicacionBean apli = listaAplicaciones.get(indice);
 				apli.setNombre(StringEscapeUtils.escapeHtml(apli.getNombre()));
@@ -242,37 +275,41 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return NO_USER;
 		}
-		int page = getPage(AplicacionAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(AplicacionAction.TABLE_ID); // Ordenar de modo ascendente o
+		int page = getPage(AplicacionAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(AplicacionAction.TABLE_ID); 
+		// Ordenar de modo ascendente o
 											// descendente
-		String columnSort = getColumnSort(AplicacionAction.TABLE_ID); // Columna usada para
+		String columnSort = getColumnSort(AplicacionAction.TABLE_ID); 
+		// Columna usada para
 														// ordenar
 
-		if (aplicacion != null)
-			if (aplicacion.getNombre() != null && aplicacion.getNombre().length() <= 0)
-				aplicacion.setNombre(null);
+		if (aplicacion != null && aplicacion.getNombre() != null && aplicacion.getNombre().isEmpty()) {
+			aplicacion.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, R_CONST_REF));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 		PaginatedList<AplicacionBean> result = servicioAplicacion.getAplicaciones(inicio,
-				(export) ? -1 : Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")), order,
+				export ? -1 : Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, R_CONST_REF)), order,
 				columnSort, aplicacion);
 		Integer totalSize = result.getTotalList();
 
 		listaAplicaciones = result.getPageList();
 
-		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(AplicacionAction.GENERALES_PAGESIZE, R_CONST_REF)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(AplicacionAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaAplicaciones != null && !listaAplicaciones.isEmpty()) {
-			for (int indice = 0; indice < listaAplicaciones.size(); indice++) {
+			for (int indice = 0, s = listaAplicaciones.size(); indice < s; indice++) {
 
 				AplicacionBean aplicacion = listaAplicaciones.get(indice);
 				aplicacion.setNombre(StringEscapeUtils.escapeHtml(aplicacion.getNombre()));
@@ -292,22 +329,25 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	public String create() throws BaseException {
 		String accion = properties.getProperty("log.ACCION_INSERTAR", null);
 		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_INSERTAR", null));
-		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
+		String source = properties.getProperty(LOGDOTSOURCE_AP, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return NO_USER;
 		}
 		if (aplicacion != null) {
 
-			if (newActivo != null && newActivo.equals("true")) {
+			if (newActivo != null && TRUE.equals(newActivo)) {
 				aplicacion.setActivo(true);
 			} else {
 				aplicacion.setActivo(false);
 			}
-			if (!validPasswords(aplicacion) || !validaObligatorios(aplicacion, false))
+			if (!validPasswords(aplicacion) || !validaObligatorios(aplicacion, false)) {
 				return ERROR;
-			aplicacion.setPassword(Base64.encode(aplicacion.getPassword().trim().getBytes())); // Eliminamos los espacios
+			}
+			aplicacion.setPassword(Base64.encode(aplicacion.getPassword().trim().getBytes())); 
+			// Eliminamos los espacios
 			
 			Integer idAplicacion = servicioAplicacion.newAplicacion(aplicacion, source, accion, accionId);
 			this.idAplicacion = idAplicacion.toString();
@@ -329,11 +369,12 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	//////MIGRADO
 	public String update() throws BaseException {
 		String accion = properties.getProperty(AplicacionAction.LOG_ACCION_ACTUALIZAR, null);
-		Long accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
+		Long accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		String source = properties.getProperty(LOGDOTSOURCE_AP, null);
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return NO_USER;
 		}
 		AplicacionBean aplicacionBBDD = null;
@@ -344,14 +385,14 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 			
 			if (aplicacion.getAplicacionId() == null) {
 				if (idAplicacion != null) {
-					aplicacion.setAplicacionId(new Integer(idAplicacion));
+					aplicacion.setAplicacionId(Integer.valueOf(idAplicacion));
 					aplicacionBBDD = servicioAplicacion.loadAplicacion(aplicacion);
 				} else {
 					String idAplicacion = (String) request.getAttribute("idAplicacion");
 					logger.info("[ServidoresAction - request.getAttribute('idAplicacion)' == " + idAplicacion);
 					
 					if (idAplicacion != null) {
-						aplicacion.setId(new Long(idAplicacion));
+						aplicacion.setId(Long.valueOf(idAplicacion));
 						aplicacionBBDD = servicioAplicacion.loadAplicacion(aplicacion);
 					}
 				}
@@ -372,15 +413,9 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 				aplicacionBBDD.setRespTecnicoEmail(aplicacion.getRespTecnicoEmail());
 				aplicacionBBDD.setRespTecnicoNombre(aplicacion.getRespTecnicoNombre());
 
-//				String oldPass = "";
-//				try {
-//					byte[] oldPassByte = Base64.decode(aplicacionBBDD.getPassword());
-//					oldPass = new String(oldPassByte);
-//				} catch (Exception e) {
-//					logger.error("AplicacionAction - update:", e);
-//				}
 				if (null != aplicacion.getPassword()) {
-					aplicacionBBDD.setPassword(Base64.encode(aplicacion.getPassword().trim().getBytes())); // Eliminamos espacios
+					aplicacionBBDD.setPassword(Base64.encode(aplicacion.getPassword().trim().getBytes())); 
+					// Eliminamos espacios
 				}
 				if (!validPasswords(aplicacion)) {
 					return SUCCESS;
@@ -407,25 +442,26 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("AplicacionAction - load:" + e);
+			logger.error(APLICACIONACTIO0 + e);
 			return NO_USER;
 		}
-		if (idAplicacion == null)
+		if (idAplicacion == null) {
 			throw new BusinessException("EL idAplicacion recibido es nulo");
+		}
 		try {
 			aplicacion = new AplicacionBean();
-			aplicacion.setAplicacionId(Integer.parseInt((idAplicacion)));
+			aplicacion.setAplicacionId(Integer.parseInt(idAplicacion));
 			aplicacion = servicioAplicacion.loadAplicacion(aplicacion);
 			try {
 				aplicacion.setPassword(new String(Base64.decode(aplicacion.getPassword())));
 			} catch (Exception e) {
-				logger.error("AplicacionAction - load:" + e);
+				logger.error(APLICACIONACTIO0 + e);
 			}
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { aplicacion
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { aplicacion
 					.getAplicacionId().toString() });
-			logger.error("AplicacionAction - load:" + e);
+			logger.error(APLICACIONACTIO0 + e);
 			throw new BusinessException(mensg);
 		}
 
@@ -439,20 +475,21 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	////MIGRADO
 	public String delete() throws BaseException {
-		String accionEliminar = properties.getProperty("log.ACCION_ELIMINAR", null);
+		String accionEliminar = properties.getProperty(LOGDOTACCION_EL, null);
 		String accionActualizar = properties.getProperty(AplicacionAction.LOG_ACCION_ACTUALIZAR, null);
-		Long accionIdActualizar = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		Long accionIdEliminar = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String descripcionServicio = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO", null);
-		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
-		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+		Long accionIdActualizar = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		Long accionIdEliminar = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
+		String descripcionServicio = properties.getProperty(LOGDOTACCION_DE0, null);
+		String source = properties.getProperty(LOGDOTSOURCE_AP, null);
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null) {
 			return NO_USER;
+		}
 		if (idAplicacion == null) {
 			addActionErrorSession(this.getText("plataforma.aplicacion.delete.error"));
 		} else {
 			aplicacion = new AplicacionBean();
-			aplicacion.setAplicacionId(new Integer(idAplicacion));
+			aplicacion.setAplicacionId(Integer.valueOf(idAplicacion));
 			
 			servicioAplicacion.deleteAplicacion(aplicacion, source, accionEliminar, accionIdEliminar, descripcionServicio, accionActualizar, accionIdActualizar, descripcionPlanificacion);
 			addActionMessageSession(this.getText("plataforma.aplicacion.delete.ok"));
@@ -469,22 +506,23 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	////MIGRADO
 	public String deleteSelected() throws BaseException {
-		String accionEliminar = properties.getProperty("log.ACCION_ELIMINAR", null);
+		String accionEliminar = properties.getProperty(LOGDOTACCION_EL, null);
 		String accionActualizar = properties.getProperty(AplicacionAction.LOG_ACCION_ACTUALIZAR, null);
-		Long accionIdActualizar = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-		Long accionIdEliminar = Long.parseLong(properties.getProperty("log.ACCIONID_ELIMINAR", null));
-		String descripcionPlanificacion = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION", null);
-		String descripcionServicio = properties.getProperty("log.ACCION_DESCRIPCION_ELIMINAR_SERVIDOR_SERVICIO", null);
-		String source = properties.getProperty("log.SOURCE_APLICACIONES", null);
-		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+		Long accionIdActualizar = Long.parseLong(properties.getProperty(LOGDOTACCIONID_0, null));
+		Long accionIdEliminar = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+		String descripcionPlanificacion = properties.getProperty(LOGDOTACCION_DE, null);
+		String descripcionServicio = properties.getProperty(LOGDOTACCION_DE0, null);
+		String source = properties.getProperty(LOGDOTSOURCE_AP, null);
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null) {
 			return NO_USER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.aplicacion.deleteSelected.error"));
 
 		} else {
 			for (String idAplicacion : checkDelList) {
 				aplicacion = new AplicacionBean();
-				aplicacion.setAplicacionId(new Integer(idAplicacion));
+				aplicacion.setAplicacionId(Integer.valueOf(idAplicacion));
 				servicioAplicacion.deleteAplicacion(aplicacion, source, accionEliminar, accionIdEliminar, descripcionServicio, accionActualizar, accionIdActualizar, descripcionPlanificacion);
 			}
 			addActionMessageSession(this.getText("plataforma.aplicacion.deleteSelected.ok"));
@@ -504,25 +542,26 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	///MIGRADO
 	public String loadDetalleAplicacion() throws BusinessException, IllegalAccessException, InvocationTargetException {
-		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null) {
 			return NO_USER;
+		}
 		AplicacionBean detalleApp = new AplicacionBean();
 		DetalleAplicacionBean detalle = new DetalleAplicacionBean();
 		if (idAplicacion != null) {
-			detalleApp.setAplicacionId(new Integer(idAplicacion));
+			detalleApp.setAplicacionId(Integer.valueOf(idAplicacion));
 			detalleApp = servicioAplicacion.loadAplicacion(detalleApp);
 			List<UsuarioAplicacionBean> listaUsuariosAplicacion = servicioUsuarioAplicacion
-					.getUsuarioAplicacionesByAplicacionId(new Integer(idAplicacion));
+					.getUsuarioAplicacionesByAplicacionId(Integer.valueOf(idAplicacion));
 			
 			detalle = getDetalleBean(detalle, detalleApp, listaUsuariosAplicacion);
 			
 			List<ServicioBean> listServicioBean = servicioServicio
 					.getServiciosByAplicacionId(detalle.getAplicacionId().intValue());
-			if (listServicioBean != null)
+			if (listServicioBean != null) {
 				for (ServicioBean ser : listServicioBean) {
 					DetalleServicioBean serBean = new DetalleServicioBean();
 					BeanUtils.copyProperties(serBean, ser);
-					serBean.setActivo(true);//ser.getActivo());
+					serBean.setActivo(true);
 					serBean.setFechacreacion(ser.getFechacreacion());
 					serBean.setFechamodificacion(ser.getFechamodificacion());
 					serBean.setFrommail(ser.getFrommail());
@@ -535,6 +574,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 					serBean.setListaPlanificaciones(planificacionesList);
 					detalle.addDetalleServicio(serBean);
 				}
+			}
 
 			detalleAplicacion = detalle;
 
@@ -573,21 +613,17 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	////MIGRADO
 	private List<ServicioBean> loadSeviciosAplicacion() {
 		List<ServicioBean> lista = null;
-		if (idAplicacion != null && idAplicacion.length() > 0) {
+		if (idAplicacion != null && !idAplicacion.isEmpty()) {
 			try {
-				lista = servicioServicio.getServiciosByAplicacionId(new Integer(idAplicacion));
-			} catch (NumberFormatException e) {
-				logger.error("AplicacionAction - loadSeviciosAplicacion:" + e);
-			} catch (BusinessException e) {
-				logger.error("AplicacionAction - loadSeviciosAplicacion:" + e);
+				lista = servicioServicio.getServiciosByAplicacionId(Integer.valueOf(idAplicacion));
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(APLICACIONACTIO + e);
 			}
 		} else if (aplicacion != null && aplicacion.getAplicacionId() != null) {
 			try {
-				lista = servicioServicio.getServiciosByAplicacionId(new Long(aplicacion.getAplicacionId()).intValue());
-			} catch (NumberFormatException e) {
-				logger.error("AplicacionAction - loadSeviciosAplicacion:" + e);
-			} catch (BusinessException e) {
-				logger.error("AplicacionAction - loadSeviciosAplicacion:" + e);
+				lista = servicioServicio.getServiciosByAplicacionId(Long.valueOf(aplicacion.getAplicacionId()).intValue());
+			} catch (NumberFormatException | BusinessException e) {
+				logger.error(APLICACIONACTIO + e);
 			}
 		}
 		return lista;
@@ -601,13 +637,15 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	////MIGRADO
 	public String loadPlanificaciones() throws BaseException {
-		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(AplicacionAction.INFO_USER) == null) {
 			return NO_USER;
-		if (idPlanificacion == null)
+		}
+		if (idPlanificacion == null) {
 			throw new BusinessException("EL idPlanificacion recibido es nulo");
+		}
 		try {
 			planificacion = new PlanificacionBean();
-			planificacion.setPlanificacionId(new Integer(idPlanificacion));
+			planificacion.setPlanificacionId(Integer.valueOf(idPlanificacion));
 			planificacion = servicioPlanificacion.loadPlanificacion(planificacion);
 			servicio = new ServicioBean();
 			if (planificacion.getServicioId() != null) {
@@ -615,14 +653,14 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 				servicio = servicioServicio.loadServicio(servicio);
 			}
 			String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-			if ((rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)||PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario)) {
 				comboServidores = loadComboServidores();
-			} else if (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_PROPIETARIO)) {
+			} else if (PlataformaMensajeriaUtil.ROL_PROPIETARIO.equals(rolUsuario)) {
 				comboServidores = loadComboServidoresServicio(servicio.getServicioId());
 			}
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { planificacion
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { planificacion
 					.getPlanificacionId().toString() });
 			logger.error("AplicacionAction - loadPlanificaciones:" + e);
 			throw new BusinessException(mensg);
@@ -637,7 +675,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	////MIGRADO
 	private List<KeyValueObject> loadComboServidores() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
 		ArrayList<ServidorBean> keys = null;
 		try {
@@ -679,7 +717,7 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	 */
 	////MIGRADO
 	private List<KeyValueObject> loadComboServidoresServicio(Integer servicioId) throws BusinessException {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option;
 
 		ArrayList<ServidoresServiciosBean> keys = null;
@@ -774,15 +812,15 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 			sw = false;
 		}
 		if (PlataformaMensajeriaUtil.isEmpty(aplicacion2.getRePassword())
-				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && checkPassword.equals("true")) {
+				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && TRUE.equals(checkPassword)) {
 			addFieldErrorSession(this.getText("plataforma.aplicacion.field.rePassword"));
 			sw = false;
 		}
 		// Eliminamos los espacios
 		if (!PlataformaMensajeriaUtil.isEmpty(aplicacion2.getPassword())
 				&& !PlataformaMensajeriaUtil.isEmpty(aplicacion2.getRePassword())
-				&& !(aplicacion2.getPassword().trim().equals(aplicacion2.getRePassword().trim()))
-				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && checkPassword.equals("true")) {
+				&& !aplicacion2.getPassword().trim().equals(aplicacion2.getRePassword().trim())
+				&& !PlataformaMensajeriaUtil.isEmpty(checkPassword) && TRUE.equals(checkPassword)) {
 			addFieldErrorSession(this.getText("plataforma.aplicacion.passwords.error"));
 			sw = false;
 		}
@@ -937,9 +975,6 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	public void setServicioUsuarioAplicacion(ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		this.servicioUsuarioAplicacion = servicioUsuarioAplicacion;
 	}
-
-	/**  detalle aplicacion. */
-	private DetalleAplicacionBean detalleAplicacion;
 
 	/**
 	 * Obtener detalle aplicacion.

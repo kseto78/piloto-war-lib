@@ -47,6 +47,24 @@ import es.mpr.plataformamensajeria.util.TituloEstadisticasParser;
 @Scope("prototype")
 public class HomeAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String PLATAFORMAMENSA = "PlataformaMensajeriaUtil.ID_ROL_USUARIO_PLATAFORMA";
+
+	protected static final String DOT = "###,###.##";
+
+	protected static final String PASS = "password";
+
+	protected static final String PLATAFORMAMENSA0 = "PlataformaMensajeriaUtil.ID_USUARIO_LOGUEADO";
+
+	protected static final String MOCKUSER = "mockUser";
+
+	protected static final String PLATAFORMAMENSA1 = "PlataformaMensajeriaUtil.USERNAME";
+
+	protected static final String PLATAFORMAMENSA2 = "PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA";
+
+	protected static final String PRUEBAS = "pruebas";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +95,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 
 	/**  combo anyos. */
 	// Combos
-	List<KeyValueObject> comboAnyos = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboAnyos = new ArrayList<>();
 
 	/**  lista envios pendientes canal. */
 	// Listados
@@ -122,126 +140,39 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 //////Migrado
 	public String infoHome() throws BaseException {
 		
-		if(getRequest().getParameter("mockUser")!=null) {
-			if(getRequest().getParameter("mockUser").equals(properties.getProperty("key.random", "bhk2460u44m8rwea"))) {
+		if(getRequest().getParameter(MOCKUSER)!=null) {
+			if(getRequest().getParameter(MOCKUSER).equals(properties.getProperty("key.random", "bhk2460u44m8rwea"))) {
 				mockAdminUser();
-			} else if (getRequest().getParameter("mockUser").equals("mockAppUser")) {
+			} else if ("mockAppUser".equals(getRequest().getParameter(MOCKUSER))) {
 				mockApplicationUser();
 			}
 		}
 		
 		//Se comenta hasta reestructurar la Home
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
 			return "noUser";
+		}
 		SimpleDateFormat sdfInicio = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		logger.info("### INFO HOME ### INICIO: " + sdfInicio.format(Calendar.getInstance().getTime()));
-//		int page = getPage("tableId");
-//		int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZEHOME", "10"));
 //		
 //		// ///////////////////////////////////////////
 //		// Obtenemos el listado de Mensajes Pendientes
 //		// ///////////////////////////////////////////
-//		logger.info("### INFO HOME ### INICIO EnviosPendientesCanal: " + sdfInicio.format(Calendar.getInstance().getTime()));
-//		listaEnviosPendientesCanal = serviciosListadoHome.getEnviosPendientesCanal();
-//		logger.info("### INFO HOME ### FIN    EnviosPendientesCanal: " + sdfInicio.format(Calendar.getInstance().getTime()));
-//		if (listaEnviosPendientesCanal != null) {
-//			for (EnviosPendientesCanalBean envioPendiente : listaEnviosPendientesCanal) {
-//				totalesEmail += envioPendiente.getEmail();
-//				totalesSMS += envioPendiente.getSms();
-//				totalesRecepcionSMS += envioPendiente.getRecepcionSMS();
-//				totalesPush += envioPendiente.getPush();
-//			}
-//		}
-//		if (listaEnviosPendientesCanal != null && listaEnviosPendientesCanal.size() < 4) {
-//			int size = listaEnviosPendientesCanal.size();
-//			for (int i = size; i < 4; i++) {
-//				EnviosPendientesCanalBean envioPendienteVacio = new EnviosPendientesCanalBean();
-//				envioPendienteVacio.setAplicacion("");
-//				envioPendienteVacio.setEmail(0);
-//				envioPendienteVacio.setSms(0);
-//				envioPendienteVacio.setRecepcionSMS(0);
-//				envioPendienteVacio.setPush(0);
-//				listaEnviosPendientesCanal.add(envioPendienteVacio);
-//			}
-//		}
 //		// ///////////////////////////////////////////
 //		// Obtenemos el listado de Uso Servidores
 //		// ///////////////////////////////////////////
-//		if (null == filtroAnyo || filtroAnyo.isEmpty()) {
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-//			String anyoActual = sdf.format(new Date());
-//			this.filtroAnyo = anyoActual;
-//		}
-//		if (null == filtroMes || filtroMes.isEmpty()) {
-//			SimpleDateFormat sdf = new SimpleDateFormat("M");
-//			String mesActual = sdf.format(new Date());
-//			this.filtroMes = mesActual;
-//		}
 //		// ///////////////////////////////////////////
 //		// Obtenemos el listado de Uso Servidores
 //		// ///////////////////////////////////////////
-//		if (null == filtroAnyoLotes || filtroAnyoLotes.isEmpty()) {
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-//			String anyoActual = sdf.format(new Date());
-//			this.filtroAnyoLotes = anyoActual;
-//		}
-//		if (null == filtroMesLotes || filtroMesLotes.isEmpty()) {
-//			SimpleDateFormat sdf = new SimpleDateFormat("M");
-//			String mesActual = sdf.format(new Date());
-//			this.filtroMesLotes = mesActual;
-//		}
-//		logger.info("### INFO HOME ### INICIO UsoServidores: " + sdfInicio.format(Calendar.getInstance().getTime()));
-//		if(filtroAnyo != null && filtroMes != null){
-//			listaUso = serviciosListadoHome.getUsoServidoresBean(filtroAnyo, filtroMes);
-//		}
-//		logger.info("### INFO HOME ### FIN    UsoServidores: " + sdfInicio.format(Calendar.getInstance().getTime()));
 //		// Caluclar listados usos servidores, proveedores, receptores y
 //		// servidores push.
-//		listaUsoServidores = new ArrayList<UsoServidoresBean>();
-//		listaUsoProveedores = new ArrayList<UsoServidoresBean>();
-//		listaUsoReceptores = new ArrayList<UsoServidoresBean>();
-//		listaUsoServidoresPush = new ArrayList<UsoServidoresBean>();
-//		for (UsoServidoresBean uso : listaUso) {
-//			if (uso.getTipoServidor() == 1) {
-//				listaUsoServidores.add(uso);
-//			}
-//			if (uso.getTipoServidor() == 2) {
-//				listaUsoProveedores.add(uso);
-//			}
-//			if (uso.getTipoServidor() == 3) {
-//				listaUsoReceptores.add(uso);
-//			}
-//			if (uso.getTipoServidor() == 4) {
-//				listaUsoServidoresPush.add(uso);
-//			}
-//		}
 //		// ///////////////////////////////////////////
 //		// Obtenemos el listado de Alertas
 //		// ///////////////////////////////////////////
-//		logger.info("### INFO HOME ### INICIO EstadoLotesEnvios: " + sdfInicio.format(Calendar.getInstance().getTime()));
 //		PaginatedList<EstadoLotesEnviosBean> result = serviciosListadoHome.getEstadosLotesEnvios(inicio, Integer.parseInt(properties.getProperty("generales.PAGESIZEHOME", "10")),
-//				filtroAnyoLotes, filtroMesLotes);
-//		logger.info("### INFO HOME ### FIN EstadoLotesEnvios: " + sdfInicio.format(Calendar.getInstance().getTime()));
-//		Integer totalSize = result.getTotalList();
 //
-//		listadoEstadosLotesEnvios = result.getPageList();
-//		if (listadoEstadosLotesEnvios != null && listadoEstadosLotesEnvios.size() < 10) {
-//			int i = listadoEstadosLotesEnvios.size();
-//			for (int j = i; j <= 10; j++) {
-//				EstadoLotesEnviosBean estadoBean = new EstadoLotesEnviosBean();
-//				listadoEstadosLotesEnvios.add(estadoBean);
-//			}
-//		} else if (listadoEstadosLotesEnvios == null) {
-//			listadoEstadosLotesEnvios = new ArrayList<EstadoLotesEnviosBean>();
-//			for (int j = 0; j < 10; j++) {
-//				EstadoLotesEnviosBean estadoBean = new EstadoLotesEnviosBean();
-//				listadoEstadosLotesEnvios.add(estadoBean);
-//			}
-//		}
 
-//		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE",null), totalSize);
 
-//		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE",null), Integer.parseInt(properties.getProperty("generales.PAGESIZEHOME", "10")));
 
 		logger.info("### INFO HOME ### FIN: " + sdfInicio.format(Calendar.getInstance().getTime()));
 		return SUCCESS;
@@ -255,24 +186,24 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
     	Integer idUsuario = 341;
     	String userName="11111111H";
     	
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null), 
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA2,null), 
     	properties.getProperty("PlataformaMensajeriaUtil.ROL_ADMINISTRADOR",null));
 
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ID_ROL_USUARIO_PLATAFORMA",null), rolUsuarioId);
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ID_USUARIO_LOGUEADO",null), idUsuario);
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA,null), rolUsuarioId);
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA0,null), idUsuario);
 
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.USERNAME",null), userName);
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA1,null), userName);
     	
     	User060VO usuario = new User060VO();
 		usuario.setUsername(userName);
 		usuario.setNombre("Juan");
 		usuario.setApellidos("Ejemplo");
 		
-		MapUser springUser = new MapUser(userName, "password", true, getAuthoritiesMock(usuario, rolUsuarioId), usuario);
+		MapUser springUser = new MapUser(userName, PASS, true, getAuthoritiesMock(usuario, rolUsuarioId), usuario);
 //		        
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(springUser, null, getAuthoritiesMock(usuario, rolUsuarioId), null, null, null, null, null));
 //		        
-        request.getSession().setAttribute("infoUser", springUser);
+        request.getSession().setAttribute(INFOUSER, springUser);
 		
 	}
 	
@@ -282,30 +213,30 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 	private void mockApplicationUser () {
 		Integer rolUsuarioId = 2;
     	Integer idUsuario = 321;
-    	String userName="pruebas";
+    	String userName=PRUEBAS;
     	
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ROL_USUARIO_PLATAFORMA",null), 
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA2,null), 
     	properties.getProperty("PlataformaMensajeriaUtil.ROL_PROPIETARIO",null));
 
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ID_ROL_USUARIO_PLATAFORMA",null), rolUsuarioId);
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ID_USUARIO_LOGUEADO",null), idUsuario);
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA,null), rolUsuarioId);
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA0,null), idUsuario);
 
-    	request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.USERNAME",null), userName);
+    	request.getSession().setAttribute(properties.getProperty(PLATAFORMAMENSA1,null), userName);
     	
     	User060VO usuario = new User060VO();
 		usuario.setUsername(userName);
-		usuario.setNombre("pruebas");
+		usuario.setNombre(PRUEBAS);
 		usuario.setApellidos("PRUEBAS");
 		
-		MapUser springUser = new MapUser(userName, "password", true, getAuthoritiesMock(usuario, rolUsuarioId), usuario);
+		MapUser springUser = new MapUser(userName, PASS, true, getAuthoritiesMock(usuario, rolUsuarioId), usuario);
 //		        
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(springUser, null, getAuthoritiesMock(usuario, rolUsuarioId), null, null, null, null, null));
 //		        
-        request.getSession().setAttribute("infoUser", springUser);
+        request.getSession().setAttribute(INFOUSER, springUser);
         
           
-        List<String> arrayOrganismos = new ArrayList<String>();
-    	arrayOrganismos.add("AEAT1");   			    			
+        List<String> arrayOrganismos = new ArrayList<>();
+    	arrayOrganismos.add("L01471868");   			    			
 		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ARRAY_ORGANISMOS",null), arrayOrganismos);
 		
 		request.getSession().setAttribute(properties.getProperty("PlataformaMensajeriaUtil.ES_AEAT",null), "OK");
@@ -319,7 +250,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
  */
 //////Migrado
 	public List<KeyValueObject> getComboAnyos() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option = null;
 		ArrayList<String> listaAnyos = PlataformaMensajeriaUtil.getYears(properties.getProperty("home.startyear", "2012"), properties.getProperty("home.endyear", ""));
 		for (String anyo : listaAnyos) {
@@ -338,7 +269,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
  */
 //////Migrado
 	public List<KeyValueObject> getComboMeses() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 		KeyValueObject option = null;
 		ArrayList<String> listaMeses = TituloEstadisticasParser.getMesesFullName();
 		for (String string : listaMeses) {
@@ -413,7 +344,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 	 * @return totales email
 	 */
 	public String getTotalesEmail() {
-		DecimalFormat formateador = new DecimalFormat("###,###.##");
+		DecimalFormat formateador = new DecimalFormat(DOT);
 		return formateador.format(totalesEmail);
 	}
 
@@ -432,7 +363,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 	 * @return totales SMS
 	 */
 	public String getTotalesSMS() {
-		DecimalFormat formateador = new DecimalFormat("###,###.##");
+		DecimalFormat formateador = new DecimalFormat(DOT);
 		return formateador.format(totalesSMS);
 
 	}
@@ -461,7 +392,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 	 * @return totales recepcion SMS
 	 */
 	public String getTotalesRecepcionSMS() {
-		DecimalFormat formateador = new DecimalFormat("###,###.##");
+		DecimalFormat formateador = new DecimalFormat(DOT);
 		return formateador.format(totalesRecepcionSMS);
 	}
 
@@ -542,6 +473,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 	 */
 	@Override
 	public void prepare() throws Exception {
+		// This method has to be empty.
 		
 	}
 	
@@ -552,8 +484,7 @@ public class HomeAction extends PlataformaPaginationAction implements ServletReq
 	 * @param rolUsuarioId the rol usuario id
 	 * @return authorities mock
 	 */
-	private List<GrantedAuthority> getAuthoritiesMock(User060VO usuario, Integer rolUsuarioId)
-	  {
+	private List<GrantedAuthority> getAuthoritiesMock(User060VO usuario, Integer rolUsuarioId) {
 	    List<GrantedAuthority> authList = new ArrayList<>(2);
 	    
 	    authList.add(new GrantedAuthorityImpl("ROLE_"));

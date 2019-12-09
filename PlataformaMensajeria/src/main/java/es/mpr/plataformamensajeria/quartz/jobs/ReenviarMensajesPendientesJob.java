@@ -64,6 +64,36 @@ import es.mpr.plataformamensajeria.web.action.servicios.SendMailService;
  */
 @Service("reenviarMensajesPendientesJob")
 public class ReenviarMensajesPendientesJob implements Job{
+	protected static final String MENSAJE_REF = "Mensaje ";
+
+	protected static final String EN_EJECUCIONDOT = "En ejecucion...";
+
+	protected static final String LOGDOTACCION_AC = "log.ACCION_ACTUALIZAR";
+
+	protected static final String REENVIARMENSAJE = "ReenviarMensajesPendientesJob";
+
+	protected static final String REENVIARMENSAJE0 = "[ReenviarMensajesPendientesJob] Error ReenviarMensajesPendientes";
+
+	protected static final String BLANK_REF = " - ";
+
+	protected static final String FINALIZADO = "Finalizado";
+
+	protected static final String TBLPARAMETROSSE = "tblParametrosServidorManagerImpl";
+
+	protected static final String MESSAGESENDER = "messageSender";
+
+	protected static final String LOGDOTSOURCE_RE = "log.SOURCE_REENVIOJOBS";
+
+	protected static final String HYPHEN_REF = "------------------";
+
+	protected static final String TBLMENSAJESMANA = "TblMensajesManagerImpl";
+
+	protected static final String TBLPROCESOSMANA = "TblProcesosManagerImpl";
+
+	protected static final String TBLDESTINATARIO = "TblDestinatariosMensajesManagerImpl";
+
+	protected static final String LOGDOTACCIONID_REF = "log.ACCIONID_ACTUALIZAR";
+
 	private static final Logger LOG = Logger.getLogger(ReenviarMensajesPendientesJob.class);
 
 	@Autowired
@@ -72,16 +102,16 @@ public class ReenviarMensajesPendientesJob implements Job{
 	@Autowired
 	private ErroresManager erroresManager;
 
-	@Resource(name = "TblMensajesManagerImpl")
+	@Resource(name = TBLMENSAJESMANA)
 	private TblMensajesManager tblMensajesManager;
 	
-	@Resource(name = "tblParametrosServidorManagerImpl")
+	@Resource(name = TBLPARAMETROSSE)
 	private TblParametrosServidorManagerImpl tblParametrosServidorManager;
 
-	@Resource(name = "TblDestinatariosMensajesManagerImpl")
+	@Resource(name = TBLDESTINATARIO)
 	private TblDestinatariosMensajesManager tblDestinatariosMensajesManager;
 	
-	@Resource(name = "TblProcesosManagerImpl")
+	@Resource(name = TBLPROCESOSMANA)
 	private TblProcesosManager tblProcesosManager;
 	
 	/**  servicio proceso historicos. */
@@ -90,7 +120,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 	@Resource
 	ConnectionFactory pooledConnectionFactory;
 	
-	@Resource(name = "messageSender")
+	@Resource(name = MESSAGESENDER)
 	private SIMMessageSender sender;
 	
 	/**  estado proceso ok. */
@@ -133,22 +163,22 @@ public class ReenviarMensajesPendientesJob implements Job{
 			ApplicationContext applicationContext = (ApplicationContext) schedulerContext.get("applicationContext");
 			this.inicializarVariables(applicationContext);
 			
-			accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-			accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-			source = properties.getProperty("log.SOURCE_REENVIOJOBS", null);
+			accion = properties.getProperty(LOGDOTACCION_AC, null);
+			accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+			source = properties.getProperty(LOGDOTSOURCE_RE, null);
 			
 
 			TblProcesosQuery query = new TblProcesosQuery();
-			query.setNombreClase("ReenviarMensajesPendientesJob");
+			query.setNombreClase(REENVIARMENSAJE);
 			
 			proceso = tblProcesosManager.getProcesosByQuery(query);
 				
-			if(proceso.get(0).getEstado().equals("En ejecucion...")){
+			if(EN_EJECUCIONDOT.equals(proceso.get(0).getEstado())){
 				return;
 			}
 			
 			proceso.get(0).setInicioUltimaEjecucion(new Date());
-			proceso.get(0).setEstado("En ejecucion...");
+			proceso.get(0).setEstado(EN_EJECUCIONDOT);
 			tblProcesosManager.update(proceso.get(0), source, accion, accionId);
 			
 			
@@ -160,11 +190,11 @@ public class ReenviarMensajesPendientesJob implements Job{
 		try{
 			ejecutar();
 		}catch (Exception ex){
-			LOG.error("[ReenviarMensajesPendientesJob] Error ReenviarMensajesPendientes" , ex);
+			LOG.error(REENVIARMENSAJE0 , ex);
 			
 		}finally{
 			proceso.get(0).setFinUltimaEjecucion(new Date());
-			proceso.get(0).setEstado("Finalizado");
+			proceso.get(0).setEstado(FINALIZADO);
 			tblProcesosManager.update(proceso.get(0), source, accion, accionId);
 		}
 	}
@@ -188,20 +218,20 @@ public class ReenviarMensajesPendientesJob implements Job{
 			jobBean = bean;			
 			datosServicios = servicios;
 			
-			accion = properties.getProperty("log.ACCION_ACTUALIZAR", null);
-			accionId = Long.parseLong(properties.getProperty("log.ACCIONID_ACTUALIZAR", null));
-			source = properties.getProperty("log.SOURCE_REENVIOJOBS", null);
+			accion = properties.getProperty(LOGDOTACCION_AC, null);
+			accionId = Long.parseLong(properties.getProperty(LOGDOTACCIONID_REF, null));
+			source = properties.getProperty(LOGDOTSOURCE_RE, null);
 			
 			TblProcesosQuery query = new TblProcesosQuery();
-			query.setNombreClase("ReenviarMensajesPendientesJob");
+			query.setNombreClase(REENVIARMENSAJE);
 			
 			proceso = tblProcesosManager.getProcesosByQuery(query);
 				
-			if(proceso.get(0).getEstado().equals("En ejecucion...")){
+			if(EN_EJECUCIONDOT.equals(proceso.get(0).getEstado())){
 				return;
 			}		
 			proceso.get(0).setInicioUltimaEjecucion(new Date());
-			proceso.get(0).setEstado("En ejecucion...");
+			proceso.get(0).setEstado(EN_EJECUCIONDOT);
 			tblProcesosManager.update(proceso.get(0), source, accion, accionId);
 						
 		} catch (SchedulerException e) {
@@ -211,11 +241,11 @@ public class ReenviarMensajesPendientesJob implements Job{
 		try{
 			ejecutar();
 		}catch (Exception ex){
-			LOG.error("[ReenviarMensajesPendientesJob] Error ReenviarMensajesPendientes" , ex);
+			LOG.error(REENVIARMENSAJE0 , ex);
 			
 		}finally{
 			proceso.get(0).setFinUltimaEjecucion(new Date());
-			proceso.get(0).setEstado("Finalizado");
+			proceso.get(0).setEstado(FINALIZADO);
 			tblProcesosManager.update(proceso.get(0), source, accion, accionId);
 		}
 
@@ -231,13 +261,13 @@ public class ReenviarMensajesPendientesJob implements Job{
 		try {
 			erroresManager = (ErroresManager) applicationContext.getBean("ErroresManagerImpl");
 			pooledConnectionFactory = (ConnectionFactory) applicationContext.getBean("amqConnectionFactory");
-			sender = (SIMMessageSender) applicationContext.getBean("messageSender");
-			tblDestinatariosMensajesManager = (TblDestinatariosMensajesManager) applicationContext.getBean("TblDestinatariosMensajesManagerImpl");
-			tblMensajesManager = (TblMensajesManager) applicationContext.getBean("TblMensajesManagerImpl");
-			tblProcesosManager = (TblProcesosManager) applicationContext.getBean("TblProcesosManagerImpl");
+			sender = (SIMMessageSender) applicationContext.getBean(MESSAGESENDER);
+			tblDestinatariosMensajesManager = (TblDestinatariosMensajesManager) applicationContext.getBean(TBLDESTINATARIO);
+			tblMensajesManager = (TblMensajesManager) applicationContext.getBean(TBLMENSAJESMANA);
+			tblProcesosManager = (TblProcesosManager) applicationContext.getBean(TBLPROCESOSMANA);
 			serviciosManager = (TblServiciosManagerImpl) applicationContext.getBean("TblServiciosManagerImpl");
 			servicioProcesoHistoricos = (ServicioProcesoHistoricos) applicationContext.getBean("servicioProcesoHistoricosImpl");
-			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean("tblParametrosServidorManagerImpl");
+			tblParametrosServidorManager = (TblParametrosServidorManagerImpl) applicationContext.getBean(TBLPARAMETROSSE);
 			properties = (PlataformaMensajeriaProperties) applicationContext.getBean("plataformaMensajeriaProperties");
 		} catch (Exception objException) {
 			logger.error("RecuperarInforDIRJob - InicializarVariables - Error: " + objException);
@@ -256,24 +286,27 @@ public class ReenviarMensajesPendientesJob implements Job{
 		procesoHistBean.setFechaInicio(new Date());		
 		
 		TblProcesosQuery query = new TblProcesosQuery();
-		query.setNombreClase("ReenviarMensajesPendientesJob");
+		query.setNombreClase(REENVIARMENSAJE);
 		
 		List<TblProcesos> proceso = tblProcesosManager.getProcesosByQuery(query);
 
 		String errorActiveMq = properties.getProperty("conexion.ERRORACTIVEMQ","[ERROR-ACTIVEMQ]");
 		String serviciosExcluidos = "";
-		if(proceso.get(0).getParametro2() != null) serviciosExcluidos = proceso.get(0).getParametro2();
+		if(proceso.get(0).getParametro2() != null) {
+			serviciosExcluidos = proceso.get(0).getParametro2();
+		}
 		Date fechaInicio = null;
 		Date fechaFin = null;
 
-		if (null != jobBean && null != jobBean.getFecha()) {			
+		if (null != jobBean && null != jobBean.getFecha()) {
+				
 			fechaInicio = jobBean.getFecha();			
 		}else{
 			int numeroDiasAtras;
 			if(null != jobBean && jobBean.getParametro1() != null){
-				numeroDiasAtras = Integer.valueOf(jobBean.getParametro1());
+				numeroDiasAtras = Integer.parseInt(jobBean.getParametro1());
 			}else if(tblProcesosManager.getProcesosByQuery(query).get(0).getParametro1() != null){
-				numeroDiasAtras = Integer.valueOf(tblProcesosManager.getProcesosByQuery(query).get(0).getParametro1());
+				numeroDiasAtras = Integer.parseInt(tblProcesosManager.getProcesosByQuery(query).get(0).getParametro1());
 			}else{
 				numeroDiasAtras=7;
 			}			
@@ -291,7 +324,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 			String prefijoNormal = properties.getProperty("activemq.queueNamePrefix", null);
 			String prefijoPremium = properties.getProperty("activemq.premiumQueueName", null);
 			List<String> mensajesConError = new ArrayList<>();
-			HashMap<Long, String> mensajesEnviados = new HashMap<Long, String>();
+			HashMap<Long, String> mensajesEnviados = new HashMap<>();
 			List<String> destinatariosConError = new ArrayList<>();
 			
 			LOG.info("---Inicio JOB ReenviarMensajes---");
@@ -314,6 +347,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 						listaMensajesEncolados = getListaMensajesEncolados(servicioId, prefijoNormal);
 					}
 				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 					for (MensajeJMS mensajeJMS : listaMensajesPendientes) {
 						completarMensajesConError(mensajesConError, destinatariosConError, mensajeJMS);
 					}
@@ -326,8 +360,8 @@ public class ReenviarMensajesPendientesJob implements Job{
 						boolean encolado = false;
 						for (MensajeJMS mensajeJMSEncolado : listaMensajesEncolados) {
 							if(mensajeJMSPendiente.getIdMensaje().equals(mensajeJMSEncolado.getIdMensaje()) 
-									&& (mensajeJMSPendiente.getDestinatarioMensajeId()!=null &&
-											mensajeJMSPendiente.getDestinatarioMensajeId().equals(mensajeJMSEncolado.getDestinatarioMensajeId())
+									&& ((mensajeJMSPendiente.getDestinatarioMensajeId()!=null &&
+											mensajeJMSPendiente.getDestinatarioMensajeId().equals(mensajeJMSEncolado.getDestinatarioMensajeId()))
 											|| (mensajeJMSPendiente.getDestinatarioMensajeId() == null 
 												&& mensajeJMSEncolado.getDestinatarioMensajeId() == null))) {
 								encolado=true;
@@ -335,7 +369,8 @@ public class ReenviarMensajesPendientesJob implements Job{
 							}
 						}
 						if (!encolado) {
-							LOG.info("Mensaje " + mensajeJMSPendiente.getIdMensaje() + " - " + mensajeJMSPendiente.getDestinatarioMensajeId() + " no ha sido encolado previamente.");
+							LOG.info(MENSAJE_REF + 
+								mensajeJMSPendiente.getIdMensaje() + BLANK_REF + mensajeJMSPendiente.getDestinatarioMensajeId() + " no ha sido encolado previamente.");
 							encolarMensaje(servicioId, servicio, mensajeJMSPendiente);
 							if(mensajesEnviados.containsKey(servicioId)){
 								if(!mensajesEnviados.get(servicioId).contains(mensajeJMSPendiente.getIdMensaje())){
@@ -346,34 +381,43 @@ public class ReenviarMensajesPendientesJob implements Job{
 								mensajesEnviados.put(servicioId,mensajeJMSPendiente.getIdMensaje());
 							}							
 							//Comprobamos que si ya se ha actualizado la tabla de errores a true
-							activeMQ = 1;//true
+							activeMQ = 1;
+							//true
 						} else {
-							LOG.info("Mensaje " + mensajeJMSPendiente.getIdMensaje() + " - " + mensajeJMSPendiente.getDestinatarioMensajeId() + " ya ha sido encolado previamente.");
+							LOG.info(MENSAJE_REF + 
+								mensajeJMSPendiente.getIdMensaje() + BLANK_REF + mensajeJMSPendiente.getDestinatarioMensajeId() + " ya ha sido encolado previamente.");
 						} 				
 					}catch (CannotCreateTransactionException e) {
+						logger.error(e.getMessage(), e);
 						//Comprobamos que si ya se ha actualizado la tabla de errores a false
-						activeMQ = 0;//false
+						activeMQ = 0;
+						//false
 					} catch (Exception e) {
 						LOG.error("[ReenviarMensajesPendientesJob] Error al encolarMensaje: " , e);
 						completarMensajesConError(mensajesConError, destinatariosConError, mensajeJMSPendiente);
 					}finally{
 //						Comprobamos que si ya se ha actualizado la tabla de errores
 						LOG.debug("Estamos en ReenviarMensajesPendientesJob-execute");					
-						if (activeMQ == 0){
+						switch (activeMQ) {
+						case 0:
 							if (erroresManager.comprobarActiveMqActivo(false)) {
 								LOG.error(errorActiveMq+" HiloEnviarMensajesPremium.run --Error ActiveMq-- Mensaje: " + mensajeJMSPendiente.getIdMensaje());
 							}
-						}else if (activeMQ == 1){
+							break;
+						case 1:
 							erroresManager.comprobarActiveMqActivo(true);
+							break;
 						}
 					}
 				}
 	
-			}// del for del map
+			}
+			// del for del map
  			
  			
 			
-			if (null != mensajesConError && mensajesConError.size() > 0) {								
+			if (null != mensajesConError && !mensajesConError.isEmpty()) {
+									
 				procesoHistBean.setCodigoEstado(ESTADO_PROCESO_KO);
 				procesoHistBean.setDescripcionEstado("Se han producido fallos en el reenvio job. Para mas informacion, consulte logs.");
 				
@@ -388,10 +432,10 @@ public class ReenviarMensajesPendientesJob implements Job{
 				LOG.info("--- Envio email Job ReenviarMensajesPendientes ---");
 				SendMailService sendMailService = new SendMailService();
 				try {
-					if(mensajesEnviados.size() == 0){
+					if(mensajesEnviados.isEmpty()){
 						descripcionEstado.append("No se ha reenviado ningun mensaje");
 					}
-					if(mensajesEnviados.size() > 0){
+					if(!mensajesEnviados.isEmpty()){
 						descripcionEstado.append("Se han enviado los siguientes mensajes: ");
 						for (Map.Entry<Long, String> entry : mensajesEnviados.entrySet()) {
 							descripcionEstado.append("<br>");
@@ -429,11 +473,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 		} else {
 			maxRetries = Long.parseLong(properties.getProperty("constantes.servicio.numMaxReenvios", null));
 		}
-		boolean premium = false;
-		if (servicio.getPremium() != null && servicio.getPremium()) {
-			premium = true;
-		}
-//		throw new CannotCreateTransactionException("Error manual");
+		boolean premium = servicio.getPremium() != null && servicio.getPremium();
 		LOG.info("Se encola Mensaje:  ---->" + mensajeJMS.getIdMensaje() + " -- DestinatarioMensajeId: " + mensajeJMS.getDestinatarioMensajeId());
 		sender.send(mensajeJMS, maxRetries, servicioId.toString(), premium);
 		
@@ -445,10 +485,10 @@ public class ReenviarMensajesPendientesJob implements Job{
 	 * @param listaMensajes
 	 */
 	private void infoMensajes(Long servicioId, List<MensajeJMS> listaMensajes) {
-		LOG.info("------------------");
+		LOG.info(HYPHEN_REF);
 		LOG.info("SERVICIO ---->" + servicioId);
 		LOG.info("MENSAJES ---->" + listaMensajes.size());
-		LOG.info("------------------");
+		LOG.info(HYPHEN_REF);
 	}
 	
 
@@ -463,15 +503,17 @@ public class ReenviarMensajesPendientesJob implements Job{
 			List<String> destinatariosConError, MensajeJMS mensajeJMS) {
 		Integer maxIntentosReenvio = Integer.parseInt(properties.getProperty("constantes.servicio.maxIntentosReenvio", null));
 		
-		List<String> listaDestinatarios = new ArrayList<String>(Arrays.asList(mensajeJMS.getDestinatarioMensajeId()
+		List<String> listaDestinatarios = new ArrayList<>(Arrays.asList(mensajeJMS.getDestinatarioMensajeId()
 				.split(";")));
 		for (String ds : listaDestinatarios) {
 			Integer intentos = tblDestinatariosMensajesManager.updateNumIntentosEncolar(Long.parseLong(ds));
 			if (intentos >= maxIntentosReenvio) {
-				if (!mensajesConError.contains(mensajeJMS.getIdMensaje()))
+				if (!mensajesConError.contains(mensajeJMS.getIdMensaje())) {
 					mensajesConError.add(mensajeJMS.getIdMensaje());
-				if (!destinatariosConError.contains(ds))
+				}
+				if (!destinatariosConError.contains(ds)) {
 					destinatariosConError.add(ds);
+				}
 			}
 			
 		}
@@ -509,12 +551,15 @@ public class ReenviarMensajesPendientesJob implements Job{
 			LOG.error("ReenviarMensajesPendientesJob.getListaMensajesEncolados", e);
 			throw new Exception(e);
 		} finally {
-			if (null != browser)
+			if (null != browser) {
 				browser.close();
-			if (null != session)
+			}
+			if (null != session) {
 				session.close();
-			if (null != connection)
+			}
+			if (null != connection) {
 				connection.close();
+			}
 		}
 		return listaMensajesEncolados;
 	}
@@ -527,18 +572,18 @@ public class ReenviarMensajesPendientesJob implements Job{
 	 */
 	private ArrayList<String> recuperarInternetAddress(String address) throws AddressException {
 
-		ArrayList<String> recipients = new ArrayList<String>();
+		ArrayList<String> recipients = new ArrayList<>();
 		int contador = 0;
 
 		if (null != address && !address.isEmpty()) {
 			// Si existe solo una direccion de correo
-			if (address.indexOf(";") == -1) {
+			if (address.indexOf(';') == -1) {
 				recipients.add(address);
 			} else {
 				// Recuperamos todos las direcciones de correo
-				while (address.indexOf(";", contador) > -1) {
-					recipients.add(address.substring(contador, address.indexOf(";", contador)));
-					contador = address.indexOf(";", contador) + 1;
+				while (address.indexOf(';', contador) > -1) {
+					recipients.add(address.substring(contador, address.indexOf(';', contador)));
+					contador = address.indexOf(';', contador) + 1;
 				}
 				recipients.add(address.substring(contador, address.length()));
 			}
@@ -557,7 +602,7 @@ public class ReenviarMensajesPendientesJob implements Job{
 
 		InternetAddress[] address = new InternetAddress[recipients.size()];
 
-		for (int i = 0; i < recipients.size(); i++) {
+		for (int i = 0, s = recipients.size(); i < s; i++) {
 			address[i] = new InternetAddress(recipients.get(i));
 		}
 		return address;

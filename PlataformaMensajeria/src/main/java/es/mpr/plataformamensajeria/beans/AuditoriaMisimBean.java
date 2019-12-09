@@ -13,6 +13,16 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class AuditoriaMisimBean implements Audit {
 
+	protected Long idAuditoria = null;
+	protected ProveedorMisimBean proveedor = null;
+	protected AplicacionMisimBean aplicacion = null;
+	protected ProductoBean producto = null;
+	protected PeticionBean peticion = null;
+	protected Long idMensaje = null;
+	protected Date fechaCreacion = null;
+	protected Date fechaActualizacion = null;
+	protected Long idLote = null;
+
 	/**
 	 * Constructor por defecto
 	 */
@@ -29,16 +39,6 @@ public class AuditoriaMisimBean implements Audit {
 		this.idLote = null;
 	}
 
-	protected Long idAuditoria = null;
-	protected ProveedorMisimBean proveedor = null;
-	protected AplicacionMisimBean aplicacion = null;
-	protected ProductoBean producto = null;
-	protected PeticionBean peticion = null;
-	protected Long idMensaje = null;
-	protected Date fechaCreacion = null;
-	protected Date fechaActualizacion = null;
-	protected Long idLote = null;
-	
 	/**
 	 * Obtener idAuditoria
 	 * @return

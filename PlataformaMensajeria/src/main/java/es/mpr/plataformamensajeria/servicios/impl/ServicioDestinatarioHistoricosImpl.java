@@ -31,6 +31,10 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioDestinatarioHistoric
 @Service("servicioDestinatarioHistoricosImpl")
 public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioHistoricos{
 	
+	protected static final String SERVICIOMENSAJE = "ServicioMensajesAdjuntosHist.getTodosIdAdjuntosCons";
+
+	protected static final String ERRORSDOTJOBDOT = "errors.job.cons.getFicherosAdjuntos";
+
 	/**  logger. */
 	Logger logger = Logger.getLogger(ServicioMensajesAdjuntosHistoricosImpl.class);
 	
@@ -73,8 +77,8 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 			res = queryExecutorDestinatariosHist.getIdDestinatariosCons(listaMensajes);
 				
 		} catch (Exception e) {
-			logger.error("ServicioMensajesAdjuntosHist.getTodosIdAdjuntosCons", e);
-			throw new BusinessException(e, "errors.job.cons.getFicherosAdjuntos");
+			logger.error(SERVICIOMENSAJE, e);
+			throw new BusinessException(e, ERRORSDOTJOBDOT);
 		}
 		return res;
 
@@ -92,8 +96,8 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 			res = queryExecutorDestinatariosMensajesHist.getIdDestinatariosMensajesCons(listaMensajes);
 				
 		} catch (Exception e) {
-			logger.error("ServicioMensajesAdjuntosHist.getTodosIdAdjuntosCons", e);
-			throw new BusinessException(e, "errors.job.cons.getFicherosAdjuntos");
+			logger.error(SERVICIOMENSAJE, e);
+			throw new BusinessException(e, ERRORSDOTJOBDOT);
 		}
 		return res;
 
@@ -139,7 +143,8 @@ public class ServicioDestinatarioHistoricosImpl implements ServicioDestinatarioH
 
 		Integer partes = (int) Math.ceil((double) total / MAX);
 		for (int i = 0; i < partes; i++) {
-			List<TblDestinatariosMensHist> listaTblDestinatariosMensajesHist = queryExecutorDestinatariosMensajesHist.convertDestinatarioMensTODestinatarioMensHist(subList, MAX, i * MAX);
+			List<TblDestinatariosMensHist> listaTblDestinatariosMensajesHist = queryExecutorDestinatariosMensajesHist.convertDestinatarioMensTODestinatarioMensHist(subList, MAX, i * 
+				MAX);
 			if (null == listaTblDestinatariosMensajesHist) {
 				listaTblDestinatariosMensajesHist = new ArrayList<>();
 			}

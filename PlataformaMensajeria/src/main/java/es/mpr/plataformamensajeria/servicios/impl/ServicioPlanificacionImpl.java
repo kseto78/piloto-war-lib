@@ -45,6 +45,36 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioPlanificacionImpl")
 public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 
+	protected static final String SERVICIOPLANIFI = "ServicioPlanificacionImpl - deletePlanificacion:";
+
+	protected static final String SERVICIOPLANIFI0 = "ServicioPlanificacionImpl - validaPlanificacionServidor: ";
+
+	protected static final String NOMBREAPLICACIO = "nombreAplicacion";
+
+	protected static final String D = "d";
+
+	protected static final String SERVICIOPLANIFI1 = "ServicioPlanificacionImpl - newPlanificacion: ";
+
+	protected static final String J = "j";
+
+	protected static final String L = "l";
+
+	protected static final String M = "m";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String S = "s";
+
+	protected static final String V = "v";
+
+	protected static final String TRUE = "true";
+
+	protected static final String X = "x";
+
+	protected static final String ERRORSDOTORGANI0 = "errors.organismo.deleteOrganismo";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
 	
@@ -91,15 +121,18 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			
 			//Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("2","nombreAplicacion");
+			columns.put(R_CONST_REF,NOMBREAPLICACIO);
 			columns.put("3","nombreServicio");
 			
-			if (columnSort==null)
-				columnSort = "2"; //Id
+			if (columnSort==null) {
+				columnSort = R_CONST_REF;
+			} 
+				//Id
 			
 			String column = columns.get(columnSort);
-			if (column==null)
-				column = "nombreAplicacion";
+			if (column==null) {
+				column = NOMBREAPLICACIO;
+			}
 			
 			es.minhap.plataformamensajeria.iop.beans.PlanificacionBean pb = new es.minhap.plataformamensajeria.iop.beans.PlanificacionBean();
 			if (null != criterio){
@@ -113,14 +146,14 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			Integer rowcount = viewPlanificacionesManager.getPlanificacionesPaginadas(start, size, order, column, nombre,
 					pb, true).size();
 			
-			PaginatedList<PlanificacionBean> result = new PaginatedList<PlanificacionBean>();
+			PaginatedList<PlanificacionBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
 			return result;
 		} catch (Exception e) {
 			logger.error("ServicioPlanificacionImpl - getPlanificaciones:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 
 		}
 	}
@@ -167,8 +200,8 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			planificacion.setCreadoPor(planificacionTO.getCreadopor());
 			return idPlanificacion.intValue();
 		}catch (Exception e){
-			logger.error("ServicioPlanificacionImpl - newPlanificacion: ", e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");
+			logger.error(SERVICIOPLANIFI1, e);
+			throw new BusinessException(e,ERRORSDOTORGANI);
 		}
 	}
 
@@ -190,8 +223,8 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			tblPlanificacionesManager.updatePlanificacion(planificacionTO, source, accion, accionId, descripcion);
 			
 		} catch (Exception e){
-			logger.error("ServicioPlanificacionImpl - newPlanificacion: ", e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");
+			logger.error(SERVICIOPLANIFI1, e);
+			throw new BusinessException(e,ERRORSDOTORGANI);
 		}
 	}
 
@@ -225,32 +258,30 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		}catch(Exception e)	{}
 		
 		try{
-		//	if (null != servidorId && servidorId > 0){
-				if (null == solapado && "true".equals(lunes)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId, tipo, "l", servidorId, horaHasta, horaDesde, servicioId);
+				if (null == solapado && TRUE.equals(lunes)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId, tipo, L, servidorId, horaHasta, horaDesde, servicioId);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(martes)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId, tipo, "m", servidorId, horaHasta, horaDesde, servicioId);
+				if ((null == solapado || solapado == 1) && TRUE.equals(martes)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId, tipo, M, servidorId, horaHasta, horaDesde, servicioId);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(miercoles)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, "x", servidorId, horaHasta, horaDesde, servicioId);
+				if ((null == solapado || solapado == 1) && TRUE.equals(miercoles)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, X, servidorId, horaHasta, horaDesde, servicioId);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(jueves)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, "j", servidorId, horaHasta, horaDesde, servicioId);
+				if ((null == solapado || solapado == 1) && TRUE.equals(jueves)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, J, servidorId, horaHasta, horaDesde, servicioId);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(viernes)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, "v", servidorId, horaHasta, horaDesde, servicioId);
+				if ((null == solapado || solapado == 1) && TRUE.equals(viernes)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, V, servidorId, horaHasta, horaDesde, servicioId);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(sabado)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, "s", servidorId, horaHasta, horaDesde, servicioId);
+				if ((null == solapado || solapado == 1) && TRUE.equals(sabado)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, S, servidorId, horaHasta, horaDesde, servicioId);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(domingo)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, "d", servidorId, horaHasta, horaDesde, servicioId);
+				if ((null == solapado || solapado == 1) && TRUE.equals(domingo)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServicio(planId,tipo, D, servidorId, horaHasta, horaDesde, servicioId);
 				}
-	//		}
 		}catch (Exception e) {
-			logger.error("ServicioPlanificacionImpl - validaPlanificacionServidor: ", e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");
+			logger.error(SERVICIOPLANIFI0, e);
+			throw new BusinessException(e,ERRORSDOTORGANI);
 		}
 		return solapado;
 	}
@@ -271,33 +302,33 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		try{
 			
 			if (null != servidorId && servidorId > 0){
-				if ((null == solapado || solapado == 1) && "true".equals(lunes)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "l", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(lunes)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, L, servidorId, horaHasta, horaDesde);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(martes)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "m", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(martes)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, M, servidorId, horaHasta, horaDesde);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(miercoles)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "x", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(miercoles)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, X, servidorId, horaHasta, horaDesde);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(jueves)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "j", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(jueves)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, J, servidorId, horaHasta, horaDesde);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(viernes)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "v", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(viernes)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, V, servidorId, horaHasta, horaDesde);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(sabado)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "s", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(sabado)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, S, servidorId, horaHasta, horaDesde);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(domingo)){
-					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, "d", servidorId, horaHasta, horaDesde);
+				if ((null == solapado || solapado == 1) && TRUE.equals(domingo)){
+					solapado = queryExecutorViewPlanificaciones.validaPlanificacionServidor(planId, D, servidorId, horaHasta, horaDesde);
 				}
 				
 			}
 			
 		}catch (Exception e) {
-			logger.error("ServicioPlanificacionImpl - validaPlanificacionServidor: ", e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");
+			logger.error(SERVICIOPLANIFI0, e);
+			throw new BusinessException(e,ERRORSDOTORGANI);
 		}
 		return solapado;
 	}
@@ -314,8 +345,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			ViewPlanificaciones plan = viewPlanificacionesManager.getPlanificacionById(planificacion.getPlanificacionId().longValue());
 			
 			return getPlanificacionBean(plan);
-		}
-		catch (Exception e){
+		} catch (Exception e){
 				throw new BusinessException(e,"errors.organismo.loadOrganismo");			
 		}
 	}
@@ -336,15 +366,13 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 				planificacionTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 				planificacionTO.setFechamodificacion(new Date());
 				tblPlanificacionesManager.updatePlanificacion(planificacionTO, source, accion, accionId, descripcion);	
-			}
-			catch (Exception e){
-				logger.error("ServicioPlanificacionImpl - deletePlanificacion:" + e);
+			} catch (Exception e){
+				logger.error(SERVICIOPLANIFI + e);
 				sw=false;
 			}
 			return sw;	
-		}
-		catch (Exception e){
-			logger.error("ServicioPlanificacionImpl - deletePlanificacion:" + e);
+		} catch (Exception e){
+			logger.error(SERVICIOPLANIFI + e);
 			sw=false;
 		}
 		return sw;
@@ -360,8 +388,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
-	public TblPlanificaciones getPlanificacionTO(PlanificacionBean planificacion) throws BusinessException
-	{
+	public TblPlanificaciones getPlanificacionTO(PlanificacionBean planificacion) throws BusinessException {
 		TblPlanificaciones res = new TblPlanificaciones();
 		try {
 			res.setActivo(planificacion.getActivo());
@@ -381,7 +408,8 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			res.setS(planificacion.getSabado());
 			res.setTblServicios((null != planificacion.getServicioId())? tblServiciosManager.getServicio(planificacion.getServicioId().longValue()) : null);
 			res.setTblServidores((null != planificacion.getServidorId())? tblServidoresManager.getServidorById(planificacion.getServidorId().longValue()) : null);
-			res.setTblTipoPlanificaciones((null != planificacion.getTipoPlanificacionId())? tblTipoPlanificacionesManager.getTipoPlanificacionById(planificacion.getTipoPlanificacionId().longValue()) : null);
+			res.setTblTipoPlanificaciones((null != 
+				planificacion.getTipoPlanificacionId())? tblTipoPlanificacionesManager.getTipoPlanificacionById(planificacion.getTipoPlanificacionId().longValue()) : null);
 			res.setV(planificacion.getViernes());
 			res.setX(planificacion.getMiercoles());
 		
@@ -400,8 +428,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
-	public PlanificacionBean getPlanificacionBean(TblPlanificaciones planificacion) throws BusinessException
-	{
+	public PlanificacionBean getPlanificacionBean(TblPlanificaciones planificacion) throws BusinessException {
 		PlanificacionBean res = new PlanificacionBean();
 		try {
 			res.setActivo(planificacion.getActivo());
@@ -424,7 +451,8 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			res.setServidorId((null != planificacion.getTblServidores())? planificacion.getTblServidores().getServidorid().intValue() : null);
 			res.setNombreServicio((null != planificacion.getTblServicios())? planificacion.getTblServicios().getNombre() : null);
 			res.setNombreServidor((null != planificacion.getTblServidores())? planificacion.getTblServidores().getNombre() : null);
-			res.setTipoPlanificacionId((null != planificacion.getTblTipoPlanificaciones())? planificacion.getTblTipoPlanificaciones().getTipoplanificacionid().intValue() : null);
+			res.setTipoPlanificacionId((null != 
+				planificacion.getTblTipoPlanificaciones())? planificacion.getTblTipoPlanificaciones().getTipoplanificacionid().intValue() : null);
 			res.setViernes(planificacion.getV());
 			res.setMiercoles(planificacion.getX());
 		
@@ -443,14 +471,13 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	 * @throws BusinessException the business exception
 	 */
 	////MIGRADO
-	protected List<PlanificacionBean> getListPlanificacionBean(List<TblPlanificaciones> lista) throws BusinessException
-	{	
+	protected List<PlanificacionBean> getListPlanificacionBean(List<TblPlanificaciones> lista) throws BusinessException {
+	
 		List<PlanificacionBean> result = new ArrayList<>();
 		
-		if (lista!=null && !lista.isEmpty())
-		{
+		if (lista!=null && !lista.isEmpty()) {
 			for (TblPlanificaciones p : lista) {
-				PlanificacionBean planificacion =  new PlanificacionBean();
+				PlanificacionBean planificacion = null;
 				planificacion = getPlanificacionBean(p);
 				result.add(planificacion);
 			}
@@ -468,8 +495,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	 * @return objeto PlanificacionBean
 	 * @throws BusinessException the business exception
 	 */
-	protected PlanificacionBean getPlanificacionBean(ViewPlanificaciones viewPlanificacion) throws BusinessException
-	{
+	protected PlanificacionBean getPlanificacionBean(ViewPlanificaciones viewPlanificacion) throws BusinessException {
 		PlanificacionBean planificacion = new PlanificacionBean();
 		
 		try {
@@ -494,13 +520,12 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 	 */
 	
 	//////MIGRADO
-	protected List<PlanificacionBean> getListViewPlanificacionBean(List<ViewPlanificaciones> lista) throws BusinessException
-	{	
+	protected List<PlanificacionBean> getListViewPlanificacionBean(List<ViewPlanificaciones> lista) throws BusinessException {
+	
 		List<PlanificacionBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
-			result = new ArrayList<PlanificacionBean>();
+		if (lista!=null && !lista.isEmpty()) {
+			result = new ArrayList<>();
 		
 			for (ViewPlanificaciones vp : lista) {
 				PlanificacionBean planificacion =  new PlanificacionBean();
@@ -537,7 +562,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			return getListViewPlanificacionBean(lista);	
 		} catch (Exception e) {
 			logger.error("ServicioPlanificacionImpl - getPlanificacionesByServidorId:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}		
 	}
 	
@@ -559,7 +584,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			return getListPlanificacionBean(lista);	
 		} catch (Exception e) {
 			logger.error("ServicioPlanificacionImpl - getPlanificacionesByServicioID:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 		
 	}
@@ -581,7 +606,7 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 			return getListPlanificacionBean(lista);	
 		} catch (Exception e) {
 			logger.error("ServicioPlanificacionImpl - getPlanificacionesByOrganismoID:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -600,33 +625,33 @@ public class ServicioPlanificacionImpl implements ServicioPlanificacion{
 		
 		try{
 			if (null != servicioId && servicioId > 0){
-				if ((null == solapado || solapado == 1) && "true".equals(lunes)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "l", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(lunes)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, L, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(martes)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "m", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(martes)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, M, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(miercoles)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "x", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(miercoles)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, X, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(jueves)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "j", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(jueves)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, J, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(viernes)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "v", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(viernes)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, V, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(sabado)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "s", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(sabado)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, S, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
-				if ((null == solapado || solapado == 1) && "true".equals(domingo)){
-					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, "d", planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
+				if ((null == solapado || solapado == 1) && TRUE.equals(domingo)){
+					solapado = queryExecutorViewPlanificaciones.countPlanificacionPorHorasOrganismo(organismoId, D, planId, horaHasta, horaDesde, servicioId, servidorId, tipo);
 				}
 			}
 			
 			
 		}catch (Exception e) {
-			logger.error("ServicioPlanificacionImpl - validaPlanificacionServidor: ", e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");
+			logger.error(SERVICIOPLANIFI0, e);
+			throw new BusinessException(e,ERRORSDOTORGANI);
 		}
 		return solapado;
 	}

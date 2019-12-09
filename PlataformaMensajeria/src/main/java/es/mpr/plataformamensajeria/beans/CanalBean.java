@@ -21,6 +21,15 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  * @author Altran
  */
 public class CanalBean implements Audit {
+	protected Integer canalId;
+	protected String nombre;
+	protected String descripcion;
+	protected Boolean activo = null;
+	protected Date fechacreacion = null;
+	protected String creadopor = null;
+	protected Date fechamodificacion = null;
+	protected String modificadopor = null;
+
 	/**
 	 * COnstructor por defecto
 	 */
@@ -35,15 +44,6 @@ public class CanalBean implements Audit {
 		this.modificadopor = null;
 
 	}
-
-	protected Integer canalId;
-	protected String nombre;
-	protected String descripcion;
-	protected Boolean activo = null;
-	protected Date fechacreacion = null;
-	protected String creadopor = null;
-	protected Date fechamodificacion = null;
-	protected String modificadopor = null;
 
 	/**
 	 * Obtener id

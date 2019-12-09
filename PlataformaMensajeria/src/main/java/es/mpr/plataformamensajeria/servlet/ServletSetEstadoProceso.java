@@ -23,7 +23,7 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 public class ServletSetEstadoProceso extends HttpServlet {
 	private static final long serialVersionUID = 1L;
      
-	private static final Logger logger = LoggerFactory.getLogger(ServletSetEstadoProceso.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServletSetEstadoProceso.class);
 	
 	/**  properties. */
 	private PlataformaMensajeriaProperties properties;
@@ -45,7 +45,7 @@ public class ServletSetEstadoProceso extends HttpServlet {
 		ServletOutputStream stream = null;
 		String respuesta = "";
 		String proceso = request.getParameter("job");
-		if(proceso == null || proceso.equals("")){
+		if(proceso == null || "".equals(proceso)){
 			return;
 		}
 		 ApplicationContext applicationContext =
@@ -55,7 +55,7 @@ public class ServletSetEstadoProceso extends HttpServlet {
 		 
 		 try {
 			
-			if(!nodoPrincipal.equals("S")){
+			if(!"S".equals(nodoPrincipal)){
 				 respuesta = "Nodo no principal, no se planifica ningun job.";
 				 stream = response.getOutputStream();
 				 stream.write(respuesta.getBytes());
@@ -69,8 +69,7 @@ public class ServletSetEstadoProceso extends HttpServlet {
 			
 			if(planificado){
 				respuesta = "Planificacion automatica del proceso " + proceso + " correcta.";
-			}
-			else{
+			} else{
 				respuesta="No se ha planificado ningun proceso";
 			}
 			stream = response.getOutputStream();
@@ -79,7 +78,7 @@ public class ServletSetEstadoProceso extends HttpServlet {
 			stream.close();		
 
 		} catch (Exception e1) {
-			logger.error("Ha ocurrido un error en la planificaci�n del proceso: ", e1);
+			LOGGER.error("Ha ocurrido un error en la planificaci�n del proceso: ", e1);
 			respuesta = "Ha ocurrido un error realizando la planificaci�n sobre el proceso " + proceso;
 			stream = response.getOutputStream();
 			stream.write(respuesta.getBytes());

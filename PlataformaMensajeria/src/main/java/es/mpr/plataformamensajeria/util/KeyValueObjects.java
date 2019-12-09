@@ -11,6 +11,7 @@ public class KeyValueObjects implements Serializable {
 	private String nombre;
 
 	public KeyValueObjects() {
+		// This method has to be empty.
 	}
 
 	public KeyValueObjects(String aCodigo, String aDescripcion) {

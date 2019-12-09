@@ -13,7 +13,24 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class AplicacionBean implements Audit, Serializable{
 
+	protected static final String TRUE = "true";
 	private static final long serialVersionUID = 21522231942501054L;
+	protected Integer aplicacionId;
+	protected String nombre = null;
+	protected String descripcion = null;
+	protected String usuario = null;
+	protected String password = null;
+	protected String rePassword = null;
+	protected Boolean activo = null;
+	protected Date fechacreacion = null;
+	protected String creadopor = null;
+	protected Date fechamodificacion = null;
+	protected String modificadopor = null;
+	protected String isActivo = null;
+	protected String respFuncionalNombre = null;
+	protected String respFuncionalEmail = null;
+	protected String respTecnicoNombre = null;
+	protected String respTecnicoEmail = null;
 
 	/**
 	 * Constructor por defecto
@@ -40,33 +57,12 @@ public class AplicacionBean implements Audit, Serializable{
 		
 	}
 
-	protected Integer aplicacionId;
-	protected String nombre = null;
-	protected String descripcion = null;
-	protected String usuario = null;
-	protected String password = null;
-	protected String rePassword = null;
-
-
-	protected Boolean activo = null;
-	protected Date fechacreacion = null;
-	protected String creadopor = null;
-	protected Date fechamodificacion = null;
-	protected String modificadopor = null;
-	protected String isActivo = null; 
-	
-	protected String respFuncionalNombre = null;
-	protected String respFuncionalEmail = null;
-	protected String respTecnicoNombre = null;
-	protected String respTecnicoEmail = null;
-	
-
 	/**
 	 * Modificar activado
 	 * @param activado
 	 */
 	public void setActivado(String activado){
-		if(activado!=null&&activado.equals("true")){
+		if(activado!=null&&TRUE.equals(activado)){
 			this.activo = true;
 		}else{
 			this.activo = false;
@@ -91,7 +87,7 @@ public class AplicacionBean implements Audit, Serializable{
 	 * @param isActivo
 	 */
 	public void setIsActivo(String isActivo) {
-		if(isActivo!=null && isActivo.equals("true")){
+		if(isActivo!=null && TRUE.equals(isActivo)){
 			this.activo = true;
 		}else{
 			this.activo = false;
@@ -105,7 +101,7 @@ public class AplicacionBean implements Audit, Serializable{
 	 */
 	public String getActivado(){
 		if(activo!=null && activo){
-			return "true";
+			return TRUE;
 		}else{
 			return "false";
 		}

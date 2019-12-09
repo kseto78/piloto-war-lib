@@ -110,19 +110,19 @@
 		</div>
 	</div>
 	<div class="editContainer">
+		   <img src="/sim/img/ajax-loader.gif" id=loading alt="Processing" height="50" width="50" style="
+			    position: absolute;
+			    left: 50%; visibility:hidden;
+			    bottom: 45%;
+			">
 		<div style="width: 135px" class="nameDescription">
 			<label>Destinatarios</label>
 		</div>
 
 		<div style="width: 770px" class="editContent">
 		 <s:set var="total">${resultCount}</s:set>
-    <s:if test="#total > 20">
-          <h4 class="titular">Encontradas ${resultCount} entradas. Por rendimiento se muestran 20.</h4>
-    </s:if>
-     <s:if test="#total < 20">
         <h4 class="titular">Encontradas ${resultCount} entradas</h4>
-    </s:if>
-			
+  			
 			<display:table id="tableMensajesId"
 				summary="Tabla de resultados de búsqueda de logs"
 				name="listaGestionEnviosDestinatariosMensaje" pagesize="${pageSize}"
@@ -130,7 +130,7 @@
 				defaultorder="ascending" sort="external" export="true"
 				cellpadding="0" cellspacing="0" partialList="true"
 				requestURIcontext="false"
-				size="20"
+				size='<%=request.getAttribute("totalSize")%>'
 				decorator="es.mpr.template.web.decorators.TableWrapper">
 				<display:setProperty name="css.tr.even" value="null" />
 				<display:setProperty name="css.tr.odd" value="odd" />
@@ -158,3 +158,15 @@
 
 	</div>
 </sj:dialog>
+<script>
+$(function(){
+    $('a').each(function() {
+        if(this.href.includes("viewHistorico.action?")){
+	        	var enl = this.href.split('viewHistorico.action')[1];
+	        	
+	            $(this).attr('href', 'javascript:verMensajesPaginar("viewMensaje.action' + enl + '")');
+            }
+        
+    });
+});
+</script>

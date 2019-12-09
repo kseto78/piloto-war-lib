@@ -31,6 +31,10 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class MailSenderAction extends ActionSupport implements ServletRequestAware, ServletResponseAware{
 
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String NOUSER = "noUser";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -50,16 +54,19 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	protected HttpServletResponse response;
 	
 	/**  lista formatos correo. */
-	protected List<KeyValueObject> listaFormatosCorreo = new ArrayList<KeyValueObject>();
+	protected List<KeyValueObject> listaFormatosCorreo = new ArrayList<>();
 	
     /**  adjuntos. */
-    private List<File> adjuntos;//La lista de adjuntos
+    private List<File> adjuntos;
+    //La lista de adjuntos
     
     /**  adjunto content type. */
-    private List<String> adjuntoContentType; //El content type de los adjuntos
+    private List<String> adjuntoContentType; 
+    //El content type de los adjuntos
     
     /**  adjunto file name. */
-    private List<String> adjuntoFileName; //El nombre de los ficheros adjuntos
+    private List<String> adjuntoFileName; 
+    //El nombre de los ficheros adjuntos
 
 	/**
 	 * <p>M&eacute;todo que genera los datos para presentar el formulario de correo</p>.
@@ -67,7 +74,9 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
 	 * @return the string
 	 */
     public String newMail() {
-    	if(request.getSession().getAttribute("infoUser")==null) return "noUser"; 
+    	if(request.getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
     	KeyValueObject aOption = new KeyValueObject();
     	aOption.setCodigo("text/plain");
     	aOption.setDescripcion(getText("mail.content.type.texto"));
@@ -88,7 +97,9 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
      * @throws Exception the exception
      */
     public String send() throws Exception {
-    	if(request.getSession().getAttribute("infoUser")==null) return "noUser"; 
+    	if(request.getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 
         MailMessageVO message= new MailMessageVO();
         message.setFrom(f.getFrom());
@@ -252,10 +263,10 @@ public class MailSenderAction extends ActionSupport implements ServletRequestAwa
      * @throws Exception the exception
      */
     private ArrayList<File> getAttatchments() throws Exception {
-    	ArrayList<File> listaAttachments = new ArrayList<File>();
+    	ArrayList<File> listaAttachments = new ArrayList<>();
     	
     	if (getAdjunto() != null) {
-	    	for (int i=0; i<getAdjunto().size();i++) {
+	    	for (int i=0, s = getAdjunto().size(); i<s;i++) {
 	    		File unAdjunto = getAdjunto().get(i);
 	    		String nombreAdjunto = getAdjuntoFileName().get(i);
 	        	File destFile = new File(nombreAdjunto);

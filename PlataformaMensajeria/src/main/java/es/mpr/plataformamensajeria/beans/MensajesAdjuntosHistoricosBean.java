@@ -14,6 +14,19 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class MensajesAdjuntosHistoricosBean implements Audit{
 
+	/**  mensaje adjunto id. */
+	private Integer mensajeAdjuntoId;
+
+	/**  mensaje id. */
+	private Integer mensajeId;
+
+	/**  adjunto id. */
+	private Integer adjuntoId;
+
+	/**  fecha historificacion. */
+	private Date fechaHistorificacion;
+
+
 	/**
 	 * Constructor de mensajes adjuntos historicos bean.
 	 */
@@ -24,19 +37,6 @@ public class MensajesAdjuntosHistoricosBean implements Audit{
 		this.fechaHistorificacion=null;
 	}
 	
-	/**  mensaje adjunto id. */
-	private Integer mensajeAdjuntoId;
-	
-	/**  mensaje id. */
-	private Integer mensajeId;
-	
-	/**  adjunto id. */
-	private Integer adjuntoId;
-	
-	/**  fecha historificacion. */
-	private Date fechaHistorificacion;
-	
-
 	/* (non-Javadoc)
 	 * @see com.map.j2ee.auditoria.ifaces.Audit#obtenerXML()
 	 */

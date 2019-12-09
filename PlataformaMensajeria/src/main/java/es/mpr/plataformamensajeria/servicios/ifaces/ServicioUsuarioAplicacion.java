@@ -63,7 +63,7 @@ public interface ServicioUsuarioAplicacion {
 	 * @return the usuario aplicacion bean
 	 * @throws BusinessException the business exception
 	 */
-	public UsuarioAplicacionBean loadUsuarioAplicacion(UsuarioAplicacionBean usuarioAplicacionBean)	throws BusinessException;
+	UsuarioAplicacionBean loadUsuarioAplicacion(UsuarioAplicacionBean usuarioAplicacionBean)	throws BusinessException;
 
 	/**
 	 * Obtener list permisos aplicaciones usuario.

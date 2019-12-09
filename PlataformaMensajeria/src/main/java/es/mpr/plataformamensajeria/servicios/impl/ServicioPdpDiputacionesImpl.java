@@ -57,6 +57,14 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioPdpDiputacionesImpl")
 public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String SERVICIOORGANIS = "ServicioOrganismoImpl - getOrganismoBean:";
+
+	protected static final String SERVICIOORGANIS0 = "ServicioOrganismoImpl - getOrganismos:";
+
+	protected static final String SERVICIOORGANIS1 = "ServicioOrganismoImpl - autocomplete organismos:";
+
 	/** Constante ERRORS_ORGANISMO_GET_ORGANISMOS. */
 	private static final String ERRORS_ORGANISMO_GET_ORGANISMOSPDP = "errors.organismo.getOrganismosPdp";
 
@@ -97,13 +105,13 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 		try {
 			TblPdpDiputacionesQuery query = new TblPdpDiputacionesQuery();
 			query.setEliminadoIsNull(true);
-			query.addOrder("nombre", OrderType.ASC);
+			query.addOrder(NOMBRE, OrderType.ASC);
 			List<TblPdpDiputaciones> lista = tblPdpDiputacionesManager
 					.getPdpDiputacionesByQuery(query);
 
 			return getListOrganismoPdpBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - getOrganismos:" + e);
+			logger.error(SERVICIOORGANIS0 + e);
 			throw new BusinessException(e,
 					ServicioPdpDiputacionesImpl.ERRORS_ORGANISMO_GET_ORGANISMOSPDP);
 		}
@@ -188,12 +196,12 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("1", "nombre");
+			columns.put("1", NOMBRE);
 			columns.put("2", "descripcion");			
 
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "nombre";
+				column = NOMBRE;
 			}
 
 			es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean ob = new es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean();
@@ -213,7 +221,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - getOrganismos:" + e);
+			logger.error(SERVICIOORGANIS0 + e);
 			throw new BusinessException(e,
 					ServicioPdpDiputacionesImpl.ERRORS_ORGANISMO_GET_ORGANISMOSPDP);
 
@@ -266,8 +274,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 			organismoPdpTO.setModificadopor(PlataformaMensajeriaUtil.getUsuarioLogueado().getNombreCompleto());
 			tblPdpDiputacionesManager.update(organismoPdpTO, source, accion, accionId);
 			
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioOrganismoImpl - updateOrganismo:" + e);
 			throw new BusinessException(e,"errors.organismo.updateOrganismo");		
 		} 
@@ -324,7 +331,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 			return queryExecutorOrganismosPdpImpl.getListAutocomplete(term);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS1 + e);
 			return new ArrayList<>();
 		}
 
@@ -337,7 +344,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 			return queryExecutorOrganismosPdpImpl.getOrganismosHijos(search);
 
 		} catch (Exception e) {
-			logger.error("ServicioOrganismoImpl - autocomplete organismos:" + e);
+			logger.error(SERVICIOORGANIS1 + e);
 			return null;
 		}
 	}
@@ -354,7 +361,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 			List<TblPdpDiputaciones> lista = tblPdpDiputacionesManager
 					.getPdpDiputacionesByQuery(query);
 
-			return (null != lista && !lista.isEmpty()) ? true : false;
+			return null != lista && !lista.isEmpty();
 
 		} catch (Exception e) {
 			logger.error("ServicioOrganismoImpl - autocomplete organismosPdp:" + e);
@@ -412,8 +419,6 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 	protected List<PdpDiputacionesBean> getListOrganismoPdpBean(List<TblPdpDiputaciones> lista)
 			throws BusinessException {
 		List<PdpDiputacionesBean> result = null;
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
 		if (lista != null && !lista.isEmpty()) {
 			result = new ArrayList<>();
 
@@ -474,7 +479,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 			BeanUtils.copyProperties(organismo, o);
 			organismo.setPdpDiputacionesId(o.getPdpDiputacionesId().intValue());
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			logger.error("ServicioOrganismoImpl - getOrganismoBean:" + e);
+			logger.error(SERVICIOORGANIS + e);
 		}
 		return organismo;
 	}
@@ -507,7 +512,7 @@ public class ServicioPdpDiputacionesImpl implements ServicioPdpDiputaciones {
 			}
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			logger.error("ServicioOrganismoImpl - getOrganismoBean:" + e);
+			logger.error(SERVICIOORGANIS + e);
 		}
 		return ob;
 	}

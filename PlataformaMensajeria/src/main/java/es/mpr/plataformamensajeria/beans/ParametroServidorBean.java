@@ -24,7 +24,7 @@ public class ParametroServidorBean implements Audit, Serializable {
 	public static final int USUARIO = 2;
 	
 	/** Constante PASSWORD. */
-	public static final int PASSWORD = 3;
+	public static final int PASS = 3;
 	
 	/** Constante CONEXION_SEGURA. */
 	public static final int CONEXION_SEGURA = 4;
@@ -34,26 +34,6 @@ public class ParametroServidorBean implements Audit, Serializable {
 	
 	/** Constante REQ_AUTH. */
 	public static final int REQ_AUTH = 11;
-
-	/**
-	 * Constructor de parametro servidor bean.
-	 */
-	public ParametroServidorBean() {
-
-		this.parametroservidorid = null;
-		this.tipoparametroid = null;
-		this.tiponombre = null;
-		this.valor = null;
-		this.tipodescripcion = null;
-		this.servidorid = null;
-		this.tipotag = null;
-		this.activo = null;
-		this.fechacreacion = null;
-		this.creadopor = null;
-		this.fechamodificacion = null;
-		this.modificadopor = null;
-
-	}
 
 	/**  parametroservidorid. */
 	protected Long parametroservidorid;
@@ -90,6 +70,26 @@ public class ParametroServidorBean implements Audit, Serializable {
 
 	/**  tipotag. */
 	protected String tipotag = null;
+
+	/**
+	 * Constructor de parametro servidor bean.
+	 */
+	public ParametroServidorBean() {
+
+		this.parametroservidorid = null;
+		this.tipoparametroid = null;
+		this.tiponombre = null;
+		this.valor = null;
+		this.tipodescripcion = null;
+		this.servidorid = null;
+		this.tipotag = null;
+		this.activo = null;
+		this.fechacreacion = null;
+		this.creadopor = null;
+		this.fechamodificacion = null;
+		this.modificadopor = null;
+
+	}
 
 	/**
 	 * Obtener tipo nombre.
@@ -336,14 +336,6 @@ public class ParametroServidorBean implements Audit, Serializable {
 	public void setTipotag(String tipotag) {
 		this.tipotag = tipotag;
 	}
-
-	/**
-	 * Obtener tiponombre.
-	 *
-	 * @return the tiponombre
-	 */
-	public String getTiponombre() {
-		return tiponombre;
-	}
+	
 
 }

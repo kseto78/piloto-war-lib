@@ -82,8 +82,7 @@ public class DownloadFile extends javax.servlet.http.HttpServlet implements java
 				}
 			
 		
-			} 
-		catch (Exception e) {
+			} catch (Exception e) {
 			logger.error("[DownloadFile] - doGet - ERROR: ", e);
 		}
 		

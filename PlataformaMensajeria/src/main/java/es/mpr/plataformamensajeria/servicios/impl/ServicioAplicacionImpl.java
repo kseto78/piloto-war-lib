@@ -27,7 +27,6 @@ import es.minhap.plataformamensajeria.iop.manager.TblPlanificacionesManager;
 import es.minhap.plataformamensajeria.iop.manager.TblServiciosManager;
 import es.minhap.plataformamensajeria.iop.manager.TblUsuariosAplicacionesManager;
 import es.minhap.sim.model.TblAplicaciones;
-import es.minhap.sim.model.TblCanales;
 import es.minhap.sim.model.TblServicios;
 import es.minhap.sim.model.TblUsuariosAplicaciones;
 import es.minhap.sim.query.TblAplicacionesQuery;
@@ -51,6 +50,20 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
  */
 @Service("servicioAplicacionImpl")
 public class ServicioAplicacionImpl implements ServicioAplicacion {
+
+	protected static final String SERVICIOAPLICAC = "ServicioAplicacionImpl - existeUsuario:";
+
+	protected static final String ERRORSDOTORGANI = "errors.organismo.loadOrganismo";
+
+	protected static final String SERVICIOAPLICAC0 = "ServicioAplicacionImpl - getAplicacionTO:";
+
+	protected static final String NOMBRE = "nombre";
+
+	protected static final String ERRORSDOTORGANI0 = "errors.organismo.getOrganismos";
+
+	protected static final String R_CONST_REF = "2";
+
+	protected static final String SERVICIOAPLICAC1 = "ServicioAplicacionImpl - getAplicaciones:";
 
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioAplicacionImpl.class);
@@ -87,8 +100,8 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			return getListViewAplicacionBean(lista);
 			
 		} catch (Exception e) {
-			logger.error("ServicioAplicacionImpl - getAplicaciones:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOAPLICAC1 + e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -114,7 +127,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			}
 			queryAplicacionesQuery.setEliminadoIsNull(true);
 			queryAplicacionesQuery.setActivo(true);
-			queryAplicacionesQuery.addOrder("nombre", OrderType.ASC);
+			queryAplicacionesQuery.addOrder(NOMBRE, OrderType.ASC);
 			
 			
 			List<TblAplicaciones> listaAplicaciones = tblAplicacionesManager.getAplicaciones(queryAplicacionesQuery);
@@ -142,7 +155,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		try {
 			tblAplicacionesManager.existeAplicacionUsuario(usuario);
 		} catch (Exception e) {
-			logger.error("ServicioAplicacionImpl - existeUsuario:" + e);
+			logger.error(SERVICIOAPLICAC + e);
 		}
 		return existe;
 
@@ -156,11 +169,11 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 	public List<AplicacionBean> getAplicacionesMenu(String rolUsuario, Integer userName) {
 		List<AplicacionBean> listBean = new ArrayList<>();
 		try {
-			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (rolUsuario != null && (PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)||PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario))) {
 				TblAplicacionesQuery query = new TblAplicacionesQuery();
 				query.setActivo(true);
 				query.setEliminadoIsNull(true);
-				query.addOrder("nombre", OrderType.ASC);
+				query.addOrder(NOMBRE, OrderType.ASC);
 				List<TblAplicaciones> lista = tblAplicacionesManager.getAplicaciones(query);
 				for (TblAplicaciones a : lista) {
 					AplicacionBean app = new AplicacionBean();
@@ -183,7 +196,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 					}
 					queryAplicacionesQuery.setActivo(true);
 					queryAplicacionesQuery.setEliminadoIsNull(true);
-					queryAplicacionesQuery.addOrder("nombre", OrderType.ASC);
+					queryAplicacionesQuery.addOrder(NOMBRE, OrderType.ASC);
 					List<TblAplicaciones> listaAplicaciones = tblAplicacionesManager.getAplicaciones(queryAplicacionesQuery);
 					if (null != listaAplicaciones){
 						for (TblAplicaciones a : listaAplicaciones) {
@@ -196,7 +209,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("ServicioAplicacionImpl - existeUsuario:" + e);
+			logger.error(SERVICIOAPLICAC + e);
 		} 
 		return listBean;
 
@@ -207,13 +220,13 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		List<AplicacionBean> listBean = new ArrayList<>();
 		try {
 			
-			if (rolUsuario != null && (rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)||rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))) {
+			if (rolUsuario != null && (PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)||PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario))) {
 				TblServiciosQuery squery = new TblServiciosQuery();
 				TblCanalesQuery canal= new TblCanalesQuery();
 				TblAplicacionesQuery aquery = new TblAplicacionesQuery();
 				aquery.setActivo(true);
 				aquery.setEliminadoIsNull(true);
-				aquery.addOrder("nombre", OrderType.ASC);				
+				aquery.addOrder(NOMBRE, OrderType.ASC);				
 				
 				canal.setCanalid(Long.valueOf(canalId));
 				squery.setTblCanales(canal);
@@ -229,14 +242,17 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 						AplicacionBean app = new AplicacionBean();
 						app.setAplicacionId(a.getTblAplicaciones().getAplicacionid().intValue());						
 						app.setNombre(a.getTblAplicaciones().getNombre());
-						for (AplicacionBean ap : listBean){							
+						for (AplicacionBean ap : listBean){
+								
 						
 							if(ap.getAplicacionId().equals(app.getAplicacionId())){
 								encontrado = true;
 							}
 						}
 																	
-						if(!encontrado) listBean.add(app);
+						if(!encontrado) {
+							listBean.add(app);
+						}
 						
 					}					
 				}
@@ -263,7 +279,8 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 					squery.setActivo(true);
 										
 					List<TblServicios> lista = tblServiciosManager.getServicios(squery);
-					for (TblServicios a : lista) {						
+					for (TblServicios a : lista) {
+							
 						Boolean encontrado = false;
 							
 							AplicacionBean app = new AplicacionBean();
@@ -273,13 +290,16 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 							for(TblUsuariosAplicaciones usuApl : listaUsuarioAplicaciones){
 								
 								if( usuApl.getAplicacionid().equals(a.getTblAplicaciones().getAplicacionid()) ){
-									for (AplicacionBean ap : listBean){							
+									for (AplicacionBean ap : listBean){
+								
 										
 										if(ap.getAplicacionId().equals(app.getAplicacionId())){
 											encontrado = true;
 										}
 									}
-									if(!encontrado) listBean.add(app);									
+									if(!encontrado) {
+										listBean.add(app);
+									}									
 								}
 							}	
 					}
@@ -289,7 +309,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("ServicioAplicacionImpl - existeUsuario:" + e);
+			logger.error(SERVICIOAPLICAC + e);
 		} 
 		return listBean;
 
@@ -311,16 +331,15 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			today = sdf.parse(todayString);
 			fechaUltimo = sdf.parse(fechaUltimoString);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	
-		if(today.after(fechaUltimo)){ // Si es true, en el dia actual no se han enviado SMS.
+		if(today.after(fechaUltimo)){
+ 	
+			// Si es true, en el dia actual no se han enviado SMS.
 			aplicacion.setSmsEnviadosDia(0);
 			aplicacion.setSmsFechaUltimo(today);
 			
 			tblAplicacionesManager.updateSMS(aplicacion);
-			//Por hacer actualizacion tblAplicacionesManager.update(aplicacion, source, accion, accionId);
 			
 			return true;
 		} else{
@@ -330,7 +349,6 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 				aplicacion.setSmsEnviadosDia((Integer)aplicacion.getSmsEnviadosDia()+1);
 				aplicacion.setSmsFechaUltimo(today);
 				return true;
-				//Por hacer actualizacion tblAplicacionesManager.update(aplicacion, source, accion, accionId);
 			}
 		}
 			
@@ -365,14 +383,15 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		try {
 			// Columna para ordenar
 			HashMap<String, String> columns = new HashMap<>();
-			columns.put("2", "nombre");
+			columns.put(R_CONST_REF, NOMBRE);
 			
 			if (columnSort == null) {
-				columnSort = "2"; // Id
+				columnSort = R_CONST_REF; 
+				// Id
 			}
 			String column = columns.get(columnSort);
 			if (column == null) {
-				column = "nombre";
+				column = NOMBRE;
 			}
 			
 			if (null != criterio && null != criterio.getNombre()) {
@@ -393,14 +412,14 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			// Total de organismos
 			Integer rowcount = lista.size();
 
-			PaginatedList<AplicacionBean> result = new PaginatedList<AplicacionBean>();
+			PaginatedList<AplicacionBean> result = new PaginatedList<>();
 			result.setPageList(pageList);
 			result.setTotalList(rowcount);
 
 			return result;
 		} catch (Exception e) {
-			logger.error("ServicioAplicacionImpl - getAplicaciones:" + e);
-			throw new BusinessException(e, "errors.organismo.getOrganismos");
+			logger.error(SERVICIOAPLICAC1 + e);
+			throw new BusinessException(e, ERRORSDOTORGANI0);
 		}
 	}
 
@@ -467,7 +486,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			return getAplicacionBean(aplicacionTO);
 		} catch (Exception e) {
 			logger.error("ServicioProveedorSMS - loadProveedorSMS:" + e);
-			throw new BusinessException(e, "errors.organismo.loadOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -504,12 +523,10 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			aplicacionTO.setFechamodificacion(new Date());
 			aplicacionTO.setEliminado("S");
 			tblAplicacionesManager.update(aplicacionTO, source, accion, accionId);
-			
-			return;
 
 		} catch (Exception e) {
 			logger.error("ServicioProveedorSMS - deleteAplicacion:" + e);
-			throw new BusinessException(e, "errors.organismo.loadOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -533,9 +550,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			ConvertUtils.register(converter, java.util.Date.class);
 			BeanUtils.copyProperties(aplicacion, apli);
 			aplicacion.setAplicacionId(apli.getAplicacionid().intValue());
-		} catch (IllegalAccessException e) {
-			throw new BusinessException(e);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new BusinessException(e);
 		}
 
@@ -556,7 +571,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 		List<AplicacionBean> result = null;
 
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<AplicacionBean>();
+			result = new ArrayList<>();
 			for (TblAplicaciones a : lista) {
 				AplicacionBean aplicacion = new AplicacionBean();
 				try {
@@ -565,9 +580,7 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 					ConvertUtils.register(converter, java.util.Date.class);
 					BeanUtils.copyProperties(aplicacion, a);
 					aplicacion.setAplicacionId(a.getAplicacionid().intValue());
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 
@@ -596,10 +609,8 @@ public class ServicioAplicacionImpl implements ServicioAplicacion {
 			aplicacionTO.setAplicacionid((null != aplicacion.getAplicacionId()) ? aplicacion.getAplicacionId()
 					.longValue() : null);
 			aplicacionTO.setFechacreacion(aplicacion.getFechacreacion());
-		} catch (IllegalAccessException e) {
-			logger.error("ServicioAplicacionImpl - getAplicacionTO:" + e);
-		} catch (InvocationTargetException e) {
-			logger.error("ServicioAplicacionImpl - getAplicacionTO:" + e);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			logger.error(SERVICIOAPLICAC0 + e);
 		}
 		return aplicacionTO;
 	}

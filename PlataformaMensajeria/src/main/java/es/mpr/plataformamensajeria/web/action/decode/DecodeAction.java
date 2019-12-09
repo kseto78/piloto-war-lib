@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.springframework.context.annotation.Scope;
@@ -39,6 +37,10 @@ import es.mpr.plataformamensajeria.util.XMLUtils;
 public class DecodeAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
 	
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String NOUSER = "noUser";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -60,7 +62,7 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 	private CertificadoBean certificadoBean;
 	
 	/**  combo certificados. */
-	List<KeyValueObject> comboCertificados = new ArrayList<KeyValueObject>();
+	List<KeyValueObject> comboCertificados = new ArrayList<>();
 
 	
 	/* (non-Javadoc)
@@ -80,12 +82,13 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 	 */
 	public String decode() {
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null) 
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		
 		LOGGER.debug("[DecodeAction] - decode: Inicio");
 		
-		if (decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())){
+		if (decodeBean.getXmlCifrado()!=null && !"".equals(decodeBean.getXmlCifrado())){
 		
 			try {
 				
@@ -122,7 +125,7 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 	 * @throws Exception the exception
 	 */
 	public DecodeBean descifradoFichero(DecodeBean decodeBean,
-			String certificado) throws FactoryConfigurationError, Exception {
+			String certificado) throws Exception {
 		String xmlCifrado = decodeBean.getXmlCifrado();
 
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -170,18 +173,19 @@ public class DecodeAction extends PlataformaPaginationAction implements ServletR
 	 */
 	public String limpiar() {
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null) return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		
 		LOGGER.debug("[DecodeAction] - limpiar: Inicio");
 		
-		if ((decodeBean.getXmlCifrado()!=null && !("").equals(decodeBean.getXmlCifrado())) || 
-				(decodeBean.getXmlDescifrado()!=null && !("").equals(decodeBean.getXmlDescifrado()))){
+		if ((decodeBean.getXmlCifrado()!=null && !"".equals(decodeBean.getXmlCifrado())) || 
+				(decodeBean.getXmlDescifrado()!=null && !"".equals(decodeBean.getXmlDescifrado()))){
 			
 			try {
 				decodeBean.setXmlCifrado(null);
 				decodeBean.setXmlDescifrado(null);
-			}
-			catch (Exception e){
+			} catch (Exception e){
 				LOGGER.error("[DecodeAction] Error al limpiar el XML: ",e);
 				addActionErrorSession(this.getText("plataforma.decodificador.decodeLimpiar.error"));
 			}

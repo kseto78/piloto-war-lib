@@ -26,6 +26,8 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioTipoParametro;
 @Service("servicioTipoParametroImpl")
 public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	
+	protected static final String ERRORSDOTORGANI = "errors.organismo.getOrganismos";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioTipoParametroImpl.class);
 	
@@ -41,14 +43,11 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	public List<TipoParametroBean> getTipoParametrosServidor() throws BusinessException {
 		try {
 			List<TblTiposParametros> lista = tblTiposParametrosManager.listaTiposParametrosPorTipo(2);
-			List<TipoParametroBean> result = getListTipoParametroBean(lista);					
-		
-			return result;
+			return getListTipoParametroBean(lista);
 			
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioTipoParametroImpl - getTipoParametrosServidor:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		} 
 	}
 	
@@ -60,12 +59,11 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	public List<TipoParametroBean> getTipoParametrosProveedorSMS() throws BusinessException {
 		try {
 			List<TblTiposParametros> lista = tblTiposParametrosManager.listaTiposParametrosPorTipo(1);
-			List<TipoParametroBean> result = getListTipoParametroBean(lista);	
-			return result;
+			return getListTipoParametroBean(lista);
 			
 		}catch (Exception e){
 			logger.error("ServicioTipoParametroImpl - getTipoParametrosProveedorSMS:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		} 
 	}
 	
@@ -77,12 +75,11 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	public List<TipoParametroBean> getTipoParametrosReceptorSMS() throws BusinessException {
 		try {
 			List<TblTiposParametros> lista = tblTiposParametrosManager.listaTiposParametrosPorTipo(3);
-			List<TipoParametroBean> result = getListTipoParametroBean(lista);	
-			return result;
+			return getListTipoParametroBean(lista);
 			
 		}catch (Exception e){
 			logger.error("ServicioTipoParametroImpl - getTipoParametrosReceptorSMS:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		} 
 	}
 	
@@ -94,12 +91,11 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	public List<TipoParametroBean> getTipoParametrosServidorPush() throws BusinessException {
 		try {
 			List<TblTiposParametros> lista = tblTiposParametrosManager.listaTiposParametrosPorTipo(4);
-			List<TipoParametroBean> result = getListTipoParametroBean(lista);	
-			return result;
+			return getListTipoParametroBean(lista);
 			
 		}catch (Exception e){
 			logger.error("ServicioTipoParametroImpl - getTipoParametrosServidorPush:" + e);
-			throw new BusinessException(e,"errors.organismo.getOrganismos");	
+			throw new BusinessException(e,ERRORSDOTORGANI);	
 		} 
 	}
 
@@ -111,13 +107,12 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 	 * @throws BusinessException the business exception
 	 */
 	/////MIGRADO
-	protected List<TipoParametroBean> getListTipoParametroBean(List<TblTiposParametros> lista) throws BusinessException
-	{	
+	protected List<TipoParametroBean> getListTipoParametroBean(List<TblTiposParametros> lista) throws BusinessException {
+	
 		List<TipoParametroBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
-			result = new ArrayList<TipoParametroBean>();
+		if (lista!=null && !lista.isEmpty()) {
+			result = new ArrayList<>();
 		
 			for (TblTiposParametros t : lista) {
 				TipoParametroBean tipoParametro =  new TipoParametroBean();
@@ -126,9 +121,7 @@ public class ServicioTipoParametroImpl implements ServicioTipoParametro {
 					DateConverter converter = new DateConverter (defaultValue);         
 					ConvertUtils.register (converter, java.util.Date.class);
 					BeanUtils.copyProperties(tipoParametro, t);
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			

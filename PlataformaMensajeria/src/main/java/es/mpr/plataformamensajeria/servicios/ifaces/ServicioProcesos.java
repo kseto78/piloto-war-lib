@@ -5,7 +5,6 @@ import java.util.List;
 import com.map.j2ee.exceptions.BusinessException;
 import com.map.j2ee.pagination.PaginatedList;
 
-import es.minhap.plataformamensajeria.iop.beans.PdpDiputacionesBean;
 import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
 
 /**

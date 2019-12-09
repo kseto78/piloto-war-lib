@@ -18,9 +18,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
@@ -39,6 +36,60 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties;
 ////MIGRADO
 public class SendMailService extends HttpServlet  {
 
+	protected static final String PRUEBA_SIM = "Prueba SIM";
+
+	protected static final String JOBDOTMAILDOTRE = "job.mail.requiereAutenticacion";
+
+	protected static final String JOBDOTMAILDOTUS = "job.mail.usuario";
+
+	protected static final String MAILDOTSMTPDOTP = "mail.smtp.port";
+
+	protected static final String MAILDOTSMTPDOTS = "mail.smtp.starttls.enable";
+
+	protected static final String MAILDOTSMTPDOTC = "mail.smtp.connectiontimeout";
+
+	protected static final String S = "S";
+
+	protected static final String MAILDOTREQUIERE = "mail.requiereAutenticacion";
+
+	protected static final String JOBDOTMAILDOTTI = "job.mail.tiempoEspera";
+
+	protected static final String MAILDOTSMTPDOTT = "mail.smtp.timeout";
+
+	protected static final String TXTSENDMAILSERVICE = "SendMailService - initJob:";
+
+	protected static final String JOBDOTMAILDOTIP = "job.mail.ip.dns";
+
+	protected static final String TEXTHTML = "text/HTML";
+
+	protected static final String MAILDOTUSUARIO = "mail.usuario";
+
+	protected static final String SENDMAILSERVICE0 = "SendMailService - initInformesServicios:";
+
+	protected static final String SENDMAILSERVICE1 = "SendMailService - initServicio:";
+
+	protected static final String UTF_8 = "UTF-8";
+
+	protected static final String JOBDOTMAILDOTPU = "job.mail.puerto";
+
+	protected static final String MAILDOTSMTPDOTA = "mail.smtp.auth";
+
+	protected static final String MAILDOTSMTPDOTH = "mail.smtp.host";
+
+	protected static final String BLANKCHARSET = "; charset=";
+
+	protected static final String MAILDOTREQUIERE0 = "mail.requiereConexionSegura";
+
+	protected static final String IDENTIFICADOR = "[IDENTIFICADOR]";
+
+	protected static final String JOBDOTMAILDOTTI0 = "job.mail.titulo";
+
+	protected static final String TRUE = "true";
+
+	protected static final String NOMBREJOB = "[NOMBREJOB]";
+
+	protected static final String JOBDOTMAILDOTRE0 = "job.mail.requiereConexionSegura";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -49,9 +100,18 @@ public class SendMailService extends HttpServlet  {
 	private static SendMailService sendMailService = new SendMailService();
 	
 	/**  caracter separador lineas. */
-	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; //El salto de linea esta preparado para el correo en formato HTML
+	private static String CARACTER_SEPARADOR_LINEAS = "<br>"; 
+	//El salto de linea esta preparado para el correo en formato HTML
 	
 	
+	/**
+	 * Constructor de send mail service.
+	 */
+	public SendMailService() {
+		super();
+		
+	}
+
 	/**
 	 * Inits the servicio.
 	 *
@@ -62,21 +122,21 @@ public class SendMailService extends HttpServlet  {
 	 * @throws ServletException the servlet exception
 	 */
 	////MIGRADO
-	public void initServicio(String usuario, String aplicacion, String servicioId, PlataformaMensajeriaProperties configProp) throws ServletException{	
+	public void initServicio(String usuario, String aplicacion, String servicioId, PlataformaMensajeriaProperties configProp) throws ServletException{
+	
 		try {
            sendMailService.sendMailServicio(usuario, aplicacion, servicioId, configProp);
 		} catch (IOException e) {
-			logger.error("SendMailService - initServicio:" + e);
+			logger.error(SENDMAILSERVICE1 + e);
 		} catch (Exception e) {
-			if (e instanceof SMTPAddressFailedException)
-			{
+			if (e instanceof SMTPAddressFailedException) {
 				SMTPAddressFailedException smtpEx = (SMTPAddressFailedException)e;
-				logger.error("SendMailService - initServicio:" + smtpEx);
+				logger.error(SENDMAILSERVICE1 + smtpEx);
 			}else if (e instanceof SendFailedException){
 				SendFailedException sfex = (SendFailedException)e;
-				logger.error("SendMailService - initServicio:" + sfex);							
+				logger.error(SENDMAILSERVICE1 + sfex);							
 			} else {
-				logger.error("SendMailService - initServicio:" + e);
+				logger.error(SENDMAILSERVICE1 + e);
 			}
 		}
 	}
@@ -91,21 +151,21 @@ public class SendMailService extends HttpServlet  {
 	 * @throws ServletException the servlet exception
 	 */
 	///MIGRADO
-	public void initJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManagerImpl tblParametrosServidorManager) throws ServletException{		
+	public void initJob(String nombreJob, String resultado, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManagerImpl tblParametrosServidorManager) throws ServletException{
+	
 		try {
            sendMailService.sendMailJob(nombreJob, resultado, descripcionJob, configProp, tblParametrosServidorManager);
 		} catch (IOException e) {
-			logger.error("SendMailService - initJob:" + e);
+			logger.error(TXTSENDMAILSERVICE + e);
 		} catch (Exception e) {
-			if (e instanceof SMTPAddressFailedException)
-			{
+			if (e instanceof SMTPAddressFailedException) {
 				SMTPAddressFailedException smtpEx = (SMTPAddressFailedException)e;
-				logger.error("SendMailService - initJob:" + smtpEx);	
+				logger.error(TXTSENDMAILSERVICE + smtpEx);	
 			}else if (e instanceof SendFailedException){
 				SendFailedException sfex = (SendFailedException)e;
-				logger.error("SendMailService - initJob:" + sfex);							
+				logger.error(TXTSENDMAILSERVICE + sfex);							
 			} else {
-				logger.error("SendMailService - initJob:" + e);
+				logger.error(TXTSENDMAILSERVICE + e);
 			}
 		}
 	}
@@ -122,46 +182,22 @@ public class SendMailService extends HttpServlet  {
 	 */
 	////MIGRADO
 	public void initInformesServicios(String nombreJob, String resultado, String emails, String descripcionJob, PlataformaMensajeriaProperties configProp, TblParametrosServidorManager tblParametrosServidorManager) throws ServletException{
-		try {    
+		try {
+    	
           sendMailService.sendMailJobWithEmails(nombreJob, resultado, emails, descripcionJob, configProp, tblParametrosServidorManager);
 		} catch (IOException e) {
-			logger.error("SendMailService - initInformesServicios:" + e);
+			logger.error(SENDMAILSERVICE0 + e);
 		} catch (Exception e) {
-			if (e instanceof SMTPAddressFailedException)
-			{
+			if (e instanceof SMTPAddressFailedException) {
 				SMTPAddressFailedException smtpEx = (SMTPAddressFailedException)e;
-				logger.error("SendMailService - initInformesServicios:" + smtpEx);	
+				logger.error(SENDMAILSERVICE0 + smtpEx);	
 			}else if (e instanceof SendFailedException){
 				SendFailedException sfex = (SendFailedException)e;
-				logger.error("SendMailService - initInformesServicios:" + sfex);						
+				logger.error(SENDMAILSERVICE0 + sfex);						
 			} else {
-				logger.error("SendMailService - initInformesServicios:" + e);
+				logger.error(SENDMAILSERVICE0 + e);
 			}
 		}
-	}
-	
-	/**
-	 * Constructor de send mail service.
-	 */
-	public SendMailService() {
-		super();
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		super.doGet(req, resp);
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		super.doPost(req, resp);
 	}
 	
 	/**
@@ -185,28 +221,28 @@ public class SendMailService extends HttpServlet  {
 		Authenticator auth = null;
 		
 		// HOST
-		props.put("mail.smtp.host", configProp.getProperty("mail.ip.dns",null));
+		props.put(MAILDOTSMTPDOTH, configProp.getProperty("mail.ip.dns",null));
 		
 		// PUERTO
-		props.put("mail.smtp.port", configProp.getProperty("mail.puerto", null));
+		props.put(MAILDOTSMTPDOTP, configProp.getProperty("mail.puerto", null));
 		
 		// TIEMPO DE ESPERA
 		int timeout = Integer.parseInt(configProp.getProperty("mail.tiempoEspera", null)) * 1000;
-		props.put("mail.smtp.connectiontimeout", timeout); 
-		props.put("mail.smtp.timeout", timeout);
+		props.put(MAILDOTSMTPDOTC, timeout); 
+		props.put(MAILDOTSMTPDOTT, timeout);
 		
 		// SI REQUIERE CONEXION SEGURA
-		if (configProp.getProperty("mail.requiereConexionSegura", null) != null && configProp.getProperty("mail.requiereConexionSegura", null).equals("S")){
-			props.setProperty("mail.smtp.starttls.enable", "true");
+		if (configProp.getProperty(MAILDOTREQUIERE0, null) != null && S.equals(configProp.getProperty(MAILDOTREQUIERE0, null))){
+			props.setProperty(MAILDOTSMTPDOTS, TRUE);
 		}	
 		
 		// SI REQUIERE AUTENTIFICACION 
-		if (configProp.getProperty("mail.requiereAutenticacion", null) != null && configProp.getProperty("mail.requiereAutenticacion", null).equals("S")) {
-			props.put("mail.smtp.auth", true);
-			auth = new SMTPAuthenticator(configProp.getProperty("mail.usuario", null), configProp.getProperty("mail.password", null));
+		if (configProp.getProperty(MAILDOTREQUIERE, null) != null && S.equals(configProp.getProperty(MAILDOTREQUIERE, null))) {
+			props.put(MAILDOTSMTPDOTA, true);
+			auth = new SMTPAuthenticator(configProp.getProperty(MAILDOTUSUARIO, null), configProp.getProperty("mail.password", null));
 			session = Session.getInstance(props, auth);
 		}else{
-			props.put("mail.smtp.auth", false);
+			props.put(MAILDOTSMTPDOTA, false);
 			session = Session.getInstance(props, null);
 		}
 		
@@ -218,11 +254,11 @@ public class SendMailService extends HttpServlet  {
 		InternetAddress addressFrom = null;
 		
 		// ANADIR EL SENDER
-		if (configProp.getProperty("mail.usuario", null) != null){
-			addressFrom = new InternetAddress(configProp.getProperty("mail.usuario", null),"Prueba SIM", null);
+		if (configProp.getProperty(MAILDOTUSUARIO, null) != null){
+			addressFrom = new InternetAddress(configProp.getProperty(MAILDOTUSUARIO, null),PRUEBA_SIM, null);
 			msg.setFrom(addressFrom);			
 		}else{
-			addressFrom = new InternetAddress(configProp.getProperty("mail.usuario", null));
+			addressFrom = new InternetAddress(configProp.getProperty(MAILDOTUSUARIO, null));
 			msg.setFrom(addressFrom);
 		}
 		
@@ -245,9 +281,9 @@ public class SendMailService extends HttpServlet  {
 		
 		// ASUNTO
 		String tituloCorreo = configProp.getProperty("mail.titulo", null);
-		tituloCorreo = tituloCorreo.replace("[IDENTIFICADOR]", servicioId);
+		tituloCorreo = tituloCorreo.replace(IDENTIFICADOR, servicioId);
 		
-		msg.setSubject(tituloCorreo, "UTF-8");
+		msg.setSubject(tituloCorreo, UTF_8);
 		
 		/////////  CREACION DEL CUERPO DEL MENSAJE  ///////////////
 		Multipart multipart = new MimeMultipart();
@@ -256,9 +292,9 @@ public class SendMailService extends HttpServlet  {
 		String cuerpoCorreo = configProp.getProperty("mail.cuerpo", null);
 		cuerpoCorreo = cuerpoCorreo.replace("[USUARIO]", usuario);
 		cuerpoCorreo = cuerpoCorreo.replace("[APLICACION]", aplicacion);
-		cuerpoCorreo = cuerpoCorreo.replace("[IDENTIFICADOR]", servicioId);
+		cuerpoCorreo = cuerpoCorreo.replace(IDENTIFICADOR, servicioId);
 		
-		String typeContent = "text/HTML" +"; charset=" + "UTF-8";
+		String typeContent = TEXTHTML +BLANKCHARSET + UTF_8;
 		cuerpo.setContent(cuerpoCorreo, typeContent);
 		multipart.addBodyPart(cuerpo);
 		
@@ -290,28 +326,28 @@ public class SendMailService extends HttpServlet  {
 		Authenticator auth = null;
 		
 		// HOST
-		props.put("mail.smtp.host", configProp.getProperty("job.mail.ip.dns", null));
+		props.put(MAILDOTSMTPDOTH, configProp.getProperty(JOBDOTMAILDOTIP, null));
 		
 		// PUERTO
-		props.put("mail.smtp.port", configProp.getProperty("job.mail.puerto", null));
+		props.put(MAILDOTSMTPDOTP, configProp.getProperty(JOBDOTMAILDOTPU, null));
 		
 		// TIEMPO DE ESPERA
-		int timeout = Integer.parseInt(configProp.getProperty("job.mail.tiempoEspera", null)) * 1000;
-		props.put("mail.smtp.connectiontimeout", timeout); 
-		props.put("mail.smtp.timeout", timeout);
+		int timeout = Integer.parseInt(configProp.getProperty(JOBDOTMAILDOTTI, null)) * 1000;
+		props.put(MAILDOTSMTPDOTC, timeout); 
+		props.put(MAILDOTSMTPDOTT, timeout);
 		
 		// SI REQUIERE CONEXION SEGURA
-		if (configProp.getProperty("job.mail.requiereConexionSegura", null) != null && configProp.getProperty("job.mail.requiereConexionSegura", null).equals("S")){
-			props.setProperty("mail.smtp.starttls.enable", "true");
+		if (configProp.getProperty(JOBDOTMAILDOTRE0, null) != null && S.equals(configProp.getProperty(JOBDOTMAILDOTRE0, null))){
+			props.setProperty(MAILDOTSMTPDOTS, TRUE);
 		}	
 		
 		// SI REQUIERE AUTENTIFICACION 
-		if (configProp.getProperty("job.mail.requiereAutenticacion", null) != null && configProp.getProperty("job.mail.requiereAutenticacion", null).equals("S")) {
-			props.put("mail.smtp.auth", true);
+		if (configProp.getProperty(JOBDOTMAILDOTRE, null) != null && S.equals(configProp.getProperty(JOBDOTMAILDOTRE, null))) {
+			props.put(MAILDOTSMTPDOTA, true);
 			
 			//Buscamos todos los parametros con el valor de la property de job.mail.usuario
 			TblParametrosServidorQuery tblParQuery = new TblParametrosServidorQuery();
-			tblParQuery.setValor(configProp.getProperty("job.mail.usuario", null));				
+			tblParQuery.setValor(configProp.getProperty(JOBDOTMAILDOTUS, null));				
 			List<TblParametrosServidor> parametrosServidor = tblParametrosServidorManager.getByQuery(tblParQuery);
 			
 			//Buscamos los parametros con el servidor id de la consulta anterior y el tipo de parametro 3
@@ -320,15 +356,16 @@ public class SendMailService extends HttpServlet  {
 			queryServ.setServidorid(parametrosServidor.get(0).getTblServidores().getServidorid());
 			tblParQuery2.setTblServidores(queryServ);
 			TblTiposParametrosQuery tiposQuery = new TblTiposParametrosQuery();
-			tiposQuery.setTipoparametroid(3L); //Tipo de parametro de contraseña
+			tiposQuery.setTipoparametroid(3L); 
+			//Tipo de parametro de contraseña
 			tblParQuery2.setTblTiposParametros(tiposQuery);
 			List<TblParametrosServidor> valorFinal = tblParametrosServidorManager.getByQuery(tblParQuery2);
 			String contraseniaJobs = valorFinal.get(0).getValor();
 
-			auth = new SMTPAuthenticator(configProp.getProperty("job.mail.usuario", null), contraseniaJobs);
+			auth = new SMTPAuthenticator(configProp.getProperty(JOBDOTMAILDOTUS, null), contraseniaJobs);
 			session = Session.getInstance(props, auth);
 		}else{
-			props.put("mail.smtp.auth", false);
+			props.put(MAILDOTSMTPDOTA, false);
 			session = Session.getInstance(props, null);
 		}
 		
@@ -340,11 +377,11 @@ public class SendMailService extends HttpServlet  {
 		InternetAddress addressFrom = null;
 		
 		// ANADIR EL SENDER
-		if (configProp.getProperty("job.mail.usuario", null) != null){
-			addressFrom = new InternetAddress(configProp.getProperty("job.mail.usuario", null),"Prueba SIM");
+		if (configProp.getProperty(JOBDOTMAILDOTUS, null) != null){
+			addressFrom = new InternetAddress(configProp.getProperty(JOBDOTMAILDOTUS, null),PRUEBA_SIM);
 			msg.setFrom(addressFrom);			
 		}else{
-			addressFrom = new InternetAddress(configProp.getProperty("job.mail.usuario", null));
+			addressFrom = new InternetAddress(configProp.getProperty(JOBDOTMAILDOTUS, null));
 			msg.setFrom(addressFrom);
 		}
 		
@@ -366,22 +403,22 @@ public class SendMailService extends HttpServlet  {
 		msg.setRecipients(Message.RecipientType.BCC, addressBCC);
 		
 		// ASUNTO
-		String tituloCorreo = configProp.getProperty("job.mail.titulo", null);
-		tituloCorreo = tituloCorreo.replace("[NOMBREJOB]", nombreJob);
+		String tituloCorreo = configProp.getProperty(JOBDOTMAILDOTTI0, null);
+		tituloCorreo = tituloCorreo.replace(NOMBREJOB, nombreJob);
 		
-		msg.setSubject(tituloCorreo, "UTF-8");
+		msg.setSubject(tituloCorreo, UTF_8);
 		
 		/////////  CREACION DEL CUERPO DEL MENSAJE  ///////////////
 		Multipart multipart = new MimeMultipart();
 		MimeBodyPart cuerpo = new MimeBodyPart();
 		
 		String cuerpoCorreo = configProp.getProperty("job.mail.cuerpo", null);
-		cuerpoCorreo = cuerpoCorreo.replace("[NOMBREJOB]", nombreJob);
+		cuerpoCorreo = cuerpoCorreo.replace(NOMBREJOB, nombreJob);
 		cuerpoCorreo = cuerpoCorreo.replace("[RESULTADO]", resultado);
 		cuerpoCorreo = cuerpoCorreo.concat(CARACTER_SEPARADOR_LINEAS);
 		cuerpoCorreo = cuerpoCorreo.concat(descripcionJob);
 		
-		String typeContent = "text/HTML" +"; charset=" + "UTF-8";
+		String typeContent = TEXTHTML +BLANKCHARSET + UTF_8;
 		cuerpo.setContent(cuerpoCorreo, typeContent);
 		multipart.addBodyPart(cuerpo);
 		
@@ -414,28 +451,28 @@ public class SendMailService extends HttpServlet  {
 		Authenticator auth = null;
 		
 		// HOST
-		props.put("mail.smtp.host", configProp.getProperty("job.mail.ip.dns", null));
+		props.put(MAILDOTSMTPDOTH, configProp.getProperty(JOBDOTMAILDOTIP, null));
 		
 		// PUERTO
-		props.put("mail.smtp.port", configProp.getProperty("job.mail.puerto", null));
+		props.put(MAILDOTSMTPDOTP, configProp.getProperty(JOBDOTMAILDOTPU, null));
 				
 		// TIEMPO DE ESPERA
-		int timeout = Integer.parseInt(configProp.getProperty("job.mail.tiempoEspera", null)) * 1000;
-		props.put("mail.smtp.connectiontimeout", timeout); 
-		props.put("mail.smtp.timeout", timeout);
+		int timeout = Integer.parseInt(configProp.getProperty(JOBDOTMAILDOTTI, null)) * 1000;
+		props.put(MAILDOTSMTPDOTC, timeout); 
+		props.put(MAILDOTSMTPDOTT, timeout);
 		
 		// SI REQUIERE CONEXION SEGURA
-		if (configProp.getProperty("job.mail.requiereConexionSegura", null) != null && configProp.getProperty("job.mail.requiereConexionSegura", null).equals("S")){
-			props.setProperty("mail.smtp.starttls.enable", "true");
+		if (configProp.getProperty(JOBDOTMAILDOTRE0, null) != null && S.equals(configProp.getProperty(JOBDOTMAILDOTRE0, null))){
+			props.setProperty(MAILDOTSMTPDOTS, TRUE);
 		}	
 		
 		// SI REQUIERE AUTENTIFICACION 
-		if (configProp.getProperty("job.mail.requiereAutenticacion", null) != null && configProp.getProperty("job.mail.requiereAutenticacion", null).equals("S")) {
-			props.put("mail.smtp.auth", true);
+		if (configProp.getProperty(JOBDOTMAILDOTRE, null) != null && S.equals(configProp.getProperty(JOBDOTMAILDOTRE, null))) {
+			props.put(MAILDOTSMTPDOTA, true);
 			
 			//Buscamos todos los parametros con el valor de la property de job.mail.usuario
 			TblParametrosServidorQuery tblParQuery = new TblParametrosServidorQuery();
-			tblParQuery.setValor(configProp.getProperty("job.mail.usuario", null));				
+			tblParQuery.setValor(configProp.getProperty(JOBDOTMAILDOTUS, null));				
 			List<TblParametrosServidor> parametrosServidor = tblParametrosServidorManager.getByQuery(tblParQuery);
 			
 			//Buscamos los parametros con el servidor id de la consulta anterior y el tipo de parametro 3
@@ -444,15 +481,16 @@ public class SendMailService extends HttpServlet  {
 			queryServ.setServidorid(parametrosServidor.get(0).getTblServidores().getServidorid());
 			tblParQuery2.setTblServidores(queryServ);
 			TblTiposParametrosQuery tiposQuery = new TblTiposParametrosQuery();
-			tiposQuery.setTipoparametroid(3L); //Tipo de parametro de contraseña
+			tiposQuery.setTipoparametroid(3L); 
+			//Tipo de parametro de contraseña
 			tblParQuery2.setTblTiposParametros(tiposQuery);
 			List<TblParametrosServidor> valorFinal = tblParametrosServidorManager.getByQuery(tblParQuery2);
 			String contraseniaJobs = valorFinal.get(0).getValor();
 
-			auth = new SMTPAuthenticator(configProp.getProperty("mail.usuario", null), contraseniaJobs);			
+			auth = new SMTPAuthenticator(configProp.getProperty(MAILDOTUSUARIO, null), contraseniaJobs);			
 			session = Session.getInstance(props, auth);
 		}else{
-			props.put("mail.smtp.auth", false);
+			props.put(MAILDOTSMTPDOTA, false);
 			session = Session.getInstance(props, null);
 		}
 		
@@ -464,11 +502,11 @@ public class SendMailService extends HttpServlet  {
 		InternetAddress addressFrom = null;
 		
 		// ANADIR EL SENDER
-		if (configProp.getProperty("job.mail.usuario", null) != null){
-			addressFrom = new InternetAddress(configProp.getProperty("job.mail.usuario", null),"Prueba SIM");
+		if (configProp.getProperty(JOBDOTMAILDOTUS, null) != null){
+			addressFrom = new InternetAddress(configProp.getProperty(JOBDOTMAILDOTUS, null),PRUEBA_SIM);
 			msg.setFrom(addressFrom);			
 		}else{
-			addressFrom = new InternetAddress(configProp.getProperty("job.mail.usuario", null));
+			addressFrom = new InternetAddress(configProp.getProperty(JOBDOTMAILDOTUS, null));
 			msg.setFrom(addressFrom);
 		}
 		
@@ -482,10 +520,10 @@ public class SendMailService extends HttpServlet  {
 
 		
 		// ASUNTO
-		String tituloCorreo = configProp.getProperty("job.mail.titulo", null);
-		tituloCorreo = tituloCorreo.replace("[NOMBREJOB]", nombreJob);
+		String tituloCorreo = configProp.getProperty(JOBDOTMAILDOTTI0, null);
+		tituloCorreo = tituloCorreo.replace(NOMBREJOB, nombreJob);
 		
-		msg.setSubject(tituloCorreo, "UTF-8");
+		msg.setSubject(tituloCorreo, UTF_8);
 		
 		/////////  CREACION DEL CUERPO DEL MENSAJE  ///////////////
 		Multipart multipart = new MimeMultipart();
@@ -495,7 +533,7 @@ public class SendMailService extends HttpServlet  {
 		
 		cuerpoCorreo = cuerpoCorreo.concat(descripcionJob);
 		
-		String typeContent = "text/HTML" +"; charset=" + "UTF-8";
+		String typeContent = TEXTHTML +BLANKCHARSET + UTF_8;
 		cuerpo.setContent(cuerpoCorreo, typeContent);
 		multipart.addBodyPart(cuerpo);
 		
@@ -516,18 +554,18 @@ public class SendMailService extends HttpServlet  {
 	// METODO QUE RECUPERA LOS DESTINATARIOS POR EL TIPO (CC,TO,BCC)
 	private ArrayList<String> recuperarInternetAddress(String address) throws AddressException {
 		
-		ArrayList<String> recipients = new ArrayList<String>();
+		ArrayList<String> recipients = new ArrayList<>();
 		int contador = 0;
 		
 		if(null != address && !address.isEmpty()){
 			//Si existe solo una direccion de correo
-			if(address.indexOf(";") == -1){
+			if(address.indexOf(';') == -1){
 				recipients.add(address);
 			} else {
 				//Recuperamos todos las direcciones de correo
-				while (address.indexOf(";", contador) > -1) {
-					recipients.add(address.substring(contador, address.indexOf(";", contador)));
-					contador = address.indexOf(";", contador) + 1;
+				while (address.indexOf(';', contador) > -1) {
+					recipients.add(address.substring(contador, address.indexOf(';', contador)));
+					contador = address.indexOf(';', contador) + 1;
 				}
 				recipients.add(address.substring(contador, address.length()));
 			}
@@ -549,7 +587,7 @@ public class SendMailService extends HttpServlet  {
 		
 		InternetAddress[] address = new InternetAddress[recipients.size()];
 		
-		for (int i = 0; i < recipients.size(); i++) {
+		for (int i = 0, s = recipients.size(); i < s; i++) {
 			address[i] = new InternetAddress(recipients.get(i));
 		}
 		return address;

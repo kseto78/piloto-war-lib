@@ -12,6 +12,16 @@ public class ProductoBean implements Audit {
 
 	
 
+	/**  id producto. */
+	protected Long idProducto = null;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  codigo. */
+	protected String codigo = null;
+
+
 	/**
 	 * Constructor de producto bean.
 	 */
@@ -23,16 +33,6 @@ public class ProductoBean implements Audit {
 	}
 
 
-	/**  id producto. */
-	protected Long idProducto = null;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  codigo. */
-	protected String codigo = null;
-
-	
 	/**
 	 * Obtener id producto.
 	 *

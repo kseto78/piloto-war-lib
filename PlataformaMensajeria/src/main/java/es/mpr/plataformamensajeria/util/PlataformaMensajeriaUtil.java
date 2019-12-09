@@ -44,6 +44,20 @@ import es.mpr.template.web.action.admin.UsuariosForm;
  */
 public class PlataformaMensajeriaUtil {
 
+	protected static final String PLATAFORMAMENSA = "PlataformaMensajeriaUtil - getUsuarioLogueado Authority():";
+
+	protected static final String R_CONST_REF = "\\";
+
+	protected static final String DD20_4D250_5DOT = "([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.";
+
+	protected static final String DOT = ".";
+
+	protected static final String CONTENT_DISPOSI = "Content-Disposition";
+
+	protected static final String ATTACHMENT_FILE = "attachment; filename=\\";
+
+	protected static final String PLATAFORMAMENSA0 = "PlataformaMensajeriaUtil - getUsuarioLogueado ";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(PlataformaMensajeriaUtil.class);
 	
@@ -74,13 +88,13 @@ public class PlataformaMensajeriaUtil {
 	public static final String USERNAME = "USERNAME";
 	
 	/** Constante ROLES. */
-	public static final HashMap<String,Integer> ROLES = new HashMap<String,Integer>();
+	public static final HashMap<String,Integer> ROLES = new HashMap<>();
     
     /** Constante IPADDRESS_PATTERN. */
     private static final String IPADDRESS_PATTERN = 
 		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		DD20_4D250_5DOT +
+		DD20_4D250_5DOT +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
 	/**  pattern. */
@@ -90,8 +104,7 @@ public class PlataformaMensajeriaUtil {
 	private static Matcher matcher;
 
 	 
-	static
- 	{
+	static {
 		ROLES.put(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR,1 );
 		ROLES.put(PlataformaMensajeriaUtil.ROL_PROPIETARIO,2);
 		ROLES.put(PlataformaMensajeriaUtil.ROL_CAID,3);
@@ -116,12 +129,12 @@ public class PlataformaMensajeriaUtil {
 			UserVO tmpUserVO = (UserVO) detallesUsuario.getUserInfo();
 			Collection<GrantedAuthority> roles=detallesUsuario.getAuthorities();
 		     for (GrantedAuthority g : roles) {
-		    	 logger.info("PlataformaMensajeriaUtil - getUsuarioLogueado Authority():" +g.getAuthority());
+		    	 logger.info(PLATAFORMAMENSA +g.getAuthority());
 			}
 			try {
 				LocaleBeanUtils.copyProperties(formUsuario,tmpUserVO);
 			} catch (IllegalAccessException | InvocationTargetException e) {
-				logger.info("PlataformaMensajeriaUtil - getUsuarioLogueado " + e);
+				logger.info(PLATAFORMAMENSA0 + e);
 			} 
 		}
 		return formUsuario;
@@ -139,13 +152,13 @@ public class PlataformaMensajeriaUtil {
 		UsuariosForm formUsuario = new UsuariosForm();
 		 Collection<GrantedAuthority> roles=detallesUsuario.getAuthorities();
 	     for (GrantedAuthority g : roles) {
-	    	 logger.info("PlataformaMensajeriaUtil - getUsuarioLogueado Authority():" +g.getAuthority());
+	    	 logger.info(PLATAFORMAMENSA +g.getAuthority());
 		}
 		UserVO tmpUserVO = (UserVO) detallesUsuario.getUserInfo();
 		try {
 			LocaleBeanUtils.copyProperties(formUsuario,tmpUserVO);
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			logger.info("PlataformaMensajeriaUtil - getUsuarioLogueado " +e);
+			logger.info(PLATAFORMAMENSA0 +e);
 		} 
 		return formUsuario;
 	}
@@ -158,11 +171,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 	
 	public static boolean isEmpty(String value){
-		if(value==null||(value!=null&&value.equals(""))){
-			return true;
-		}else{
-			return false;
-		}
+		return value==null||(value!=null&&"".equals(value));
 	}
 	
 	/**
@@ -173,11 +182,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 	
 	public static boolean isEmptyNumber(Integer value){
-		if(value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1))){
-			return true;
-		}else{
-			return false;
-		}
+		return value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1));
 	}
 		
 	/**
@@ -188,11 +193,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 	
 	public static boolean isEmptyNumberLong(Long value){
-		if(value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1))){
-			return true;
-		}else{
-			return false;
-		}
+		return value==null||(value!=null&&(value.intValue()==0||value.intValue()==-1));
 	}
 	
 	/**
@@ -233,7 +234,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 	
 	public static HashMap<Integer, Integer> getMapPermisosAplicaciones(String userName, ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
-		HashMap<Integer,Integer> mapPermisosAplicaciones = new HashMap<Integer,Integer>();
+		HashMap<Integer,Integer> mapPermisosAplicaciones = new HashMap<>();
 		List<UsuarioAplicacionBean> lista = servicioUsuarioAplicacion.getListPermisosAplicacionesUsuario(userName);
 		for (UsuarioAplicacionBean uab : lista) {
 			Integer aplicacion = 0;
@@ -258,8 +259,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 
 	public static Integer getRolIdFromSession(HttpServletRequest request){
-		Integer sessionRolIdUsuario = (Integer)request.getSession().getAttribute(ID_ROL_USUARIO_PLATAFORMA);
-		return sessionRolIdUsuario;
+		return (Integer)request.getSession().getAttribute(ID_ROL_USUARIO_PLATAFORMA);
 	}
 	
 	/**
@@ -270,8 +270,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 	
 	public static String getRolFromSession(HttpServletRequest request){
-		String sessionRolUsuario = (String)request.getSession().getAttribute(ROL_USUARIO_PLATAFORMA);
-		return sessionRolUsuario;
+		return (String)request.getSession().getAttribute(ROL_USUARIO_PLATAFORMA);
 	}
 	
 	/**
@@ -282,8 +281,7 @@ public class PlataformaMensajeriaUtil {
 	 */
 	
 	public static Integer getIdUsuarioFromSession(HttpServletRequest request){
-		Integer sessionIdUsuario = (Integer)request.getSession().getAttribute(ID_USUARIO_LOGUEADO);
-		return sessionIdUsuario;
+		return (Integer)request.getSession().getAttribute(ID_USUARIO_LOGUEADO);
 
 	}	
 	
@@ -313,6 +311,7 @@ public class PlataformaMensajeriaUtil {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args){
+		// This method has to be empty.
 		
 	}
 
@@ -346,11 +345,11 @@ public class PlataformaMensajeriaUtil {
      */
 	////MIGRADO
 	public static boolean isMobileNumber(String nmaxenvios) {
-		if (nmaxenvios == null || nmaxenvios.toString().length() == 0 || !(nmaxenvios.toString().length()==9)){
+		if (nmaxenvios == null || nmaxenvios.isEmpty() || nmaxenvios.length() != 9){
             return false;
 		}else{
-	        for (int i = 0; i < nmaxenvios.toString().length() - 1; i++) {
-	            if (!Character.isDigit(nmaxenvios.toString().charAt(i))){
+	        for (int i = 0; i < nmaxenvios.length() - 1; i++) {
+	            if (!Character.isDigit(nmaxenvios.charAt(i))){
 	            	return false;
 	            }
 	        }
@@ -366,11 +365,13 @@ public class PlataformaMensajeriaUtil {
      */
 	////MIGRADO
 	public static boolean isNumber(Integer nmaxenvios) {
-		if (nmaxenvios == null || nmaxenvios.toString().length() == 0)
-            return false;
+		if (nmaxenvios == null || nmaxenvios.toString().isEmpty()) {
+			return false;
+		}
         for (int i = 0; i < nmaxenvios.toString().length(); i++) {
-            if (!Character.isDigit(nmaxenvios.toString().charAt(i)))
-                return false;
+            if (!Character.isDigit(nmaxenvios.toString().charAt(i))) {
+				return false;
+			}
         }
         return true;
 	}
@@ -384,12 +385,12 @@ public class PlataformaMensajeriaUtil {
 	 */
 	////MIGRADO
 	public static ArrayList<String> getYears(String startYear,String endYear){
-		ArrayList<String> listadoAnyos = new ArrayList<String>();
+		ArrayList<String> listadoAnyos = new ArrayList<>();
 		try{
-			int start = Integer.valueOf(startYear);
+			int start = Integer.parseInt(startYear);
 			int lastYear = 0;
 			if(endYear!=null&&!endYear.isEmpty()){
-				lastYear = Integer.valueOf(endYear);
+				lastYear = Integer.parseInt(endYear);
 			}else{
 				lastYear = Calendar.getInstance().get(Calendar.YEAR);
 			}
@@ -401,7 +402,6 @@ public class PlataformaMensajeriaUtil {
 				}
 			}
 		}catch(NumberFormatException exc){
-			exc.printStackTrace();
 		}
 		return listadoAnyos;
 	}
@@ -415,10 +415,10 @@ public class PlataformaMensajeriaUtil {
 	
 	////MIGRADO
 	public static boolean validateEmail(String email){
-		String EMAIL_PATTERN = 
+		String emailPattern = 
 				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-		pattern = Pattern.compile(EMAIL_PATTERN);
+		pattern = Pattern.compile(emailPattern);
 		matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
@@ -494,9 +494,9 @@ public class PlataformaMensajeriaUtil {
 		
 		String contenidoFicheroUTF8 = Utils.convertToUTF8(contenidoFichero);
 		
-		String contentDisposition = "attachment; filename=\"" + nombreFichero + "." + tipoFichero + "\"";
+		String contentDisposition = ATTACHMENT_FILE + nombreFichero + DOT + tipoFichero + R_CONST_REF;
 
-		response.setHeader("Content-Disposition", contentDisposition);
+		response.setHeader(CONTENT_DISPOSI, contentDisposition);
 
 		response.setContentType("text/xml");
 
@@ -509,7 +509,7 @@ public class PlataformaMensajeriaUtil {
 				
 			} catch (IOException e) {
 				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroXml - ERROR: Se ha producido al descargar el fichero");
-				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroXml - ERROR: " + e.toString(), e);
+				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroXml - ERROR: " + e, e);
 			}
 	        
 			logger.info("[PlataformaMensajeriaUtil] - descargaFicheroXml - fin");
@@ -527,10 +527,9 @@ public class PlataformaMensajeriaUtil {
 			String contenidoFichero, String tipoFichero) {
 
 		logger.info("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - inicio");
-		//Path pathFile = Paths.get(contenidoFichero);
 		String old = contenidoFichero.substring(contenidoFichero.lastIndexOf('/') + 1);
 		String f = contenidoFichero;
-		f = f.replace(old, nombreFichero) + "." + tipoFichero;
+		f = f.replace(old, nombreFichero) + DOT + tipoFichero;
 		Path pathFile = Paths.get(contenidoFichero);
 		Path destinationPath = Paths.get(f);
 					
@@ -539,9 +538,9 @@ public class PlataformaMensajeriaUtil {
 				Files.move(pathFile, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 				byte bFichero[] = Files.readAllBytes(destinationPath);
 				
-				String contentDisposition = "attachment; filename=\"" + nombreFichero + "." + tipoFichero + "\"";
+				String contentDisposition = ATTACHMENT_FILE + nombreFichero + DOT + tipoFichero + R_CONST_REF;
 
-				response.setHeader("Content-Disposition", contentDisposition);
+				response.setHeader(CONTENT_DISPOSI, contentDisposition);
 
 				response.setContentType("application/vnd-com.apple.pkpass");
 				
@@ -553,7 +552,7 @@ public class PlataformaMensajeriaUtil {
 				Files.delete(destinationPath);
 			} catch (IOException e) {
 				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - ERROR: Se ha producido al descargar el fichero");
-				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - ERROR: " + e.toString(), e);
+				logger.error("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - ERROR: " + e, e);
 			}
 	        
 			logger.info("[PlataformaMensajeriaUtil] - descargaFicheroPkpass - fin");

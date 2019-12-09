@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -70,6 +69,18 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Controller("altaMasivaAction")
 @Scope("prototype")
 public class AltaMasivaAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
+
+	protected static final String PLATAFORMADOTOR = "plataforma.organismos.altasmasivas.error.existencia";
+
+	protected static final String T = "\\t";
+
+	protected static final String ORGANISMOSACTIO = "OrganismosAction - cargarComboServicioOrganismos:";
+
+	protected static final String BLANK = " ";
+
+	protected static final String R_CONST_REF2 = ",";
+
+	protected static final String ORGANISMOSACTIO0 = "OrganismosAction - load:";
 
 	private static final String ALTA_MASIVA_ACTION_CARGAR_COMBO_SERVICIO_ORGANISMOS = "AltaMasivaAction - cargarComboServicioOrganismos:";
 
@@ -248,13 +259,16 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	private static final String LOG_SOURCE_ALTASMASIVAS = "log.SOURCE_ALTASMASIVAS";
 	
 	/** Constante RECOVERY. */
-	private static final String RECOVERY = "recovery";
+	private static final String TXTRECOVERY = "recovery";
 	
 	/** Property texto altas masivas */
 	private String textoAltasMasivas;
 	
 	/** Property texto entrada altas masivas */
 	private String textoEntradaAltasMasivas;
+
+	/**  detalle aplicacion. */
+	transient DetalleAplicacionBean detalleAplicacion;
 	
 
 	/**
@@ -264,8 +278,9 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	 * @throws BaseException the base exception
 	 */
 	public String newSearch() {
-		if (getRequest().getSession().getAttribute(AltaMasivaAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(AltaMasivaAction.INFO_USER) == null) {
 			return AltaMasivaAction.NO_USER;
+		}
 		
 		textoAltasMasivas = properties.getProperty("altasmasivas.texto", null);
 		textoEntradaAltasMasivas = properties.getProperty("altasmasivas.texto.entrada", null);
@@ -289,22 +304,23 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("OrganismosAction - load:" + e);
+			logger.error(ORGANISMOSACTIO0 + e);
 			return AltaMasivaAction.NO_USER;
 		}
-		if (idOrganismo == null)
+		if (idOrganismo == null) {
 			throw new BusinessException("EL idOrganismo recibido es nulo");
+		}
 		try {
 						
 			organismo = new OrganismoBean();
-			organismo.setOrganismoId(new Integer(idOrganismo));
+			organismo.setOrganismoId(Integer.valueOf(idOrganismo));
 			organismo = servicioOrganismo.loadOrganismo(organismo);
 			comboOrganismosHijos = cargarComboOrganismosHijos(organismo.getDir3());
 
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
 			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { organismo.getOrganismoId().toString() });
-			logger.error("OrganismosAction - load:" + e);
+			logger.error(ORGANISMOSACTIO0 + e);
 			throw new BusinessException(mensg);
 		} 
 	}
@@ -318,7 +334,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	@Override
 	public void prepare() throws Exception {
 		session = (Map) ActionContext.getContext().get("session");
-		recovery = (String) session.get(RECOVERY);
+		recovery = (String) session.get(TXTRECOVERY);
 		
 		comboOrganismosPdp = cargarComboOrganismosPdp();
 		comboServicioOrganismos = cargarComboServicioOrganismos();
@@ -337,13 +353,14 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 			logger.error(ALTA_MASIVA_ACTION_CARGAR_COMBO_SERVICIO_ORGANISMOS + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (PdpDiputacionesBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getPdpDiputacionesId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -354,14 +371,15 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	 */
 	///MIGRADO
 	public String ajaxLoadServicios() {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
+		if (getRequest().getSession().getAttribute("infoUser") == null) {
 			return "noUser";
+		}
 		if (idServicio == null) {
 			addFieldErrorSession("Datos incorrectos");
 		} else {
 			ResultOptions rOptions = new ResultOptions();
 			try {
-				if (idServicio.length() > 0) {
+				if (!idServicio.isEmpty()) {
 					ServicioBean sBean = new ServicioBean();
 					sBean.setServicioId(Integer.valueOf(idServicio));
 					ServicioBean servBean = servicioServicio.loadServicio(sBean);
@@ -373,9 +391,8 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 					.add(new SelectOption(String.valueOf(servBean.getDescripcion()),"descripcion"));				
 					
 				} else {
-					String rolUsuario = PlataformaMensajeriaUtil.getRolFromSession(request);
-					Integer idUsuario = PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
-//					listado = (ArrayList<ServicioBean>) servicioServicio.getServicios(rolUsuario, idUsuario);
+					PlataformaMensajeriaUtil.getRolFromSession(request);
+					PlataformaMensajeriaUtil.getIdUsuarioFromSession(request);
 				}
 				
 			} catch (Exception e) {
@@ -412,25 +429,26 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	if(archivoExcel == null){
 		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.seleccion.archivo"));		
 	}
-	if(datosServicios.equals("")){
+	if("".equals(datosServicios)){
 		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.seleccion.servicio"));	
 	}else{
-		idServicios = datosServicios.split(",");
+		idServicios = datosServicios.split(R_CONST_REF2);
 		List<String> listaServicios = Arrays.asList(idServicios); 		
 		listaServicioOrganismos = new ArrayList<>();	
-		for(String serv:listaServicios){	
+		for(String serv:listaServicios){
+		
 			ServicioBean sBean = new ServicioBean();
 			sBean.setServicioId(Integer.valueOf(serv));
 			ServicioBean servBean = servicioServicio.loadServicio(sBean);
 			listaServicioOrganismos.add(servBean);
 		}
 	}
-	if(datosServidor.equals("")){
+	if("".equals(datosServidor)){
 		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.seleccion.servidor"));	
 	}else{
 		listaServidoresOrganismos = new ArrayList<>();
 		ServidoresOrganismosBean servBean = new ServidoresOrganismosBean();
-		infoServidor = datosServidor.split(",");	
+		infoServidor = datosServidor.split(R_CONST_REF2);	
 		servBean.setServidorId(Long.valueOf(infoServidor[0]));
 		servBean.setHeaderSMS(infoServidor[1]);
 		servBean.setProveedorUsuarioSMS(infoServidor[2]);
@@ -439,13 +457,13 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		listaServidoresOrganismos.add(servBean);
 	}
 	
-	if(archivoExcel == null || datosServicios.equals("") || datosServidor.equals("")){
+	if(archivoExcel == null || "".equals(datosServicios) || "".equals(datosServidor)){
 		return SUCCESS;
 	}
 	/////////////////////////////
 
 	ArrayList<String> organismos = null;
-	if(formatoArchivoExcel.equals("xls")){
+	if("xls".equals(formatoArchivoExcel)){
 		organismos = leerArchivoExcel();
 	}else{
 		organismos = leerArchivoExcelXlsx();
@@ -463,9 +481,9 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	if(!existenOrganismos.isEmpty()){
 		
 		for(String org: existenOrganismos){
-			listaOrg.append(org + "\t");		
+			listaOrg.append(org + T);		
 		}
-		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.organismos")+" "+listaOrg);		
+		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.organismos")+BLANK+listaOrg);		
 		return SUCCESS;
 	}
 	///////////////////////////////////////////////////////////////////
@@ -475,17 +493,18 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	//Comprueba que los organismos no tienen configurados un servidor/proveedor	
 	for(TblOrganismos org:listadoOrganismos){
 		if(!servicioServidor.getServidorOrganismo(String.valueOf(org.getOrganismoid())).isEmpty()){
-			listaOrg.append(org.getDir3() + "\t");	
+			listaOrg.append(org.getDir3() + T);	
 		}
 	}
-	if(!listaOrg.toString().equals("")){
-		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.servidor")+" "+listaOrg);				
+	if(!"".equals(listaOrg.toString())){
+		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.servidor")+BLANK+listaOrg);				
 		return SUCCESS;
 	}
 	/////////////////////////////////////////
 	
 	//Comprueba que cada uno de los organismos del excel no tienen ya uno de los servicios que selecciona el usuario
-	for(TblOrganismos orga:listadoOrganismos){		
+	for(TblOrganismos orga:listadoOrganismos){
+			
 		
 		//Obtenemos la lista ServicioOrganismo para cada organismo del excel
 		List<OrganismosServicioBean> listaServiciosOrganismo = servicioServicio.getServicioByOrganismo(orga.getOrganismoid());
@@ -493,14 +512,15 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		//Comparamos los servicios de la lista ServicioOrganismo de cada organismo con la lista de servicios que selecciona el usuario
 		for(OrganismosServicioBean servOrg:listaServiciosOrganismo){
 			for(ServicioBean serv:listaServicioOrganismos){
-				if(serv.getServicioId().equals(servOrg.getServicioId())){					
-					listaOrg.append("<p>"+ "Organismo DIR3: "+orga.getDir3() + " con el servicio ID: "+serv.getServicioId() + "\t"+"</p>");
+				if(serv.getServicioId().equals(servOrg.getServicioId())){
+						
+					listaOrg.append("<p>"+ "Organismo DIR3: "+orga.getDir3() + " con el servicio ID: "+serv.getServicioId() + T+"</p>");
 				}
 			}
 		}	
 	}
 	
-	if(!listaOrg.toString().equals("")){
+	if(!"".equals(listaOrg.toString())){
 		addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.servicio")+listaOrg);					
 		return SUCCESS;
 	}	
@@ -543,7 +563,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		}
 
 		orgModificados.append(orga.getDir3());
-		orgModificados.append("\t");
+		orgModificados.append(T);
 		}	
 	
 		//Para borrar datos de servicios, servidores y la seleccion del organismo pdp si hubiera
@@ -574,7 +594,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 
 	      while (cellIterator.hasNext()) {
 	        Cell cell = cellIterator.next();
-	        if(cell.getRowIndex() != 0 && !cell.toString().equals("")){
+	        if(cell.getRowIndex() != 0 && !"".equals(cell.toString())){
 	        	organismos.add(cell.toString());
 	        }
 	      }
@@ -583,7 +603,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 
 	    fis.close();
 	    if(organismos.isEmpty()){
-	    	addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.existencia"));
+	    	addActionErrorSession(this.getText(PLATAFORMADOTOR));
 	    }
 		return organismos;
 	}
@@ -591,12 +611,13 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	private ArrayList<TblOrganismos> obtenerOrganismos(ArrayList<String> organismos) {
 		ArrayList<TblOrganismos> organismosValidos = new ArrayList<>();
 		
-		for(String orgActual: organismos){			
+		for(String orgActual: organismos){
+				
 			 
 			List<TblOrganismos> orgn = servicioOrganismo.getOrganismoById(orgActual);
 			
 			for(TblOrganismos orgnTemp : orgn){
-				organismosValidos.add((orgnTemp));
+				organismosValidos.add(orgnTemp);
 			}
 		}
 		
@@ -606,7 +627,8 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	private ArrayList<String> comprobarOrganismos(ArrayList<String> organismos) {
 		ArrayList<String> organismosNoValidos = new ArrayList<>();
 		
-		for(String orgActual: organismos){			
+		for(String orgActual: organismos){
+				
 			int id;
 			id = servicioOrganismo.getOrganismoIdByDir3SoloEliminado(orgActual);
 			
@@ -629,17 +651,21 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	    HSSFRow row;
 	    HSSFCell cell;
 
-	    int rows; // No of rows
+	    int rows; 
+	    // No of rows
 	    rows = sheet.getPhysicalNumberOfRows();
 
-	    int cols = 0; // No of columns	    
+	    int cols = 0; 
+	    // No of columns	    
 	    int tmp = 0;
 	    
 	    for(int i = 0; i < 10 || i < rows; i++) {
 	        row = sheet.getRow(i);
 	        if(row != null) {
 	            tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-	            if(tmp > cols) cols = tmp;
+	            if(tmp > cols) {
+					cols = tmp;
+				}
 	        }
 	    }
 
@@ -648,14 +674,15 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	        if(row != null) {
 	            for(int c = 0; c < cols; c++) {
 	                cell = row.getCell(c);
-	                if(cell != null) {	                	
+	                if(cell != null) {
+	                		
 	                	if(cell.getCellType() == 0 ){
 	                		cell.setCellType(1);
-	                		if(!cell.getStringCellValue().equals("")){
+	                		if(!"".equals(cell.getStringCellValue())){
 	                			organismos.add(cell.getStringCellValue());
 	                		}
 	                	}else{
-	                		if(!cell.getStringCellValue().equals("")){
+	                		if(!"".equals(cell.getStringCellValue())){
 	                			organismos.add(cell.getStringCellValue());
 	                		}	                		
 	                	}	                	
@@ -664,7 +691,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	        }
 	    }
 	    if(organismos.isEmpty()){
-	    	addActionErrorSession(this.getText("plataforma.organismos.altasmasivas.error.existencia"));
+	    	addActionErrorSession(this.getText(PLATAFORMADOTOR));
 	    }	    	
 	    return organismos;
 	}
@@ -680,18 +707,18 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 
 		KeyValueObject option;
 		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
-		List<String> serviciosAeatGiss = new ArrayList<String>(Arrays.asList(listaServ.split(",")));
+		List<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(listaServ.split(R_CONST_REF2)));
 		ArrayList<ServicioBean> keys = null;
 		try {
 			keys = (ArrayList<ServicioBean>) servicioServicio.getServiciosMultiorganismo();
 		} catch (BusinessException e) {
-			logger.error("OrganismosAction - cargarComboServicioOrganismos:" + e);
+			logger.error(ORGANISMOSACTIO + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServicioBean key : keys) {
 				for(String idServ : serviciosAeatGiss){
-					if((idServ.trim()).equals(key.getServicioId().toString())){
+					if(idServ.trim().equals(key.getServicioId().toString())){
 						option = new KeyValueObject();
 						option.setCodigo(key.getServicioId().toString());
 						option.setDescripcion(key.getNombre());
@@ -699,6 +726,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 					}
 				}
 			}
+		}
 		return result;
 	}
 
@@ -717,16 +745,17 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		try {
 			keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresYProveedores(properties.getProperty("generales.TIPO_SERVIDOR_SMS", null));
 		} catch (BusinessException e) {
-			logger.error("OrganismosAction - cargarComboServicioOrganismos:" + e);
+			logger.error(ORGANISMOSACTIO + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServidorBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getServidorid().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -745,12 +774,13 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		ArrayList<TblOrganismos> keys = null;
 		keys = (ArrayList<TblOrganismos>) servicioOrganismo.getOrganismosHijos(dir3);
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (TblOrganismos key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getDir3());				
 				result.add(option);
 			}
+		}
 		return result;
 	}
 	
@@ -826,9 +856,6 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 	public void setServicioUsuarioAplicacion(ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		this.servicioUsuarioAplicacion = servicioUsuarioAplicacion;
 	}
-
-	/**  detalle aplicacion. */
-	transient DetalleAplicacionBean detalleAplicacion;
 
 	/**
 	 * Obtener detalle aplicacion.

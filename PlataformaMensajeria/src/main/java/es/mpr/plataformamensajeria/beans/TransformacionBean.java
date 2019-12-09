@@ -14,6 +14,28 @@ public class TransformacionBean implements Audit {
 
 	
 
+	/**  id transformacion. */
+	protected Long idTransformacion = null;
+
+	/**  nombre. */
+	protected String nombre = null;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  fecha actualizacion. */
+	protected Date fechaActualizacion = null;
+
+	/**  xsl peticion. */
+	protected String xslPeticion = null;
+
+	/**  xsl respuesta. */
+	protected String xslRespuesta = null;
+
+	/**  xsl fault. */
+	protected String xslFault = null;
+
+
 	/**
 	 * Constructor de transformacion bean.
 	 */
@@ -28,28 +50,6 @@ public class TransformacionBean implements Audit {
 		this.fechaActualizacion = null;
 
 	}
-
-
-	/**  id transformacion. */
-	protected Long idTransformacion = null;
-	
-	/**  nombre. */
-	protected String nombre = null;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  fecha actualizacion. */
-	protected Date fechaActualizacion = null;
-	
-	/**  xsl peticion. */
-	protected String xslPeticion = null;
-	
-	/**  xsl respuesta. */
-	protected String xslRespuesta = null;
-	
-	/**  xsl fault. */
-	protected String xslFault = null;	
 
 
 	/**

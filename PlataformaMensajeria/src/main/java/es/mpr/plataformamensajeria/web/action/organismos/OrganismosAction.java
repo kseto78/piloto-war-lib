@@ -65,6 +65,36 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class OrganismosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable {
 
+	protected static final String ORGANISMOSACTIO = "OrganismosAction - cargarComboServicioOrganismos:";
+
+	protected static final String PLATAFORMADOTSE = "plataforma.servicio.servicioOrganismo.add.error";
+
+	protected static final String R_CONST_REF = ":";
+
+	protected static final String R_CONST_0 = "=";
+
+	protected static final String ORGANISMOSACTIO0 = "OrganismosAction - load:";
+
+	protected static final String R_CONST_1 = "20";
+
+	protected static final String R_CONST_2 = "?";
+
+	protected static final String PLATAFORMADOTOR = "plataforma.organismo.update.cambiopdp";
+
+	protected static final String TXTORGANISMO = "organismo";
+
+	protected static final String EL_IDORGANISMO_REF = "EL idOrganismo recibido es nulo";
+
+	protected static final String PLATAFORMADOTSE0 = "plataforma.servidores.planificacion.horaDesde.menor.error";
+
+	protected static final String PLATAFORMADOTSE1 = "plataforma.servicio.servicioOrganismo.add.ok";
+
+	protected static final String PLATAFORMADOTSE2 = "plataforma.servicio.servidorOrganismo.delete.ok";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String ORGANISMOSACTIO1 = "OrganismosAction - loadSeviciosOrganismo:";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -256,13 +286,16 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	private static final String LOG_SOURCE_ORGANISMOS = "log.SOURCE_ORGANISMOS";
 	
 	/** Constante RECOVERY. */
-	private static final String RECOVERY = "recovery";
+	private static final String TXTRECOVERY = "recovery";
 	
 	/** Constante SEPARADOR_OPCIONES_VALUES. */
 	private static final String SEPARADOR_OPCIONES_VALUES = "#";
 
 	/** Constante SEPARADOR_OPCIONES. */
 	private static final String SEPARADOR_OPCIONES = "&&";
+
+	/**  detalle aplicacion. */
+	private DetalleAplicacionBean detalleAplicacion;
 
 
 	/**
@@ -272,10 +305,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 * @throws BaseException the base exception
 	 */
 	public String newSearch() throws BaseException {
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		
-		organismo = (OrganismoBean) getRequest().getSession().getAttribute("organismo");
+		organismo = (OrganismoBean) getRequest().getSession().getAttribute(TXTORGANISMO);
 		
 		
 		Integer totalSize = 0;
@@ -295,14 +329,15 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("OrganismosAction - load:" + e);
+			logger.error(ORGANISMOSACTIO0 + e);
 			return OrganismosAction.NO_USER;
 		}
-		if (idOrganismo == null)
-			throw new BusinessException("EL idOrganismo recibido es nulo");
+		if (idOrganismo == null) {
+			throw new BusinessException(EL_IDORGANISMO_REF);
+		}
 		try {
 			organismo = new OrganismoBean();
-			organismo.setOrganismoId(new Integer(idOrganismo));
+			organismo.setOrganismoId(Integer.valueOf(idOrganismo));
 			organismo = servicioOrganismo.loadOrganismo(organismo);
 			comboOrganismosHijos = cargarComboOrganismosHijos(organismo.getDir3());
 			organismoPadre = new OrganismoBean();			
@@ -313,8 +348,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			}
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { organismo.getOrganismoId().toString() });
-			logger.error("OrganismosAction - load:" + e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { organismo.getOrganismoId().toString() });
+			logger.error(ORGANISMOSACTIO0 + e);
 			throw new BusinessException(mensg);
 		} 
 	}
@@ -328,16 +363,20 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	///MIGRADO
 	public String search() throws BaseException {
 
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 
-		int page = getPage(OrganismosAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(OrganismosAction.TABLE_ID); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort(OrganismosAction.TABLE_ID); // Columna usada para ordenar
+		int page = getPage(OrganismosAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(OrganismosAction.TABLE_ID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(OrganismosAction.TABLE_ID); 
+		// Columna usada para ordenar
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, R_CONST_1));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, export ? -1 : Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")), order, columnSort, organismo);
+		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, export ? -1 : Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, R_CONST_1)), order, columnSort, organismo);
 		Integer totalSize = result.getTotalList();
 
 		listaOrganismos = result.getPageList();
@@ -346,14 +385,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_TOTALSIZE, null), totalSize);
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), 
-					Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, R_CONST_1)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), 
 					totalSize);
 		}
 
 		//guardamos el organismo para que al volver tengamos la ultima busqueda
-		getRequest().getSession().setAttribute("organismo", organismo);
+		getRequest().getSession().setAttribute(TXTORGANISMO, organismo);
 
 		return SUCCESS;
 	}
@@ -367,19 +406,23 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return OrganismosAction.NO_USER;
 		}
-		int page = getPage(OrganismosAction.TABLE_ID); // Pagina a mostrar
-		String order = getOrder(OrganismosAction.TABLE_ID); // Ordenar de modo ascendente o descendente
-		String columnSort = getColumnSort(OrganismosAction.TABLE_ID); // Columna usada para ordenar
+		int page = getPage(OrganismosAction.TABLE_ID); 
+		// Pagina a mostrar
+		String order = getOrder(OrganismosAction.TABLE_ID); 
+		// Ordenar de modo ascendente o descendente
+		String columnSort = getColumnSort(OrganismosAction.TABLE_ID); 
+		// Columna usada para ordenar
 
-		if (organismo != null)
-			if (organismo.getNombre() != null && organismo.getNombre().length() <= 0)
-				organismo.setNombre(null);
+		if (organismo != null && organismo.getNombre() != null && organismo.getNombre().isEmpty()) {
+			organismo.setNombre(null);
+		}
 
-		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20"));
+		int inicio = (page - 1) * Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, R_CONST_1));
 		boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
-		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, (export) ? -1 : Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")), order, columnSort, organismo);
+		PaginatedList<OrganismoBean> result = servicioOrganismo.getOrganismos(inicio, export ? -1 : Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, R_CONST_1)), order, columnSort, organismo);
 		Integer totalSize = result.getTotalList();
 
 		listaOrganismos = result.getPageList();
@@ -388,12 +431,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 		if (!export) {
 			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null),
-					Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, "20")));
+					Integer.parseInt(properties.getProperty(OrganismosAction.GENERALES_PAGESIZE, R_CONST_1)));
 		} else {
 			getRequest().setAttribute(properties.getProperty(OrganismosAction.GENERALES_REQUEST_ATTRIBUTE_PAGESIZE, null), totalSize);
 		}
 		if (listaOrganismos != null && !listaOrganismos.isEmpty()) {
-			for (int indice = 0; indice < listaOrganismos.size(); indice++) {
+			for (int indice = 0, s = listaOrganismos.size(); indice < s; indice++) {
 
 				OrganismoBean organismo = listaOrganismos.get(indice);
 				organismo.setNombre(StringEscapeUtils.escapeHtml(organismo.getNombre()));
@@ -499,13 +542,13 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			
 			if (organismo.getOrganismoId() == null) {
 				if (idOrganismo != null) {
-					organismo.setOrganismoId(new Integer(idOrganismo));
+					organismo.setOrganismoId(Integer.valueOf(idOrganismo));
 					organismoBBDD = servicioOrganismo.loadOrganismo(organismo);
 				} else {
 					String id = (String) request.getAttribute("idOrganismo");
 					
 					if (id != null) {
-						aplicacion.setId(new Long(id));
+						aplicacion.setId(Long.valueOf(id));
 						organismoBBDD = servicioOrganismo.loadOrganismo(organismo);
 					}
 				}
@@ -519,13 +562,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					organismoBBDD.setNombre(organismo.getNombre());
 					organismoBBDD.setDescripcion(organismo.getDescripcion());
 				}
-				if( organismoBBDD.getIdPdpDiputaciones() != organismo.getIdPdpDiputaciones()){					
+				if( organismoBBDD.getIdPdpDiputaciones() != organismo.getIdPdpDiputaciones()){
+						
 					if(organismoBBDD.getIdPdpDiputaciones() != null && organismo.getIdPdpDiputaciones() != null){
 						if(!organismoBBDD.getIdPdpDiputaciones().equals(organismo.getIdPdpDiputaciones()) ){
-							addActionWarningMessageSession(this.getText("plataforma.organismo.update.cambiopdp"));
+							addActionWarningMessageSession(this.getText(PLATAFORMADOTOR));
 						}
 					}else{
-						addActionWarningMessageSession(this.getText("plataforma.organismo.update.cambiopdp"));
+						addActionWarningMessageSession(this.getText(PLATAFORMADOTOR));
 					}
 					
 				}
@@ -554,20 +598,21 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		try {
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		} catch (Exception e) {
-			logger.error("OrganismosAction - load:" + e);
+			logger.error(ORGANISMOSACTIO0 + e);
 			return OrganismosAction.NO_USER;
 		}
-		if (idOrganismo == null)
-			throw new BusinessException("EL idOrganismo recibido es nulo");
+		if (idOrganismo == null) {
+			throw new BusinessException(EL_IDORGANISMO_REF);
+		}
 		try {
 			organismo = new OrganismoBean();
-			organismo.setOrganismoId(new Integer(idOrganismo));
+			organismo.setOrganismoId(Integer.valueOf(idOrganismo));
 			organismo = servicioOrganismo.loadOrganismo(organismo);
 
 			return SUCCESS;
 		} catch (NumberFormatException | BusinessException e) {
-			String mensg = this.getText("errors.action.organismo.loadOrganismo", new String[] { organismo.getOrganismoId().toString() });
-			logger.error("OrganismosAction - load:" + e);
+			String mensg = this.getText(ERRORSDOTACTION, new String[] { organismo.getOrganismoId().toString() });
+			logger.error(ORGANISMOSACTIO0 + e);
 			throw new BusinessException(mensg);
 		} 
 
@@ -589,8 +634,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 				
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		if (idOrganismo == null) {
 			addActionErrorSession(this.getText("plataforma.organismo.delete.error"));
 
@@ -611,7 +657,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			
 			// borramos sus planificaciones
 			List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
-			for (PlanificacionBean o : listaPlanificacionesOrganismos) { 
+			for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+ 	
 					servicioPlanificacion.deletePlanificacion(o, sourcePlanificacion, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 			}
 			
@@ -640,8 +687,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		if (checkDelList == null) {
 			addActionErrorSession(this.getText("plataforma.organimo.deleteSelected.error"));
 
@@ -663,7 +711,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				
 				// borramos sus planificaciones
 				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
-				for (PlanificacionBean o : listaPlanificacionesOrganismos) { 
+				for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+ 	
 						servicioPlanificacion.deletePlanificacion(o, sourcePlanificacion, accionPlanificacion, accionIdPlanificacion, descripcionPlanificacion);
 				}
 				
@@ -690,8 +739,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		if (checkDelListOrganismosServicios == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.deleteSelected.error"));
 
@@ -716,7 +766,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				deleteServicioOrganismo(so.getServicioOrganismoId());
 				
 			}
-			addActionMessageSession(this.getText("plataforma.servicio.servidorOrganismo.delete.ok"));
+			addActionMessageSession(this.getText(PLATAFORMADOTSE2));
 
 		}
 		return SUCCESS;
@@ -734,8 +784,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
 		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 
 		if (checkDelListServidorOrganismos == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servidorOrganismo.deleteSelected.error"));
@@ -748,7 +799,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				// ////borrar planificaciones
 				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
 				if (null != listaPlanificacionesOrganismos){
-					for (PlanificacionBean o : listaPlanificacionesOrganismos) { 
+					for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+ 	
 						if (o.getServidorId().equals(Integer.valueOf(idServidor))) {
 							servicioPlanificacion.deletePlanificacion(o, source, accion, accionId, descripcion);
 						}
@@ -758,7 +810,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				deleteServidorOrganismo(Long.valueOf(serOrg));
 
 			}
-			addActionMessageSession(this.getText("plataforma.servicio.servidorOrganismo.delete.ok"));
+			addActionMessageSession(this.getText(PLATAFORMADOTSE2));
 
 		}
 		return SUCCESS;
@@ -776,8 +828,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		if (checkDelListPlanificacionesOrganismos == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.deletePlanificacionesSelected.error"));
 
@@ -804,15 +857,16 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 */
 	///MIGRADO
 	public String loadDetalleOrganismo() throws BusinessException, IllegalAccessException, InvocationTargetException {
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		OrganismoBean detalleApp = new OrganismoBean();
 		DetalleAplicacionBean detalle = new DetalleAplicacionBean();
 		if (idOrganismo != null) {
-			detalleApp.setOrganismoId(new Integer(idOrganismo));
+			detalleApp.setOrganismoId(Integer.valueOf(idOrganismo));
 			detalleApp = servicioOrganismo.loadOrganismo(detalleApp);
 			Date defaultValue = null;
-			List<UsuarioAplicacionBean> listaUsuariosAplicacion = servicioUsuarioAplicacion.getUsuarioAplicacionesByAplicacionId(new Integer(idOrganismo));
+			List<UsuarioAplicacionBean> listaUsuariosAplicacion = servicioUsuarioAplicacion.getUsuarioAplicacionesByAplicacionId(Integer.valueOf(idOrganismo));
 			detalle.setListaUsuariosAplicacion(listaUsuariosAplicacion);
 			DateConverter converter = new DateConverter(defaultValue);
 			ConvertUtils.register(converter, java.util.Date.class);
@@ -821,7 +875,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			detalle.setFechacreacion(detalleApp.getFechacreacion());
 			detalle.setFechamodificacion(detalleApp.getFechamodificacion());
 			List<ServicioBean> listServicioBean = servicioServicio.getServiciosByAplicacionId(detalle.getAplicacionId().intValue());
-			if (listServicioBean != null)
+			if (listServicioBean != null) {
 				for (ServicioBean ser : listServicioBean) {
 					DetalleServicioBean serBean = new DetalleServicioBean();
 					BeanUtils.copyProperties(serBean, ser);
@@ -836,6 +890,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					serBean.setListaPlanificaciones(planificacionesList);
 					detalle.addDetalleServicio(serBean);
 				}
+			}
 
 			detalleAplicacion = detalle;
 
@@ -851,17 +906,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	///MIGRADO
 	private List<ServicioOrganismosBean> loadSeviciosOrganismo() {
 		List<ServicioOrganismosBean> lista = null;
-		if (idOrganismo != null && idOrganismo.length() > 0) {
+		if (idOrganismo != null && !idOrganismo.isEmpty()) {
 			try {
 				lista = servicioServicio.getOrganismoServicio(idOrganismo);
 			} catch (NumberFormatException | BusinessException e) {
-				logger.error("OrganismosAction - loadSeviciosOrganismo:" + e);
+				logger.error(ORGANISMOSACTIO1 + e);
 			} 
 		} else if (organismo != null && organismo.getOrganismoId() != null) {
 			try {
 				lista = servicioServicio.getOrganismoServicio(String.valueOf(organismo.getOrganismoId()));
 			} catch (NumberFormatException | BusinessException e) {
-				logger.error("OrganismosAction - loadSeviciosOrganismo:" + e);
+				logger.error(ORGANISMOSACTIO1 + e);
 			} 
 		}
 		return lista;
@@ -875,17 +930,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	///MIGRADO
 	private List<ServidoresOrganismosBean> loadServidoresOrganismos() {
 		List<ServidoresOrganismosBean> lista = null;
-		if (idOrganismo != null && idOrganismo.length() > 0) {
+		if (idOrganismo != null && !idOrganismo.isEmpty()) {
 			try {
 				lista = servicioServidor.getServidorOrganismo(idOrganismo);
 			} catch (NumberFormatException | BusinessException e) {
-				logger.error("OrganismosAction - loadSeviciosOrganismo:" + e);
+				logger.error(ORGANISMOSACTIO1 + e);
 			} 
 		} else if (organismo != null && organismo.getOrganismoId() != null) {
 			try {
 				lista = servicioServidor.getServidorOrganismo(String.valueOf(organismo.getOrganismoId()));
 			} catch (NumberFormatException |  BusinessException e) {
-				logger.error("OrganismosAction - loadSeviciosOrganismo:" + e);
+				logger.error(ORGANISMOSACTIO1 + e);
 			} 
 		}
 		return lista;
@@ -903,8 +958,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ACTUALIZAR, null));
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_PLANIFICACION", null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 
 		boolean sw = true;
 
@@ -931,23 +987,23 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 						planificacionOrganismo.getMartes(), planificacionOrganismo.getMiercoles(), planificacionOrganismo.getJueves(), planificacionOrganismo.getViernes(), planificacionOrganismo.getSabado(), planificacionOrganismo.getDomingo(),
 						planificacionOrganismo.getHoraHasta(), planificacionOrganismo.getHoraDesde(), planificacionOrganismo.getOrganismoId());
 
-				if (valido == 1) {
+				switch (valido) {
+				case 1:
 					planificacionOrganismo.setActivo(true);
-
 					servicioPlanificacion.newPlanificacion(planificacionOrganismo, source, accion, accionId, descripcion);
-					
 					addActionMessageSession(this.getText("plataforma.servidores.planificacion.add.ok"));
-				} else if (valido == 2) {
+					break;
+				case 2:
 					addActionErrorSession("No se ha guardado la planificaci&oacute;n. La planificaci&oacute;n introducida se solapa con otras planificaciones");
-				} else {
+					break;
+				default:
 					addActionErrorSession("No se ha guardado la planificaci&oacute;n. La configuraci&oacute;n seleccionada no garantiza el env&iacute;o de los mensajes");
+					break;
 				}
 			} else {
-				// addActionErrorSession(this.getText("plataforma.servidores.planificacion.add.error"));
 				return ERROR;
 			}
 		} else {
-			return SUCCESS;
 		}
 
 		return SUCCESS;
@@ -985,13 +1041,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaHasta.formato.error"));
 					sw = false;
 				}
-				if (sw) {
-					if (!validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
-						sw = false;
-					}
+				if (sw && !validoHoras(planificacionServidor.getHoraDesde(), planificacionServidor.getHoraHasta())) {
+					sw = false;
 				}
 			}
-			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes()) && PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getMartes()) && PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getMiercoles()) && PlataformaMensajeriaUtil
+			if (PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getLunes()) && 
+				PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getMartes()) && PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getMiercoles()) && PlataformaMensajeriaUtil
 					.isEmpty(planificacionServidor.getJueves()) && PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getViernes()) && PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getSabado()) && PlataformaMensajeriaUtil.isEmpty(planificacionServidor.getDomingo())) {
 				addFieldErrorSession(this.getText("plataforma.servidores.planificacion.dias.error"));
 				sw = false;
@@ -1011,17 +1066,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	///MIGRADO
 	private boolean validoHoras(String horaDesde, String horaHasta) {
 		boolean sw = true;
-		String[] horaDesdeArray = horaDesde.split(":");
-		String[] horaHastaArray = horaHasta.split(":");
-		int hDesde = Integer.valueOf(horaDesdeArray[0]);
-		int mDesde = Integer.valueOf(horaDesdeArray[1]);
-		int hHasta = Integer.valueOf(horaHastaArray[0]);
-		int mHasta = Integer.valueOf(horaHastaArray[1]);
+		String[] horaDesdeArray = horaDesde.split(R_CONST_REF);
+		String[] horaHastaArray = horaHasta.split(R_CONST_REF);
+		int hDesde = Integer.parseInt(horaDesdeArray[0]);
+		int mDesde = Integer.parseInt(horaDesdeArray[1]);
+		int hHasta = Integer.parseInt(horaHastaArray[0]);
+		int mHasta = Integer.parseInt(horaHastaArray[1]);
 		if (hDesde > hHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE0));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde > mHasta) {
-			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horaDesde.menor.error"));
+			addFieldErrorSession(this.getText(PLATAFORMADOTSE0));
 			sw = false;
 		} else if (hDesde == hHasta && mDesde == mHasta) {
 			addFieldErrorSession(this.getText("plataforma.servidores.planificacion.horas.iguales.error"));
@@ -1039,10 +1094,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	///MIGRADO
 	private boolean validoFormatoHora(String hora) {
 		boolean sw = true;
-		if (!PlataformaMensajeriaUtil.isEmpty(hora)) {
-			if (!PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
-				sw = false;
-			}
+		if (!PlataformaMensajeriaUtil.isEmpty(hora) && !PlataformaMensajeriaUtil.validaFormatoHora(hora)) {
+			sw = false;
 		}
 		return sw;
 	}
@@ -1056,15 +1109,16 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	@Override
 	public void prepare() throws Exception {
 		session = (Map) ActionContext.getContext().get("session");
-		recovery = (String) session.get(RECOVERY);
+		recovery = (String) session.get(TXTRECOVERY);
 
 		listaServicioOrganismos = loadSeviciosOrganismo();
 		listaServidoresOrganismos = loadServidoresOrganismos();
 		comboTiposEstados = getTipoEstados();
 
 		if (idOrganismo != null) {
-			if (organismo == null)
+			if (organismo == null) {
 				load();
+			}
 			comboServicioOrganismos = cargarComboServicioOrganismos();
 			comboServidoresOrganismos = cargarComboServidoresOrganismos();
 			comboServidoresPlan = cargarComboServidoresPlan();
@@ -1075,7 +1129,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	private List<KeyValueObject> cargarComboOrganismosPdp() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
 
@@ -1086,13 +1140,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			logger.error("OrganismosAction - cargarComboOrganismosPdp:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (PdpDiputacionesBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getPdpDiputacionesId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1136,16 +1191,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		try {
 			keys = (ArrayList<ServicioBean>) servicioServicio.getServiciosMultiorganismo();
 		} catch (BusinessException e) {
-			logger.error("OrganismosAction - cargarComboServicioOrganismos:" + e);
+			logger.error(ORGANISMOSACTIO + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServicioBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getServicioId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1156,7 +1212,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServidoresOrganismos() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
 
@@ -1164,16 +1220,17 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		try {
 			keys = (ArrayList<ServidorBean>) servicioServidor.getServidoresYProveedores(properties.getProperty("generales.TIPO_SERVIDOR_SMS", null));
 		} catch (BusinessException e) {
-			logger.error("OrganismosAction - cargarComboServicioOrganismos:" + e);
+			logger.error(ORGANISMOSACTIO + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServidorBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getServidorid().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1192,7 +1249,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		ArrayList<TblOrganismos> keys = null;
 		keys = (ArrayList<TblOrganismos>) servicioOrganismo.getOrganismosHijos(dir3);
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (TblOrganismos key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getDir3());
@@ -1200,6 +1257,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				
 				result.add(option);
 			}
+		}
 		return result;
 	}
 	
@@ -1210,7 +1268,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServidoresPlan() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
 
@@ -1221,13 +1279,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			logger.error("OrganismosAction - cargarComboServidoresPlan:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServidoresOrganismosBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getServidorId().toString());
 				option.setDescripcion(key.getNombreServidor());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1238,7 +1297,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 */
 	///MIGRADO
 	private List<KeyValueObject> cargarComboServiciosPlan() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
 
@@ -1249,13 +1308,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			logger.error("OrganismosAction - cargarComboServiciosPlan:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ServicioOrganismosBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getServicioId().toString());
 				option.setDescripcion(key.getNombreServicio());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 
@@ -1274,8 +1334,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVICIO", null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		boolean sw = true;
 
 		if (servicioOrganismos != null) {
@@ -1309,12 +1370,12 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				servicioOrganismos.setOrganismoId(Integer.valueOf(idOrganismo));
 
 				servicioServicio.newServicioOrganismo(servicioOrganismos, source, accion, accionId, descripcion);
-				addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.add.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTSE1));
 			} else {
 				return ERROR;
 			}
 		} else {
-			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.add.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTSE));
 			return ERROR;
 		}
 		return SUCCESS;
@@ -1334,8 +1395,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
 
 		String descripcion = properties.getProperty("log.ACCION_DESCRIPCION_ANADIR_SERVIDOR", null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 		boolean sw = true;
 
 		if (servidorOrganismo != null) {
@@ -1370,15 +1432,15 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					servicioServidor.newServidoresOrganismo(servidorOrganismo, source, accion, accionId, descripcion);
 				} catch (Exception e) {
 					logger.error("OrganismosAction - addServidorOrganismo:" + e);
-					addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.add.error"));
+					addActionErrorSession(this.getText(PLATAFORMADOTSE));
 					return ERROR;
 				}
-				addActionMessageSession(this.getText("plataforma.servicio.servicioOrganismo.add.ok"));
+				addActionMessageSession(this.getText(PLATAFORMADOTSE1));
 			} else {
 				return ERROR;
 			}
 		} else {
-			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.add.error"));
+			addActionErrorSession(this.getText(PLATAFORMADOTSE));
 			return ERROR;
 		}
 		return SUCCESS;
@@ -1397,8 +1459,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
 		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 
 		if (idServicioOrganismo == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servicioOrganismo.delete.error"));
@@ -1520,8 +1583,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		Long accionId = Long.parseLong(properties.getProperty(OrganismosAction.LOG_ACCIONID_ELIMINAR, null));
 		String descripcion = properties.getProperty(OrganismosAction.LOG_ACCION_DESCRIPCION_ELIMINAR_PLANIFICACION, null);
 		String source = properties.getProperty(OrganismosAction.LOG_SOURCE_ORGANISMOS, null);
-		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null)
+		if (getRequest().getSession().getAttribute(OrganismosAction.INFO_USER) == null) {
 			return OrganismosAction.NO_USER;
+		}
 
 		if (servidorOrganismoId == null) {
 			addActionErrorSession(this.getText("plataforma.servicio.servidorOrganismo.delete.error"));
@@ -1531,7 +1595,8 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 				// ////borrar planificaciones
 				List<PlanificacionBean> listaPlanificacionesOrganismos = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
 				if (null != listaPlanificacionesOrganismos){
-					for (PlanificacionBean o : listaPlanificacionesOrganismos) { 
+					for (PlanificacionBean o : listaPlanificacionesOrganismos) {
+ 	
 						if (o.getServidorId().equals(Integer.valueOf(idServidor))) {
 							servicioPlanificacion.deletePlanificacion(o, source, accion, accionId, descripcion);
 						}
@@ -1539,7 +1604,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 					}
 				}
 				deleteServidorOrganismo(Long.parseLong(servidorOrganismoId));
-			addActionMessageSession(this.getText("plataforma.servicio.servidorOrganismo.delete.ok"));
+			addActionMessageSession(this.getText(PLATAFORMADOTSE2));
 		}
 		return SUCCESS;
 	}
@@ -1550,9 +1615,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	 * @return volver servicio
 	 */
 	public String getVolverServicio() {
-		String volver = "editServicio.action";
+		String volver = null;
 		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
-			volver = from + "?" + var + "=" + idFrom;
+			volver = from + R_CONST_2 + var + R_CONST_0 + idFrom;
 		} else {
 			volver = "viewAplicacion.action?idAplicacion=" + servicio.getAplicacionid();
 		}
@@ -1568,11 +1633,11 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	public String getVolver() {
 		String volver = "listarOrganismos.action";
 		if (!PlataformaMensajeriaUtil.isEmpty(from) && !PlataformaMensajeriaUtil.isEmpty(idFrom)) {
-			volver = from + "?" + var + "=" + idFrom;
-			session.put(RECOVERY, volver);
-		} else if (session.get(RECOVERY) != null) {
-			volver = (String) session.get(RECOVERY);
-			session.put(RECOVERY, null);
+			volver = from + R_CONST_2 + var + R_CONST_0 + idFrom;
+			session.put(TXTRECOVERY, volver);
+		} else if (session.get(TXTRECOVERY) != null) {
+			volver = (String) session.get(TXTRECOVERY);
+			session.put(TXTRECOVERY, null);
 		}
 		return volver;
 	}
@@ -1600,8 +1665,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			}
 			
 			return result;
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			LOG.error("[CifradoServiceImpl] - getCertificados:" + e);
 			throw new BusinessException(e,"errors.decode.getCertificados");	
 		}
@@ -1678,9 +1742,6 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	public void setServicioUsuarioAplicacion(ServicioUsuarioAplicacion servicioUsuarioAplicacion) {
 		this.servicioUsuarioAplicacion = servicioUsuarioAplicacion;
 	}
-
-	/**  detalle aplicacion. */
-	private DetalleAplicacionBean detalleAplicacion;
 
 	/**
 	 * Obtener detalle aplicacion.
@@ -2372,7 +2433,7 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	}
 
 	public List<KeyValueObject> getComboProveedoresSMS() {
-		List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
 
@@ -2383,13 +2444,14 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			logger.error("OrganismosAction - cargarComboProveedoresSMS:" + e);
 		}
 
-		if (keys != null && !keys.isEmpty())
+		if (keys != null && !keys.isEmpty()) {
 			for (ProveedorSMSBean key : keys) {
 				option = new KeyValueObject();
 				option.setCodigo(key.getProveedorSMSId().toString());
 				option.setDescripcion(key.getNombre());
 				result.add(option);
 			}
+		}
 		return result;
 	}
 	

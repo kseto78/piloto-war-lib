@@ -13,6 +13,24 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class ProcesoInformesServiciosBean implements Audit{
 
+	/**  proceso informes servicios id. */
+	private Long procesoInformesServiciosId;
+
+	/**  codigo estado. */
+	private String codigoEstado;
+
+	/**  descripcion estado. */
+	private String descripcionEstado;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  fecha inicio. */
+	private Date fechaInicio;
+
+	/**  fecha fin. */
+	private Date fechaFin;
+
 	/**
 	 * Constructor de proceso informes servicios bean.
 	 */
@@ -24,24 +42,6 @@ public class ProcesoInformesServiciosBean implements Audit{
 		this.fechaInicio=null;
 		this.fechaFin=null;
 	}
-	
-	/**  proceso informes servicios id. */
-	private Long procesoInformesServiciosId;
-	
-	/**  codigo estado. */
-	private String codigoEstado;
-	
-	/**  descripcion estado. */
-	private String descripcionEstado;
-	
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  fecha inicio. */
-	private Date fechaInicio;
-	
-	/**  fecha fin. */
-	private Date fechaFin;
 	
 	/**
 	 * Obtener proceso informes servicios id.

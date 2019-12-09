@@ -39,6 +39,10 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesoInformesServi
 @Service("servicioProcesoInformesServiciosImpl")
 public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInformesServicios{
 	
+	protected static final String ERRORSDOTJOBDOT = "errors.job.informesServicios.getMensajesEstado";
+
+	protected static final String SERVICIOPROCESO = "ServicioProcesoInformesServiciosImpl - obtenerInformesServiciosCodSia:";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioProcesoInformesServiciosImpl.class);
 	
@@ -101,7 +105,8 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 	///MIGRADO
 	@Override
 	@Transactional
-	public List<InformesServiciosEstadoBean> obtenerInformesServiciosEstado(Integer servicioId, Integer anno, Integer mes) throws BusinessException{	
+	public List<InformesServiciosEstadoBean> obtenerInformesServiciosEstado(Integer servicioId, Integer anno, Integer mes) throws BusinessException{
+	
 		List<InformesServiciosEstadoBean> result = new ArrayList<>();
 
 		try {
@@ -117,7 +122,7 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 			}
 		} catch (Exception e) {
 			logger.error("ServicioProcesoInformesServiciosImpl - obtenerInformesServiciosEstado:" + e);
-			throw new BusinessException(e, "errors.job.informesServicios.getMensajesEstado" + servicioId);
+			throw new BusinessException(e, ERRORSDOTJOBDOT + servicioId);
 		} 
 		
 		return result;
@@ -148,7 +153,7 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 			}
 		} catch (Exception e) {
 			logger.error("ServicioProcesoInformesServiciosImpl - obtenerInformesServiciosCodOrg:" + e);
-			throw new BusinessException(e, "errors.job.informesServicios.getMensajesEstado" + servicioId);
+			throw new BusinessException(e, ERRORSDOTJOBDOT + servicioId);
 		} 
 		
 		return result;
@@ -176,8 +181,8 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 				result.add(ise);
 			}
 		} catch (Exception e) {
-			logger.error("ServicioProcesoInformesServiciosImpl - obtenerInformesServiciosCodSia:" + e);
-			throw new BusinessException(e, "errors.job.informesServicios.getMensajesEstado" + servicioId);
+			logger.error(SERVICIOPROCESO + e);
+			throw new BusinessException(e, ERRORSDOTJOBDOT + servicioId);
 		} 
 		
 		return result;
@@ -204,8 +209,8 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 				result.add(ise);
 			}
 		} catch (Exception e) {
-			logger.error("ServicioProcesoInformesServiciosImpl - obtenerInformesServiciosCodSia:" + e);
-			throw new BusinessException(e, "errors.job.informesServicios.getMensajesEstado" + servicioId);
+			logger.error(SERVICIOPROCESO + e);
+			throw new BusinessException(e, ERRORSDOTJOBDOT + servicioId);
 		} 
 		
 		return result;
@@ -245,7 +250,7 @@ public class ServicioProcesoInformesServiciosImpl implements ServicioProcesoInfo
 			}	
 		} catch (Exception e) {
 			logger.error("ServicioProcesoInformesServiciosImpl - obtenerInformesServicios:" + e);
-			throw new BusinessException(e, "errors.job.informesServicios.getMensajesEstado" + servicioId);
+			throw new BusinessException(e, ERRORSDOTJOBDOT + servicioId);
 		} 
 		
 		return result;

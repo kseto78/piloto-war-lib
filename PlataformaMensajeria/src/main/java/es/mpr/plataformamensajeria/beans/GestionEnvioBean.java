@@ -19,6 +19,126 @@ public class GestionEnvioBean implements Audit, Serializable{
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 2205483197518833217L;
 
+	/**  editable checkbox. */
+	private String editableCheckbox;
+
+	/**  mensaje id. */
+	private Long mensajeId;
+
+	/**  id. */
+	private String id;
+
+	/**  envio id. */
+	private String envioId;
+
+	/**  aplicacion. */
+	private String aplicacion;
+
+	/**  servicio. */
+	private String servicio;
+
+	/**  lote envio. */
+	private String loteEnvio;
+
+	/**  servidor. */
+	private String servidor;
+
+	/**  ultimo envio. */
+	private Date ultimoEnvio;
+
+	/**  ultimo envio str. */
+	private String ultimoEnvioStr;
+
+	/**  estado. */
+	private String estado;
+
+	/**  destinatario. */
+	private String destinatario;
+
+	/**  canal id. */
+	private Long canalId;
+
+	/**  aplicacion id. */
+	private Long aplicacionId;
+
+	/**  servidor id. */
+	private Long servidorId;
+
+	/**  servicio id. */
+	private Long servicioId;
+
+	/**  estado id. */
+	private Long estadoId;
+
+	/**  fecha desde. */
+	private Date fechaDesde;
+
+	/**  fecha hasta. */
+	private Date fechaHasta;
+
+	/**  email. */
+	private String email;
+
+	/**  telefono movil. */
+	private String telefonoMovil;
+
+	/**  id lote. */
+	private Long idLote;
+
+	/**  id externo. */
+	private String idExterno;
+
+	/**  canal. */
+	private String canal;
+
+	/**  nombre. */
+	private String nombre;
+
+	/**  codigo externo. */
+	private String codigoExterno;
+
+	/**  anio. */
+	private Integer anio;
+
+	/**  mes. */
+	private Integer mes;
+
+	/**  doc usuario. */
+	private String docUsuario;
+
+	/**  cod SIA. */
+	private String codSIA;
+
+	/**  cod organismo. */
+	private String codOrganismo;
+
+	/**  cod organismo pagador. */
+	private String codOrganismoPagador;
+
+	/**  icono. */
+	private String icono;
+
+	/**  sonido. */
+	private String sonido;
+
+	/**  nombre usuario. */
+	private String nombreUsuario;
+
+	/**  vista envios id. */
+	private Integer vistaEnviosId;
+
+	/**  multidestinatario. */
+	private Integer multidestinatario;
+
+	/**  destinatarios mensajes. */
+	private Long destinatariosMensajes;
+
+	/**  boton intercambios. */
+	private Boolean botonIntercambios;
+
+	/**  array organismos. */
+	private List<String> arrayOrganismos;
+
 	
 	/**
 	 * Constructor de gestion envio bean.
@@ -62,126 +182,6 @@ public class GestionEnvioBean implements Audit, Serializable{
 		this.destinatariosMensajes = null;
 		this.arrayOrganismos = null;
 	}
-	
-	/**  editable checkbox. */
-	private String editableCheckbox;
-	
-	/**  mensaje id. */
-	private Long mensajeId;
-	
-	/**  id. */
-	private String id;
-	
-	/**  envio id. */
-	private String envioId;
-	
-	/**  aplicacion. */
-	private String aplicacion;
-	
-	/**  servicio. */
-	private String servicio;
-	
-	/**  lote envio. */
-	private String loteEnvio;
-	
-	/**  servidor. */
-	private String servidor;
-	
-	/**  ultimo envio. */
-	private Date ultimoEnvio;
-	
-	/**  ultimo envio str. */
-	private String ultimoEnvioStr;
-	
-	/**  estado. */
-	private String estado;
-	
-	/**  destinatario. */
-	private String destinatario;
-	
-	/**  canal id. */
-	private Long canalId;
-	
-	/**  aplicacion id. */
-	private Long aplicacionId;
-	
-	/**  servidor id. */
-	private Long servidorId;
-	
-	/**  servicio id. */
-	private Long servicioId;
-	
-	/**  estado id. */
-	private Long estadoId;
-	
-	/**  fecha desde. */
-	private Date fechaDesde;
-	
-	/**  fecha hasta. */
-	private Date fechaHasta;
-	
-	/**  email. */
-	private String email;
-	
-	/**  telefono movil. */
-	private String telefonoMovil;
-	
-	/**  id lote. */
-	private Long idLote;
-	
-	/**  id externo. */
-	private String idExterno;
-	
-	/**  canal. */
-	private String canal;
-	
-	/**  nombre. */
-	private String nombre;
-	
-	/**  codigo externo. */
-	private String codigoExterno;
-	
-	/**  anio. */
-	private Integer anio;
-	
-	/**  mes. */
-	private Integer mes;
-	
-	/**  doc usuario. */
-	private String docUsuario;
-	
-	/**  cod SIA. */
-	private String codSIA;
-	
-	/**  cod organismo. */
-	private String codOrganismo;
-	
-	/**  cod organismo pagador. */
-	private String codOrganismoPagador;
-	
-	/**  icono. */
-	private String icono;
-	
-	/**  sonido. */
-	private String sonido;
-	
-	/**  nombre usuario. */
-	private String nombreUsuario;
-	
-	/**  vista envios id. */
-	private Integer vistaEnviosId;
-	
-	/**  multidestinatario. */
-	private Integer multidestinatario;
-	
-	/**  destinatarios mensajes. */
-	private Long destinatariosMensajes;
-	
-	/**  boton intercambios. */
-	private Boolean botonIntercambios;
-	
-	/**  array organismos. */
-	private List<String> arrayOrganismos;
 	
 	/**
 	 * Modificar mensaje id.

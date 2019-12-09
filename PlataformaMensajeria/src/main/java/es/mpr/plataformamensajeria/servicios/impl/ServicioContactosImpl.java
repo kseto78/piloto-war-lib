@@ -37,6 +37,8 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioContactosImpl")
 public class ServicioContactosImpl implements ServicioContacto {
 
+	protected static final String NOMBRE = "nombre";
+
 	/** logger. */
 	private static Logger logger = Logger.getLogger(ServicioContactosImpl.class);
 
@@ -94,14 +96,14 @@ public class ServicioContactosImpl implements ServicioContacto {
 			 HashMap<String, String> columns = new HashMap<>();
 			 columns.put("2","aplicacion");
 			 columns.put("3","servicio");
-			 columns.put("4","nombre");
+			 columns.put("4",NOMBRE);
 			 columns.put("5","apellidos");
 			 columns.put("6","email");
 			 columns.put("7","telefono");
 		
 			 String column = columns.get(columnSort);
 			 if (column==null){
-			 column = "nombre";
+			 column = NOMBRE;
 			 }
 
 
@@ -251,7 +253,8 @@ public class ServicioContactosImpl implements ServicioContacto {
 
 
 		ContactoBean contacto = new ContactoBean();
-		try{	
+		try{
+		
 			Date defaultValue = null;
 			DateConverter converter = new DateConverter(defaultValue);
 			Long defaultLongValue = null;

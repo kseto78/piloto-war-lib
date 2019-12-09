@@ -13,6 +13,18 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class AdjuntoEmailHistoricosBean implements Audit{
 
+	private Long adjuntoId;
+	private String nombre;
+	private Long emailId;
+	private Date fechaCreacion;
+	private String creadoPor;
+	private Date fechaModificacion;
+	private String modificadoPor;
+	private byte[] contenido;
+	private Integer imagen;
+	private Date fechaHistorificacion;
+	private String contenidoFile;
+
 	/**
 	 * Constructor por defecto
 	 */
@@ -28,18 +40,6 @@ public class AdjuntoEmailHistoricosBean implements Audit{
 		this.fechaHistorificacion = null;
 		this.contenidoFile = null;
 	}
-	private Long adjuntoId;
-	private String nombre;
-	private Long emailId;
-	private Date fechaCreacion;
-	private String creadoPor;
-	private Date fechaModificacion;
-	private String modificadoPor;
-	private byte[] contenido;
-	private Integer imagen;
-	private Date fechaHistorificacion;
-	private String contenidoFile;
-	
 	/**
 	 * Modifica el numero de imagen
 	 * @param imagen

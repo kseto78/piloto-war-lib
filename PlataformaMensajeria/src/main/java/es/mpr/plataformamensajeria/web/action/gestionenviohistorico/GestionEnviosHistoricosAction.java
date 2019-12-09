@@ -57,6 +57,36 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Scope("prototype")
 public class GestionEnviosHistoricosAction extends PlataformaPaginationAction implements ServletRequestAware, Preparable{
 	
+	protected static final String INFOUSER = "infoUser";
+
+	protected static final String EL_IDMENSAJE_RE = "EL idMensaje recibido es nulo";
+
+	protected static final String R_CONST_REF = "50";
+
+	protected static final String R_CONST_0 = "10";
+
+	protected static final String GENERALESDOTREQ = "generales.REQUEST_ATTRIBUTE_TOTALSIZE";
+
+	protected static final String R_CONST_1 = "0";
+
+	protected static final String R_CONST_2 = "1";
+
+	protected static final String EL_IDLOTE_RECIB = "EL idLote recibido es nulo";
+
+	protected static final String R_CONST_3 = "20";
+
+	protected static final String NOUSER = "noUser";
+
+	protected static final String ERRORSDOTACTION = "errors.action.organismo.loadOrganismo";
+
+	protected static final String GENERALESDOTPAG = "generales.PAGESIZEM";
+
+	protected static final String R_CONST_4 = "100";
+
+	protected static final String TABLEID = "tableId";
+
+	protected static final String GENERALESDOTREQ0 = "generales.REQUEST_ATTRIBUTE_PAGESIZE";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
@@ -194,6 +224,12 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	/** Constante TIPO_FICHERO. */
 	public static final String TIPO_FICHERO = "xml";
 
+	/**  adjunto descargable. */
+	private String adjuntoDescargable;
+
+	/**  file input stream. */
+	private InputStream fileInputStream;
+
 	/**
 	 * New search.
 	 *
@@ -202,13 +238,17 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 */
 	////MIGRADO
 	public String newSearch() throws BusinessException {
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (validUsuario()) {
-			int page = getPage("tableId"); // Pagina a mostrar
-			String order = getOrder("tableId"); // Ordenar de modo ascendente o
+			int page = getPage(TABLEID); 
+			// Pagina a mostrar
+			String order = getOrder(TABLEID); 
+			// Ordenar de modo ascendente o
 												// descendente
-			String columnSort = getColumnSort("tableId"); // Columna usada para
+			String columnSort = getColumnSort(TABLEID); 
+			// Columna usada para
 															// ordenar
 			int inicio = (page - 1) * pageSize;
 			if (gestionEnvioHistoricoBean == null) {
@@ -217,15 +257,13 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 			if (gestionEnvioHistoricoBean != null && gestionEnvioHistoricoBean.getVistaEnviosId() != null) {
 				vistaEnviosIdSelected = gestionEnvioHistoricoBean.getVistaEnviosId().toString();
 			} else {
-				vistaEnviosIdSelected = "1";
+				vistaEnviosIdSelected = R_CONST_2;
 			}
-//			gestionEnvioHistoricoBean.setFechaDesde(new Date(new Date().getTime() * 2));
-//			gestionEnvioHistoricoBean.setFechaHasta(new Date(new Date().getTime() * 2));
 
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 
 			PaginatedList<GestionEnvioHistoricoBean> result = servicioGestionEnviosHistoricos
-					.getGestionDeEnviosHistoricos(inicio - 1, (export) ? -1 : pageSize - 1, order, columnSort,
+					.getGestionDeEnviosHistoricos(inicio - 1, export ? -1 : pageSize - 1, order, columnSort,
 							gestionEnvioHistoricoBean, request, false);
 			Integer totalSize = result.getTotalList();
 			gestionEnvioHistoricoBean.setFechaDesde(null);
@@ -245,14 +283,14 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 				}
 			}
 			
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 			// Atributos de request
-			getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+			getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 			if (!export) {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
+				getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
 						pageSize);
 			} else {
-				getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null),
+				getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null),
 						totalSize);
 			}
 			return SUCCESS;
@@ -271,29 +309,32 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	public String search() throws BaseException {
 		PaginatedList<GestionEnvioHistoricoBean> result = null;
 		Integer totalSize = null;
-		if(getRequest().getSession().getAttribute("infoUser")==null){
-			return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null){
+			return NOUSER; 
 		}
 		if(validUsuario()){
-		   	int page = getPage("tableId"); //Pagina a mostrar
-	    	String order = getOrder("tableId"); //Ordenar de modo ascendente o descendente
-	    	String columnSort = getColumnSort("tableId"); //Columna usada para ordenar
+		   	int page = getPage(TABLEID); 
+		   	//Pagina a mostrar
+	    	String order = getOrder(TABLEID); 
+	    	//Ordenar de modo ascendente o descendente
+	    	String columnSort = getColumnSort(TABLEID); 
+	    	//Columna usada para ordenar
 	    	int inicio = (page-1)*pageSize;
 	    	boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 	    	
 	    	if (gestionEnvioHistoricoBean != null && gestionEnvioHistoricoBean.getVistaEnviosId()!= null){
 	    		vistaEnviosIdSelected = gestionEnvioHistoricoBean.getVistaEnviosId().toString();
 			} else {
-				vistaEnviosIdSelected = "1";
+				vistaEnviosIdSelected = R_CONST_2;
 			}
-			if (vistaEnviosIdSelected.equals("1")) {
-				result = servicioGestionEnviosHistoricos.getGestionDeEnviosHistoricos(inicio, (export) ? -1 : pageSize, order, columnSort, gestionEnvioHistoricoBean, request, false);
+			if (R_CONST_2.equals(vistaEnviosIdSelected)) {
+				result = servicioGestionEnviosHistoricos.getGestionDeEnviosHistoricos(inicio, export ? -1 : pageSize, order, columnSort, gestionEnvioHistoricoBean, request, false);
 				totalSize = result.getTotalList();
-			} else if (vistaEnviosIdSelected.equals("3")){
-				result = servicioGestionEnviosHistoricos.getGestionDeEnviosDestinatariosHistoricos(inicio, (export) ? -1 : pageSize, order, columnSort, gestionEnvioHistoricoBean, request);
+			} else if ("3".equals(vistaEnviosIdSelected)){
+				result = servicioGestionEnviosHistoricos.getGestionDeEnviosDestinatariosHistoricos(inicio, export ? -1 : pageSize, order, columnSort, gestionEnvioHistoricoBean, request);
 				totalSize = result.getTotalList();
 			}else {
-				result = servicioGestionEnviosHistoricos.getGestionDeEnviosHistoricos(inicio, (export) ? -1 : pageSize, order, columnSort, gestionEnvioHistoricoBean, request, true);
+				result = servicioGestionEnviosHistoricos.getGestionDeEnviosHistoricos(inicio, export ? -1 : pageSize, order, columnSort, gestionEnvioHistoricoBean, request, true);
 				totalSize = result.getTotalList();
 			}
 	    	
@@ -313,13 +354,13 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 				}
 			}
 	    	
-	    	resultCount = (totalSize!=null)?totalSize.toString():"0";
+	    	resultCount = (totalSize!=null)?totalSize.toString():R_CONST_1;
 	    	//Atributos de request
-	    	getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_TOTALSIZE", null), totalSize);
+	    	getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ, null), totalSize);
 	    	if(!export){
-	    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), pageSize);
+	    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), pageSize);
 	    	}else{
-	    		getRequest().setAttribute(properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null), totalSize);
+	    		getRequest().setAttribute(properties.getProperty(GENERALESDOTREQ0, null), totalSize);
 	    	}
 	        return SUCCESS;
 		}else{
@@ -335,8 +376,8 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 */
 	////MIGRADO
 	public String loadContenidoMensaje() throws BusinessException{
-		if(getRequest().getSession().getAttribute("infoUser")==null){
-			return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null){
+			return NOUSER; 
 		}
     	if(idEnvio == null){
     		throw new BusinessException("EL idEnvio recibido es nulo");
@@ -349,7 +390,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 			return SUCCESS;
 		} catch (BusinessException e) {
 			logger.error("GestionEnviosHistoricosAction - loadContenidoMensaje:" + e);
-			throw new BusinessException(this.getText("errors.action.organismo.loadOrganismo"));
+			throw new BusinessException(this.getText(ERRORSDOTACTION));
 		}
 	}
 	
@@ -362,20 +403,21 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	////MIGRADO
 	public String loadLote() throws BusinessException {
 		Integer totalSize = null;
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idLote == null) {
-			throw new BusinessException("EL idLote recibido es nulo");
+			throw new BusinessException(EL_IDLOTE_RECIB);
 		}
 		try {
 			int page = getPage("tableLotesHistoricoId");
-			int inicio = (page - 1) * Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20"));
+			int inicio = (page - 1) * Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_3));
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 			detalleLote = servicioGestionEnviosHistoricos.loadLote(idLote);
 			PaginatedList<MensajeHistoricosBean> result = servicioGestionEnviosHistoricos.getMensajesLotes(inicio, 
-					(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), detalleLote.getIdLoteEnvio().longValue());
+					export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_3)), detalleLote.getIdLoteEnvio().longValue());
 			totalSize = result.getTotalList();
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 			listaGestionEnviosMensajesHistoricos = result.getPageList();
 			
 			return SUCCESS;
@@ -394,13 +436,14 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 */
 	////MIGRADO
 	public String loadMensaje() throws BusinessException{
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idMensaje == null) {
-			throw new BusinessException("EL idMensaje recibido es nulo");
+			throw new BusinessException(EL_IDMENSAJE_RE);
 		}
 		if (idLote == null) {
-			throw new BusinessException("EL idLote recibido es nulo");
+			throw new BusinessException(EL_IDLOTE_RECIB);
 		}
     	try {
 			detalleEmail = servicioGestionEnviosHistoricos.loadMensaje(idMensaje);
@@ -415,22 +458,22 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 			if (servicioGestionEnviosHistoricos.isMultidestinatario(detalleEmail.getMensajeId())) {
 				// sacar destinatarios de tabla destinatario_mensaje
 				result = servicioGestionEnviosHistoricos.getDestinatariosMensajesMultidestinatario(inicio, 
-						(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), detalleEmail.getMensajeId());
+						export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_3)), detalleEmail.getMensajeId());
 				totalSize = result.getTotalList();
-				resultCount = (totalSize != null) ? totalSize.toString() : "0";
+				resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 				listaGestionEnviosDestinatariosMensajeHistoricos = result.getPageList();
 			} else {
 				result = servicioGestionEnviosHistoricos.getDestinatariosMensajes(inicio, 
-						(export) ? -1 : Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), detalleEmail.getMensajeId());
+						export ? -1 : Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_3)), detalleEmail.getMensajeId());
 				totalSize = result.getTotalList();
-				resultCount = (totalSize != null) ? totalSize.toString() : "0";
+				resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 				listaGestionEnviosDestinatariosMensajeHistoricos = result.getPageList();
 			}
 						
 			return SUCCESS;
 		} catch (BusinessException e) {
 			logger.error("[GestionEnviosHistoricosAction] - loadMensaje:" + e);
-			throw new BusinessException(this.getText("errors.action.organismo.loadOrganismo"));
+			throw new BusinessException(this.getText(ERRORSDOTACTION));
 		}
 	}
 	
@@ -442,8 +485,9 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 */
 	public String loadMisimHistorico() throws BusinessException {
 		
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
+		}
 		if (idLote == null) {
 			throw new BusinessException("El idLote recibido es nulo");
 		}
@@ -464,10 +508,10 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 			PaginatedList<ViewMisimBean> result = null;
 			boolean export = PlataformaMensajeriaUtil.isExport(getRequest());
 			
-			result = servicioGestionEnvios.getIntercambiosMisim(inicio, (export) ? -1
-					: Integer.parseInt(properties.getProperty("generales.PAGESIZEM", "20")), Long.valueOf(idLote), idMensaje);
+			result = servicioGestionEnvios.getIntercambiosMisim(inicio, export ? -1
+					: Integer.parseInt(properties.getProperty(GENERALESDOTPAG, R_CONST_3)), Long.valueOf(idLote), idMensaje);
 			totalSize = result.getTotalList();
-			resultCount = (totalSize != null) ? totalSize.toString() : "0";
+			resultCount = (totalSize != null) ? totalSize.toString() : R_CONST_1;
 			listaIntercambiosMisim = result.getPageList();
 			
 			return SUCCESS;
@@ -487,12 +531,13 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	////MIGRADO
 	public String loadHistoricoMsj() throws BusinessException {
 		destinatariosMensajes = null;
-		if (getRequest().getSession().getAttribute("infoUser") == null)
-			return "noUser";
-		if (idMensaje == null) {
-			throw new BusinessException("EL idMensaje recibido es nulo");
+		if (getRequest().getSession().getAttribute(INFOUSER) == null) {
+			return NOUSER;
 		}
-		if (idDestinatariosMensajes != null && !idDestinatariosMensajes.equals("null") && Integer.parseInt(idDestinatariosMensajes) > 0) {
+		if (idMensaje == null) {
+			throw new BusinessException(EL_IDMENSAJE_RE);
+		}
+		if (idDestinatariosMensajes != null && !"null".equals(idDestinatariosMensajes) && Integer.parseInt(idDestinatariosMensajes) > 0) {
 			destinatariosMensajes = servicioGestionEnviosHistoricos.getDestinatariosMensajesHistoricos(idDestinatariosMensajes);
 		}else{
 			idDestinatariosMensajes = null;
@@ -525,7 +570,9 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 */
 	////MIGRADO
 	public String loadAdjunto() throws IOException{
-		if(getRequest().getSession().getAttribute("infoUser")==null) return "noUser"; 
+		if(getRequest().getSession().getAttribute(INFOUSER)==null) {
+			return NOUSER;
+		} 
 		try{
 			AdjuntoEmailHistoricosBean adjunto = servicioGestionEnviosHistoricos.loadAdjunto(Long.parseLong(idAdjunto), Long.parseLong(idEmail));
 			
@@ -694,10 +741,10 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	////MIGRADO
 	public List<KeyValueObject> getComboPageSize() throws BusinessException{
 		  List<KeyValueObject> result = new ArrayList<>();
-	      KeyValueObject option10 = new KeyValueObject("10","10");
-	      KeyValueObject option20 = new KeyValueObject("20","20");
-	      KeyValueObject option50 = new KeyValueObject("50","50");
-	      KeyValueObject option100 = new KeyValueObject("100","100");
+	      KeyValueObject option10 = new KeyValueObject(R_CONST_0,R_CONST_0);
+	      KeyValueObject option20 = new KeyValueObject(R_CONST_3,R_CONST_3);
+	      KeyValueObject option50 = new KeyValueObject(R_CONST_REF,R_CONST_REF);
+	      KeyValueObject option100 = new KeyValueObject(R_CONST_4,R_CONST_4);
 	      result.add(option10);
 	      result.add(option20);
 	      result.add(option50);
@@ -715,9 +762,9 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	@Override
 	public void prepare() throws Exception {
 		pageSize = (Integer) getRequest().getAttribute(
-				properties.getProperty("generales.REQUEST_ATTRIBUTE_PAGESIZE", null));
+				properties.getProperty(GENERALESDOTREQ0, null));
 		if (null == pageSize) {
-			pageSize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", "20"));
+			pageSize = Integer.parseInt(properties.getProperty("generales.PAGESIZE", R_CONST_3));
 		}
 	}
 	
@@ -745,7 +792,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @param comboAplicaciones new combo aplicaciones
 	 */
 	public void setComboAplicaciones(List<KeyValueObject> comboAplicaciones) {
-		this.comboAplicaciones = new ArrayList<KeyValueObject>(comboAplicaciones);
+		this.comboAplicaciones = new ArrayList<>(comboAplicaciones);
 	}
 	
 	/**
@@ -809,7 +856,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @return lista gestion envios historicos
 	 */
 	public List<GestionEnvioHistoricoBean> getListaGestionEnviosHistoricos() {
-		return new ArrayList<GestionEnvioHistoricoBean>(listaGestionEnviosHistoricos);
+		return new ArrayList<>(listaGestionEnviosHistoricos);
 	}
 	
 	/**
@@ -818,7 +865,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @param listaGestionEnviosHistoricos new lista gestion envios historicos
 	 */
 	public void setListaGestionEnviosHistoricos(List<GestionEnvioHistoricoBean> listaGestionEnviosHistoricos) {
-		this.listaGestionEnviosHistoricos = new ArrayList<GestionEnvioHistoricoBean>(listaGestionEnviosHistoricos);
+		this.listaGestionEnviosHistoricos = new ArrayList<>(listaGestionEnviosHistoricos);
 	}
 	
 	/**
@@ -881,7 +928,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @param comboServidores new combo servidores
 	 */
 	public void setComboServidores(List<KeyValueObject> comboServidores) {
-		this.comboServidores = new ArrayList<KeyValueObject>(comboServidores);
+		this.comboServidores = new ArrayList<>(comboServidores);
 	}
 	
 	/**
@@ -890,7 +937,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @param comboServicios new combo servicios
 	 */
 	public void setComboServicios(List<KeyValueObject> comboServicios) {
-		this.comboServicios = new ArrayList<KeyValueObject>(comboServicios);
+		this.comboServicios = new ArrayList<>(comboServicios);
 	}
 	
 	/**
@@ -899,7 +946,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @param comboEstados new combo estados
 	 */
 	public void setComboEstados(List<KeyValueObject> comboEstados) {
-		this.comboEstados = new ArrayList<KeyValueObject>(comboEstados);
+		this.comboEstados = new ArrayList<>(comboEstados);
 	}
 	
 	/**
@@ -908,7 +955,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 	 * @param comboCanales new combo canales
 	 */
 	public void setComboCanales(List<KeyValueObject> comboCanales) {
-		this.comboCanales = new ArrayList<KeyValueObject>(comboCanales);
+		this.comboCanales = new ArrayList<>(comboCanales);
 	}
 	
 	/**
@@ -1253,10 +1300,7 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 		this.idEmail = idEmail;
 	}
 	
-	/**  adjunto descargable. */
-	private String adjuntoDescargable;
-    
-    /**
+	/**
      * Obtener adjunto descargable.
      *
      * @return adjunto descargable
@@ -1292,9 +1336,6 @@ public class GestionEnviosHistoricosAction extends PlataformaPaginationAction im
 		this.idAdjunto = idAdjunto;
 	}
 	
-	/**  file input stream. */
-	private InputStream fileInputStream;
-    
 	/**
 	 * Obtener file input stream.
 	 *

@@ -19,6 +19,57 @@ public class HistoricoBean implements Audit, Serializable {
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -6093724517567453005L;
 
+	/**  estado. */
+	private String estado;
+
+	/**  descripcion. */
+	private String descripcion;
+
+	/**  historico id. */
+	private Long historicoId;
+
+	/**  fecha. */
+	private Date fecha;
+
+	/**  mensaje id. */
+	private Long mensajeId;
+
+	/**  estado id. */
+	private Long estadoId;
+
+	/**  servidor id. */
+	private Long servidorId;
+
+	/**  planificacion id. */
+	private Long planificacionId;
+
+	/**  fecha creacion. */
+	private Date fechaCreacion;
+
+	/**  creado por. */
+	private String creadoPor;
+
+	/**  id envio SMS. */
+	private Integer idEnvioSMS;
+
+	/**  uim. */
+	private String uim;
+
+	/**  id grupo. */
+	private Integer idGrupo;
+
+	/**  nombre servidor. */
+	private String nombreServidor;
+
+	/**  nombre servidor SMS. */
+	private String nombreServidorSMS;
+
+	/**  sub estado id. */
+	private Long subEstadoId;
+
+	/**  destinatarios mensajes. */
+	private Long destinatariosMensajes;
+
 	/**
 	 * Constructor de historico bean.
 	 */
@@ -38,57 +89,6 @@ public class HistoricoBean implements Audit, Serializable {
 		this.subEstadoId = null;
 		this.destinatariosMensajes = null;
 	}
-
-	/**  estado. */
-	private String estado;
-	
-	/**  descripcion. */
-	private String descripcion;
-	
-	/**  historico id. */
-	private Long historicoId;
-	
-	/**  fecha. */
-	private Date fecha;
-	
-	/**  mensaje id. */
-	private Long mensajeId;
-	
-	/**  estado id. */
-	private Long estadoId;
-	
-	/**  servidor id. */
-	private Long servidorId;
-	
-	/**  planificacion id. */
-	private Long planificacionId;
-
-	/**  fecha creacion. */
-	private Date fechaCreacion;
-	
-	/**  creado por. */
-	private String creadoPor;
-	
-	/**  id envio SMS. */
-	private Integer idEnvioSMS;
-	
-	/**  uim. */
-	private String uim;
-	
-	/**  id grupo. */
-	private Integer idGrupo;
-	
-	/**  nombre servidor. */
-	private String nombreServidor;
-	
-	/**  nombre servidor SMS. */
-	private String nombreServidorSMS;
-
-	/**  sub estado id. */
-	private Long subEstadoId;
-	
-	/**  destinatarios mensajes. */
-	private Long destinatariosMensajes;
 
 	/**
 	 * Obtener nombre servidor SMS.

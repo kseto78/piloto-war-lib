@@ -15,6 +15,27 @@ public class ParametrosProveedorBean implements Audit,Serializable {
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  id parametros proveedor. */
+	protected Long idParametrosProveedor = null;
+
+	/**  id proveedor. */
+	protected Long idProveedor = null;
+
+	/**  parametro. */
+	protected String parametro = null;
+
+	/**  valor. */
+	protected String valor = null;
+
+	/**  variable. */
+	protected String variable = null;
+
+	/**  tipo valor. */
+	protected String tipoValor = null;
+
+	/**  resultado valor. */
+	protected String resultadoValor = null;
+
 
 	/**
 	 * Constructor de parametros proveedor bean.
@@ -30,28 +51,6 @@ public class ParametrosProveedorBean implements Audit,Serializable {
 		this.resultadoValor = null;
 	}
 
-
-	/**  id parametros proveedor. */
-	protected Long idParametrosProveedor = null;
-	
-	/**  id proveedor. */
-	protected Long idProveedor = null;
-	
-	/**  parametro. */
-	protected String parametro = null;
-	
-	/**  valor. */
-	protected String valor = null;
-	
-	/**  variable. */
-	protected String variable = null;
-	
-	/**  tipo valor. */
-	protected String tipoValor = null;
-	
-	/**  resultado valor. */
-	protected String resultadoValor = null;
-	
 
 	/**
 	 * Obtener id parametros proveedor.

@@ -25,11 +25,8 @@ import es.mpr.plataformamensajeria.beans.TransformacionBean;
  */
 public class Utiles{
 	
-//	private static final Logger LOGGER = Logger.getLogger(Utiles.class);
 //	
-//	private static final String ORDEN_LETRAS = "TRWAGMYFPDXBNJZSQVHLCKE";
 //	
-//	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 	/**
  * Codificacion Base64.
@@ -49,8 +46,7 @@ public class Utiles{
 	 * @return the byte[]
 	 */
 	public static byte[] decode(String param){
-		byte[] decoded = Base64.decodeBase64(param.getBytes());
-		return decoded;
+		return Base64.decodeBase64(param.getBytes());
 	}
 	
 	/**
@@ -61,16 +57,11 @@ public class Utiles{
 	 */
 	public static String FiletoBase64String (File originalFile){
         String iconoBase64 = null;
-        try {
-            @SuppressWarnings("resource")
-			FileInputStream fileInputStreamReader = new FileInputStream(originalFile);
+        try (FileInputStream fileInputStreamReader = new FileInputStream(originalFile)){
             byte[] bytes = new byte[(int)originalFile.length()];
             fileInputStreamReader.read(bytes);
             iconoBase64 = new String(Base64.encodeBase64(bytes));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
         }
         
         return iconoBase64;

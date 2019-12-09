@@ -40,6 +40,20 @@ import es.mpr.plataformamensajeria.util.SeguridadUtil;
 @Service(value = "cifradoService")
 public class CifradoServiceImpl implements CifradoService {
 
+	protected static final String ERROR_DE_SISTEM = "Error de sistema Descifrado";
+
+	protected static final String CIFRADOSERVICEI = "[CifradoServiceImpl] Descifrado: Error de sistema Descifrado";
+
+	protected static final String SUNJCE = "SunJCE";
+
+	protected static final String HTTPWWWDOTW3DOT = "http://www.w3.org/2001/04/xmlenc#aes128-cbc";
+
+	protected static final String HTTPWWWDOTW3DOT0 = "http://www.w3.org/2001/04/xmlenc#";
+
+	protected static final String KEYSTORE_UTILIZ = "KeyStore utilizado: ";
+
+	protected static final String CIPHERVALUE = "CipherValue";
+
 	/** Constante SEPARADOR_CERTIFICADOS_VALUES. */
 	private static final String SEPARADOR_CERTIFICADOS_VALUES = "#";
 
@@ -56,9 +70,6 @@ public class CifradoServiceImpl implements CifradoService {
 	private PlataformaMensajeriaProperties props;
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Document descifrar(final Document documento,
 			final String keyStoreType, final String keyStorePassword,
@@ -67,26 +78,26 @@ public class CifradoServiceImpl implements CifradoService {
 		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inicio descifrar....");
-			LOG.debug("KeyStore utilizado: " + keyStoreFile);
+			LOG.debug(KEYSTORE_UTILIZ + keyStoreFile);
 		}
 		
 		try {
 			
 			Init.init();
 			final Node key = documento.getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#", 
+					HTTPWWWDOTW3DOT0, 
 					"EncryptedKey").item(0);
 			
 			if (key == null) {
 				return documento;
 			}
 			final Node keyData = ((Element) key).getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#", 
+					HTTPWWWDOTW3DOT0, 
 					"CipherData").item(0);
 
 			final Node keyValue = ((Element) keyData).getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#", 
-					"CipherValue").item(0);
+					HTTPWWWDOTW3DOT0, 
+					CIPHERVALUE).item(0);
 
 			final String symetricKey = ((Element) keyValue).getFirstChild().getNodeValue();
 
@@ -94,12 +105,12 @@ public class CifradoServiceImpl implements CifradoService {
 					Base64.decodeBase64(symetricKey), "AES");
 
 			final Element encryptedDataElement = (Element) documento.getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#",
+					HTTPWWWDOTW3DOT0,
 					"EncryptedData").item(0);
 
 			final XMLCipher xmlCipher = XMLCipher.getProviderInstance(
-					"http://www.w3.org/2001/04/xmlenc#aes128-cbc", 
-					"SunJCE");
+					HTTPWWWDOTW3DOT, 
+					SUNJCE);
 			
 			xmlCipher.init(2, keySpec);
 			xmlCipher.doFinal(documento, encryptedDataElement);
@@ -111,14 +122,11 @@ public class CifradoServiceImpl implements CifradoService {
 			return documento;
 			
 		} catch (final Exception e) {
-			LOG.error("[CifradoServiceImpl] Descifrado: Error de sistema Descifrado", e);
-			throw new Exception("Error de sistema Descifrado");
+			LOG.error(CIFRADOSERVICEI, e);
+			throw new Exception(ERROR_DE_SISTEM);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Document descifrarKey(final Document documento,
 			final String keyStoreType, final String keyStorePassword,
@@ -130,11 +138,11 @@ public class CifradoServiceImpl implements CifradoService {
 			LOG.debug("Key store utilizado: " + keyStoreFile);
 		}
 		
-		try {
+		try (FileInputStream file = new FileInputStream(keyStoreFile)){
 			
 			final NodeList nl = documento.getElementsByTagNameNS(
-					"http://www.w3.org/2001/04/xmlenc#", 
-					"CipherValue");
+					HTTPWWWDOTW3DOT0, 
+					CIPHERVALUE);
 
 			final Node encriptedKey = nl.item(0);
 
@@ -151,16 +159,15 @@ public class CifradoServiceImpl implements CifradoService {
 				ks = KeyStore.getInstance(keyStoreType, "SUN");
 			}
 			
-			ks.load(new FileInputStream(keyStoreFile),keyStorePassword.toCharArray());
-			
+			ks.load(file,keyStorePassword.toCharArray());
+						
 			final KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(
 					keyStoreAlias, 
 					new KeyStore.PasswordProtection(aliasPassword.toCharArray()));
 
 			final PrivateKey privateKey = keyEntry.getPrivateKey();
 
-			final Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding","SunJCE");
-//			Cipher cipher = Cipher.getInstance("RSA");
+			final Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding",SUNJCE);
 			
 			cipher.init(2, privateKey);
 			final byte[] encryptedKeyBA = Base64.decodeBase64(encriptedKey.getFirstChild().getNodeValue());
@@ -174,14 +181,11 @@ public class CifradoServiceImpl implements CifradoService {
 			return documento;
 			
 		} catch (final Throwable e) {
-			LOG.error("[CifradoServiceImpl] Descifrado: Error de sistema Descifrado", e);
-			throw new Exception("Error de sistema Descifrado");
+			LOG.error(CIFRADOSERVICEI, e);
+			throw new Exception(ERROR_DE_SISTEM);
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Document cifrar(final Document documento, final String keyStoreType,
 			final String keyStorePassword, final String keyStoreAlias,
@@ -190,7 +194,7 @@ public class CifradoServiceImpl implements CifradoService {
 		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inicio cifrar....");
-			LOG.debug("KeyStore utilizado: " + keyStoreFile);
+			LOG.debug(KEYSTORE_UTILIZ + keyStoreFile);
 		}
 		
 		try {
@@ -206,14 +210,14 @@ public class CifradoServiceImpl implements CifradoService {
 			builder.setUserInfo(keyStoreAlias, keyStorePassword);
 			builder.setKeyEnc("http://www.w3.org/2001/04/xmlenc#rsa-1_5");
 			builder.setKeyIdentifierType(1);
-			builder.setSymmetricEncAlgorithm("http://www.w3.org/2001/04/xmlenc#aes128-cbc");
+			builder.setSymmetricEncAlgorithm(HTTPWWWDOTW3DOT);
 			JCEMapper.registerDefaultAlgorithms();
 
 			final WSSecHeader secHeader = new WSSecHeader();
 			secHeader.insertSecurityHeader(documento);
 			builder.prepare(documento, crypto);
 
-			final List<WSEncryptionPart> parts = new ArrayList<WSEncryptionPart>();
+			final List<WSEncryptionPart> parts = new ArrayList<>();
 			for (final Node node : nodosAFirmar) {
 				final WSEncryptionPart encP = new WSEncryptionPart(node.getLocalName(), node.getNamespaceURI(), "Content");
 				parts.add(encP);
@@ -244,7 +248,7 @@ public class CifradoServiceImpl implements CifradoService {
 			String certificados = props.getProperty("decode.keystore.certificados", null);
 			
 			String[] combos = certificados.split(SEPARADOR_CERTIFICADOS);
-			List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+			List<KeyValueObject> result = new ArrayList<>();
 
 			for (String combo : combos) {
 				KeyValueObject option =  new KeyValueObject();
@@ -255,8 +259,7 @@ public class CifradoServiceImpl implements CifradoService {
 			}
 			
 			return result;
-		} 
-		catch (Exception e){
+		} catch (Exception e){
 			LOG.error("[CifradoServiceImpl] - getCertificados:" + e);
 			throw new BusinessException(e,"errors.decode.getCertificados");	
 		}

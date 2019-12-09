@@ -38,12 +38,11 @@ public class ServicioEstadoImpl implements ServicioEstado{
 	@Override
 	public List<EstadoBean> getEstados() throws BusinessException {
 		List<TblEstados> list = null;
-		try {			
+		try {
+				
 			list= tblEstadosManager.getEstados().getResults();
-			List<EstadoBean> result = getListEstadoBean(list);					
-			return result;
-		} 
-		catch (Exception e){
+			return getListEstadoBean(list);
+		} catch (Exception e){
 			logger.error("ServicioEstadosImpl - getEstados:" + e);
 			throw new BusinessException(e,"errors.organismo.getOrganismos");	
 		}
@@ -57,15 +56,14 @@ public class ServicioEstadoImpl implements ServicioEstado{
 	 * @throws BusinessException the business exception
 	 */
 	///MIGRADO
-	protected List<EstadoBean> getListEstadoBean(List<TblEstados> list) throws BusinessException
-	{	
+	protected List<EstadoBean> getListEstadoBean(List<TblEstados> list) throws BusinessException {
+	
 		List<EstadoBean> result = null;
 		
-		if (list!=null && !list.isEmpty())
-		{
-			result = new ArrayList<EstadoBean>();
+		if (list!=null && !list.isEmpty()) {
+			result = new ArrayList<>();
 		
-			for (int indice=0;indice<list.size();indice++) {
+			for (int indice=0, s = list.size();indice<s;indice++) {
 					
 				TblEstados estadoJPA = list.get(indice);
 				EstadoBean estado =  new EstadoBean();
@@ -75,8 +73,7 @@ public class ServicioEstadoImpl implements ServicioEstado{
 				estado.setDescripcion(estadoJPA.getDescripcion());
 				if(estadoJPA.getActivo()){
 					estado.setActivo(1);
-				}
-				else {
+				} else {
 					estado.setActivo(0);
 				}
 				estado.setFechaCreacion(estadoJPA.getFechacreacion());

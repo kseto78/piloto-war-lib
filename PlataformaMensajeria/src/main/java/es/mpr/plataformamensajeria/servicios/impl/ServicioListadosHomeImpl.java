@@ -72,7 +72,7 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	public List<UsoServidoresBean> getUsoServidoresBean(String anyo, String mes)
 			throws BusinessException {
 	
-		List<UsoServidoresBean> listaUsoServidores = new ArrayList<UsoServidoresBean>();
+		List<UsoServidoresBean> listaUsoServidores = new ArrayList<>();
 		try{
 			
 			List<es.minhap.plataformamensajeria.iop.beans.UsoServidoresBean> lista = queryExecutorServidores.getUsoServidores(anyo, mes);
@@ -101,7 +101,7 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	 	List<EstadoLotesEnviosBean> pageList = getListViewEstadoEnviosLotesBean(lista);
 
 		
-		PaginatedList<EstadoLotesEnviosBean> result = new PaginatedList<EstadoLotesEnviosBean>();
+		PaginatedList<EstadoLotesEnviosBean> result = new PaginatedList<>();
 		result.setPageList(pageList);
 		result.setTotalList(10);
 	 	return result;
@@ -117,24 +117,21 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	 * @throws BusinessException the business exception
 	 */
 //////Migrado
-	protected List<EstadoLotesEnviosBean> getListViewEstadoEnviosLotesBean(List<ViewEstadoLotesEnvios> lista) throws BusinessException
-	{	
+	protected List<EstadoLotesEnviosBean> getListViewEstadoEnviosLotesBean(List<ViewEstadoLotesEnvios> lista) throws BusinessException {
+	
 		List<EstadoLotesEnviosBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
-			result = new ArrayList<EstadoLotesEnviosBean>();
+		if (lista!=null && !lista.isEmpty()) {
+			result = new ArrayList<>();
 		
-			for (int indice=0;indice<lista.size();indice++) {
+			for (int indice=0, s = lista.size();indice<s;indice++) {
 					
 				ViewEstadoLotesEnvios servidorJPA = lista.get(indice);
 				EstadoLotesEnviosBean servidor =  new EstadoLotesEnviosBean();
 			
 				try {
 					BeanUtils.copyProperties(servidor, servidorJPA);
-				} catch (IllegalAccessException e) {
-					throw new BusinessException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new BusinessException(e);
 				}
 			
@@ -154,13 +151,12 @@ public class ServicioListadosHomeImpl implements ServicioListadosHome{
 	 */
 //////Migrado
 	protected List<EnviosPendientesCanalBean> getListEnviosPendientesBeam
-		(List<ViewEnviosPendientesPorCanal> lista) throws BusinessException
-	{	
+		(List<ViewEnviosPendientesPorCanal> lista) throws BusinessException {
+	
 		List<EnviosPendientesCanalBean> result = null;
 		
-		if (lista!=null && !lista.isEmpty())
-		{
-			result = new ArrayList<EnviosPendientesCanalBean>();
+		if (lista!=null && !lista.isEmpty()) {
+			result = new ArrayList<>();
 			for (ViewEnviosPendientesPorCanal l : lista) {
 				EnviosPendientesCanalBean envioPendiente =  new EnviosPendientesCanalBean();
 				envioPendiente.setAplicacion(l.getId().getNombre());

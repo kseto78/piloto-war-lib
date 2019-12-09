@@ -17,6 +17,43 @@ import com.map.j2ee.auditoria.ifaces.Audit;
 public class EstadoLotesEnviosBean implements Audit{
 
 	
+	protected static final String DOT = "###,###.##";
+
+	/**  loteenvioid. */
+	protected Long loteenvioid;
+
+	/**  nombrelote. */
+	protected String nombrelote;
+
+	/**  servicioid. */
+	protected Long servicioid;
+
+	/**  nombreservicio. */
+	protected String nombreservicio;
+
+	/**  aplicacionid. */
+	protected Long aplicacionid;
+
+	/**  nombreaplicacion. */
+	protected String nombreaplicacion;
+
+	/**  enviados. */
+	protected Long enviados;
+
+	/**  incidencia. */
+	protected Long incidencia;
+
+	/**  anulado. */
+	protected Long anulado;
+
+	/**  pendiente. */
+	protected Long pendiente;
+
+	/**  fecha. */
+	protected Date fecha;
+
+
+
 	/**
 	 * Constructor de estado lotes envios bean.
 	 */
@@ -35,41 +72,6 @@ public class EstadoLotesEnviosBean implements Audit{
 	}
 
 
-	/**  loteenvioid. */
-	protected Long loteenvioid;
-	
-	/**  nombrelote. */
-	protected String nombrelote;
-	
-	/**  servicioid. */
-	protected Long servicioid;
-	
-	/**  nombreservicio. */
-	protected String nombreservicio;
-	
-	/**  aplicacionid. */
-	protected Long aplicacionid;
-	
-	/**  nombreaplicacion. */
-	protected String nombreaplicacion;
-	
-	/**  enviados. */
-	protected Long enviados;
-	
-	/**  incidencia. */
-	protected Long incidencia;
-	
-	/**  anulado. */
-	protected Long anulado;
-	
-	/**  pendiente. */
-	protected Long pendiente;
-	
-	/**  fecha. */
-	protected Date fecha;
-	
-	
-	
 	/**
 	 * Obtener fecha formateada.
 	 *
@@ -211,7 +213,7 @@ public class EstadoLotesEnviosBean implements Audit{
 	 */
 	public String getEnviadosString(){
 		if(this.enviados != null){
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(enviados);
 		}
 		return null;
@@ -224,7 +226,7 @@ public class EstadoLotesEnviosBean implements Audit{
 	 */
 	public String getIncidenciaString(){
 		if(this.incidencia != null){
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(incidencia);
 		}
 		return null;
@@ -237,7 +239,7 @@ public class EstadoLotesEnviosBean implements Audit{
 	 */
 	public String getAnuladoString(){
 		if(this.anulado != null){
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(anulado);
 		}
 		return null;
@@ -250,7 +252,7 @@ public class EstadoLotesEnviosBean implements Audit{
 	 */
 	public String getPendienteString(){
 		if(this.pendiente != null){
-			DecimalFormat formateador = new DecimalFormat("###,###.##"); 
+			DecimalFormat formateador = new DecimalFormat(DOT); 
 			return formateador.format(pendiente);
 		}
 		return null;

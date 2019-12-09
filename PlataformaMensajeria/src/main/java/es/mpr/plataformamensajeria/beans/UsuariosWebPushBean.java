@@ -24,6 +24,36 @@ public class UsuariosWebPushBean implements Audit, Serializable{
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**  usuario id. */
+	protected Integer usuarioId;
+
+	/**  nombre usuario. */
+	protected String nombreUsuario;
+
+	/**  servicio id. */
+	protected Integer servicioId;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion;
+
+	/**  aplicacion id. */
+	protected Integer aplicacionId;
+
+	/**  fecha desde. */
+	protected Date fechaDesde;
+
+	/**  fecha hasta. */
+	protected Date fechaHasta;
+
+	/**  aplicacion. */
+	protected String aplicacion;
+
+	/**  servicio. */
+	protected String servicio;
+
 	/**
 	 * Constructor de usuarios web push bean.
 	 */
@@ -43,36 +73,6 @@ public class UsuariosWebPushBean implements Audit, Serializable{
 		this.servicio = null;
 	}
 	
-	
-	/**  usuario id. */
-	protected Integer usuarioId;
-	
-	/**  nombre usuario. */
-	protected String nombreUsuario;
-	
-	/**  servicio id. */
-	protected Integer servicioId;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion;
-		
-	/**  aplicacion id. */
-	protected Integer aplicacionId;
-	
-	/**  fecha desde. */
-	protected Date fechaDesde;
-	
-	/**  fecha hasta. */
-	protected Date fechaHasta;
-	
-	/**  aplicacion. */
-	protected String aplicacion;
-	
-	/**  servicio. */
-	protected String servicio;
 	
 	/**
 	 * Obtener usuario id.

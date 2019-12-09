@@ -30,6 +30,10 @@ import es.mpr.plataformamensajeria.util.PlataformaMensajeriaUtil;
 @Service("servicioParametroServidorImpl")
 public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 
+	protected static final String ERRORSDOTORGANI = "errors.organismo.deleteOrganismo";
+
+	protected static final String SERVICIOPARAMET = "ServicioParametroServidorImpl - getParametroServidorByServidorId:";
+
 	/**  logger. */
 	private static Logger logger = Logger.getLogger(ServicioParametroServidorImpl.class);
 	
@@ -83,10 +87,9 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 	public void deleteParametroServidor(ParametroServidorBean parametroServidor, String source, String accion, Long accionId, String descripcion) throws BusinessException {
 		try {
 			tblParametrosServidorManager.delete(parametroServidor.getParametroservidorid(), source, accion, accionId, descripcion);			
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			logger.error("ServicioParametroServidorImpl - deleteParametroServidor:" + e);
-			throw new BusinessException(e,"errors.organismo.deleteOrganismo");			
+			throw new BusinessException(e,ERRORSDOTORGANI);			
 		}
 	}
 	
@@ -98,11 +101,10 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 	public List<ParametroServidorBean> getParametroServidorByServidorId(Integer servidorId) throws BusinessException {
 		try {
 			List<TblParametrosServidor> lista = tblParametrosServidorManager.getParametrosPorServidor(servidorId.longValue(), null);
-			List<ParametroServidorBean> result = getListViewParametroServidorBean(lista);
-			return result;
+			return getListViewParametroServidorBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioParametroServidorImpl - getParametroServidorByServidorId:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			logger.error(SERVICIOPARAMET + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 
 	}
@@ -115,11 +117,10 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 	public List<ParametroServidorBean> getParametroServidorByProveedorSMSId(Integer proveedorSMSId) throws BusinessException {
 		try {
 			List<TblParametrosServidor> lista = tblParametrosServidorManager.getParametrosPorServidor(proveedorSMSId.longValue(), null);
-			List<ParametroServidorBean> result = getListViewParametroServidorBean(lista);
-			return result;
+			return getListViewParametroServidorBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioParametroServidorImpl - getParametroServidorByServidorId:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			logger.error(SERVICIOPARAMET + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 	
@@ -131,11 +132,10 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 	public List<ParametroServidorBean> getParametroServidorByReceptorSMSId(Integer receptorSMSId) throws BusinessException {
 		try {
 			List<TblParametrosServidor> lista = tblParametrosServidorManager.getParametrosPorServidor(receptorSMSId.longValue(), null);
-			List<ParametroServidorBean> result = getListViewParametroServidorBean(lista);
-			return result;
+			return getListViewParametroServidorBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioParametroServidorImpl - getParametroServidorByServidorId:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			logger.error(SERVICIOPARAMET + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 	
@@ -147,11 +147,10 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 	public List<ParametroServidorBean> getParametroServidorByServidorPushId(Integer servidorPushId) throws BusinessException {
 		try {
 			List<TblParametrosServidor> lista = tblParametrosServidorManager.getParametrosPorServidor(servidorPushId.longValue(), null);
-			List<ParametroServidorBean> result = getListViewParametroServidorBean(lista);
-			return result;
+			return getListViewParametroServidorBean(lista);
 		} catch (Exception e) {
-			logger.error("ServicioParametroServidorImpl - getParametroServidorByServidorId:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			logger.error(SERVICIOPARAMET + e);
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 	}
 
@@ -169,7 +168,7 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 			}
 		}catch (Exception e) {
 			logger.error("ServicioParametroServidorImpl - existeParametroServidor:" + e);
-			throw new BusinessException(e, "errors.organismo.deleteOrganismo");
+			throw new BusinessException(e, ERRORSDOTORGANI);
 		}
 		return false;
 	}	
@@ -187,7 +186,7 @@ public class ServicioParametroServidorImpl implements ServicioParametroServidor{
 		List<ParametroServidorBean> result = null;
 
 		if (lista != null && !lista.isEmpty()) {
-			result = new ArrayList<ParametroServidorBean>();
+			result = new ArrayList<>();
 
 			for (TblParametrosServidor ps : lista) {
 				ParametroServidorBean servidor = new ParametroServidorBean();

@@ -1,9 +1,11 @@
 <%@include file="/WEB-INF/jsp/utils/taglibs.jsp"%>
+<%@page import="es.mpr.plataformamensajeria.util.PlataformaMensajeriaProperties" %>
 <plataforma:securityRedirect isAction="true" redirectTo="permisoDenegado"  allowedTo="ROL_ADMINISTRADOR,ROL_CAID">
 	<script>
 		document.location.href="permisoDenegado.action";
 	</script>
 </plataforma:securityRedirect>
+
 <div class="mainContent">  
         <s:form id="frmEditPlanificacion" method="POST" action="updateUsuario" validate="false" theme="simple" cssClass="">
             <h3 class="pageNameButtons">
@@ -40,13 +42,32 @@
 								size="50"
 								cssClass=""/>
                     </p>    
-                      <p class="criteria">
+                     <p class="criteria">
                  		<label class="fieldText" style="width: 120px;">Email:</label>
                  		<s:textfield
 								name="usuario.email" value="%{usuario.email}" id="usuario.email"
 								theme="simple" style="width:300px;"
 								size="50"
 								cssClass=""/>
+                    </p>
+                      <p class="criteria">
+                 		<label class="fieldText" style="width: 120px;">Telefono:</label>
+                 		<s:textfield
+								name="usuario.telefono" value="%{usuario.telefono}" id="usuario.telefono"
+								theme="simple" style="width:300px;"
+								size="50"
+								cssClass=""/>
+                    </p>
+                      <p class="criteria">
+                 		<label class="fieldText" style="width: 120px;">Organismo:</label>
+                 		<s:textfield
+								name="usuario.organismo" value="%{usuario.organismo}" id="usuario.organismo"
+								theme="simple" style="width:300px;"
+								size="50"
+								cssClass=""/>
+						<label class="tiptext"><img src="./img/icoHelp.png" height="10" width="10" "><label class="description">Si desea que el usuario pueda acceder a todos los envios de AEAT
+						 y GISS, debe de introducir los siguientes organismos: <br> AEAT - <%=PlataformaMensajeriaProperties.getInstance().getProperty("usuario.ayuda.organismo.aeat", "")%> 
+						 <br>GISS - <%=PlataformaMensajeriaProperties.getInstance().getProperty("usuario.ayuda.organismo.giss", "")%></label></label>
                     </p>
                       <p class="criteria">
                  		<label class="fieldText" style="width: 120px;">Activo:</label>
@@ -87,7 +108,7 @@
            <div class="editContent">
 			       	  <p class="criteria">
 			       	    <s:form id="frmAddUsuarioAplicacion" method="POST" action="addUsuarioAplicacion" validate="false" cssClass="">
-		                      
+		                      <s:hidden id="usuario.organismo" name="usuario.organismo" value="%{usuario.organismo}"/>
 		                          <span><label class="fieldText"> Aplicación:
 		                          <s:select
 											id="usuarioAplicacion.aplicacionId" name="usuarioAplicacion.aplicacionId" 
@@ -111,7 +132,7 @@
 								</label>
 								</span>
 			          	      
-		                      <a class="addLink" id="addItem" onclick="document.forms['frmAddUsuarioAplicacion'].submit()" name="addItem">Añadir Item</a>
+		                      <a class="addLink" id="addItem" onclick="submitAddAplicacion()" name="addItem">Añadir Item</a>
 		                      <s:hidden id="idUsuario" name="idUsuario" value="%{usuario.usuarioId}"/>
 		                </s:form>
 		                  </p>
@@ -178,3 +199,13 @@
         		<input type="hidden" name="idUsuario" id="idUsuario" value="${idUsuario}"/>
         </s:form> 
         </div>
+        <script>
+			function submitAddAplicacion(){
+				document.forms['frmAddUsuarioAplicacion'].submit();
+			}
+			$(".tiptext").mouseover(function() {
+       		    $(this).children(".description").show();
+       		}).mouseout(function() {
+       		    $(this).children(".description").hide();
+       		});
+        </script>

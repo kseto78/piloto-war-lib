@@ -32,6 +32,10 @@ import es.mpr.plataformamensajeria.util.TituloEstadisticasParser;
 @Service("estadisticasPlataforma")
 public class EstadisticasPlataforma {
 	
+	protected static final String R_CONST_ = "0";
+
+	protected static final String SLASH = "_";
+
 	/**  estadistica. */
 	private EstadisticasBean estadistica = null;
 	
@@ -67,18 +71,16 @@ public class EstadisticasPlataforma {
 	public static final String AGRUPAR_ESTADO="5";
 	
 	/** Constante vista. */
-	private static final  HashMap<String,String> vista = new HashMap<String,String>();
- 	static
- 	{
+	private static final  HashMap<String,String> vista = new HashMap<>();
+ 	static {
  		vista.put(VISTA_ANNOS, "Años");
  		vista.put(VISTA_MESES, "Meses");
  		vista.put(VISTA_DIAS, "Días");
  	}	
 
 	/** Constante agrupaciones. */
-	private static final HashMap<String,String> agrupaciones = new HashMap<String,String>();
- 	static
- 	{
+	private static final HashMap<String,String> agrupaciones = new HashMap<>();
+ 	static {
  		agrupaciones.put(AGRUPAR_APLICACIONES, "Aplicaciones");
  		agrupaciones.put(AGRUPAR_SERVIDOR, "Servidor");
  		agrupaciones.put(AGRUPAR_SERVICIO, "Servicio");
@@ -95,7 +97,9 @@ public class EstadisticasPlataforma {
 	/**
 	 * Constructor de estadisticas plataforma.
 	 */
-	public EstadisticasPlataforma(){}
+	public EstadisticasPlataforma(){
+		// This method has to be empty.
+	}
 	
 	/**
 	 * Constructor de estadisticas plataforma.
@@ -138,13 +142,13 @@ public class EstadisticasPlataforma {
 	 */
 	///MIGRADO
 	public List<FilaEstadisticaBean> getEstadisticas(EstadisticasBean estadisticaBean, boolean reverse) throws BusinessException{
-		List<FilaEstadisticaBean> listaFilasEstadisticas = new ArrayList<FilaEstadisticaBean>();
+		List<FilaEstadisticaBean> listaFilasEstadisticas = new ArrayList<>();
 		
 		if(estadisticaBean != null){
 			
 			StringBuffer aplicaciones = new StringBuffer();
-			if(mapPermisosUsuario!=null&&(!PlataformaMensajeriaUtil.isEmpty(rolUsuario)
-					&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_ADMINISTRADOR)&&!rolUsuario.equals(PlataformaMensajeriaUtil.ROL_CAID))){
+			if(mapPermisosUsuario!=null&&!PlataformaMensajeriaUtil.isEmpty(rolUsuario)
+					&&!PlataformaMensajeriaUtil.ROL_ADMINISTRADOR.equals(rolUsuario)&&!PlataformaMensajeriaUtil.ROL_CAID.equals(rolUsuario)){
 				Set<Integer> idAplicaciones = mapPermisosUsuario.keySet();
 				Iterator<Integer> itAplicaciones = idAplicaciones.iterator();
 				boolean first=true;
@@ -163,7 +167,7 @@ public class EstadisticasPlataforma {
 			
 			List<Object[]> rows = queryExecutorEstadisticas.getEstadisticas(est, aplicaciones);
 			
-			List<String> nombreColumnas = new ArrayList<String>();
+			List<String> nombreColumnas = new ArrayList<>();
 			
 			nombreColumnas.add(null);
 			
@@ -184,7 +188,7 @@ public class EstadisticasPlataforma {
 			} else if(estadisticaBean.getVistaId() == 2){
 				while (fechaDesde.getTime().before(fechaHasta.getTime())){
 					String columnName = (fechaDesde.get(Calendar.MONTH)+1)
-		            		+ "_"
+		            		+ SLASH
 		            		+ fechaDesde.get(Calendar.YEAR);
 		        	fechaDesde.add(Calendar.MONTH, 1);
 		        	nombreColumnas.add(columnName);
@@ -192,24 +196,25 @@ public class EstadisticasPlataforma {
 			}else if(estadisticaBean.getVistaId() == 3){
 				while (fechaDesde.getTime().before(fechaHasta.getTime())){
 					String columnName = fechaDesde.get(Calendar.DAY_OF_MONTH)
-		            		+ "_"
+		            		+ SLASH
 		            		+ (fechaDesde.get(Calendar.MONTH)+1)
-		            		+ "_"
+		            		+ SLASH
 		            		+ fechaDesde.get(Calendar.YEAR);
 		        	fechaDesde.add(Calendar.DAY_OF_YEAR, 1);
 		        	nombreColumnas.add(columnName);
 		        }
 			}
 			
-			LinkedHashMap<String, List<ColumnaBean>> valores = new LinkedHashMap<String, List<ColumnaBean>>();
+			LinkedHashMap<String, List<ColumnaBean>> valores = new LinkedHashMap<>();
 			
 			for(Object[] obj: rows){
 				//En el caso de que no se haya añadido ya una fila con un nombre concreto de servicio.
 				if(!valores.containsKey((String) obj[0])){
 					Iterator<String> it = nombreColumnas.iterator();
-					List<ColumnaBean> dias = new ArrayList<ColumnaBean>();
+					List<ColumnaBean> dias = new ArrayList<>();
 					ColumnaBean colMap;
-					while(it.hasNext()){//COLUMNA
+					while(it.hasNext()){
+						//COLUMNA
 						String columna = it.next();
 						String valor;
 						if(columna!=null){
@@ -218,34 +223,34 @@ public class EstadisticasPlataforma {
 								String[] columnaS = null;
 								String[] objColumnaS = null;
 								if(estadisticaBean.getVistaId() != 1){
-									columnaS = columna.split("_");
-									objColumnaS = ((String) obj[3]).split("_");
+									columnaS = columna.split(SLASH);
+									objColumnaS = ((String) obj[3]).split(SLASH);
 								}
 								if(estadisticaBean.getVistaId() == 1){
 									if(columna.equals(((BigDecimal) obj[3]).toString())){
 										valor = ((BigDecimal) obj[4]).toString();
 									} else {
-										valor = "0";
+										valor = R_CONST_;
 									}
 								} else if(estadisticaBean.getVistaId() == 2){
 									if(columnaS[0].equals(objColumnaS[0]) && columnaS[1].equals(objColumnaS[1])){
 										valor = ((BigDecimal) obj[4]).toString();
 									} else {
-										valor = "0";
+										valor = R_CONST_;
 									}
 								} else if(estadisticaBean.getVistaId() == 3){
 									if(columnaS[0].equals(objColumnaS[0]) && columnaS[1].equals(objColumnaS[1]) 
 											&& columnaS[2].equals(objColumnaS[2])){
 										valor = ((BigDecimal) obj[4]).toString();
 									} else {
-										valor = "0";
+										valor = R_CONST_;
 									}
 								} else {
-									valor = "0";
+									valor = R_CONST_;
 								}
 									
 							} else {
-								valor = "0";
+								valor = R_CONST_;
 							}
 												
 							colMap.setTitulo(columna);
@@ -260,38 +265,32 @@ public class EstadisticasPlataforma {
 					//Si el servicio ya ha sido añadido en la lista anteriormente.
 					List<ColumnaBean> diasRec = valores.get((String) obj[0]);
 					
-					for(int i=0;i<diasRec.size();i++){
-//						if(diasRec.get(i).getValor().equals("0")){
+					for(int i=0, s = diasRec.size();i<s;i++){
 							String columnaRec = diasRec.get(i).getTitulo();
 							String fecha = (String) obj[3];
-							if(fecha!=null && columnaRec != null){
-								if(obj[4] != null){
-									String[] columnaS = null;
-									String[] objColumnaS = null;
-									if(estadisticaBean.getVistaId() != 1){
-										columnaS = columnaRec.split("_");
-										objColumnaS = fecha.split("_");
-									}
-									if(estadisticaBean.getVistaId() == 1){
-										if(fecha.equals(((BigDecimal) obj[3]).toString())){
-											Integer v = Integer.parseInt(diasRec.get(i).getValor());
-											diasRec.get(i).setValor(String.valueOf(((BigDecimal) obj[4]).intValue() + v));
-										} 
-									} else if(estadisticaBean.getVistaId() == 2){
-										if(columnaS[0].equals(objColumnaS[0]) && columnaS[1].equals(objColumnaS[1])){
-											Integer v = Integer.parseInt(diasRec.get(i).getValor());
-											diasRec.get(i).setValor(String.valueOf(((BigDecimal) obj[4]).intValue() + v));
-										} 
-									} else if(estadisticaBean.getVistaId() == 3){
-										if(columnaS[0].equals(objColumnaS[0]) && columnaS[1].equals(objColumnaS[1]) 
-												&& columnaS[2].equals(objColumnaS[2])){
-											Integer v = Integer.parseInt(diasRec.get(i).getValor());
-											diasRec.get(i).setValor(String.valueOf(((BigDecimal) obj[4]).intValue() + v));
-										} 
-									} 
+							if(fecha!=null && columnaRec != null && obj[4] != null) {
+								String[] columnaS = null;
+								String[] objColumnaS = null;
+								if(estadisticaBean.getVistaId() != 1){
+									columnaS = columnaRec.split(SLASH);
+									objColumnaS = fecha.split(SLASH);
 								}
+								if(estadisticaBean.getVistaId() == 1){
+									if(fecha.equals(((BigDecimal) obj[3]).toString())){
+										Integer v = Integer.parseInt(diasRec.get(i).getValor());
+										diasRec.get(i).setValor(String.valueOf(((BigDecimal) obj[4]).intValue() + v));
+									} 
+								} else if(estadisticaBean.getVistaId() == 2){
+									if(columnaS[0].equals(objColumnaS[0]) && columnaS[1].equals(objColumnaS[1])){
+										Integer v = Integer.parseInt(diasRec.get(i).getValor());
+										diasRec.get(i).setValor(String.valueOf(((BigDecimal) obj[4]).intValue() + v));
+									} 
+								} else if(estadisticaBean.getVistaId() == 3 && columnaS[0].equals(objColumnaS[0]) && columnaS[1].equals(objColumnaS[1]) 
+										&& columnaS[2].equals(objColumnaS[2])) {
+Integer v = Integer.parseInt(diasRec.get(i).getValor());
+diasRec.get(i).setValor(String.valueOf(((BigDecimal) obj[4]).intValue() + v));
+} 
 							}
-//						}
 					}
 					
 					valores.put((String) obj[0], diasRec);
@@ -342,7 +341,7 @@ public class EstadisticasPlataforma {
 	 */
 	public static List<KeyValueObject> getComboVista(){
 		Set<String>listaClaves= vista.keySet();
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         Iterator<String> itClaves = listaClaves.iterator();
         while(itClaves.hasNext()){
@@ -364,12 +363,12 @@ public class EstadisticasPlataforma {
 	 */
 	public List<FilaEstadisticaBean> reverseEstadistica(List<FilaEstadisticaBean> listaEstadistica,
 			EstadisticasBean estadisticaBean){
-		ArrayList<FilaEstadisticaBean> listaRevertida = new ArrayList<FilaEstadisticaBean>();
-		ArrayList<String> nombreColumnasNuevo = new ArrayList<String>();
-		List<ColumnaBean> listadoColumnasAFilas = new ArrayList<ColumnaBean>();
+		ArrayList<FilaEstadisticaBean> listaRevertida = new ArrayList<>();
+		ArrayList<String> nombreColumnasNuevo = new ArrayList<>();
+		List<ColumnaBean> listadoColumnasAFilas = new ArrayList<>();
 		for (FilaEstadisticaBean filaEstadisticaBean : listaEstadistica) {
 			nombreColumnasNuevo.add(filaEstadisticaBean.getNombreGrupo());
-			if(listadoColumnasAFilas.size()==0){
+			if(listadoColumnasAFilas.isEmpty()){
 				listadoColumnasAFilas = filaEstadisticaBean.getListaColumnasMap();
 			}
 		}
@@ -396,7 +395,7 @@ public class EstadisticasPlataforma {
 	 */
 	public static List<KeyValueObject> getComboAgrupaciones(){
 		Set<String>listaClaves= agrupaciones.keySet();
-        List<KeyValueObject> result = new ArrayList<KeyValueObject>();
+        List<KeyValueObject> result = new ArrayList<>();
         KeyValueObject option = null;
         Iterator<String> itClaves = listaClaves.iterator();
         while(itClaves.hasNext()){

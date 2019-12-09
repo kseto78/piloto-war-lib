@@ -23,21 +23,6 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class PlataformaBean implements Audit {
 
-	/**
-	 * Constructor de plataforma bean.
-	 */
-	public PlataformaBean() {
-		super();
-		this.nombre = null;
-		this.descripcion = null;
-		this.activo = null;
-		this.fechacreacion = null;
-		this.creadopor = null;
-		this.fechamodificacion = null;
-		this.modificadopor = null;
-
-	}
-
 	/**  plataformaid. */
 	protected Integer plataformaid;
 
@@ -61,6 +46,21 @@ public class PlataformaBean implements Audit {
 
 	/**  modificadopor. */
 	protected String modificadopor = null;
+
+	/**
+	 * Constructor de plataforma bean.
+	 */
+	public PlataformaBean() {
+		super();
+		this.nombre = null;
+		this.descripcion = null;
+		this.activo = null;
+		this.fechacreacion = null;
+		this.creadopor = null;
+		this.fechamodificacion = null;
+		this.modificadopor = null;
+
+	}
 
 	/**
 	 * Obtener id.

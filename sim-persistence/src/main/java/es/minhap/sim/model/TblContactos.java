@@ -36,9 +36,6 @@ public class TblContactos implements java.io.Serializable {
 	
 	@Column(name = "NOMBRE", length = 200)
 	private String nombre;
-	
-	@Column(name = "APELLIDOS", length = 300)
-	private String apellidos;
 
 	@Column(name = "EMAIL", length = 100)
 	private String email;
@@ -147,20 +144,7 @@ public class TblContactos implements java.io.Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
-	/**
-	 * @return
-	 */
-	public String getApellidos() {
-		return apellidos;
-	}
-
-	/**
-	 * @param apellidos
-	 */
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
+	
 
 	/**
 	 * @return

@@ -14,8 +14,101 @@ import com.map.j2ee.auditoria.ifaces.Audit;
  */
 public class PlanificacionBean implements Audit, Serializable {
 
+	protected static final String S = "S";
+
+	protected static final String BLANK = ", ";
+
+	protected static final String TRUE = "true";
+
 	/** Constante serialVersionUID. */
 	private static final long serialVersionUID = -1274813465180160041L;
+
+	/**  planificacion id. */
+	protected Integer planificacionId;
+
+	/**  servidor id. */
+	protected Integer servidorId;
+
+	/**  servicio id. */
+	protected Integer servicioId;
+
+	/**  tipo planificacion id. */
+	protected Integer tipoPlanificacionId;
+
+	/**  lunes. */
+	protected String lunes;
+
+	/**  martes. */
+	protected String martes;
+
+	/**  miercoles. */
+	protected String miercoles;
+
+	/**  jueves. */
+	protected String jueves;
+
+	/**  viernes. */
+	protected String viernes;
+
+	/**  sabado. */
+	protected String sabado;
+
+	/**  domingo. */
+	protected String domingo;
+
+	/**  hora desde. */
+	protected String horaDesde;
+
+	/**  hora hasta. */
+	protected String horaHasta;
+
+	/**  activo. */
+	protected Boolean activo;
+
+	/**  fecha creacion. */
+	protected Date fechaCreacion = null;
+
+	/**  creado por. */
+	protected String creadoPor = null;
+
+	/**  fecha modificacion. */
+	protected Date fechaModificacion = null;
+
+	/**  modificado por. */
+	protected String modificadoPor = null;
+
+	/**  external id. */
+	protected Integer externalId = null;
+
+	/**  canal id. */
+	protected Integer canalId;
+
+	/**  nombre aplicacion. */
+	protected String nombreAplicacion = null;
+
+	/**  nombre tipo planificacion. */
+	protected String nombreTipoPlanificacion = null;
+
+	/**  organismo id. */
+	protected Integer organismoId = null;
+
+	/**  dir 3 organismo. */
+	protected String dir3Organismo = null;
+
+	/**  aplicacion id. */
+	protected Integer aplicacionId;
+
+	/**  nombre servidor. */
+	protected String nombreServidor;
+
+	/**  nombre servicio. */
+	protected String nombreServicio;
+
+	/**  hora desde fin. */
+	protected String horaDesdeFin;
+
+	/**  hora hasta fin. */
+	protected String horaHastaFin;
 
 	/**
 	 * Constructor de planificacion bean.
@@ -51,93 +144,6 @@ public class PlanificacionBean implements Audit, Serializable {
 		this.organismoId = null;
 		this.dir3Organismo = null;
 	}
-
-	/**  planificacion id. */
-	protected Integer planificacionId;
-	
-	/**  servidor id. */
-	protected Integer servidorId;
-	
-	/**  servicio id. */
-	protected Integer servicioId;
-	
-	/**  tipo planificacion id. */
-	protected Integer tipoPlanificacionId;
-	
-	/**  lunes. */
-	protected String lunes;
-	
-	/**  martes. */
-	protected String martes;
-	
-	/**  miercoles. */
-	protected String miercoles;
-	
-	/**  jueves. */
-	protected String jueves;
-	
-	/**  viernes. */
-	protected String viernes;
-	
-	/**  sabado. */
-	protected String sabado;
-	
-	/**  domingo. */
-	protected String domingo;
-	
-	/**  hora desde. */
-	protected String horaDesde;
-	
-	/**  hora hasta. */
-	protected String horaHasta;
-	
-	/**  activo. */
-	protected Boolean activo;
-	
-	/**  fecha creacion. */
-	protected Date fechaCreacion = null;
-	
-	/**  creado por. */
-	protected String creadoPor = null;
-	
-	/**  fecha modificacion. */
-	protected Date fechaModificacion = null;
-	
-	/**  modificado por. */
-	protected String modificadoPor = null;
-	
-	/**  external id. */
-	protected Integer externalId = null;
-	
-	/**  canal id. */
-	protected Integer canalId;
-	
-	/**  nombre aplicacion. */
-	protected String nombreAplicacion = null;
-	
-	/**  nombre tipo planificacion. */
-	protected String nombreTipoPlanificacion = null;
-	
-	/**  organismo id. */
-	protected Integer organismoId = null;
-	
-	/**  dir 3 organismo. */
-	protected String dir3Organismo = null;
-	
-	/**  aplicacion id. */
-	protected Integer aplicacionId;
-	
-	/**  nombre servidor. */
-	protected String nombreServidor;
-	
-	/**  nombre servicio. */
-	protected String nombreServicio;
-	
-	/**  hora desde fin. */
-	protected String horaDesdeFin;
-	
-	/**  hora hasta fin. */
-	protected String horaHastaFin;
 
 	/**
 	 * Obtener nombre tipo planificacion.
@@ -217,7 +223,7 @@ public class PlanificacionBean implements Audit, Serializable {
 	 * @param activado new activado
 	 */
 	public void setActivado(String activado) {
-		if (activado != null && activado.equals("true")) {
+		if (activado != null && TRUE.equals(activado)) {
 			this.activo = true;
 		} else {
 			this.activo = false;
@@ -231,7 +237,7 @@ public class PlanificacionBean implements Audit, Serializable {
 	 */
 	public String getActivado() {
 		if (activo != null && activo) {
-			return "true";
+			return TRUE;
 		} else {
 			return "false";
 		}
@@ -669,48 +675,48 @@ public class PlanificacionBean implements Audit, Serializable {
 	public String getDias() {
 		StringBuffer sbf = new StringBuffer();
 		boolean sw = true;
-		if (lunes != null && (lunes.equals("S") || lunes.equals("true"))) {
+		if (lunes != null && (S.equals(lunes) || TRUE.equals(lunes))) {
 			sbf.append("L");
 			sw = false;
 		}
-		if (martes != null && (martes.equals("S") || martes.equals("true"))) {
+		if (martes != null && (S.equals(martes) || TRUE.equals(martes))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(BLANK);
 			}
 			sbf.append("M");
 			sw = false;
 		}
-		if (miercoles != null && (miercoles.equals("S") || miercoles.equals("true"))) {
+		if (miercoles != null && (S.equals(miercoles) || TRUE.equals(miercoles))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(BLANK);
 			}
 			sbf.append("X");
 			sw = false;
 		}
-		if (jueves != null && (jueves.equals("S") || jueves.equals("true"))) {
+		if (jueves != null && (S.equals(jueves) || TRUE.equals(jueves))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(BLANK);
 			}
 			sbf.append("J");
 			sw = false;
 		}
-		if (viernes != null && (viernes.equals("S") || viernes.equals("true"))) {
+		if (viernes != null && (S.equals(viernes) || TRUE.equals(viernes))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(BLANK);
 			}
 			sbf.append("V");
 			sw = false;
 		}
-		if (sabado != null && (sabado.equals("S") || sabado.equals("true"))) {
+		if (sabado != null && (S.equals(sabado) || TRUE.equals(sabado))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(BLANK);
 			}
-			sbf.append("S");
+			sbf.append(S);
 			sw = false;
 		}
-		if (domingo != null && (domingo.equals("S") || domingo.equals("true"))) {
+		if (domingo != null && (S.equals(domingo) || TRUE.equals(domingo))) {
 			if (!sw) {
-				sbf.append(", ");
+				sbf.append(BLANK);
 			}
 			sbf.append("D");
 		}
@@ -738,7 +744,7 @@ public class PlanificacionBean implements Audit, Serializable {
 	 * @param isActivo new checks if is activo
 	 */
 	public void setIsActivo(String isActivo) {
-		if (isActivo != null && isActivo.equals("true")) {
+		if (isActivo != null && TRUE.equals(isActivo)) {
 			this.activo = true;
 		} else {
 			this.activo = false;

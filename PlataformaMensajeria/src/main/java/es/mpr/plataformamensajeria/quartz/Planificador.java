@@ -1,12 +1,7 @@
 package es.mpr.plataformamensajeria.quartz;
 
 import java.text.ParseException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
@@ -22,7 +17,6 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
 
 import es.minhap.plataformamensajeria.iop.beans.ProcesosBean;
@@ -31,6 +25,14 @@ import es.mpr.plataformamensajeria.servicios.ifaces.ServicioProcesos;
 
 
 public class Planificador {
+
+	protected static final String PLANIFICAR_PROC = "planificar proceso ";
+
+	protected static final String RUN_PROCESOS_REF = "run - Procesos planificados";
+
+	protected static final String RUN___TAM_SIZE = "run - Tam size:";
+
+	protected static final String RUN___PLANIFICA = "run - Planificando proceso:";
 
 	private static Logger logger = Logger.getLogger(Planificador.class);
 	
@@ -46,7 +48,6 @@ public class Planificador {
 	public Planificador(ApplicationContext applicationContext){
 		this.applicationContext = applicationContext;		
 		servicioProcesos = (ServicioProcesos) applicationContext.getBean("servicioProcesosImpl");
-//		properties = (Properties) applicationContext.getBean("propertiesBean"); 
 	
 	}
 	
@@ -54,15 +55,15 @@ public class Planificador {
 		logger.info("run - start");
 		
     	
-    		logger.info("run - Procesos planificados");
+    		logger.info(RUN_PROCESOS_REF);
 			List<ProcesosBean> listaProcesos = servicioProcesos.getAllProcesos();
-			logger.info("run - Tam size:" + listaProcesos.size());
+			logger.info(RUN___TAM_SIZE + listaProcesos.size());
 			
 			for (ProcesosBean proceso : listaProcesos){
-				if (proceso==null || (proceso.getActivo() != null && !(proceso.getActivo()))){
+				if (proceso==null || (proceso.getActivo() != null && !proceso.getActivo())){
 					continue;
 				}
-				logger.info("run - Planificando proceso:" + proceso.getNombre());
+				logger.info(RUN___PLANIFICA + proceso.getNombre());
 				this.planificarProcesos(proceso);
 			}
     	
@@ -72,13 +73,13 @@ public class Planificador {
 	public boolean planificarUnProceso(String nombreProceso) throws BusinessException{
 		
 		boolean planificado = false;
-		logger.info("run - Procesos planificados");
+		logger.info(RUN_PROCESOS_REF);
 		List<ProcesosBean> listaProcesos = servicioProcesos.getAllProcesos();
-		logger.info("run - Tam size:" + listaProcesos.size());
+		logger.info(RUN___TAM_SIZE + listaProcesos.size());
 		
 		for (ProcesosBean proceso : listaProcesos){
 			if (proceso!=null && proceso.getNombreClase().equals(nombreProceso) ){
-				logger.info("run - Planificando proceso:" + proceso.getNombre());
+				logger.info(RUN___PLANIFICA + proceso.getNombre());
 				this.planificarProcesos(proceso);			
 				planificado = true;
 			}			
@@ -114,10 +115,10 @@ public class Planificador {
 						Class<? extends Job> clase = (Class <? extends Job>)Class.forName("es.mpr.plataformamensajeria.quartz.jobs."+proceso.getNombreClase());
 						job.setJobClass(clase);
 						
-						logger.debug("planificar proceso "+proceso.getNombre()+"- La cronExpression es: " + proceso.getProximaEjecucion());
+						logger.debug(PLANIFICAR_PROC+proceso.getNombre()+"- La cronExpression es: " + proceso.getProximaEjecucion());
 						CronExpression cronExp = new CronExpression(proceso.getProximaEjecucion());
 						// Creación del trigger
-				        logger.debug("planificar proceso "+proceso.getNombre()+" - Configuramos el trigger que avisara al planificador");
+				        logger.debug(PLANIFICAR_PROC+proceso.getNombre()+" - Configuramos el trigger que avisara al planificador");
 				        // Configuramos el Trigger que avisará al planificador de cuando debe ejecutar la tarea 
 						CronTriggerImpl trigger = new CronTriggerImpl();
 						
