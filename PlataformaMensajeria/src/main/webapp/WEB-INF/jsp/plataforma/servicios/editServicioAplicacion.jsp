@@ -410,38 +410,5 @@
                 </div>
             </div>
            </s:form>
-           
-           <script type="text/javascript">
-           		checkCanalHeader(document.getElementById('servicio.canalid'));
-           		
-       			
-           		function selectOnlyThis(id) {
-           			
-           			var idCheck = document.getElementById(id).checked;
-           			var idCheck2 = null;
-           			if(id=="servicio.isPremium"){
-           				idCheck2 = document.getElementById("servicio.isExclusivo");
-           				}
-           			else{
-           				idCheck2 = document.getElementById("servicio.isPremium");
-           				}
-           			
-           			if(idCheck) {
-           					idCheck2.checked = false;
-           				}
-           		}
-    		</script>
 			
-        </div>
-        
-        <script>
-        const serviciosAEATGiss = "${serviciosAEATGiss}"; 
-   		var res = serviciosAEATGiss.split(",");
-
-   		res.forEach(function(idServActual) {
-   			  if (idServActual == idServicio.value){
-   				  document.getElementById("servicio.isPremium").disabled = true;
-   				  document.getElementById("servicio.isExclusivo").disabled = true;			  
-   				  }
-   			});
-        </script>
+        </div> 
