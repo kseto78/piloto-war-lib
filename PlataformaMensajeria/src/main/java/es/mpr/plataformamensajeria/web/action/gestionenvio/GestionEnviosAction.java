@@ -347,8 +347,8 @@ public class GestionEnviosAction extends PlataformaPaginationAction implements S
  */
 ////MIGRADO
 	public String search() throws BaseException {
-		String dir3AEAT = properties.getProperty("usuario.ayuda.organismo.aeat", null);
-		String dir3GISS = properties.getProperty("usuario.ayuda.organismo.giss", null);
+		String dir3AEAT = properties.getProperty("usuario.ayuda.organismo.aeat", null).trim();
+		String dir3GISS = properties.getProperty("usuario.ayuda.organismo.giss", null).trim();
 		PaginatedList<GestionEnvioBean> result;
 		Integer totalSize;
 		if (getRequest().getSession().getAttribute(GestionEnviosAction.INFO_USER) == null) {
