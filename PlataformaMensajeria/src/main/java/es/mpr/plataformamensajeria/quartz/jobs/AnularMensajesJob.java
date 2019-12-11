@@ -163,7 +163,7 @@ public class AnularMensajesJob implements Job {
 			}
 			
 
-			String listaServiciosBusqueda = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null);
+			String listaServiciosBusqueda = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null).trim();
 			if(null == listaServiciosBusqueda || "".equals(listaServiciosBusqueda)) {
 				descripcionEstado.append("Se ha produciodo un error en la carga de los servicios");
 				procesoHistBean.setCodigoEstado(ESTADO_PROCESO_KO);
