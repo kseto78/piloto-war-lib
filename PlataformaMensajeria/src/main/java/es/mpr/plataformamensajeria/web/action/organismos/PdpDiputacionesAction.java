@@ -787,7 +787,7 @@ public class PdpDiputacionesAction extends PlataformaPaginationAction implements
 		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
-		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
+		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null).trim();
 		List<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(listaServ.split(R_CONST_REF)));
 		ArrayList<ServicioBean> keys = null;
 		try {

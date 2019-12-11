@@ -1519,7 +1519,7 @@ public class EjecucionJobAction extends PlataformaPaginationAction implements Se
 		}
 
 		public String getPropertyServiciosAnularMensajes() throws BusinessException {
-			String idServ = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null);
+			String idServ = properties.getProperty("jobAnularMensajes.serviciosAEATGiss", null).trim();
 			ArrayList<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(idServ.split(R_CONST_0)));
 			propertyServiciosAnularMensajes ="";
 			for(String serv:serviciosAeatGiss){

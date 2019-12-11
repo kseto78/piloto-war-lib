@@ -72,7 +72,7 @@ public class UsuarioAction extends PlataformaPaginationAction implements Servlet
 
 	protected static final String NOUSER = "noUser";
 
-	protected static final String PLATAFORMADOTUS0 = "plataforma.usuario.add.usuarioaplicacion.AEATGISS";
+	protected static final String PLATAFORMADOTUS0 = "plataforma.usuario.add.usuarioaplicacion.AEATGISS".trim();
 
 	protected static final String PLATAFORMADOTUS1 = "plataforma.usuario.create.usuarioexistente";
 

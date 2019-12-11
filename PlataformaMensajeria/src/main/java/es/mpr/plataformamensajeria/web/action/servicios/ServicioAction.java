@@ -2047,7 +2047,7 @@ servicio.setVapidPublicKey(vapidPublicKey);
 
 			comboConfiguraciones = getComboConfiguracion(servicio.getCanalid());
 			comboConfiguracionesPlan = getComboConfiguracionesPlan(servicio.getCanalid());
-			serviciosAEATGiss = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
+			serviciosAEATGiss = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null).trim();
 
 			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByServicioID(Integer
 					.parseInt(idServicio));

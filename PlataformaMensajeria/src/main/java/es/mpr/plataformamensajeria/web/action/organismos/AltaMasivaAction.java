@@ -706,7 +706,7 @@ public class AltaMasivaAction extends PlataformaPaginationAction implements Serv
 		List<KeyValueObject> result = new ArrayList<>();
 
 		KeyValueObject option;
-		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null);
+		String listaServ = properties.getProperty("altasmasivas.comboservicios.serviciosAeatGiss", null).trim();
 		List<String> serviciosAeatGiss = new ArrayList<>(Arrays.asList(listaServ.split(R_CONST_REF2)));
 		ArrayList<ServicioBean> keys = null;
 		try {
