@@ -1169,6 +1169,47 @@
 			</result>
 			<result name="noUser" type="tiles">pages.nouser</result>
 		</action>
+		
+		<action name="addDocumentoAplicacion" class="aplicacionAction"
+			method="addDocumentoAplicacion">			
+			<result name="success" type="redirectAction">
+				<param name="actionName">editAplicacion</param>
+				<param name="parse">true</param> 
+				<param name="idAplicacion">${idAplicacion}</param>				
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="deleteDocumentoAplicacion" class="aplicacionAction"
+			method="deleteDocumentoAplicacion">			
+			<result name="success" type="redirectAction">
+				<param name="actionName">editAplicacion</param>
+				<param name="parse">true</param> 
+				<param name="idAplicacion">${idAplicacion}</param>				
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="deleteDocumentoAplicacionSelected" class="aplicacionAction"
+			method="deleteDocumentoAplicacionSelected">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editAplicacion</param>
+				<param name="parse">true</param> 
+				<param name="idAplicacion">${idAplicacion}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="descargarDocumentoAplicacion" class="aplicacionAction"
+			method="descargarDocumentoAplicacion">			
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">fileInputStream</param>
+				<param name="contentDisposition">${adjuntoDescargable}</param>
+				<param name="bufferSize">1024</param>			
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>	
 
 
 		<!-- ************************************* -->
@@ -2447,6 +2488,47 @@
 			<result name="noUser" type="tiles">pages.nouser</result>
 			
 		</action>
+		
+		<action name="addDocumentoOrganismo" class="organismosAction"
+			method="addDocumentoOrganismo">			
+			<result name="success" type="redirectAction">
+				<param name="actionName">editOrganismo</param>
+				<param name="parse">true</param> 
+				<param name="idOrganismo">${idOrganismo}</param>				
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="deleteDocumentoOrganismo" class="organismosAction"
+			method="deleteDocumentoOrganismo">			
+			<result name="success" type="redirectAction">
+				<param name="actionName">editOrganismo</param>
+				<param name="parse">true</param> 
+				<param name="idOrganismo">${idOrganismo}</param>				
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="deleteDocumentoOrganismoSelected" class="organismosAction"
+			method="deleteDocumentoOrganismoSelected">
+			<result name="success" type="redirectAction">
+				<param name="actionName">editOrganismo</param>
+				<param name="parse">true</param> 
+				<param name="idOrganismo">${idOrganismo}</param>
+			</result>
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>
+		
+		<action name="descargarDocumentoOrganismo" class="organismosAction"
+			method="descargarDocumentoOrganismo">			
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">fileInputStream</param>
+				<param name="contentDisposition">${adjuntoDescargable}</param>
+				<param name="bufferSize">1024</param>			
+			</result>		
+			<result name="noUser" type="tiles">pages.nouser</result>			
+		</action>	
 		
 		<!-- ************************************* -->
 		<!-- PLATAFORMA MENSAJERIA - SERVICIOS MOVILES -->

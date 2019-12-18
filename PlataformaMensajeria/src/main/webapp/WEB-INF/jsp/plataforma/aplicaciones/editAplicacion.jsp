@@ -261,6 +261,166 @@
 				</table>
 			</div>
 		</div>
+		<input type="hidden" id="idAplicacion" name="idAplicacion"
+			value="${idAplicacion}" />
+	</s:form>
+<!-- ****************************************************
+***********************GESTION DE FICHEROS*********************
+********************************************************* -->
+<div class="editContainer">
+		  			
+		<div class="nameDescription">
+			<label>Gestión de Documentos</label>
+		</div>
+		<div class="editContent">
+		<s:form id="formaddDocumentoAplicacion" theme="simple" validate="false"
+ 				name="formaddDocumentoAplicacion" method="POST" enctype="multipart/form-data"
+				action="addDocumentoAplicacion">
+		<s:hidden theme="simple" id="idAplicacion" name="idAplicacion"
+						value="%{aplicacion.aplicacionId}" />	
+		<s:hidden theme="simple" id="nombreDocumento" name="nombreDocumento"
+						value="%{nombreDocumento}" />
+		<p class="criteria">
+			<span style="width: 300px;"> <label style="width: 145px;"
+						class="fieldText">Tipo:</label> <s:select
+							id="tipoDocumento"
+							name="tipoDocumento" emptyOption="true"
+							theme="simple" labelposition="left" title="Tipo del fichero"
+							list="comboDocumentosAplicaciones" listKey="codigo"
+							listValue="descripcion" cssClass="" cssStyle="width:138px"
+							 disabled="false" />
+			</span>
+			 <a class="addLink" id="addItem" onclick="insertarNuevoDocumento()"
+							name="addItem">Añadir Item</a>
+			
+		</p>
+		<p class="criteria">
+			<span style="width: 300px;">
+				<label style="width: 145px;"
+						class="fieldText">Fichero:</label> 
+				<input type="file" name="documento" id="documento" style="position: absolute;"> 
+			 </span>
+		 </p>
+		</s:form>
+			
+			<s:form id="formDeleteDocumentoAplicacionSelected"
+				onsubmit="return confirmDeleteSelected();" theme="simple"
+				validate="false" name="formDeleteDocumentoAplicacionSelected" method="POST"
+				action="deleteDocumentoAplicacionSelected">
+				<s:hidden theme="simple" id="idAplicacion" name="idAplicacion"
+						value="%{aplicacion.aplicacionId}" />
+				<script type="text/javascript">
+				  function checkBotonEliminarSeleccionados7(){
+                      var listaChecks = document.getElementById('formDeleteDocumentoAplicacionSelected').checkDelListDocumentosAplicaciones;
+
+                      var botonEliminarSeleccionados = document.getElementById('eliminaSeleccionadosDocumentosAplicaciones');
+                      var enable=false;
+                		if(listaChecks.checked){
+                  			enable=true;
+                  		}
+                      for (i = 0; lcheck = listaChecks[i]; i++) {
+                          if (lcheck.checked) {
+                              enable=true;   
+                          }
+                      }
+                      if(enable){
+                          botonEliminarSeleccionados.disabled="";
+                      }else{
+                          botonEliminarSeleccionados.disabled="disabled";
+                      }
+                  }
+                 
+                   function selectAllD(checkAllD){
+                       var listaChecks = document.getElementById('formDeleteDocumentoAplicacionSelected').checkDelListDocumentosAplicaciones;
+                       if(listaChecks.checked!="undefined"){
+                    	   if(checkAllD.checked){
+                    		   listaChecks.checked=true;
+                    	   }else{
+                    		   listaChecks.checked=false;
+                    	   }
+                       }
+                       
+                       for (i = 0; lcheck = listaChecks[i]; i++) {
+                           if (checkAllD.checked) {
+                               lcheck.checked=true;   
+                           }else{
+                        	   lcheck.checked=false;
+                           }
+                       }  
+                       checkBotonEliminarSeleccionados7();
+                   }
+               </script>
+				<table cellspacing="0" cellpadding="0" border="0"
+					>
+					<thead>
+						<tr>
+							<th class=""><input type="checkbox" id="checkAllD"
+								theme="simple" onclick="selectAllD(this)" /></th>
+							<th class="TH100">Elemento</th>
+							<th class="TH150">Fichero</th>
+							<th class="TH280">Fecha de subida</th>
+							<th class="TH45 separator"></th>
+							
+						</tr>
+					</thead>
+
+					<tbody id="bodyTablaDocumentos">
+						<s:iterator value="%{listaDocumentos}" var="aplicacionDoc"
+							status="organismoServStatus">
+							<tr
+								class="<s:if test='#organismoServStatus.odd == true '></s:if><s:else>odd</s:else>">
+								<td class="darkTD TH15"><input type="checkbox"
+									onclick="checkBotonEliminarSeleccionados7()"
+									id="checkDelListDocumentosAplicaciones"
+									name="checkDelListDocumentosAplicaciones"
+									value="${aplicacionDoc.elemento}" /> <input type="hidden"
+									id="__checkbox_checkDelListDocumentosAplicaciones"
+									name="__checkbox_checkDelListDocumentosAplicaciones" /></td>
+								<td><s:label value="%{elemento}" /></td>
+								<td><s:label value="%{fichero}" /></td>
+								<td><s:label value="%{fechaSubida}" /></td>
+								<td class="buttons">
+									<span class="edit"> <a
+											class="btnEdit" title="Descargar"
+											href="descargarDocumentoAplicacion.action?tipoDocumento=${aplicacionDoc.elemento}&idAplicacion=${idAplicacion}&fichero=${aplicacionDoc.fichero}"></a>
+									</span>
+									<span class="delete"> <a class="btnDelete"
+											title="Eliminar" onclick="return confirmDelete();"
+											href="deleteDocumentoAplicacion.action?idAplicacion=${idAplicacion}&tipoDocumento=${aplicacionDoc.elemento}"></a>
+									</span>
+								</td>								
+							</tr>
+						</s:iterator>
+						<s:if test="%{listaDocumentos == null}">
+							<tr>
+
+								<td colspan="5">La aplicación no tiene ningun documento asociado</td>
+							</tr>
+							<script>
+// 								document.getElementById('selectAllD').style.visibility = "hidden";
+							</script>
+						</s:if>
+						<s:else>
+							<tr>
+							<tfoot>
+								<td colspan="4"><s:submit
+										id="eliminaSeleccionadosDocumentosAplicaciones"
+										name="eliminaSeleccionadosDocumentosAplicaciones" theme="simple"
+										disabled="true"
+										value="%{getText('button.plataforma.eliminarseleccionados')}"
+										cssClass="button" />
+								<td>
+							</tfoot>
+							</tr>
+						</s:else>
+
+					</tbody>
+				</table>
+				</s:form>
+			
+		</div>		
+	</div>	
+		
 		<div class="editContainer">
 			<div class="nameDescription">
 				<label>Auditoría</label>
@@ -292,9 +452,7 @@
 				</p>
 			</div>
 		</div>
-		<input type="hidden" id="idAplicacion" name="idAplicacion"
-			value="${idAplicacion}" />
-	</s:form>
+		
 	<script type="text/javascript">
 		var oDiv = document.getElementById('aplicacion.password');
 		var f = function(e) {
@@ -310,5 +468,37 @@
 			oDiv.attachEvent("onkeyup", f);
 		}
 		//oDiv.addEventListener('keyup',f,true);
+		
+		function insertarNuevoDocumento(){
+			var nomb = document.getElementById('documento');
+			document.getElementById('nombreDocumento').value = nomb.value.split(/(\\|\/)/g).pop();
+			var numDocumentos = document.getElementById("bodyTablaDocumentos").rows.length;
+
+			if ($("#tipoDocumento option:selected").text() == '' ){
+				alert('No ha seleccionado ningun tipo para el fichero');
+				return;
+			}
+			if ( $("#documento").val() == ''){
+				alert('No ha seleccionado ningun fichero');
+				return;
+			}
+			for(var i=0;i<numDocumentos-1;i++){
+					var tipoDocumento = document.getElementById("bodyTablaDocumentos").rows[i].cells[1].textContent;
+					if( $("#tipoDocumento option:selected").text().replace(/\s/g, '') == tipoDocumento ){
+							alert("No se pueden guardar dos documento del mismo tipo");
+							return;
+						}
+				}
+			
+			
+			
+			document.formaddDocumentoAplicacion.submit();	
+			}	
+			$('#documento').bind('change', function() {			  
+				  if(this.files[0].name.split('.').pop() != "pdf"){
+					  alert("El tipo de fichero no es de tipo PDF");
+					  documento.value = null;					  
+					  }
+				});
 	</script>
 </div>

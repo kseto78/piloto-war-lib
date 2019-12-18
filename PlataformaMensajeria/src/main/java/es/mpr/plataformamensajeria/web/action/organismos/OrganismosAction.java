@@ -1,7 +1,17 @@
 package es.mpr.plataformamensajeria.web.action.organismos;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +20,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -31,6 +42,7 @@ import es.minhap.sim.model.TblOrganismos;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleAplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleServicioBean;
+import es.mpr.plataformamensajeria.beans.DocumentoBean;
 import es.mpr.plataformamensajeria.beans.OrganismoBean;
 import es.mpr.plataformamensajeria.beans.PlanificacionBean;
 import es.mpr.plataformamensajeria.beans.ProveedorSMSBean;
@@ -163,6 +175,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	/**  lista servicio organismos. */
 	public List<ServicioOrganismosBean> listaServicioOrganismos = null;
 	
+	/**  lista documentos organismos. */
+	public List<DocumentoBean> listaDocumentos = null;
+	
 	/**  lista servidores organismos. */
 	public List<ServidoresOrganismosBean> listaServidoresOrganismos = null;
 	
@@ -192,6 +207,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	/**  combo organismos pdp. */
 	transient List<KeyValueObject> comboOrganismosPdp = new ArrayList<>();
+	
+	/**  combo documentos organismos. */
+	transient List<KeyValueObject> comboDocumentosOrganismos = new ArrayList<>();
 
 	/**  combo proveedores SMS */
 	transient List<KeyValueObject> comboProveedoresSMS = new ArrayList<>();
@@ -202,6 +220,9 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 	
 	/**  check del list organismos servicios. */
 	private String[] checkDelListOrganismosServicios;
+	
+	/**  check del list organismos servicios. */
+	private String[] checkDelListDocumentosOrganismos;
 	
 	/**  check del list servidor organismos. */
 	private String[] checkDelListServidorOrganismos;
@@ -296,6 +317,21 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 
 	/**  detalle aplicacion. */
 	private DetalleAplicacionBean detalleAplicacion;
+	
+	/** documento */
+	private File documento;
+	
+	/** documento */
+	private String nombreDocumento;
+	
+	/** tipo documento */
+	private String tipoDocumento;
+	
+	/**  adjunto descargable. */
+	private String adjuntoDescargable;
+	
+	/**  file input stream. */
+	private InputStream fileInputStream;
 
 
 	/**
@@ -1124,8 +1160,71 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 			comboServidoresPlan = cargarComboServidoresPlan();
 			comboServiciosPlan = cargarComboServiciosPlan();
 			comboOrganismosPdp = cargarComboOrganismosPdp();
-			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));
+			comboDocumentosOrganismos = cargarComboDocumentosOrganismos();
+			listaDocumentos = loadDocumentosOrganismos();			
+			listaPlanificacionesServicio = servicioPlanificacion.getPlanificacionesByOrganismoID(Integer.valueOf(idOrganismo));			
 		}
+	}
+
+	private List<DocumentoBean> loadDocumentosOrganismos() throws IOException {
+		List<DocumentoBean> lista = new ArrayList<>();
+		if (idOrganismo != null && !idOrganismo.isEmpty()) {
+			
+			
+			String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+			pathBase = pathBase + "/Organismos/"+idOrganismo + "/";
+			ArrayList<String> listaDirectorios = new ArrayList<>();
+			
+			String documentos = properties.getProperty("plataforma.documentos.tipoOrganismo", null).trim();
+			List<String> tiposDocumentos = new ArrayList<>(Arrays.asList(documentos.split(",")));
+			
+			for(String tipo: tiposDocumentos){
+				listaDirectorios.add(pathBase + tipo.replaceAll("\\s+","") + "/");
+			}			
+			
+			for(String directory:listaDirectorios){
+				File dir = new File(directory);
+				File[] matches = dir.listFiles();
+				if(null != matches && 0 != matches.length){
+					DocumentoBean doc = new DocumentoBean();
+			        Path filePath = matches[0].toPath();
+
+					BasicFileAttributes attr = Files.readAttributes(filePath, BasicFileAttributes.class);
+
+					
+					doc.setElemento(dir.getName());
+					doc.setFichero(matches[0].getName());
+					Date dateFile = new Date(attr.lastModifiedTime().toMillis());
+					  String pattern = "yyyy-MM-dd HH:mm:ss";
+					    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+					doc.setFechaSubida(simpleDateFormat.format(dateFile));
+					lista.add(doc);					
+				}
+			}
+		}
+		if(lista.isEmpty()) {
+			return null;
+		}else{
+			return lista;
+		}
+		
+	}
+
+	private List<KeyValueObject> cargarComboDocumentosOrganismos() {
+		List<KeyValueObject> result = new ArrayList<>();
+
+		KeyValueObject option;
+		String documentos = properties.getProperty("plataforma.documentos.tipoOrganismo", null).trim();
+		List<String> tiposDocumentos = new ArrayList<>(Arrays.asList(documentos.split(",")));
+		
+		for(String tipo: tiposDocumentos){
+			option = new KeyValueObject();
+			option.setCodigo(tipo);
+			option.setDescripcion(tipo);
+			result.add(option);			
+		}
+		
+		return result;
 	}
 
 	private List<KeyValueObject> cargarComboOrganismosPdp() {
@@ -1380,7 +1479,97 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		}
 		return SUCCESS;
 	}
+	
+	public String addDocumentoOrganismo() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		pathBase = pathBase + "/Organismos/"+idOrganismo+"/";
+		
+		if(null != tipoDocumento && !"".equals(tipoDocumento)){
+			pathBase = pathBase + tipoDocumento.replaceAll("\\s+","") + "/";
+			if (null != documento){
+				File dest = new File(pathBase+nombreDocumento);
+			    FileUtils.copyFile(documento, dest);	
+			    addActionMessageSession(this.getText("plataforma.documentos.nuevo"));
+			}
+		}		
+		
+		return SUCCESS;
+	}
+	
+	/**
+	 * Metodo que borra un documento de un organismo.
+	 * @return
+	 * @throws IOException
+	 */
+	public String deleteDocumentoOrganismo() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		
+		if(null != idOrganismo && !"".equals(idOrganismo)){
+			pathBase = pathBase + "/Organismos/"+idOrganismo+"/";
+			if(null != tipoDocumento && !"".equals(tipoDocumento)){
+				pathBase = pathBase + tipoDocumento + "/";
+				File dir = new File(pathBase);
+				File[] matches = dir.listFiles();
+				if(null != matches && 0 != matches.length && matches[0].delete()){					
+					addActionMessageSession(this.getText("plataforma.documentos.borrar"));					
+				}
+			}			
+		}		
+		return SUCCESS;
+	}
+	
+	/**
+	 * Metodo que borra los documentos seleccionados del organismo
+	 * @return
+	 * @throws IOException
+	 */
+	public String deleteDocumentoOrganismoSelected() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		
+		if (checkDelListDocumentosOrganismos == null) {
+			addActionErrorSession(this.getText("plataforma.documentos.borrarSeleccionados.error"));
+		}else{
+			if(null != idOrganismo && !"".equals(idOrganismo)){
+				pathBase = pathBase + "/Organismos/"+idOrganismo+"/";
+				for (String tipo:checkDelListDocumentosOrganismos){					
+					if(null != tipo && !"".equals(tipo)){
+						
+						File dir = new File(pathBase+tipo);
+						File[] matches = dir.listFiles();
+						if(null != matches && 0 != matches.length && matches[0].delete()){						
+							addActionMessageSession(this.getText("plataforma.documentos.borrar"));						
+						}
+					}
+				}					
+			}	
+		}
+			
+		return SUCCESS;
+	}
+	
+	/**
+	 * Metodo que descarga el documento seleccionado del organismo.
+	 * @return
+	 * @throws IOException
+	 */
+	public String descargarDocumentoOrganismo() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		
+		if(tipoDocumento != null){
+			pathBase = pathBase + "/Organismos/"+idOrganismo+"/"+tipoDocumento;
+			File dir = new File(pathBase);
+			File[] matches = dir.listFiles();
+			if(null != matches && 0 != matches.length){				
+				InputStream targetStream = 
+				        new DataInputStream(new FileInputStream(matches[0]));
+				this.fileInputStream = targetStream;
+				this.adjuntoDescargable = "attachment;filename=\"" + matches[0].getName() + "\"";		
 
+			}
+		}		
+		return SUCCESS;
+	}
+	
 	//@Transactional(noRollbackFor = Exception.class)
 	/**
 	 * Agrega servidor organismo.
@@ -2454,5 +2643,72 @@ public class OrganismosAction extends PlataformaPaginationAction implements Serv
 		}
 		return result;
 	}
+
+	public List<KeyValueObject> getComboDocumentosOrganismos() {
+		return comboDocumentosOrganismos;
+	}
+
+	public void setComboDocumentosOrganismos(
+			List<KeyValueObject> comboDocumentosOrganismos) {
+		this.comboDocumentosOrganismos = comboDocumentosOrganismos;
+	}
+
+	public File getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(File documento) {
+		this.documento = documento;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public String getNombreDocumento() {
+		return nombreDocumento;
+	}
+
+	public void setNombreDocumento(String nombreDocumento) {
+		this.nombreDocumento = nombreDocumento;
+	}
+
+	public List<DocumentoBean> getListaDocumentos() {
+		return listaDocumentos;
+	}
+
+	public void setListaDocumentos(List<DocumentoBean> listaDocumentos) {
+		this.listaDocumentos = listaDocumentos;
+	}
+
+	public String[] getCheckDelListDocumentosOrganismos() {
+		return checkDelListDocumentosOrganismos;
+	}
+
+	public void setCheckDelListDocumentosOrganismos(
+			String[] checkDelListDocumentosOrganismos) {
+		this.checkDelListDocumentosOrganismos = checkDelListDocumentosOrganismos;
+	}
+
+	public String getAdjuntoDescargable() {
+		return adjuntoDescargable;
+	}
+
+	public void setAdjuntoDescargable(String adjuntoDescargable) {
+		this.adjuntoDescargable = adjuntoDescargable;
+	}
+
+	public InputStream getFileInputStream() {
+		return fileInputStream;
+	}
+
+	public void setFileInputStream(InputStream fileInputStream) {
+		this.fileInputStream = fileInputStream;
+	}
+
 	
 }

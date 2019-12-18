@@ -1,14 +1,26 @@
 package es.mpr.plataformamensajeria.web.action.aplicacion;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -27,6 +39,7 @@ import com.opensymphony.xwork2.Preparable;
 import es.mpr.plataformamensajeria.beans.AplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleAplicacionBean;
 import es.mpr.plataformamensajeria.beans.DetalleServicioBean;
+import es.mpr.plataformamensajeria.beans.DocumentoBean;
 import es.mpr.plataformamensajeria.beans.PlanificacionBean;
 import es.mpr.plataformamensajeria.beans.ServicioBean;
 import es.mpr.plataformamensajeria.beans.ServidorBean;
@@ -196,6 +209,30 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 
 	/**  detalle aplicacion. */
 	private DetalleAplicacionBean detalleAplicacion;
+	
+	/**  combo documentos aplicaciones. */
+	transient List<KeyValueObject> comboDocumentosAplicaciones = new ArrayList<>();
+	
+	/**  lista documentos organismos. */
+	public List<DocumentoBean> listaDocumentos = null;
+	
+	/** documento */
+	private File documento;
+	
+	/** documento */
+	private String nombreDocumento;
+	
+	/** tipo documento */
+	private String tipoDocumento;
+	
+	/**  adjunto descargable. */
+	private String adjuntoDescargable;
+	
+	/**  file input stream. */
+	private InputStream fileInputStream;
+
+	/**  check del list documentos aplicaciones. */
+	private String[] checkDelListDocumentosAplicaciones;
 
 	/**
 	 * New search.
@@ -750,8 +787,70 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		session = (Map) ActionContext.getContext().get("session");
 		recovery = (String) session.get(txtRecovery);
 		listaServiciosAplicacion = loadSeviciosAplicacion();
+		comboDocumentosAplicaciones = cargarComboDocumentosAplicaciones();
+		listaDocumentos = loadDocumentosAplicaciones();
 	}
 
+	private List<DocumentoBean> loadDocumentosAplicaciones() throws IOException {
+		List<DocumentoBean> lista = new ArrayList<>();
+		if (idAplicacion != null && !idAplicacion.isEmpty()) {
+			
+			
+			String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+			pathBase = pathBase + "/Aplicaciones/"+idAplicacion+ "/";
+			ArrayList<String> listaDirectorios = new ArrayList<>();
+			
+			String documentos = properties.getProperty("plataforma.documentos.tipoAplicacion", null).trim();
+			List<String> tiposDocumentos = new ArrayList<>(Arrays.asList(documentos.split(",")));
+			
+			for(String tipo: tiposDocumentos){
+				listaDirectorios.add(pathBase + tipo.replaceAll("\\s+","") + "/");
+			}			
+			
+			for(String directory:listaDirectorios){
+				File dir = new File(directory);
+				File[] matches = dir.listFiles();
+				if(null != matches && 0 != matches.length){
+					DocumentoBean doc = new DocumentoBean();
+			        Path filePath = matches[0].toPath();
+
+					BasicFileAttributes attr = Files.readAttributes(filePath, BasicFileAttributes.class);
+
+					
+					doc.setElemento(dir.getName());
+					doc.setFichero(matches[0].getName());
+					Date dateFile = new Date(attr.lastModifiedTime().toMillis());
+					  String pattern = "yyyy-MM-dd HH:mm:ss";
+					    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+					doc.setFechaSubida(simpleDateFormat.format(dateFile));
+					lista.add(doc);					
+				}
+			}
+		}
+		if(lista.isEmpty()) {
+			return null;
+		}else{
+			return lista;
+		}
+		
+	}
+
+	private List<KeyValueObject> cargarComboDocumentosAplicaciones() {
+		List<KeyValueObject> result = new ArrayList<>();
+
+		KeyValueObject option;
+		String documentos = properties.getProperty("plataforma.documentos.tipoAplicacion", null).trim();
+		List<String> tiposDocumentos = new ArrayList<>(Arrays.asList(documentos.split(",")));
+		
+		for(String tipo: tiposDocumentos){
+			option = new KeyValueObject();
+			option.setCodigo(tipo);
+			option.setDescripcion(tipo);
+			result.add(option);			
+		}
+		
+		return result;
+	}
 	/**
 	 * Valida obligatorios.
 	 *
@@ -831,7 +930,102 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 		return sw;
 
 	}
+	
+	/**
+	 * Metodo que asocia un documento a la aplicación.
+	 * @return
+	 * @throws IOException
+	 */
+	public String addDocumentoAplicacion() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		pathBase = pathBase + "/Aplicaciones/"+idAplicacion+"/";
+		
+		if(null != tipoDocumento && !"".equals(tipoDocumento)){
+			pathBase = pathBase + tipoDocumento.replaceAll("\\s+","") + "/";
+			if (null != documento){
+				File dest = new File(pathBase+nombreDocumento);
+			    FileUtils.copyFile(documento, dest);	
+			    addActionMessageSession(this.getText("plataforma.documentos.nuevo"));
+			}
+		}		
+		
+		return SUCCESS;
+	}
+	
+	/**
+	 * Metodo que borra un documento de una aplicación.
+	 * @return
+	 * @throws IOException
+	 */
+	public String deleteDocumentoAplicacion() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		
+		if(null != idAplicacion && !"".equals(idAplicacion)){
+			pathBase = pathBase + "/Aplicaciones/"+idAplicacion+"/";
+			if(null != tipoDocumento && !"".equals(tipoDocumento)){
+				pathBase = pathBase + tipoDocumento + "/";
+				File dir = new File(pathBase);
+				File[] matches = dir.listFiles();
+				if(null != matches && 0 != matches.length && matches[0].delete()){					
+					addActionMessageSession(this.getText("plataforma.documentos.borrar"));					
+				}
+			}			
+		}		
+		return SUCCESS;
+	}
+	
+	/**
+	 * Metodo que borra los documentos seleccionados del organismo
+	 * @return
+	 * @throws IOException
+	 */
+	public String deleteDocumentoAplicacionSelected() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		
+		if (checkDelListDocumentosAplicaciones == null) {
+			addActionErrorSession(this.getText("plataforma.documentos.borrarSeleccionados.error"));
+		}else{
+			if(null != idAplicacion && !"".equals(idAplicacion)){
+				pathBase = pathBase + "/Aplicaciones/"+idAplicacion+"/";
+				for (String tipo:checkDelListDocumentosAplicaciones){					
+					if(null != tipo && !"".equals(tipo)){
+						
+						File dir = new File(pathBase+tipo);
+						File[] matches = dir.listFiles();
+						if(null != matches && 0 != matches.length && matches[0].delete()){						
+							addActionMessageSession(this.getText("plataforma.documentos.borrar"));						
+						}
+					}
+				}					
+			}	
+		}
+			
+		return SUCCESS;
+	}
 
+	/**
+	 * Metodo que descarga el documento seleccionado de la aplicación.
+	 * @return
+	 * @throws IOException
+	 */
+	public String descargarDocumentoAplicacion() throws IOException {
+		String pathBase = properties.getProperty("filesystem.pathBaseDocumentos", null);
+		
+		if(tipoDocumento != null){
+			pathBase = pathBase + "/Aplicaciones/"+idAplicacion+"/"+tipoDocumento;
+			File dir = new File(pathBase);
+			File[] matches = dir.listFiles();
+			if(null != matches && 0 != matches.length){				
+				InputStream targetStream = 
+				        new DataInputStream(new FileInputStream(matches[0]));
+				this.fileInputStream = targetStream;
+				this.adjuntoDescargable = "attachment;filename=\"" + matches[0].getName() + "\"";		
+
+			}
+		}		
+		return SUCCESS;
+	}
+	
 	/**
 	 * Método que resuelve el lugar donde tiene que volver.
 	 *
@@ -1324,6 +1518,71 @@ public class AplicacionAction extends PlataformaPaginationAction implements Serv
 	public void setNewActivo(String newActivo) {
 		this.newActivo = newActivo;
 	}
-	
+
+	public List<KeyValueObject> getComboDocumentosAplicaciones() {
+		return comboDocumentosAplicaciones;
+	}
+
+	public List<DocumentoBean> getListaDocumentos() {
+		return listaDocumentos;
+	}
+
+	public void setComboDocumentosAplicaciones(
+			List<KeyValueObject> comboDocumentosAplicaciones) {
+		this.comboDocumentosAplicaciones = comboDocumentosAplicaciones;
+	}
+
+	public void setListaDocumentos(List<DocumentoBean> listaDocumentos) {
+		this.listaDocumentos = listaDocumentos;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public File getDocumento() {
+		return documento;
+	}
+
+	public String getNombreDocumento() {
+		return nombreDocumento;
+	}
+
+	public String getAdjuntoDescargable() {
+		return adjuntoDescargable;
+	}
+
+	public InputStream getFileInputStream() {
+		return fileInputStream;
+	}
+
+	public void setDocumento(File documento) {
+		this.documento = documento;
+	}
+
+	public void setNombreDocumento(String nombreDocumento) {
+		this.nombreDocumento = nombreDocumento;
+	}
+
+	public void setAdjuntoDescargable(String adjuntoDescargable) {
+		this.adjuntoDescargable = adjuntoDescargable;
+	}
+
+	public void setFileInputStream(InputStream fileInputStream) {
+		this.fileInputStream = fileInputStream;
+	}
+
+	public String[] getCheckDelListDocumentosAplicaciones() {
+		return checkDelListDocumentosAplicaciones;
+	}
+
+	public void setCheckDelListDocumentosAplicaciones(
+			String[] checkDelListDocumentosAplicaciones) {
+		this.checkDelListDocumentosAplicaciones = checkDelListDocumentosAplicaciones;
+	}	
 	
 }
