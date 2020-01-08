@@ -1,1 +1,0 @@
-Este directorio contiene los ficheros de mensajes i18n

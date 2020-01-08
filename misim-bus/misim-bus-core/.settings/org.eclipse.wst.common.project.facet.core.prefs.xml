@@ -1,7 +1,0 @@
-<root>
-  <facet id="jpt.jaxb">
-    <node name="classgen">
-      <attribute name="package" value="es.redsara.misim.misim_bus_webapp.peticion.aplicaciones"/>
-    </node>
-  </facet>
-</root>

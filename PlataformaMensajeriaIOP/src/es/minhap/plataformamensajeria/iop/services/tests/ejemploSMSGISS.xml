@@ -1,8 +1,0 @@
-<Peticion xmlns="http://misim.redsara.es/misim-bus-webapp/peticion" xmlns:ns2="http://misim.redsara.es/misim-bus-webapp/respuesta">    
-          <IdPeticion>iDeXTERNO1234354893400141268</IdPeticion>
-          <UsuSistemaEnvio>11231231h_A1B2C3</UsuSistemaEnvio>
-          <PassSistemaEnvio>11231231h_A1B2C3</PassSistemaEnvio>
-          <ContenidoMsj>Mensaje pruebas envio  GISS</ContenidoMsj>
-          <NumeroTelefonoDestino>696644884</NumeroTelefonoDestino>
-          <Aplicacion>APLI</Aplicacion>
-</Peticion>
